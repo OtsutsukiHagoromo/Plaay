@@ -1,9 +1,56 @@
-{% comment %} Subtotal row — data-cart-total carries the raw fils value for JS tier bar updates {% endcomment %}
+{% liquid
+  assign original_total_price = cart.original_total_price | default: cart.total_price
+  assign total_savings = original_total_price | minus: cart.total_price
+  assign has_discounted_total = false
+
+  if original_total_price > cart.total_price
+    assign has_discounted_total = true
+  endif
+%}
+
+{% if cart.cart_level_discount_applications.size > 0 or has_discounted_total %}
+  <div class="mb-3 rounded-2xl border border-dark-blue border-opacity-10 bg-[#f8f8f4] px-4 py-3">
+    <div class="flex items-center justify-between gap-3">
+      <span class="text-[11px] font-walsheim-bold uppercase tracking-[0.14em] text-dark-blue opacity-70">Applied promo</span>
+      {% if has_discounted_total %}
+        <span class="text-xs font-walsheim-bold text-[#138a4a]">You saved {{ total_savings | money }}</span>
+      {% endif %}
+    </div>
+
+    {% if cart.cart_level_discount_applications.size > 0 %}
+      <div class="mt-2 flex flex-col gap-2">
+        {% for discount in cart.cart_level_discount_applications %}
+          <div class="flex items-center justify-between gap-3 rounded-xl bg-white px-3 py-2">
+            <span class="text-sm font-walsheim-bold text-dark-blue">{{ discount.title }}</span>
+            <span class="text-sm font-walsheim-bold text-[#138a4a]">-{{ discount.total_allocated_amount | money }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% elsif has_discounted_total %}
+      <div class="mt-2 rounded-xl bg-white px-3 py-2 text-sm font-walsheim-bold text-dark-blue">
+        Discount applied at checkout
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% comment %} Subtotal row - data-cart-total carries the raw fils value for JS tier bar updates {% endcomment %}
 <div class="flex items-center justify-between py-3 border-t border-dark-blue border-opacity-10">
   <span class="text-dark-blue text-base font-walsheim-bold uppercase tracking-wide">{{ 'cart-drawer.total' | t }}</span>
-  <span class="text-dark-blue text-xl font-walsheim-black" data-subtotal data-cart-total="{{ cart.total_price }}">{{ cart.total_price | money }}</span>
+  <div class="flex flex-col items-end" data-subtotal data-cart-total="{{ cart.total_price }}">
+    <span class="text-dark-blue text-xl font-walsheim-black">{{ cart.total_price | money }}</span>
+    {% if has_discounted_total %}
+      <span class="text-xs font-walsheim-bold text-dark-blue opacity-45 line-through">{{ original_total_price | money }}</span>
+    {% endif %}
+  </div>
 </div>
-<p class="text-xs text-dark-blue opacity-40 font-walsheim text-right -mt-1 mb-3">Taxes &amp; shipping calculated at checkout</p>
+<p class="text-xs text-dark-blue opacity-40 font-walsheim text-right -mt-1 mb-3">
+  {% if has_discounted_total %}
+    Savings of {{ total_savings | money }} included. Taxes &amp; shipping calculated at checkout
+  {% else %}
+    Taxes &amp; shipping calculated at checkout
+  {% endif %}
+</p>
 
 {% comment %} Discount code accordion {% endcomment %}
 <div class="plaay-discount-wrap">
