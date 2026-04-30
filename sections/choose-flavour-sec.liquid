@@ -1,149 +1,506 @@
 {% liquid
   assign title = section.settings.title
+  assign intro = section.settings.intro
+  assign eyebrow = section.settings.eyebrow
   assign background_color = section.settings.background_color
   assign card_style = section.settings.card_style
-  assign products = section.blocks | where: 'type', 'product'
+  assign default_cta = section.settings.default_cta
 %}
 
-<div class="plaay-flavour-sec" style="background-color: {{ background_color }}; padding: 60px 0;">
+<section class="plaay-flavour-showcase" style="--plaay-showcase-bg: {{ background_color }};">
   <div class="container">
-    {% if title != blank %}
-      <h2 class="font-walsheim-bold uppercase text-dark-blue text-center" style="font-size:clamp(1.8rem,4vw,3rem);letter-spacing:0.02em;margin-bottom:40px">{{ title }}</h2>
-    {% endif %}
+    <div class="plaay-flavour-showcase__header">
+      <div class="plaay-flavour-showcase__header-copy">
+        {% if eyebrow != blank %}
+          <p class="plaay-flavour-showcase__eyebrow font-walsheim-bold">{{ eyebrow }}</p>
+        {% endif %}
+
+        {% if title != blank %}
+          <h2 class="plaay-flavour-showcase__title font-walsheim-bold">{{ title }}</h2>
+        {% endif %}
+      </div>
+
+      {% if intro != blank %}
+        <div class="plaay-flavour-showcase__intro font-walsheim">
+          {{ intro }}
+        </div>
+      {% endif %}
+    </div>
+
     <div class="plaay-flavour-grid">
       {% for block in section.blocks %}
-        {% assign bg = '#021D49' %}
-        {% if card_style == 'yellow' %}{% assign bg = '#F9C61D' %}{% endif %}
-        {% if card_style == 'white' %}{% assign bg = '#FFFFFF' %}{% endif %}
-        {% if block.settings.card_bg != blank %}{% assign bg = block.settings.card_bg %}{% endif %}
-        <a href="{{ block.settings.product_link }}" class="plaay-flavour-card" style="background:{{ bg }}" {{ block.shopify_attributes }}>
-          {% if block.settings.product_image != blank %}
-            <div class="plaay-flavour-card__img-wrap">
-              <img src="{{ block.settings.product_image | img_url: '400x400' }}" alt="{{ block.settings.product_heading }}" loading="lazy" class="plaay-flavour-card__img">
-            </div>
-          {% endif %}
-          <div class="plaay-flavour-card__body">
-            {% if block.settings.product_heading != blank %}
-              <h3 class="plaay-flavour-card__title font-walsheim-bold">{{ block.settings.product_heading }}</h3>
+        {% liquid
+          assign bg = '#021D49'
+          if card_style == 'yellow'
+            assign bg = '#F9C61D'
+          endif
+          if card_style == 'white'
+            assign bg = '#FFFFFF'
+          endif
+          if block.settings.card_bg != blank
+            assign bg = block.settings.card_bg
+          endif
+
+          assign collection_obj = block.settings.collection
+          assign card_url = block.settings.product_link
+          assign card_title = block.settings.product_heading
+          assign card_image = block.settings.product_image
+          assign card_kicker = block.settings.card_kicker
+          assign card_copy = block.settings.card_copy
+          assign cta_text = block.settings.cta_text
+
+          if collection_obj != blank
+            assign card_url = collection_obj.url
+
+            if card_title == blank
+              assign card_title = collection_obj.title
+            endif
+
+            if card_image == blank
+              assign card_image = collection_obj.featured_image
+            endif
+
+            if card_copy == blank and collection_obj.description != blank
+              assign card_copy = collection_obj.description | strip_html | truncatewords: 14
+            endif
+          endif
+
+          if cta_text == blank
+            assign cta_text = default_cta
+          endif
+
+          assign color_token = 'dark'
+          assign title_color = '#F9C61D'
+          assign body_color = 'rgba(255,255,255,0.82)'
+          assign chip_bg = 'rgba(255,255,255,0.12)'
+          assign chip_color = '#FFFFFF'
+          assign cta_bg = '#F9C61D'
+          assign cta_color = '#021D49'
+          assign media_glow = 'rgba(255,255,255,0.18)'
+
+          if card_style == 'yellow' and block.settings.card_bg == blank
+            assign color_token = 'light'
+            assign title_color = '#021D49'
+            assign body_color = 'rgba(2,29,73,0.74)'
+            assign chip_bg = 'rgba(2,29,73,0.08)'
+            assign chip_color = '#021D49'
+            assign cta_bg = '#021D49'
+            assign cta_color = '#F9C61D'
+            assign media_glow = 'rgba(2,29,73,0.10)'
+          endif
+
+          if card_style == 'white' and block.settings.card_bg == blank
+            assign color_token = 'light'
+            assign title_color = '#021D49'
+            assign body_color = 'rgba(2,29,73,0.70)'
+            assign chip_bg = 'rgba(2,29,73,0.08)'
+            assign chip_color = '#021D49'
+            assign cta_bg = '#021D49'
+            assign cta_color = '#FFFFFF'
+            assign media_glow = 'rgba(2,29,73,0.08)'
+          endif
+
+          if block.settings.card_bg != blank
+            assign bg_downcase = block.settings.card_bg | downcase
+            if bg_downcase contains '#f9c61d' or bg_downcase contains '#fff' or bg_downcase contains '#ffffff'
+              assign color_token = 'light'
+              assign title_color = '#021D49'
+              assign body_color = 'rgba(2,29,73,0.70)'
+              assign chip_bg = 'rgba(2,29,73,0.08)'
+              assign chip_color = '#021D49'
+              assign cta_bg = '#021D49'
+              assign cta_color = '#FFFFFF'
+              assign media_glow = 'rgba(2,29,73,0.08)'
+            endif
+          endif
+        %}
+
+        <a
+          href="{{ card_url | default: '#' }}"
+          class="plaay-flavour-card plaay-flavour-card--{{ color_token }}"
+          style="--card-bg: {{ bg }}; --card-title: {{ title_color }}; --card-copy: {{ body_color }}; --card-chip-bg: {{ chip_bg }}; --card-chip-color: {{ chip_color }}; --card-cta-bg: {{ cta_bg }}; --card-cta-color: {{ cta_color }}; --card-glow: {{ media_glow }};"
+          {{ block.shopify_attributes }}>
+
+          <div class="plaay-flavour-card__media">
+            <div class="plaay-flavour-card__orb plaay-flavour-card__orb--one"></div>
+            <div class="plaay-flavour-card__orb plaay-flavour-card__orb--two"></div>
+
+            {% if card_kicker != blank %}
+              <span class="plaay-flavour-card__kicker font-walsheim-bold">{{ card_kicker }}</span>
+            {% elsif collection_obj != blank %}
+              <span class="plaay-flavour-card__kicker font-walsheim-bold">Collection</span>
             {% endif %}
-            <span class="plaay-flavour-card__btn font-walsheim-bold">
-              Shop Now
-              <svg width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left:6px;vertical-align:middle"><path d="M1 5H15M15 5L11 1M15 5L11 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+
+            {% if card_image != blank %}
+              <div class="plaay-flavour-card__img-wrap">
+                <img
+                  src="{{ card_image | image_url: width: 720 }}"
+                  alt="{{ card_title | escape }}"
+                  loading="lazy"
+                  class="plaay-flavour-card__img">
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="plaay-flavour-card__body">
+            <div class="plaay-flavour-card__body-top">
+              {% if card_title != blank %}
+                <h3 class="plaay-flavour-card__title font-walsheim-bold">{{ card_title }}</h3>
+              {% endif %}
+
+              {% if card_copy != blank %}
+                <p class="plaay-flavour-card__copy font-walsheim">{{ card_copy }}</p>
+              {% endif %}
+            </div>
+
+            <div class="plaay-flavour-card__footer">
+              <span class="plaay-flavour-card__cta font-walsheim-bold">
+                {{ cta_text }}
+                <svg class="plaay-flavour-card__cta-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
           </div>
         </a>
       {% endfor %}
     </div>
   </div>
-</div>
+</section>
 
 <style>
+  .plaay-flavour-showcase {
+    background:
+      radial-gradient(circle at top left, rgba(249, 198, 29, 0.18), transparent 28%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 26%),
+      var(--plaay-showcase-bg);
+    padding: 72px 0;
+    overflow: hidden;
+  }
+
+  .plaay-flavour-showcase__header {
+    display: grid;
+    gap: 20px;
+    align-items: end;
+    margin-bottom: 34px;
+  }
+
+  .plaay-flavour-showcase__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 14px;
+    color: #021D49;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .plaay-flavour-showcase__eyebrow::before {
+    content: "";
+    width: 38px;
+    height: 2px;
+    border-radius: 999px;
+    background: #F9C61D;
+  }
+
+  .plaay-flavour-showcase__title {
+    margin: 0;
+    color: #021D49;
+    font-size: clamp(2.2rem, 5vw, 4.4rem);
+    line-height: 0.94;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    max-width: 9ch;
+  }
+
+  .plaay-flavour-showcase__intro {
+    color: rgba(2, 29, 73, 0.78);
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 38rem;
+  }
+
+  .plaay-flavour-showcase__intro p:last-child {
+    margin-bottom: 0;
+  }
+
   .plaay-flavour-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
   }
-  @media (min-width: 768px) {
-    .plaay-flavour-grid {
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-  }
+
   .plaay-flavour-card {
-    display: flex;
-    flex-direction: column;
-    border-radius: 16px;
+    position: relative;
+    display: grid;
+    grid-template-rows: minmax(180px, 1fr) auto;
+    min-height: 100%;
+    border-radius: 28px;
     overflow: hidden;
     text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    box-shadow: 0 2px 12px rgba(2,29,73,0.08);
+    background: var(--card-bg);
+    box-shadow: 0 20px 44px rgba(2, 29, 73, 0.12);
+    transition: transform 0.28s ease, box-shadow 0.28s ease;
+    isolation: isolate;
   }
+
+  .plaay-flavour-card::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 27px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .plaay-flavour-card--light::before {
+    border-color: rgba(2, 29, 73, 0.10);
+  }
+
   .plaay-flavour-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 28px rgba(2,29,73,0.18);
+    transform: translateY(-6px);
+    box-shadow: 0 28px 54px rgba(2, 29, 73, 0.18);
   }
-  .plaay-flavour-card__img-wrap {
-    aspect-ratio: 1 / 1;
+
+  .plaay-flavour-card__media {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 16px 16px 0;
     overflow: hidden;
-    background: rgba(255,255,255,0.1);
+  }
+
+  .plaay-flavour-card__orb {
+    position: absolute;
+    border-radius: 999px;
+    pointer-events: none;
+    background: var(--card-glow);
+    filter: blur(0.5px);
+    transition: transform 0.35s ease;
+  }
+
+  .plaay-flavour-card__orb--one {
+    width: 130px;
+    height: 130px;
+    top: 18px;
+    right: -22px;
+  }
+
+  .plaay-flavour-card__orb--two {
+    width: 170px;
+    height: 170px;
+    left: -42px;
+    bottom: 14px;
+  }
+
+  .plaay-flavour-card:hover .plaay-flavour-card__orb--one {
+    transform: translate(-6px, 6px);
+  }
+
+  .plaay-flavour-card:hover .plaay-flavour-card__orb--two {
+    transform: translate(10px, -8px);
+  }
+
+  .plaay-flavour-card__kicker {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: var(--card-chip-bg);
+    color: var(--card-chip-color);
+    font-size: 0.68rem;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+  }
+
+  .plaay-flavour-card__img-wrap {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    aspect-ratio: 1 / 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px;
+    padding: 28px 22px 0;
   }
+
   .plaay-flavour-card__img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    transform-origin: center bottom;
     transition: transform 0.35s ease;
   }
+
   .plaay-flavour-card:hover .plaay-flavour-card__img {
-    transform: scale(1.06);
+    transform: scale(1.07) rotate(-1deg);
   }
+
   .plaay-flavour-card__body {
-    padding: 14px 16px 18px;
-    display: flex;
-    flex-direction: column;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: 16px;
+    padding: 16px 18px 20px;
+  }
+
+  .plaay-flavour-card__body-top {
+    display: grid;
     gap: 10px;
   }
+
   .plaay-flavour-card__title {
-    font-size: 0.9rem;
-    line-height: 1.25;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #F9C61D;
     margin: 0;
+    color: var(--card-title);
+    font-size: clamp(1rem, 2vw, 1.38rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
   }
-  /* When card background is yellow, flip text to dark blue */
-  .plaay-flavour-card[style*="#F9C61D"] .plaay-flavour-card__title,
-  .plaay-flavour-card[style*="#f9c61d"] .plaay-flavour-card__title {
-    color: #021D49;
+
+  .plaay-flavour-card__copy {
+    margin: 0;
+    color: var(--card-copy);
+    font-size: 0.92rem;
+    line-height: 1.55;
   }
-  .plaay-flavour-card[style*="#FFFFFF"] .plaay-flavour-card__title,
-  .plaay-flavour-card[style*="#fff"] .plaay-flavour-card__title,
-  .plaay-flavour-card[style*="#ffffff"] .plaay-flavour-card__title {
-    color: #021D49;
+
+  .plaay-flavour-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
   }
-  .plaay-flavour-card__btn {
+
+  .plaay-flavour-card__cta {
     display: inline-flex;
     align-items: center;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: #F9C61D;
-    background: rgba(249,198,29,0.15);
-    padding: 7px 14px;
+    gap: 10px;
+    min-height: 48px;
+    padding: 12px 16px 12px 18px;
     border-radius: 999px;
-    transition: background 0.2s, color 0.2s;
-    width: fit-content;
+    background: var(--card-cta-bg);
+    color: var(--card-cta-color);
+    font-size: 0.78rem;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: transform 0.25s ease, gap 0.25s ease;
   }
-  .plaay-flavour-card:hover .plaay-flavour-card__btn {
-    background: #F9C61D;
-    color: #021D49;
+
+  .plaay-flavour-card__cta-arrow {
+    flex: 0 0 auto;
   }
-  /* Yellow card: dark btn */
-  .plaay-flavour-card[style*="#F9C61D"] .plaay-flavour-card__btn,
-  .plaay-flavour-card[style*="#f9c61d"] .plaay-flavour-card__btn {
-    color: #021D49;
-    background: rgba(2,29,73,0.1);
+
+  .plaay-flavour-card:hover .plaay-flavour-card__cta {
+    transform: translateX(2px);
+    gap: 14px;
   }
-  .plaay-flavour-card[style*="#F9C61D"]:hover .plaay-flavour-card__btn,
-  .plaay-flavour-card[style*="#f9c61d"]:hover .plaay-flavour-card__btn {
-    background: #021D49;
-    color: #F9C61D;
+
+  @media (min-width: 768px) {
+    .plaay-flavour-showcase {
+      padding: 90px 0;
+    }
+
+    .plaay-flavour-showcase__header {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: 28px;
+      margin-bottom: 42px;
+    }
+
+    .plaay-flavour-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .plaay-flavour-card {
+      grid-template-rows: minmax(230px, 1fr) auto;
+      border-radius: 32px;
+    }
+
+    .plaay-flavour-card::before {
+      border-radius: 31px;
+    }
+
+    .plaay-flavour-card__media {
+      padding: 18px 18px 0;
+    }
+
+    .plaay-flavour-card__img-wrap {
+      padding: 34px 26px 0;
+    }
+
+    .plaay-flavour-card__body {
+      padding: 18px 20px 22px;
+    }
   }
-  /* White card: dark btn */
-  .plaay-flavour-card[style*="#FFFFFF"] .plaay-flavour-card__btn,
-  .plaay-flavour-card[style*="#ffffff"] .plaay-flavour-card__btn {
-    color: #021D49;
-    background: rgba(2,29,73,0.08);
-    border: 1px solid rgba(2,29,73,0.2);
+
+  @media (max-width: 767px) {
+    .plaay-flavour-showcase {
+      padding: 54px 0;
+    }
+
+    .plaay-flavour-showcase__title {
+      max-width: none;
+    }
   }
+
   @media (max-width: 640px) {
-    .plaay-flavour-card__img-wrap { padding: 12px; }
-    .plaay-flavour-card__body { padding: 10px 12px 14px; }
-    .plaay-flavour-card__title { font-size: 0.75rem; }
-    .plaay-flavour-card__btn { font-size: 0.65rem; padding: 6px 10px; }
+    .plaay-flavour-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .plaay-flavour-card {
+      grid-template-columns: minmax(0, 130px) minmax(0, 1fr);
+      grid-template-rows: none;
+      align-items: stretch;
+      min-height: 220px;
+    }
+
+    .plaay-flavour-card__media {
+      padding: 14px 12px 14px 14px;
+      align-items: center;
+    }
+
+    .plaay-flavour-card__kicker {
+      top: 14px;
+      left: 14px;
+    }
+
+    .plaay-flavour-card__img-wrap {
+      aspect-ratio: auto;
+      min-height: 100%;
+      padding: 26px 6px 12px;
+    }
+
+    .plaay-flavour-card__body {
+      padding: 16px 16px 16px 6px;
+      gap: 14px;
+      align-content: center;
+    }
+
+    .plaay-flavour-card__title {
+      font-size: 1.05rem;
+    }
+
+    .plaay-flavour-card__copy {
+      font-size: 0.84rem;
+    }
+
+    .plaay-flavour-card__cta {
+      min-height: 42px;
+      padding: 11px 14px 11px 16px;
+      font-size: 0.72rem;
+    }
   }
 </style>
 
@@ -154,9 +511,21 @@
   "settings": [
     {
       "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Shop by mood"
+    },
+    {
+      "type": "text",
       "id": "title",
       "label": "Section heading",
       "default": "Shop by Category"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro copy",
+      "default": "<p>Lead with your strongest collections and make it easier for shoppers to jump straight into the category that fits their craving.</p>"
     },
     {
       "type": "color",
@@ -174,6 +543,12 @@
         { "value": "white", "label": "White" }
       ],
       "default": "dark_blue"
+    },
+    {
+      "type": "text",
+      "id": "default_cta",
+      "label": "Default CTA label",
+      "default": "Shop now"
     }
   ],
   "blocks": [
@@ -182,19 +557,40 @@
       "name": "Category card",
       "settings": [
         {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
           "type": "url",
           "id": "product_link",
-          "label": "Link"
+          "label": "Fallback link"
         },
         {
           "type": "image_picker",
           "id": "product_image",
-          "label": "Image"
+          "label": "Override image"
         },
         {
           "type": "text",
           "id": "product_heading",
-          "label": "Heading"
+          "label": "Override title"
+        },
+        {
+          "type": "text",
+          "id": "card_kicker",
+          "label": "Kicker",
+          "default": "Best seller"
+        },
+        {
+          "type": "textarea",
+          "id": "card_copy",
+          "label": "Supporting copy"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "CTA label"
         },
         {
           "type": "color",
