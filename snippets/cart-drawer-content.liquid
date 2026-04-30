@@ -10,6 +10,9 @@
       </div>
       {%- render 'cart-recommendations' -%}
     {% else %}
+      <div class="hidden" aria-hidden="true">
+        {%- render 'cart-drawer-items' -%}
+      </div>
       {%- render 'plaay-cart-empty-state' -%}
     {% endif %}
   </div>
