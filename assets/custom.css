@@ -666,6 +666,69 @@ cart-drawer {
   background: rgba(192, 57, 43, 0.07);
 }
 
+@media (max-width: 767px) {
+  .plaay-cart-item {
+    gap: 12px;
+    padding: 16px 14px;
+  }
+
+  .plaay-cart-item__img-wrap {
+    width: 84px;
+    height: 84px;
+  }
+
+  .plaay-cart-item__title {
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  .plaay-cart-item__actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 10px 12px;
+  }
+
+  .plaay-cart-item__qty {
+    min-width: 0;
+  }
+
+  .plaay-cart-item__qty quantity-adjuster > div {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .plaay-cart-item__price-remove {
+    min-width: 84px;
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .plaay-cart-item__price {
+    min-width: 84px;
+    text-align: right;
+  }
+
+  .plaay-cart-item__price span {
+    white-space: nowrap;
+  }
+
+  .plaay-cart-item__price .line-through {
+    font-size: 12px;
+  }
+
+  .plaay-cart-item__price span:last-child {
+    font-size: 18px;
+    line-height: 1.05;
+  }
+
+  .plaay-cart-item__remove {
+    padding: 2px;
+  }
+}
+
 /* ── Branded Empty State ── */
 .plaay-cart-empty {
   display: flex;
