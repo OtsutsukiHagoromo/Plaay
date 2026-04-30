@@ -34,22 +34,20 @@
 {% enddoc %}
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 {% assign ai_gen_outer_radius = 0 %}
-{% assign ai_gen_inner_radius = 0 %}
 {% if block.settings.enable_rounded_corners %}
   {% assign ai_gen_outer_radius = block.settings.corner_radius | plus: 16 %}
-  {% assign ai_gen_inner_radius = block.settings.corner_radius %}
 {% endif %}
 
 {% style %}
   .ai-collection-cards-{{ ai_gen_id }} {
     display: block;
     width: 100%;
-    padding: 34px 16px;
+    padding: 28px 16px;
   }
 
   .ai-collection-cards__container-{{ ai_gen_id }} {
     position: relative;
-    max-width: 1280px;
+    max-width: 1200px;
     margin: 0 auto;
   }
 
@@ -83,20 +81,17 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    padding: 16px;
     text-decoration: none;
     color: inherit;
-    background:
-      radial-gradient(circle at top left, rgba(249, 198, 29, 0.18), transparent 34%),
-      linear-gradient(155deg, #fff9ec 0%, #ffffff 52%, #eef3ff 100%);
-    border: 1px solid rgba(2, 29, 73, 0.1);
+    background: #ffffff;
+    border: 1px solid rgba(2, 29, 73, 0.08);
     border-radius: {{ ai_gen_outer_radius }}px;
-    box-shadow: 0 20px 50px rgba(2, 29, 73, 0.08);
+    box-shadow: 0 10px 28px rgba(2, 29, 73, 0.08);
     overflow: hidden;
     transition:
-      transform 0.35s ease,
-      box-shadow 0.35s ease,
-      border-color 0.35s ease;
+      transform 0.28s ease,
+      box-shadow 0.28s ease,
+      border-color 0.28s ease;
   }
 
   .carousel-active .ai-collection-cards__card-{{ ai_gen_id }} {
@@ -105,9 +100,9 @@
   }
 
   .ai-collection-cards__card-{{ ai_gen_id }}:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 28px 60px rgba(2, 29, 73, 0.14);
-    border-color: rgba(2, 29, 73, 0.18);
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(2, 29, 73, 0.12);
+    border-color: rgba(2, 29, 73, 0.14);
   }
 
   .ai-collection-cards__image-shell-{{ ai_gen_id }} {
@@ -127,24 +122,14 @@
         padding-bottom: 56.25%;
     {% endcase %}
     overflow: hidden;
-    border-radius: {{ ai_gen_inner_radius }}px;
     background: #f3f5f8;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
   }
 
   .ai-collection-cards__image-wrapper-{{ ai_gen_id }}::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(2, 29, 73, 0.04) 0%, rgba(2, 29, 73, 0.34) 100%);
-    pointer-events: none;
-  }
-
-  .ai-collection-cards__shine-{{ ai_gen_id }} {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), transparent 42%);
+    background: linear-gradient(180deg, rgba(2, 29, 73, 0) 45%, rgba(2, 29, 73, 0.12) 100%);
     pointer-events: none;
   }
 
@@ -195,32 +180,13 @@
   .ai-collection-cards__content-{{ ai_gen_id }} {
     position: relative;
     z-index: 2;
-    margin: -28px 14px 0;
-    min-height: 168px;
-    padding: 18px 20px 20px;
-    padding-right: 72px;
+    min-height: 0;
+    padding: 16px 16px 18px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
     align-items: {% if block.settings.content_alignment == 'left' %}flex-start{% elsif block.settings.content_alignment == 'right' %}flex-end{% else %}center{% endif %};
     text-align: {{ block.settings.content_alignment }};
-    background: rgba(255, 255, 255, 0.96);
-    border: 1px solid rgba(2, 29, 73, 0.08);
-    border-radius: {{ ai_gen_inner_radius }}px;
-    box-shadow: 0 14px 34px rgba(2, 29, 73, 0.08);
-    backdrop-filter: blur(12px);
-  }
-
-  .ai-collection-cards__eyebrow-{{ ai_gen_id }} {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgba(2, 29, 73, 0.65);
   }
 
   .ai-collection-cards__count-{{ ai_gen_id }} {
@@ -228,11 +194,11 @@
     align-items: center;
     justify-content: center;
     margin: 0;
-    padding: 6px 10px;
+    padding: 5px 10px;
     border-radius: 999px;
     background: rgba(249, 198, 29, 0.2);
     color: #021d49;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     line-height: 1;
   }
@@ -240,47 +206,23 @@
   .ai-collection-cards__title-{{ ai_gen_id }} {
     display: block;
     margin: 0;
-    max-width: 18ch;
+    max-width: none;
     color: #021d49;
     font-size: {{ block.settings.title_size }}px;
     font-weight: 700;
-    line-height: 1.1;
+    line-height: 1.15;
   }
 
   .ai-collection-cards__description-{{ ai_gen_id }} {
     margin: 0;
-    max-width: 30ch;
+    max-width: none;
     color: rgba(2, 29, 73, 0.72);
     font-size: 14px;
-    line-height: 1.5;
-  }
-
-  .ai-collection-cards__arrow-{{ ai_gen_id }} {
-    position: absolute;
-    top: 18px;
-    right: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    border-radius: 999px;
-    background: {{ block.settings.button_bg_color }};
-    color: {{ block.settings.button_text_color }};
-    box-shadow: 0 12px 24px rgba(2, 29, 73, 0.18);
-    transition:
-      transform 0.3s ease,
-      background-color 0.3s ease;
-  }
-
-  .ai-collection-cards__arrow-{{ ai_gen_id }} svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .ai-collection-cards__card-{{ ai_gen_id }}:hover .ai-collection-cards__arrow-{{ ai_gen_id }} {
-    transform: translate(4px, -4px);
-    background: {{ block.settings.button_hover_color }};
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .ai-collection-cards__button-{{ ai_gen_id }} {
@@ -297,6 +239,7 @@
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;
+    margin-top: auto;
   }
 
   {% if block.settings.button_style == 'filled' %}
@@ -380,13 +323,13 @@
 
   @media screen and (max-width: 749px) {
     .ai-collection-cards-{{ ai_gen_id }} {
-      padding: 22px 12px;
+      padding: 18px 12px;
     }
 
     .ai-collection-cards__carousel-{{ ai_gen_id }} {
       {% if block.settings.mobile_layout == 'grid' %}
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: {{ block.settings.card_spacing | times: 0.75 }}px;
+        gap: {{ block.settings.card_spacing | times: 0.55 }}px;
       {% else %}
         display: flex;
         overflow-x: auto;
@@ -410,35 +353,22 @@
       }
     {% endif %}
 
-    .ai-collection-cards__card-{{ ai_gen_id }} {
-      padding: 12px;
-    }
-
     .ai-collection-cards__nav-{{ ai_gen_id }} {
       display: none;
     }
 
     .ai-collection-cards__content-{{ ai_gen_id }} {
-      margin: -22px 10px 0;
-      min-height: 148px;
-      padding: 16px 16px 18px;
-      padding-right: 60px;
-      gap: 8px;
+      padding: 14px 12px 16px;
+      gap: 6px;
     }
 
     .ai-collection-cards__title-{{ ai_gen_id }} {
-      font-size: {{ block.settings.title_size | times: 0.85 }}px;
+      font-size: {{ block.settings.title_size | times: 0.82 }}px;
     }
 
     .ai-collection-cards__description-{{ ai_gen_id }} {
-      font-size: 13px;
-    }
-
-    .ai-collection-cards__arrow-{{ ai_gen_id }} {
-      top: 16px;
-      right: 16px;
-      width: 38px;
-      height: 38px;
+      font-size: 12px;
+      -webkit-line-clamp: 2;
     }
   }
 {% endstyle %}
@@ -520,19 +450,9 @@
                     <div class="ai-collection-cards__overlay-{{ ai_gen_id }}"></div>
                   {% endif %}
                 </div>
-
-                <div class="ai-collection-cards__shine-{{ ai_gen_id }}"></div>
               </div>
 
               <div class="ai-collection-cards__content-{{ ai_gen_id }}">
-                <span class="ai-collection-cards__arrow-{{ ai_gen_id }}" aria-hidden="true">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 17L17 7"></path>
-                    <path d="M8 7h9v9"></path>
-                  </svg>
-                </span>
-
-                <span class="ai-collection-cards__eyebrow-{{ ai_gen_id }}">Collection</span>
                 {% if card_product_count > 0 %}
                   <span class="ai-collection-cards__count-{{ ai_gen_id }}">
                     {{ card_product_count }}
