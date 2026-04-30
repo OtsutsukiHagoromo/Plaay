@@ -7,6 +7,18 @@
 
   assign slides = section.blocks | where: 'type', 'slide'
   assign slides_size = slides | size
+  assign full_image_slides = 0
+
+  for block in slides
+    if block.settings.img != blank
+      assign full_image_slides = full_image_slides | plus: 1
+    endif
+  endfor
+
+  assign all_slides_are_full_images = false
+  if slides_size > 0 and full_image_slides == slides_size
+    assign all_slides_are_full_images = true
+  endif
 %}
 
 {% style %}
@@ -83,6 +95,22 @@
           padding-left: 1rem;
           padding-right: 1rem;
         }
+
+        {% if all_slides_are_full_images %}
+          #two-sections-overlay-{{ section.id }},
+          #two-sections-overlay-{{ section.id }} .glide__track,
+          #two-sections-overlay-{{ section.id }} .glide__slides,
+          #two-sections-overlay-{{ section.id }} .glide__slide,
+          #two-sections-overlay-{{ section.id }} .main-hero-full-img,
+          #two-sections-overlay-{{ section.id }} .main-hero-full-img img {
+            height: auto;
+          }
+
+          #two-sections-overlay-{{ section.id }} .main-hero-full-img img {
+            object-fit: contain;
+            object-position: top center;
+          }
+        {% endif %}
       }
 {% endstyle %}
 
@@ -133,7 +161,7 @@
           assign section_two_image_desktop = block.settings.section_two_image_desktop
         %}
 
-        <li id="slide-{{ block.id }}" class="relative flex h-full {% if slides_size > 1 %} glide__slide {% endif %}">
+        <li id="slide-{{ block.id }}" class="relative flex {% if block.settings.img == blank %}h-full{% endif %} {% if slides_size > 1 %} glide__slide {% endif %}">
           {% if block.settings.img != blank %}
             <div style="width: 100%" class="main-hero-full-img">
               <img
