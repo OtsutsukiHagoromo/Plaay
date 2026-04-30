@@ -29,8 +29,10 @@
     assign use_collection_products = true
   endif
 
-  if use_collection_products and (see_all_link == blank or see_all_link == '/')
-    assign see_all_link = featured_collection.url
+  if use_collection_products
+    if see_all_link == blank or see_all_link == '/'
+      assign see_all_link = featured_collection.url
+    endif
   endif
 %}
 
