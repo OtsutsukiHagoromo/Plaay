@@ -13,6 +13,9 @@
   assign see_all_link_text = section.settings.see_all_link_text
   assign see_all_link = section.settings.see_all_link
   assign products = section.blocks | where: 'type', 'product'
+  assign product_source = section.settings.product_source
+  assign featured_collection = section.settings.featured_collection
+  assign collection_product_limit = section.settings.collection_product_limit
   assign extra_bottom_padding = section.settings.extra_bottom_padding 
   assign extra_top_padding = section.settings.extra_top_padding
   assign hide_arrows_desktop = section.settings.hide_arrows_desktop
@@ -20,6 +23,15 @@
   assign hide_bullets = section.settings.hide_bullets
 
   assign products_featured_in_this_article = article.metafields.arena.product_featured_in_this_article
+  assign use_collection_products = false
+
+  if article == blank and product_source == 'collection' and featured_collection != blank
+    assign use_collection_products = true
+  endif
+
+  if use_collection_products and (see_all_link == blank or see_all_link == '/')
+    assign see_all_link = featured_collection.url
+  endif
 %}
 
 <product-tile data-module="product-tile">
@@ -81,6 +93,12 @@
                   {% render 'product-tile', grey_background: true, product: all_products[featured_product] %}
                 </li>
               {% endfor %}
+            {% elsif use_collection_products %}
+              {% for product in featured_collection.products limit: collection_product_limit %}
+                <li class="glide__slide h-auto px-2" data-product-tile>
+                  {% render 'product-tile', grey_background: true, product: product, hide_atc: section.settings.hide_atc_on_tiles %}
+                </li>
+              {% endfor %}
             {% else %}
               {% for product_block in products %}
                 {% assign product = product_block.settings.product %}
@@ -106,6 +124,12 @@
                 <button class="glide__bullet h-4 w-4 bg-dark-blue opacity-50 rounded-full transition-all duration-200 {% unless forloop.first %} ml-3 {% endunless %}" data-glide-dir="={{ forloop.index0 }}"></button>
               {% endfor %}
             </div>
+          {% elsif use_collection_products and featured_collection.products_count > 1 %}
+            <div class="glide__bullets flex items-center justify-center my-5 | md:hidden" data-glide-el="controls[nav]">
+              {% for product in featured_collection.products limit: collection_product_limit %}
+                <button class="glide__bullet h-4 w-4 bg-dark-blue opacity-50 rounded-full transition-all duration-200 {% unless forloop.first %} ml-3 {% endunless %}" data-glide-dir="={{ forloop.index0 }}"></button>
+              {% endfor %}
+            </div>
           {% elsif products.size > 1 %}
             <div class="glide__bullets flex items-center justify-center my-5 | md:hidden" data-glide-el="controls[nav]">
               {% for product_block in products %}
@@ -118,6 +142,10 @@
         {% if products_featured_in_this_article != blank and products_featured_in_this_article.size > 0 %}
           {% for featured_product in products_featured_in_this_article %}
             {% render 'product-quick-add-popup', product: all_products[featured_product] %}
+          {% endfor %}
+        {% elsif use_collection_products %}
+          {% for product in featured_collection.products limit: collection_product_limit %}
+            {% render 'product-quick-add-popup', product: product %}
           {% endfor %}
         {% else %}
           {% for product_block in products %}
@@ -181,6 +209,36 @@
       "id": "background_color",
       "label": "Background color",
       "default": "#FFF"
+    },
+    {
+      "type": "select",
+      "id": "product_source",
+      "label": "Product source",
+      "options": [
+        {
+          "value": "manual",
+          "label": "Manual product list"
+        },
+        {
+          "value": "collection",
+          "label": "Collection"
+        }
+      ],
+      "default": "manual"
+    },
+    {
+      "type": "collection",
+      "id": "featured_collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "collection_product_limit",
+      "label": "Products to show from collection",
+      "default": 12,
+      "min": 2,
+      "max": 24,
+      "step": 1
     },
     {
       "type": "checkbox",
