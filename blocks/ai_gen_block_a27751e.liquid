@@ -33,16 +33,23 @@
     Spacing control, have option to remove shop now button
 {% enddoc %}
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+{% assign ai_gen_outer_radius = 0 %}
+{% assign ai_gen_inner_radius = 0 %}
+{% if block.settings.enable_rounded_corners %}
+  {% assign ai_gen_outer_radius = block.settings.corner_radius | plus: 16 %}
+  {% assign ai_gen_inner_radius = block.settings.corner_radius %}
+{% endif %}
 
 {% style %}
   .ai-collection-cards-{{ ai_gen_id }} {
     display: block;
     width: 100%;
-    padding: 24px 16px;
+    padding: 34px 16px;
   }
 
   .ai-collection-cards__container-{{ ai_gen_id }} {
-    max-width: 1200px;
+    position: relative;
+    max-width: 1280px;
     margin: 0 auto;
   }
 
@@ -52,17 +59,19 @@
 
   .ai-collection-cards__carousel-{{ ai_gen_id }} {
     display: grid;
-    grid-template-columns: repeat({{ block.settings.cards_per_row }}, 1fr);
+    grid-template-columns: repeat({{ block.settings.cards_per_row }}, minmax(0, 1fr));
     gap: {{ block.settings.card_spacing }}px;
-    overflow: hidden;
+    align-items: stretch;
   }
 
   .ai-collection-cards__carousel-{{ ai_gen_id }}.carousel-active {
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    padding-bottom: 6px;
   }
 
   .ai-collection-cards__carousel-{{ ai_gen_id }}.carousel-active::-webkit-scrollbar {
@@ -73,22 +82,37 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    min-width: 0;
+    padding: 16px;
     text-decoration: none;
     color: inherit;
-    transition: transform 0.3s ease;
-    {% if block.settings.enable_rounded_corners %}
-      border-radius: {{ block.settings.corner_radius }}px;
-      overflow: hidden;
-    {% endif %}
+    background:
+      radial-gradient(circle at top left, rgba(249, 198, 29, 0.18), transparent 34%),
+      linear-gradient(155deg, #fff9ec 0%, #ffffff 52%, #eef3ff 100%);
+    border: 1px solid rgba(2, 29, 73, 0.1);
+    border-radius: {{ ai_gen_outer_radius }}px;
+    box-shadow: 0 20px 50px rgba(2, 29, 73, 0.08);
+    overflow: hidden;
+    transition:
+      transform 0.35s ease,
+      box-shadow 0.35s ease,
+      border-color 0.35s ease;
   }
 
   .carousel-active .ai-collection-cards__card-{{ ai_gen_id }} {
     flex: 0 0 calc((100% - ({{ block.settings.cards_per_row | minus: 1 }} * {{ block.settings.card_spacing }}px)) / {{ block.settings.cards_per_row }});
-    margin-right: {{ block.settings.card_spacing }}px;
+    scroll-snap-align: start;
   }
 
   .ai-collection-cards__card-{{ ai_gen_id }}:hover {
-    transform: translateY(-3px);
+    transform: translateY(-8px);
+    box-shadow: 0 28px 60px rgba(2, 29, 73, 0.14);
+    border-color: rgba(2, 29, 73, 0.18);
+  }
+
+  .ai-collection-cards__image-shell-{{ ai_gen_id }} {
+    position: relative;
+    z-index: 1;
   }
 
   .ai-collection-cards__image-wrapper-{{ ai_gen_id }} {
@@ -103,9 +127,25 @@
         padding-bottom: 56.25%;
     {% endcase %}
     overflow: hidden;
-    {% if block.settings.enable_rounded_corners %}
-      border-radius: {{ block.settings.corner_radius }}px;
-    {% endif %}
+    border-radius: {{ ai_gen_inner_radius }}px;
+    background: #f3f5f8;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  }
+
+  .ai-collection-cards__image-wrapper-{{ ai_gen_id }}::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(2, 29, 73, 0.04) 0%, rgba(2, 29, 73, 0.34) 100%);
+    pointer-events: none;
+  }
+
+  .ai-collection-cards__shine-{{ ai_gen_id }} {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), transparent 42%);
+    pointer-events: none;
   }
 
   .ai-collection-cards__image-{{ ai_gen_id }} {
@@ -115,6 +155,11 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.55s ease;
+  }
+
+  .ai-collection-cards__card-{{ ai_gen_id }}:hover .ai-collection-cards__image-{{ ai_gen_id }} {
+    transform: scale(1.06);
   }
 
   .ai-collection-cards__placeholder-{{ ai_gen_id }} {
@@ -144,43 +189,114 @@
     background: {{ block.settings.overlay_color }};
     opacity: {{ block.settings.overlay_opacity }};
     pointer-events: none;
+    z-index: 3;
   }
 
   .ai-collection-cards__content-{{ ai_gen_id }} {
-    padding: 14px 0;
+    position: relative;
+    z-index: 2;
+    margin: -28px 14px 0;
+    min-height: 168px;
+    padding: 18px 20px 20px;
+    padding-right: 72px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     align-items: {% if block.settings.content_alignment == 'left' %}flex-start{% elsif block.settings.content_alignment == 'right' %}flex-end{% else %}center{% endif %};
     text-align: {{ block.settings.content_alignment }};
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(2, 29, 73, 0.08);
+    border-radius: {{ ai_gen_inner_radius }}px;
+    box-shadow: 0 14px 34px rgba(2, 29, 73, 0.08);
+    backdrop-filter: blur(12px);
   }
 
-  /* Title uses the same filled-button design: dark bg, light text */
-  .ai-collection-cards__title-{{ ai_gen_id }} {
+  .ai-collection-cards__eyebrow-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(2, 29, 73, 0.65);
+  }
+
+  .ai-collection-cards__count-{{ ai_gen_id }} {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: {{ block.settings.title_size }}px;
-    font-weight: 600;
     margin: 0;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(249, 198, 29, 0.2);
+    color: #021d49;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .ai-collection-cards__title-{{ ai_gen_id }} {
+    display: block;
+    margin: 0;
+    max-width: 18ch;
+    color: #021d49;
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+
+  .ai-collection-cards__description-{{ ai_gen_id }} {
+    margin: 0;
+    max-width: 30ch;
+    color: rgba(2, 29, 73, 0.72);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .ai-collection-cards__arrow-{{ ai_gen_id }} {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: {{ block.settings.button_bg_color }};
     color: {{ block.settings.button_text_color }};
-    padding: 10px 20px;
-    background-color: {{ block.settings.button_bg_color }};
-    border-radius: {{ block.settings.button_border_radius }}px;
-    line-height: 1.2;
+    box-shadow: 0 12px 24px rgba(2, 29, 73, 0.18);
+    transition:
+      transform 0.3s ease,
+      background-color 0.3s ease;
+  }
+
+  .ai-collection-cards__arrow-{{ ai_gen_id }} svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .ai-collection-cards__card-{{ ai_gen_id }}:hover .ai-collection-cards__arrow-{{ ai_gen_id }} {
+    transform: translate(4px, -4px);
+    background: {{ block.settings.button_hover_color }};
   }
 
   .ai-collection-cards__button-{{ ai_gen_id }} {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 10px 20px;
-    font-size: 13px;
+    width: fit-content;
+    padding: 11px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     text-decoration: none;
     transition: all 0.3s ease;
     border: none;
     cursor: pointer;
-    width: fit-content;
   }
 
   {% if block.settings.button_style == 'filled' %}
@@ -205,9 +321,11 @@
     }
   {% else %}
     .ai-collection-cards__button-{{ ai_gen_id }} {
+      padding: 0;
       background-color: transparent;
       color: {{ block.settings.button_bg_color }};
       text-decoration: underline;
+      text-underline-offset: 0.18em;
     }
     .ai-collection-cards__button-{{ ai_gen_id }}:hover {
       color: {{ block.settings.button_hover_color }};
@@ -216,21 +334,21 @@
 
   .ai-collection-cards__nav-{{ ai_gen_id }} {
     position: absolute;
-    top: 40%;
+    top: calc(50% - 24px);
     transform: translateY(-50%);
-    background-color: {{ block.settings.arrow_bg_color }};
-    color: {{ block.settings.arrow_color }};
-    border: none;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: rgba(255, 255, 255, 0.94);
+    color: #021d49;
+    border: 1px solid rgba(2, 29, 73, 0.08);
+    border-radius: 50%;
     cursor: pointer;
     z-index: 2;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 14px 30px rgba(2, 29, 73, 0.12);
   }
 
   .ai-collection-cards__nav-{{ ai_gen_id }}:hover {
@@ -248,11 +366,11 @@
   }
 
   .ai-collection-cards__nav--prev-{{ ai_gen_id }} {
-    left: -20px;
+    left: -24px;
   }
 
   .ai-collection-cards__nav--next-{{ ai_gen_id }} {
-    right: -20px;
+    right: -24px;
   }
 
   .ai-collection-cards__nav-{{ ai_gen_id }} svg {
@@ -262,20 +380,22 @@
 
   @media screen and (max-width: 749px) {
     .ai-collection-cards-{{ ai_gen_id }} {
-      padding: 16px 12px;
+      padding: 22px 12px;
     }
 
     .ai-collection-cards__carousel-{{ ai_gen_id }} {
       {% if block.settings.mobile_layout == 'grid' %}
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: {{ block.settings.card_spacing | times: 0.75 }}px;
       {% else %}
         display: flex;
         overflow-x: auto;
         scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
         scrollbar-width: none;
         -ms-overflow-style: none;
         gap: {{ block.settings.card_spacing | times: 0.75 }}px;
+        padding-bottom: 6px;
       {% endif %}
     }
 
@@ -285,22 +405,40 @@
       }
 
       .ai-collection-cards__card-{{ ai_gen_id }} {
-        flex: 0 0 75%;
+        flex: 0 0 min(82vw, 320px);
+        scroll-snap-align: start;
       }
     {% endif %}
+
+    .ai-collection-cards__card-{{ ai_gen_id }} {
+      padding: 12px;
+    }
 
     .ai-collection-cards__nav-{{ ai_gen_id }} {
       display: none;
     }
 
-    .ai-collection-cards__title-{{ ai_gen_id }} {
-      font-size: {{ block.settings.title_size | times: 0.85 }}px;
-      padding: 6px 14px;
+    .ai-collection-cards__content-{{ ai_gen_id }} {
+      margin: -22px 10px 0;
+      min-height: 148px;
+      padding: 16px 16px 18px;
+      padding-right: 60px;
+      gap: 8px;
     }
 
-    .ai-collection-cards__content-{{ ai_gen_id }} {
-      padding: 10px 0;
-      gap: 8px;
+    .ai-collection-cards__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.85 }}px;
+    }
+
+    .ai-collection-cards__description-{{ ai_gen_id }} {
+      font-size: 13px;
+    }
+
+    .ai-collection-cards__arrow-{{ ai_gen_id }} {
+      top: 16px;
+      right: 16px;
+      width: 38px;
+      height: 38px;
     }
   }
 {% endstyle %}
@@ -333,9 +471,13 @@
           {% assign card_button = block.settings[card_button_key] %}
 
           {% if card_enabled %}
+            {% assign card_description = '' %}
+            {% assign card_product_count = 0 %}
             {% if card_collection %}
               {% assign card_url = card_collection.url %}
               {% assign default_title = card_collection.title %}
+              {% assign card_description = card_collection.description | strip_html | strip | truncatewords: 18 %}
+              {% assign card_product_count = card_collection.all_products_count %}
             {% else %}
               {% assign card_url = '#' %}
               {% assign default_title = 'Collection title' %}
@@ -347,40 +489,67 @@
               {% assign display_title = default_title %}
             {% endif %}
 
-            <a href="{{ card_url }}" class="ai-collection-cards__card-{{ ai_gen_id }}">
-              <div class="ai-collection-cards__image-wrapper-{{ ai_gen_id }}">
-                {% if card_image %}
-                  <img
-                    src="{{ card_image | image_url: width: 800 }}"
-                    alt="{{ card_image.alt | escape }}"
-                    class="ai-collection-cards__image-{{ ai_gen_id }}"
-                    loading="lazy"
-                    width="800"
-                    height="800"
-                  >
-                {% elsif card_collection and card_collection.featured_image %}
-                  <img
-                    src="{{ card_collection.featured_image | image_url: width: 800 }}"
-                    alt="{{ card_collection.featured_image.alt | escape }}"
-                    class="ai-collection-cards__image-{{ ai_gen_id }}"
-                    loading="lazy"
-                    width="800"
-                    height="800"
-                  >
-                {% else %}
-                  <div class="ai-collection-cards__placeholder-{{ ai_gen_id }}">
-                    {{ 'collection-1' | placeholder_svg_tag }}
-                  </div>
-                {% endif %}
+            <a href="{{ card_url }}" class="ai-collection-cards__card-{{ ai_gen_id }}" aria-label="{{ display_title | escape }}">
+              <div class="ai-collection-cards__image-shell-{{ ai_gen_id }}">
+                <div class="ai-collection-cards__image-wrapper-{{ ai_gen_id }}">
+                  {% if card_image %}
+                    <img
+                      src="{{ card_image | image_url: width: 900 }}"
+                      alt="{{ card_image.alt | escape }}"
+                      class="ai-collection-cards__image-{{ ai_gen_id }}"
+                      loading="lazy"
+                      width="900"
+                      height="900"
+                    >
+                  {% elsif card_collection and card_collection.featured_image %}
+                    <img
+                      src="{{ card_collection.featured_image | image_url: width: 900 }}"
+                      alt="{{ card_collection.featured_image.alt | escape }}"
+                      class="ai-collection-cards__image-{{ ai_gen_id }}"
+                      loading="lazy"
+                      width="900"
+                      height="900"
+                    >
+                  {% else %}
+                    <div class="ai-collection-cards__placeholder-{{ ai_gen_id }}">
+                      {{ 'collection-1' | placeholder_svg_tag }}
+                    </div>
+                  {% endif %}
 
-                {% if block.settings.enable_overlay %}
-                  <div class="ai-collection-cards__overlay-{{ ai_gen_id }}"></div>
-                {% endif %}
+                  {% if block.settings.enable_overlay %}
+                    <div class="ai-collection-cards__overlay-{{ ai_gen_id }}"></div>
+                  {% endif %}
+                </div>
+
+                <div class="ai-collection-cards__shine-{{ ai_gen_id }}"></div>
               </div>
 
               <div class="ai-collection-cards__content-{{ ai_gen_id }}">
+                <span class="ai-collection-cards__arrow-{{ ai_gen_id }}" aria-hidden="true">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 17L17 7"></path>
+                    <path d="M8 7h9v9"></path>
+                  </svg>
+                </span>
+
+                <span class="ai-collection-cards__eyebrow-{{ ai_gen_id }}">Collection</span>
+                {% if card_product_count > 0 %}
+                  <span class="ai-collection-cards__count-{{ ai_gen_id }}">
+                    {{ card_product_count }}
+                    {% if card_product_count == 1 %}
+                      product
+                    {% else %}
+                      products
+                    {% endif %}
+                  </span>
+                {% endif %}
+
                 <h3 class="ai-collection-cards__title-{{ ai_gen_id }}">{{ display_title }}</h3>
-                
+
+                {% if card_description != blank %}
+                  <p class="ai-collection-cards__description-{{ ai_gen_id }}">{{ card_description }}</p>
+                {% endif %}
+
                 {% if block.settings.show_button %}
                   {% if card_button != blank %}
                     <span class="ai-collection-cards__button-{{ ai_gen_id }}">
@@ -413,66 +582,109 @@
 
 <script>
 (function() {
-  class CollectionCards{{ ai_gen_id }} extends HTMLElement {
-    constructor() {
-      super();
-    }
+  const tagName = 'collection-cards-{{ ai_gen_id }}';
 
+  if (customElements.get(tagName)) {
+    return;
+  }
+
+  class CollectionCards{{ ai_gen_id }} extends HTMLElement {
     connectedCallback() {
       this.carousel = this.querySelector('[data-carousel]');
       this.prevButton = this.querySelector('[data-nav="prev"]');
       this.nextButton = this.querySelector('[data-nav="next"]');
       this.cards = this.querySelectorAll('.ai-collection-cards__card-{{ ai_gen_id }}');
-      
-      if (window.innerWidth >= 750) {
-        this.initDesktopCarousel();
-      }
 
-      window.addEventListener('resize', () => {
-        if (window.innerWidth >= 750) {
-          this.initDesktopCarousel();
-        } else {
-          this.carousel.classList.remove('carousel-active');
-        }
-      });
-    }
-
-    initDesktopCarousel() {
-      if (this.cards.length <= {{ block.settings.cards_per_row }}) {
-        this.prevButton.style.display = 'none';
-        this.nextButton.style.display = 'none';
+      if (!this.carousel) {
         return;
       }
 
-      this.carousel.classList.add('carousel-active');
-      this.updateButtons();
+      this.handleResize = this.handleResize.bind(this);
+      this.handleScroll = this.updateButtons.bind(this);
+      this.handlePrevClick = () => this.scroll(-1);
+      this.handleNextClick = () => this.scroll(1);
 
-      this.prevButton.addEventListener('click', () => this.scroll('prev'));
-      this.nextButton.addEventListener('click', () => this.scroll('next'));
-      this.carousel.addEventListener('scroll', () => this.updateButtons());
+      if (this.prevButton) {
+        this.prevButton.addEventListener('click', this.handlePrevClick);
+      }
+
+      if (this.nextButton) {
+        this.nextButton.addEventListener('click', this.handleNextClick);
+      }
+
+      this.carousel.addEventListener('scroll', this.handleScroll, { passive: true });
+      window.addEventListener('resize', this.handleResize);
+
+      this.handleResize();
     }
 
-    scroll(direction) {
-      const cardWidth = this.cards[0].offsetWidth;
-      const gap = {{ block.settings.card_spacing }};
-      const scrollAmount = (cardWidth + gap) * {{ block.settings.cards_per_row }};
+    disconnectedCallback() {
+      window.removeEventListener('resize', this.handleResize);
 
-      if (direction === 'prev') {
-        this.carousel.scrollLeft -= scrollAmount;
-      } else {
-        this.carousel.scrollLeft += scrollAmount;
+      if (this.carousel) {
+        this.carousel.removeEventListener('scroll', this.handleScroll);
+      }
+
+      if (this.prevButton) {
+        this.prevButton.removeEventListener('click', this.handlePrevClick);
+      }
+
+      if (this.nextButton) {
+        this.nextButton.removeEventListener('click', this.handleNextClick);
       }
     }
 
+    handleResize() {
+      this.cards = this.querySelectorAll('.ai-collection-cards__card-{{ ai_gen_id }}');
+      const shouldUseDesktopCarousel = window.innerWidth >= 750 && this.cards.length > {{ block.settings.cards_per_row }};
+
+      this.carousel.classList.toggle('carousel-active', shouldUseDesktopCarousel);
+
+      if (!shouldUseDesktopCarousel) {
+        this.carousel.scrollLeft = 0;
+      }
+
+      const buttonDisplay = shouldUseDesktopCarousel ? 'flex' : 'none';
+
+      if (this.prevButton) {
+        this.prevButton.style.display = buttonDisplay;
+      }
+
+      if (this.nextButton) {
+        this.nextButton.style.display = buttonDisplay;
+      }
+
+      this.updateButtons();
+    }
+
+    scroll(direction) {
+      const scrollAmount = this.carousel.clientWidth * 0.92;
+
+      this.carousel.scrollBy({
+        left: scrollAmount * direction,
+        behavior: 'smooth'
+      });
+    }
+
     updateButtons() {
+      if (!this.carousel || !this.prevButton || !this.nextButton) {
+        return;
+      }
+
+      if (!this.carousel.classList.contains('carousel-active')) {
+        this.prevButton.disabled = true;
+        this.nextButton.disabled = true;
+        return;
+      }
+
       const maxScroll = this.carousel.scrollWidth - this.carousel.clientWidth;
-      
+
       this.prevButton.disabled = this.carousel.scrollLeft <= 0;
       this.nextButton.disabled = this.carousel.scrollLeft >= maxScroll - 1;
     }
   }
 
-  customElements.define('collection-cards-{{ ai_gen_id }}', CollectionCards{{ ai_gen_id }});
+  customElements.define(tagName, CollectionCards{{ ai_gen_id }});
 })();
 </script>
 
