@@ -33,6 +33,7 @@
         height: 100%;
       }
 
+      #two-sections-overlay-{{ section.id }} .main-hero-full-img picture,
       #two-sections-overlay-{{ section.id }} .main-hero-full-img img,
       #two-sections-overlay-{{ section.id }} .two-sections-overlay__media-{{ section.id }} img,
       #two-sections-overlay-{{ section.id }} .two-sections-overlay__media-{{ section.id }} video {
@@ -41,10 +42,6 @@
         height: 100%;
         object-fit: cover;
         object-position: center center;
-      }
-
-      #two-sections-overlay-{{ section.id }} .mobile-img {
-        display: none;
       }
 
       #two-sections-overlay-{{ section.id }} .two-sections-overlay__media-{{ section.id }} {
@@ -83,14 +80,6 @@
       }
 
       @media only screen and (max-width: 767px) {
-        #two-sections-overlay-{{ section.id }} .desk-img {
-          display: none;
-        }
-
-        #two-sections-overlay-{{ section.id }} .mobile-img {
-          display: block;
-        }
-
         #two-sections-overlay-{{ section.id }} .textual_content {
           padding-left: 1rem;
           padding-right: 1rem;
@@ -102,6 +91,7 @@
           #two-sections-overlay-{{ section.id }} .glide__slides,
           #two-sections-overlay-{{ section.id }} .glide__slide,
           #two-sections-overlay-{{ section.id }} .main-hero-full-img,
+          #two-sections-overlay-{{ section.id }} .main-hero-full-img picture,
           #two-sections-overlay-{{ section.id }} .main-hero-full-img img {
             height: auto;
           }
@@ -159,23 +149,25 @@
           assign section_two_video = block.settings.section_two_video
           assign section_two_image_mobile = block.settings.section_two_image_mobile
           assign section_two_image_desktop = block.settings.section_two_image_desktop
+          assign full_image_mobile = block.settings['m-img']
         %}
 
         <li id="slide-{{ block.id }}" class="relative flex {% if block.settings.img == blank %}h-full{% endif %} {% if slides_size > 1 %} glide__slide {% endif %}">
           {% if block.settings.img != blank %}
             <div style="width: 100%" class="main-hero-full-img">
-              <img
-                class="desk-img"
-                style="width: 100%; height: 100%;"
-                src="{{ block.settings.img | img_url : 'master' }}"
-                alt="{{ block.settings.title | escape }}"
-              >
-              <img
-                class="mobile-img"
-                style="width: 100%; height: 100%;"
-                src="{% if block.settings['m-img'] != blank %}{{ block.settings['m-img'] | img_url : 'master' }}{% else %}{{ block.settings.img | img_url : 'master' }}{% endif %}"
-                alt="{{ block.settings.title_mobile | default: block.settings.title | escape }}"
-              >
+              <picture>
+                {% if full_image_mobile != blank %}
+                  <source
+                    media="(max-width: 767px)"
+                    srcset="{{ full_image_mobile | img_url : 'master' }}"
+                  >
+                {% endif %}
+                <img
+                  style="width: 100%; height: 100%;"
+                  src="{{ block.settings.img | img_url : 'master' }}"
+                  alt="{{ block.settings.title_mobile | default: block.settings.title | escape }}"
+                >
+              </picture>
             </div>
           {% endif %}
           {% if block.settings.img == blank %}
