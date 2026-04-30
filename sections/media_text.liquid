@@ -1,0 +1,211 @@
+{% liquid 
+  assign slide_blocks = section.blocks | where: 'type', 'slide'
+  assign slide_block_size = slide_blocks | size
+  assign image_height_mobile = section.settings.image_height_mobile
+  assign image_height_tablet = section.settings.image_height_tablet
+  assign image_height_desktop = section.settings.image_height_desktop
+  assign autoplay_speed = section.settings.autoplay_speed
+%}
+
+{% style %}
+  @media only screen and (max-width: 768px) {
+    #product_upsell-{{ section.id }} .main_image {
+      height: {{ image_height_mobile | append: 'px' }}
+      ;
+    }
+  }
+  @media only screen and (min-width: 768px) and(max-width: 1024px) {
+    #product_upsell-{{ section.id }} .upsell_content, #product_upsell-{{ section.id }} .main_image {
+      height: {{ image_height_tablet | append: 'px' }}
+      ;
+    }
+  }
+  @media only screen and (min-width: 1024px) {
+    #product_upsell-{{ section.id }} .upsell_content, #product_upsell-{{ section.id }} .main_image {
+      height: {{ image_height_desktop | append: 'px' }}
+      ;
+    }
+  }
+{% endstyle %}
+
+<product-upsell-media data-module="product-upsell-media">
+  <div id="product_upsell-{{ section.id }}" style="background-color: {{ background_color }};">
+    <div class="{% if slide_block_size > 1 %} glide upsell_media_glide {% endif %}" data-autoplay="{{ autoplay_speed }}">
+      <div {% if slide_block_size > 1 %}class="glide__track"data-glide-el="track"{% endif %}>
+        <ul class="{% if slide_block_size > 1 %} glide__slides {% endif %}">
+          {% for block in slide_blocks %}
+            {% liquid 
+              assign background_color = block.settings.background_color
+              assign reverse_content = block.settings.reverse_content 
+              assign image_desktop = block.settings.image_desktop 
+              assign image_mobile = block.settings.image_mobile 
+              assign upsell_image = block.settings.upsell_image 
+              assign upsell_heading = block.settings.upsell_heading 
+              assign upsell_product = block.settings.upsell_product
+              assign button_style = block.settings.button_style 
+            %}
+            <li class="{% if slide_block_size > 1 %} glide__slide {% endif %}">
+              <div class="inner_container grid grid-cols-1 | md:grid-cols-2">
+                {% comment %} upsell content {% endcomment %}
+                <div class="upsell_content w-full flex px-6 py-10 max-w-3xl items-center | md:mx-auto md:py-20 | lg:pr-20 | xl:pl-14 xl:pr-32 | 2xl:pr-52 {% if reverse_content %} md:order-1 {% else %} order-1 md:order-first {% endif %}">
+                  {% if upsell_image != blank %}
+                    {% render 'img', type: 'img', img: upsell_image, lazy: true, class: 'object-contain max-h-60 md:max-h-[330px]' %}
+                  {% endif %}
+                  <div class="flex flex-col justify-center pl-4 | md:pl-8 | lg:pl-14 ">
+                    {% if upsell_heading != blank %}
+                      <h2 class="text-dark-blue text-2xl leading-none font-walsheim-black uppercase | md:text-4xl">{{ upsell_heading }}</h2>
+                    {% endif %}
+                    {% if upsell_product != blank %}
+                      {% assign copy = 'shop ' | append: upsell_product.title %}
+                      {% render 'btn', href: upsell_product.url, style: button_style, width: 'auto', additional_class: 'text-xs w-auto max-w-[200px] text-center rounded-lg mt-8', no_translation: true, copy: copy %}
+                    {% endif %}
+                  </div>
+                </div>
+
+                {% comment %} images {% endcomment %}
+                <div class="main_image w-full h-full">
+                  {% if image_desktop != blank %}
+                    {% render 'img', type: 'img', img: image_desktop, lazy: true, class: 'object-cover h-full w-full hidden md:block' %}
+                  {% endif %}
+                  {% if image_mobile != blank %}
+                    {% render 'img', type: 'img', img: image_mobile, lazy: true, class: 'object-cover h-full w-full md:hidden' %}
+                  {% endif %}
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% if slide_block_size > 1 %}
+        <div class="glide__bullets flex items-center justify-center my-5" data-glide-el="controls[nav]">
+          {% for block in slide_blocks %}
+            <button class="glide__bullet h-4 w-4 bg-[#A8A8A8] opacity-50 rounded-full transition-all duration-200 {% unless forloop.first %} ml-3 {% endunless %}" data-glide-dir="={{ forloop.index0 }}"></button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</product-upsell-media>
+
+{% schema %}
+  {
+    "name": "Product upsell (media)",
+    "settings": [
+      {
+        "type": "range",
+        "id": "image_height_desktop",
+        "label": "Image height (desktop)",
+        "min": 100,
+        "max": 900,
+        "step": 20,
+        "default": 480
+      }, {
+        "type": "range",
+        "id": "image_height_tablet",
+        "label": "Image height (tablet)",
+        "min": 100,
+        "max": 900,
+        "step": 20,
+        "default": 400
+      }, {
+        "type": "range",
+        "id": "image_height_mobile",
+        "label": "Image height (mobile)",
+        "min": 100,
+        "max": 900,
+        "step": 20,
+        "default": 300
+      }, {
+        "type": "range",
+        "id": "autoplay_speed",
+        "label": "Autoplay speed",
+        "min": 0,
+        "max": 9900,
+        "default": 0,
+        "step": 100,
+        "info": "Set this to 0 to disable autoplay."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "slide",
+        "name": "Slide",
+        "settings": [
+          {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background color",
+            "default": "#F5F5F5"
+          },
+          {
+            "type": "checkbox",
+            "id": "reverse_content",
+            "label": "Reverse content?",
+            "default": false
+          },
+          {
+            "type": "header",
+            "content": "Images (right side)"
+          },
+          {
+            "type": "image_picker",
+            "label": "Image (desktop)",
+            "id": "image_desktop",
+            "info": "Image aspect ratio: 1200px width x 500px height"
+          }, {
+            "type": "image_picker",
+            "label": "Image (mobile)",
+            "id": "image_mobile",
+            "info": "Image aspect ratio: 800px width x  400px height"
+          }, {
+            "type": "header",
+            "content": "Upsell content (left side)"
+          }, {
+            "type": "image_picker",
+            "id": "upsell_image",
+            "label": "Upsell image"
+          }, {
+            "type": "text",
+            "id": "upsell_heading",
+            "label": "Upsell heading",
+            "default": "Feels like findind that ultimate shop to binge on"
+          }, {
+            "type": "product",
+            "id": "upsell_product",
+            "label": "Upsell product"
+          }, {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button style",
+            "options": [
+              {
+                "label": "Blue",
+                "value": "blue"
+              },
+              {
+                "label": "White",
+                "value": "white"
+              },
+              {
+                "label": "Yellow",
+                "value": "yellow"
+              },
+              {
+                "label": "White border",
+                "value": "white-border"
+              }, {
+                "label": "Blue border",
+                "value": "blue-border"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product upsell (media)"
+      }
+    ]
+  }
+{% endschema %}

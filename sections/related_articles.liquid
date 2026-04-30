@@ -1,0 +1,107 @@
+{% liquid 
+  assign related_articles = article.metafields.arena.related_article 
+
+  assign related_articles_title = section.settings.related_articles_title
+  assign related_articles_grid_desktop_large = section.settings.related_articles_grid_desktop_large 
+  assign related_articles_grid_desktop = section.settings.related_articles_grid_desktop
+  assign related_articles_grid_tablet = section.settings.related_articles_tablet 
+  assign related_articles_grid_mobile = section.settings.related_articles_grid_mobile
+  assign backup_articles = section.blocks | where: 'type', 'backup_article'
+%}
+
+{% if backup_articles.size > 0 or related_articles.size > 0 or related_articles != blank %}
+  <div class="container my-12 | md:my-16">
+    {% if related_articles_title != blank %}
+      <h2 class="text-center text-dark-blue text-2xl">{{ related_articles_title }}</h2>
+    {% endif %}
+    <div class="mt-12 grid grid-cols-{{ related_articles_grid_mobile }} | sm:grid-cols-{{ related_articles_grid_tablet }} | lg:grid-cols-{{ related_articles_grid_desktop }} | xl:grid-cols-{{ related_articles_grid_desktop_large }}">
+      {% if related_articles.size > 0 and related_articles != blank %}
+        {% for related_article in related_articles %}
+          <div class="m-4 | sm:m-5">
+            {% render 'article-item', article: articles[related_article] %}
+          </div>
+        {% endfor %}
+      {% else %}
+        {% if backup_articles.size > 0 %}
+          {% for backup_article in backup_articles %}
+            {% assign article_drop = backup_article.settings.article %}
+            <div class="m-4 | sm:m-5 | lg:m-5">
+              {% render 'article-item', article: article_drop %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Related articles",
+  "settings": [
+    {
+      "type": "text",
+      "id": "related_articles_title",
+      "label": "Related articles - title",
+      "default": "Related articles"
+    },
+    {
+      "type": "range",
+      "id": "related_articles_grid_mobile",
+      "label": "Related articles grid - mobile (639px and below)",
+      "min": 1,
+      "max": 4,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "related_articles_grid_tablet",
+      "label": "Related articles grid - tablet (640px - 1023px)",
+      "min": 1,
+      "max": 4,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "related_articles_grid_desktop",
+      "label": "Related articles grid - desktop (1024px - 1279px)",
+      "min": 1,
+      "max": 4,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "related_articles_grid_desktop_large",
+      "label": "Related articles grid - desktop large (1280px and above)",
+      "min": 1,
+      "max": 5,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_related_articles",
+      "label": "Hide related articles?",
+      "info": "This will hide the related articles section on all articles.",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "backup_article",
+      "name": "Backup article",
+      "settings": [
+        {
+          "type": "article",
+          "label": "Article",
+          "id": "article"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related articles"
+    }
+  ]
+}
+{% endschema %}

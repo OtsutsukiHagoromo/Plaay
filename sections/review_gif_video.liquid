@@ -1,0 +1,431 @@
+{% liquid 
+  assign title = section.settings.heading
+  assign per_view_mobile = section.settings.per_view_mobile
+  assign per_view_tablet = section.settings.per_view_tablet
+  assign per_view_desktop = section.settings.per_view_desktop 
+  assign per_view_desktop_large = section.settings.per_view_desktop_large
+  assign autoplay_speed = section.settings.autoplay_speed
+  assign desktop_vertical_padding  = section.settings.desktop_vertical_padding
+  assign mobile_vertical_padding = section.settings.mobile_vertical_padding
+  assign blocks = section.blocks
+%}
+
+{% style %}
+  {% unless settings.hide_tap_me_functionality %}
+    @media only screen and (min-width: 1023px) {
+      .review_slide img {
+        cursor: url("data:image/svg+xml, %3Csvg width='102' height='85' viewBox='0 0 102 85' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M96.7126 15.5587C108.34 33.5404 97.246 60.108 71.9346 74.899C46.6231 89.6901 16.6787 87.1035 5.05176 69.1217C-6.57515 51.14 4.51836 24.5724 29.8298 9.7814C55.1413 -5.00962 85.0857 -2.42304 96.7126 15.5587Z' fill='%23F08B34'/%3E%3Cpath d='M29.4119 54.8932L24.2744 47.4801L22.4156 48.6714L20.7291 46.2379L27.3285 42.0082L29.015 44.4418L27.1562 45.6331L32.2937 53.0462L29.4119 54.8932ZM39.3745 48.508L38.1895 47.3986L35.6535 49.0239L36.2622 50.5028L33.3227 52.3867L29.3661 40.7023L32.6082 38.6244L42.314 46.6241L39.3745 48.508ZM34.6917 46.7354L36.3632 45.6641L32.8661 42.3595L34.6917 46.7354ZM39.9098 33.9447C41.1202 33.1689 42.3067 32.8892 43.4694 33.1056C44.6256 33.3126 45.6001 33.9882 46.393 35.1323C47.1599 36.2388 47.4251 37.3622 47.1887 38.5024C46.9523 39.6426 46.2385 40.5944 45.0473 41.3578L44.2404 41.8749L45.9269 44.3085L43.0451 46.1555L36.2211 36.3088L39.9098 33.9447ZM43.3316 39.5727C43.7639 39.2957 43.9898 38.941 44.0092 38.5087C44.0318 38.0608 43.8514 37.5603 43.4679 37.007C43.0975 36.4724 42.693 36.129 42.2545 35.9767C41.816 35.8243 41.3902 35.8806 40.9771 36.1453L40.4872 36.4593L42.8561 39.8775L43.3316 39.5727ZM36.104 67.222L29.28 57.3753L32.6517 55.2143L38.7262 60.7065L35.8073 53.1918L39.179 51.0308L46.003 60.8775L43.4094 62.5398L39.432 56.8006L42.0694 63.3987L40.0377 64.7008L34.7058 59.8297L38.6832 65.5689L36.104 67.222ZM47.3048 60.0432L40.4808 50.1965L46.1003 46.5949L47.5724 48.7189L44.8347 50.4736L46.0727 52.2601L48.8104 50.5054L50.2337 52.5591L47.496 54.3138L48.7146 56.0721L51.4523 54.3175L52.9243 56.4416L47.3048 60.0432Z' fill='white'/%3E%3Cpath d='M80.1825 24.7947L52.98 25.7088C52.4532 25.727 51.9728 26.01 51.7147 26.45C51.4556 26.8939 51.4608 27.4281 51.7274 27.8577L65.2076 49.5804C65.4743 50.01 65.9603 50.2675 66.489 50.2581C66.7559 50.2519 67.0129 50.1793 67.2355 50.0513C67.4503 49.9276 67.6363 49.7518 67.7663 49.5362L81.4886 26.8994C81.7569 26.4535 81.7589 25.9086 81.4878 25.4717C81.2167 25.0348 80.7174 24.7784 80.1825 24.7947V24.7947Z' fill='white'/%3E%3C/svg%3E%0A"), auto;
+      }
+    }
+  {% endunless %}
+  .review_slide.active .review_content {
+    max-height: 20rem;
+  }
+  .review_slide.active .tap_me_button {
+    transform: rotate(360deg) scale(0.8);
+  }
+  @media only screen and (min-width: 1023px) {
+    .upsell_media_glide .glide__slide:hover {}
+  }
+  {% if section.settings.enable_style %}
+    #review_gif_video-{{ section.id }} {
+      padding-top: {{ section.settings.spacing_top_desktop }}px;
+      padding-bottom: {{ section.settings.spacing_bottom_desktop }}px;
+    }
+    @media(max-width: 767px) {
+      #review_gif_video-{{ section.id }} {
+        padding-top: {{ section.settings.spacing_top_mobile }}px;
+        padding-bottom: {{ section.settings.spacing_bottom_mobile }}px;
+      }      
+    }
+  {% endif %}
+{% endstyle %}
+<div class="py-{{ mobile_vertical_padding }} | md:py-{{ desktop_vertical_padding }}" id="review_gif_video-{{ section.id }}">
+  {% if title != blank %}
+    <h2 class="text-center text-dark-blue text-5xl | md:text-9xl">{{ title }}</h2>
+  {% endif %}
+  {% if section.settings.text != blank %}
+    <div class="md:text-6xl review_gif_video__text text-4xl text-center text-dark-blue mt-5"> {{  section.settings.text }}</div>
+  {% endif %}
+  <div class="glide review_gif_slider" id="review_gif_video_slider-{{ section.id }}">
+    <div class="glide__track" data-glide-el="track">
+      <ul class="glide__slides my-10">
+        {% for block in blocks %}
+          {% if block.type == 'video' %}
+            {% assign poster = block.settings.image %}
+            {% assign video = block.settings.video_url %}
+            <li class="glide__slide mt-16 px-3 transition-all duration-200 | lg:hover:animate-floatSlow" style="background: {{ block.settings.slider_bg_color }}">
+              <div class="standard_video_player_container relative" style="height: {{ block.settings.height }}px">
+                {% render 'video-player', src: video, poster: poster, controls: false, height: 'h-full', width: 'w-full' %}
+              </div>
+              <div class="review-text">{{ block.settings.review_text_video }}</div>
+              <h3 class="review_heading">{{ block.settings.review_heading_video }}</h3>
+            </li>
+          {% endif %}
+          {% if block.type == 'image' %}
+            {% assign image = block.settings.image %}
+            {% assign star_rating = block.settings.star_rating %}
+            <li class="glide__slide px-3 transition-all duration-200 | lg:hover:animate-floatSlow" style="background: {{ block.settings.slider_bg_color }}"> 
+              {% if image != blank %}
+                <div style="height: {{ block.settings.height }}px">
+                  {% render 'img', type: 'img', img: image, lazy: true, class: 'object-cover w-full h-full' %}
+                </div>
+                 <div class="flex items-center justify-center mb-1 mt-3">
+                        {% for i in (1..star_rating) %}
+                          <span class="h-4 w-4 flex text-dark-blue {% unless forloop.first %} ml-1 {% endunless %}">
+                            {% render 'icon-star' %}
+                          </span>
+                        {% endfor %}
+                      </div>
+                <div class="review-text">{{ block.settings.review_text }}</div>
+                <h3 class="review_heading">{{ block.settings.review_heading }}</h3>
+               
+              {% endif %}
+            </li>
+            {% endif %}
+          {% if block.type == 'review' %}
+            {% liquid 
+              assign image = block.settings.image
+              assign star_rating = block.settings.star_rating
+              assign review = block.settings.review
+              assign review_name = block.settings.review_name
+            %}
+            <li class="glide__slide mt-8 relative px-3 transition-all duration-200 | lg:hover:animate-floatSlow" style="background: {{ block.settings.slider_bg_color }}">
+              <div class="review_slide">
+                <tap-me data-module="tap-me">
+                  {% if image != blank %}
+                    {% unless settings.hide_tap_me_functionality %}
+                      <span class="tap_me_button transition-all duration-300 ease-in-out flex h-24 w-24 absolute -top-10 left-10 cursor-pointer lg:hidden">
+                        {% render 'icon-tap-me' %}
+                      </span>
+                    {% endunless %}
+                    <div class="" style="height: {{ block.settings.height }}px">
+                      {% render 'img', type: 'img', img: image, lazy: true, class: 'object-cover cursor-pointer h-full w-full' %}
+                    </div>
+                  {% endif %}
+                  <div class="overflow-hidden">
+                    <div class="review_content mt-3 {% unless settings.hide_tap_me_functionality %} max-h-0 transition-maxHeight {% endunless %} duration-500">
+                      <div class="flex items-center">
+                        {% for i in (1..star_rating) %}
+                          <span class="h-4 w-4 flex text-dark-blue {% unless forloop.first %} ml-1 {% endunless %}">
+                            {% render 'icon-star' %}
+                          </span>
+                        {% endfor %}
+                      </div>
+                      {% if review != blank %}
+                        <p class="mt-3 text-xs font-walsheim | md:text-sm">{{ review }}</p>
+                      {% endif %}
+                      {% if review_name != blank %}
+                        <p class="mt-6 text-xs font-walsheim | md:text-sm">{{ review_name }}</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </tap-me>
+              </div>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+      <div class="glide__arrows hero-arrows flex md:hidden items-center justify-center w-full mt-3  |  md:mb-0 md:mt-0  md:ml-10  md:w-auto" data-glide-el="controls">
+    <button data-glide-dir="<" class="glide__arrow glide__arrow--left text-0 mr-5 group">
+      slide left
+      <span class="flex h-6 w-6 transform rotate-180 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" focusable="false"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>
+      </span>
+    </button>
+    <button data-glide-dir=">" class="glide__arrow glide__arrow--right text-0 ml-5 group">
+      slide right
+      <span class="flex h-6 w-6 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" focusable="false"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>
+      </span>
+    </button>
+  </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const reviewGifVideoGlide = new Glide("#review_gif_video_slider-{{ section.id }}", {
+      type: 'carousel',
+      autoplay: {{ autoplay_speed }},
+      perView: {{ per_view_desktop_large }},
+      startAt: 0,
+      focusAt: 2,
+      gap: 0,
+      breakpoints: {
+        1280: {
+          perView: {{ per_view_desktop }}
+        },
+        1024: {
+          perView: {{ per_view_tablet }}
+        },
+        768: {
+          perView: {{ per_view_mobile }}
+        }
+      }
+    });
+    reviewGifVideoGlide.mount();
+  });
+</script>
+{% schema %}
+  {
+    "name": "Reviews / Gifs / Videos",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "Check out some content!"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "text",
+        "label": "Text"
+      },
+      {
+        "type": "range",
+        "min": 1,
+        "max": 6,
+        "label": "Per view: dekstop large (1280px + )",
+        "default": 4.5,
+        "step": 0.5,
+        "id": "per_view_desktop_large"
+      },
+      {
+        "type": "range",
+        "min": 1,
+        "max": 6,
+        "label": "Per view: dekstop (1024px - 1279px)",
+        "default": 4,
+        "step": 0.5,
+        "id": "per_view_desktop"
+      },
+      {
+        "type": "range",
+        "min": 1,
+        "max": 6,
+        "label": "Per view: tablet (768px - 1023px)",
+        "default": 3,
+        "step": 0.5,
+        "id": "per_view_tablet"
+      }, {
+        "type": "range",
+        "min": 1,
+        "max": 6,
+        "label": "Per view: mobile (0 - 767px)",
+        "default": 1.5,
+        "step": 0.5,
+        "id": "per_view_mobile"
+      }, {
+        "type": "range",
+        "id": "autoplay_speed",
+        "label": "Autoplay speed",
+        "min": 0,
+        "max": 9900,
+        "default": 0,
+        "step": 100,
+        "info": "Set this to 0 to disable autoplay"
+      }, {
+        "type": "range",
+        "min": 1,
+        "max": 14,
+        "step": 1,
+        "default": 10,
+        "id": "desktop_vertical_padding",
+        "label": "Desktop vertical padding",
+        "info": "14 = largest padding size."
+      }, {
+        "type": "range",
+        "min": 1,
+        "max": 14,
+        "step": 1,
+        "default": 5,
+        "id": "mobile_vertical_padding",
+        "label": "Mobile vertical padding",
+        "info": "14 = largest padding size."
+      },
+      {
+        "type": "header",
+        "content": "Section style"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_style",
+        "label": "Enable Custom Style"
+      },
+      {
+        "type": "range",
+        "min": 0,
+        "max": 200,
+        "default": 0,
+        "step": 2,
+        "unit": "px",
+        "id": "spacing_top_desktop",
+        "label": "spacing top (Desktop)"
+      },
+      {
+        "type": "range",
+        "min": 0,
+        "max": 200,
+        "default": 0,
+        "step": 2,
+        "unit": "px",
+        "id": "spacing_bottom_desktop",
+        "label": "spacing bottom (Desktop)"
+      },
+      {
+        "type": "range",
+        "min": 0,
+        "max": 100,
+        "default": 0,
+        "step": 1,
+        "unit": "px",
+        "id": "spacing_top_mobile",
+        "label": "spacing top (Mobile)"
+      },
+      {
+        "type": "range",
+        "min": 0,
+        "max": 100,
+        "default": 0,
+        "step": 1,
+        "unit": "px",
+        "id": "spacing_bottom_mobile",
+        "label": "spacing bottom (Mobile)"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "video",
+        "name": "Video",
+        "settings": [
+          {
+            "type": "image_picker",
+            "label": "Poster",
+            "id": "image",
+            "info": "Image aspect ratio: 500px width x 400px height"
+          }, {
+            "type": "text",
+            "label": "Video",
+            "id": "video_url"
+          }, {
+            "type": "range",
+            "id": "height",
+            "label": "Height",
+            "min": 100,
+            "max": 500,
+            "default": 380,
+            "step": 5
+          },
+          {
+            "type": "richtext",
+            "label": "Review Text",
+            "id": "review_text_video"
+          },
+          {
+            "type": "text",
+            "label": "Review Headig",
+            "id": "review_heading_video"
+          },
+          {
+            "type": "color",
+            "label": "Bacckground Color",
+            "id": "slider_bg_color"
+          }
+        ]
+      }, {
+        "type": "image",
+        "name": "Image / Gif",
+        "settings": [
+          {
+            "type": "image_picker",
+            "label": "Image / Gif",
+            "id": "image",
+            "info": "Image aspect ratio: 500px width x 400px height"
+          }, {
+            "type": "range",
+            "id": "height",
+            "label": "Height",
+            "min": 100,
+            "max": 500,
+            "default": 280,
+            "step": 5
+          },
+          {
+            "type": "richtext",
+            "label": "Review Text",
+            "id": "review_text"
+          },
+          {
+            "type": "text",
+            "label": "Review Heading",
+            "id": "review_heading"
+          },
+          {
+            "type": "color",
+            "label": "Bacckground Color",
+            "id": "slider_bg_color"
+          },
+           {
+            "type": "range",
+            "id": "star_rating",
+            "label": "Star rating",
+            "min": 1,
+            "max": 5,
+            "default": 5
+          }
+        ]
+      }, {
+        "type": "review",
+        "name": "Review",
+        "settings": [
+          {
+            "type": "image_picker",
+            "label": "Image",
+            "id": "image",
+            "info": "Image aspect ratio: 500px width x 400px height"
+          },
+          {
+            "type": "range",
+            "id": "star_rating",
+            "label": "Star rating",
+            "min": 1,
+            "max": 5,
+            "default": 5
+          },
+          {
+            "type": "text",
+            "id": "review",
+            "label": "Review",
+            "default": "Your review goes here..."
+          },
+          {
+            "type": "text",
+            "id": "review_name",
+            "label": "Review name",
+            "default": "Jane Harry"
+          }, {
+            "type": "range",
+            "id": "height",
+            "label": "Height",
+            "min": 100,
+            "max": 500,
+            "default": 380,
+            "step": 5
+          },
+                    {
+            "type": "color",
+            "label": "Bacckground Color",
+            "id": "slider_bg_color"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Reviews / Gifs / Videos"
+      }
+    ]
+  }
+{% endschema %}

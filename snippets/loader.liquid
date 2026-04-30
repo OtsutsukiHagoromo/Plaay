@@ -1,0 +1,19 @@
+{%- liquid
+  if type == nil
+    assign type = 'dark'
+  endif
+-%}
+
+<div class="loader loader-{{ type }} {{ class }}">
+  <div class="loading_dots transition-all duration-200 flex items-center w-full justify-center py-16">
+    <div class="h-4 w-4 rounded-full transition-all duration-200 relative mr-2">
+      <div class="dot h-0 w-0 bg-dark-blue rounded-full transition-all duration-200 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+    </div>
+    <div class="h-4 w-4 rounded-full transition-all duration-200 relative mr-2">
+      <div class="dot h-0 w-0 bg-dark-blue rounded-full transition-all duration-200 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+    </div>
+    <div class="h-4 w-4 rounded-full transition-all duration-200 relative mr-2">
+      <div class="dot h-0 w-0 bg-dark-blue rounded-full transition-all duration-200 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+    </div>
+  </div>
+</div>

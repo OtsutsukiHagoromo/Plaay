@@ -1,0 +1,815 @@
+{% liquid 
+  assign landing_section_background = section.settings.landing_section_background 
+  assign landing_section_title = section.settings.landing_section_title 
+  assign underline_text = section.settings.underline_text
+  assign horizontal_scrolling_background = section.settings.horizontal_scrolling_background
+
+  assign nutritionist_title = section.settings.nutritionist_title
+  assign nutritionist_scroll_text = section.settings.nutritionist_scroll_text
+  assign nutritionist_image = section.settings.nutritionist_image
+  assign nutritionist_background_color = section.settings.nutritionist_background_color
+
+  assign horizontal_section_one_width = section.settings.horizontal_section_one_width
+  assign horizontal_section_two_width = section.settings.horizontal_section_two_width
+  assign horizontal_section_three_width = section.settings.horizontal_section_three_width
+  assign horizontal_section_four_width = section.settings.horizontal_section_four_width
+  assign horizontal_section_five_width = section.settings.horizontal_section_five_width
+  assign horizontal_section_six_width = section.settings.horizontal_section_six_width
+  assign horizontal_section_seven_width = section.settings.horizontal_section_seven_width
+%}
+
+{% comment %} I know append isn't the preffered method here, but ESlint keeps putting my px on a new line, so I've gotta use this for now {% endcomment %}
+{% style %}
+  @media only screen and (min-width: 767px) {
+    .horizontal_scroll_container .scroll_section:nth-child(1),
+    .horizontal_scroll_container .scroll_section:nth-child(2) {
+      width: {{ horizontal_section_one_width | append: 'px' }}
+    }
+    .horizontal_scroll_container .scroll_section:nth-child(3),
+    .horizontal_scroll_container .scroll_section:nth-child(4) {
+      width: {{ horizontal_section_two_width | append: 'px' }}
+    }
+    .horizontal_scroll_container .scroll_section:nth-child(5) {
+      width: {{ horizontal_section_three_width | append: 'px' }}
+    }
+    .horizontal_scroll_container .scroll_section:nth-child(6),
+    .horizontal_scroll_container .scroll_section:nth-child(7),
+    .horizontal_scroll_container .scroll_section:nth-child(8) {
+      width: {{ horizontal_section_four_width | append: 'px' }}
+    }
+    .horizontal_scroll_container .scroll_section:nth-child(9) {
+      width: {{ horizontal_section_five_width | append: 'px' }}
+    }
+    .horizontal_scroll_container .scroll_section:nth-child(10),
+    .horizontal_scroll_container .scroll_section:nth-child(11) {
+      width: {{ horizontal_section_six_width | append: 'px' }}
+    }
+    .horizontal_scroll_container .scroll_section:nth-child(12) {
+      width: {{ horizontal_section_seven_width | append: 'px' }}
+    }
+  }
+
+  .flip_section .back_image {
+    transform: rotateY(180deg);
+  }
+
+  .flip_section.active .front_image {
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+  .flip_section.active .back_image {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+  .flip_section.active .flip_button {
+    color: #F7C744;
+    background: #021D49;
+  }
+
+  .scroll_section_text::-webkit-scrollbar, .horizontal_slider::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+  /* Track */
+  .scroll_section_text::-webkit-scrollbar-track, .horizontal_slider:-webkit-scrollbar-track {
+    background: #ECECEC;
+    height: 4px;
+    width: 4px;
+  }
+  /* Handle */
+  .scroll_section_text::-webkit-scrollbar-thumb, .horizontal_slider::-webkit-scrollbar-thumb {
+    background: #021D49;
+    width: 10px;
+  }
+  /* Handle on hover */
+  .scroll_section_text::-webkit-scrollbar-thumb:hover, .horizontal_slider::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+{% endstyle %}
+
+
+{% comment %} HORIZONTAL SCROLLING SECTION {% endcomment %}
+<for-the-geeks-horizontal
+  data-module="for-the-geeks-horizontal" class="relative">
+  {% comment %} pagination dots {% endcomment %}
+
+  <div class="flex flex-row overflow-x-auto horizontal_slider"
+    style="scroll-snap-type: x mandatory;">
+    {% comment %} return to first slide arrow {% endcomment %}
+    <div class="return_arrow h-[34px] w-[34px] bg-[#F4F4F4] absolute z-10 rounded-full transform rotate-180 bottom-5 left-5 cursor-pointer">
+      <span class="absolute w-4 h-4 text-black transform -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+        {% render 'icon-long-arrow' %}
+      </span>
+    </div>
+    {% comment %} landing section {% endcomment %}
+    <div class="landing_section h-[100vh] w-[100vw] max-w-full max-h-[820px] relative flex-100"
+      style="background-color: {{ landing_section_background }}; scroll-snap-align: start;">
+      {% comment %} title {% endcomment %}
+      <div
+        class="container pt-32 flex flex-col justify-between h-full pb-[200px] | md:pb-14 md:pt-44">
+        {% comment %} for the geeks {% endcomment %}
+        <div class="flex h-[120px] w-[250px] mx-auto mt-0 | lg:mt-9">
+          {% render 'icon-for-the-geeks-text' %}
+        </div>
+        {% comment %} title / arrow {% endcomment %}
+        <div class="flex flex-col">
+          {% if landing_section_title != blank %}
+            {% assign landing_section_title_split = landing_section_title | split: ' ' %}
+            <h1
+              class="text-5xl text-dark-blue text-center uppercase max-w-xs mx-auto leading-none | md:text-6xl">
+              {% for section in landing_section_title_split %}
+                <span
+                  class=" {% if underline_text == section %} underline {% endif %}">{{ section }}</span>
+              {% endfor %}
+            </h1>
+          {% endif %}
+          <div
+            data-arrow-move-down
+            class="relative flex mx-auto mt-6 bg-white rounded-full cursor-pointer h-11 w-11 z-1">
+            <span
+              class="absolute flex w-5 h-5 transition-all duration-300 ease-linear transform rotate-90 -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+              {% render 'icon-long-arrow' %}
+            </span>
+          </div>
+        </div>
+      </div>
+      {% comment %} from our nutritionist {% endcomment %}
+      <div
+        class="nutritionists_button cursor-pointer absolute right-0 bottom-20 py-5 pl-4 pr-2 rounded-l-[44px] max-w-[240px] flex items-center shadow-md group"
+        style="background-color: {{ nutritionist_background_color }};">
+        {% if nutritionist_image != blank %}
+          {% render 'img', type: 'img', img: nutritionist_image, lazy: true, class: 'object-contain h-20 w-20 mr-3' %}
+        {% endif %}
+        <div
+          class="flex flex-col">
+          {% if nutritionist_title != blank %}
+            <h2
+              class="text-xl leading-none uppercase border-b text-dark-blue font-walsheim-bold border-dark-blue">{{ nutritionist_title }}</h2>
+          {% endif %}
+          {% if nutritionist_scroll_text != blank %}
+            <p
+              class="flex items-center mt-2 text-xs uppercase text-dark-blue font-walsheim-bold">
+              {{ nutritionist_scroll_text }}
+              <span
+                class="text-dark-blue w-5 h-5 flex ml-3 transition-all duration-300 group-hover:translate-x-[6px]">
+                {% render 'icon-long-arrow' %}
+              </span>
+            </p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% comment %} horizontal scrolling section 1 {% endcomment %}
+    <div class="relative w-full">
+      <div
+      class="horizontal_scroll_container w-full max-h-[820px] h-[100vh] relative flex flex-col flex-wrap content-start"
+      style="scroll-snap-align: start; scroll-snap-type: x mandatory;">
+      {% for block in section.blocks %}
+        {% capture thecycle %}
+          {% cycle 'odd', 'even' %}
+        {% endcapture %}
+
+        {% if block.type == 'heading' %}
+          {% liquid 
+          assign height = block.settings.height 
+          assign title = block.settings.title
+          assign font_size = block.settings.font_size
+          assign font_family = block.settings.font_family
+          assign color = block.settings.color
+          assign extra_padding_top = block.settings.extra_padding_top
+          assign border_bottom = block.settings.border_bottom
+        %}
+          <div
+            class="scroll_section pb-12 w-full border-r pl-7 pr-7 {% if extra_padding_top %} pt-32 {% else %} pt-11 {% endif %} {% if border_bottom %} border-b border-black {% endif %} {% if forloop.first or forloop.index0 == 1 %} pl-8 md:pl-24 {% endif %}"
+            style="height: {{ height }}%; background-color: {{ horizontal_scrolling_background }}; scroll-snap-align: start;">
+            {% if title != blank %}
+              <h2
+                class="{{ font_family }} uppercase leading-none"
+                style="font-size: {{ font_size }}px; color: {{ color }};">{{ title }}</h2>
+            {% endif %}
+          </div>
+        {% elsif block.type == 'text_content' %}
+          {% liquid
+          assign title = block.settings.title
+          assign heading = block.settings.heading 
+          assign text = block.settings.text 
+          assign height = block.settings.height
+          assign extra_padding_top = block.settings.extra_padding_top
+          assign border_bottom = block.settings.border_bottom
+        %}
+          <div
+            class="scroll_section w-full pb-12 border-r pl-7 pr-10 {% if extra_padding_top %} pt-32 {% else %} pt-11 {% endif %} {% if border_bottom %} border-b border-black {% endif %} {% if forloop.first or forloop.index0 == 1 %} pl-8 md:pl-24 {% endif %}"
+            style="height: {{ height }}%; background-color: {{ horizontal_scrolling_background }}; scroll-snap-align: start;">
+            <div
+              class="h-full overflow-auto scroll_section_text">
+              {% if title != blank %}
+                <h2
+                  class="mb-2 text-2xl uppercase font-walsheim-bold text-dark-blue">{{ title }}</h2>
+              {% endif %}
+              {% if heading != blank %}
+                <h3
+                  class="mb-5 text-lg leading-none uppercase text-dark-blue font-walsheim-bold">{{ heading }}</h3>
+              {% endif %}
+              {% if text != blank %}
+                <div
+                  class="text-sm text-dark-blue font-walsheim">{{ text }}</div>
+              {% endif %}
+            </div>
+          </div>
+        {% elsif block.type == 'image_content' %}
+          {% liquid 
+          assign height = block.settings.height 
+          assign image = block.settings.image
+          assign image_height = block.settings.image_height
+          assign extra_padding_top = block.settings.extra_padding_top
+          assign border_bottom = block.settings.border_bottom
+        %}
+          <div
+            class="scroll_section w-full pb-4 border-r pl-7 px-6 flex items-end {% if extra_padding_top %} pt-32 {% else %} pt-11 {% endif %} {% if border_bottom %} border-b border-black {% endif %} {% if forloop.first or forloop.index0 == 1 %} pl-8 md:pl-24 {% endif %}"
+            style="height: {{ height }}%; background-color: {{ horizontal_scrolling_background }}; scroll-snap-align: start;">
+            <div
+              class="w-full max-h-full"
+              style="height: {{ image_height }}px;">
+              {% render 'img', type: 'img', img: image, lazy: true, class: 'object-contain w-full h-full' %}
+            </div>
+          </div>
+        {% elsif block.type == 'video_content' %}
+          {% liquid 
+          assign height = block.settings.height 
+          assign video_url = block.settings.video_url 
+          assign video_poster = block.settings.video_poster
+          assign video_poster_cover = block.settings.video_poster_cover
+          assign add_border_radius = block.settings.add_border_radius
+          assign extra_padding_top = block.settings.extra_padding_top
+          assign border_bottom = block.settings.border_bottom
+          assign horizontal_padding = block.settings.horizontal_padding
+        %}
+          <div
+            class="scroll_section w-full flex items-center justify-center border-r border-black {% if extra_padding_top %} pt-32 {% else %} pt-11 {% endif %} {% if border_bottom %} border-b {% endif %} {% if forloop.first or forloop.index0 == 1 %} pl-8 md:pl-24 {% endif %} {% if horizontal_padding %} px-8 | md:px-20 {% else %} px-2 {% endif %}"
+            style="height: {{ height }}%; background-color: {{ horizontal_scrolling_background }}; scroll-snap-align: start;">
+            <div
+              class="geeks-video standard_video_player relative max-h-[480px] max-w-lg w-full h-[440px] | md:h-[560px]">
+              {% render 'video-player', src: video_url, poster: video_poster, rounded: add_border_radius, height: 'h-full', width: 'w-full', controls: false, poster_cover: video_poster_cover %}
+
+            </div>
+          </div>
+        {% elsif block.type == 'flip' %}
+          {% liquid 
+          assign flip_text_back = block.settings.flip_text_back
+          assign flip_image_front = block.settings.flip_image_front 
+          assign height = block.settings.height 
+          assign border_bottom = block.settings.border_bottom
+        %}
+          <div
+            class="scroll_section w-full border-r border-black {% if border_bottom %} border-b {% endif %}"
+            style="height: {{ height }}%; scroll-snap-align: start;">
+            <div
+              class="relative w-full h-full flip_section">
+              <p
+                class="absolute top-0 right-0 flex items-center justify-center w-10 h-10 text-xs uppercase transition-all duration-200 cursor-pointer flip_button bg-yellow-secondary text-dark-blue rounded-bl-2xl font-walsheim-bold z-2">Flip</p>
+              {% if flip_image_front != blank %}
+                {% render 'img', type: 'img', img: flip_image_front, lazy: true, class: 'front_image transition-all duration-200 transform h-full w-full object-cover relative z-1' %}
+              {% endif %}
+              {% if flip_image_back != blank %}
+                {% render 'img', type: 'img', img: flip_image_back, lazy: true, class: 'back_image transition-all duration-200 transform h-full opacity-0 w-full object-cover absolute top-0 left-0' %}
+              {% endif %}
+              <div class="absolute top-0 left-0 w-full h-full transition-all duration-200 transform opacity-0 back_image">
+                {% if flip_text_back != blank %}
+                  <p class="flex items-center justify-center h-full px-10 py-10 text-lg text-center font-walsheim-medium text-dark-blue">{{ flip_text_back }}</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% elsif block.type == 'heading_smaller' %}
+          {% liquid 
+            assign extra_padding_top = block.settings.extra_padding_top 
+            assign border_bottom = block.settings.border_bottom 
+            assign height = block.settings.height 
+            assign color = block.settings.color
+            assign title = block.settings.title 
+            assign font_size = block.settings.font_size 
+          %}
+          <div
+            class="scroll_section w-full flex items-center justify-center border-r border-black {% if extra_padding_top %} pt-32 {% else %} pt-11 {% endif %} {% if border_bottom %} border-b {% endif %} {% if forloop.first or forloop.index0 == 1 %} pl-8 md:pl-24 {% endif %}"
+            style="height: {{ height }}%; background-color: {{ horizontal_scrolling_background }}; scroll-snap-align: start;">
+            <div
+              class="flex items-center justify-center w-full h-full">
+              {% if title != blank %}
+                <h2
+                  class="px-8 leading-tight text-center uppercase font-walsheim-bold"
+                  style="font-size: {{ font_size }}px; color: {{ color }};">{{ title }}</h2>
+              {% endif %}
+            </div>
+          </div>
+        {% elsif block.type == 'product_carousel' %}
+          {% liquid
+            assign collection = block.settings.collection
+            assign height = block.settings.height 
+            assign extra_padding_top = block.settings.extra_padding_top 
+            assign border_bottom = block.settings.border_bottom
+          %}
+          <div
+            class="scroll_section px-6 w-full flex items-center justify-center border-r border-black | md:px-13 {% if extra_padding_top %} pt-32 {% else %} pt-11 {% endif %} {% if border_bottom %} border-b {% endif %} {% if forloop.first or forloop.index0 == 1 %} pl-8 md:pl-24 {% endif %}"
+            style="height: {{ height }}%; background-color: {{ horizontal_scrolling_background }}; scroll-snap-align: start;">
+            {% if collection != blank %}
+            <product-tile data-module="product-tile"></product-tile>
+              <div
+                data-id="for_the_geeks_product_carousel-{{ block.id }}"
+                class="glide for_the_geeks_product_carousel"
+                id="for_the_geeks_product_carousel-{{ block.id }}">
+                <div
+                  class="glide__track"
+                  data-glide-el="track">
+                  <ul
+                    class="py-2 glide__slides">
+                    {% for product in collections[collection].products %}
+                      <li
+                        class="glide__slide {% if forloop.first %} pr-[10px] md:pr-[20px] {% else %} pl-[10px] md:pl-[20px] {% endif %}">
+                        {% render 'product-tile', product: product %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+                <div class="glide__arrows mt-5 ml-6 | md:w-auto" data-glide-el="controls">
+                  <button data-glide-dir="<" class=" mr-3 bg-white rounded-full glide__arrow glide__arrow--left text-0 group">
+                    slide left
+                    <span class="flex h-4 w-4 transform rotate-180 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+                           {% comment %}{% render 'icon-slider-arrow' %}{% endcomment %}
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" focusable="false"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>
+                    </span>
+                  </button>
+                  <button data-glide-dir=">" class=" ml-3 bg-white rounded-full glide__arrow glide__arrow--right text-0 group">
+                    slide right
+                    <span class="flex h-4 w-4 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+                          {% comment %}{% render 'icon-slider-arrow' %}{% endcomment %}
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" focusable="false"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    </div>
+  </div>
+</for-the-geeks-horizontal>
+
+
+{% schema %}
+  {
+    "name": "For the Geeks",
+    "blocks": [
+      {
+        "type": "product_carousel",
+        "name": "Product carousel",
+        "settings": [
+          {
+            "type": "collection",
+            "label": "Collection",
+            "id": "collection"
+          }, {
+            "type": "range",
+            "id": "height",
+            "info": "Set the height for this section.",
+            "label": "Height (%)",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "default": 50
+          }, {
+            "type": "checkbox",
+            "id": "extra_padding_top",
+            "label": "Extra padding top?",
+            "info": "This is useful if the section is at the top of the grid as it will stop the navigation bar overlapping the content.",
+            "default": true
+          }, {
+            "type": "checkbox",
+            "id": "border_bottom",
+            "label": "Border bottom?",
+            "info": "provide a border to the bottom of this grid section.",
+            "default": true
+          }
+        ]
+      },
+      {
+        "type": "heading_smaller",
+        "name": "Smaller Heading",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Plaay has a mix of only and only the greatest stuff for your gut so your good bacteria can have a feast in there and make you go wow every day!"
+          },
+          {
+            "type": "color",
+            "id": "color",
+            "label": "Text color",
+            "default": "#021D49"
+          },
+          {
+            "type": "range",
+            "id": "font_size",
+            "label": "Font size",
+            "unit": "px",
+            "label": "Font size",
+            "min": 10,
+            "max": 34,
+            "default": 25
+          },
+          {
+            "type": "checkbox",
+            "id": "border_bottom",
+            "label": "Border bottom?",
+            "info": "provide a border to the bottom of this grid section.",
+            "default": true
+          }, {
+            "type": "range",
+            "id": "height",
+            "info": "Set the height for this section.",
+            "label": "Height (%)",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "default": 50
+          }, {
+            "type": "checkbox",
+            "id": "extra_padding_top",
+            "label": "Extra padding top?",
+            "info": "This is useful if the section is at the top of the grid as it will stop the navigation bar overlapping the content.",
+            "default": true
+          }
+        ]
+      },
+      {
+        "type": "flip",
+        "name": "Flip",
+        "settings": [
+          {
+            "type": "image_picker",
+            "label": "Flip image (front)",
+            "id": "flip_image_front"
+          }, {
+            "type": "text",
+            "label": "Flip text (back)",
+            "id": "flip_text_back",
+            "default": "This is the text that will show once the image has been flipped!"
+          }, {
+            "type": "range",
+            "id": "height",
+            "info": "Set the height for this section.",
+            "label": "Height (%)",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "default": 50
+          }
+        ]
+      },
+      {
+        "type": "video_content",
+        "name": "Video",
+        "settings": [
+          {
+            "type": "url",
+            "id": "video_url",
+            "label": "Video url"
+          },
+          {
+            "type": "image_picker",
+            "label": "Video poster",
+            "id": "video_poster"
+          },
+          {
+            "type": "select",
+            "id": "video_poster_cover",
+            "label": "Video poster cover",
+            "default": "object-cover",
+            "options": [
+              {
+                "value": "object-cover",
+                "label": "Cover (fill whole space)"
+              },
+              {
+                "value": "object-contain",
+                "label": "Contain (fit the size of the image)"
+              }
+            ]
+          },
+          {
+            "type": "checkbox",
+            "id": "add_border_radius",
+            "label": "Add border radius?",
+            "info": "Add some border radius to the video",
+            "default": true
+          },
+          {
+            "type": "range",
+            "id": "height",
+            "info": "Set the height for this section.",
+            "label": "Height (%)",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "default": 50
+          }, {
+            "type": "checkbox",
+            "id": "horizontal_padding",
+            "label": "Horizontal padding?",
+            "default": true,
+            "info": "Provide some horizontal padding to the video section."
+          }, {
+            "type": "checkbox",
+            "id": "extra_padding_top",
+            "label": "Extra padding top?",
+            "info": "This is useful if the section is at the top of the grid as it will stop the navigation bar overlapping the content.",
+            "default": true
+          }, {
+            "type": "checkbox",
+            "id": "border_bottom",
+            "label": "Border bottom?",
+            "info": "provide a border to the bottom of this grid section.",
+            "default": true
+          }
+        ]
+      }, {
+        "type": "image_content",
+        "name": "Image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "range",
+            "id": "height",
+            "info": "Set the height for this section.",
+            "label": "Height (%)",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "default": 50
+          },
+          {
+            "type": "range",
+            "id": "image_height",
+            "label": "Image height",
+            "unit": "px",
+            "min": 100,
+            "max": 500,
+            "default": 260,
+            "step": 5
+          },
+          {
+            "type": "checkbox",
+            "id": "extra_padding_top",
+            "label": "Extra padding top?",
+            "info": "This is useful if the section is at the top of the grid as it will stop the navigation bar overlapping the content.",
+            "default": true
+          }, {
+            "type": "checkbox",
+            "id": "border_bottom",
+            "label": "Border bottom?",
+            "info": "provide a border to the bottom of this grid section.",
+            "default": true
+          }
+        ]
+      }, {
+        "type": "text_content",
+        "name": "Text content",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "info": "Provide your section with a title"
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "default": "I cannot even begin to describe how excited I am for you to bring Plaay into your life. "
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text"
+          },
+          {
+            "type": "range",
+            "id": "height",
+            "info": "Set the height for this section.",
+            "label": "Height (%)",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "default": 50
+          }, {
+            "type": "checkbox",
+            "id": "extra_padding_top",
+            "label": "Extra padding top?",
+            "info": "This is useful if the section is at the top of the grid as it will stop the navigation bar overlapping the content.",
+            "default": true
+          }, {
+            "type": "checkbox",
+            "id": "border_bottom",
+            "label": "Border bottom?",
+            "info": "provide a border to the bottom of this grid section.",
+            "default": true
+          }
+        ]
+      }, {
+        "type": "heading",
+        "name": "Heading",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "from our nutritionist rashi 🥳"
+          },
+          {
+            "type": "range",
+            "id": "height",
+            "label": "Height (%)",
+            "unit": "%",
+            "min": 1,
+            "max": 100,
+            "step": 1,
+            "default": 50,
+            "info": "Set the height for this section."
+          },
+          {
+            "type": "range",
+            "id": "font_size",
+            "label": "Font size",
+            "unit": "px",
+            "min": 10,
+            "max": 80,
+            "default": 60,
+            "step": 1
+          },
+          {
+            "type": "select",
+            "id": "font_family",
+            "label": "Font family",
+            "default": "font-walsheim-bold",
+            "options": [
+              {
+                "value": "font-walsheim",
+                "label": "Walsheim"
+              }, {
+                "value": "font-walsheim-medium",
+                "label": "Walsheim medium"
+              }, {
+                "value": "font-walsheim-bold",
+                "label": "Walsheim bold"
+              }, {
+                "value": "font-walsheim-black",
+                "label": "Walsheim black"
+              }
+            ]
+          }, {
+            "type": "color",
+            "id": "color",
+            "label": "Color",
+            "default": "#021D49"
+          }, {
+            "type": "checkbox",
+            "id": "extra_padding_top",
+            "label": "Extra padding top?",
+            "info": "This is useful if the section is at the top of the grid as it will stop the navigation bar overlapping the content.",
+            "default": true
+          }, {
+            "type": "checkbox",
+            "id": "border_bottom",
+            "label": "Border bottom?",
+            "info": "provide a border to the bottom of this grid section.",
+            "default": true
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "header",
+        "content": "Landing section"
+      },
+      {
+        "type": "color",
+        "id": "landing_section_background",
+        "label": "Landing section (background)",
+        "default": "#F5C08D"
+      },
+      {
+        "type": "text",
+        "id": "landing_section_title",
+        "label": "Landing section (title)",
+        "default": "Here's how we're 100% clean"
+      },
+      {
+        "type": "text",
+        "id": "underline_text",
+        "label": "Landing section (underline text)",
+        "info": "select a word in the title to be underlined. Just make sure that it's worded exactly like the word in the title.",
+        "default": "100%"
+      }, {
+        "type": "header",
+        "content": "From our nutritionist prompt"
+      }, {
+        "type": "text",
+        "id": "nutritionist_title",
+        "label": "From our nutritionist (title)",
+        "default": "From our nutritionist"
+      }, {
+        "type": "text",
+        "id": "nutritionist_scroll_text",
+        "label": "From our nutritionist (scroll text)",
+        "default": "Scroll this way"
+      }, {
+        "type": "image_picker",
+        "label": "From our nutritionist (image)",
+        "id": "nutritionist_image"
+      }, {
+        "type": "color",
+        "label": "From our nutritionist (background color)",
+        "id": "nutritionist_background_color",
+        "default": "#FAD1D2"
+      }, {
+        "type": "color",
+        "label": "Horizontal scroll section (background color)",
+        "id": "horizontal_scrolling_background",
+        "default": "#FAD1D2"
+      }, {
+        "type": "header",
+        "content": "Horizontal section widths"
+      }, {
+        "type": "range",
+        "id": "horizontal_section_one_width",
+        "label": "Horizontal section 1 (width)",
+        "min": 320,
+        "max": 600,
+        "default": 450,
+        "step": 10,
+        "unit": "px"
+      }, {
+        "type": "range",
+        "id": "horizontal_section_two_width",
+        "label": "Horizontal section 2 (width)",
+        "min": 320,
+        "max": 600,
+        "default": 350,
+        "step": 10,
+        "unit": "px"
+      }, {
+        "type": "range",
+        "id": "horizontal_section_three_width",
+        "label": "Horizontal section 3 (width)",
+        "min": 320,
+        "max": 600,
+        "default": 550,
+        "step": 10,
+        "unit": "px"
+      }, {
+        "type": "range",
+        "id": "horizontal_section_four_width",
+        "label": "Horizontal section 4 (width)",
+        "min": 320,
+        "max": 600,
+        "default": 450,
+        "step": 10,
+        "unit": "px"
+      }, {
+        "type": "range",
+        "id": "horizontal_section_five_width",
+        "label": "Horizontal section 5 (width)",
+        "min": 320,
+        "max": 600,
+        "default": 450,
+        "step": 10,
+        "unit": "px"
+      }, {
+        "type": "range",
+        "id": "horizontal_section_six_width",
+        "label": "Horizontal section 6 (width)",
+        "min": 320,
+        "max": 600,
+        "default": 450,
+        "step": 10,
+        "unit": "px"
+      }, {
+        "type": "range",
+        "id": "horizontal_section_seven_width",
+        "label": "Horizontal section 7 (width)",
+        "min": 320,
+        "max": 600,
+        "default": 450,
+        "step": 10,
+        "unit": "px"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,115 @@
+{% liquid 
+  assign banner_image = blog.metafields.arena.banner_image 
+  assign banner_image_mobile = blog.metafields.arena.banner_image_mobile
+  assign backup_banner_image = section.settings.backup_banner_image
+  assign backup_banner_image_mobile = section.settings.backup_banner_image_mobile
+  assign height_mobile = section.settings.height_mobile 
+  assign height_tablet = section.settings.height_tablet
+  assign height_desktop = section.settings.height_desktop
+  assign height_desktop_large = section.settings.height_desktop_large
+  assign title_color = section.settings.title_color
+%}
+
+{% style %}
+  .blog_banner_container{
+    height: {{ height_mobile }}px;
+  }
+  @media only screen and (min-width: 768px) and (max-width: 1023px){
+    .blog_banner_container{
+      height: {{ height_tablet }}px;
+    }
+  }
+  @media only screen and (min-width: 1024px) and (max-width: 1535px){
+    .blog_banner_container{
+      height: {{ height_desktop }}px;
+    }
+  }
+  @media only screen and (min-width: 1536px){
+    .blog_banner_container{
+      height: {{ height_desktop_large }}px;
+    }
+  }
+{% endstyle %}
+
+<div>
+  {% if banner_image or backup_banner_image != blank %}
+    <div class="blog_banner_container relative">
+      {% if banner_image != blank %}
+        {% render 'img', type: 'img', img: banner_image, eager: true, class: 'object-cover h-full w-full hidden md:block' %}
+        {% render 'img', type: 'img', img: banner_image_mobile, eager: true, class: 'object-cover h-full w-full md:hidden' %}
+      {% else %}
+        {% render 'img', type: 'img', img: backup_banner_image, eager: true, class: 'object-cover h-full w-full hidden md:block' %}
+        {% render 'img', type: 'img', img: backup_banner_image_mobile, eager: true, class: 'object-cover h-full w-full md:hidden' %}
+      {% endif %}
+      <h1 class="{% if hide_title_on_mobile %} hidden | md:block {% endif %} text-5xl absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 px-4 | md:max-w-3xl md:text-[56px]" style="color: {{ title_color }};">{{ blog.title }}</h1>
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+  "name": "Blog banner",
+  "settings": [
+    {
+      "type": "image_picker",
+      "label": "Backup banner image",
+      "id": "backup_banner_image",
+      "info": "Aspect ratio - 2000px (width) - 800px (height)"
+    },
+    {
+      "type": "image_picker",
+      "label": "Backup banner image (mobile)",
+      "id": "backup_banner_image_mobile",
+      "info": "Aspect ratio - 800px (width) - 600px (height)"
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Height (mobile) in px",
+      "min": 200,
+      "max": 800,
+      "default": 240,
+      "step": 20
+    },
+    {
+      "type": "range",
+      "id": "height_tablet",
+      "label": "Height (tablet) in px",
+      "min": 200,
+      "max": 800,
+      "default": 440,
+      "step": 20
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "label": "Height (desktop) in px",
+      "min": 200,
+      "max": 800,
+      "default": 600,
+      "step": 20
+    },
+    {
+      "type": "range",
+      "id": "height_desktop_large",
+      "label": "Height (desktop large) in px",
+      "min": 200,
+      "max": 800,
+      "default": 600,
+      "step": 20
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#FFF"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_title_on_mobile",
+      "label": "Hide title on mobile?",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,398 @@
+{% style %}
+  #what_were_made_of-{{ section.id }}.points_container::-webkit-scrollbar {
+    height: 4px;
+  }
+  /* Track */
+  #what_were_made_of-{{ section.id }}.points_container::-webkit-scrollbar-track {
+    background: #ECECEC;
+    height: 4px;
+  }
+  /* Handle */
+  #what_were_made_of-{{ section.id }}.points_container::-webkit-scrollbar-thumb {
+    background: #000;
+    width: 180px;
+  }
+  /* Handle on hover */
+  #what_were_made_of-{{ section.id }}.points_container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+  .point.active {
+    background: #FFF;
+  }
+  .point.top.active {
+    padding-top: 48px;
+  }
+  .point.bottom.active {
+    padding-bottom: 48px;
+  }
+  .point.active .description {
+    max-height: 0;
+  }
+  .point.active .full_description {
+    max-height: 20rem;
+  }
+  .point.active .point_image {
+    width: 0;
+  }
+  .point.active .information_icon {
+    transform: rotate(360deg);
+  }
+  .point.active .background_image {
+    opacity: 1;
+  }
+
+
+  @media only screen and (min-width: 1280px) {
+    .point.active {
+      padding-top: 58px;
+      padding-bottom: 20px;
+    }
+    .points_container .point_container:nth-child(1) .point {
+      max-width: 340px;
+      margin-left: 24px;
+    }
+    .points_container .point_container:nth-child(2) .point {
+      max-width: 350px;
+    }
+    .points_container .point_container:nth-child(3) .point {
+      max-width: 280px;
+      margin-top: 40px;
+      margin-left: 32px;
+    }
+    .points_container .point_container:nth-child(4) .point {
+      max-width: 250px;
+      margin-right: 36px;
+      margin-top: 40px;
+    }
+    .points_container .point_container:nth-child(5) .point {
+      max-width: 320px;
+      margin-top: 40px;
+    }
+    .points_container .point_container:nth-child(6) .point {
+      max-width: 340px;
+      margin-top: 40px;
+    }
+    .points_container .point_container:nth-child(7) .point {
+      max-width: 290px;
+      margin-top: 40px;
+      margin-left: 52px;
+    }
+
+    /* pointer arrows */
+
+    .points_container .point_container:nth-child(1) .pointer_arrow {
+      width: 112px;
+      top: 32px;
+      right: 0;
+      transform: rotate(230deg);
+    }
+    .points_container .point_container:nth-child(2) .pointer_arrow {
+      width: 126px;
+      height: 60px;
+      transform: rotate(104deg) scaleX(-1);
+      bottom: 0;
+      left: 0;
+    }
+    .points_container .point_container:nth-child(3) .pointer_arrow {
+      width: 66px;
+      height: 40px;
+      transform: scaleX(-1) rotate(45deg);
+      right: 110px;
+      top: 80px;
+    }
+    .points_container .point_container:nth-child(4) .pointer_arrow {
+      width: 96px;
+      transform: scaleX(-1) rotate(240deg);
+      top: 74px;
+      left: 80px;
+    }
+    .points_container .point_container:nth-child(5) .pointer_arrow {
+      width: 66px;
+      transform: scaleX(-1) rotate(40deg);
+      right: 66px;
+      top: 52px;
+    }
+    .points_container .point_container:nth-child(6) .pointer_arrow {
+      width: 76px;
+      transform: scaleX(-1) rotate(194deg);
+      left: 60px;
+      top: 40px;
+    }
+    .points_container .point_container:nth-child(7) .pointer_arrow {
+      width: 100px;
+      transform: scaleX(-1) rotate(25deg);
+      right: 46px;
+      top: 60px;
+    }
+  }
+  @media only screen and (min-width: 1280px) {
+    .points_container .glide__slides {
+      transform: initial !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      width: 100% !important;
+      justify-content: space-between !important;
+    }
+    .points_container .glide__slides .glide__slide {
+      width: 100% !important;
+    }
+  }
+  @media only screen and (min-width: 1280px) and(max-width: 1360px) {
+    .central_image {
+      width: 560px;
+    }
+  }
+{% endstyle %}
+
+{% liquid 
+  assign title = section.settings.title
+  assign background_color = section.settings.background_color 
+  assign central_image = section.settings.central_image 
+  assign central_image_mobile = section.settings.central_image_mobile
+  assign show_scratch_sticker = section.settings.show_scratch_sticker
+  assign provide_margin_top = section.settings.provide_margin_top
+  assign sticker_text = section.settings.sticker_text 
+  assign sticker_heading = section.settings.sticker_heading 
+  assign sticker_background_color = section.settings.sticker_background_color 
+  assign sticker_background_image = section.settings.sticker_backgound_image
+  assign sticker_rotation_text = section.settings.sticker_rotation_text
+  assign sticker_text_color = section.settings.sticker_text_color
+  assign points = section.blocks | where: 'type', 'point'
+%}
+
+<what-were-made-of data-module="what-were-made-of">
+  <scratch-sticker data-module="scratch-sticker">
+    <div
+      class="relative {% if show_scratch_sticker %} {% if provide_margin_top %} mt-14 | md:mt-28 {% endif %} {% endif %}"
+      id="what_were_made_of-{{ section.id }}"
+      style="background-color: {{ background_color }};">
+      {% if show_scratch_sticker %}
+        <div class="container absolute left-0 -top-10 | md:-top-20">
+          <div class="relative flex items-center justify-center h-[220px] w-[220px] mx-auto | md:mx-0 md:h-[240px] md:w-[240px]">
+            {% if sticker_rotation_text != blank %}
+              {% render 'img', type: 'img', img: sticker_rotation_text, lazy: true, class: 'animate-rotateText object-contain h-[220px] w-[220px] md:h-[240px] md:w-[240px] absolute transform left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2' %}
+            {% endif %}
+            {% render 'scratch-sticker', text_color: sticker_text_color, background_image, sticker_background_image: sticker_background_image, background_color: sticker_background_color, text: sticker_text, heading: sticker_heading %}
+          </div>
+        </div>
+      {% endif %}
+      <div class="container relative | xl:max-w-[1480px] {% if show_scratch_sticker %} pt-56 pb-16 md:pt-48 xl:py-16 {% else %} py-16 | xl:pt-16 pb-16 {% endif %}">
+        {% comment %} title {% endcomment %}
+        {% if title != blank %}
+          <h2 class="text-dark-blue text-4xl pb-14 font-walsheim-black text-center | md:text-9xl | xl:pb-24">
+            {{ title }}
+          </h2>
+        {% endif %}
+        {% comment %} central image {% endcomment %}
+        {% if central_image != blank %}
+          {% render 'img', type: 'img', img: central_image, class: 'hidden central_image transition-maxHeight duration-500 object-contain absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[540px] xl:w-[640px] xl:mt-[74px] xl:block', lazy: true %}
+        {% endif %}
+        {% if central_image_mobile != blank %}
+          {% render 'img', type: 'img', img: central_image_mobile, height: 434, width: 384, class: 'object-contain transition-maxHeight duration-500 mx-auto max-w-sm w-full xl:hidden', lazy: true %}
+        {% endif %}
+        {% comment %} points {% endcomment %}
+        <div class="glide points_container mt-14 | xl:mt-0 xl:overflow-hidden">
+          <div class="glide__track inner_container | xl:flex xl:flex-wrap xl:justify-between" data-glide-el="track">
+            <ul class="glide__slides">
+              {% for point in points %}
+                {% capture thecycle %}
+                  {% cycle 'odd', 'even' %}
+                {% endcapture %}
+                {% liquid
+                  assign image = point.settings.image
+                  assign heading = point.settings.heading
+                  assign description = point.settings.description  
+                  assign description_full = point.settings.full_description 
+                  assign background_image = point.settings.background_image
+                  assign point_background_image_position = point.settings.point_background_image_position
+                %}
+                  <div class="glide__slide point_container relative | xl:h-fit xl:w-[48%] xl:max-w-[480px] xl:flex {% if thecycle contains 'even' %} xl:justify-end {% endif %}">
+                  {% comment %} pointer arrow {% endcomment %}
+                  <span class="pointer_arrow text-white absolute hidden | xl:flex">
+                    {% render 'icon-pointer-arrow' %}
+                  </span>
+                  <div class="point relative overflow-hidden flex flex-col justify-between pb-4 mb-4 w-56 rounded-lg transition-all duration-500 px-5 | xl:overflow-hidden xl:h-fit xl:w-auto xl:mr-0 | xl:max-w-[300px]  {% unless forloop.last %} mr-10 {% endunless %}">
+                    <div class=" xl:flex">
+                      {% if image != blank %}
+                        {% render 'img', type: 'img', img: image, lazy: true, class: 'point_image transition-all duration-300 delay-100 h-16 w-16 mr-3 object-contain xl:h-14 xl:w-14' %}
+                      {% endif %}
+                      {% if background_image != blank %}
+                        <div class="h-36 w-36 absolute background_image transition-all duration-300 opacity-0 {{ point_background_image_position }}">
+                          {% render 'img', type: 'img', img: background_image, lazy: true, class: 'object-contain h-full w-full -z-1 opacity-30' %}
+                        </div>
+                      {% endif %}
+                      <div class="relative">
+                        <span class="close_point h-4 w-4 flex text-dark-blue absolute cursor-pointer opacity-0 transition-all duration-150 -right-3 top-3 | xl:right-auto xl:-top-7">
+                          {% render 'icon-close' %}
+                        </span>
+                        {% if heading != blank %}
+                          <div class="flex items-end">
+                            <h3 class="mt-4 font-walsheim-black text-dark-blue uppercase leading-none w-[90%] mr-2 | xl:mt-0 xl:text-xl">{{ heading }}</h3>
+                            {% if description_full != blank %}
+                              <span class="relative flex w-8 h-4 transition-all duration-500 cursor-pointer text-dark-blue z-1 information_icon">
+                                {% render 'icon-info' %}
+                              </span>
+                            {% endif %}
+                          </div>
+                        {% endif %}
+                        {% if description != blank %}
+                          <div class="">
+                            <div class="overflow-hidden">
+                              <p class="description mt-3 transition-maxHeight duration-500 font-walsheim text-dark-blue text-xs | xl:text-sm">{{ description }}</p>
+                            </div>
+                            {% if description_full != blank %}
+                              <div class="overflow-hidden">
+                                <p class="full_description transition-maxHeight duration-500 text-dark-blue text-xs max-h-0 | xl:text-sm">
+                                  {{ description_full }}
+                                </p>
+                              </div>
+                            {% endif %}
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </scratch-sticker>
+</what-were-made-of>
+
+
+{% schema %}
+  {
+    "name": "What we're made of",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "What we're made of"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#F5C08D"
+      },
+      {
+        "type": "image_picker",
+        "id": "central_image",
+        "label": "Central image",
+        "info": "Image aspect ratio: 640px width x 640px height"
+      },
+      {
+        "type": "image_picker",
+        "id": "central_image_mobile",
+        "label": "Central image (mobile)",
+        "info": "Image aspect ratio: 450px width x 450px height"
+      }, {
+        "type": "header",
+        "content": "Scratch sticker"
+      }, {
+        "type": "color",
+        "id": "sticker_background_color",
+        "label": "Sticker background color",
+        "default": "#F08B34"
+      }, {
+        "type": "color",
+        "id": "sticker_text_color",
+        "label": "Sticker text color",
+        "default": "#FFF"
+      }, {
+        "type": "image_picker",
+        "id": "sticker_backgound_image",
+        "label": "Sticker background image",
+        "info": "This will show before the sticker has been scratched"
+      }, {
+        "type": "text",
+        "id": "sticker_heading",
+        "label": "Sticker heading",
+        "default": "5% off"
+      }, {
+        "type": "text",
+        "id": "sticker_text",
+        "label": "Sticker copy",
+        "default": "Use code PLAAY31"
+      }, {
+        "type": "image_picker",
+        "id": "sticker_rotation_text",
+        "label": "Sticker rotation text"
+      }, {
+        "type": "checkbox",
+        "id": "show_scratch_sticker",
+        "label": "Show scratch sticker",
+        "default": false
+      }, {
+        "type": "checkbox",
+        "id": "provide_margin_top",
+        "label": "Provide margin top?",
+        "info": "Keep this checked if you want to provide some margin to the top of the section.",
+        "default": false
+      }
+    ],
+    "blocks": [
+      {
+        "type": "point",
+        "name": "Point",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+          },
+          {
+            "type": "text",
+            "id": "description",
+            "label": "Description"
+          },
+          {
+            "type": "text",
+            "id": "full_description",
+            "label": "Full description"
+          }, {
+            "type": "select",
+            "id": "point_background_image_position",
+            "label": "Background image position",
+            "default": "-top-10 -left-10",
+            "options": [
+              {
+                "label": "Top left",
+                "value": "-top-10 -left-10"
+              }, {
+                "label": "Top right",
+                "value": "-top-10 -right-10"
+              }, {
+                "label": "Bottom left",
+                "value": "-left-10 -bottom-10"
+              }, {
+                "label": "Bottom right",
+                "value": "-right-10 -bottom-10"
+              }
+            ]
+          }, {
+            "type": "image_picker",
+            "label": "Background image",
+            "id": "background_image",
+            "info": "This will appear on desktop only"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "What we're made of"
+      }
+    ]
+  }
+{% endschema %}

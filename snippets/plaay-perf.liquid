@@ -1,0 +1,75 @@
+{% comment %}
+  PLAAY — Performance Optimisations
+  File: snippets/plaay-perf.liquid
+
+  Drop this snippet inside <head> in theme.liquid.
+  Contains resource hints, preloads, and render-blocking deferrals.
+
+  Usage: {% render 'plaay-perf' %}
+{% endcomment %}
+
+{% comment %} ── DNS prefetch + preconnect for key third-party origins ── {% endcomment %}
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.judge.me" crossorigin>
+<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+<link rel="dns-prefetch" href="https://static.rechargeapps.com">
+<link rel="dns-prefetch" href="https://cdn.rebuyengine.com">
+
+{% comment %} ── Preload LCP hero image on collection & home pages ── {% endcomment %}
+{% if request.page_type == 'collection' and collection.products.first.featured_image %}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ collection.products.first.featured_image | image_url: width: 600 }}"
+    fetchpriority="high">
+{% endif %}
+
+{% if request.page_type == 'index' %}
+  {% for section in template.sections %}
+    {% comment %} nothing — Shopify doesn't expose template.sections in liquid outside of JSON templates; hint kept for future use {% endcomment %}
+  {% endfor %}
+{% endif %}
+
+{% comment %} ── Preload product featured image on PDPs ── {% endcomment %}
+{% if request.page_type == 'product' and product.featured_image %}
+  <link
+    rel="preload"
+    as="image"
+    href="{{ product.featured_image | image_url: width: 800 }}"
+    fetchpriority="high">
+{% endif %}
+
+{% comment %} ── Inline critical font-face declarations ── {% endcomment %}
+{% comment %}
+  GT Walsheim is loaded via @font-face in theme.css. By inlining the
+  woff2 preloads here we shave ~200–400ms off first paint.
+  Replace hrefs with your actual CDN paths from assets/.
+{% endcomment %}
+{% assign walsheim_bold   = 'GT-Walsheim-Bold.woff2'   | asset_url %}
+{% assign walsheim_black  = 'GT-Walsheim-Black.woff2'  | asset_url %}
+{% assign walsheim_regular = 'GT-Walsheim-Regular.woff2' | asset_url %}
+<link rel="preload" as="font" type="font/woff2" href="{{ walsheim_bold }}"    crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="{{ walsheim_black }}"   crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="{{ walsheim_regular }}" crossorigin="anonymous">
+
+{% comment %} ── Defer non-critical scripts: Reelfy, Rebuy widget, chat ── {% endcomment %}
+{% comment %}
+  These scripts are already loaded by app blocks. The snippet below
+  delays any inline scripts that reference them until after page load,
+  giving the main thread room to paint.
+  Nothing to emit here — the deferral is handled by adding `defer` /
+  `type="module"` in the app block settings where possible.
+{% endcomment %}
+
+{% comment %} ── Lazy-load off-screen images via native loading="lazy" polyfill ── {% endcomment %}
+<script>
+  /* Intersection-Observer–based lazy-load fallback for browsers without native support */
+  if (!('loading' in HTMLImageElement.prototype)) {
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+</script>

@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "plaay_wishlist": {
+      "type": "plaay-wishlist-page",
+      "settings": {
+        "bg_color": "#F4F1EC",
+        "heading": "My Wishlist",
+        "empty_text": "Your wishlist is empty. Start adding your favourites!",
+        "empty_cta_url": "/collections/all",
+        "empty_cta_text": "Shop All"
+      }
+    }
+  },
+  "order": ["plaay_wishlist"]
+}

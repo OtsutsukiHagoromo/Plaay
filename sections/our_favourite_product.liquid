@@ -1,0 +1,284 @@
+{% comment %} general settings {% endcomment %}
+{% liquid 
+  assign heading = section.settings.heading
+  assign description = section.settings.description
+  assign link = section.settings.link
+  assign link_text = section.settings.link_text
+  assign reverse = section.settings.reverse
+  assign button_style = section.settings.button_style
+  assign underline = section.settings.underline
+  assign show_product_background_color = section.settings.show_product_background_color
+  assign extra_padding = section.settings.extra_padding
+  assign show_container = section.settings.show_container 
+  assign background_color = section.settings.background_color 
+  assign badge = section.settings.badge
+  assign badge_mobile = section.settings.badge_mobile
+  assign badge_text = section.settings.badge_copy
+  assign icons = section.blocks | where: 'type', 'icon'
+  assign icons_heading = section.settings.icon_heading
+%}
+
+
+<div class="media_text_container video-main vpb-5 relative overflow-hidden | md:pb-8" style="background-color: {{ background_color }};">
+  <div class="flex flex-col relative | {% if show_container %} pt-5 pb-10 container | md:py-20 {% else %} xl:container {% endif %} md:flex-row md:items-center md:justify-end">
+    {% comment %} media {% endcomment %}
+    <div class="relative w-full | md:h-full md:absolute md:top-0 md:left-0 md:w-1/2 {% if reverse == true %} md:order-1 {% endif %}">
+      {% for block in section.blocks %}
+        {% if block.type == 'video' %}
+          {% comment %} video {% endcomment %}
+          {% assign video = block.settings.block_video %}
+          {% assign video_poster = block.settings.video_poster %}
+          {% assign video_poster_mob = block.settings.video_poster_mob %}
+          {% assign show_controls = block.settings.show_controls %}
+          {% if show_controls %}
+            {% assign autoplay = false %}
+          {% else %}
+            {% assign autoplay = true %}
+          {% endif %}
+          <div class="relative h-full standard_video_player_container">
+            {% render 'video-player', src: video, poster: video_poster, autoplay: autoplay, mob_poster: video_poster_mob, controls: show_controls, height: 'h-full', width: 'w-full' %}
+          </div>
+        {% elsif block.type == 'image' %}
+          {% comment %} image {% endcomment %}
+          {% assign image = block.settings.block_image %}
+          {% render 'img', type: 'img', img: image, lazy: true, class: 'h-full w-full object-cover' %}
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% comment %} text content {% endcomment %}
+    <div class="w-full flex flex-col {% unless show_container %} px-4 | md:px-16 md:md:max-w-3xl {% endunless %} | md:w-1/2 md:pl-5 {% if reverse == true %} {% if extra_padding %} py-14 | md:py-28 {% else %} md:pr-7 {% endif %} pb-6 md:pl-0 | lg:pr-14 {% else %} {% if extra_padding %} py-14 | md:py-28 {% else %} md:pl-7 md:pt-0 {% endif %} pt-6 | lg:pl-14 {% endif %}">
+      {% if badge != blank %}
+        <div class="flex justify-end absolute right-4 -mt-16 | md:mt-0 md:static md:-mb-32">
+          <div class="h-[132px] w-[132px] relative | md:my-10 md:h-[150px] md:w-[150px]">
+            {% comment %} badge (inside) {% endcomment %}
+            {% render 'img', type: 'img', img: badge, lazy: true, class: 'object-contain md:h-36 md:w-36 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 hidden md:block' %}
+            {% if badge_mobile != blank %}
+              {% render 'img', type: 'img', img: badge_mobile, lazy: true, class: 'object-contain w-[90px] h-[90px] absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:hidden' %}
+            {% else %}
+              {% render 'img', type: 'img', img: badge, lazy: true, class: 'object-contain w-[90px] h-[90px] absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:hidden' %}
+            {% endif %}
+            {% comment %} badge (outside) {% endcomment %}
+            {% if badge_text != blank %}
+              {% render 'img', type: 'img', img: badge_text, lazy: true, class: 'object-contain transition-all duration-200 animate-rotateText w-[132px] h-[132px] absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 md:w-[150px] md:h-[150px]' %}
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+      {% comment %} heading {% endcomment %}
+      {% if heading != blank %}
+        <h2 class="text-dark-blue text-4xl md:text-5xl leading-none uppercase {% if badge != blank %} pt-5 max-w-[250px] | xs:max-w-[230px] |  md:pt-0 {% endif %} {% if underline %} underline {% endif %}">
+          {{ heading }}
+        </h2>
+      {% endif %}
+      {% comment %} description {% endcomment %}
+      {% if description != blank %}
+        <div class="my--pb pb-8 mt-8 text-sm font-bold font-walsheim">
+          {{ description }}
+        </div>
+      {% endif %}
+      {% comment %} icons {% endcomment %}
+      <div class="my--bb border-b border-dark-blue text-dark-blue">
+        {% if icons_heading != blank %}
+          <h3 class="text-dark-blue uppercase text-2xl mt-6 | md:mt-8">{{ icons_heading }}</h3>
+        {% endif %}
+        <div class="flex flex-wrap items-end pb-6">
+          {% for icon in icons %}
+            {% assign icon_image = icon.settings.image %}
+            {% assign icon_text_top = icon.settings.icon_text_top %}
+            {% assign icon_text = icon.settings.title %}
+            <div class="flex items-end mt-4 mr-4">
+              {% if icon_image != blank %}
+                {% render 'img', type: 'img', img: icon_image, lazy: true, class: 'object-contain h-10 w-10 mr-1' %}
+              {% endif %}
+              <div class="flex flex-col">
+                {% if icon_text_top != blank %}
+                  <span class="text-xl leading-none uppercase text-dark-blue font-walsheim-black">{{ icon_text_top }}</span>
+                {% endif %}
+                {% if icon_text != blank %}
+                  <span class="text-xl leading-none uppercase text-dark-blue font-walsheim-black">{{ icon_text }}</span>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% comment %} button {% endcomment %}
+      {% if link != blank %}
+        {% if link_text != blank %}
+          {% assign btn_text = link_text %}
+        {% else %}
+          {% assign btn_text = 'learn more' %}
+        {% endif %}
+        {% render 'btn', copy: btn_text, style: button_style, href: link, no_translation: true, width: 'full' additional_class: "mt-5 rounded-lg w-full flex font-walsheim-bold rounded-xl max-w-md order-first max-w-[140px] md:max-w-[240px] md:order-1 md:mb-32" %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Our Favourite Product",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "title",
+        "default": "Default text"
+      },
+      {
+        "type": "checkbox",
+        "id": "underline",
+        "label": "Underline on title?",
+        "default": true
+      },
+      {
+        "type": "richtext",
+        "id": "description",
+        "label": "Description"
+      }, {
+        "type": "image_picker",
+        "id": "badge",
+        "label": "Badge"
+      }, {
+        "type": "image_picker",
+        "id": "badge_mobile",
+        "label": "Badge mobile"
+      }, {
+        "type": "image_picker",
+        "id": "badge_copy",
+        "label": "Badge text"
+      }, {
+        "type": "text",
+        "id": "icon_heading",
+        "label": "Icons (heading)",
+        "default": "What's Inside"
+      }, {
+        "type": "url",
+        "id": "link",
+        "label": "Link"
+      }, {
+        "type": "text",
+        "id": "link_text",
+        "label": "Link text"
+      }, {
+        "type": "select",
+        "id": "button_style",
+        "label": "Button style",
+        "options": [
+          {
+            "label": "Blue",
+            "value": "blue"
+          },
+          {
+            "label": "Blue (alternate)",
+            "value": "blue-alternate"
+          },
+          {
+            "label": "White",
+            "value": "white"
+          },
+          {
+            "label": "Yellow",
+            "value": "yellow"
+          }, {
+            "label": "Blue border",
+            "value": "blue-border"
+          }, {
+            "label": "White border",
+            "value": "white-border"
+          }
+        ]
+      }, {
+        "type": "checkbox",
+        "id": "reverse",
+        "label": "Reverse content?",
+        "info": "reverse the placement of the media & text"
+      }, {
+        "type": "checkbox",
+        "id": "show_product_background_color",
+        "label": "Show product background color?",
+        "info": "if this section isn't on a product page, you can leave this unchecked",
+        "default": false
+      }, {
+        "type": "checkbox",
+        "id": "extra_padding",
+        "label": "Extra padding",
+        "info": "provide extra padding to the top and bottom of the text section",
+        "default": false
+      }, {
+        "type": "checkbox",
+        "id": "show_container",
+        "label": "Show container?",
+        "info": "Provide a container around the content to provide padding on the left and right. This will also remove the padding from the top and bottom of the section.",
+        "default": true
+      }
+    ],
+    "blocks": [
+      {
+        "type": "icon",
+        "name": "Icon",
+        "settings": [
+          {
+            "type": "image_picker",
+            "label": "Image",
+            "id": "image"
+          }, 
+          {
+            "type": "text",
+            "id": "icon_text_top",
+            "label": "Icon text (top)"
+          }, {
+            "type": "text",
+            "id": "title",
+            "label": "Text"
+          }
+        ]
+      }, {
+        "type": "image",
+        "name": "image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "block_image",
+            "label": "Block Image",
+            "info": "Image aspect ratio: 760px width x 760px height"
+          }
+        ]
+      }, {
+        "type": "video",
+        "name": "video",
+        "settings": [
+          {
+            "type": "text",
+            "id": "block_video",
+            "label": "Block video"
+          }, {
+            "type": "image_picker",
+            "id": "video_poster",
+            "label": "Video poster Desktop",
+            "info": "Image aspect ratio: 760px width x 760px height"
+          }, 
+          {
+            "type": "checkbox",
+            "id": "show_controls",
+            "label": "Show controls?",
+            "info": "if unchecked, the video will autoplay on loop",
+            "default": true
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Our Favourite Product"
+      }
+    ]
+  }
+{% endschema %}

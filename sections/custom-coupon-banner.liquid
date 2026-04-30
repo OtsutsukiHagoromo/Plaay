@@ -1,0 +1,151 @@
+{% schema %}
+{
+  "name": "Custom Coupon Banner",
+  "tag": "section",
+  "class": "custom-coupon-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "coupon_text",
+      "label": "Coupon Text",
+      "default": "Get Flat 35% Off on orders above ₹3,999",
+      "info": "Enter the text to display on the coupon."
+    },
+    {
+      "type": "text",
+      "id": "coupon_code",
+      "label": "Coupon Code",
+      "default": "TRU35",
+      "info": "Enter the coupon code to display."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Coupon Banner",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="custom-coupon-banner">
+  <svg class="clip-left" width="27" height="62" viewBox="0 0 27 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 1H26V61H20H3L11.5 52L2 48.4C4.66667 46 9.9 41.2 9.5 41.2C9.1 41.2 5.33333 37.6 3.5 35.8L11 28L4.5 23.8L9.5 17.2L5 12.4L10.5 7.6L5 1Z" fill="#FECE55" stroke="#404040" stroke-width="2"></path>
+    <rect x="24" y="2" width="6" height="58" fill="#FECE55"></rect>
+  </svg>
+  <div class="coupon-wrapper">
+    <div class="larg">
+      {% comment %} <div class="lightning">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M5 1.07244V10.7244C5 11.3142 5.48604 11.7968 6.08009 11.7968H8.24026V19.4647C8.24026 20.0117 8.96392 20.2047 9.24474 19.7329L14.8504 10.1882C15.2716 9.46963 14.7532 8.5795 13.9215 8.5795H11.4805L14.1699 1.44779C14.44 0.750707 13.9215 0 13.1655 0H6.08009C5.48604 0 5 0.482597 5 1.07244Z" fill="#404040"></path>
+        </svg>
+      </div> {% endcomment %}
+      <div class="bloc">
+        {% comment %} <p>Use code: <span class="oc-copy">{{ section.settings.coupon_code }}</span></p> {% endcomment %}
+        <p><span class="oc-copy">{{ section.settings.coupon_text }}</span></p>
+        {% comment %} <h6>{{ section.settings.coupon_text }}</h6> {% endcomment %}
+      </div>
+    </div>
+  </div>
+  <svg class="clip-right" width="27" height="62" viewBox="0 0 27 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M22 61H1L1 0.999996H7H24L15.5 10L25 13.6C22.3333 16 17.1 20.8 17.5 20.8C17.9 20.8 21.6667 24.4 23.5 26.2L16 34L22.5 38.2L17.5 44.8L22 49.6L16.5 54.4L22 61Z" fill="#FECE55" stroke="#404040" stroke-width="2"></path>
+    <rect y="2" width="3" height="58" fill="#FECE55"></rect>
+  </svg>
+</div>
+
+<style>
+.custom-coupon-banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  background: #f5f5f5;
+}
+
+.coupon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  height: 62px; /* Matches SVG height */
+  background-color: #FECE55;
+  position: relative;
+  border-top: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+}
+
+.larg {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.lightning svg {
+  width: 20px;
+  height: 20px;
+  fill: #FECE55;
+}
+
+.bloc p {
+  margin: 0;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.bloc h6 {
+  margin: 0;
+  font-size: 0.9em;
+  font-weight: normal;
+}
+
+.oc-copy {
+  font-weight: bold;
+}
+
+.clip-left, .clip-right {
+  display: block;
+  width: 27px;
+}
+
+@media (max-width: 768px) {
+  .coupon-wrapper {
+    max-width: 90%;
+    height: 61px; /* Reduced height for mobile */
+  }
+
+  .larg {
+    flex-direction: column;
+    text-align: center;
+    padding: 5px;
+  }
+
+  .bloc p {
+    font-size: 1em;
+  }
+
+  .bloc h6 {
+    font-size: 0.8em;
+  }
+
+  .lightning svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .coupon-wrapper {
+    height: 55px;
+  }
+
+  .bloc p {
+    font-size: 0.9em;
+  }
+
+  .bloc h6 {
+    font-size: 0.7em;
+  }
+}
+</style>

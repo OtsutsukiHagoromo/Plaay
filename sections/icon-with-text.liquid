@@ -1,0 +1,112 @@
+{% schema %}
+{
+  "name": "Icons With Text",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#FF7359"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon_block",
+      "name": "Icon Block",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Block Title"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Block description here."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Icons With Text",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="custom-icons-section" style="background-color: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};">
+  <div class="container">
+    <div class="icons-container">
+      {% for block in section.blocks %}
+        <div class="icon-item">
+          {% if block.settings.icon %}
+            <img src="{{ block.settings.icon | image_url: width: 90 }}" alt="{{ block.settings.title }}" class="icon-image" loading="lazy">
+          {% endif %}
+          {% if block.settings.title %}
+            <h3 class="icon-title">{{ block.settings.title }}</h3>
+          {% endif %}
+          {% if block.settings.description %}
+            <p class="icon-description">{{ block.settings.description }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .custom-icons-section {
+    padding: 20px;
+    text-align: center;
+  }
+  .icons-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .icon-item {
+    width: 33.333%;
+    padding:15px;
+}
+  .icon-image {
+   border-radius:100%;
+    margin: 0 auto 20px;
+    display: block;
+    object-fit:cover;
+  }
+  .icon-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+.icon-description {
+    font-size: 17px;
+    width: 100%;
+    max-width: 298px;
+    margin: 0 auto;
+}
+
+  @media (max-width: 720px) {
+
+    .icon-item {
+      width:100%;
+      padding:15px 0;
+    }
+  }
+</style>

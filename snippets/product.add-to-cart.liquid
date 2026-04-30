@@ -1,0 +1,502 @@
+{% style %}
+  .rc-container-wrapper {
+    display: none;
+  }
+  div[data-quick-add-selling-plan-container] input[type="radio"] + .fake_radio {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-image: url("data:image/svg+xml, %3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='11' stroke='black'/%3E%3C/svg%3E%0A");
+  }
+  div[data-quick-add-selling-plan-container] {
+    max-height: 400px;
+  }
+  div[data-quick-add-selling-plan-container] input[type="radio"]:checked + .fake_radio {
+    background-image: url("data:image/svg+xml, %3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='11' stroke='black'/%3E%3Ccircle cx='12' cy='12' r='8' fill='%23FF4D00'/%3E%3C/svg%3E%0A");
+  }
+  div[data-quick-add-selling-plan-container] input[type="radio"]:checked + label {
+    opacity: 1;
+  }
+  .product_subscriptions .product_subscription input:checked ~ .fake_input div {
+    background: #F9C61D;
+  }
+  .product_subscriptions .product_subscription label::after {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background: #FFF;
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 8px;
+    opacity: 0.5;
+  }
+  .product_subscriptions .product_subscription.active {
+    opacity: 1;
+  }
+  .product_subscriptions .product_subscription input:checked ~ label {
+    opacity: 1;
+  }
+  .product_subscriptions .product_subscription input:checked ~ label::after {
+    opacity: 1;
+  }
+
+  [data-quick-add-selling-plan].active {
+    background: #021D49;
+    color: #FFF;
+  }
+{% endstyle %}
+
+{% liquid 
+  assign current_variant = product.selected_or_first_available_variant
+  assign whats_inside_one_pack = product.metafields.arena.whats_inside_one_pack
+  assign global_recharge_point_one = settings.global_recharge_point_one
+  assign global_recharge_point_two = settings.global_recharge_point_two
+  assign global_recharge_point_three = settings.global_recharge_point_three
+%}
+<div class="mt-6 border-t border-black border-opacity-40 pt-5 | md:mt-5 my---ele">
+  {% if product.available %}
+    {% comment %} product available {% endcomment %}
+    <form
+      action="/cart/add"
+      method="post"
+      enctype="multipart/form-data"
+      class="product-page-form"
+      id="add-to-cart-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
+      data-add-to-cart
+      data-product-page-add-to-cart>
+      <quick-add data-module="quick-add" data-id="{{- product.first_available_variant.id -}}">
+        <select
+          name="id"
+          id="productSelect"
+          class="hidden ">
+          {% for variant in product.variants %}
+            {% if variant.available %}
+              <option value="{{variant.id}}">
+                {{ variant.title }} - {{ variant.price | money }}
+              </option>
+            {% else %}
+              <option disabled="disabled">
+                {{ variant.title }} - Sold out
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
+        {%- unless product.has_only_default_variant -%}
+          {% comment %} variants {% endcomment %}
+          <div class="mb-5">
+            {%- for option in product.options_with_values -%}
+              {% assign option_title = option.name | downcase %}
+
+              <fieldset class="variant_type {% unless forloop.first %} mt-3 {% endunless %}">
+                <h3 class="mb-4 text-sm uppercase text-dark-blue font-walsheim-bold">{{ option.name }}</h3>
+                <div class="flex flex-wrap product_variant">
+                  {% comment %} loop through each variant type {% endcomment %}
+                  <div class="relative w-full">
+
+                    <select class="w-full px-3 py-2 text-xs text-center uppercase rounded-lg variants_container text-dark-blue font-walsheim-bold">
+                      {% for value in option.values %}
+                        <option
+                          name="{{ option.name }}"
+                          {% if value contains current_variant.title %}selected{% endif %}
+                          class="text-xs uppercase variant_option text-dark-blue font-walsheim-bold">{{ value }}</option>
+                      {% endfor %}
+                    </select>
+                    <span class="absolute flex w-3 h-3 transform -translate-y-1/2 text-dark-blue right-5 top-1/2">
+                      {% render 'icon-arrow-down' %}
+                    </span>
+                  </div>
+                </div>
+              </fieldset>
+            {%- endfor -%}
+          </div>
+        {%- endunless -%}
+        {% comment %} whats inside one pack {% endcomment %}
+        <div class="flex items-start justify-between flex-col pb-5 | md:border-b md:border-black md:border-opacity-40 md:flex-row md:h-28  {% if whats_inside_one_pack != blank %}qty_and_img {% endif %}">
+          {% if whats_inside_one_pack != blank %}
+            <div class="flex flex-col">
+              <h2 class="text-dark-blue uppercase text-sm mb-2 font-walsheim-bold | md:mb-3">{{ 'product.whats_inside_one_pack' | t }}</h2>
+              {% render 'img', type: 'img', img: whats_inside_one_pack, lazy: true, class: 'object-contain', height: 56, width: 145 %}
+            </div>
+          {% endif %}
+          {% comment %} quantity {% endcomment %}
+          <div class="flex flex-col justify-between mt-8 w-full h-full | {% if whats_inside_one_pack != blank %} pack__qty md:w-fit {% else %} md:w-full {% endif %} md:mt-0">
+            <h2 class="text-dark-blue uppercase text-sm mb-4 font-walsheim-bold | md:mb-0">{{ 'product.how_many' | t }}</h2>
+            {% render 'custom-quantity', product_quantity: true %}
+          </div>
+        </div>
+        {% comment %} subscriptions — new clean toggle {% endcomment %}
+        {% if product.selling_plan_groups.size > 0 and show_subscribe != false %}
+          {% comment %} Extract discount % from first selling plan {% endcomment %}
+          {% assign sub_discount = 0 %}
+          {% for selling_plan_group in product.selling_plan_groups %}
+            {% for selling_plan in selling_plan_group.selling_plans %}
+              {% if forloop.index0 == 0 %}
+                {% for price_adjustment in selling_plan.price_adjustments %}
+                  {% if forloop.index0 == 0 and price_adjustment.value > 0 %}
+                    {% assign sub_discount = price_adjustment.value %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+          {% assign sub_disc_amt = current_variant.price | times: sub_discount | divided_by: 100.0 %}
+          {% assign sub_final_price = current_variant.price | minus: sub_disc_amt %}
+
+          <div class="plaay-sub-wrap">
+            {% comment %} ── Pill toggle bar ── {% endcomment %}
+            <div class="plaay-sub-toggle" role="group" aria-label="Purchase option">
+              <button type="button" class="plaay-sub-tab plaay-sub-tab--active" id="plaay-tab-onetime" aria-pressed="true">
+                <span class="plaay-sub-tab__name">One-Time</span>
+                <span class="plaay-sub-tab__price">{{ current_variant.price | money }}</span>
+              </button>
+              <button type="button" class="plaay-sub-tab" id="plaay-tab-subscribe" aria-pressed="false">
+                <span class="plaay-sub-tab__name">Subscribe &amp; Save</span>
+                {% if sub_discount > 0 %}
+                  <span class="plaay-sub-tab__badge">{{ sub_discount }}% OFF</span>
+                  <span class="plaay-sub-tab__disc-price">{{ sub_final_price | money }}</span>
+                {% else %}
+                  <span class="plaay-sub-tab__disc-price">{{ current_variant.price | money }}</span>
+                {% endif %}
+              </button>
+            </div>
+
+            {% comment %} ── Subscription perks ── {% endcomment %}
+            {% if global_recharge_point_one != blank or global_recharge_point_two != blank or global_recharge_point_three != blank %}
+              <div class="plaay-sub-perks">
+                {% if global_recharge_point_one != blank %}
+                  <div class="plaay-sub-perk">
+                    <span class="plaay-sub-perk__tick">{% render 'icon-tick-green' %}</span>
+                    <span>{{ global_recharge_point_one }}</span>
+                  </div>
+                {% endif %}
+                {% if global_recharge_point_two != blank %}
+                  <div class="plaay-sub-perk">
+                    <span class="plaay-sub-perk__tick">{% render 'icon-tick-green' %}</span>
+                    <span>{{ global_recharge_point_two }}</span>
+                  </div>
+                {% endif %}
+                {% if global_recharge_point_three != blank %}
+                  <div class="plaay-sub-perk">
+                    <span class="plaay-sub-perk__tick">{% render 'icon-tick-green' %}</span>
+                    <span>{{ global_recharge_point_three }}</span>
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% comment %} ── Frequency picker (visible when subscribe tab active) ── {% endcomment %}
+            <div class="plaay-sub-freq" id="plaay-sub-freq" style="display:none" data-quick-add-selling-plan-container>
+              {%- for selling_plan_group in product.selling_plan_groups -%}
+                <p class="plaay-sub-freq__heading">{{ 'product.recharge.delivery_label' | t }}</p>
+                <div class="plaay-sub-freq__opts">
+                  {%- for selling_plan in selling_plan_group.selling_plans -%}
+                    <button
+                      type="button"
+                      class="plaay-sub-freq__opt{% if forloop.first %} active{% endif %}"
+                      data-quick-add-selling-plan
+                      data-value="{{ selling_plan.id }}"
+                      data-price-adjustments="{{ selling_plan.price_adjustments | json | escape }}">
+                      {{ selling_plan.name | split: 'Delivery every ' | last }}
+                    </button>
+                  {%- endfor -%}
+                </div>
+                <input type="hidden" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id />
+                <input type="hidden" value="{{ product.variants | json | escape }}" data-variants />
+                <input type="hidden" value="false" data-subscription />
+                <input type="hidden" value="{{ product.selling_plan_groups[0].selling_plans[0].id }}" data-selling-plan-id />
+              {%- endfor -%}
+            </div>
+
+            {% comment %} ── Hidden radio inputs kept for quick-add JS compatibility ── {% endcomment %}
+            <div class="product_subscriptions" style="position:absolute;opacity:0;pointer-events:none;height:0;overflow:hidden">
+              <div class="product_subscription active">
+                <input id="one_time_purchase" type="radio" name="subscription_option" value="one time purchase" checked />
+              </div>
+              <div class="product_subscription">
+                <input id="subscribe_and_save" type="radio" name="subscription_option" value="subscribe" />
+              </div>
+            </div>
+          </div>
+
+          <script>
+          (function() {
+            var tabOnetime = document.getElementById('plaay-tab-onetime');
+            var tabSub     = document.getElementById('plaay-tab-subscribe');
+            var freqPanel  = document.getElementById('plaay-sub-freq');
+            var radioOne   = document.getElementById('one_time_purchase');
+            var radioSub   = document.getElementById('subscribe_and_save');
+
+            function activate(mode) {
+              var isSub = mode === 'subscribe';
+              tabOnetime.classList.toggle('plaay-sub-tab--active', !isSub);
+              tabSub.classList.toggle('plaay-sub-tab--active', isSub);
+              tabOnetime.setAttribute('aria-pressed', String(!isSub));
+              tabSub.setAttribute('aria-pressed', String(isSub));
+              if (freqPanel) freqPanel.style.display = isSub ? 'block' : 'none';
+              var subInput = freqPanel ? freqPanel.querySelector('[data-subscription]') : null;
+              if (subInput) subInput.value = isSub ? 'true' : 'false';
+            }
+
+            if (tabOnetime) tabOnetime.addEventListener('click', function() {
+              activate('onetime');
+              if (radioOne) { radioOne.checked = true; radioOne.dispatchEvent(new Event('change')); }
+            });
+            if (tabSub) tabSub.addEventListener('click', function() {
+              activate('subscribe');
+              if (radioSub) { radioSub.checked = true; radioSub.dispatchEvent(new Event('change')); }
+            });
+
+            // Frequency option selection
+            if (freqPanel) {
+              freqPanel.querySelectorAll('[data-quick-add-selling-plan]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                  freqPanel.querySelectorAll('[data-quick-add-selling-plan]').forEach(function(b) { b.classList.remove('active'); });
+                  btn.classList.add('active');
+                  var planInput = freqPanel.querySelector('[data-selling-plan-id]');
+                  if (planInput) planInput.value = btn.dataset.value;
+                });
+              });
+            }
+          })();
+          </script>
+        {% endif %}
+    {% comment %}
+        <button
+          data-add
+          type="button"
+          class="relative flex items-center justify-center w-full py-3 mb-4 text-sm font-bold uppercase transition-all duration-200 rounded-lg btn mt-7 blue product_page_atc font-walsheim-bold">
+         
+
+          <div class="text-sm product_price relative transition-all duration-200 {% if discount > 0 and discount != blank %} line-through mr-2 text-xs discount_price_exists {% else %} hidden {% endif %} | md:hidden">
+            {{ current_variant.price | money | replace: ',', '.' }}
+          </div>
+          <div class="text-sm product_discount_price relative z-1 font-walsheim-bold | {% if product.selling_plan_groups.size > 0 %} md:hidden {% endif %}" data-discount="{{ discount }}">
+            {% assign discount_price = current_variant.price | times: discount | divided_by: 100.0 %}
+            {{ current_variant.price | minus: discount_price | money | replace: ',', '.' }}
+          </div>
+
+          <span class="px-1 | {% if product.selling_plan_groups.size > 0 %} md:hidden {% endif %}">
+            |
+          </span>
+          <span class="hidden">{{ 'action.seo' | t }}</span>
+          {{ 'product.add_to_cart.add_to_bag' | t }}
+        </button>
+        {% endcomment %}
+    
+        <button
+          data-add
+          type="button"
+          class="relative flex items-center justify-center w-full py-4 mb-4 text-m font-bold uppercase transition-all duration-200 rounded-lg btn mt-7 blue product_page_atc font-walsheim-bold">
+        
+          <div class="text-sm product_discount_price relative z-1 font-walsheim-bold | {% if product.selling_plan_groups.size > 0 %} md:hidden {% endif %}">
+            {{ current_variant.price | money | replace: ',', '.' }}
+          </div>
+          {%- comment -%} Show compare price only if product has 'Bundle' tag {%- endcomment -%}
+          <div class="text-sm product_price relative transition-all duration-200 {% if product.tags contains 'Bundle' %} line-through ml-3 text-xs discount_price_exists {% else %} hidden {% endif %}">
+            {{ current_variant.compare_at_price | money | replace: ',', '.' }}
+          </div>
+        
+          <span class="px-1 | {% if product.selling_plan_groups.size > 0 %} md:hidden {% endif %}">|</span>
+          <span class="hidden">{{ 'action.seo' | t }}</span>
+          {{ 'product.add_to_cart.add_to_bag' | t }}
+        </button>
+
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          data-add-to-cart-variant-id />
+        <input
+          type="hidden"
+          name="variants"
+          value="{{ product.variants | json | escape }}"
+          data-add-to-cart-variants />
+      </quick-add>
+    </form>
+  {% else %}
+    {% render 'btn', copy: 'product.add_to_cart.sold_out', style: 'disabled' %}
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const customAddToCart = (() => {
+      const elements = {
+        product_page_form: document.querySelector(".product-page-form"),
+        atc_button: document.querySelector(".product_page_atc"),
+        selling_plan_radios: document.querySelector(".product-page-form").querySelectorAll(".product_subscription"),
+        selling_plan_container: document.querySelector(".product-page-form").querySelector("[data-quick-add-selling-plan-container]"),
+        variants: document.querySelector(".product-page-form").querySelectorAll(".variants_container"),
+        variants_container: document.querySelector(".product-page-form").querySelectorAll(".product_variant"),
+        selling_plans: document.querySelector(".product-page-form").querySelectorAll("[data-quick-add-selling-plan]"),
+        url: window.location.href
+      };
+      const init = () => {
+        addEventListeners();
+      };
+      const addEventListeners = () => {
+
+        /* product page elements */
+        let variant_fieldsets = elements.product_page_form.querySelectorAll(".variant_type");
+        let productSelectOptions = elements.product_page_form.querySelector("#productSelect").querySelectorAll("option");
+        let variantId = elements.product_page_form.querySelector("[data-variant-id]");
+        let quantity = elements.product_page_form.querySelector("[data-quantity]").getAttribute("value");
+        let product_price = document.querySelectorAll(".product_price");
+        let product_discount_price = document.querySelectorAll(".product_discount_price");
+        let selling_plan_radios = elements.product_page_form.querySelectorAll(".product_subscription");
+        let selling_plan = elements.product_page_form.querySelector(".recharge_select");
+
+        /* change classlist for recharge radio buttons */
+        if (elements.selling_plan_radios != undefined && elements.selling_plan_radios != null) {
+          elements.selling_plan_radios.forEach(selling_plan_radio => {
+            toggleRecharge(selling_plan_radio, elements.selling_plan_container);
+          });
+        }
+
+        /* update pricing on select (variant) change */
+        elements.variants.forEach(variant_select => {
+          variant_select.addEventListener("change", () => {
+            const variant_id = findVariant(elements.product_page_form, elements.variants_container, productSelectOptions, variantId, false, true);
+            const variant_text = findVariant(elements.product_page_form, elements.variants_container, productSelectOptions, variantId, true, true);
+            const new_url = elements.url.split("?")[0] + "?variant=" + variant_id;
+            const price = variant_text.split("- ")[1];
+
+            history.pushState(null, null, new_url);
+            product_price.forEach(html_price => {
+              html_price.innerHTML = price.replace(",", ".");
+            });
+            product_discount_price.forEach(html_price => {
+              const discount = html_price.dataset.discount * price.slice(1).replace(",", ".") / 100;
+              html_price.innerHTML = price.charAt(0) + Math.round((price.slice(1).replace(",", ".") - discount) * 100) / 100;
+            });
+            console.log(variant_text);
+          });
+        });
+
+        // toggle active selling plan
+        elements.selling_plans.forEach(selling_plan => {
+          selling_plan.addEventListener("click", () => {
+            elements.selling_plans.forEach(selling_plan => {
+              selling_plan.classList.remove("active");
+            });
+            if (selling_plan.classList.contains("active")) {
+              selling_plan.classList.remove("active");
+            } else {
+              selling_plan.classList.add("active");
+            }
+          });
+        });
+
+        /* add to cart for product page */
+        elements.atc_button.addEventListener("click", () => {
+
+          let variant = findVariant(elements.product_page_form, variant_fieldsets, productSelectOptions, variantId);
+          if (elements.selling_plan_container != null && elements.selling_plan_container != undefined) {
+            if (elements.selling_plan_container.classList.contains("active")) {
+              selling_plan_id = elements.selling_plan_container.querySelector(".active");
+              console.log(selling_plan_id);
+            } else {
+              selling_plan_id = undefined;
+            }
+          } else {
+            selling_plan_id = undefined;
+          } // addProduct(quantity, variant, selling_plan_id);
+        });
+      };
+      const addProduct = async (quantity, variantId, sellingPlanId) => {
+        try { /* selling plan & variant exists */
+          if (sellingPlanId !== undefined) {
+            await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(
+                {id: variantId, quantity: quantity, selling_plan: sellingPlanId.dataset.value}
+              )
+            });
+
+            /* selling plan does not exist */
+          } else {
+            await fetch('/cart/add.js', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(
+                {id: variantId, quantity: quantity}
+              )
+            });
+          }
+
+          /* variant id does not exist */
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      const findVariant = (selector, selects, productSelectOptions, variantId, returnText, isSelect) => {
+        let select_value = "";
+        let productDefaultOption = selector.querySelector("#productSelect");
+        let options_array = [];
+        if (isSelect == true) {
+          if (selects[0] !== undefined && selects[0] !== null) {
+            select_value += selects[0].querySelector("select").value;
+          }
+          if (selects[1] !== undefined && selects[1] !== null) {
+            select_value += ' / ' + selects[1].querySelector("select").value;
+          }
+          if (selects[2] !== undefined && selects[2] !== null) {
+            select_value += ' / ' + selects[2].querySelector("select").value;
+          }
+        } else {
+          if (selects[0] !== undefined && selects[0] !== null) {
+            select_value += selects[0].querySelector("select").value;
+          }
+          if (selects[1] !== undefined && selects[1] !== null) {
+            select_value += ' / ' + selects[1].querySelector("select").value;
+          }
+          if (selects[2] !== undefined && selects[2] !== null) {
+            select_value += ' / ' + selects[2].querySelector("select").value;
+          }
+        };
+        productSelectOptions.forEach(option => {
+          options_array.push(option.text);
+          let new_select_value;
+          if (select_value.includes("Pack of")) {
+            new_select_value = select_value.split("Pack of ")[1];
+          } else {
+            new_select_value = select_value;
+          }
+          const checker = value => [new_select_value].some(element => value.includes(element));
+          const check_variants_exist = options_array.filter(checker);
+          if (option.text.includes(new_select_value)) {
+            if (option.text.includes('Sold out')) {
+              option_value = variantId;
+
+              // disableButton(selector.querySelector(".popup_atc"), selector.querySelector(".product_price"));
+            } else {
+              option_value = option;
+
+              // enableButton(selector.querySelector(".popup_atc"), selector.querySelector(".product_price"))
+            }
+          } else if (check_variants_exist.length === 0) {
+            option_value = productDefaultOption[0];
+          }
+        });
+        if (returnText == true) {
+          return option_value.text;
+        } else {
+          return option_value.value;
+        }
+      }
+      return {init};
+    })();
+
+    /* toggleRecharge — kept as no-op so any external calls don't throw */
+    const toggleRecharge = function() {};
+    customAddToCart.init();
+  });
+</script>

@@ -1,0 +1,26 @@
+{%- liquid
+  assign id = false
+
+  if cart.items.size > 0
+    for line_item in cart.items
+      if forloop.first
+        assign id = line_item.product_id
+        break
+      endif
+    endfor
+  endif
+-%}
+
+
+<cart-page-recommendations
+ data-module="cart-page-recommendations"
+ data-url="{{ routes.product_recommendations_url }}"
+ data-id="{{ id }}"
+>
+  {% if section.settings.product_recommendations_title != blank %}
+    {% comment %} this is hidden for a reason, I'm coming back to it
+    <h2 class="text-dark-blue text-2xl mb-4" data-recommendations-title data-title="{{ section.settings.product_recommendations_limit }}">{{ section.settings.product_recommendations_title }}</h2>
+    {% endcomment %}
+  {% endif %}
+  <div class="flex mb-auto pr-4 overflow-y-auto items-stretch pb-5" data-limit="{{ section.settings.product_recommendations_limit }}" data-cart-page-recommendations></div>
+</cart-page-recommendations>

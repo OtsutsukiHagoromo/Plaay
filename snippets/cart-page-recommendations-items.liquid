@@ -1,0 +1,19 @@
+{%- capture widths -%}_{width}x.{%- endcapture -%}
+
+{% liquid 
+  assign recommendations_size = recommendations.products | size 
+  assign backup_recommendations_collection = settings.backup_recommendations_collection
+  assign product_recommendations_limit = settings.product_recommendations_limit
+%}
+
+{% if recommendations_size > 0 %}
+  {%- for product in recommendations.products limit: product_recommendations_limit -%}
+  {% render 'cart-page-recommendations-item', product: product %}
+  {%- endfor -%}
+{% else %}
+    {% if backup_recommendations_collection != blank %}
+      {% for product in collections[backup_recommendations_collection].products limit: product_recommendations_limit %}
+        {% render 'cart-page-recommendations-item', product: product %}
+      {% endfor %}
+    {% endif %}
+{% endif %}

@@ -1,0 +1,185 @@
+{% style %}
+  .cart_items_container::-webkit-scrollbar { width: 3px; }
+  .cart_items_container::-webkit-scrollbar-track { background: #f0f0f0; }
+  .cart_items_container::-webkit-scrollbar-thumb { background: rgba(2,29,73,0.25); border-radius: 4px; }
+{% endstyle %}
+
+<cart-drawer class="group/cart"
+  data-module="drawer-cart"
+  data-drawer="cart">
+  <div class="translate-x-full opacity-0 invisible fixed inset-y-0 right-0 w-screen md:w-[65vw] lg:max-w-[620px] z-[17500] transition-all duration-500 group-active/cart:translate-x-0 group-active/cart:opacity-100 group-active/cart:visible" data-drawer>
+    <div class="relative flex w-full h-full z-10 flex-col" style="background-color: {{ settings.cart_drawer_background | default: '#ffffff' }}">
+
+      {% comment %} Header {% endcomment %}
+      <div class="flex items-center justify-between px-6 py-4 border-b border-dark-blue border-opacity-10 flex-shrink-0">
+        <div class="flex items-center gap-3">
+          <h3 class="text-xl text-dark-blue uppercase font-walsheim-bold">{{ 'cart-drawer.title' | t }}</h3>
+          <span class="flex items-center justify-center w-6 h-6 text-xs bg-yellow rounded-full font-walsheim-bold text-dark-blue{% if cart.item_count == 0 %} hidden{% endif %}" data-cart-drawer-count-wrapper>
+            <span data-cart-drawer-count>{{ cart.item_count }}</span>
+          </span>
+        </div>
+        <button
+          type="button"
+          class="flex h-8 w-8 items-center justify-center rounded-full text-dark-blue transition-all hover:bg-dark-blue hover:text-white"
+          aria-label="Close cart"
+          data-close>
+          <span class="h-4 w-4 flex">{% render 'icon-cross-thin' %}</span>
+        </button>
+      </div>
+
+      {%- render 'cart-drawer-content' -%}
+
+      {% comment %} Loading overlay {% endcomment %}
+      <div class="flex items-center justify-center absolute inset-0 bg-black bg-opacity-30 opacity-0 invisible group-loading/cart:opacity-100 group-loading/cart:visible z-50">
+        {%- render 'loader' type: 'light' -%}
+      </div>
+
+    </div>
+  </div>
+</cart-drawer>
+
+<script>
+  (function() {
+    if (window.plaayCartGiftPromptReady) return;
+    window.plaayCartGiftPromptReady = true;
+
+    function getSectionInnerHTML(html, selector) {
+      var parsed = new DOMParser().parseFromString(html, 'text/html');
+      var node = parsed.querySelector(selector || '.shopify-section');
+      return node ? node.innerHTML : html;
+    }
+
+    function updateDrawerCount(count) {
+      var countValue = Number(count) || 0;
+      var badgeWrapper = document.querySelector('[data-cart-drawer-count-wrapper]');
+      var badgeValue = document.querySelector('[data-cart-drawer-count]');
+
+      if (!badgeWrapper || !badgeValue) return;
+
+      badgeValue.textContent = String(countValue);
+      badgeWrapper.classList.toggle('hidden', countValue === 0);
+    }
+
+    function renderCartSections(sections) {
+      var cartContent = document.querySelector('[data-cart-drawer-content]');
+
+      if (cartContent && sections['cart-drawer-content']) {
+        var parsed = new DOMParser().parseFromString(sections['cart-drawer-content'], 'text/html');
+        var contentNode = parsed.querySelector('[data-cart-drawer-content]');
+
+        if (contentNode) {
+          cartContent.setAttribute('data-cart-item-count', contentNode.getAttribute('data-cart-item-count') || '0');
+          cartContent.innerHTML = contentNode.innerHTML;
+          updateDrawerCount(contentNode.getAttribute('data-cart-item-count'));
+        }
+      }
+
+      if (sections['cart-count']) {
+        var cartCountHtml = getSectionInnerHTML(sections['cart-count']);
+        document.querySelectorAll('[data-cart-count]').forEach(function(element) {
+          element.innerHTML = cartCountHtml;
+        });
+      }
+
+      setTimeout(function() {
+        var recommendations = document.querySelector('cart-drawer cart-recommendations');
+        if (recommendations && recommendations.getRecommendations) {
+          recommendations.getRecommendations();
+        }
+      }, 150);
+    }
+
+    function refreshCartDrawer() {
+      var cartUrl = (window.routes && window.routes.cart_url ? window.routes.cart_url : '/cart') + '?sections=cart-drawer-content,cart-count';
+      return fetch(cartUrl)
+        .then(function(r) { return r.json(); })
+        .then(renderCartSections);
+    }
+
+    window.plaayRenderCartDrawerSections = renderCartSections;
+    window.plaayRefreshCartDrawer = refreshCartDrawer;
+
+    /*
+      Tier bar real-time update via fetch intercept.
+      Wraps window.fetch once, detects cart mutations,
+      then refreshes the tier bar against /cart.js.
+    */
+    (function() {
+      if (window.plaayFetchPatched) return;
+      window.plaayFetchPatched = true;
+
+      var CART_MUTATION = /\/cart\/(add|change|update|clear)(\.js)?(\?|$)/;
+      var _origFetch = window.fetch;
+
+      window.fetch = function(input, init) {
+        var url = typeof input === 'string' ? input
+                  : (input && input.url) ? input.url : '';
+
+        var promise = _origFetch.apply(this, arguments);
+
+        if (CART_MUTATION.test(url)) {
+          promise.then(function() {
+            if (window.plaayRefreshCartDrawer) {
+              window.plaayRefreshCartDrawer().catch(function() {});
+            }
+
+            _origFetch.call(window, '/cart.js')
+              .then(function(r) { return r.json(); })
+              .then(function(cart) {
+                if (window.plaayTierBar) {
+                  window.plaayTierBar.update(cart.total_price);
+                }
+              })
+              .catch(function() {});
+          }).catch(function() {});
+        }
+
+        return promise;
+      };
+    })();
+
+    function applyDiscountCode() {
+      var input = document.getElementById('plaay-discount-input');
+      var msgEl  = document.getElementById('plaay-discount-msg');
+      if (!input) return;
+      var code = input.value.trim();
+      if (!code) {
+        if (msgEl) {
+          msgEl.textContent = 'Please enter a discount code.';
+          msgEl.className = 'plaay-discount-msg plaay-discount-msg--error';
+        }
+        return;
+      }
+      var returnTo = encodeURIComponent(window.location.pathname + window.location.search);
+      window.location.href = '/discount/' + encodeURIComponent(code) + '?return_to=' + returnTo;
+    }
+
+    document.addEventListener('click', function(e) {
+      var toggle = e.target.closest && e.target.closest('.plaay-discount-toggle');
+      if (toggle) {
+        var body = document.getElementById('plaay-discount-body');
+        if (!body) return;
+        var isOpen = body.getAttribute('aria-hidden') === 'false';
+        body.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
+        body.classList.toggle('plaay-discount-body--open', !isOpen);
+        toggle.setAttribute('aria-expanded', String(!isOpen));
+        if (!isOpen) {
+          var inp = document.getElementById('plaay-discount-input');
+          if (inp) setTimeout(function() { inp.focus(); }, 150);
+        }
+        return;
+      }
+
+      if (e.target.closest && e.target.closest('#plaay-discount-apply')) {
+        applyDiscountCode();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && e.target && e.target.id === 'plaay-discount-input') {
+        applyDiscountCode();
+      }
+    });
+
+  })();
+</script>

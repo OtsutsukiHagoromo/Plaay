@@ -1,0 +1,85 @@
+{% liquid 
+  assign image = section.settings.image
+  assign title = section.settings.title 
+  assign copy = section.settings.copy 
+  assign background_color = section.settings.background_color
+  assign menu = section.settings.menu
+  assign menu_title = section.settings.menu_title
+  assign menu_background_color = section.settings.menu_background_color
+%}
+<div style="background-color: {{ background_color }};">
+  <div class="container pt-32 pb-10 flex flex-col | md:pb-16 md:pt-44 md:max-w-xl">
+    {% if image != blank %}
+      {% render 'img', type: 'img', img: image, eager: true, additional_class: 'object-cover w-full h-[120px] | md:h-[300px]' %}
+    {% endif %}
+    {% if title != blank %}
+      <h1 class="mt-6 text-dark-blue uppercase text-11xl text-center font-walsheim-bold">{{ title }}</h1>
+    {% endif %}
+    {% if copy != blank %}
+      <p class="text-dark-blue mt-1 text-center font-walsheim">{{ copy }}</p>
+    {% endif %}
+  </div>
+  {% if menu != blank %}
+    <div class="py-10" style="background-color: {{ menu_background_color }};">
+      <div class="container px-16 | md:px-0 md:max-w-xl">
+        {% if menu_title != blank %}
+          <h2 class="text-sm text-dark-blue mb-3">{{ menu_title }}</h2>
+        {% endif %}
+        <ul class="flex flex-col | md:flex-row md:items-start">
+          {% for link in linklists[menu].links %}
+            <li class="underline text-dark-blue font-walsheim text-sm {% unless forloop.first %} mt-4 md:mt-0 md:ml-10 {% endunless %} | hover:no-underline">
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% schema %}
+  {
+    "name": "404",
+    "settings": [
+      {
+        "type": "image_picker",
+        "label": "Image",
+        "id": "image"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Oops.."
+      },
+      {
+        "type": "text",
+        "id": "copy",
+        "label": "Copy",
+        "default": "We can't seem to find the page you were looking for"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#FFF"
+      },
+      {
+        "type": "text",
+        "id": "menu_title",
+        "label": "Menu title",
+        "default": "Get Back Into The Action"
+      },
+      {
+        "type": "link_list",
+        "id": "menu",
+        "label": "Menu"
+      },
+      {
+        "type": "color",
+        "id": "menu_background_color",
+        "label": "Menu background color",
+        "default": "#F6F5F3"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,62 @@
+<quantity-adjuster data-module="quantity-adjuster">
+  {%- if pdp -%}
+    {%- assign control_classes = 'qty_btn flex items-center justify-center w-9 h-[44px] cursor-pointer disabled:cursor-not-allowed disabled:opacity-20' -%}
+
+    <div class="flex overflow-hidden mx-auto w-full max-w-[240px] items-center justify-between">
+      <button
+        type="button"
+        name="minus"
+        class="{{- control_classes -}}">
+        <span class="w-3 h-3 text-black transition-all duration-200 cursor-pointer text-0">
+          minus button
+          {%- render 'icon-minus' -%}
+        </span>
+      </button>
+      <input
+        class="relative w-9 h-[44px] bg-white text-xs text-center focus:outline-none"
+        type="number"
+        name="quantity"
+        value="{{ quantity | default: 1 }}"
+        min="1">
+      <button
+        type="button"
+        name="plus"
+        class="{{- control_classes -}}">
+        <span class="w-3 h-3 text-black transition-all duration-200 cursor-pointer text-0">
+          plus button
+          {%- render 'icon-plus' -%}
+        </span>
+      </button>
+    </div>
+  {%- else -%}
+    {%- assign control_classes = 'qty_btn flex items-center justify-center w-9 h-8 cursor-pointer disabled:cursor-not-allowed disabled:opacity-20' -%}
+    <div class="flex items-center overflow-hidden {% if template == 'cart' %} border border-black border-opacity-25 rounded-xl flex justify-between w-[180px] h-9 | md:w-auto {% endif %}">
+      <button
+        type="button"
+        name="minus"
+        class="{{- control_classes -}}">
+        <span class="w-2 h-2 text-black transition-all duration-200 cursor-pointer text-0">
+          minus button
+          {%- render 'icon-minus' -%}
+        </span>
+      </button>
+
+      <input
+        class="relative w-7 h-7 bg-opacity-0 text-center bg-white focus:outline-none {% if cart %} text-base md:text-lg {% else %} text-xs bg-white border-2 border-white  {% endif %}"
+        type="number"
+        name="quantity"
+        value="{%- if item -%}{{- item.quantity -}}{%- else -%}1{%- endif -%}"
+        min="0">
+
+      <button
+        type="button"
+        name="plus"
+        class="{{- control_classes -}}">
+        <span class="w-2 h-2 text-black transition-all duration-200 cursor-pointer text-0">
+          {%- render 'icon-plus' -%}
+          plus button
+        </span>
+      </button>
+    </div>
+  {%- endif -%}
+</quantity-adjuster>

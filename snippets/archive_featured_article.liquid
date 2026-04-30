@@ -1,0 +1,63 @@
+{% liquid 
+  assign article = block.settings.article
+  assign background_color = block.settings.background_color
+  assign extra_vertical_padding = block.settings.extra_vertical_padding
+  assign video = block.settings.video 
+  assign image = block.settings.image 
+
+  assign padding_bottom_mobile = block.settings.padding_bottom_mobile
+  assign padding_top_mobile = block.settings.padding_top_mobile
+  assign padding_bottom_desktop = block.settings.padding_bottom_desktop 
+  assign padding_top_desktop = block.settings.padding_top_desktop
+%}
+
+{% style %}
+  @media only screen and (max-width: 1023px){
+    #featured_article-{{ block.id }}{
+      padding-top: {{ padding_top_mobile }}px;
+      padding-bottom: {{ padding_bottom_mobile }}px;
+    }
+  }
+  @media only screen and (min-width: 1024px){
+    #featured_article-{{ block.id }}{
+      padding-top: {{ padding_top_desktop }}px;
+      padding-bottom: {{ padding_bottom_desktop }}px;
+    }
+  }
+{% endstyle %}
+
+{% if article != blank %}
+  <div id="featured_article-{{ block.id }}" style="background: {{ background_color }};">
+    <div class="flex flex-col | lg:container lg:flex-row-reverse">
+      {% if video != blank %}
+        <div class="standard_video_player relative w-full h-[240px] | lg:h-[400px] lg:w-2/3">
+          {% render 'video-player', src: video, poster: image, height: 'h-full', width: 'w-full' %}
+        </div>
+      {% elsif image != blank and video == blank %}
+        <a href="{{ article.url }}" class="text-0 | md:mr-4 | lg:mr-5">
+          {{ article.title }}
+          {% render 'img', type: 'img', lazy: true, img: image, class: 'w-full h-[240px] object-cover lg:w-2/3 lg:h-full lg:max-h-[400px]' %}
+        </a>
+      {% else %}
+        <a href="{{ article.url }}" class="w-full text-0 | md:mr-4 | lg:w-2/3 lg:mr-5">
+          {{ article.title }}
+          {% render 'img', type: 'img', lazy: true, img: article.image, class: 'h-[240px] object-cover w-full lg:h-full lg:max-h-[400px]' %}
+        </a>
+      {% endif %}
+      <div class="container | lg:px-0 lg:w-1/3 lg:mr-7 | xl:mr-10">
+        <h2 class="pt-6 text-5xl font-walsheim-bold text-dark-blue | lg:pt-0">{{ article.title }}</h2>
+        {% if article.excerpt != blank %}
+          <div class="pt-6 text-dark-blue font-walsheim-medium text-base | lg:text-lg">{{ article.excerpt }}</div>
+        {% else %}
+          <div class="pt-6 text-dark-blue font-walsheim-medium text-base | lg:text-lg">{{ article.content | strip_html }}</div>
+        {% endif %}
+        <a href="{{ article.url }}" class="flex items-center text-sm font-walsheim font-bold text-dark-blue mt-4 group">
+          {{ 'article.read-article' | t }}
+          <span class="h-3 w-5 flex text-dark-blue transition-all ml-2 duration-200 mt-[2px] group-hover:ml-4">
+            {% render 'icon-long-arrow' %}
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+{% endif %} 

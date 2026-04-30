@@ -1,0 +1,122 @@
+{% liquid 
+  assign heading = section.blocks | where: 'type', 'heading'
+  assign content = section.blocks | where: 'type', 'content'
+  assign content_heading = section.blocks | where: 'type', 'content_heading'
+  assign background_color = section.settings.background_color
+%}
+
+{% style %}
+  [data-desktop-category].active {
+    text-decoration: underline;
+    font-family: 'walsheim-medium';
+  }
+  .category_content strong {
+    font-family: 'walsheim-medium';
+    font-weight: 400;
+  }
+  .category_content a {
+    font-family: 'walsheim-medium';
+    text-decoration: underline;
+    font-size: 18px;
+  }
+  .category_content p:empty {
+    padding-top: 12px;
+  }
+{% endstyle %}
+
+<terms-template data-module="terms-template">
+  <div style="background-color: {{ background_color }};">
+    <div class="container pt-32 pb-11  | md:pt-44 md:pb-20">
+      {% comment %} headers {% endcomment %}
+      <div class="flex flex-col | md:flex-row">
+        {% for block in heading %}
+          {% assign title = block.settings.title %}
+          {% if forloop.first %}
+            {% assign first_heading = title | downcase %}
+            <h1
+              class="active font-walsheim cursor-pointer text-[22px] text-dark-blue"
+              data-desktop-category
+              data-title="{{ title | downcase }}">{{ title }}</h1>
+          {% else %}
+            <h2
+              class="font-walsheim cursor-pointer text-[22px] text-dark-blue mt-9 | md:mt-0 md:ml-14 | lg:ml-28"
+              data-desktop-category
+              data-title="{{ title | downcase }}">{{ title }}</h2>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+
+      {% comment %} content {% endcomment %}
+      <div class="pt-12">
+        {% for block in content %}
+          {% liquid 
+            assign content_category = block.settings.title | downcase
+            assign content = block.settings.content
+            assign heading = block.settings.heading
+          %}
+          <div class="terms_section overflow-hidden" data-category="{{ content_category }}">
+            <div class="inner_container transition-maxHeight duration-500 {% if content_category == first_heading %} max-h-[60rem] {% else %} max-h-0 {% endif %}">
+              {% if heading != blank %}
+                <h3 class="text-dark-blue font-walsheim-bold text-2xl mb-12">{{ heading }}</h3>
+              {% endif %}
+              {% if content != blank %}
+                <div class="category_content font-walsheim text-dark-blue text-sm pb-10">
+                  {{ content }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</terms-template>
+
+{% schema %}
+  {
+    "name": "Terms & Conditions",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#F8F8F8"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "heading",
+        "name": "Heading",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Category"
+          }
+        ]
+      }, {
+        "type": "content",
+        "name": "Content",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Content (category)",
+            "info": "Please keep this the same as the category you'd like this to sit under."
+          }, {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading",
+            "info": "Add a heading to your content section."
+          }, {
+            "type": "richtext",
+            "id": "content",
+            "label": "Content (main content)",
+            "info": "Add some textual content to your content section. To add a small heading, simply add some bold styling to a seciton of the text."
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

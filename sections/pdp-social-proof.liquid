@@ -1,0 +1,346 @@
+{% comment %}
+  PDP Social Proof — star-rating headline + scrollable testimonial cards.
+  Shown on product pages to reinforce purchase confidence near the ATC button or lower on the page.
+  Add to the product page template via the theme customiser.
+{% endcomment %}
+
+{% liquid
+  assign bg           = section.settings.background_color
+  assign heading      = section.settings.heading
+  assign rating_text  = section.settings.rating_text
+  assign reviews      = section.blocks | where: 'type', 'review'
+  assign trust_badges = section.blocks | where: 'type', 'trust_badge'
+%}
+
+<div class="pdp-sp" style="background:{{ bg }}">
+  <div class="container">
+
+    {%- comment -%} Rating headline {%- endcomment -%}
+    <div class="pdp-sp__header">
+      {% if heading != blank %}
+        <h2 class="pdp-sp__heading font-walsheim-black">{{ heading }}</h2>
+      {% endif %}
+      {% if rating_text != blank %}
+        <div class="pdp-sp__rating">
+          <span class="pdp-sp__stars" aria-label="5 stars">
+            {% for i in (1..5) %}
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="#F9C61D" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M10 1.5L12.39 6.5L18 7.27L14 11.14L14.76 16.73L10 14.14L5.24 16.73L6 11.14L2 7.27L7.61 6.5L10 1.5Z"/>
+              </svg>
+            {% endfor %}
+          </span>
+          <span class="pdp-sp__rating-text font-walsheim-bold">{{ rating_text }}</span>
+        </div>
+      {% endif %}
+    </div>
+
+    {%- comment -%} Trust badges row {%- endcomment -%}
+    {% if trust_badges.size > 0 %}
+      <div class="pdp-sp__trust">
+        {% for block in trust_badges %}
+          <div class="pdp-sp__trust-item" {{ block.shopify_attributes }}>
+            {% if block.settings.icon != blank %}
+              <div class="pdp-sp__trust-icon">
+                {% render 'img', type: 'img', img: block.settings.icon, lazy: true, class: 'pdp-sp__trust-img' %}
+              </div>
+            {% endif %}
+            {% if block.settings.label != blank %}
+              <span class="pdp-sp__trust-label font-walsheim-bold">{{ block.settings.label }}</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {%- comment -%} Review cards — horizontal scroll on mobile, 3-col grid on desktop {%- endcomment -%}
+    {% if reviews.size > 0 %}
+      <div class="pdp-sp__reviews">
+        {% for block in reviews %}
+          <div class="pdp-sp__card" {{ block.shopify_attributes }}>
+            <div class="pdp-sp__card-stars" aria-label="{{ block.settings.rating }} stars">
+              {% assign stars_count = block.settings.rating | default: 5 | plus: 0 %}
+              {% for i in (1..stars_count) %}
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="#F9C61D" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M10 1.5L12.39 6.5L18 7.27L14 11.14L14.76 16.73L10 14.14L5.24 16.73L6 11.14L2 7.27L7.61 6.5L10 1.5Z"/>
+                </svg>
+              {% endfor %}
+            </div>
+            {% if block.settings.quote != blank %}
+              <p class="pdp-sp__card-quote font-walsheim-regular">"{{ block.settings.quote }}"</p>
+            {% endif %}
+            <div class="pdp-sp__card-footer">
+              {% if block.settings.reviewer != blank %}
+                <span class="pdp-sp__card-reviewer font-walsheim-bold">{{ block.settings.reviewer }}</span>
+              {% endif %}
+              {% if block.settings.tag != blank %}
+                <span class="pdp-sp__card-tag font-walsheim-regular">{{ block.settings.tag }}</span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<style>
+.pdp-sp {
+  padding: 56px 0;
+}
+.pdp-sp__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+.pdp-sp__heading {
+  color: #021D49;
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  margin: 0;
+}
+.pdp-sp__rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pdp-sp__stars {
+  display: flex;
+  gap: 2px;
+}
+.pdp-sp__rating-text {
+  color: #021D49;
+  font-size: 0.9rem;
+  opacity: 0.75;
+}
+
+/* Trust badges */
+.pdp-sp__trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 44px;
+}
+.pdp-sp__trust-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border-radius: 999px;
+  padding: 10px 20px;
+  box-shadow: 0 2px 10px rgba(2,29,73,0.07);
+}
+.pdp-sp__trust-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pdp-sp__trust-img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+.pdp-sp__trust-label {
+  color: #021D49;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Reviews grid */
+.pdp-sp__reviews {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+@media (max-width: 639px) {
+  .pdp-sp__reviews {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 12px;
+    padding-bottom: 12px;
+    /* hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .pdp-sp__reviews::-webkit-scrollbar { display: none; }
+  .pdp-sp__card {
+    flex: 0 0 82vw;
+    scroll-snap-align: start;
+  }
+}
+.pdp-sp__card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px 20px 20px;
+  box-shadow: 0 2px 14px rgba(2,29,73,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.pdp-sp__card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(2,29,73,0.12);
+}
+.pdp-sp__card-stars {
+  display: flex;
+  gap: 2px;
+}
+.pdp-sp__card-quote {
+  color: #021D49;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0;
+  flex: 1;
+}
+.pdp-sp__card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(2,29,73,0.08);
+}
+.pdp-sp__card-reviewer {
+  color: #021D49;
+  font-size: 0.82rem;
+}
+.pdp-sp__card-tag {
+  color: #021D49;
+  opacity: 0.5;
+  font-size: 0.72rem;
+}
+@media (max-width: 639px) {
+  .pdp-sp { padding: 40px 0; }
+  .pdp-sp__trust-item { padding: 8px 14px; }
+}
+</style>
+
+{% schema %}
+{
+  "name": "PDP — Social Proof",
+  "class": "pdp-social-proof-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Loved by thousands"
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating label",
+      "default": "4.9 out of 5 from 2,000+ reviews",
+      "info": "Shown next to the 5-star display"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_badge",
+      "name": "Trust badge",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Halal certified"
+        }
+      ]
+    },
+    {
+      "type": "review",
+      "name": "Review card",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Star rating",
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Review quote",
+          "default": "Honestly the best protein snack I have tried. Tastes amazing and doesn't leave that chalky aftertaste."
+        },
+        {
+          "type": "text",
+          "id": "reviewer",
+          "label": "Reviewer name",
+          "default": "Aisha K."
+        },
+        {
+          "type": "text",
+          "id": "tag",
+          "label": "Tag / label",
+          "default": "Verified buyer",
+          "info": "e.g. Verified buyer, Trusted customer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP — Social Proof",
+      "blocks": [
+        { "type": "trust_badge", "settings": { "label": "Halal certified" } },
+        { "type": "trust_badge", "settings": { "label": "No artificial colours" } },
+        { "type": "trust_badge", "settings": { "label": "High protein" } },
+        { "type": "trust_badge", "settings": { "label": "Made in the UK" } },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Honestly the best protein snack I've tried. Tastes great and no chalky aftertaste.",
+            "reviewer": "Aisha K.",
+            "tag": "Verified buyer"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "My kids love these. Feels good knowing exactly what's in them.",
+            "reviewer": "Omar J.",
+            "tag": "Verified buyer"
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Perfect post-gym snack. High protein, genuinely delicious — ordering again.",
+            "reviewer": "Priya S.",
+            "tag": "Verified buyer"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

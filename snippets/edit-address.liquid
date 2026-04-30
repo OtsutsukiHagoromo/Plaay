@@ -1,0 +1,148 @@
+<div id="EditAddress_{{ address.id }}" class="edit_address hidden w-[90%] max-w-4xl mx-auto bg-white py-8 px-8 justify-center fixed top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2 z-30 | lg:px-14 lg:pb-16">
+  <button class="text-0 block h-4 w-4 text-dark-blue ml-auto mr-0 mb-5 | lg:mb-9" type="reset">
+    {% render 'icon-cross-thin' %}
+    {{ 'account.addresses.cancel' | t }}
+  </button>
+  
+  {% comment %} title / copy {% endcomment %}
+  <h2 class="text-base text-dark-blue mb-2 font-walsheim-bold">{{ 'account.addresses.edit_address' | t }}</h2>
+  <p class="text-[#757575] text-xs mb-12 | lg:mb-9">{{ 'account.addresses.update-address-details' | t }}</p>
+
+  {% comment %} form {% endcomment %}
+  <div id="AddAddress hidden">
+    {%- form 'customer_address', address, class: "flex flex-col w-full" -%}
+      <div class="overflow-y-scroll flex flex-col max-h-[320px] pr-5 | lg:grid lg:grid-cols-3 lg:overflow-y-hidden">
+        <div class="field flex items-start mt-3 flex-col | lg:justify-between lg:items-start lg:flex-col">
+          <label for="AddressFirstName_{{ form.id }}" class="text-dark-blue text-xs mb-2 capitalize font-walsheim-medium">{{ 'account.addresses.first_name' | t }}</label>
+          <input
+            type="text"
+            id="AddressFirstName_{{ form.id }}"
+            name="address[first_name]"
+            class="w-full text-dark-blue font-walsheim-medium text-xs px-5 py-[6px] rounded border border-black border-opacity-40 | lg:w-[184px] | placeholder:text-opacity-50 placeholder:text-dark-blue"
+            value="{{ form.first_name }}"
+            autocomplete="given-name"
+            placeholder="{{ 'account.addresses.first_name' | t }}">
+        </div>
+        <div class="field flex items-start mt-3 flex-col | lg:justify-between lg:items-start lg:flex-col">
+          <label for="AddressLastName_{{ form.id }}" class="text-dark-blue text-xs mb-2 capitalize font-walsheim-medium">{{ 'account.addresses.last_name' | t }}</label>
+          <input
+            type="text"
+            id="AddressLastName_{{ form.id }}"
+            name="address[last_name]"
+            class="w-full text-dark-blue font-walsheim-medium text-xs px-5 py-[6px] rounded border border-black border-opacity-40 | lg:w-[184px] | placeholder:text-opacity-50 placeholder:text-dark-blue"
+            value="{{ form.last_name }}"
+            autocomplete="family-name"
+            placeholder="{{ 'account.addresses.last_name' | t }}">
+        </div>
+        <div class="field flex items-start mt-3 flex-col | lg:justify-between lg:items-start lg:flex-col">
+          <label for="AddressCompany_{{ form.id }}" class="text-dark-blue text-xs mb-2 capitalize font-walsheim-medium">{{ 'account.addresses.company' | t }}</label>
+          <input
+            type="text"
+            id="AddressCompany_{{ form.id }}"
+            name="address[company]"
+            class="w-full text-dark-blue font-walsheim-medium text-xs px-5 py-[6px] rounded border border-black border-opacity-40 | lg:w-[184px] | placeholder:text-opacity-50 placeholder:text-dark-blue"
+            value="{{ form.company }}"
+            autocomplete="organization"
+            placeholder="{{ 'account.addresses.company' | t }}">
+        </div>
+        <div class="field flex items-start mt-3 flex-col | lg:justify-between lg:items-start lg:flex-col">
+          <label for="AddressAddress1_{{ form.id }}" class="text-dark-blue text-xs mb-2 capitalize font-walsheim-medium">{{ 'account.addresses.address1' | t }}</label>
+          <input
+            type="text"
+            id="AddressAddress1_{{ form.id }}"
+            name="address[address1]"
+            class="w-full text-dark-blue font-walsheim-medium text-xs px-5 py-[6px] rounded border border-black border-opacity-40 | lg:w-[184px] | placeholder:text-opacity-50 placeholder:text-dark-blue"
+            value="{{ form.address1 }}"
+            autocomplete="address-line1"
+            placeholder="{{ 'account.addresses.address1' | t }}">
+        </div>
+        <div class="field flex items-start mt-3 flex-col | lg:justify-between lg:items-start lg:flex-col">
+          <label for="AddressAddress2_{{ form.id }}" class="text-dark-blue text-xs mb-2 capitalize font-walsheim-medium">{{ 'account.addresses.address2' | t }}</label>
+          <input
+            type="text"
+            id="AddressAddress2_{{ form.id }}"
+            name="address[address2]"
+            class="w-full text-dark-blue font-walsheim-medium text-xs px-5 py-[6px] rounded border border-black border-opacity-40 | lg:w-[184px] | placeholder:text-opacity-50 placeholder:text-dark-blue"
+            value="{{ form.address2 }}"
+            autocomplete="address-line2"
+            placeholder="{{ 'account.addresses.address2' | t }}">
+        </div>
+        <div class="field flex items-start mt-3 flex-col | lg:justify-between lg:items-start lg:flex-col">
+          <label for="AddressCity_{{ form.id }}" class="text-dark-blue text-xs mb-2 capitalize font-walsheim-medium">{{ 'account.addresses.city' | t }}</label>
+          <input
+            type="text"
+            id="AddressCity_{{ form.id }}"
+            name="address[city]"
+            class="w-full text-dark-blue font-walsheim-medium text-xs px-5 py-[6px] rounded border border-black border-opacity-40 | lg:w-[184px] | placeholder:text-opacity-50 placeholder:text-dark-blue"
+            value="{{ form.city }}"
+            autocomplete="address-level2"
+            placeholder="{{ 'account.addresses.city' | t }}">
+        </div>
+        <div class="field flex items-start mt-3 flex-col | lg:justify-between lg:items-start lg:flex-col">
+          <label for="AddressCountry_{{ form.id }}" class="text-dark-blue text-xs mb-2 capitalize font-walsheim-medium">
+            {{ 'account.addresses.country' | t }}
+          </label>
+          <div class="select">
+            <select
+              id="AddressCountry_{{ form.id }}"
+              name="address[country]"
+              data-address-country-select
+              data-default="{{ form.country }}"
+              data-form-id="{{ form.id }}"
+              autocomplete="country"
+              class="text-dark-blue text-xs flex items-center py-2 border border-black border-opacity-40 font-body rounded h-7 w-full px-5 font-walsheim-medium | lg:w-[184px]">
+              {{ all_country_option_tags }}
+            </select>
+          </div>
+        </div>
+        <div id="AddressProvinceContainer_{{ form.id }}" style="display:none;" class="mt-3">
+          <label for="AddressProvince_{{ form.id }}" class="text-dark-blue text-xs mb-2 capitalize font-walsheim-medium">
+            {{ 'account.addresses.province' | t }}
+          </label>
+          <div class="select">
+            <select
+              id="AddressProvince_{{ form.id }}"
+              name="address[province]"
+              data-default="{{ form.province }}"
+              autocomplete="address-level1"
+              class="text-black  text-xs flex items-center py-2 px-3 border font-body border-black rounded w-48"></select>
+          </div>
+        </div>
+        <div class="field flex items-start mt-3 flex-col | lg:justify-between lg:items-start lg:flex-col">
+          <label for="AddressZip_{{ form.id }}" class="text-dark-blue text-xs mb-2 capitalize font-walsheim-medium">{{ 'account.addresses.zip' | t }}</label>
+          <input
+            type="text"
+            id="AddressZip_{{ form.id }}"
+            name="address[zip]"
+            value="{{ form.zip }}"
+            class="w-full text-dark-blue font-walsheim-medium text-xs px-5 py-[6px] rounded border border-black border-opacity-40 | lg:w-[184px] | placeholder:text-opacity-50 placeholder:text-dark-blue"
+            autocapitalize="characters"
+            autocomplete="postal-code"
+            placeholder="{{ 'account.addresses.zip' | t }}">
+        </div>
+        <div class="field flex items-start mt-3 flex-col | lg:justify-between lg:items-start lg:flex-col">
+          <label for="AddressPhone_{{ form.id }}" class="text-dark-blue text-xs mb-2 capitalize font-walsheim-medium">{{ 'account.addresses.phone' | t }}</label>
+          <input
+            type="tel"
+            id="AddressPhone_{{ form.id }}"
+            name="address[phone]"
+            value="{{ form.phone }}"
+            class="w-full text-dark-blue font-walsheim-medium text-xs px-5 py-[6px] rounded border border-black border-opacity-40 | lg:w-[184px] | placeholder:text-opacity-50 placeholder:text-dark-blue"
+            autocomplete="tel"
+            placeholder="{{ 'account.addresses.phone' | t }}">
+        </div>
+        <div class="flex items-center my-5">
+          <span class="default_address relative h-6 mr-5 w-5 flex items-center">
+            {{ form.set_as_default_checkbox }}
+          </span>
+          <label for="address_default_address_new" class="text-dark-blue font-walsheim-medium text-xs w-full | lg:mb-0">{{ 'account.addresses.set_default' | t }}</label>
+        </div>
+      </div>
+  
+  
+      <div class="flex mt-5 flex-col">
+        <button class="text-sm text-dark-blue py-2 w-[252px] rounded font-walsheim-medium bg-[#E0E0E0] transition-all duration-200 uppercase | hover:bg-dark-blue hover:text-white">{{ 'account.addresses.update' | t }}</button>
+      </div>
+    {%- endform -%}
+  </div>
+</div>

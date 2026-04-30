@@ -1,0 +1,147 @@
+{% liquid 
+  assign announcement_text = section.settings.announcement_text
+  assign background_color = section.settings.background_color
+  assign background_color_mobile = section.settings.background_color_mobile
+  assign announcement_text = section.blocks | where: 'type', 'announcement_text'
+  assign announcement_text_size = announcement_text | size
+
+  assign autoplay = section.settings.autoplay
+%}
+
+{% style %}
+  .announcement_bar{
+    background-color: {{ background_color }};
+    color: {{ text_color }};
+  }
+  @media only screen and (max-width: 768px){
+    .announcement_bar{
+      background-color: {{ background_color_mobile }};
+      color: {{ text_color_mobile }}; 
+    }
+  }
+{% endstyle %}
+
+{% if announcement_text_size > 0 %}
+  <announcement-bar data-module="announcement-bar">
+    <div class="announcement_bar fixed top-0 w-full z-10">
+      <!-- Swiper CSS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+
+      <div class="container py-2">
+        <div class="swiper" data-autoplay="7000">
+          <div class="swiper-wrapper" style="align-items:center;">
+            {% for block in announcement_text %}
+              {% liquid 
+                assign text = block.settings.text
+                assign text_color = block.settings.text_color
+                assign text_color_mobile = block.settings.text_color_mobile 
+                assign text_style = block.settings.text_style
+              %}
+              {% if text != blank %}
+                <div class="swiper-slide text-sm text-center font-bold float-left transition-all duration-500 {{ text_style }}">
+                  {{ text }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Swiper JS -->
+      <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+
+      <!-- Swiper Init -->
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          new Swiper('.swiper', {
+            loop: true,
+            autoplay: {
+              delay: 7000,
+              disableOnInteraction: false,
+            },
+            slidesPerView: 1,
+          });
+        });
+      </script>
+    </div>
+  </announcement-bar>
+{% endif %}
+
+
+{% schema %}
+  {
+    "name": "Announcement Bar",
+    "blocks": [
+      {
+        "type": "announcement_text",
+        "name": "Announcement text",
+        "settings": [
+          {
+            "type": "text",
+            "id": "text",
+            "label": "Text"
+          },
+          {
+            "type": "color",
+            "id": "text_color",
+            "label": "Text color",
+            "default": "#021D49"
+          },
+          {
+            "type": "color",
+            "id": "text_color_mobile",
+            "label": "Text color (mobile)",
+            "default": "#021D49"
+          },
+          {
+            "type": "select",
+            "id": "text_style",
+            "label": "Text style",
+            "options": [
+              {
+                "value": "uppercase",
+                "label": "Uppercase"
+              },
+              {
+                "value": "lowercase",
+                "label": "Lowercase"
+              },
+              {
+                "value": "capitalize",
+                "label": "Capitalize"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#FFF"
+      },
+      {
+        "type": "color",
+        "id": "background_color_mobile",
+        "label": "Background color (mobile)",
+        "default": "#F9C61D"
+      },
+      {
+        "type": "header",
+        "content": "Slider settings"
+      },
+      {
+        "type": "range",
+        "label": "Autoplay speed",
+        "info": "Set to 0 to turn off autoplay (value in milliseconds)",
+        "min": 1000,
+        "max": 9900,
+        "default": 4000,
+        "step": 100,
+        "id": "autoplay"
+      }
+    ]
+  }
+{% endschema %}

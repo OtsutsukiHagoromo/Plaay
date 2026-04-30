@@ -1,0 +1,91 @@
+<section class="faq-section bg-yellow-400 py-12">
+  <div class="container mx-auto max-w-4xl">
+    <h2 class="text-4xl font-bold mb-8">{{ section.settings.heading }}</h2>
+
+    <div class="faq-items">
+      {% for block in section.blocks %}
+        <div class="faq-item border-b border-black py-4">
+          <button class="faq-question w-full flex justify-between items-center text-lg font-semibold" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.icon').textContent = this.nextElementSibling.classList.contains('hidden') ? '+' : '-'">
+            <span>{{ block.settings.question }}</span>
+            <span class="icon">+</span>
+          </button>
+          <div class="faq-answer hidden mt-2 text-base text-gray-800">
+            {{ block.settings.answer }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.faq-section {
+  background-color: #FFD400; /* Yellow */
+}
+.faq-item button {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+.faq-answer p {
+  margin-bottom: 0.75rem; /* paragraphs ke beech spacing */
+}
+
+.faq-answer ul {
+  list-style-type: disc;
+  padding-left: 1.5rem; /* left indent */
+  margin-bottom: 0.75rem;
+}
+
+.faq-answer ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.faq-answer li {
+  margin-bottom: 0.25rem; /* har bullet ke beech choti spacing */
+}
+</style>
+
+{% schema %}
+{
+  "name": "FAQ Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section Heading",
+      "default": "FAQs"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Your question here"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Your answer here</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Section",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

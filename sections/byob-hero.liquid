@@ -1,0 +1,362 @@
+<style>
+  .byob-hero {
+    background-color: {{ section.settings.background_color }};
+    width: 100%;
+    padding: 72px 24px 56px;
+    box-sizing: border-box;
+    text-align: center;
+  }
+
+  .byob-hero__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .byob-hero__heading {
+    font-family: var(--font-walsheim-black, 'GT Walsheim', sans-serif);
+    font-size: clamp(40px, 6vw, 72px);
+    color: #F9C61D;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    margin: 0 0 16px;
+    line-height: 1.05;
+  }
+
+  .byob-hero__subheading {
+    font-family: var(--font-walsheim-regular, 'GT Walsheim', sans-serif);
+    font-size: clamp(16px, 2.2vw, 22px);
+    color: #ffffff;
+    margin: 0 auto 52px;
+    max-width: 640px;
+    line-height: 1.5;
+    opacity: 0.92;
+  }
+
+  /* Tier cards grid */
+  .byob-hero__tiers {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 48px;
+  }
+
+  .byob-tier-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 32px 24px 28px;
+    position: relative;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .byob-tier-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 36px rgba(0, 0, 0, 0.24);
+  }
+
+  /* Saving badge — top right corner */
+  .byob-tier-card__saving-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background-color: #F9C61D;
+    color: #021D49;
+    font-family: var(--font-walsheim-bold, 'GT Walsheim', sans-serif);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 30px;
+    line-height: 1.4;
+  }
+
+  /* "Most Popular" pill — sits above the card at the top */
+  .byob-tier-card__popular-pill {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #F9C61D;
+    color: #021D49;
+    font-family: var(--font-walsheim-bold, 'GT Walsheim', sans-serif);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 5px 14px;
+    border-radius: 30px;
+    white-space: nowrap;
+  }
+
+  .byob-tier-card__icon {
+    width: 56px;
+    height: 56px;
+    margin-top: 8px;
+    color: #021D49;
+  }
+
+  .byob-tier-card__name {
+    font-family: var(--font-walsheim-bold, 'GT Walsheim', sans-serif);
+    font-size: 18px;
+    color: #021D49;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+
+  .byob-tier-card__bars {
+    font-family: var(--font-walsheim-black, 'GT Walsheim', sans-serif);
+    font-size: 36px;
+    color: #F9C61D;
+    line-height: 1;
+    margin: 0;
+  }
+
+  .byob-tier-card__price {
+    font-family: var(--font-walsheim-bold, 'GT Walsheim', sans-serif);
+    font-size: 20px;
+    color: #021D49;
+    margin: 0;
+  }
+
+  /* CTA button */
+  .byob-hero__cta-wrap {
+    display: flex;
+    justify-content: center;
+  }
+
+  .byob-hero__cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #F9C61D;
+    color: #021D49;
+    font-family: var(--font-walsheim-bold, 'GT Walsheim', sans-serif);
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 16px 36px;
+    border-radius: 50px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .byob-hero__cta-btn:hover {
+    background-color: #e8b500;
+    transform: translateY(-2px);
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .byob-hero {
+      padding: 52px 20px 44px;
+    }
+
+    .byob-hero__tiers {
+      grid-template-columns: 1fr;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 960px) {
+    .byob-hero__tiers {
+      gap: 16px;
+    }
+
+    .byob-tier-card {
+      padding: 28px 16px 24px;
+    }
+  }
+</style>
+
+{%- assign popular_index = section.settings.tier_popular | plus: 0 -%}
+
+<section class="byob-hero" id="byob-hero-section">
+  <div class="byob-hero__inner">
+
+    <h1 class="byob-hero__heading font-walsheim-black">{{ section.settings.heading }}</h1>
+    <p class="byob-hero__subheading font-walsheim-regular">{{ section.settings.subheading }}</p>
+
+    <div class="byob-hero__tiers">
+
+      {%- for i in (1..3) -%}
+        {%- assign tier_name_key   = 'tier_name_'   | append: i -%}
+        {%- assign tier_bars_key   = 'tier_bars_'   | append: i -%}
+        {%- assign tier_price_key  = 'tier_price_'  | append: i -%}
+        {%- assign tier_saving_key = 'tier_saving_' | append: i -%}
+
+        <div class="byob-tier-card">
+
+          {%- if popular_index == i -%}
+            <span class="byob-tier-card__popular-pill font-walsheim-bold">Most Popular</span>
+          {%- endif -%}
+
+          <span class="byob-tier-card__saving-badge font-walsheim-bold">{{ section.settings[tier_saving_key] }}</span>
+
+          <!-- Box SVG icon -->
+          <svg class="byob-tier-card__icon" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="8" y="20" width="40" height="28" rx="3" stroke="#021D49" stroke-width="2.5" fill="none"/>
+            <path d="M8 26h40" stroke="#021D49" stroke-width="2.5"/>
+            <path d="M20 20v-6a8 8 0 0116 0v6" stroke="#021D49" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M22 26v10M34 26v10" stroke="#F9C61D" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+
+          <p class="byob-tier-card__name font-walsheim-bold">{{ section.settings[tier_name_key] }}</p>
+          <p class="byob-tier-card__bars font-walsheim-black">{{ section.settings[tier_bars_key] }}</p>
+          <p class="byob-tier-card__price font-walsheim-bold">{{ section.settings[tier_price_key] }}</p>
+
+        </div>
+      {%- endfor -%}
+
+    </div>
+
+    <div class="byob-hero__cta-wrap">
+      <a
+        href="#byob-builder-anchor"
+        class="byob-hero__cta-btn font-walsheim-bold"
+        onclick="event.preventDefault(); document.querySelector('#byob-builder-anchor, .ilovebyob-app, .byob-app-wrapper, [data-section-type=\'apps\']')?.scrollIntoView({ behavior: 'smooth', block: 'start' });"
+      >
+        Start Building ↓
+      </a>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "BYOB Hero",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#021D49"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Build Your Box"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Mix & match your favourite Plaay flavours — your box, your rules."
+    },
+    {
+      "type": "header",
+      "content": "Tier 1"
+    },
+    {
+      "type": "text",
+      "id": "tier_name_1",
+      "label": "Tier 1 — Name",
+      "default": "Taster Box"
+    },
+    {
+      "type": "text",
+      "id": "tier_bars_1",
+      "label": "Tier 1 — Bars",
+      "default": "6 Bars"
+    },
+    {
+      "type": "text",
+      "id": "tier_price_1",
+      "label": "Tier 1 — Price",
+      "default": "AED 65"
+    },
+    {
+      "type": "text",
+      "id": "tier_saving_1",
+      "label": "Tier 1 — Saving badge",
+      "default": "Save 10%"
+    },
+    {
+      "type": "header",
+      "content": "Tier 2"
+    },
+    {
+      "type": "text",
+      "id": "tier_name_2",
+      "label": "Tier 2 — Name",
+      "default": "Builder Box"
+    },
+    {
+      "type": "text",
+      "id": "tier_bars_2",
+      "label": "Tier 2 — Bars",
+      "default": "12 Bars"
+    },
+    {
+      "type": "text",
+      "id": "tier_price_2",
+      "label": "Tier 2 — Price",
+      "default": "AED 120"
+    },
+    {
+      "type": "text",
+      "id": "tier_saving_2",
+      "label": "Tier 2 — Saving badge",
+      "default": "Save 15%"
+    },
+    {
+      "type": "header",
+      "content": "Tier 3"
+    },
+    {
+      "type": "text",
+      "id": "tier_name_3",
+      "label": "Tier 3 — Name",
+      "default": "Bulk Box"
+    },
+    {
+      "type": "text",
+      "id": "tier_bars_3",
+      "label": "Tier 3 — Bars",
+      "default": "24 Bars"
+    },
+    {
+      "type": "text",
+      "id": "tier_price_3",
+      "label": "Tier 3 — Price",
+      "default": "AED 220"
+    },
+    {
+      "type": "text",
+      "id": "tier_saving_3",
+      "label": "Tier 3 — Saving badge",
+      "default": "Save 20%"
+    },
+    {
+      "type": "header",
+      "content": "Most Popular"
+    },
+    {
+      "type": "select",
+      "id": "tier_popular",
+      "label": "\"Most Popular\" card",
+      "options": [
+        { "value": "1", "label": "Tier 1 — Taster Box" },
+        { "value": "2", "label": "Tier 2 — Builder Box" },
+        { "value": "3", "label": "Tier 3 — Bulk Box" }
+      ],
+      "default": "2"
+    }
+  ],
+  "presets": [
+    {
+      "name": "BYOB Hero",
+      "category": "BYOB"
+    }
+  ]
+}
+{% endschema %}

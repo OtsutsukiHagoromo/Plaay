@@ -1,0 +1,300 @@
+{% liquid 
+  assign title = section.settings.title
+%}
+
+<div class="pt-28 | lg:pt-36">
+  {% if title != blank %}
+    <h1 class="text-center text-dark-blue text-5xl | lg:text-7xl">{{ title }}</h1>
+  {% endif %}
+  <div class="pt-10 | lg:pt-14">
+    {% for block in section.blocks %}
+      {% if block.type == 'featured_article' %}
+        {% render 'archive_featured_article', block: block %}
+      {% elsif block.type == 'archive_grid_articles' %}
+        {% render 'archive_grid_articles', block: block %}
+      {% elsif block.type == 'grid_articles_rounded' %}
+        {% render 'archive_grid_articles_rounded', block: block %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Blog archive template",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Blog archive"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "grid_articles_rounded",
+        "name": "Grid articles (rounded)",
+        "settings": [
+          {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background color",
+            "default": "#FFFFFF"
+          },
+          {
+            "type": "range",
+            "id": "padding_top_mobile",
+            "label": "Padding top (mobile) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 30
+          },
+          {
+            "type": "range",
+            "id": "padding_bottom_mobile",
+            "label": "Padding bottom (mobile) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 30
+          },
+          {
+            "type": "range",
+            "id": "padding_top_desktop",
+            "label": "Padding top (desktop) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 36
+          },
+          {
+            "type": "range",
+            "id": "padding_bottom_desktop",
+            "label": "Padding bottom (desktop) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 90
+          },
+          {
+            "type": "range",
+            "id": "number_of_columns_mobile",
+            "label": "Number of columns - mobile (640px and below)",
+            "min": 1,
+            "max": 4,
+            "default": 2
+          },
+          {
+            "type": "range",
+            "id": "number_of_columns_tablet",
+            "label": "Number of columns - tablet (641px to 1023px)",
+            "min": 1,
+            "max": 4,
+            "default": 3
+          },
+          {
+            "type": "range",
+            "id": "number_of_columns_desktop",
+            "label": "Number of columns - desktop (1024px to 1279px)",
+            "min": 1,
+            "max": 4,
+            "default": 3
+          },
+          {
+            "type": "range",
+            "id": "number_of_columns_desktop_large",
+            "label": "Number of columns - desktop large (1280px and above)",
+            "min": 1,
+            "max": 4,
+            "default": 4
+          },
+          {
+            "type": "article",
+            "id": "article_one",
+            "label": "Article (one)"
+          },
+          {
+            "type": "article",
+            "id": "article_two",
+            "label": "Article (two)"
+          },          
+          {
+            "type": "article",
+            "id": "article_three",
+            "label": "Article (three)"
+          },          
+          {
+            "type": "article",
+            "id": "article_four",
+            "label": "Article (four)"
+          }
+        ]
+      },
+      {
+        "type": "archive_grid_articles",
+        "name": "Grid articles",
+        "settings": [
+          {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background color",
+            "default": "#FFFFFF"
+          },
+          {
+            "type": "range",
+            "id": "padding_top_mobile",
+            "label": "Padding top (mobile) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 18
+          },
+          {
+            "type": "range",
+            "id": "padding_bottom_mobile",
+            "label": "Padding bottom (mobile) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 18
+          },
+          {
+            "type": "range",
+            "id": "padding_top_desktop",
+            "label": "Padding top (desktop) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 20
+          },
+          {
+            "type": "range",
+            "id": "padding_bottom_desktop",
+            "label": "Padding bottom (desktop) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 30
+          },
+          {
+            "type": "range",
+            "id": "number_of_columns_mobile",
+            "label": "Number of columns - mobile (640px and below)",
+            "min": 1,
+            "max": 4,
+            "default": 2
+          },
+          {
+            "type": "range",
+            "id": "number_of_columns_tablet",
+            "label": "Number of columns - tablet (641px to 1023px)",
+            "min": 1,
+            "max": 4,
+            "default": 3
+          },
+          {
+            "type": "range",
+            "id": "number_of_columns_desktop",
+            "label": "Number of columns - desktop (1024px to 1279px)",
+            "min": 1,
+            "max": 4,
+            "default": 3
+          },
+          {
+            "type": "range",
+            "id": "number_of_columns_desktop_large",
+            "label": "Number of columns - desktop large (1280px and above)",
+            "min": 1,
+            "max": 4,
+            "default": 4
+          },
+          {
+            "type": "article",
+            "id": "article_one",
+            "label": "Article (one)"
+          },
+          {
+            "type": "article",
+            "id": "article_two",
+            "label": "Article (two)"
+          },          
+          {
+            "type": "article",
+            "id": "article_three",
+            "label": "Article (three)"
+          },          
+          {
+            "type": "article",
+            "id": "article_four",
+            "label": "Article (four)"
+          }
+        ]
+      },
+      {
+        "type": "featured_article",
+        "name": "Featured article",
+        "settings": [
+          {
+            "type": "article",
+            "id": "article",
+            "label": "Featured article"
+          },
+          {
+            "type": "text",
+            "id": "video",
+            "info": "Provide a video instead of showing the articles image",
+            "label": "Video"
+          },
+          {
+            "type": "image_picker",
+            "label": "Image",
+            "info": "Provide an alternative image, or a poster for a video ( if one is provided ), Aspect Ratio: (900px width - 500px height)",
+            "id": "image"
+          },
+          {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background color",
+            "default": "#FFFFFF"
+          },
+          {
+            "type": "range",
+            "id": "padding_top_mobile",
+            "label": "Padding top (mobile) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 0
+          },
+          {
+            "type": "range",
+            "id": "padding_bottom_mobile",
+            "label": "Padding bottom (mobile) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 80
+          },
+          {
+            "type": "range",
+            "id": "padding_top_desktop",
+            "label": "Padding top (desktop) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 64
+          },
+          {
+            "type": "range",
+            "id": "padding_bottom_desktop",
+            "label": "Padding bottom (desktop) - px",
+            "min": 0,
+            "max": 120,
+            "step": 2,
+            "default": 68
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,32 @@
+{%- assign img_sizes = img_sizes | default: '150,320,425,640,768,1024,1280,1536' | split: ',' -%}
+{%- assign class_list = '' -%}
+
+{%- for img_size in img_sizes -%}
+  {%- assign img_url_size = img_size | append: 'x' -%}
+  {%- case type -%}
+    {%- when 'asset' -%}
+    {%- assign img_url = img | asset_img_url: img_url_size -%}
+    {%- when 'img' -%}
+    {%- assign img_url = img | img_url: img_url_size -%}
+  {%- endcase -%}
+  {%- unless forloop.last -%}
+    {%- assign sizes = sizes | append: '(max-width:' | append: img_size | append: 'px) ' | append: img_size | append: 'w, ' -%}
+    {%- assign srcset = srcset | append: img_url | append: ' ' | append: img_size | append: 'w, ' -%}
+  {%- else -%}
+    {%- assign sizes = sizes | append: img_size | append: 'px' -%}
+    {%- assign srcset = srcset | append: img_url | append: ' ' | append: img_size | append: 'w' -%}
+    {%- assign src = img_url_size -%}
+  {%- endunless -%}
+{%- endfor -%}
+
+{%- if clip_path -%}
+  {%- assign class_list = class_list | append: ' ' | append: clip_path -%}
+{%- endif -%}
+
+{%- if lazy -%}
+  <img {% if forloop_data %}data-index="{{ forloop_data }}"{% endif %}loading="lazy"class="{{ class_list }} {{ class }}"srcset="{{ srcset }}"sizes="{{sizes}}"src="{{ src }}"alt="{{ alt }}"{% if height %}height="{{height}}"{% endif %}{% if width %}width="{{width}}"{% endif %} />
+{% elsif eager %}
+  <img {% if forloop_data %}data-index="{{ forloop_data }}"{% endif %}loading="eager"class="{{ class_list }} {{ class }}"srcset="{{ srcset }}"sizes="{{sizes}}"src="{{ src }}"alt="{{ alt }}"{% if height %}height="{{height}}"{% endif %}{% if width %}width="{{width}}"{% endif %} />
+{%- else -%}
+  <img {% if forloop_data %}data-index="{{ forloop_data }}"{% endif %}class="{{ class_list }} {{ class }}"srcset="{{ srcset }}"sizes="{{sizes}}"src="{{ src }}"alt="{{ alt }}"{% if height %}height="{{height}}"{% endif %}{% if width %}width="{{width}}"{% endif %} />
+{%- endif -%}

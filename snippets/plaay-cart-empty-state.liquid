@@ -1,0 +1,87 @@
+<div class="plaay-empty">
+
+  {%- comment -%} ── Illustration ── {%- endcomment -%}
+  <div class="plaay-empty__hero">
+    <div class="plaay-empty__bag-wrap" aria-hidden="true">
+      <svg class="plaay-empty__bag-svg" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+        {%- comment -%} Bag body {%- endcomment -%}
+        <path d="M22 34H74L68 78H28L22 34Z" fill="rgba(249,198,29,0.12)" stroke="#021D49" stroke-width="2.5" stroke-linejoin="round"/>
+        {%- comment -%} Bag handle {%- endcomment -%}
+        <path d="M34 34C34 24.059 40.268 16 48 16C55.732 16 62 24.059 62 34" stroke="#021D49" stroke-width="2.5" stroke-linecap="round"/>
+        {%- comment -%} Chocolate bar inside {%- endcomment -%}
+        <rect x="37" y="50" width="22" height="16" rx="2.5" fill="#F9C61D" opacity="0.9"/>
+        <line x1="48" y1="50" x2="48" y2="66" stroke="#021D49" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="37" y1="58" x2="59" y2="58" stroke="#021D49" stroke-width="1.5" stroke-linecap="round"/>
+        {%- comment -%} Small sparkles {%- endcomment -%}
+        <circle cx="17" cy="26" r="2" fill="#F9C61D" class="plaay-empty__sparkle"/>
+        <circle cx="79" cy="30" r="2.5" fill="#F9C61D" class="plaay-empty__sparkle plaay-empty__sparkle--2"/>
+        <circle cx="74" cy="18" r="1.5" fill="rgba(2,29,73,0.3)" class="plaay-empty__sparkle plaay-empty__sparkle--3"/>
+      </svg>
+    </div>
+    <h4 class="plaay-empty__title font-walsheim-black">Your bag is empty</h4>
+    <p class="plaay-empty__sub font-walsheim-regular">No chocolates yet — let's change that!</p>
+  </div>
+
+  {%- comment -%} ── USP strip ── {%- endcomment -%}
+  <div class="plaay-empty__usps">
+    <div class="plaay-empty__usp">
+      <span class="plaay-empty__usp-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </span>
+      <span class="font-walsheim-regular">Free shipping AED 75+</span>
+    </div>
+    <div class="plaay-empty__usp">
+      <span class="plaay-empty__usp-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      </span>
+      <span class="font-walsheim-regular">Same-day delivery in Dubai</span>
+    </div>
+    <div class="plaay-empty__usp">
+      <span class="plaay-empty__usp-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      </span>
+      <span class="font-walsheim-regular">Free gift with AED 350+ orders</span>
+    </div>
+  </div>
+
+  {%- comment -%} ── Collection cards ── {%- endcomment -%}
+  <p class="plaay-empty__section-label font-walsheim-bold">Start shopping</p>
+
+  <div class="plaay-empty__collections">
+
+    <a href="/collections/variety-packs" class="plaay-empty__card plaay-empty__card--variety">
+      <div class="plaay-empty__card-left">
+        <span class="plaay-empty__card-emoji" aria-hidden="true">🎨</span>
+        <div>
+          <p class="plaay-empty__card-name font-walsheim-black">Variety Packs</p>
+          <p class="plaay-empty__card-tag font-walsheim-regular">Mix &amp; match flavours</p>
+        </div>
+      </div>
+      <svg class="plaay-empty__card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <a href="/collections/chocolate-bar" class="plaay-empty__card plaay-empty__card--bars">
+      <div class="plaay-empty__card-left">
+        <span class="plaay-empty__card-emoji" aria-hidden="true">🍫</span>
+        <div>
+          <p class="plaay-empty__card-name font-walsheim-black">Chocolate Bars</p>
+          <p class="plaay-empty__card-tag font-walsheim-regular">Bold &amp; creamy flavours</p>
+        </div>
+      </div>
+      <svg class="plaay-empty__card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+    <a href="/collections/chocolate-truffles" class="plaay-empty__card plaay-empty__card--truffles">
+      <div class="plaay-empty__card-left">
+        <span class="plaay-empty__card-emoji" aria-hidden="true">✨</span>
+        <div>
+          <p class="plaay-empty__card-name font-walsheim-black">Chocolate Truffles</p>
+          <p class="plaay-empty__card-tag font-walsheim-regular">Indulge in luxury</p>
+        </div>
+      </div>
+      <svg class="plaay-empty__card-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+
+  </div>
+
+</div>

@@ -1,0 +1,317 @@
+{% liquid 
+  assign collection_size = collection.products | size
+  assign default_background_color = section.settings.default_background_color
+  assign collection_background_color = collection.metafields.background_color
+  
+  assign backup_featured_product_one = section.settings.backup_featured_product_one
+  assign backup_featured_product_one_image = section.settings.backup_featured_product_one_image
+  assign backup_featured_product_one_image_mobile = section.settings.backup_featured_product_one_image_mobile
+  assign backup_featured_product_two = section.settings.backup_featured_product_two 
+  assign backup_featured_product_two_image = section.settings.backup_featured_product_two_image
+  assign backup_featured_product_two_image_mobile = section.settings.backup_featured_product_two_image_mobile
+
+
+
+
+
+  assign featured_product_one = collection.metafields.custom.featured_product_one
+  assign featured_product_one_image = collection.metafields.custom.featured_product_one_image
+  assign featured_product_one_image_mobile = collection.metafields.custom.featured_product_one_image_mobile
+  
+  assign featured_product_two = collection.metafields.custom.featured_product_two
+  assign featured_product_two_image = collection.metafields.custom.featured_product_two_image
+  assign featured_product_two_image_mobile = collection.metafields.custom.featured_product_two_image_mobile
+
+
+
+
+
+
+  assign empty_collection_heading = section.settings.empty_collection_heading
+  assign empty_collection_copy = section.settings.empty_collection_copy
+  assign empty_collection_link = section.settings.empty_collection_link
+  assign empty_collection_link_text = section.settings.empty_collection_link_text
+%}
+
+
+{% if collection_background_color != blank %}
+  {% assign background_color = collection_background_color %}
+{% else %}
+  {% assign background_color = default_background_color %}
+{% endif %}
+
+<collection-page data-module="collection-page">
+{% comment %}  <facet-filters-form data-module="facet-filters-form">
+    {% render 'collection_filters', results: collection %}
+  </facet-filters-form>{% endcomment %}
+
+  {% comment %} ── Collection USP bar ── {% endcomment %}
+  {% if section.settings.usp_show %}
+  <div class="plaay-coll-usp" style="background: {{ section.settings.usp_bg }};">
+    <div class="container">
+      <div class="plaay-coll-usp__track">
+        {% for i in (1..6) %}
+          {% case i %}
+            {% when 1 %}{% assign usp_icon = section.settings.usp_1_icon %}{% assign usp_text = section.settings.usp_1_text %}
+            {% when 2 %}{% assign usp_icon = section.settings.usp_2_icon %}{% assign usp_text = section.settings.usp_2_text %}
+            {% when 3 %}{% assign usp_icon = section.settings.usp_3_icon %}{% assign usp_text = section.settings.usp_3_text %}
+            {% when 4 %}{% assign usp_icon = section.settings.usp_4_icon %}{% assign usp_text = section.settings.usp_4_text %}
+            {% when 5 %}{% assign usp_icon = section.settings.usp_5_icon %}{% assign usp_text = section.settings.usp_5_text %}
+            {% when 6 %}{% assign usp_icon = section.settings.usp_6_icon %}{% assign usp_text = section.settings.usp_6_text %}
+          {% endcase %}
+          {% if usp_text != blank %}
+            <div class="plaay-coll-usp__item">
+              {% if usp_icon != blank %}<span class="plaay-coll-usp__icon" aria-hidden="true">{{ usp_icon }}</span>{% endif %}
+              <span class="plaay-coll-usp__label font-walsheim-bold">{{ usp_text }}</span>
+            </div>
+            {% unless forloop.last %}<span class="plaay-coll-usp__sep" aria-hidden="true">·</span>{% endunless %}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div style="background: {{ background_color }};">
+    <div class="container py-20 | md:py-36">
+      {% if collection_size > 0 %}
+        {% comment %} collection products {% endcomment %}
+        <div class="" id="ProductGridContainer">
+          {% paginate collection.products by 50 %}
+            <div>
+              <product-tile
+                data-module="product-tile"
+                id="product-grid"
+                data-id="{{ section.id }}"
+                class="collection grid {% if section.settings.compact_mobile_grid %}grid-cols-2 compact-grid{% else %}grid-cols-1 gap-10{% endif %} | sm:grid-cols-3 sm:gap-10 | lg:grid-cols-3 | xl:grid-cols-4">
+                {% for product in collection.products %}
+                  {% capture thecycle %}
+                    {% cycle 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' %}{% endcapture %}
+                    {% unless product.tags contains 'Hide' %}
+                    <div data-product-tile class="w-full">
+                    {% if forloop.first %}
+                      {% assign eager_load = true %}
+                    {% endif %}
+                    {% render 'product-tile', product: product, eager_load: eager_load %}
+                    
+                    {% render 'product-quick-add-popup', product: product %}
+                  </div>
+                {% endunless %}
+                {% endfor %}
+                {% comment %} featured product one {% endcomment %}
+                {% if featured_product_one != blank or backup_featured_product_one != blank %}
+                  <div data-product-tile class="coll__feature-product row-start-3 | md:col-start-2 md:row-start-1 | lg:col-start-2 lg:col-end-4 lg:row-start-1 lg:row-end-2 | xl:col-start-3 xl:col-end-5 xl:row-start-1 xl:row-end-3">
+                    {% if featured_product_one != blank %}
+                      {% render 'featured-product', featured_product: featured_product_one, desktop_image: featured_product_one_image, mobile_image: featured_product_one_image_mobile %}
+                      {% render 'product-quick-add-popup', product: featured_product_one %}
+                    {% else %}
+                      {% render 'featured-product', featured_product: backup_featured_product_one, desktop_image: backup_featured_product_one_image, mobile_image: backup_featured_product_one_image_mobile %}
+                      {% render 'product-quick-add-popup', product: backup_featured_product_one %}
+                    {% endif %}
+                  </div>
+                {% endif %}
+                {% comment %} featured product two {% endcomment %}
+                {% if featured_product_two != blank or backup_featured_product_two != blank %}
+                  <div data-product-tile class="row-start-6 | md:col-start-1 md:row-start-4 | lg:col-start-1 lg:col-end-3 lg:row-start-3 | xl:col-start-1 xl:col-end-3 xl:row-start-3 xl:row-end-5">
+                    {% if featured_product_two != blank %}
+                      {% render 'featured-product', featured_product: featured_product_two, desktop_image: featured_product_two_image, mobile_image: featured_product_two_image_mobile %}
+                      {% render 'product-quick-add-popup', product: featured_product_two %}
+                    {% else %}
+                      {% render 'featured-product', featured_product: backup_featured_product_two, desktop_image: backup_featured_product_two_image, mobile_image: backup_featured_product_two_image_mobile %}
+                      {% render 'product-quick-add-popup', product: backup_featured_product_two %}
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </product-tile>
+            </div>
+          {% endpaginate %}
+        </div>
+      {% else %}
+        {% comment %} empty collection {% endcomment %}
+        <div class=" min-h-[600px] flex items-center justify-center flex-col">
+          <h1 class="text-dark-blue capitalize text-center leading-none text-5xl | md:text-9xl">
+            {% if empty_collection_heading != blank %}
+              {{ empty_collection_heading }}
+            {% else %}
+              {{ 'collection.no_products' | t }}
+            {% endif %}
+          </h1>
+          {% if empty_collection_copy != blank %}
+            <p class="text-dark-blue text-base pt-6 | md:text-lg">{{ empty_collection_copy }}</p>
+          {% endif %}
+          {% if empty_collection_link != blank %}
+            {% render 'btn', href: empty_collection_link, copy: empty_collection_link_text, style: 'blue', additional_class: 'mt-6', no_translation: true, width: 'small' %}
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</collection-page>
+
+{% schema %}
+  {
+    "name": "Collection",
+    "settings": [
+      {
+        "type": "header",
+        "content": "USP / Trust bar"
+      },
+      {
+        "type": "checkbox",
+        "id": "usp_show",
+        "label": "Show USP bar",
+        "default": true
+      },
+      {
+        "type": "color",
+        "id": "usp_bg",
+        "label": "USP bar background",
+        "default": "#021D49"
+      },
+      {
+        "type": "text",
+        "id": "usp_1_icon",
+        "label": "USP 1 — icon (emoji)",
+        "default": "🚀"
+      },
+      {
+        "type": "text",
+        "id": "usp_1_text",
+        "label": "USP 1 — text",
+        "default": "Free shipping AED 75+"
+      },
+      {
+        "type": "text",
+        "id": "usp_2_icon",
+        "label": "USP 2 — icon (emoji)",
+        "default": "🌿"
+      },
+      {
+        "type": "text",
+        "id": "usp_2_text",
+        "label": "USP 2 — text",
+        "default": "No refined sugar"
+      },
+      {
+        "type": "text",
+        "id": "usp_3_icon",
+        "label": "USP 3 — icon (emoji)",
+        "default": "🇦🇪"
+      },
+      {
+        "type": "text",
+        "id": "usp_3_text",
+        "label": "USP 3 — text",
+        "default": "Made in UAE"
+      },
+      {
+        "type": "text",
+        "id": "usp_4_icon",
+        "label": "USP 4 — icon (emoji)",
+        "default": "✅"
+      },
+      {
+        "type": "text",
+        "id": "usp_4_text",
+        "label": "USP 4 — text",
+        "default": "Halal certified"
+      },
+      {
+        "type": "text",
+        "id": "usp_5_icon",
+        "label": "USP 5 — icon (emoji)",
+        "default": "🌾"
+      },
+      {
+        "type": "text",
+        "id": "usp_5_text",
+        "label": "USP 5 — text",
+        "default": "Gluten free"
+      },
+      {
+        "type": "text",
+        "id": "usp_6_icon",
+        "label": "USP 6 — icon (emoji)",
+        "default": "🌱"
+      },
+      {
+        "type": "text",
+        "id": "usp_6_text",
+        "label": "USP 6 — text",
+        "default": "Soy free"
+      },
+      {
+        "type": "header",
+        "content": "Grid"
+      },
+      {
+        "type": "checkbox",
+        "id": "compact_mobile_grid",
+        "label": "Compact 2-column grid on mobile",
+        "default": false,
+        "info": "Shows smaller product cards in a 2-column grid on mobile devices."
+      },
+      {
+        "type": "color",
+        "id": "default_background_color",
+        "label": "Default background color",
+        "info": "If no background color metafield is provided, this will show instead.",
+        "default": "#FAD1D2"
+      },
+      {
+        "type": "header",
+        "content": "Featured products"
+      },
+      {
+        "type": "product",
+        "id": "backup_featured_product_one",
+        "label": "Backup featured product - one"
+      },
+      {
+        "type": "image_picker",
+        "id": "backup_featured_product_one_image",
+        "label": "Backup featured product image - one"
+      }, {
+        "type": "image_picker",
+        "id": "backup_featured_product_one_image_mobile",
+        "label": "Backup featured product image mobile - one"
+      }, {
+        "type": "product",
+        "id": "backup_featured_product_two",
+        "label": "Backup featured product - two"
+      }, {
+        "type": "image_picker",
+        "id": "backup_featured_product_two_image",
+        "label": "Backup featured product image - two"
+      }, {
+        "type": "image_picker",
+        "id": "backup_featured_product_two_image_mobile",
+        "label": "Backup featured product image mobile - two"
+      }, {
+        "type": "header",
+        "content": "Empty collection"
+      }, {
+        "type": "text",
+        "id": "empty_collection_heading",
+        "label": "Empty collection heading",
+        "default": "Looks like there are no products in this collection..."
+      }, {
+        "type": "text",
+        "id": "empty_collection_copy",
+        "label": "Empty collection copy",
+        "default": "Why not try looking in another one of our collections."
+      }, {
+        "type": "url",
+        "id": "empty_collection_link",
+        "label": "Empty collection link",
+        "info": "Send users to another page when a collection has no products",
+        "default": "/"
+      }, {
+        "type": "text",
+        "id": "empty_collection_link_text",
+        "label": "Empty collection link text",
+        "default": "Return home"
+      }
+    ]
+  }
+{% endschema %}

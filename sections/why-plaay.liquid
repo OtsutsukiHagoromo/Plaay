@@ -1,0 +1,176 @@
+{% liquid 
+  assign background_color = section.settings.background_color
+  assign text_color = section.settings.text_color
+%}
+{%- style -%}
+ .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    color: {{ text_color }};
+  }
+
+  @media screen and (max-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top_mob }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mob }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="section-{{ section.id }}-padding" style="background-color: {{ background_color }};">
+
+  <div class="plaay-container">
+    <h2 class="">{{ section.settings.why_play_heading }}</h2>
+    <div class="why-play-flex">
+      <div class="why-left">
+        <div class="why-inner-flex">
+          {% for block in section.blocks %}  
+            {% case block.type %}
+              {% when 'left' %}
+                <div class="icon-detail-flex">
+                  <div class="why-icon"><img src="{{ block.settings.why_icon_left | image_url: width: 84 }}"></div>
+                  <div class="why-detail">
+                    <h3 class="why-detail-heading">{{ block.settings.why_detail_left }}</h3>
+                    <div class="why-detail-description">{{ block.settings.why_description_left }}</div>
+                  </div>
+                </div>
+            {% endcase %} 
+          {% endfor %}
+        </div>
+      </div>
+      <div class="why-right">
+        <div class="why-inner-flex">
+          {% for block in section.blocks %}  
+            {% case block.type %}
+              {% when 'right' %}
+              <div class="icon-detail-flex">
+                <div class="why-icon"><img src="{{ block.settings.why_icon_right | image_url: width: 84 }}"></div>
+                <div class="why-detail">
+                  <h3 class="why-detail-heading">{{ block.settings.why_detail_right }}</h3>
+                  <div class="why-detail-description">{{ block.settings.why_description_right }}</div>
+                </div>
+              </div>
+            {% endcase %} 
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Why Plaay",
+    "settings": [
+      {
+        "type": "text",
+        "id": "why_play_heading",
+        "label": "heading",
+        "default": "Why Plaay?"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#021D49"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "#FFF"
+      },
+      {
+        "type": "range",
+        "id": "padding_top",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Desktop: Padding Top",
+        "default": 40
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Desktop: Padding bottom",
+        "default": 52
+      },
+      {
+        "type": "range",
+        "id": "padding_top_mob",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Mobile: Padding Top",
+        "default": 40
+      },
+      {
+        "type": "range",
+        "id": "padding_bottom_mob",
+        "min": 0,
+        "max": 100,
+        "step": 4,
+        "unit": "px",
+        "label": "Mobile: Padding bottom",
+        "default": 52
+      }
+    ],
+    "blocks": [
+      {
+        "type": "left",
+        "name": "Left data",
+        "settings": [
+          {
+            "id": "why_icon_left",
+            "type": "image_picker",
+            "label": "choose image"
+          },
+          {
+            "id": "why_detail_left",
+            "type": "text",
+            "label": "Text"
+          },
+          {
+            "id": "why_description_left",
+            "type": "richtext",
+            "label": "Description",
+            "default": "<p>13g of plant-based protein per bowl</p>"
+          }
+        ]
+      },
+      {
+        "type": "right",
+        "name": "Right data",
+        "settings": [
+           {
+            "id": "why_icon_right",
+            "type": "image_picker",
+            "label": "choose image"
+          },
+          {
+            "id": "why_detail_right",
+            "type": "text",
+            "label": "Text"
+          },
+          {
+            "id": "why_description_right",
+            "type": "richtext",
+            "label": "Description",
+            "default": "<p>13g of plant-based protein per bowl</p>"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Why Plaay"
+      }
+    ]
+  }
+{% endschema %}

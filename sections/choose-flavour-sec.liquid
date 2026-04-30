@@ -1,0 +1,213 @@
+{% liquid
+  assign title = section.settings.title
+  assign background_color = section.settings.background_color
+  assign card_style = section.settings.card_style
+  assign products = section.blocks | where: 'type', 'product'
+%}
+
+<div class="plaay-flavour-sec" style="background-color: {{ background_color }}; padding: 60px 0;">
+  <div class="container">
+    {% if title != blank %}
+      <h2 class="font-walsheim-bold uppercase text-dark-blue text-center" style="font-size:clamp(1.8rem,4vw,3rem);letter-spacing:0.02em;margin-bottom:40px">{{ title }}</h2>
+    {% endif %}
+    <div class="plaay-flavour-grid">
+      {% for block in section.blocks %}
+        {% assign bg = '#021D49' %}
+        {% if card_style == 'yellow' %}{% assign bg = '#F9C61D' %}{% endif %}
+        {% if card_style == 'white' %}{% assign bg = '#FFFFFF' %}{% endif %}
+        {% if block.settings.card_bg != blank %}{% assign bg = block.settings.card_bg %}{% endif %}
+        <a href="{{ block.settings.product_link }}" class="plaay-flavour-card" style="background:{{ bg }}" {{ block.shopify_attributes }}>
+          {% if block.settings.product_image != blank %}
+            <div class="plaay-flavour-card__img-wrap">
+              <img src="{{ block.settings.product_image | img_url: '400x400' }}" alt="{{ block.settings.product_heading }}" loading="lazy" class="plaay-flavour-card__img">
+            </div>
+          {% endif %}
+          <div class="plaay-flavour-card__body">
+            {% if block.settings.product_heading != blank %}
+              <h3 class="plaay-flavour-card__title font-walsheim-bold">{{ block.settings.product_heading }}</h3>
+            {% endif %}
+            <span class="plaay-flavour-card__btn font-walsheim-bold">
+              Shop Now
+              <svg width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-left:6px;vertical-align:middle"><path d="M1 5H15M15 5L11 1M15 5L11 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<style>
+  .plaay-flavour-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (min-width: 768px) {
+    .plaay-flavour-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+  }
+  .plaay-flavour-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 12px rgba(2,29,73,0.08);
+  }
+  .plaay-flavour-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(2,29,73,0.18);
+  }
+  .plaay-flavour-card__img-wrap {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .plaay-flavour-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.35s ease;
+  }
+  .plaay-flavour-card:hover .plaay-flavour-card__img {
+    transform: scale(1.06);
+  }
+  .plaay-flavour-card__body {
+    padding: 14px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .plaay-flavour-card__title {
+    font-size: 0.9rem;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #F9C61D;
+    margin: 0;
+  }
+  /* When card background is yellow, flip text to dark blue */
+  .plaay-flavour-card[style*="#F9C61D"] .plaay-flavour-card__title,
+  .plaay-flavour-card[style*="#f9c61d"] .plaay-flavour-card__title {
+    color: #021D49;
+  }
+  .plaay-flavour-card[style*="#FFFFFF"] .plaay-flavour-card__title,
+  .plaay-flavour-card[style*="#fff"] .plaay-flavour-card__title,
+  .plaay-flavour-card[style*="#ffffff"] .plaay-flavour-card__title {
+    color: #021D49;
+  }
+  .plaay-flavour-card__btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #F9C61D;
+    background: rgba(249,198,29,0.15);
+    padding: 7px 14px;
+    border-radius: 999px;
+    transition: background 0.2s, color 0.2s;
+    width: fit-content;
+  }
+  .plaay-flavour-card:hover .plaay-flavour-card__btn {
+    background: #F9C61D;
+    color: #021D49;
+  }
+  /* Yellow card: dark btn */
+  .plaay-flavour-card[style*="#F9C61D"] .plaay-flavour-card__btn,
+  .plaay-flavour-card[style*="#f9c61d"] .plaay-flavour-card__btn {
+    color: #021D49;
+    background: rgba(2,29,73,0.1);
+  }
+  .plaay-flavour-card[style*="#F9C61D"]:hover .plaay-flavour-card__btn,
+  .plaay-flavour-card[style*="#f9c61d"]:hover .plaay-flavour-card__btn {
+    background: #021D49;
+    color: #F9C61D;
+  }
+  /* White card: dark btn */
+  .plaay-flavour-card[style*="#FFFFFF"] .plaay-flavour-card__btn,
+  .plaay-flavour-card[style*="#ffffff"] .plaay-flavour-card__btn {
+    color: #021D49;
+    background: rgba(2,29,73,0.08);
+    border: 1px solid rgba(2,29,73,0.2);
+  }
+  @media (max-width: 640px) {
+    .plaay-flavour-card__img-wrap { padding: 12px; }
+    .plaay-flavour-card__body { padding: 10px 12px 14px; }
+    .plaay-flavour-card__title { font-size: 0.75rem; }
+    .plaay-flavour-card__btn { font-size: 0.65rem; padding: 6px 10px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Choose Flavours",
+  "class": "featured-products choose-flavours",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section heading",
+      "default": "Shop by Category"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "select",
+      "id": "card_style",
+      "label": "Default card colour",
+      "options": [
+        { "value": "dark_blue", "label": "Dark blue (Plaay)" },
+        { "value": "yellow", "label": "Yellow" },
+        { "value": "white", "label": "White" }
+      ],
+      "default": "dark_blue"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Category card",
+      "settings": [
+        {
+          "type": "url",
+          "id": "product_link",
+          "label": "Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "product_heading",
+          "label": "Heading"
+        },
+        {
+          "type": "color",
+          "id": "card_bg",
+          "label": "Override card colour (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Choose Flavours"
+    }
+  ]
+}
+{% endschema %}

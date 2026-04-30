@@ -1,0 +1,144 @@
+{% liquid 
+  assign usp_images = product.metafields.custom.usp_image.value
+  assign usp_text = product.metafields.arena.usp_text.value
+  assign global_recharge_point_one = settings.global_recharge_point_one
+  assign global_recharge_point_two = settings.global_recharge_point_two
+  assign global_recharge_point_three = settings.global_recharge_point_three
+%}
+<div class="invisible opacity-0 transition-all duration-200 product_popup bg-white fixed left-1/2 top-1/2 transform -translate-y-1/2 -translate-x-1/2 rounded-xl pb-6 pt-4 px-6 z-20 w-full h-auto | sm:max-w-sm"
+ data-popup-title="{{product.title}}">
+  {% comment %} cross {% endcomment %}
+  <div class="cross text-dark-blue h-5 w-5 mb-1 ml-auto mr-0 cursor-pointer">
+    {% render 'icon-cross' %}
+  </div>
+  {% comment %} product info {% endcomment %}
+  <form data-add-to-cart id="add-to-cart-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}" action="/cart/add" method="post" data-productid="{{product.id}}" class="flex flex-col">
+    <quick-add data-module="quick-add" data-id="{{- product.first_available_variant.id -}}">
+    <select name="id" id="productSelect" class="hidden">
+      {% for variant in product.variants %}
+        {% if variant.available %}
+          <option value="{{variant.id}}">
+            {{variant.title}} - {{variant.price | money}}
+          </option>
+        {% else %}
+          <option disabled="disabled">
+            {{variant.title}} - Sold out
+          </option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    {% comment %} product title {% endcomment %}
+    <div class="flex items-center flex-col order-first | sm:flex-row">
+      <div class="flex flex-col items-center w-full">
+        <h3 class="text-2xl text-purple-dark leading-none uppercase text-center px-7 w-full |">{{ product.title }}</h3>
+      </div>
+    </div>
+    {% comment %} USPs {% endcomment %}
+    {% if usp_images != blank or usp_text != blank %}
+      <div class="flex items-center flex-wrap justify-between w-full mt-5 order-first">
+        {% for image in usp_images %}
+          {% assign text = usp_text[forloop.index0] %}
+          <div class="flex items-center flex-col ml-2 max-w-[80px]">
+            {% render 'img', type: 'img', img: image, lazy: true, class: 'h-7 w-7 object-contain' %}
+            <span class="text-dark-blue text-xxs uppercase font-walsheim-bold mt-2">{{ text }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% comment %} subscription toggle {% endcomment %}
+    <div class="pt-7 pb-2 flex justify-evenly items-center order-first">
+      {% comment %} toggle {% endcomment %}
+      <div class="popup_toggle border-2.5 rounded-3xl border-dark-blue w-[70px] h-[36px] cursor-pointer flex items-center justify-start transition-all duration-200">
+        <div class="toggle bg-white rounded-full h-[34px] w-[34px] relative border-2.5 border-dark-blue transition-all duration-200 -ml-[2px]">
+          <div class="bg-purple-dark rounded-full h-6 w-6 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+        </div>
+      </div>
+      {% comment %} just once {% endcomment %}
+      <p class="just_once text-lg font-walsheim-bold text-dark-blue transition-all duration-200 order-first">{{ 'product.recharge.just_once' | t }}</p>
+      {% comment %} subscribe {% endcomment %}
+      <p class="subscribe text-lg font-walsheim-bold text-dark-blue opacity-50 transition-all duration-200"> {{ 'product.recharge.subscribe' | t }}</p>
+    </div>
+    {% assign variant_size = product.options_with_values | size %}
+    {% comment %} variants {% endcomment %}
+    {% if variant_size > 1 %}
+      <div class="flex flex-col mb-3 | sm:flex-row">
+        {% for option in product.options_with_values %}
+          <div class="product_variant relative flex-1 {% unless forloop.first %} mt-4 {% endunless %}">
+            <span class="h-3 w-3 text-purple-dark flex absolute right-2 top-1/2 transform -translate-y-1/2 z-10">
+              {% render 'icon-down-arrow' %}
+            </span>
+            <select data-variant name="id" class="font-roc text-sm h-11">
+              <option value="{{option.name}}" selected="selected">{{ option.name }}</option>
+              {% for value in option.values %}
+                <option value="{{ value | escape }}">
+                  {{value}}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% comment %} recharge {% endcomment %}
+    <div data-quick-add-selling-plan-container class="justify-between items-center flex-row mt-1 flex-wrap hidden">
+      {%- for selling_plan_group in  product.selling_plan_groups -%}
+        <div class="flex flex-col mt-2 w-full mb-2 relative | xl:flex-row">
+          <span class="h-3 w-3 text-black flex absolute right-2 top-1/2 transform -translate-y-1/2 z-10">
+            {% render 'icon-down-arrow' %}
+          </span>
+          <select name="selling_plan_select" class="recharge_select border rounded-lg border-dark-blue pl-5 font-walsheim-bold py-1 h-11 w-full">
+            {% for selling_plan in selling_plan_group.selling_plans %}
+              <option data-quick-add-selling-plan name="selling_plan" data-value="{{selling_plan.id}}" data-price-adjustments="{{ selling_plan.price_adjustments | json | escape }}">{{ selling_plan.name }}</option>
+            {% endfor %}
+          </select>
+          <input type="hidden" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id />
+          <input type="hidden" value="{{ product.variants | json | escape }}" data-variants />
+          <input type="hidden" value="false" data-subscription />
+          <input type="hidden" value="{{ product.selling_plan_groups[0].selling_plans[0].id }}" data-selling-plan-id />
+        </div>
+      {%- endfor -%}
+      {% comment %} recharge USPs {% endcomment %}
+      <div class="flex flex-col mx-auto w-1/2 py-3 font-walsheim-bold">
+        {% if global_recharge_point_one != blank %}
+          <div class="flex items-center text-dark-blue">
+            <span class="h-4 w-4 flex text-purple-dark mr-2">
+              {% render 'icon-tick' %}
+            </span>
+            {{ global_recharge_point_one }}
+          </div>
+        {% endif %}
+        {% if global_recharge_point_two != blank %}
+          <div class="flex items-center mt-3 text-dark-blue font-walsheim-bold">
+            <span class="h-4 w-4 flex text-purple-dark mr-2">
+              {% render 'icon-tick' %}
+            </span>
+            {{ global_recharge_point_two }}
+          </div>
+        {% endif %}
+        {% if global_recharge_point_three != blank %}
+          <div class="flex items-center mt-3 text-dark-blue font-walsheim-bold">
+            <span class="h-4 w-4 flex text-purple-dark mr-2">
+              {% render 'icon-tick' %}
+            </span>
+            {{ global_recharge_point_three }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+      <div class="my-3 order-first">
+        {% render 'quantity-adjuster', item: product, pdp: true %}
+      </div>
+      
+      {% if product.selected_or_first_available_variant.inventory_quantity <= 0 or product.available == false %}
+        {% assign copy = 'product.add_to_cart.sold_out' %}
+        {% assign class = 'my-3 font-walsheim-bold md:mt-0 rounded-xl disabled' %}
+      {% else %}
+        {% assign copy = 'product.add_to_cart.purchase' %}
+        {% assign class = 'my-3 font-walsheim-bold rounded-xl md:mt-0 popup_atc' %}
+      {% endif %}
+
+      {% render 'btn', width: 'full', style: 'blue-border', is_add_to_cart: true, has_price: true, type: 'button', copy: copy, has_price: true, additional_class: class, product: product %}
+      
+    </quick-add>
+  </form>
+</div>

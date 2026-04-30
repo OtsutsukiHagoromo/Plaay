@@ -1,0 +1,133 @@
+{% liquid 
+  assign backup_hero_image = section.settings.backup_hero_image
+  assign backup_hero_background_color = section.settings.backup_hero_background_color
+  assign backup_hero_description = section.settings.backup_hero_description
+  assign backup_hero_usps = section.blocks | where: 'type', 'usp'
+
+  assign hero_description = collection.metafields.arena.hero_description
+  assign hero_image = collection.image
+  assign hero_background_color = collection.metafields.arena.hero_background_color
+
+  assign usp_images = collection.metafields.custom.usp_image.value
+  assign usp_text = collection.metafields.custom.usp_text.value
+
+  assign usp_images_size = usp_images | size
+%}
+
+{% style %}
+  .collection_usp_icon img {
+    height: 100%;
+    width: 100%;
+  }
+  .collection_usp:hover img {
+    filter: brightness(2000);
+  }
+  .collection_hero {
+    {% if hero_background_color != blank %}
+      background: {{ hero_background_color }}
+      ;
+    {% else %}
+      background: {{ backup_hero_background_color }}
+      ;
+    {% endif %}
+  }
+{% endstyle %}
+
+<div class="collection_hero relative overflow-hidden">
+  {% comment %} collection hero image {% endcomment %}
+  <div class="hidden absolute -left-14 -bottom-14 h-auto max-h-[30rem] max-w-[30rem] | md:block | 2xl:max-w-none">
+    {% if hero_image != blank %}
+      {% render 'img', img: hero_image, type: 'img', eager: true, class: 'object-cover h-full w-full' %}
+    {% else %}
+      {% render 'img', img: backup_hero_image, type: 'img', eager: true, class: 'object-cover h-full w-full' %}
+    {% endif %}
+  </div>
+  <div class="container pt-28 pb-10 relative z-1 | md:pb-12 md:pt-52 md:max-w-md | lg:max-w-xl | xl:max-w-2xl">
+    {% comment %} title / description {% endcomment %}
+    <h1 class="text-center text-dark-blue uppercase text-9xl leading-none">
+      {{ collection.title }}</h1>
+    {% if backup_hero_description != blank or hero_description != blank %}
+      <div class="text-dark-blue mt-4 uppercase text-center font-walsheim-bold text-2xl">
+        {% if hero_description != blank %}
+          {{ hero_description }}
+        {% else %}
+          {{ backup_hero_description }}
+        {% endif %}
+      </div>
+    {% endif %}
+    {% comment %} USPs {% endcomment %}
+    {% if usp_images != blank or backup_hero_usps != blank %}
+      <div class="flex items-center justify-center flex-wrap mt-4 gap-6 | sm:gap-0">
+        {% if usp_images != blank %}
+          <div class="flex flex-row w-full justify-center items-center flex-wrap mt-9">
+            {% for image in usp_images %}
+              {% assign text = usp_text[forloop.index0] %}
+              <div class="collection_usp flex items-center flex-col max-w-[80px] group {% unless forloop.first %} sm:ml-9 {% endunless %}">
+                <span class="collection_usp_icon h-16 w-16 bg-white rounded-full mb-1 flex p-3 transition-all duration-200 | group-hover:bg-dark-blue">
+                  {% render 'img', type: 'img', img: image, lazy: true %}
+                </span>
+                <span class="text-[#4c4c4c] text-xxs uppercase font-walsheim-bold mt-1 text-center | group-hover:text-dark-blue">{{ text }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          {% for block in backup_hero_usps %}
+            {% assign usp_block_image = block.settings.image %}
+            {% assign usp_block_text = block.settings.text %}
+            <div class="flex flex-col items-center justify-center max-w-[80px] group {% unless forloop.first %} sm:ml-9 {% endunless %}">
+              {% if usp_block_image != blank %}
+                <span class="collection_usp_icon h-16 w-16 bg-white rounded-full mb-1 flex p-3 transition-all duration-200 | group-hover:bg-dark-blue">
+                  {% render 'img', type: 'img', img: usp_block_image %}
+                </span>
+              {% endif %}
+              {% if usp_block_text != blank %}
+                <span class="text-[#4c4c4c] text-xxs uppercase font-walsheim-bold mt-1 text-center | group-hover:text-dark-blue">
+                  {{ usp_block_text }}</span>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Collection hero",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "backup_hero_image",
+        "label": "Backup hero image"
+      }, {
+        "type": "color",
+        "id": "backup_hero_background_color",
+        "label": "Backup background color",
+        "default": "#F5C08D"
+      }, {
+        "type": "text",
+        "id": "backup_hero_description",
+        "label": "Backup description",
+        "default": "Lorem ipsum dolor sit amet adipiscing elitsed do"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "usp",
+        "name": "USP",
+        "settings": [
+          {
+            "type": "image_picker",
+            "label": "Image",
+            "id": "image",
+            "info": "Please upload the SVG to the 'files' section in the admin and then copy the link generated."
+          }, {
+            "type": "text",
+            "id": "text",
+            "label": "Text"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

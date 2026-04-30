@@ -1,0 +1,22 @@
+<div class="flex flex-col | md:rounded md:bg-white md:px-3 md:pt-3 md:pb-5">
+  <a href="{{ article.url }}" class="text-0">
+    {{ article.title }}
+    {% render 'img', type: 'img', img: article.image, lazy: true, class: 'object-cover w-full aspect-square' %}
+  </a>
+  <div class="px-6 h-full flex flex-col justify-between | md:px-0">
+    {% comment %} created at {% endcomment %}
+    <p class="mt-3 font-walsheim-medium text-xs text-dark-blue">{{ article.created_at | date: "%m %b %Y"  }}</p>
+    <h2 class="text-sm text-dark-blue pt-3 font-walsheim-bold">{{ article.title }}</h2>
+    {% if article.excerpt != blank %}
+      <div class="text-dark-blue font-walsheim-medium text-xs">{{ article.excerpt | strip_html | truncatewords: 20 }}</div>
+    {% else %}
+      <div class="text-dark-blue font-walsheim-medium text-xs">{{ article.content | strip_html | truncatewords: 20 }}</div>
+    {% endif %}
+    <a href="{{ article.url }}" class="flex items-center text-sm font-bold font-walsheim text-dark-blue mt-4 group">
+      {{ 'article.read-article' | t }}
+      <span class="h-3 w-5 mt-[2px] flex text-dark-blue transition-all duration-200 ml-2 group-hover:ml-4">
+        {% render 'icon-long-arrow' %}
+      </span>
+    </a>
+  </div>
+</div>

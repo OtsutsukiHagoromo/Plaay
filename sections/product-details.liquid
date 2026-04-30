@@ -1,0 +1,87 @@
+{% liquid
+  assign background_color = section.settings.background_color 
+  assign title = section.settings.title
+  assign blocks = section.blocks 
+%}
+<div style="background-color: {{ background_color }};" class="product-details">
+  <div class="container py-12 | md:py-16">
+    {% if title != blank %}
+      <h2 class="text-dark-blue text-[54px] mb-9 font-walsheim-bold">{{ title }}</h2>
+    {% endif %}
+    {% comment %}
+    {% if blocks.size > 0 %}
+      <div class="flex flex-col md:flex-row md:flex-wrap">
+        {% for block in blocks %}
+          {% assign question = block.settings.title %}
+          {% assign answer = block.settings.answer %}
+          {% capture thecycle %} {% cycle 'odd', 'even' %} {% endcapture %}
+          <div class="w-full {% unless forloop.last %} pb-4 {% endunless %} {{ thecycle }} {% if thecycle contains 'even' %} md:pl-10 lg:pl-14 xl:pl-20 {% else %} md:pr-10 lg:pr-14 xl:pr-20 {% endif %} | md:w-1/2">
+            {% render 'content-accordion', heading: question, content: answer, product_accordion: true, color: 'dark-blue' %}
+          </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+   {% endcomment %}
+    {% if blocks.size > 0 %}
+      <div class="flex flex-col md:flex-row md:flex-wrap">
+        {% assign cycle_index = 0 %}
+        {% for block in blocks %}
+          {% assign question = block.settings.title %}
+          {% assign answer = block.settings.answer %}
+    
+          {% if answer != blank %}
+            {% assign thecycle = cycle_index | modulo: 2 | replace: '0', 'odd' | replace: '1', 'even' %}
+            
+            <div class="w-full {% unless forloop.last %} pb-4 {% endunless %} {{ thecycle }} {% if thecycle == 'even' %} md:pl-10 lg:pl-14 xl:pl-20 {% else %} md:pr-10 lg:pr-14 xl:pr-20 {% endif %} | md:w-1/2">
+              {% render 'content-accordion', heading: question, content: answer, product_accordion: true, color: 'dark-blue' %}
+            </div>
+    
+            {% assign cycle_index = cycle_index | plus: 1 %}
+          {% endif %}
+        {% endfor %}
+      </div>
+  {% endif %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Product Details",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "FAQs"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#F9C61D"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Details"
+    }
+  ]
+}
+{% endschema %}

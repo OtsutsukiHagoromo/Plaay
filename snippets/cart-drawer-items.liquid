@@ -1,0 +1,75 @@
+{%- capture widths -%}_{width}x.{%- endcapture -%}
+
+<cart-drawer-items class="h-full group loading:pointer-events-none" data-module="cart-drawer-items">
+  <cart-remove-button data-module="cart-remove-button"></cart-remove-button>
+  <div class="flex items-center justify-center absolute inset-0 bg-black bg-opacity-30 z-[100] opacity-0 invisible group-loading:opacity-100 group-loading:visible">
+    {%- render 'loader' type: 'light' -%}
+  </div>
+
+  <form action="{{ routes.cart_url }}" method="post">
+    {%- for item in cart.items -%}
+      {%- liquid
+        assign on_sale = false
+        if item.variant.compare_at_price > item.variant.price
+          assign on_sale = true
+        endif
+        assign show_variant = true
+        if item.variant.title == 'Default Title'
+          assign show_variant = false
+        endif
+      -%}
+
+      <div
+        class="plaay-cart-item"
+        data-variant-id="{{ item.variant_id }}"
+        data-product-id="{{ item.product_id }}"
+        data-key="{{- item.key -}}"
+        data-cart-item>
+
+        {% comment %} Product image {% endcomment %}
+        <a href="{{- item.product.url -}}" class="plaay-cart-item__img-wrap">
+          {% render 'img', type: 'img', img: item.image, lazy: true, class: 'absolute inset-0 w-full h-full object-cover rounded-lg' %}
+        </a>
+
+        {% comment %} Info + controls {% endcomment %}
+        <div class="plaay-cart-item__info">
+          <div class="plaay-cart-item__meta">
+            <a href="{{- item.product.url -}}" class="plaay-cart-item__title">{{- item.product.title -}}</a>
+            {% if show_variant %}
+              <span class="plaay-cart-item__variant">{{ item.variant.title }}</span>
+            {% endif %}
+            {% if item.selling_plan_allocation.selling_plan.name != blank %}
+              <span class="plaay-cart-item__sub-label">{{ item.selling_plan_allocation.selling_plan.name }}</span>
+            {% endif %}
+          </div>
+
+          <div class="plaay-cart-item__actions">
+            <div class="plaay-cart-item__qty">
+              {%- render 'quantity-adjuster' item: item -%}
+            </div>
+            <div class="plaay-cart-item__price-remove">
+              <div class="plaay-cart-item__price">
+                {% if item.selling_plan_allocation %}
+                  {% if item.selling_plan_allocation.compare_at_price > item.selling_plan_allocation.price %}
+                    <span class="line-through text-xs opacity-50">{{ item.selling_plan_allocation.compare_at_price | times: item.quantity | money }}</span>
+                  {% endif %}
+                  <span>{{ item.selling_plan_allocation.price | times: item.quantity | money }}</span>
+                {% else %}
+                  {% if on_sale %}
+                    <span class="line-through text-xs opacity-50">{{ item.variant.compare_at_price | money }}</span>
+                  {% endif %}
+                  <span>{{ item.final_price | times: item.quantity | money }}</span>
+                {% endif %}
+              </div>
+              <cart-remove-button data-module="cart-remove-button">
+                <button type="button" class="plaay-cart-item__remove" aria-label="Remove {{ item.product.title }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                </button>
+              </cart-remove-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </form>
+</cart-drawer-items>

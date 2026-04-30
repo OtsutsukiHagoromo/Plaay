@@ -1,0 +1,38 @@
+<div
+class="relative y-5 flex-180px flex flex-col justify-between h-auto bg-[#EFEFEF] rounded-md px-2 py-2 mr-4"
+data-cart-recommendation-item
+data-variant-id="{{ variant_id }}"
+data-product-id="{{ product_id }}">
+<div class="inner_content relative px-3 py-2 mx-auto h-full flex flex-col justify-between w-full">
+  <a href="{{- product.url -}}" class="w-full bg-gray-200 self-start mb-5 text-0">
+    {{ product.title }}
+    {% render 'img', type: 'img', lazy: true, img: product.featured_image, class: 'object-contain mx-auto h-[140px] w-[170px]' %}
+  </a>
+
+  <div class="flex items-center justify-between w-full">
+    <h3 class="max-w-[220px] font-walsheim-black text-xxs1 text-dark-blue text-xxs leading-none">
+      <a href="{{- product.url -}}" class="uppercase leading-none ">{{- product.title | truncate: 40 -}}</a>
+    </h3>
+
+    <div class="flex text-xxs items-center text-dark-blue font-walsheim-bold ml-3">
+      <div class="flex items-center text-xxs2 text-sm w-full justify-center leading-none lg:text-base">
+        {%- if product.compare_at_price > product.price -%}
+          <span class="text-dark-blue font-walsheim-bold font-normal line-through mr-2 text-xxs">{{- product.price | money -}}</span>
+          <span class="text-xxs font-walsheim-black">{{- product.compare_at_price | money -}}</span>
+        {%- else -%}
+          <div class="font-normal text-xxs font-walsheim-black">{{- product.price | money -}}</div>
+        {%- endif- %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<quick-add data-module="quick-add" data-id="{{- product.first_available_variant.id -}}">
+  <input
+    type="hidden"
+    name="quantity"
+    value="1">
+
+    {% render 'btn', style: 'yellow', is_add_to_cart: true, width: 'full', copy: 'cart.quick-add', additional_class: 'h-8 font-walsheim-bold text-xxs' %}
+</quick-add>
+</div>

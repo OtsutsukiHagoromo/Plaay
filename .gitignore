@@ -1,0 +1,15 @@
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+.idea/
+.vscode/
+
+node_modules/
+dist/
+build/
+
+.shopify/
+.theme-check-cache/
+
+*.log

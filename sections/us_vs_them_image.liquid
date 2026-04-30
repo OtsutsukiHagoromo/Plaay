@@ -1,0 +1,172 @@
+{% liquid 
+  assign title = section.settings.title
+  assign heading = section.settings.heading 
+  assign background_color_left = section.settings.background_color_left 
+  assign background_color_right = section.settings.background_color_right 
+  assign plaay_percent = section.settings.plaay_percent
+  assign plaay_percent_text = section.settings.plaay_percent_text
+  assign others_text = section.settings.others_text
+  assign find_out_why_url = section.settings.find_out_why_url 
+  assign find_out_why_text = section.settings.find_out_why_text 
+  assign plaay_additional_text = section.settings.plaay_additional_text
+  assign backup_percentages = section.blocks
+  assign backup_percentages_size = backup_percentages | size
+  assign plaay_versus_them_plaay_image_backup = section.settings.plaay_versus_them_plaay_image_backup
+
+  assign plaay_versus_them_plaay_image = product.metafields.arena.plaay_versus_them_plaay_image
+  assign plaay_versus_them_candy_image = product.metafields.arena.plaay_versus_them_candy_image 
+  assign plaay_versus_them_percentages = product.metafields.arena.plaay_versus_them_percentages.value
+  assign play_versus_them_percentages_size = plaay_versus_them_percentages | size
+  assign plaay_versus_them_descriptions = product.metafields.arena.plaay_versus_them_descriptions
+%}
+{% style %}
+  #play_versus_them-{{ section.id }}::before {
+    content: '';
+    background: {{ background_color_left }}
+    ;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 50%;
+    width: 100%;
+    z-index: -1;
+  }
+  #play_versus_them-{{ section.id }}::after {
+    content: '';
+    background: {{ background_color_right }}
+    ;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: 50%;
+    width: 100%;
+    z-index: -1;
+  }
+  .data-percentage .percentage::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: #000;
+    position: absolute;
+    left: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -24px;
+  }
+  @media only screen and (min-width: 768px) {
+    .data-percentage .percentage::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: #000;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      left: -28px;
+      right: auto;
+    }
+    #play_versus_them-{{ section.id }}::before {
+      height: 100%;
+      width: 50%;
+    }
+    #play_versus_them-{{ section.id }}::after {
+      height: 100%;
+      width: 50%;
+    }
+  }
+{% endstyle %}
+<play-versus-them data-module="play-versus-them" class="us-vs-image">
+  {% if play_versus_them_percentages_size > 0 or backup_percentages_size > 0 and plaay_versus_them_plaay_image_backup != blank or plaay_versus_them_plaay_image != blank %}
+    <div class="relative z-1" id="play_versus_them-{{ section.id }}">
+      <div class="container pt-14 | md:pt-24">
+        {% comment %} title {% endcomment %}
+        {% if title != blank %}
+          <div class="justify-center items-center text-center hidden | md:flex">
+            <span class="relative ml-3 mr-3 text-3xl uppercase text-dark-blue font-walsheim-black">
+              {% if section.settings.us_text != blank %}
+                <h2 class="text-3xl uppercase text-dark-blue absolute right-[45px] top-0">
+                  {{ section.settings.us_text }}
+                </h2>
+              {% else %}
+                <span class="flex w-20 h-8 text-dark-blue absolute right-[45px] top-1">
+                  {% render 'icon-plaay' %}
+                </span>
+              {% endif %}
+              vs
+              <h2 class="absolute text-3xl uppercase text-dark-blue left-[45px] top-0">
+                {{ title }}
+              </h2>
+            </span>
+          </div>
+        {% endif %}
+        {% comment %} heading {% endcomment %}
+        {% if heading != blank %}
+          <h3 class="text-dark-blue text-[40px] text-center pt-5">{{ heading }}</h3>
+        {% endif %}
+        {% comment %} plaay vs them {% endcomment %}
+        <div class="us-vs-image flex flex-col justify-center pt-10 | md:flex-row pb-16 | md:pb-20 md:items-start">
+          {{
+            section.settings.sv_vs_image
+            | image_url: width: 3200
+            | image_tag:
+              sizes: sizes,
+              widths: '50, 75, 100, 150, 200, 300, 400, 500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3200',
+              alt: section.settings.sv_vs_image.alt
+          }}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+</play-versus-them>
+
+{% schema %}
+  {
+    "name": "Us Vs Them Image",
+
+    "settings": [
+      {
+        "type": "text",
+        "id": "us_text",
+        "label": "Us text",
+        "default": "Us",
+        "info": "Leave blank to show Plaay svg logo"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Them"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "What makes us 100% Clean?"
+      },
+      {
+        "type": "color",
+        "id": "background_color_left",
+        "label": "Background color (left)",
+        "default": "#FAD1D2"
+      }, {
+        "type": "color",
+        "id": "background_color_right",
+        "label": "Background color (right)",
+        "default": "#F6F6F6"
+      }, 
+      {
+        "type": "image_picker",
+        "id": "sv_vs_image",
+        "label": "Uv vs Them Image"
+      }
+    ],
+
+    "presets": [
+      {
+        "name": "Us Vs Them Image"
+      }
+    ]
+  }
+{% endschema %}

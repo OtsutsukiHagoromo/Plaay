@@ -1,0 +1,79 @@
+<script>
+function updategift() {
+  setTimeout(() => {
+    fetch('/cart.js')
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to fetch cart');
+        return response.json();
+      })
+      .then(cart => {
+        var targetVariantIds = [
+            {% for product in settings.Sample_product %}
+                {{ product.selected_or_first_available_variant.id }},
+            {% endfor %}
+            ];
+
+        var total_items = cart.item_count;
+
+        var variantsInCart = cart.items.filter(item => targetVariantIds.includes(item.variant_id));
+        var variantsNotInCart = targetVariantIds.filter(id => !variantsInCart.some(item => item.variant_id === id));
+
+        variantsInCart.forEach(item => {
+            total_items -= item.quantity;
+        });
+        if (variantsNotInCart.length > 0 && total_items > 0) {
+            var itemsToAdd = variantsNotInCart.map(id => ({ id: id, quantity: 1 }));
+            addMultipleToCart(itemsToAdd);
+        } else if (variantsInCart.length > 0 && total_items == 0) {
+            clearCart();
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching cart:', error);
+      });
+
+  }, 700);
+}
+
+function addMultipleToCart(products) {
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({ items: products })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Products added:', data);
+    {% comment %} alert('Products added to your cart!'); {% endcomment %}
+  })
+  .catch(error => {
+    console.error('Error adding products:', error);
+  });
+}
+
+function clearCart() {
+  fetch('/cart/clear.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Cart cleared:', data);
+    {% comment %} alert('All products removed from your cart!'); {% endcomment %}
+  })
+  .catch(error => {
+    console.error('Error clearing cart:', error);
+  });
+}
+
+
+
+updategift();
+document.addEventListener("rebuy:cart.change", updategift);
+</script>

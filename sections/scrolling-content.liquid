@@ -1,0 +1,1735 @@
+<div
+  class="scrolling-content"
+  style="background:{{ section.settings.background }}; padding-top:{{ section.settings.padding_top }}; padding-bottom:{{ section.settings.padding_bottom }}"
+>
+  <div
+    class="section-{{ section.id }}-padding isolate{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+    {% if settings.animations_reveal_on_scroll %}
+      data-cascade
+    {% endif %}
+  >
+    <div class="scrolling-content-inner-row">
+      <div class="scrolling-content-inner-col">
+        <div class="scrolling-content-main-par-block">
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          {% for block in section.blocks %}
+            <div class="scrolling-content-main-block">
+              {% if block.settings.image %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings.image %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings.title != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings.title }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-2'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-2'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-2 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-2'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-2'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-3'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-3'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-3 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-3'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-3'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              {% if block.settings['image-4'] %}
+                <div class="scrolling-content-icon-text">
+                  {% if block.settings['image-4'] %}
+                    <div class="scrolling-content-block-icon">
+                      <img src="{{ block.settings.image-4 | img_url:'master' }}">
+                    </div>
+                  {% endif %}
+                  {% if block.settings['title-4'] != blank %}
+                    <div class="scrolling-content-block-heading">
+                      <p>{{ block.settings['title-4'] }}</p>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .scrolling-content-inner-row {
+    width: 100%;
+  }
+  .scrolling-content-inner-col {
+    width: 100%;
+    overflow: hidden;
+    padding: 10px 0;
+    position: relative;
+  }
+  .scrolling-content-main-par-block {
+    width: 100%;
+    display: flex;
+    align-items: stretch;
+    height: auto;
+    gap: 50px;
+    white-space: nowrap;
+    animation: scroll-left 12s linear infinite;
+  }
+
+  .scrolling-content-main-par-block:hover {
+    animation-play-state: paused;
+  }
+  .scrolling-content-icon-text {
+    min-width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 50px;
+  }
+  .scrolling-content-main-block {
+    min-width: fit-content;
+    display: inline-block !important;
+    font-size: 1.2rem;
+    font-weight: bold;
+    display: flex !important;
+    gap: 50px;
+  }
+  .scrolling-content-block-icon img {
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+  }
+  .scrolling-content-block-heading p {
+    font-size: 17px;
+    color: #F9C61D;
+    margin: 0;
+    line-height: normal;
+    font-weight: 400;
+  }
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+  @media screen and (max-width:768px){
+    .scrolling-content-icon-text {
+      gap: 20px;
+    }
+    .scrolling-content-main-block {
+      gap: 30px;
+    }
+  }
+</style>
+{% schema %}
+{
+  "name": "Scrolling content",
+  "class": "section",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Slide",
+      "type": "slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "image_picker",
+          "id": "image-2",
+          "label": "Image 2"
+        },
+        {
+          "type": "text",
+          "id": "title-2",
+          "label": "Heading 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image-3",
+          "label": "Image 3"
+        },
+        {
+          "type": "text",
+          "id": "title-3",
+          "label": "Heading 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "image-4",
+          "label": "Image 4"
+        },
+        {
+          "type": "text",
+          "id": "title-4",
+          "label": "Heading 4"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Scrolling content"
+    }
+  ]
+}
+{% endschema %}

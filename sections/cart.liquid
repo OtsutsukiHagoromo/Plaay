@@ -1,0 +1,258 @@
+{% assign subtotal_price = cart.items_subtotal_price | money %}
+{% assign total_price = cart.total_price | money %}
+{% assign shipping_calculation_text = section.settings.shipping_calculation_text %}
+{% assign heading = section.settings.heading %}
+
+{% assign promo_text_start = settings.promo_text_start %}
+{% assign promo_text_middle = settings.promo_text_middle %}
+{% assign promo_text_end = settings.promo_text_end %}
+{% assign threshold = settings.threshold %}
+{% assign success = settings.success %}
+
+{% assign donation_start_text = section.settings.donation_start_text %}
+{% assign donation_end_text = section.settings.donation_end_text %}
+{% assign donation_image = section.settings.donation_image %}
+{% assign donation_background_color = section.settings.donation_background_color %}
+
+{% assign donate_now_image = section.settings.donate_now_image %}
+{% assign donate_now_description = section.settings.donate_now_description %}
+{% assign donate_now_link = section.settings.donate_now_link %}
+{% assign donate_now_link_text = section.settings.donate_now_link_text %}
+{% assign donate_now_background_color = section.settings.donate_now_background_color %}
+
+<div class="container pt-5 | md:pt-8"> 
+  {% if heading != blank %}
+    <h1 class="font-alternate-gothic uppercase text-5xl pt-5 | md:pt-8 md:text-8xl">
+      {{ heading }}
+    </h1>
+  {% endif %}
+  {% if cart.items.size > 0 %}
+    <div class="mt-5 | lg:flex-wrap lg:flex lg:justify-between">
+      {% comment %} promotion {% endcomment %}
+      <p class="calculate_promotion relative text-center font-roc py-2 px-3 text-xl flex items-center justify-center flex-wrap whitespace-nowrap w-full" data-threshold={{threshold}} data-success="{{success}}">
+        {% comment %} beginning of text {% endcomment %} 
+        {% if promo_text_start != blank %}
+          <span class="before_text" data-original-before="{{promo_text_start}}">
+            {{ promo_text_start }} 
+          </span>
+        {% endif %}
+        {% comment %} amount away from reaching threshold {% endcomment %}
+        <span class="amount_away_from_promotion pl-1">
+
+        </span>
+        {% comment %} middle text {% endcomment %}
+        {% if promo_text_middle != blank %}
+          <span class="middle_text pl-1" data-original-middle="{{promo_text_middle}}">
+            {{ promo_text_middle }}
+          </span>
+        {% endif %}
+        {% comment %} end of text {% endcomment %}
+        {% if promo_text_end != blank %}
+          <span class="after_text pl-1 text-red underline" data-original-after="{{promo_text_end}}">
+            {{ promo_text_end }}
+          </span>
+        {% endif %}
+      </p>
+      <div class="mt-5 | lg:w-3/4">
+        {% render 'line-item-table' %}
+        {% render 'product-recommendations' %}
+      </div>
+      <div class=" | lg:w-1/4 lg:mt-5">
+        {% comment %} desktop total {% endcomment %}
+        <div class="hidden | lg:block lg:border-b lg:border-black lg:border-opacity-30">
+          <h2 class="text-3xl font-alternate-gothic pb-2">{{ 'cart.total' | t }}</h2>
+        </div>
+        <div class="mt-5 border-b border-black border-opacity-25 pb-4">
+          {% comment %} subtotal {% endcomment %}
+          <div class="flex justify-between items-center pb-3">
+            <span class="text-base">{{ 'cart.subtotal' | t }}</span>
+            <span class="text-base font-bold">{{ subtotal_price }}</span>
+          </div>
+          {% comment %} shipping {% endcomment %}
+          <div class="flex justify-between items-center">
+            <span class="text-base">{{ 'cart.shipping' | t }}</span>
+            <span class="text-base font-bold text-right ml-2">{{ shipping_calculation_text }}</span>
+          </div>
+        </div>
+        {% comment %} total {% endcomment %}
+        <div class="mt-6 flex justify-between items-center">
+          <span class="text-base">{{ 'cart.total' | t }}</span>
+          <span class="text-base font-bold">{{ total_price }}</span>
+        </div>
+        {% comment %} checkout button {% endcomment %}
+        <div class="mt-8 text-center">
+          {% render 'btn', copy:'cart.checkout', href:'/checkout', style:'green-bg', width:'full', has_arrow:true %}
+        </div>
+        <a class="mt-7 underline capitalize block pb-10" href="/collections/all">{{ 'cart.continue' | t }}</a>
+
+        {% comment %} donation section {% endcomment %}
+        <div class="flex flex-col">
+          {% comment %} donation amount {% endcomment %}
+          <div class="flex flex-wrap items-center p-4 justify-between" style="background-color:{{donation_background_color}};">
+            {% comment %} calculate total from metafields {% endcomment %}
+            {% assign donation_total = 0 %}
+            {% for item in cart.items %}  
+              {% for product in collections.all.products %}
+                {% if product.id == item.product_id %}
+                  {% for variant in product.variants %}
+                    {% if variant.id == item.variant_id %}
+                      {% assign variant_donation_amount = variant.metafields.arena.donation_amount %}
+                    {% endif %}
+                  {% endfor %}
+                  {% assign product_donation_times_quantity = variant_donation_amount | times:item.quantity %}
+                  {% assign donation_total = donation_total | plus:product_donation_times_quantity %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+            {% if donation_image != blank %}
+              {% render 'img', type:'img', img:donation_image, lazy:true, class:'object-contain h-10 w-10 pr-2' %}
+            {% endif %}
+            {% comment %} donation text {% endcomment %}
+            <p class="calculate_donation uppercase flex flex-wrap whitespace-nowrap text-white font-acumin-black">
+              {% comment %} start of text {% endcomment %}
+              {% if donation_start_text != blank %}
+                <span>{{ donation_start_text }}</span>
+              {% endif %}
+              {% comment %} amount {% endcomment %}
+              <span class="text-green px-1">{{ donation_total | times:100 | money }}</span>
+              {% comment %} end of text {% endcomment %}
+              {% if donation_end_text != blank %}
+                <span>{{ donation_end_text }}</span>
+              {% endif %}
+            </p>
+          </div>
+          {% comment %} donate now {% endcomment %}
+          <div class="mt-5" style="background-color:{{donate_now_background_color}};">
+            {% comment %} donate now image {% endcomment %}
+            {% if donate_now_image != blank %}
+              {% render 'img', type:'img', img:donate_now_image, lazy:true, class:'object-cover w-full h-64 md:h-56' %}
+            {% endif %}
+            <div class="px-5">
+              {% comment %} donate now link {% endcomment %}
+              {% if donate_now_link != blank %}
+                {% render 'btn', href:donate_now_link, style:'transparent-bg', copy:donate_now_link_text, no_translation:true, additional_class:'my-4', width:'full' %}
+              {% endif %}
+              {% comment %} donate now description {% endcomment %}
+              {% if donate_now_description != blank %}
+                <div class="mb-4 text-xs font-roc">{{ donate_now_description }}</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="mt-10">
+      <p class="uppercase text-center font-din-std text-4xl">{{ 'cart.empty.copy' | t }}</p>
+      <div class="mt-5">
+        {% render 'btn', copy:'cart.empty.btn', href:routes.all_products_collection_url, style:'primary-black', width:'large', additional_class:'mx-auto mb-10' %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+
+{% schema %}
+  {
+    "name": "Cart",
+    "max_blocks": 5,
+    "blocks": [
+      {
+        "type": "product_recommendation",
+        "name": "Product recommendation",
+        "settings": [
+          {
+            "type": "product",
+            "id": "product",
+            "label": "Product"
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "My cart"
+      },
+      {
+        "type": "text",
+        "id": "shipping_calculation_text",
+        "label": "Shipping calculation text",
+        "default": "Calculated at checkout"
+      },
+      {
+        "type": "header",
+        "content": "Donation"
+      },
+      {
+        "type": "image_picker",
+        "label": "Donation image",
+        "id": "donation_image"
+      },
+      {
+        "type": "text",
+        "label": "Donation start text",
+        "id": "donation_start_text",
+        "default": "You donated"
+      },
+      {
+        "type": "text",
+        "label": "Donation end text",
+        "id": "donation_end_text",
+        "default": "With this order"
+      },
+      {
+        "type": "color",
+        "label": "Donation background color",
+        "id": "donation_background_color",
+        "default": "#FF4D00",
+        "info": "Green - B8E7CA, Orange - FF4D00, Yellow - FCE462, Purple - D1C4DE, Blue - C0D2EE"
+      },
+      {
+        "type": "image_picker",
+        "label": "Donate now image",
+        "id": "donate_now_image"
+      },
+      {
+        "type": "richtext",
+        "label": "Donate now description",
+        "id": "donate_now_description"
+      },
+      {
+        "type": "url",
+        "label": "Donate now link",
+        "id": "donate_now_link"
+      },
+      {
+        "type": "text",
+        "label": "Donate now link text",
+        "id": "donate_now_link_text",
+        "default": "Donate now"
+      },
+      {
+        "type": "color",
+        "label": "Donate now background color",
+        "id": "donate_now_background_color",
+        "default": "#B8E7CA",
+        "info": "Green - B8E7CA, Orange - FF4D00, Yellow - FCE462, Purple - D1C4DE, Blue - C0D2EE"
+      },
+      {
+        "type": "text",
+        "id": "recommended_products_title",
+        "label": "Recommended products (title)",
+        "default": "Pair it with"
+      },
+      {
+        "type": "range",
+        "label": "Recommended products limit",
+        "id": "recommended_products_limit",
+        "min": 1,
+        "max": 4,
+        "default": 3,
+        "step": 1
+      }
+    ]
+  }
+{% endschema %}

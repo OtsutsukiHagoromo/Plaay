@@ -1,0 +1,312 @@
+{% liquid 
+
+  assign hide_promotion_icon = settings.hide_promotion_icon
+  assign cart_promotion_text_part_one = settings.cart_promotion_text_part_one
+  assign cart_promotion_text_part_two = settings.cart_promotion_text_part_two
+  assign cart_promotion_threshold = settings.cart_promotion_threshold | times: 100
+  assign cart_promotion_background_color = settings.cart_promotion_background_color
+  assign cart_promotion_success_message = settings.cart_promotion_success_message
+  assign cart_promotion_progress_color = settings.cart_promotion_progress_color
+  assign hide_cart_promotion = settings.hide_cart_promotion
+
+  assign spend_needed = cart_promotion_threshold | minus: cart.total_price
+  assign cart_price_rounded = cart.total_price | divided_by: 100.0
+  assign threshold_rounded = cart_promotion_threshold | divided_by: 100.0
+  assign spend_percentage = cart_price_rounded | divided_by: threshold_rounded | times: 100
+%}
+
+<div class="overflow-hidden">
+  <div class="container pt-32 | lg:pt-40">
+    {% comment %} title {% endcomment %}
+    <h1 class="text-center text-2xl font-walsheim font-bold text-dark-blue">
+      {{ 'cart.title' | t }}
+    </h1>
+    {% if cart.item_count > 0 %}
+      <cart-items class="group | lg:flex lg:items-start lg:flex-wrap | loading:pointer-events-none" data-module="cart-items">
+        {% comment %} fixed checkout {% endcomment %}
+        {% unless section.settings.hide_fixed_checkout %}
+          <div class="fixed z-10 top-auto bottom-0 left-0 w-full">
+            {% unless hide_cart_promotion %}
+              <div class="mt-9 relative block | md:hidden | lg:mt-11 lg:flex-100">
+                <div class="w-full min-h-[30px] py-1 text-dark-blue border-t border-white rounded-t text-xs px-1 font-walsheim uppercase justify-center items-center flex-wrap flex | md:flex-nowrap md:text-sm" style="background: {{ cart_promotion_background_color }};">
+                  {% unless hide_promotion_icon %}
+                    <span class="w-6 h-6 flex mr-2">
+                      {% render 'icon-delivery-van' %}
+                    </span>
+                  {% endunless %}
+                  {% if spend_needed > 0 %}
+                    {% if cart_promotion_text_part_one != blank %}
+                      <span class="tracking-wide">{{ cart_promotion_text_part_one }}</span>
+                    {% endif %}
+                    <span class="font-walsheim-bold mx-1">{{ spend_needed | money }}</span>
+                    {% if cart_promotion_text_part_two != blank %}
+                      <span class="tracking-wide">{{ cart_promotion_text_part_two }}</span>
+                    {% endif %}
+                  {% else %}
+                    {% if cart_promotion_success_message != blank %}
+                      <p>{{ cart_promotion_success_message }}</p>
+                    {% endif %}
+                  {% endif %}
+                </div>
+                <div class="w-full h-2 border-b border-white rounded-b bg-[#D9D9D9] relative">
+                  <div class="percentage_bar h-2 absolute left-0 transition-all duration-300" style="background: {{ cart_promotion_progress_color }};"></div>
+                </div>
+              </div>
+            {% endunless %}
+            <div class="fixed_checkout bg-white w-full px-5 z-10 flex items-center justify-between py-3 | md:hidden" style="box-shadow: -1px 8px 31px 0px rgb(0 0 0 / 32%);">
+              <div class="flex flex-col">
+                <span class="font-sm font-walsheim font-bold text-dark-blue mr-2">{{ 'cart.subtotal' | t }}</span>
+                <div class="flex items-center mr-2">
+                  <span class="text-dark-blue text-base font-walsheim-bold mr-1">{{ cart.items_subtotal_price | money }}</span>
+                  {% unless section.settings.hide_taxes %}
+                    <span class="text-sm text-dark-blue font-walsheim-bold">{{ 'cart.taxes' | t }}</span>
+                  {% endunless %}
+                </div>
+              </div>
+              {% render 'btn', href: '/checkout', copy: 'cart.checkout', width: 'small', style: 'yellow', additional_class: 'flex font-walsheim-bold text-center rounded-lg capitalize h-10 max-w-[155px]' %}
+            </div>
+          </div>
+        {% endunless %}
+        {% style %}
+          .percentage_bar {
+            {% if spend_percentage < 100 %}
+              width: {{ spend_percentage | append: "%" }}
+              ;
+            {% else %}
+              width: 100%;
+            {% endif %}
+          }
+        {% endstyle %}
+        {% comment %} progress bar {% endcomment %}
+        {% unless hide_cart_promotion %}
+          <div
+            class="promotion_message mt-9 relative hidden | md:block | lg:mt-11 lg:flex-100"
+            data-threshold="{{ cart_promotion_threshold }}"
+            data-total="{{ cart.total_price }}">
+            <div class="w-full min-h-[30px] py-1 text-dark-blue border-t border-white rounded-t text-xs px-1 font-walsheim uppercase justify-center items-center flex-wrap hidden | md:flex md:flex-nowrap md:text-sm" style="background: {{ cart_promotion_background_color }};">
+              {% unless hide_promotion_icon %}
+                <span class="w-6 h-6 flex mr-2">
+                  {% render 'icon-delivery-van' %}
+                </span>
+              {% endunless %}
+              {% if spend_needed > 0 %}
+                {% if cart_promotion_text_part_one != blank %}
+                  <span class="tracking-wide">{{ cart_promotion_text_part_one }}</span>
+                {% endif %}
+                <span class="font-walsheim-bold mx-1">{{ spend_needed | money }}</span>
+                {% if cart_promotion_text_part_two != blank %}
+                  <span class="tracking-wide">{{ cart_promotion_text_part_two }}</span>
+                {% endif %}
+              {% else %}
+                {% if cart_promotion_success_message != blank %}
+                  <p class="promotion_success">{{ cart_promotion_success_message }}</p>
+                {% endif %}
+              {% endif %}
+            </div>
+            <div class="w-full h-2 border-b border-white rounded-b bg-[#D9D9D9] relative">
+              <div class="percentage_bar h-2 absolute left-0 transition-all duration-300" style="background: {{ cart_promotion_progress_color }};"></div>
+            </div>
+          </div>
+        {% endunless %}
+
+        {% comment %} loader {% endcomment %}
+        <div class="fixed inset-0 w-full h-full bg-black bg-opacity-60 z-[1007] transition-all duration-500 opacity-0 invisible group-loading:opacity-100 group-loading:visible cursor-pointer">
+          {%- render 'loader' type: 'light' -%}
+        </div>
+
+        {% comment %} cart items {% endcomment %}
+        <div class="flex items-start w-full flex-col | lg:pb-10 lg:flex-row lg:pt-12">
+          <div class="pt-13 w-full pb-8 | lg:pb-0 lg:pr-20 lg:w-3/5 lg:pt-5">
+            <form action="{{ routes.cart_url }}"method="post"class="cart_form flex flex-col">
+              {% comment %} header {% endcomment %}
+              <div class="hidden | lg:flex lg:justify-between lg:items-center lg:border-b lg:border-black lg:border-opacity-50 lg:pb-2">
+                <div class="w-1/5 mr-10"></div>
+                <span class="w-2/5 text-dark-blue text-2xl font-walsheim-bold mr-10">{{ 'cart.product' | t }}</span>
+                <span class="w-1/5 text-dark-blue text-2xl font-walsheim-bold mr-10">{{ 'cart.price' | t }}</span>
+                <span class="w-1/5 text-dark-blue text-2xl font-walsheim-bold text-right">{{ 'cart.quantity' | t }}</span>
+              </div>
+              {%- for item in cart.items -%}
+                {%- liquid
+                  assign status = ''
+                  if product.variants[0].inventory_quantity > 0
+                    assign status = 'in_stock'
+                    assign status_title = 'In Stock'
+                  elsif product.variants[0].inventory_quantity <= 0 and product.metafields.preorder.date != blank
+                    assign status = 'pre_order'
+                    assign status_title = 'Pre Order'
+                    assign pre_order = product.metafields.preorder.date
+                  else
+                    assign status = 'out_of_stock'
+                    assign status_title = 'Out Of Stock'
+                  endif
+        
+                  if item.selling_plan_allocation.selling_plan.name != blank
+                    assign is_subscription = true
+                    assign subscription_name = item.selling_plan_allocation.selling_plan.name
+                  else
+                    assign is_subscription = false
+                  endif
+                -%}
+
+                  <div class="{% if forloop.last %} mb-7 {% endif %} border-b border-black border-opacity-50 py-5 | lg:flex lg:items-center lg:justify-between"data-key="{{- item.key -}}"data-cart-item>
+
+                  {% comment %} item image {% endcomment %}
+                  <div class="flex items-end justify-between pb-12 | lg:pb-0 lg:w-1/5">
+                    <a href="{{- item.product.url -}}" class="block relative w-[100px] h-20 | lg:h-[100px] text-0">
+                      {{ item.title }}
+                      {% render 'img', type: 'img', img: item.image, class: 'object-contain w-full h-full' %}
+                    </a>
+                    {% comment %} item quantity {% endcomment %}
+                    <div class="flex items-center justify-center | lg:hidden">
+                      {%- render 'quantity-adjuster' item: item -%}
+                    </div>
+                  </div>
+
+                  {% comment %} item title / subscription {% endcomment %}
+                  <div class="flex flex-col justify-center | lg:w-2/5">
+                    <h2 class="text-base font-walsheim-medium mb-3 text-dark-blue | lg:mb-0 lg:text-sm">{{- item.title -}}</h2>
+
+                    {% if item.selling_plan_allocation.selling_plan.name != blank %}
+                      <span class="text-sm font-walsheim-medium text-dark-blue | lg:text-xs">{{ subscription_name }}</span>
+                    {% endif %}
+                    {% comment %} item remove {% endcomment %}
+                    <cart-remove-button data-module="cart-remove-button" class="hidden lg:block">
+                      <button class="flex text-sm font-walsheim underline text-dark-blue hover:no-underline self-start h-4 w-4 mt-3 | lg:mt-7" data-remove>
+                        {% render 'icon-trash-can' %}
+                      </button>
+                    </cart-remove-button>
+                  </div>
+                  {% comment %} item final price {% endcomment %}
+                  {% if item.line_price < item.final_line_price %}
+                    <div class="flex items-center | lg:w-1/5">
+                      <span class="flex font-bold font-walsheim-bold my-5 line-through text-xs">
+                        {{ item.final_line_price | money }}
+                      </span>
+                      <span class="flex text-base font-bold font-walsheim-bold my-5 text-[#F70C1A] ml-2 | lg:text-sm">
+                        {{ item.line_price | money }}
+                      </span>
+                    </div>
+                  {% else %}
+                    <div class="flex text-base font-bold font-walsheim-bold my-5 text-dark-blue | lg:text-sm lg:w-1/5">
+                      {{ item.final_line_price | money }}
+                    </div>
+                  {% endif %}
+                  {% comment %} item quantity ( desktop ) {% endcomment %}
+                  <div class="items-center justify-center col-span-4 hidden | lg:flex lg:order-1 lg:w-1/5 lg:justify-end">
+                    {%- render 'quantity-adjuster' item: item -%}
+                  </div>
+
+
+                  {% comment %} item remove {% endcomment %}
+                  <cart-remove-button data-module="cart-remove-button" class="lg:hidden">
+                    <button class="flex text-sm font-walsheim underline text-dark-blue hover:no-underline self-start" data-remove>Remove</button>
+                  </cart-remove-button>
+
+                </div>
+              {%- endfor -%}
+            </form>
+            {% unless section.settings.hide_product_recommendations %}
+              {% render 'cart-page-recommendations' %}
+            {% endunless %}
+          </div>
+
+          {% comment %} summary {% endcomment %}
+          <div class="cart_total_container relative pt-7 pb-10 w-full | lg:w-2/5 lg:px-11 lg:flex lg:flex-col lg:pt-12 lg:pb-6 | xl:px-[70px]">
+            <div class="textarea_container relative flex flex-col mb-6">
+              <textarea
+                class="flex items-center w-full px-3 pt-10 pb-4 text-dark-blue rounded-md h-[160px] | lg:h-[110px] lg:text-xs lg:font-walsheim-medium | placeholder:text-dark-blue placeholder:opacity-70 | focus:border-gray-500 focus:shadow-none focus:outline-none"
+                name="note"
+                form="cart"
+                placeholder="{{ section.settings.textarea_placeholder }}">{{ cart.note }}</textarea>
+            </div>
+            <cart-totals
+              data-module="cart-totals"
+              class="lg:order-first"
+              data-cart-totals>
+              <h3 class="text-sm border-b border-white border-opacity-25 pb-2 font-walsheim | lg:text-2xl lg:font-bold">{{ 'cart.total' | t }}</h3>
+              <div class="flex flex-col mb-6 pt-3 text-base font-walsheim | lg:pt-6 lg:mb-8">
+                <div class="flex justify-between items-center">
+                  <div>{{ 'cart.subtotal' | t }}</div>
+                  <div class="font-walsheim-bold">{{- cart.items_subtotal_price | money -}}</div>
+                </div>
+                <div class="flex justify-between items-center mt-3 | lg:mt-8">
+                  <div>{{ 'cart.shipping' | t }}</div>
+                  <div class="font-walsheim-bold">{{ 'cart.shipping_calculation' | t }}</div>
+                </div>
+                {%- if cart.cart_level_discount_applications.size > 0 -%}
+                  <div class="flex items-center justify-between mt-3 | lg:mt-8">
+                    <span>{{ 'cart.savings' | t }}</span>
+                    <ul
+                      class="discounts list-unstyled"
+                      role="list"
+                      aria-label="{{ 'customer.order.discount' | t }}">
+                      {%- for discount in cart.cart_level_discount_applications -%}
+                        <li class="discounts__discount discounts__discount--position font-walsheim-bold">
+                          {{ discount.total_allocated_amount | money }}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {%- endif -%}
+                <div class="flex justify-between items-center border-b border-white border-opacity-25 pb-2 border-t pt-8 mt-3 | lg:pb-6 lg:mt-8">
+                  <div>{{ 'cart.total' | t }}</div>
+                  <div class="font-walsheim-bold">
+                    {{- cart.total_price | money -}}
+                    {% unless section.settings.hide_taxes %}
+                      <span class="ml-1 font-walsheim text-xs">{{ 'cart.taxes' | t }}</span>
+                    {% endunless %}
+                  </div>
+                </div>
+              </div>
+            </cart-totals>
+            {% comment %} checkout / continue shopping {% endcomment %}
+            {% render 'btn', href: '/checkout', copy: 'cart.checkout', width: 'full', style: 'yellow', additional_class: 'flex font-walsheim-bold rounded-lg capitalize mt-14 lg:mt-8' %}
+            <a href="/" class="underline text-center text-base block underline-offset-2 font-walsheim mt-6 | lg:order-1 | hover:no-underline">{{ 'cart.continue_shopping' | t }}</a>
+
+            {% comment %} payment icons {% endcomment %}
+            {% assign enabled_payment_types = 'visa,google_pay,apple_pay,master,american_express' | remove: ' ' | split: ',' %}
+            <ul class="flex items-center justify-center mt-12">
+              {%- for type in enabled_payment_types -%}
+                {% case type %}
+                  {% when 'visa' %}
+                  <li class="w-[38px] h-6 text-white mr-6 flex">
+                    {% render 'icon-visa' %}
+                  </li>
+                  {% when 'google_pay' %}
+                  <li class="w-[38px] h-6 text-white mr-6 flex">
+                    {% render 'icon-google-pay' %}
+                  </li>
+                  {% when 'apple_pay' %}
+                  <li class="w-[38px] h-6 text-white mr-6 flex">
+                    {% render 'icon-apple-pay' %}
+                  </li>
+                  {% when 'master' %}
+                  <li class="w-[38px] h-6 text-white mr-6 flex">
+                    {% render 'icon-mastercard' %}
+                  </li>
+                  {% when 'american_express' %}
+                  <li class="w-[38px] h-6 text-white">
+                    {% render 'icon-amex' %}
+                  </li>
+                {% endcase %}
+              {%- endfor -%}
+            </ul>
+          </div>
+        </div>
+      </cart-items>
+    {% else %}
+      <cart-items data-module="cart-items">
+        <p class="text-dark-blue text-center py-20 text-2xl font-walsheim-medium">
+          {% if section.settings.empty_cart_text != blank %}
+            {{ section.settings.empty_cart_text }}
+          {% else %}
+            {{ 'cart.empty' | t }}
+          {% endif %}
+        </p>
+        {% if section.settings.continue_shopping_link != blank %}
+          {% render 'btn', style: 'blue', width: 'small', copy: section.settings.continue_shopping_text, href: section.settings.continue_shopping_link, no_translation: true, additional_class: 'flex mx-auto mb-20' %}
+        {% endif %}
+      </cart-items>
+    {% endif %}
+  </div>
+</div>

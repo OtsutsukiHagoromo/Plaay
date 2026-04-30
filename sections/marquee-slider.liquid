@@ -1,0 +1,146 @@
+<style>
+  #marquee-{{ section.id }} {
+    background-color: {{ section.settings.background_color }};
+    --gap: {{ section.settings.gap }}px;
+    --duration: {{ section.settings.duration }}s;
+  }
+
+  #marquee-{{ section.id }} .marquee {
+    padding-block: 0.5rem;
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    gap: var(--gap);
+    max-width: 100%;
+  }
+
+  #marquee-{{ section.id }} .marquee__group {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: var(--gap);
+    min-width: 100%;
+    animation: scroll var(--duration) linear infinite;
+  }
+
+@keyframes scroll {
+  0% {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+
+  #marquee-{{ section.id }} .marquee:hover .marquee__group {
+    animation-play-state: paused;
+  }
+
+  .logo-item img {
+    margin-right: 40px;
+    border-radius: 100%;
+  }
+
+  .logo-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo-item span {
+    font-size: 17px;
+    color: #F9C61D;
+  }
+</style>
+
+<div id="marquee-{{ section.id }}" class="marquee--section">
+  <div class="page-width">
+    <div class="marquee">
+      <div class="marquee__group">
+        {% for block in section.blocks %}
+          {% if block.type == 'logo' %}
+            <div class="logo-item">
+              {% if block.settings.com_logo != blank %}
+                <img loading="lazy" src="{{ block.settings.com_logo | img_url: '60x' }}" />
+              {% endif %}
+              <span>{{ block.settings.icon_text }}</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="marquee__group" aria-hidden="true">
+        {% for block in section.blocks %}
+          {% if block.type == 'logo' %}
+            <div class="logo-item">
+              {% if block.settings.com_logo != blank %}
+                <img loading="lazy" src="{{ block.settings.com_logo | img_url: '60x' }}" />
+              {% endif %}
+              <span>{{ block.settings.icon_text }}</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Marquee Slider",
+  "class": "section marquee-section-main",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between logos",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "duration",
+      "label": "Scroll speed",
+      "min": 1,
+      "max": 60,
+      "step": 1,
+      "default": 20,
+      "unit": "s"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "text",
+          "label": "Text",
+          "id": "icon_text"
+        },
+        {
+          "type": "image_picker",
+          "id": "com_logo",
+          "label": "Upload logo"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee Slider",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}

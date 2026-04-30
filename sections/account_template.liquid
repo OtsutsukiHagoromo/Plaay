@@ -1,0 +1,155 @@
+{% liquid 
+  assign title = section.settings.title
+  assign background_color = section.settings.background_color 
+  assign show_users_name = section.settings.show_users_name
+  assign background_color_main = section.settings.background_color_main
+%}
+
+<account-area data-module="account-area">
+  <div class="relative">
+    {% comment %} account banner {% endcomment %}
+    {% render 'account-banner' %}
+    <div style="background-color: {{ background_color_main }};">
+      <div class="container account_template_container z-2 relative pb-10 | lg:pb-20 lg:pt-12 lg:flex lg:flex-row lg:justify-between | xl:pb-32">
+        {% comment %} account sidebar {% endcomment %}
+        <div class="lg:mr-8 lg:w-1/4">
+          {% render 'account-sidebar' %}
+        </div>
+
+        <div class="overflow-hidden all-accounts-container | lg:w-3/4 lg:ml-8">
+          {% comment %} account overview {% endcomment %}
+          <div class="bg-white py-9 px-7 w-full | lg:max-w-2xl lg:rounded-xl">
+            <div class="border-t border-b border-black border-opacity-25 pt-8 pb-12 flex flex-col | lg:flex-row lg:pb-16">
+              {% comment %} my details {% endcomment %}
+              <div class="lg:mr-16">
+                <h2 class="text-base text-dark-blue font-walsheim-bold capitalize mb-3">{{ 'account.account-area.my-details-title' | t }}</h2>
+                <div class="text-dark-blue text-xs font-walsheim">
+                  {{ customer.first_name }} {{ customer.last_name }}
+                </div>
+                <div class="text-dark-blue text-xs font-walsheim">
+                  {{ 'account.email' | t }}: {{ customer.email }}
+                </div>
+                <div class="text-dark-blue text-xs font-walsheim">
+                  {{ 'account.phone' | t }}: {{ customer.phone }}
+                </div>
+              </div>
+              {% comment %} default address {% endcomment %}
+              <div class="lg:ml-16">
+                <div class="flex flex-row items-center mb-3 border-t border-black border-opacity-25 pt-8 mt-8 | lg:mt-0 lg:pt-0 lg:border-none">
+                  <h2 class="text-base text-dark-blue font-walsheim-bold capitalize mr-8">{{ 'account.account-area.default-address-title' | t }}</h2>
+                  <a href="/account/addresses" class="underline text-xs text-dark-blue underline-offset-2 flex items-center">
+                    {{ 'account.addresses.edit' | t }}
+                    <span class="flex text-dark-blue h-3 w-3 ml-2">
+                      {% render 'icon-pencil' %}
+                    </span>
+                  </a>
+                </div>
+                <div class="flex flex-col text-xs font-walsheim text-dark-blue">
+                  <span>{{ customer.default_address.first_name }} {{ customer.default_address.last_name }}</span>
+                  {% if customer.default_address.address1 %}
+                    <span>{{ customer.default_address.address1 }}</span>
+                  {% endif %}
+                  {% if customer.default_address.address2 %}
+                    <span>{{ customer.default_address.address2 }}</span>
+                  {% endif %}
+                  {% if customer.default_address.city %}
+                    <span>{{ customer.default_address.city }}</span>
+                  {% endif %}
+                  <span>{{ customer.default_address.country }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% comment %} Your orders {% endcomment %}
+          <div class="account-container w-full mb-7 py-4 overflow-hidden mt-10" data-container="4">
+            <h2 class="text-2xl mb-2 text-dark-blue | lg:block lg:mb-0">
+              {{ 'account.account-area.my-orders' | t }}
+            </h2>
+            {% if customer.orders.size != 0 %}
+              <div class="">
+                {% comment %} orders {% endcomment %}
+                {% for customer_order in customer.orders %}
+                  {% liquid
+                    assign dateCreated = customer_order.created_at | date: "%s"
+                    assign dateNow = 'now' | date: '%s'
+                    assign diffSeconds = dateNow | minus: dateCreated 
+                    assign diffDays = diffSeconds | divided_by: 3600 | divided_by: 24 
+                  %}
+                  <div class="flex order-container relative | lg:mx-0 lg:w-auto">
+                    <div class="flex py-5 flex-col bg-white px-5 w-full | lg:mt-10 lg:rounded-xl lg:px-10 lg:max-w-2xl">
+                      <div class="text-sm text-dark-blue font-walsheim-bold mb-5 | lg:text-base">You ordered this {{ diffDays }} days ago</div>
+                      <div class="flex flex-row flex-wrap items-start">
+                        {% for item in customer_order.line_items %}
+                          <div class="order_items bg-[#F4F4F4] rounded-lg w-24 h-24 {% if forloop.first %} mr-6 my-6 {% else %} m-[6px] {% endif %} | md:w-36 md:h-36 | lg:h-48 lg:w-48" style="box-shadow: 6px 2px 6px -2px rgb(2 29 73 / 30%);">
+                            {% render 'img', type: 'img', img: item.image, class: 'object-contain mx-auto h-24 w-12 md:h-32 md:w-20 lg:w-20 lg:h-44 ' %}
+                          </div>
+                        {% endfor %}
+                      </div>
+                      <div class="flex items-end mt-2 justify-between max-w-[404px]">
+                        <div class="w-auto mr-2">
+                          <div class="text-xs font-walsheim text-dark-blue">{{ 'account.account-area.order-id' | t }}: {{ customer_order.order_number }}</div>
+                          <div class="text-xs text-dark-blue font-walsheim">
+                            {{ 'account.account-area.order-total' | t }}:
+                            <span class="font-walsheim-bold pl-2">
+                              {{ customer_order.total_price | money }}
+                            </span>
+                          </div>
+                        </div>
+                        {% render 'btn', href: customer_order.customer_url, width: 'small', style: 'blue', copy: 'account.account-area.view-order', additional_class: 'flex', additional_class: 'w-1/2 ml-2' %}
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <span class="block mt-8 text-base | lg:text-22.5px">
+                {{ 'account.account-area.no-orders' | t }}</span>
+            {% endif %}
+          </div>
+          {% comment %} subscriptions {% endcomment %}
+          <div class="account-container w-full mb-7 py-4 overflow-hidden" data-container="3">
+            {% assign customer_tags_string = customer.tags | join: ' ' %}
+
+            {% unless customer_tags_string contains "Active Subscriber" %}
+
+              <p class="text-base mb-4 | lg:block lg:mb-4">You don’t currently have any active subscriptions. You can add a subscription by selecting the Subscribe & Save option on your favourite products.</p>
+
+            {% endunless %}
+
+            {% render 'btn', type: 'href', href: '/tools/recurring/login', copy: 'account.account-area.manage-subscriptions', style: 'blue', width: 'extra-large', additional_class: 'flex' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</account-area>
+
+
+{% schema %}
+  {
+    "name": "Account",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "My Account"
+      }, {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color (banner)",
+        "default": "#F5C08D"
+      }, {
+        "type": "checkbox",
+        "id": "show_users_name",
+        "label": "Show users name",
+        "default": true
+      }, {
+        "type": "color",
+        "id": "background_color_main",
+        "label": "Background color (main)",
+        "default": "#F4F4F4"
+      }
+    ]
+  }
+{% endschema %}

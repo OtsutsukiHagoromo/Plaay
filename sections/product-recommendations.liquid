@@ -1,0 +1,142 @@
+{% liquid 
+  assign per_view_desktop_large = section.settings.per_view_desktop_large 
+  assign per_view_desktop = section.settings.per_view_desktop 
+  assign per_view_tablet = section.settings.per_view_tablet 
+  assign per_view_mobile = section.settings.per_view_mobile
+  assign per_view_mobile_small = section.settings.per_view_mobile_small
+  assign title = section.settings.title
+  assign description = section.settings.description
+  assign products_limit = section.settings.products_limit
+%}
+<div class="product-recommendations-container">
+  <product-recommendations
+    data-module="product-recommendations"
+    class="product-recommendations"
+    data-product-id="{{ product.id }}"
+    data-limit="4">
+    <product-tile data-module="product-tile">
+      <div class="container">
+        {% if title != blank %}
+          <h2 class="text-center text-dark-blue text-3xl uppercase | md:text-5xl">{{ title }}</h2>
+        {% endif %}
+        {% if description != blank %}
+          <p class="text-center text-sm text-dark-blue mt-4 font-bold | md:px-10">{{ description }}</p>
+        {% endif %}
+        <div class="glide product-recommendations-glide" id="product-recommendations-{{ section.id }}">
+          <div class="glide__track" data-glide-el="track">
+            <ul class="py-5 glide__slides">
+              {% for product in recommendations.products %}
+                <li class="h-auto px-2 glide__slide" data-product-tile>
+                  {% render 'product-tile', product: product %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% for product in recommendations.products %}
+            {% render 'product-quick-add-popup', product: product %}
+          {% endfor %}
+        </div>
+      </div>
+    </product-tile>
+  </product-recommendations>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(() => {
+      const productRecommendationsGlide = new Glide(".product-recommendations-glide", {
+        type: 'carousel',
+        perView: {{ per_view_desktop_large }},
+        startAt: 2,
+        breakpoints: {
+          1280: {
+            perView: {{ per_view_desktop }}
+          },
+          1024: {
+            perView: {{ per_view_tablet }}
+          },
+          768: {
+            perView: {{ per_view_mobile }}
+          },
+          480: {
+            perView: {{ per_view_mobile_small }}
+          }
+        }
+      });
+      productRecommendationsGlide.mount();
+    }, 2000);
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Product recommendations",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "text",
+        "id": "description",
+        "label": "Description"
+      },
+      {
+        "type": "range",
+        "id": "products_limit",
+        "info": "set a limit to the number of recommended products shown.",
+        "label": "Products limit",
+        "default": 6,
+        "min": 1,
+        "max": 12
+      },
+      {
+        "type": "range",
+        "min": 1,
+        "max": 6,
+        "label": "Per view (dekstop large) | 1536px and above",
+        "default": 4.5,
+        "step": 0.5,
+        "id": "per_view_desktop_large"
+      }, {
+        "type": "range",
+        "min": 1,
+        "max": 6,
+        "label": "Per view (dekstop) | 1024px - 1535px",
+        "default": 4,
+        "step": 0.5,
+        "id": "per_view_desktop"
+      }, {
+        "type": "range",
+        "min": 1,
+        "max": 6,
+        "label": "Per view (tablet) | 768px - 1023px",
+        "default": 3,
+        "step": 0.5,
+        "id": "per_view_tablet"
+      }, {
+        "type": "range",
+        "min": 1,
+        "max": 6,
+        "label": "Per view (mobile) | 481px - 767px",
+        "default": 1.5,
+        "step": 0.5,
+        "id": "per_view_mobile"
+      }, {
+        "type": "range",
+        "min": 1,
+        "max": 6,
+        "label": "Per view (mobile - small) | 480px and under",
+        "default": 1,
+        "step": 0.5,
+        "id": "per_view_mobile_small"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product recommendations"
+      }
+    ]
+  }
+{% endschema %}

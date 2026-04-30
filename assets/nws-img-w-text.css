@@ -1,0 +1,145 @@
+.nws-img-w-text.nws-same-padding {
+    padding: 80px 0;
+}
+.nws-custom-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: block;
+}
+.nws-custom-row {
+    margin-top: 35px;
+}
+.nws-section-heading {
+    font-size: 48px;
+    font-weight: 600;
+    color: #000;
+    font-family: sans-serif;
+    line-height: 1;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: center;
+}
+.nws-section-desc {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.3;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 30px auto 0 auto;
+}
+.nws-section-desc p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.nws-blocks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 50px;
+    align-items: center;
+}
+.nws-blocks-grid:nth-child(even) {
+    direction: rtl;
+}
+.nws-media-info {
+    direction: ltr;
+}
+.nws-img-wrapper {
+    position: relative;
+    padding-bottom: 100%;
+}
+.nws-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    display: block;
+    object-fit: cover;
+}
+.nws-block-heading {
+    font-size: 36px;
+    font-weight: 600;
+    font-family: sans-serif;
+    color: #000;
+    line-height: 1.3;
+    margin-top: 0;
+    margin-bottom: 0;
+    display: block;
+}
+.nws-block-content {
+    font-size: 20px;
+    font-weight: 400;
+    font-family: sans-serif;
+    color: #000000;
+    line-height: 1.3;
+    margin-top: 30px;
+    margin-bottom: 0;
+    display: block;
+}
+.nws-block-content p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.nws-block-btn {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: sans-serif;
+    text-decoration: none;
+    color: #000;
+    line-height: normal;
+    width: 100%;
+    max-width: 200px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: #fff;
+    border: 3px solid #000000;
+    box-shadow: -3px 3px 0 #000000;
+    transition: box-shadow 0.1s, transform 0.1s;
+    border-radius: 34px;
+}
+.nws-btn-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    height: 125px;
+    display: flex;
+    margin-top: 30px;
+}
+.nws-block-btn:hover {
+    color: #000;
+}
+.nws-btn-wrapper:before {
+    content: '';
+    position: absolute;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+    transition: transform 0.1s;
+    transform: scale(0) rotate(20deg);
+}
+.nws-btn-wrapper:hover:before {
+    height: 100%;
+    top: -30%;
+    left: -15%;
+    background-image: url(/cdn/shopifycloud/brochure/assets/mr-beast/splat-primary-ff0bdcf698af9ba7d5c60b99426fcd2d2edb0aa6b1f34c6bf270a5ec986852dd.svg);
+    transform: scale(1) rotate(0);
+    width: 100%;
+}
+@media(max-width: 767px) {
+  .nws-blocks-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 50px;
+    align-items: center;
+    padding: 0 20px;
+  }
+  .nws-block-content {
+    font-size: 18px;
+  }
+}

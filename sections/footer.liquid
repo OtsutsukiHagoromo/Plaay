@@ -1,0 +1,533 @@
+{% liquid 
+  assign background_color = section.settings.background_color
+  assign text_color = section.settings.text_color
+  assign left_side_heading = section.settings.left_side_heading 
+  assign left_side_link_one = section.settings.left_side_link_one
+  assign left_side_link_text_one = section.settings.left_side_link_text_one
+  assign left_side_link_one_style = section.settings.left_side_link_one_style
+  assign left_side_link_two = section.settings.left_side_link_two
+  assign left_side_link_text_two = section.settings.left_side_link_text_two
+  assign left_side_link_two_style = section.settings.left_side_link_two_style
+  assign left_side_link_three = section.settings.left_side_link_three
+  assign left_side_link_text_three = section.settings.left_side_link_text_three
+  assign left_side_link_three_style = section.settings.left_side_link_three_style
+  assign instagram_link = section.settings.instagram_link 
+  assign instagram_text = section.settings.instagram_text 
+
+  assign right_side_heading = section.settings.right_side_heading
+  assign right_side_link_one = section.settings.right_side_link_one
+  assign right_side_link_two = section.settings.right_side_link_two
+  assign right_side_link_text_one = section.settings.right_side_link_text_one 
+  assign right_side_link_text_two = section.settings.right_side_link_text_two
+  assign right_side_link_one_style = section.settings.right_side_link_one_style
+  assign right_side_link_two_style = section.settings.right_side_link_two_style
+
+  assign menus = section.blocks | where: 'type', 'menu'
+  assign menu_size = menus | size 
+%}
+
+{% style %}
+  @media only screen and (min-width: 768px) {
+    footer::after {
+      content: '';
+      position: absolute;
+      height: 100%;
+      width: 1px;
+      background: #FFF;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0;
+    }
+  }
+{% endstyle %}
+
+<footer class="relative" style="background-color: {{ background_color }};">
+  <div class="container pt-16 pb-24 flex flex-col | md:pb-10 md:pt-16 md:flex-row md:justify-between">
+    {% comment %} LEFT SIDE {% endcomment %}
+    {% if section.settings.show_left_side %}
+      <div class=" | md:w-1/2">
+      {% comment %} heading {% endcomment %}
+      {% if left_side_heading != blank %}
+        <h2 class=" text-6xl text-center uppercase leading-none | md:text-9xl | lg:text-11xl" style="color: {{ text_color }};">{{ left_side_heading }}</h2>
+      {% endif %}
+
+      {% comment %} buttons {% endcomment %}
+      {% if left_side_link_one != blank or left_side_link_two != blank %}
+        <div class="flex items-center justify-between pt-8 | md:justify-center">
+          {% if left_side_link_one != blank %}
+            {% render 'btn', href: left_side_link_one, style: left_side_link_one_style, copy: left_side_link_text_one, additional_class: 'rounded-2xl mr-4 text-center text-xs md:text-sm lg:text-xs xl:text-sm', extra_radius: true, no_translation: true, width: 'small' %}
+          {% endif %}
+          {% if left_side_link_two != blank %}
+            {% render 'btn', href: left_side_link_two, style: left_side_link_two_style, copy: left_side_link_text_two, additional_class: 'rounded-2xl mx-2 text-center text-xs md:text-sm lg:text-xs xl:text-sm', extra_radius: true, no_translation: true, width: 'small' %}
+          {% endif %}
+          {% if left_side_link_three != blank %}
+            {% render 'btn', href: left_side_link_three, style: left_side_link_three_style, copy: left_side_link_text_three, additional_class: 'rounded-2xl ml-4 text-center text-xs md:text-sm lg:text-xs xl:text-sm', extra_radius: true, no_translation: true, width: 'small' %}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% comment %} klaviyo form {% endcomment %}
+    </div>
+    {% endif %}
+
+    {% comment %} RIGHT SIDE {% endcomment %}
+    <div class="mt-9 | md:mt-0 md:w-1/2">
+
+      {% comment %} heading {% endcomment %}
+      {% if right_side_heading != blank %}
+        <h2 class="contact-us text-5xl text-center uppercase leading-none mb-3 | md:mb-8 md:text-9xl | lg:text-11xl" style="color: {{ text_color }};">{{ right_side_heading }}</h2>
+      {% endif %}
+
+      {% comment %} buttons {% endcomment %}
+      {% if right_side_link_one != blank or right_side_link_two != blank %}
+        <div class="flex items-center justify-center">
+          {% if right_side_link_one != blank %}
+            {% if right_side_link_one_style == 'white-border-arrow' %}
+              {% render 'btn', href: right_side_link_one, style: right_side_link_one_style, copy: right_side_link_text_one, extra_radius: true, no_translation: true, width: 'small', has_arrow: true, additional_class: 'mr-1' %}
+            {% elsif right_side_link_one_style == 'blue-border-arrow' %}
+              {% render 'btn', href: right_side_link_one, style: right_side_link_one_style, copy: right_side_link_text_one, extra_radius: true, no_translation: true, width: 'small', has_arrow: true, additional_class: 'mr-1' %}
+            {% else %}
+              {% render 'btn', href: right_side_link_one, style: right_side_link_one_style, copy: right_side_link_text_one, extra_radius: true, no_translation: true, width: 'small', additional_class: 'mr-1' %}
+            {% endif %}
+          {% endif %}
+          {% if right_side_link_two != blank %}
+            {% render 'btn', href: right_side_link_two, style: right_side_link_two_style, copy: right_side_link_text_two, extra_radius: true, no_translation: true, width: 'small', additional_class: 'ml-1' %}
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% comment %} menus {% endcomment %}
+      {% if menu_size > 0 %}
+        <div class="flex flex-col pt-8 | md:flex-row md:justify-between footer-flex">
+          <div class="footer-brand-info">
+            <h5 style="color: {{ text_color }};">{{ section.settings.fooer_info_heading }}</h5>
+            <div class="" style="color: {{ text_color }};">{{ section.settings.footer_info_detail }}</div>
+
+              {% comment %} instagram {% endcomment %}
+              <div class='footer-social-links'>
+                {% if instagram_link != blank %}
+                <a href="{{ instagram_link }}" class="flex mt-8 items-center">
+                  <span class="h-[18px] w-[18px] mt-1 flex mr-1" style="color: {{ text_color }};">
+                    {% render 'icon-instagram' %}
+                  </span>
+                  {% if instagram_text != blank %}
+                    <span class="font-walsheim-black text-xl lowercase tracking-wider" style="color: {{ text_color }};">{{ instagram_text }}</span>
+                  {% endif %}
+                </a>
+              {% endif %}
+            <a href="https://www.facebook.com/profile.php?id=100087747556028" class="flex mt-8 items-center">
+                  <span class="h-[18px] w-[18px] mt-1 flex mr-1" style="color: {{ text_color }};">
+                    {% render 'icon-facebook' %}
+                  </span>
+                
+                </a>
+            <a href="https://www.tiktok.com/@shopplaay?_t=8p6Zb6fKGjB&_r=1" class="flex mt-8 items-center">
+                  <span class="h-[18px] w-[18px] mt-1 flex mr-1" style="color: {{ text_color }};">
+                    <svg width="100%" height="100%" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7071 1.00003C12.3432 1.57367 13.0356 2.05401 13.7654 2.42483C14.4852 2.7944 15.276 3.03828 16.1213 3.13066V6.53704C15.5984 6.49388 15.0735 6.40669 14.5522 6.27867C14.0308 6.15064 13.5267 5.98052 13.0463 5.77069V12.1482C13.0463 14.4092 11.2463 16.1696 9.023 16.1696C6.81388 16.1696 5.00001 14.4068 5.00001 12.1229C5.00001 10.2961 6.27099 8.73936 7.98494 8.25024V10.807C7.35148 11.1302 6.92849 11.7823 6.92849 12.5204C6.92849 13.4297 7.66191 14.1696 8.58076 14.1696C9.49604 14.1696 10.2325 13.4297 10.2325 12.5204V1.00003H11.7071Z" fill="currentColor"/>
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M11.7071 1.00003C12.3432 1.57367 13.0356 2.05401 13.7654 2.42483C14.4852 2.7944 15.276 3.03828 16.1213 3.13066V6.53704C15.5984 6.49388 15.0735 6.40669 14.5522 6.27867C14.0308 6.15064 13.5267 5.98052 13.0463 5.77069V12.1482C13.0463 14.4092 11.2463 16.1696 9.023 16.1696C6.81388 16.1696 5.00001 14.4068 5.00001 12.1229C5.00001 10.2961 6.27099 8.73936 7.98494 8.25024V10.807C7.35148 11.1302 6.92849 11.7823 6.92849 12.5204C6.92849 13.4297 7.66191 14.1696 8.58076 14.1696C9.49604 14.1696 10.2325 13.4297 10.2325 12.5204V1.00003H11.7071Z" fill="none" stroke="currentColor" stroke-width="1"/>
+                    </svg>
+                  </span>
+                </a>
+            <a href="https://www.linkedin.com/company/plaaysnacks/" class="flex mt-8 items-center">
+                  <span class="h-[18px] w-[18px] mt-1 flex mr-1" style="color: {{ text_color }};">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-supported-dps="24x24" fill="currentColor" class="footer-icon linkedin" width="24" height="24" focusable="false">
+                      <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
+                    </svg>
+                  </span>
+                </a>
+              </div>
+          </div>
+          {% for menu in menus %}
+            {% assign heading = menu.settings.heading %}
+            {% assign menu_linklist = menu.settings.menu %}
+            {%- capture mobile_menus -%}
+              <ul class="{% unless forloop.first %} mt-2 {% endunless %} | md:hidden">
+                {% for link in linklists[menu_linklist].links %}
+                  <li class="{% unless forloop.first %} mt-2 {% endunless %}">
+                    <a href="{{ link.url }}">{{ link.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {%- endcapture -%}
+            {% capture desktop_menus %}
+              <ul>
+                {% for link in linklists[menu_linklist].links %}
+                  <li class="text-sm font-walsheim pb-3">
+                    <a href="{{ link.url }}">{{ link.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endcapture %}
+
+            <div class=" | md:hidden">
+              {% render 'content-accordion', heading: heading, content: mobile_menus, color: text_color %}
+            </div>
+            <div class="hidden | md:block" style="color: {{ text_color }};">
+              <h5 class="links-heading text-sm uppercase block" style="color: {{ text_color }};">{{ heading }}</h5>
+              {{ desktop_menus }}
+            </div>
+          {% endfor %}
+          <div class="" style="color: #ffffff;">
+            {% for block in section.blocks %} 
+              {% if block.type == 'newsletter' %} 
+                <h5 class="links-heading text-sm uppercase block" style="color: {{ text_color }};">{{ block.settings.newsletterheading }}</h5>
+                <div class="footer-newsletter">
+                 <div class="footer-block__newsletter">
+                {%- if section.settings.newsletter_heading != blank -%}
+                  <h2 class="footer-block__heading inline-richtext">{{ section.settings.newsletter_heading }}</h2>
+                {%- endif -%}
+                {%- form 'customer', id: 'ContactFooter', class: 'footer__newsletter newsletter-form' -%}
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  <div class="newsletter-form__field-wrapper">
+                    <label class="field__label" style="color: {{ text_color }};" for="NewsletterForm--{{ section.id }}">
+                      {{ block.settings.newsletter_description }}
+                    </label>
+                    <div class="field">
+                      <input
+                        id="NewsletterForm--{{ section.id }}"
+                        type="email"
+                        style="color: {{ text_color }};"
+                        name="contact[email]"
+                        class="field__input"
+                        value="{{ form.email }}"
+                        aria-required="true"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        autocomplete="email"
+                        {% if form.errors %}
+                          autofocus
+                          aria-invalid="true"
+                          aria-describedby="ContactFooter-error"
+                        {% elsif form.posted_successfully? %}
+                          aria-describedby="ContactFooter-success"
+                        {% endif %}
+                        placeholder="e.g - Sir.Eel@email.com"
+                        required
+                      >
+                      <button
+                        type="submit"
+                        class="newsletter-form__button field__button"
+                        name="commit"
+                        id="Subscribe"
+                      >
+                        Sign Me Up!
+                      </button>
+                    </div>
+                    {%- if form.errors -%}
+                      <small class="newsletter-form__message form__message" id="ContactFooter-error">
+                        {%- render 'icon-error' -%}
+                        {{- form.errors.translated_fields.email | capitalize }}
+                        {{ form.errors.messages.email -}}
+                      </small>
+                    {%- endif -%}
+                  </div>
+                  {%- if form.posted_successfully? -%}
+                    <h3
+                      class="newsletter-form__message newsletter-form__message--success form__message"
+                      id="ContactFooter-success"
+                      tabindex="-1"
+                      autofocus
+                    >
+                      {% render 'icon-success' -%}
+                      Successfully Submitted
+                    </h3>
+                  {%- endif -%}
+                {%- endform -%}
+              </div>
+              </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</footer>
+
+{% schema %}
+  {
+    "name": "t:sections.footer.name",
+    "max_blocks": 4,
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#021D49"
+      },
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "#FFF"
+      },
+      {
+        "type": "header",
+        "content": "Left side"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_left_side",
+        "label": "Show Left side"
+      },
+      {
+        "type": "text",
+        "id": "left_side_heading",
+        "label": "Left side heading",
+        "default": "Shop the range"
+      }, {
+        "type": "url",
+        "id": "left_side_link_one",
+        "label": "Left side link (one)"
+      }, {
+        "type": "text",
+        "id": "left_side_link_text_one",
+        "label": "Left side link text (one)",
+        "default": "Variety Packs"
+      }, {
+        "type": "select",
+        "id": "left_side_link_one_style",
+        "label": "Left side link style (one)",
+        "default": "white-border",
+        "options": [
+          {
+            "label": "Blue border",
+            "value": "blue-border"
+          },
+          {
+            "label": "White border",
+            "value": "white-border"
+          },
+          {
+            "label": "Yellow",
+            "value": "yellow"
+          },
+          {
+            "label": "Blue",
+            "value": "blue"
+          }, {
+            "label": "White",
+            "value": "white"
+          }
+        ]
+      }, {
+        "type": "url",
+        "id": "left_side_link_two",
+        "label": "Left side link (two)"
+      }, {
+        "type": "text",
+        "id": "left_side_link_text_two",
+        "label": "Left side link text (two)",
+        "default": "Truffle Bars"
+      }, {
+        "type": "select",
+        "id": "left_side_link_two_style",
+        "label": "Left side link style (two)",
+        "default": "white-border",
+        "options": [
+          {
+            "label": "Blue border",
+            "value": "blue-border"
+          },
+          {
+            "label": "White border",
+            "value": "white-border"
+          },
+          {
+            "label": "Yellow",
+            "value": "yellow"
+          },
+          {
+            "label": "Blue",
+            "value": "blue"
+          }, {
+            "label": "White",
+            "value": "white"
+          }
+        ]
+      }, {
+        "type": "url",
+        "id": "left_side_link_three",
+        "label": "Left side link (three)"
+      }, {
+        "type": "text",
+        "id": "left_side_link_text_three",
+        "label": "Left side link text (three)",
+        "default": "Truffle Bars"
+      }, {
+        "type": "select",
+        "id": "left_side_link_three_style",
+        "label": "Left side link style (three)",
+        "default": "white-border",
+        "options": [
+          {
+            "label": "Blue border",
+            "value": "blue-border"
+          },
+          {
+            "label": "White border",
+            "value": "white-border"
+          },
+          {
+            "label": "Yellow",
+            "value": "yellow"
+          },
+          {
+            "label": "Blue",
+            "value": "blue"
+          }, {
+            "label": "White",
+            "value": "white"
+          }
+        ]
+      }, {
+        "type": "url",
+        "id": "instagram_link",
+        "label": "Instagram link"
+      }, {
+        "type": "text",
+        "label": "Instagram text",
+        "id": "instagram_text",
+        "default": "@plaay"
+      }, {
+        "type": "header",
+        "content": "Right side"
+      }, {
+        "type": "text",
+        "id": "right_side_heading",
+        "label": "Right side heading",
+        "default": "Contact Us"
+      }, {
+        "type": "url",
+        "id": "right_side_link_one",
+        "label": "Right side link (one)"
+      }, {
+        "type": "text",
+        "id": "right_side_link_text_one",
+        "label": "Right side link text (one)",
+        "default": "Truffle Bars"
+      }, {
+        "type": "select",
+        "id": "right_side_link_one_style",
+        "label": "Right side link style (one)",
+        "default": "white-border",
+        "options": [
+          {
+            "label": "Blue border",
+            "value": "blue-border"
+          },
+          {
+            "label": "White border",
+            "value": "white-border"
+          },
+          {
+            "label": "Yellow",
+            "value": "yellow"
+          },
+          {
+            "label": "Blue",
+            "value": "blue"
+          }, {
+            "label": "White",
+            "value": "white"
+          }, {
+            "label": "Blue border (arrow)",
+            "value": "blue-border-arrow"
+          }, {
+            "label": "White border (arrow)",
+            "value": "white-border-arrow"
+          }
+        ]
+      }, {
+        "type": "url",
+        "id": "right_side_link_two",
+        "label": "Right side link (two)"
+      }, {
+        "type": "text",
+        "id": "right_side_link_text_two",
+        "label": "Right side link text (two)",
+        "default": "Truffle Bars"
+      }, {
+        "type": "select",
+        "id": "right_side_link_two_style",
+        "label": "Right side link style (two)",
+        "default": "white-border",
+        "options": [
+          {
+            "label": "Blue border",
+            "value": "blue-border"
+          },
+          {
+            "label": "White border",
+            "value": "white-border"
+          },
+          {
+            "label": "Yellow",
+            "value": "yellow"
+          },
+          {
+            "label": "Blue",
+            "value": "blue"
+          }, {
+            "label": "White",
+            "value": "white"
+          }, {
+            "label": "Blue border (arrow)",
+            "value": "blue-border-arrow"
+          }, {
+            "label": "White border (arrow)",
+            "value": "white-border-arrow"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "fooer_info_heading",
+        "label": "Footer info heading",
+        "default": "About Shopplay",
+      }, 
+      {
+        "type": "textarea",
+        "id": "footer_info_detail",
+        "label": "Footer info detail"
+      }, 
+      
+    ],
+    "blocks": [
+      {
+        "type": "menu",
+        "name": "Menu",
+        "settings": [
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+          }, {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Menu"
+          }
+        ]
+      },
+      {
+        "type": "newsletter",
+        "name": "Newsletter",
+        "settings": [
+          {
+            "type": "text",
+            "id": "newsletterheading",
+            "label": "Heading"
+          },
+          {
+            "type": "text",
+            "id": "newsletter_description",
+            "label": "Newsletter Label",
+            "default": "Subscribe for flavour drops, cheeky perks, and a side of sass!"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

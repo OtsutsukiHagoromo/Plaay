@@ -1,0 +1,26 @@
+<div
+  class="{% if small_sticker %} h-[140px] w-[140px] {% else %} h-[160px] w-[160px] md:h-[180px] md:w-[180px] {% endif %} relative js-container">
+  <canvas
+    class="scratch_sticker_canvas absolute left-0 z-1 rounded-full {% if small_sticker %} h-[140px] w-[140px] {% else %} w-[160px] h-[160px] | md:h-[180px] md:w-[180px] {% endif %}"
+    id="js-canvas"
+    width="180"
+    height="180"
+    data-image="{{ sticker_background_image | img_url: 'master' }}"></canvas>
+  <div
+    class="content w-full h-full relative rounded-full"
+    style="background-color: {{ background_color }};">
+    <div
+      class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col items-center text-center w-full">
+      {% if heading != blank %}
+        <span
+          class="font-walsheim-black leading-none uppercase text-5xl | md:text-6xl"
+          style="color: {{ text_color }};">{{ heading }}</span>
+      {% endif %}
+      {% if text != blank %}
+        <span
+          class="mt-2"
+          style="color: {{ text_color }};">{{ text }}</span>
+      {% endif %}
+    </div>
+  </div>
+</div>

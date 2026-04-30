@@ -1,0 +1,123 @@
+{% liquid 
+  assign background_color_main = section.settings.background_color_main
+  assign background_color = section.settings.background_color
+  assign text_color = section.settings.text_color
+  assign title = section.settings.title 
+%}
+
+<login-template data-module="login-template">
+  <div class="customer_login relative">
+    {% comment %} Banner {% endcomment %}
+    <div class="pt-32 pb-14 | md:pt-44 md:pb-20" style="background-color: {{ background_color }}; box-shadow: 2px 5px 12px -3px rgba(0,0,0,0.75);">
+      <h1 class="text-center text-2xl font-walsheim-bold uppercase" style="color: {{ text_color }}">
+        {% if title != blank %}
+          {{ title }}
+        {% else %}
+          {{ 'account.login.title' | t }}
+        {% endif %}
+      </h1>
+    </div>
+
+    <div style="background-color: {{ background_color_main }}">
+      <div class="container relative py-16">
+        {% comment %} Login form {% endcomment %}
+        {% form 'customer_login', class: 'max-w-xl mx-auto' %}
+          {%- if form.errors -%}
+            <div class="text-center text-xl text-dark-blue underline pb-10 font-walsheim-medium">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+          {% comment %} email address {% endcomment %}
+          <fieldset>
+            <input
+              required
+              type="email"
+              name="customer[email]"
+              id="CustomerEmail"
+              placeholder="{{'account.email' | t }}*"
+              class="w-full text-sm my-2 text-dark-blue opacity-100 outline-none py-[10px] pl-3 font-walsheim-medium rounded border border-black border-opacity-25 | placeholder:bold placeholder:text-dark-blue"
+              {% if form.errors contains 'form' %}aria-invalid="true"{% endif %} />
+          </fieldset>
+          {% comment %} password {% endcomment %}
+          <fieldset>
+            <input
+              required
+              type="password"
+              name="customer[password]"
+              id="CustomerPassword"
+              placeholder="{{'account.password' | t }}*"
+              class="w-full text-sm my-2 text-dark-blue opacity-100 outline-none py-[10px] pl-3 font-walsheim-medium rounded border border-black border-opacity-25 | placeholder:bold placeholder:text-dark-blue"
+              {% if form.errors contains 'form' %}aria-invalid="true"{% endif %} />
+          </fieldset>
+          {% comment %} submit button {% endcomment %}
+          {% render 'btn', type: 'submit', style: 'blue', copy: 'account.sign-in', width: 'full', additional_class: 'mx-auto rounded-xl' %}
+          {% comment %} don't have an account? {% endcomment %}
+          <p class="text-dark-blue mt-7 text-center font-walsheim-medium mb-4">{{ 'account.dont-have-account' | t }}</p>
+          {% render 'btn', href: '/account/register', style: 'blue-border', copy: 'account.login.create-account', width: 'full', additional_class: 'flex mx-auto rounded-xl' %}
+        {% endform %}
+
+        {% comment %} FORGOTTEN PASSWORD FORM {% endcomment %}
+        <a
+          href="javascript:void(0)"
+          class="text-sm text-center text-dark-blue uppercase mx-auto flex justify-center underline underline-offset-2 mt-7 pb-3 font-walsheim-medium bold"
+          data-forgotten-password-btn>{{- 'account.login.forgotten-password-title' | t -}}</a>
+        <div class="py-6 max-w-2xl mx-auto mt-5 border-t border-black border-opacity-25 pt-5" data-forgotten-password>
+          <h2 class="text-center text-dark-blue font-walsheim-medium text-lg">
+            {{- 'account.login.forgotten-password-heading' | t -}}
+          </h2>
+          {% form 'recover_customer_password', class: 'mt-5 text-center text-dark-blue max-w-xl mx-auto' %}
+            <input
+              type="email"
+              name="email"
+              id="RecoverEmail"
+              autocorrect="off"
+              autocapitalize="off"
+              autocomplete="email"
+              placeholder="{{'account.email' | t }}"
+              class="w-full text-sm my-2 text-dark-blue opacity-100 outline-none py-[10px] pl-3 font-walsheim-medium rounded border border-black border-opacity-25 | placeholder:bold placeholder:text-dark-blue">
+            {% render 'btn', type: 'submit', style: 'blue', copy: 'account.login.forgotten-password-submit', width: 'medium', additional_class: 'mx-auto mt-5' %}
+
+            {% comment %} success / failure {% endcomment %}
+            <div class="text-center text-red mt-5">
+              {{ form.errors | default_errors }}
+            </div>
+            {% if form.posted_successfully? %}
+              <p class="text-dark-blue mt-4 mx-auto text-base font-walsheim text-center | md:max-w-lg">
+                {{ 'account.successful_password_reset' | t }}
+              </p>
+            {% endif %}
+          {% endform %}
+        </div>
+      </div>
+    </div>
+  </div>
+</login-template>
+
+{% schema %}
+  {
+    "name": "Login",
+    "settings": [
+      {
+        "type": "color",
+        "label": "Background color (banner)",
+        "id": "background_color",
+        "default": "#021D49"
+      }, {
+        "type": "color",
+        "label": "Text color (banner)",
+        "id": "text_color",
+        "default": "#FFF"
+      }, {
+        "type": "text",
+        "label": "Title",
+        "id": "title",
+        "default": "Login"
+      }, {
+        "type": "color",
+        "id": "background_color_main",
+        "label": "Background color (main form)",
+        "default": "#F4F4F4"
+      }
+    ]
+  }
+{% endschema %}

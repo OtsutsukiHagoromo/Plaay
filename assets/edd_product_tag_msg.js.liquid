@@ -1,0 +1,1 @@
+ var edd_product_tag_msg = 'not_set';

@@ -1,0 +1,138 @@
+{% liquid
+  assign background_color = section.settings.background_color
+  assign background_color_main = section.settings.background_color_main
+%}
+
+{% style %}
+  .default_address input {
+    height: 16px;
+    width: 16px;
+    border: 1px solid #021D49;
+  }
+  #AddAddress.show {
+    display: block;
+  }
+  .edit_address_button[aria-expanded="true"] ~ .edit_address {
+    display: block;
+  }
+{% endstyle %}
+
+<script src="{{ 'customer.static.js' | asset_url }}" defer></script>
+
+<div class="relative">
+  {% render 'account-banner' %}
+  <div style="background-color: {{ background_color_main }};">
+    <div class="container relative pb-10 | lg:pb-20 lg:pt-12 lg:flex lg:flex-row lg:justify-between | xl:pb-32">
+      {% comment %} account sidebar {% endcomment %}
+      <div class="lg:w-1/4 lg:mr-8">
+        {% render 'account-sidebar' %}
+      </div>
+
+      {% comment %} addresses {% endcomment %}
+      <div class="w-full | lg:w-4/5 lg:ml-8" data-customer-addresses>
+        {% paginate customer.addresses by 10 %}
+          {% comment %} list of customer addresses {% endcomment %}
+          {% render 'btn', href: '/account', style: 'blue', copy: 'account.account-area.back-to-account', width: 'large', additional_class: 'flex mb-10 text-sm' %}
+
+          {% if customer.addresses.size > 0 %}
+            <ul role="list" class="justify-center flex flex-col">
+              {%- for address in customer.addresses -%}
+                <li data-address class="bg-white justify-center px-10 py-8 {% unless forloop.first %} mt-5 {% endunless %}">
+                  <div class="flex flex-col items-start | lg:flex-row lg:justify-between">
+                    <div>
+                      <div class="text-sm text-dark-blue font-walsheim flex flex-col gap-2">
+                        {{ address | format_address }}
+                      </div>
+                      {%- if address == customer.default_address -%}
+                        <p class="text-sm mt-3 text-[#767676] font-walsheim flex items-center">
+                          <span class="h-3 w-3 flex text-[#767676] mr-2">
+                            {% render 'icon-tick' %}
+                          </span>
+                          {{ 'account.addresses.default-delivery' | t }}
+                        </p>
+                      {%- endif -%}
+                      {% if adddress == customer.billing_address %}
+                        <p class="text-sm mt-3 text-[#767676] font-walsheim flex items-center">
+                          <span class="h-3 w-3 flex text-[#767676] mr-2">
+                            {% render 'icon-tick' %}
+                          </span>
+                          {{ 'account.addresses.default-billing' | t }}
+                        </p>
+                      {% endif %}
+                    </div>
+                    <div class="flex flex-col mt-14 | lg:mt-0">
+                      <button
+                        type="button"
+                        id="EditFormButton_{{ address.id }}"
+                        aria-label="{{ 'account.addresses.edit_address' | t }} {{ forloop.index }}"
+                        aria-controls="EditAddress_{{ address.id }}"
+                        aria-expanded="false"
+                        data-address-id="{{ address.id }}"
+                        class="edit_address_button mt-2 bg-dark-blue text-white py-2 text-sm font-walsheim uppercase h-10 w-[170px] rounded relative border border-dark-blue transition-all duration-200 group | hover:bg-white hover:text-dark-blue">
+                        {{ 'account.addresses.edit' | t }}
+                        <span class="w-3 h-3 text-white flex absolute right-11 top-1/2 transform -translate-y-1/2 transition-all duration-200 | group-hover:text-dark-blue">
+                          {% render 'icon-pencil' %}
+                        </span>
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="{{ 'account.addresses.delete' | t }} {{ forloop.index }}"
+                        data-target="{{ address.url }}"
+                        data-confirm-message="{{ 'account.addresses.delete_confirm' | t }}"
+                        class="bg-[#E9E9E9] mt-2 border-[#E9E9E9] text-[#808080] py-2 text-sm font-walsheim uppercase h-10 w-[170px] leading-[0px] rounded relative border transition-all duration-200 group | hover:bg-dark-blue hover:text-white hover:border-dark-blue">
+                        {{ 'account.addresses.delete' | t }}
+                        <span class="w-3 h-3 text-[#808080] flex absolute right-11 top-1/2 transform -translate-y-1/2 transition-all duration-200 | group-hover:text-white">
+                          {% render 'icon-bin' %}
+                        </span>
+                      </button>
+                      {% render 'edit-address', address: address %}
+                    </div>
+                  </div>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {% endif %}
+          {% comment %} add new address {% endcomment %}
+          <div data-address>
+            <button
+              type="button"
+              aria-expanded="false"
+              aria-controls="AddAddress"
+              class="AddAddressButton mt-5 bg-[#E0E0E0] text-dark-blue w-[252px] font-walsheim-medium text-sm rounded uppercase py-3 transition-all duration-200 | hover:bg-dark-blue hover:text-white">{{ 'account.addresses.add-new' | t }}</button>
+            {% render 'new-address', address: address %}
+          </div>
+        {% endpaginate %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.onload = () => {
+    typeof CustomerAddresses !== 'undefined' && new CustomerAddresses();
+  };
+</script>
+
+{% schema %}
+  {
+    "name": "Addresses",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color (header)",
+        "default": "#F5C08D"
+      }, {
+        "type": "color",
+        "id": "background_color_main",
+        "label": "Background color (main)",
+        "default": "#F4F4F4"
+      }, {
+        "id": "show_users_name",
+        "type": "checkbox",
+        "label": "Show users name?",
+        "default": true
+      }
+    ]
+  }
+{% endschema %}

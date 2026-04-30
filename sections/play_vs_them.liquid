@@ -1,0 +1,385 @@
+{% liquid 
+  assign title = section.settings.title
+  assign heading = section.settings.heading 
+  assign background_color_left = section.settings.background_color_left 
+  assign background_color_right = section.settings.background_color_right 
+  assign plaay_percent = section.settings.plaay_percent
+  assign plaay_percent_text = section.settings.plaay_percent_text
+  assign others_text = section.settings.others_text
+  assign find_out_why_url = section.settings.find_out_why_url 
+  assign find_out_why_text = section.settings.find_out_why_text 
+  assign plaay_additional_text = section.settings.plaay_additional_text
+  assign backup_percentages = section.blocks
+  assign backup_percentages_size = backup_percentages | size
+  assign plaay_versus_them_plaay_image_backup = section.settings.plaay_versus_them_plaay_image_backup
+
+  assign plaay_versus_them_plaay_image = product.metafields.arena.plaay_versus_them_plaay_image
+  assign plaay_versus_them_candy_image = product.metafields.arena.plaay_versus_them_candy_image 
+  assign plaay_versus_them_percentages = product.metafields.arena.plaay_versus_them_percentages.value
+  assign play_versus_them_percentages_size = plaay_versus_them_percentages | size
+  assign plaay_versus_them_descriptions = product.metafields.arena.plaay_versus_them_descriptions
+%}
+{% style %}
+  #play_versus_them-{{ section.id }}::before {
+    content: '';
+    background: {{ background_color_left }}
+    ;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 50%;
+    width: 100%;
+    z-index: -1;
+  }
+  #play_versus_them-{{ section.id }}::after {
+    content: '';
+    background: {{ background_color_right }}
+    ;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: 50%;
+    width: 100%;
+    z-index: -1;
+  }
+  .data-percentage .percentage::before {
+    content: '';
+    width: 20px;
+    height: 1px;
+    background: #000;
+    position: absolute;
+    left: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -24px;
+  }
+  @media only screen and (min-width: 768px) {
+    .data-percentage .percentage::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: #000;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      left: -28px;
+      right: auto;
+    }
+    #play_versus_them-{{ section.id }}::before {
+      height: 100%;
+      width: 50%;
+    }
+    #play_versus_them-{{ section.id }}::after {
+      height: 100%;
+      width: 50%;
+    }
+  }
+{% endstyle %}
+<play-versus-them data-module="play-versus-them">
+  {% if play_versus_them_percentages_size > 0 or backup_percentages_size > 0 and plaay_versus_them_plaay_image_backup != blank or plaay_versus_them_plaay_image != blank %}
+    <div class="relative z-1" id="play_versus_them-{{ section.id }}">
+      <div class="container pt-14 | md:pt-24">
+        {% comment %} title {% endcomment %}
+        {% if title != blank %}
+          <div class="justify-center items-center text-center hidden | md:flex">
+            <span class="relative ml-3 mr-3 text-3xl uppercase text-dark-blue font-walsheim-black">
+              {% if section.settings.us_text != blank %}
+                <h2 class="text-3xl uppercase text-dark-blue absolute right-[45px] top-0">
+                  {{ section.settings.us_text }}
+                </h2>
+              {% else %}
+                <span class="flex w-20 h-8 text-dark-blue absolute right-[45px] top-1">
+                  {% render 'icon-plaay' %}
+                </span>
+              {% endif %}
+              vs
+              <h2 class="absolute text-3xl uppercase text-dark-blue left-[45px] top-0">
+                {{ title }}
+              </h2>
+            </span>
+          </div>
+        {% endif %}
+        {% comment %} heading {% endcomment %}
+        {% if heading != blank %}
+          <h3 class="text-dark-blue text-[40px] text-center pt-5">{{ heading }}</h3>
+        {% endif %}
+        {% comment %} plaay vs them {% endcomment %}
+        <div class="flex flex-col justify-center pt-10 | md:pt-20 md:flex-row pb-16 | md:pb-20 md:items-start">
+          {% comment %} plaay {% endcomment %}
+          {% if plaay_versus_them_plaay_image != blank or plaay_versus_them_plaay_image_backup != blank %}
+            <div class="plaay_side relative flex flex-col overflow-hidden | md:w-1/2 md:mr-16 md:items-end | xl:mr-24">
+              <div class="plaay_side_image flex items-center h-[300px] transition-all duration-[2000ms] transform translate-y-full justify-center | md:justify-start md:h-[400px]">
+                <div class="flex items-center h-full w-[400px] | md:w-full">
+                  <div class="h-[90%] w-8 border-t border-b border-r border-black order-1 | md:order-[0] md:border-l md:border-r-0"></div>
+                  {% if plaay_versus_them_plaay_image != blank %}
+                    {% render 'img', type: 'img', img: plaay_versus_them_plaay_image, lazy: true, class: 'transition-all duration-300 object-cover h-full w-[114px] opacity-20 md:w-auto', height: 400, width: 180 %}
+                  {% else %}
+                    {% render 'img', type: 'img', img: plaay_versus_them_plaay_image_backup, lazy: true, class: 'transition-all duration-300 object-cover h-full w-[114px] opacity-20 md:w-auto', height: 400, width: 180 %}
+                  {% endif %}
+                  {% if plaay_percent != blank %}
+                    <div class="w-fit order-1 ml-4 font-walsheim-bold text-dark-blue | md:ml-0 md:mr-4 md:order-first">
+                      <p class="flex items-center flex-start">
+                        <span class="flex flex-col text-base">
+                          {{ plaay_percent | append: '%' }}
+                          <span class="flex h-1 text-dark-blue w-7">
+                            {% render 'icon-wave' %}
+                          </span>
+                        </span>
+                        {% if plaay_percent_text != blank %}
+                          <span class="ml-1 text-base" style="text-transform:uppercase;">{{ plaay_percent_text }}</span>
+                        {% endif %}
+                      </p>
+                      {% if plaay_additional_text != blank %}
+                        <div class="mt-2 text-xs font-bold text-dark-blue font-walsheim plaay_additional_text">{{ plaay_additional_text }}</div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              <span class="text-dark-blue w-[120px] hidden | md:flex md:-mt-3">
+                {% render 'icon-plaay-alternate' %}
+              </span>
+              {% if find_out_why_url != blank %}
+                {% render 'btn', href: find_out_why_url, copy: find_out_why_text, style: 'blue-border', additional_class: 'rounded-lg w-full mt-9 mb-12 py-2 capitalize max-w-xs hidden md:max-w-[156px] md:block md:mb-0', no_translation: true %}
+              {% endif %}
+            </div>
+          {% endif %}
+          {% comment %} title (mobile) {% endcomment %}
+          {% if title != blank %}
+            <div class="flex justify-center items-center text-center absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 | md:hidden">
+              <span class="flex w-20 h-8 text-dark-blue">
+                {% render 'icon-plaay' %}
+              </span>
+              <span class="ml-3 mr-3 text-3xl uppercase text-dark-blue font-walsheim-black">vs</span>
+              <h2 class="text-3xl uppercase text-dark-blue">
+                {{ title }}
+              </h2>
+            </div>
+          {% endif %}
+          {% comment %} them {% endcomment %}
+          <div class="them_side relative flex | md:ml-16 md:w-1/2 | xl:ml-24 ">
+            <div class="flex flex-col items-center pt-[150px] w-full | md:pt-0">
+              <div class="flex relative items-center w-full justify-center | md:justify-start">
+                <div class="flex items-center relative h-full w-[400px] | md:w-full">
+                  <div class="relative flex flex-col items-center">
+                    <div class="absolute candy_image_target_two -bottom-0"></div>
+                    <div class="absolute candy_image_target_three -bottom-1/2"></div>
+                    <div class="candy_image h-[300px] w-[114px] relative | md:w-max md:h-[400px]">
+                      {% if plaay_versus_them_candy_image %}
+                        {% render 'icon-candy-bar' %}
+                      {% else %}
+                        {% render 'icon-candy-tube' %}
+                      {% endif %}
+                      <div class="absolute bottom-0 left-0 w-full h-full"></div>
+                    </div>
+                    {% if others_text != blank %}
+                      <span class="absolute mt-3 text-lg uppercase text-dark-blue font-walsheim-black -bottom-10 whitespace-nowrap">{{ others_text }}</span>
+                    {% endif %}
+                  </div>
+                  <div class="h-[90%] w-8 border-t border-b border-r border-black mr-3 -order-1 | md:border-l-0 md:border-r md:ml-3 md:order-[0]"></div>
+                  {% if plaay_versus_them_percentages != blank %}
+                    <div class="flex flex-col-reverse justify-between relative h-[90%] max-w-[240px] w-fit -order-2 pr-7 | md:pl-4 md:pr-0 md:order-1">
+                      {% comment %}
+                      {% for percentage in plaay_versus_them_percentages %}
+                        {% assign percentage_index = forloop.index0 %}
+                        {% assign description = product.metafields.arena.plaay_versus_them_descriptions.value[forloop.index0] %}
+                        <div class="data-percentage relative pl-6 | md:pl-1" data-percentage="{{ percentage }}">
+                          <span class="percentage relative flex flex-col text-base font-walsheim-bold text-dark-blue leading-none text-right items-end | md:items-start md:text-left">
+                            {{ percentage | append: '%' }}
+                            <span class="text-yellow h-[6px] w-10 flex">
+                              {% render 'icon-wave' %}
+                            </span>
+                          </span>
+                          {% if description != blank %}
+                            <p class="text-[11px] text-dark-blue mt-1 font-bold text-right | sm:text-xs | md:text-left">{{ description }}</p>
+                          {% endif %}
+                        </div>
+                      {% endfor %}
+                      {% endcomment %}
+
+                        <div class="data-percentage relative pl-6 | md:pl-1" data-percentage="10">
+                          <span class="percentage relative flex flex-col text-base font-walsheim-bold text-dark-blue leading-none text-right items-end | md:items-start md:text-left">
+                           {% comment %}
+                            {{ percentage | append: '%' }}
+                          {% endcomment %}
+                            10% Filler Ingredients
+                            <span class="text-yellow h-[6px] w-10 flex">
+                              {% render 'icon-wave' %}
+                            </span>
+                          </span>
+                            <p class="text-[11px] text-dark-blue mt-1 font-bold text-right | sm:text-xs | md:text-left">Rice Krispies & Tapioca Starch</p>
+                          {% comment %}
+                          {% if description != blank %}
+                            <p class="text-[11px] text-dark-blue mt-1 font-bold text-right | sm:text-xs | md:text-left">{{ description }}</p>
+                          {% endif %}
+                        {% endcomment %}
+                        </div>
+                        <div class="data-percentage relative pl-6 | md:pl-1" data-percentage="40">
+                          <span class="percentage relative flex flex-col text-base font-walsheim-bold text-dark-blue leading-none text-right items-end | md:items-start md:text-left">
+                           {% comment %}
+                            {{ percentage | append: '%' }}
+                          {% endcomment %}
+                            40% Yuck Stuff
+                            <span class="text-yellow h-[6px] w-10 flex">
+                              {% render 'icon-wave' %}
+                            </span>
+                          </span>
+                            <p class="text-[11px] text-dark-blue mt-1 font-bold text-right | sm:text-xs | md:text-left">Maltitol, Soy Protein, Brown Rice Syrup</p>
+                          {% comment %}
+                          {% if description != blank %}
+                            <p class="text-[11px] text-dark-blue mt-1 font-bold text-right | sm:text-xs | md:text-left">{{ description }}</p>
+                          {% endif %}
+                        {% endcomment %}
+                        </div>
+                        <div class="data-percentage relative pl-6 | md:pl-1" data-percentage="50">
+                          <span class="percentage relative flex flex-col text-base font-walsheim-bold text-dark-blue leading-none text-right items-end | md:items-start md:text-left">
+                           {% comment %}
+                            {{ percentage | append: '%' }}
+                          {% endcomment %}
+                            50% Sugar Rush Drivers
+                            <span class="text-yellow h-[6px] w-10 flex">
+                              {% render 'icon-wave' %}
+                            </span>
+                          </span>
+                            <p class="text-[11px] text-dark-blue mt-1 font-bold text-right | sm:text-xs | md:text-left">Excess Dates, Oats, Raisins, Quinoa and Buckwheat</p>
+                          {% comment %}
+                          {% if description != blank %}
+                            <p class="text-[11px] text-dark-blue mt-1 font-bold text-right | sm:text-xs | md:text-left">{{ description }}</p>
+                          {% endif %}
+                        {% endcomment %}
+                        </div>
+                    </div>
+                  {% else %}
+                    <div class="flex flex-col-reverse justify-between relative h-[90%] max-w-[240px] w-fit ml-2">
+                      {% for block in backup_percentages %}
+                        {% assign percentage = block.settings.percentage %}
+                        {% assign description = block.settings.title %}
+
+                        <div class="data-percentage relative pl-3 | md:pl-1" data-percentage="{{ percentage }}">
+                          <span class="relative flex flex-col items-start text-lg leading-none percentage font-walsheim-bold text-dark-blue">
+                            {{ percentage | append: '%' }}
+                            <span class="text-yellow h-[6px] w-10 flex">
+                              {% render 'icon-wave' %}
+                            </span>
+                          </span>
+                          {% if description != blank %}
+                            <p class="text-[11px] text-dark-blue mt-1 font-bold | sm:text-xs">{{ description }}</p>
+                          {% endif %}
+                        </div>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+              {% if find_out_why_url != blank %}
+                {% render 'btn', href: find_out_why_url, copy: find_out_why_text, style: 'blue-border', additional_class: 'rounded-lg w-full mt-20 py-2 capitalize max-w-xs md:max-w-[156px] text-[17px] font-walsheim-bold md:hidden md:mb-0', no_translation: true %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+</play-versus-them>
+
+{% schema %}
+  {
+    "name": "Plaay VS Them",
+    "blocks": [
+      {
+        "type": "backup_percentages",
+        "name": "Backup percentages",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+          }, {
+            "type": "range",
+            "label": "Percentage",
+            "id": "percentage",
+            "max": 100,
+            "min": 0,
+            "default": 50
+          }
+        ]
+      }
+    ],
+    "settings": [
+      {
+        "type": "text",
+        "id": "us_text",
+        "label": "Us text",
+        "default": "Us",
+        "info": "Leave blank to show Plaay svg logo"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Them"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "What makes us 100% Clean?"
+      },
+      {
+        "type": "color",
+        "id": "background_color_left",
+        "label": "Background color (left)",
+        "default": "#FAD1D2"
+      }, {
+        "type": "color",
+        "id": "background_color_right",
+        "label": "Background color (right)",
+        "default": "#F6F6F6"
+      }, {
+        "type": "range",
+        "id": "plaay_percent",
+        "label": "Plaay percent",
+        "min": 1,
+        "max": 100,
+        "default": 100
+      }, {
+        "type": "text",
+        "id": "plaay_percent_text",
+        "label": "Plaay percent (text)",
+        "default": "clean"
+      }, {
+        "id": "plaay_additional_text",
+        "label": "Plaay additional text",
+        "default": "<p>Some additional text</p>",
+        "type": "richtext"
+      }, {
+        "type": "text",
+        "id": "others_text",
+        "label": "Others (text)",
+        "default": "The others"
+      }, {
+        "type": "url",
+        "id": "find_out_why_url",
+        "label": "Find out why url"
+      }, {
+        "type": "text",
+        "id": "find_out_why_text",
+        "label": "Find out why text",
+        "default": "Find out why"
+      }, {
+        "type": "image_picker",
+        "label": "Plaay vs them backup image",
+        "id": "plaay_versus_them_plaay_image_backup",
+        "info": "Image ratio - 200px (width) | 400px (height)"
+      }
+    ],
+
+    "presets": [
+      {
+        "name": "Plaay Vs Them"
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,1 @@
+ var edd_product_vendor_msg = 'not_set';

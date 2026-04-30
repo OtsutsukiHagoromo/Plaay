@@ -1,0 +1,39 @@
+<style>
+  @font-face {
+      font-family: "walsheim-black";
+      src: url({{ 'walsheim-black.static.woff2' | asset_url }});
+      font-display: swap;
+  }
+  @font-face {
+    font-family: "walsheim-bold";
+    src: url({{ 'walsheim-bold.static.woff2' | asset_url }});
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "walsheim-regular";
+    src: url({{ 'walsheim-regular.static.woff2' | asset_url }});
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "walsheim-medium";
+    src: url({{ 'walsheim-medium.static.woff2' | asset_url }});
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "walsheim-regular-new";
+    src: url({{ 'GTWalsheimPro-Regular.static.woff2' | asset_url }});
+    font-display: swap;
+  }
+</style>
+<link rel="preload" href="{{ 'walsheim-black.static.woff2' | asset_url }}" as="font" crossorigin="anonymous">
+<link rel="preload" href="{{ 'walsheim-bold.static.woff2' | asset_url }}" as="font" crossorigin="anonymous">
+<link rel="preload" href="{{ 'walsheim-medium.static.woff' | asset_url }}" as="font" crossorigin="anonymous">
+<link rel="preload" href="{{ 'walsheim-regular.static.woff2' | asset_url }}" as="font" crossorigin="anonymous">
+<link rel="preload" href="{{ 'GTWalsheimPro-Regular.static.woff2' | asset_url }}" as="font" crossorigin="anonymous">
+
+{% comment %}
+<link rel="preload" href="{{ 'walsheim-black.woff' | asset_url }}" as="font" crossorigin="anonymous">
+<link rel="preload" href="{{ 'walsheim-bold.woff' | asset_url }}" as="font" crossorigin="anonymous">
+<link rel="preload" href="{{ 'walsheim-medium.woff' | asset_url }}" as="font" crossorigin="anonymous">
+<link rel="preload" href="{{ 'walsheim-regular.woff' | asset_url }}" as="font" crossorigin="anonymous">
+{% endcomment %}

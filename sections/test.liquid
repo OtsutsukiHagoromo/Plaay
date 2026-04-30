@@ -1,0 +1,47 @@
+<div
+  class="overflow-visible h-[1600px] | lg:h-[400vh]"
+  style="color: {{ section_two_text_color }}; background-color: {{ section_two_background_color }};">
+
+  <div
+    class="h-full | lg:sticky lg:top-0 lg:w-full lg:h-[100vh]">
+
+    <div class="h-full grid grid-cols-1 container | lg:grid-cols-2">
+      {% comment %} left side {% endcomment %}
+      <div
+        class="overflow-hidden px-4 flex flex-col pb-40 sticky top-10 h-fit | lg:justify-center lg:items-start lg:static lg:h-full lg:pb-0"
+        style="background-color: {{ section_two_background_color }};">
+        <div
+          class="animate_section transition-all duration-500 translate-y-full flex flex-col pt-20 top-10 sticky h-fit opacity-0 | lg:justify-center lg:pt-0 lg:max-w-xs lg:static lg:h-full">
+          {% if section_two_left_side_title != blank %}
+            <h2
+              class="pb-10 uppercase text-5xl leading-none | lg:pb-11">
+              {{ section_two_left_side_title }}
+            </h2>
+          {% endif %}
+          {% if section_two_right_side_copy != blank %}
+            <p
+              class="font-walsheim-bold text-lg">{{ section_two_left_side_copy }}</p>
+          {% endif %}
+        </div>
+      </div>
+      {% comment %} right side {% endcomment %}
+      <div
+        class="flex px-4 flex-col sticky top-10 h-fit overflow-hidden | lg:static lg:h-full lg:items-end"
+        style="background-color: {{ section_two_background_color }};">
+        <div
+          class="animate_section transition-all duration-500 translate-y-full flex flex-col pt-20 top-10 sticky h-fit opacity-0 pb-36 | lg:justify-center lg:pt-0 lg:max-w-xs lg:static lg:h-full">
+          {% if section_two_right_side_title != blank %}
+            <h2
+              class="pb-10 uppercase text-5xl leading-none | lg:pb-11">
+              {{ section_two_right_side_title }}
+            </h2>
+          {% endif %}
+          {% if section_two_right_side_copy != blank %}
+            <p
+              class="font-walsheim-bold text-lg">{{ section_two_right_side_copy }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

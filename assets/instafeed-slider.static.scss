@@ -1,0 +1,43 @@
+ @import "tailwindcss/base";
+ @import "tailwindcss/components";
+ 
+ @import "tailwindcss/utilities";
+
+.custom_instagram_slider{
+  overflow-x: scroll;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  scrollbar-width: none;
+  scrollbar-height: none;
+ }
+ .custom_instagram_slider::-webkit-scrollbar{
+  height: 0;
+  width: 0;
+ }
+ .insta_slide_element{
+  display: inline-block;
+  width: 260px;
+  flex: 0 0 260px;
+ }
+ .insta_slide_image{
+  object-fit: cover;
+  height: 300px;
+  width: 100%;
+  border-radius: 16px;
+}
+.custom_instagram_slider:empty {
+    display: none;
+}
+@media only screen and (min-width: 1024px){
+  .custom_instagram_slider{
+    gap: 16px;
+  }
+  .insta_slide_element{
+    width: 340px;
+    flex: 0 0 340px;
+  }
+  .insta_slide_image{
+    height: 400px;
+  }
+}

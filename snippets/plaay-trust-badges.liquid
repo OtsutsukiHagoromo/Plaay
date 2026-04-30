@@ -1,0 +1,94 @@
+{%- liquid
+  assign has_halal       = false
+  assign has_gluten_free = false
+  assign has_palm_free   = false
+  assign has_vegan       = false
+  assign has_clean       = false
+
+  for tag in product.tags
+    assign trust_tag = tag | downcase | strip
+    case trust_tag
+      when 'badge:halal', 'trust:halal', 'halal'
+        assign has_halal = true
+      when 'badge:gluten-free', 'badge:gluten_free', 'trust:gluten-free', 'trust:gluten_free', 'gluten-free', 'gluten free'
+        assign has_gluten_free = true
+      when 'badge:palm-free', 'badge:palm_free', 'trust:palm-free', 'trust:palm_free', 'palm-free', 'palm free'
+        assign has_palm_free = true
+      when 'badge:vegan', 'trust:vegan', 'vegan'
+        assign has_vegan = true
+      when 'badge:clean', 'badge:clean-ingredients', 'badge:clean_ingredients', 'trust:clean', 'trust:clean-ingredients', 'trust:clean_ingredients', 'clean ingredients'
+        assign has_clean = true
+    endcase
+  endfor
+
+  assign show_trust_badges = false
+  if has_halal or has_gluten_free or has_palm_free or has_vegan or has_clean
+    assign show_trust_badges = true
+  endif
+-%}
+
+{%- if show_trust_badges -%}
+<div class="plaay-trust-strip mt-5 mb-3" aria-label="Product certifications">
+
+  {%- if has_halal -%}
+  <div class="plaay-trust-item">
+    <img
+      src="{{ 'plaay-badge-halal.png' | asset_url }}"
+      alt="Halal certified"
+      class="plaay-trust-img"
+      loading="lazy"
+      onerror="this.style.display='none'">
+    <span class="plaay-trust-label font-walsheim-bold">Halal</span>
+  </div>
+  {%- endif -%}
+
+  {%- if has_gluten_free -%}
+  <div class="plaay-trust-item">
+    <img
+      src="{{ 'plaay-badge-gluten-free.png' | asset_url }}"
+      alt="Gluten free"
+      class="plaay-trust-img"
+      loading="lazy"
+      onerror="this.style.display='none'">
+    <span class="plaay-trust-label font-walsheim-bold">Gluten Free</span>
+  </div>
+  {%- endif -%}
+
+  {%- if has_vegan -%}
+  <div class="plaay-trust-item">
+    <img
+      src="{{ 'plaay-badge-vegan.png' | asset_url }}"
+      alt="Vegan"
+      class="plaay-trust-img"
+      loading="lazy"
+      onerror="this.style.display='none'">
+    <span class="plaay-trust-label font-walsheim-bold">Vegan</span>
+  </div>
+  {%- endif -%}
+
+  {%- if has_palm_free -%}
+  <div class="plaay-trust-item">
+    <img
+      src="{{ 'plaay-badge-palm-free.png' | asset_url }}"
+      alt="Palm oil free"
+      class="plaay-trust-img"
+      loading="lazy"
+      onerror="this.style.display='none'">
+    <span class="plaay-trust-label font-walsheim-bold">Palm Free</span>
+  </div>
+  {%- endif -%}
+
+  {%- if has_clean -%}
+  <div class="plaay-trust-item">
+    <img
+      src="{{ 'plaay-badge-clean.png' | asset_url }}"
+      alt="Clean ingredients"
+      class="plaay-trust-img"
+      loading="lazy"
+      onerror="this.style.display='none'">
+    <span class="plaay-trust-label font-walsheim-bold">Clean Ingredients</span>
+  </div>
+  {%- endif -%}
+
+</div>
+{%- endif -%}

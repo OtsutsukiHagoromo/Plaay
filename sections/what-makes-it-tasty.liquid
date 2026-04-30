@@ -1,0 +1,35 @@
+{% schema %}
+{
+  "name": "What makes it tasty",
+  "class": "what-makes-it-tasty",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#F5C08D"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "What makes it tasty?"
+    },
+    {
+      "type": "image_picker",
+      "label": "Central Image",
+      "id": "central_image"
+    },
+    {
+      "type": "image_picker",
+      "label": "Central Image (mobile)",
+      "id": "central_image_mobile"
+    }
+  ],
+  "presets": [
+    {
+      "name": "What makes it tasty"
+    }
+  ]
+}
+{% endschema %}

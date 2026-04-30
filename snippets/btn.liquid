@@ -1,0 +1,69 @@
+{%- unless no_translation -%}
+  {%- assign copy = copy | t -%}
+{%- endunless -%}
+
+{% if width == 'extra-small' %}
+  {% assign btn_width = 'w-36' %}
+{% elsif width == 'small' %}
+  {% assign btn_width = 'w-44' %}
+{% elsif width == 'medium' %}
+  {% assign btn_width = 'w-52' %}
+{% elsif width == 'large' %}
+  {% assign btn_width = 'w-56' %}
+{% elsif width == 'extra-large' %}
+  {% assign btn_width = 'w-72' %}
+{% elsif width == 'full' %}
+  {% assign btn_width = 'w-full' %}
+{% endif %}
+
+{% comment %} button icons {% endcomment %}
+{%- capture icon_svg -%}
+  {%- case icon -%}
+    {%- when 'filter' -%}
+      {%- render 'icon-filter' -%}
+    {%- when 'sort-by' -%}
+      {%- render 'icon-sort-by' -%}
+  {%- endcase -%}
+{%- endcapture -%} 
+
+{%- if href -%}
+  <a href="{{ href }}" class="btn relative font-walsheim-medium items-center transition-all px-3 uppercase py-3 duration-200 text-sm justify-center border {% if extra_radius %} rounded-2xl {% else %} rounded-md {% endif %}
+  {% if style == 'blue-border-arrow' %} border-dark-blue text-dark-blue pl-8 group hover:bg-white hover:text-dark-blue {% elsif style == 'white-border-arrow' %} group text-white border-white pl-8 hover:bg-white hover:text-dark-blue {% else %} {{ style }} {% endif %} 
+  {{ btn_width }} 
+  {{ additional_class }}">
+    <div class="flex items-center w-full {% if has_arrow %} justify-between {% else %} justify-center {% endif %}">
+      <span class="hidden">{{ 'action.seo' | t }}</span>
+      {{ copy }}
+      {% if has_arrow %}
+        <span class="flex {% if style == 'blue-border-arrow' %} text-dark-blue group-hover:text-dark-blue {% else %} text-white group-hover:text-dark-blue {% endif %} h-5 w-5">
+          {% render 'icon-long-arrow' %}
+        </span>
+      {% endif %}
+    </div>
+  </a>
+{%- else -%}
+  <button {% if product.type == 'BYOB' %}onclick="window.location.href='{{ shop.url }}/{{ 'products/' | append: product.handle }}'"{% endif %}
+    class="btn relative font-walsheim-medium flex items-center uppercase rounded py-3 transition-all duration-200 justify-center text-sm {{ style }} {{ btn_width }} {{ additional_class }} 
+  {% if is_add_to_cart %} {% if product.type != 'BYOB' %}{% if product.selected_or_first_available_variant.inventory_quantity <= 0 or product.available == false %}disabled{% endif %} {% endif %}{% endif %}"
+    type="{{ type }}"
+    {% if is_add_to_cart %}
+      name="add" data-id="{{ product.first_available_variant.id }}" data-add-to-cart data-add data-quick-add {% if product.type != 'BYOB' %}{% if product.selected_or_first_available_variant.inventory_quantity <= 0 or product.available == false %} disabled {% endif %}{% endif %}  
+    {% endif %}>
+    {% if has_price %}
+      <div class="text-sm product_price relative">
+        {{ product.price | money }}
+      </div>
+      <span class="px-1"> | </span>
+    {% endif %}
+    <div class="{% if has_arrow %}pr-3{% endif %}">
+      {% if product.type == 'BYOB' %}
+        Create Bundle
+      {% elsif is_add_to_cart and product.selected_or_first_available_variant.inventory_quantity <= 0 or product.available == false %}
+        {{ 'product.add_to_cart.sold_out' | t }}
+      {% else %}
+        <span class="hidden">{{ 'action.seo' | t }}</span>
+        {{ copy }}
+      {% endif %}
+    </div>
+  </button>
+{%- endif -%}

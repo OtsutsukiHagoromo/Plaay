@@ -1,0 +1,88 @@
+{% comment %}
+  PLAAY — Wishlist Heart
+  File: snippets/plaay-wishlist-heart.liquid
+
+  Usage:
+    On product tile:  {% render 'plaay-wishlist-heart', product: product %}
+    On PDP:           {% render 'plaay-wishlist-heart', product: product, style: 'pdp' %}
+
+  Stores product handles in localStorage key "plaay_wishlist" (JSON array).
+{% endcomment %}
+
+<button
+  type="button"
+  class="plaay-wl-heart{% if style == 'pdp' %} plaay-wl-heart--pdp{% endif %}"
+  data-wl-handle="{{ product.handle }}"
+  aria-label="Add {{ product.title | escape }} to wishlist"
+  aria-pressed="false">
+  <svg class="plaay-wl-heart__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path class="plaay-wl-heart__path" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+      2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3
+      19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+      stroke="currentColor" stroke-width="1.8" fill="none"/>
+  </svg>
+</button>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'plaay_wishlist';
+
+  function getList() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch(e) { return []; }
+  }
+  function setList(list) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch(e) {}
+  }
+  function dispatch() {
+    window.dispatchEvent(new CustomEvent('plaay:wishlist:change'));
+  }
+
+  function initHeart(btn) {
+    if (btn._wlInit) return;
+    btn._wlInit = true;
+    var handle = btn.getAttribute('data-wl-handle');
+    var path   = btn.querySelector('.plaay-wl-heart__path');
+
+    function refresh() {
+      var active = getList().indexOf(handle) > -1;
+      btn.setAttribute('aria-pressed', String(active));
+      btn.classList.toggle('is-wishlisted', active);
+      if (path) path.setAttribute('fill', active ? 'currentColor' : 'none');
+    }
+
+    refresh();
+    window.addEventListener('plaay:wishlist:change', refresh);
+
+    btn.addEventListener('click', function(e) {
+      e.preventDefault(); e.stopPropagation();
+      var list = getList();
+      var idx  = list.indexOf(handle);
+      if (idx > -1) { list.splice(idx, 1); }
+      else          { list.push(handle); }
+      setList(list);
+      dispatch();
+      /* pulse animation */
+      btn.classList.remove('plaay-wl-heart--pop');
+      void btn.offsetWidth;
+      btn.classList.add('plaay-wl-heart--pop');
+    });
+  }
+
+  /* init any hearts already in DOM */
+  document.querySelectorAll('[data-wl-handle="{{ product.handle }}"]').forEach(initHeart);
+
+  /* handle hearts injected later (quick-add popups etc.) */
+  if (window.MutationObserver) {
+    new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        m.addedNodes.forEach(function(node) {
+          if (node.nodeType !== 1) return;
+          var hearts = node.matches ? (node.matches('[data-wl-handle]') ? [node] : Array.from(node.querySelectorAll('[data-wl-handle]'))) : [];
+          hearts.forEach(initHeart);
+        });
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+})();
+</script>

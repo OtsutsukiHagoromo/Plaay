@@ -1,0 +1,41 @@
+{% comment %} Subtotal row — data-cart-total carries the raw fils value for JS tier bar updates {% endcomment %}
+<div class="flex items-center justify-between py-3 border-t border-dark-blue border-opacity-10">
+  <span class="text-dark-blue text-base font-walsheim-bold uppercase tracking-wide">{{ 'cart-drawer.total' | t }}</span>
+  <span class="text-dark-blue text-xl font-walsheim-black" data-subtotal data-cart-total="{{ cart.total_price }}">{{ cart.total_price | money }}</span>
+</div>
+<p class="text-xs text-dark-blue opacity-40 font-walsheim text-right -mt-1 mb-3">Taxes &amp; shipping calculated at checkout</p>
+
+{% comment %} Discount code accordion {% endcomment %}
+<div class="plaay-discount-wrap">
+  <button
+    type="button"
+    class="plaay-discount-toggle font-walsheim-regular"
+    aria-expanded="false"
+    aria-controls="plaay-discount-body">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+    Have a promo code?
+    <svg class="plaay-discount-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+
+  <div class="plaay-discount-body" id="plaay-discount-body" aria-hidden="true">
+    <div class="plaay-discount-row">
+      <input
+        type="text"
+        id="plaay-discount-input"
+        class="plaay-discount-input font-walsheim-regular"
+        placeholder="Enter promo code"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false">
+      <button
+        type="button"
+        id="plaay-discount-apply"
+        class="plaay-discount-apply-btn font-walsheim-bold">
+        Apply
+      </button>
+    </div>
+    <p class="plaay-discount-msg" id="plaay-discount-msg" aria-live="polite"></p>
+  </div>
+</div>
+
+{% comment %} Discount accordion JS lives in drawer-cart.liquid (event-delegation) so it survives footer re-renders {% endcomment %}

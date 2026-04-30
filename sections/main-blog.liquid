@@ -1,0 +1,87 @@
+{% liquid 
+  assign grid_cols_mobile = section.settings.grid_cols_mobile
+  assign grid_cols_tablet = section.settings.grid_cols_tablet
+  assign grid_cols_desktop = section.settings.grid_cols_desktop
+  assign grid_cols_desktop_large = section.settings.grid_cols_desktop_large
+  assign background_color = section.settings.background_color
+%}
+<div class="pb-10 pt-12 | md:pb-40 md:pt-16" style="background-color: {{ background_color }};">
+  {% paginate blog.articles by section.settings.pagination_number %}
+
+    {% comment %} articles {% endcomment %}
+    <div class="grid grid-cols-{{ grid_cols_mobile }} | sm:grid-cols-{{ grid_cols_tablet }} sm:container | lg:grid-cols-{{ grid_cols_desktop }} | xl:grid-cols-{{ grid_cols_desktop_large }}">
+      {% for article in blog.articles %}
+        <div class="my-5 | md:mx-5">
+          {% render 'article-item', article: article %}
+        </div>
+      {% endfor %}
+    </div>
+
+    {% comment %} pagination {% endcomment %}
+    <div class="container flex items-center justify-center pt-20 font-walsheim text-dark-blue text-lg">
+      {% for part in paginate.parts -%}
+        {% if part.is_link -%}
+          <a href="{{ part.url }}" class="underline mx-2 | hover:no-underline">
+            {{ part.title }}
+          </a>
+        {%- else -%}
+          <span class="mx-2">{{ part.title }}</span>
+        {% endif %}
+      {%- endfor %}
+    </div>
+  {% endpaginate %}
+</div>
+{% schema %}
+  {
+    "name": "Blog items",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#F6F6F6"
+      },
+      {
+        "type": "range",
+        "id": "pagination_number",
+        "label": "Pagination number",
+        "info": "Select how many blog articles to show per page.",
+        "min": 4,
+        "max": 32,
+        "default": 6
+      },
+      {
+        "type": "range",
+        "id": "grid_cols_mobile",
+        "label": "Grid columns mobile (640px and below)",
+        "min": 1,
+        "max": 3,
+        "default": 1
+      },
+      {
+        "type": "range",
+        "id": "grid_cols_tablet",
+        "label": "Grid columns tablet (641px to 1023px)",
+        "min": 1,
+        "max": 4,
+        "default": 2
+      },
+      {
+        "type": "range",
+        "id": "grid_cols_desktop",
+        "label": "Grid columns desktop (1024px to 1280px)",
+        "min": 1,
+        "max": 5,
+        "default": 3
+      },
+      {
+        "type": "range",
+        "id": "grid_cols_desktop_large",
+        "label": "Grid columns desktop large (1281px +)",
+        "min": 1,
+        "max": 5,
+        "default": 4
+      }
+    ]
+  }
+{% endschema %}

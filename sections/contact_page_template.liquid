@@ -1,0 +1,266 @@
+{% liquid
+  assign faq_categories = section.blocks | where: 'type', 'faq_category'
+  assign faqs = section.blocks | where: 'type', 'faq'
+  assign background_color = section.settings.background_color
+  assign background_image = section.settings.background_image
+  assign background_image_mobile = section.settings.background_image_mobile
+  assign contact_title = section.settings.contact_title
+  assign contact_copy = section.settings.contact_copy
+  assign text_color = section.settings.text_color
+  assign show_labels = section.settings.show_labels
+%}
+{% style %}
+  [data-desktop-category].active {
+    text-decoration: underline;
+  }
+{% endstyle %}
+
+{% comment %} faq section {% endcomment %}
+<contact-faqs data-module="contact-faqs">
+  <div style="background-color: {{ background_color }};">
+    <div class="container pt-28 pb-14 | md:pb-32 md:pt-40">
+      <h1 class="text-dark-blue text-center font-walsheim-bold text-2xl | md:text-7xl md:pt-10">{{ page.title }}</h1>
+      {% comment %} categories {% endcomment %}
+      {% if faq_categories.size > 0 %}
+        <div class="relative flex justify-center items-center max-w-[260px] mx-auto mt-8 border-b border-dark-blue pb-3 mb-12 | md:hidden">
+          <select class="faq_select_toggle text-dark-blue font-walsheim-medium w-full text-center outline-none bg-opacity-0 bg-white mr-2 | focus:outline-none">
+            {% for category in faq_categories %}
+              {% assign title = category.settings.title %}
+              <option data-title="{{ title | downcase }}">{{ title }}</option>
+            {% endfor %}
+          </select>
+          <span class="flex text-dark-blue h-3 w-3 absolute right-4 ml-2">
+            {% render 'icon-arrow-down' %}
+          </span>
+        </div>
+        <ul class="hidden justify-between items-center mt-12 mb-16 | md:flex md:flex-wrap md:justify-around">
+          {% for category in faq_categories %}
+            <li
+              class="font-walsheim-bold text-dark-blue cursor-pointer mt-4 {% if forloop.first %} active {% endif %} {% unless forloop.first %} md:ml-6 {% endunless %}"
+              data-desktop-category
+              data-title="{{ category.settings.title | downcase }}">{{ category.settings.title }}</li>
+          {% endfor %}
+        </ul>
+
+        {% for category in faq_categories %}
+          {% assign category_title = category.settings.title | downcase %}
+          <div class="faq_category_section overflow-hidden" data-category="{{ category.settings.title | downcase }}">
+            <div class="inner_container transition-maxHeight duration-500 | md:grid md:grid-cols-2 {% if forloop.first %} max-h-[60rem] {% else %} max-h-0 {% endif %}">
+              {% comment %} faqs {% endcomment %}
+              {% for faq in faqs %}
+                {% liquid
+                assign question = faq.settings.title
+                assign answer = faq.settings.answer 
+                assign faq_category = faq.settings.category | downcase
+              %}
+                {% capture thecycle %}
+                  {% cycle 'odd', 'even' %}{% endcapture %}
+
+                {% if category_title == faq_category %}
+                  <div class="md:mx-4 mt-4">
+                    {% render 'content-accordion', heading: question, content: answer, color: '#021D49', contact_accordion: true %}
+                  </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</contact-faqs>
+
+{% comment %} contact {% endcomment %}
+<div class="contact_form_container relative">
+  {% if background_image != blank %}
+    <div class="absolute top-0 left-0 h-full w-full hidden | md:block">
+      {% render 'img', type: 'img', img: background_image, lazy: true, class: 'object-cover h-full w-full' %}
+    </div>
+  {% endif %}
+  {% if background_image_mobile != blank %}
+    <div class="absolute top-0 left-0 h-full w-full | md:hidden">
+      {% render 'img', type: 'img', img: background_image_mobile, lazy: true, class: 'object-cover h-full w-full' %}
+    </div>
+  {% endif %}
+
+
+  <div class="container relative pt-14 | md:pb-[120px] md:pt-20">
+    {% comment %} contact form {% endcomment %}
+    {% form 'contact', class: 'pb-16' %}
+      {% comment %} form submit message {% endcomment %}
+      {% if form.posted_successfully? %}
+        <p class="text-white mt-4 mx-auto text-5xl font-walsheim-bold text-center | md:max-w-lg">
+          {{ 'contact.response' | t }}
+        </p>
+      {% else %}
+        {% comment %} title {% endcomment %}
+        <h2 class="text-2xl font-bold text-left font-walsheim-bold" style="color: {{ text_color }};">
+          {% if contact_title != blank %}
+            {{ contact_title }}
+          {% else %}
+            {{ 'contact.title' | t }}
+          {% endif %}
+        </h2>
+
+        {% comment %} description {% endcomment %}
+        {% if contact_copy != blank %}
+          <div class="font-georgia text-md text-left | md:max-w-lg" style="color: {{ text_color }};">{{ contact_copy }}</div>
+        {% endif %}
+        <div class="mt-5 | md:mt-8">
+          {% comment %} name {% endcomment %}
+          <div class="w-full mb-4">
+            {% if show_labels %}
+              <label
+                for="ContactFormName"
+                class="block font-georgia mb-1 font-walsheim"
+                style="color: {{ text_color }};">{{ 'form.name' | t }}*</label>
+            {% endif %}
+            <input
+              type="text"
+              name="contact[name]"
+              id="ContactFormName"
+              value="{% if form.name %}{{ form.name }}{% endif %}"
+              class="w-full bg-white text-sm rounded-lg h-10 text-dark-blue px-4 py-2 text-opacity-50 placeholder-dark-blue placeholder-opacity-50 font-walsheim | md:max-w-lg"
+              {% unless show_labels %}placeholder="{{ 'form.name' | t }}"{% endunless %}required>
+          </div>
+
+          {% comment %} email address {% endcomment %}
+          <div class="w-full mb-4">
+            {% if show_labels %}
+              <label
+                for="ContactFormEmail"
+                class="block font-georgia mb-1 font-walsheim"
+                style="color: {{ text_color }};">
+                {{ 'form.email' | t }}*</label>
+            {% endif %}
+            <input
+              type="email"
+              name="contact[email]"
+              id="ContactFormEmail"
+              value="{% if form.email %}{{ form.email }}{% endif %}"
+              class="w-full bg-white text-sm rounded-lg h-10 py-2 px-4 text-dark-blue text-opacity-50 placeholder-dark-blue placeholder-opacity-50 font-walsheim | md:max-w-lg"
+              {% unless show_labels %}placeholder="{{ 'form.email' | t }}"{% endunless %}required>
+          </div>
+
+          {% comment %} message {% endcomment %}
+          <div class="mb-4">
+            {% if show_labels %}
+              <label
+                for="ContactFormMessage"
+                class="block mb-1 font-walsheim"
+                style="color: {{ text_color }};">{{ 'form.message' | t }}*</label>
+            {% endif %}
+            <textarea
+              rows="10"
+              name="contact[body]"
+              id="ContactFormMessage"
+              class="w-full bg-white rounded-lg text-sm px-4 py-2 text-dark-blue text-opacity-50 placeholder-dark-blue placeholder-opacity-50 font-walsheim | md:max-w-lg"
+              {% unless show_labels %}placeholder="{{ 'form.message' | t }}"{% endunless %}required></textarea>
+          </div>
+
+          {% comment %} submit button {% endcomment %}
+          <div class="flex flex-wrap justify-between items-center mt-1 max-w-lg | md:mt-2">
+            {% render 'btn', copy: 'action.send', width: 'full', style: 'blue', additional_class: 'text-sm py-3 font-walsheim-bold rounded-lg capitalize' %}
+          </div>
+        </div>
+        {% comment %} form errors {% endcomment %}
+        {% if form.errors %}
+          {% capture error_text %}
+            {{ form.errors | default_errors }}
+          {% endcapture %}
+
+          {% render 'layout-message', type: 'error' text: error_text class: 'mb-8' %}
+        {% endif %}
+      {% endif %}
+    {% endform %}
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Contact & FAQs",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#F4F4F4"
+      },
+      {
+        "type": "header",
+        "content": "Contact"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image",
+        "info": "Aspect ratio - (800px height x 2000px width)"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image_mobile",
+        "label": "Background image (mobile)",
+        "info": "Aspect ratio - (800px height x 800px width)"
+      }, {
+        "type": "text",
+        "id": "contact_title",
+        "label": "Contact title",
+        "default": "Contact us"
+      }, {
+        "type": "text",
+        "id": "contact_copy",
+        "label": "Contact copy",
+        "default": "Add some descriptive copy here..."
+      }, {
+        "type": "checkbox",
+        "id": "show_labels",
+        "label": "Show labels?",
+        "default": false
+      }, {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "#021D49",
+        "info": "This will define the text for the title, copy, labels and messages"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "faq_category",
+        "name": "FAQ category",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "FAQ category"
+          }
+        ]
+      }, {
+        "type": "faq",
+        "name": "FAQ",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Faq title",
+            "default": "View delivery details"
+          }, {
+            "type": "richtext",
+            "id": "answer",
+            "label": "Faq answer"
+          }, {
+            "type": "text",
+            "id": "category",
+            "label": "Category",
+            "info": "Place your faq into a selected category. Please ensure all text is lowercase and that it matches the category you want it to appear in."
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Contact & FAQs"
+      }
+    ]
+  }
+{% endschema %}

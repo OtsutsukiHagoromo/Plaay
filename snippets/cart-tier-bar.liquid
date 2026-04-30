@@ -1,0 +1,208 @@
+{%- liquid
+  assign ship_aed = settings.cart_tier_ship    | default: 75
+  assign t1_aed   = settings.cart_tier_1_spend | default: 175
+  assign t2_aed   = settings.cart_tier_2_spend | default: 200
+  assign t3_aed   = settings.cart_tier_3_spend | default: 350
+
+  assign t1_label = settings.cart_tier_1_label | default: '5% off'
+  assign t2_label = settings.cart_tier_2_label | default: '10% off'
+  assign t3_label = settings.cart_tier_3_label | default: '10% off + free gift'
+
+  assign ship_fils = ship_aed | times: 100
+  assign t1_fils   = t1_aed   | times: 100
+  assign t2_fils   = t2_aed   | times: 100
+  assign t3_fils   = t3_aed   | times: 100
+
+  assign total = cart.total_price
+
+  assign tier_done_ship = false
+  assign tier_done_t1   = false
+  assign tier_done_t2   = false
+  assign tier_done_t3   = false
+  if total >= ship_fils
+    assign tier_done_ship = true
+  endif
+  if total >= t1_fils
+    assign tier_done_t1 = true
+  endif
+  if total >= t2_fils
+    assign tier_done_t2 = true
+  endif
+  if total >= t3_fils
+    assign tier_done_t3 = true
+  endif
+-%}
+
+{%- comment -%}
+  Container carries threshold data so JS can re-render on cart change
+  without a page reload.
+{%- endcomment -%}
+<div class="plaay-tier-bar"
+  id="plaay-tier-bar"
+  data-ship="{{ ship_fils }}"
+  data-t1="{{ t1_fils }}"
+  data-t2="{{ t2_fils }}"
+  data-t3="{{ t3_fils }}"
+  data-t1-label="{{ t1_label | escape }}"
+  data-t2-label="{{ t2_label | escape }}"
+  data-t3-label="{{ t3_label | escape }}">
+
+  <div id="plaay-tier-bar-inner">
+
+    {%- comment -%} Message — always points to the NEXT reward {%- endcomment -%}
+    {%- if tier_done_t3 -%}
+      <p class="plaay-tier-bar__msg plaay-tier-bar__msg--done">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        All rewards unlocked! You're all set.
+      </p>
+    {%- elsif tier_done_t2 -%}
+      {%- assign remaining_fils = t3_fils | minus: total -%}
+      <p class="plaay-tier-bar__msg">
+        <strong>{{ t2_label }}</strong> unlocked! Add <strong>{{ remaining_fils | money }}</strong> more to get <strong>{{ t3_label }}</strong>
+      </p>
+    {%- elsif tier_done_t1 -%}
+      {%- assign remaining_fils = t2_fils | minus: total -%}
+      <p class="plaay-tier-bar__msg">
+        <strong>{{ t1_label }}</strong> unlocked! Add <strong>{{ remaining_fils | money }}</strong> more for <strong>{{ t2_label }}</strong>
+      </p>
+    {%- elsif tier_done_ship -%}
+      {%- assign remaining_fils = t1_fils | minus: total -%}
+      <p class="plaay-tier-bar__msg">
+        🚚 Free shipping unlocked! Add <strong>{{ remaining_fils | money }}</strong> more for <strong>{{ t1_label }}</strong>
+      </p>
+    {%- else -%}
+      {%- assign remaining_fils = ship_fils | minus: total -%}
+      <p class="plaay-tier-bar__msg">
+        Add <strong>{{ remaining_fils | money }}</strong> more for free shipping
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline;vertical-align:-2px"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </p>
+    {%- endif -%}
+
+    {%- comment -%}
+      Progress bar tracks the SEGMENT between previous and next tier,
+      not the absolute amount from zero. This keeps the bar feeling alive
+      at every spend level rather than barely moving once you're past tier 1.
+    {%- endcomment -%}
+    {%- if tier_done_t3 -%}
+      {%- assign bar_pct = 100 -%}
+    {%- elsif tier_done_t2 -%}
+      {%- assign bar_num = total | minus: t2_fils -%}
+      {%- assign bar_den = t3_fils | minus: t2_fils -%}
+      {%- assign bar_pct = bar_num | times: 100 | divided_by: bar_den -%}
+    {%- elsif tier_done_t1 -%}
+      {%- assign bar_num = total | minus: t1_fils -%}
+      {%- assign bar_den = t2_fils | minus: t1_fils -%}
+      {%- assign bar_pct = bar_num | times: 100 | divided_by: bar_den -%}
+    {%- elsif tier_done_ship -%}
+      {%- assign bar_num = total | minus: ship_fils -%}
+      {%- assign bar_den = t1_fils | minus: ship_fils -%}
+      {%- assign bar_pct = bar_num | times: 100 | divided_by: bar_den -%}
+    {%- else -%}
+      {%- assign bar_pct = total | times: 100 | divided_by: ship_fils -%}
+    {%- endif -%}
+    {%- if bar_pct > 100 -%}{%- assign bar_pct = 100 -%}{%- endif -%}
+
+    <div class="plaay-tier-bar__track" role="progressbar" aria-valuenow="{{ bar_pct }}" aria-valuemin="0" aria-valuemax="100">
+      <div class="plaay-tier-bar__fill" style="width:{{ bar_pct }}%"></div>
+    </div>
+
+    {%- comment -%} Milestone pills ── tick when unlocked {%- endcomment -%}
+    <div class="plaay-tier-bar__pills">
+      <span class="plaay-tier-bar__pill{% if tier_done_ship %} plaay-tier-bar__pill--done{% endif %}">
+        {%- if tier_done_ship -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+        Free shipping
+      </span>
+      <span class="plaay-tier-bar__pill{% if tier_done_t1 %} plaay-tier-bar__pill--done{% endif %}">
+        {%- if tier_done_t1 -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+        AED {{ t1_aed }} &#8594; {{ t1_label }}
+      </span>
+      <span class="plaay-tier-bar__pill{% if tier_done_t2 %} plaay-tier-bar__pill--done{% endif %}">
+        {%- if tier_done_t2 -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+        AED {{ t2_aed }} &#8594; {{ t2_label }}
+      </span>
+      <span class="plaay-tier-bar__pill{% if tier_done_t3 %} plaay-tier-bar__pill--done{% endif %}">
+        {%- if tier_done_t3 -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+        AED {{ t3_aed }} &#8594; &#127873;
+      </span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  if (window.plaayTierBarDefined) return;
+  window.plaayTierBarDefined = true;
+
+  function fmtAED(fils) {
+    var n = fils / 100;
+    return 'AED ' + (n === Math.floor(n) ? n : n.toFixed(2));
+  }
+
+  var CHECK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+  var TRUCK  = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline;vertical-align:-2px"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>';
+
+  function pill(done, label) {
+    return '<span class="plaay-tier-bar__pill' + (done ? ' plaay-tier-bar__pill--done' : '') + '">' +
+      (done ? CHECK : '') + label + '</span>';
+  }
+
+  function renderInner(total, cfg) {
+    var ship = cfg.ship, t1 = cfg.t1, t2 = cfg.t2, t3 = cfg.t3;
+    var t1L  = cfg.t1Label, t2L = cfg.t2Label, t3L = cfg.t3Label;
+
+    /* Message + progress-bar segment */
+    var msg, pct, msgDone = false;
+    if (total >= t3) {
+      msgDone = true;
+      msg = CHECK + ' All rewards unlocked! You’re all set.';
+      pct = 100;
+    } else if (total >= t2) {
+      msg = '<strong>' + t2L + '</strong> unlocked! Add <strong>' + fmtAED(t3 - total) + '</strong> more to get <strong>' + t3L + '</strong>';
+      pct = Math.min(100, Math.floor((total - t2) / (t3 - t2) * 100));
+    } else if (total >= t1) {
+      msg = '<strong>' + t1L + '</strong> unlocked! Add <strong>' + fmtAED(t2 - total) + '</strong> more for <strong>' + t2L + '</strong>';
+      pct = Math.min(100, Math.floor((total - t1) / (t2 - t1) * 100));
+    } else if (total >= ship) {
+      msg = '🚚 Free shipping unlocked! Add <strong>' + fmtAED(t1 - total) + '</strong> more for <strong>' + t1L + '</strong>';
+      pct = Math.min(100, Math.floor((total - ship) / (t1 - ship) * 100));
+    } else {
+      msg = 'Add <strong>' + fmtAED(ship - total) + '</strong> more for free shipping ' + TRUCK;
+      pct = Math.min(100, Math.floor(total / ship * 100));
+    }
+
+    /* Milestone pills */
+    var t1Aed = t1 / 100, t2Aed = t2 / 100, t3Aed = t3 / 100;
+    var pills = [
+      pill(total >= ship, 'Free shipping'),
+      pill(total >= t1,   'AED ' + t1Aed + ' → ' + t1L),
+      pill(total >= t2,   'AED ' + t2Aed + ' → ' + t2L),
+      pill(total >= t3,   'AED ' + t3Aed + ' → 🎁')
+    ].join('');
+
+    return '<p class="plaay-tier-bar__msg' + (msgDone ? ' plaay-tier-bar__msg--done' : '') + '">' + msg + '</p>' +
+      '<div class="plaay-tier-bar__track" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100">' +
+        '<div class="plaay-tier-bar__fill" style="width:' + pct + '%"></div>' +
+      '</div>' +
+      '<div class="plaay-tier-bar__pills">' + pills + '</div>';
+  }
+
+  window.plaayTierBar = {
+    update: function(totalFils) {
+      var bar   = document.getElementById('plaay-tier-bar');
+      var inner = document.getElementById('plaay-tier-bar-inner');
+      if (!bar || !inner) return;
+      var d = bar.dataset;
+      inner.innerHTML = renderInner(Number(totalFils) || 0, {
+        ship:    parseInt(d.ship, 10),
+        t1:      parseInt(d.t1,   10),
+        t2:      parseInt(d.t2,   10),
+        t3:      parseInt(d.t3,   10),
+        t1Label: d.t1Label,
+        t2Label: d.t2Label,
+        t3Label: d.t3Label
+      });
+    }
+  };
+})();
+</script>

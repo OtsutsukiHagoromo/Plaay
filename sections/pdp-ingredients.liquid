@@ -1,0 +1,351 @@
+{% comment %}
+  PDP Ingredients — "Clean Ingredients" spotlight section.
+  Shows a featured product image on one side, ingredient badges + tagline on the other.
+  Inspired by Chomps "Real Ingredients" block.
+  Add to the product page template via the theme customiser.
+{% endcomment %}
+
+{% liquid
+  assign bg           = section.settings.background_color
+  assign heading      = section.settings.heading
+  assign subheading   = section.settings.subheading
+  assign tagline      = section.settings.tagline
+  assign image        = section.settings.product_image
+  assign image_side   = section.settings.image_side
+  assign badges       = section.blocks | where: 'type', 'ingredient'
+  assign cta_text     = section.settings.cta_text
+  assign cta_url      = section.settings.cta_url
+%}
+
+<div class="pdp-ingr" style="background:{{ bg }}">
+  <div class="container">
+    <div class="pdp-ingr__inner {% if image_side == 'right' %}pdp-ingr__inner--reversed{% endif %}">
+
+      {%- comment -%} Image column {%- endcomment -%}
+      <div class="pdp-ingr__img-col">
+        {% if image != blank %}
+          <div class="pdp-ingr__img-wrap">
+            {% render 'img', type: 'img', img: image, lazy: true, class: 'pdp-ingr__img' %}
+            {%- comment -%} decorative badge overlay {%- endcomment -%}
+            {% if section.settings.sticker_text != blank %}
+              <div class="pdp-ingr__sticker font-walsheim-black">
+                {{ section.settings.sticker_text }}
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      {%- comment -%} Content column {%- endcomment -%}
+      <div class="pdp-ingr__content-col">
+        {% if heading != blank %}
+          <h2 class="pdp-ingr__heading font-walsheim-black">{{ heading }}</h2>
+        {% endif %}
+        {% if subheading != blank %}
+          <p class="pdp-ingr__subheading font-walsheim-bold">{{ subheading }}</p>
+        {% endif %}
+
+        {% if badges.size > 0 %}
+          <ul class="pdp-ingr__badges">
+            {% for block in badges %}
+              <li class="pdp-ingr__badge" {{ block.shopify_attributes }}>
+                {% if block.settings.icon != blank %}
+                  <div class="pdp-ingr__badge-icon">
+                    {% render 'img', type: 'img', img: block.settings.icon, lazy: true, class: 'pdp-ingr__badge-img' %}
+                  </div>
+                {% else %}
+                  <div class="pdp-ingr__badge-dot"></div>
+                {% endif %}
+                <div class="pdp-ingr__badge-text">
+                  {% if block.settings.name != blank %}
+                    <span class="pdp-ingr__badge-name font-walsheim-bold">{{ block.settings.name }}</span>
+                  {% endif %}
+                  {% if block.settings.description != blank %}
+                    <span class="pdp-ingr__badge-desc font-walsheim-regular">{{ block.settings.description }}</span>
+                  {% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if tagline != blank %}
+          <p class="pdp-ingr__tagline font-walsheim-bold">{{ tagline }}</p>
+        {% endif %}
+
+        {% if cta_text != blank and cta_url != blank %}
+          <a href="{{ cta_url }}" class="pdp-ingr__cta font-walsheim-bold">
+            {{ cta_text }}
+            <svg width="16" height="10" viewBox="0 0 16 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1 5H15M15 5L11 1M15 5L11 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+.pdp-ingr {
+  padding: 64px 0;
+}
+.pdp-ingr__inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  align-items: center;
+}
+@media (min-width: 768px) {
+  .pdp-ingr__inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+  }
+  .pdp-ingr__inner--reversed .pdp-ingr__img-col {
+    order: 2;
+  }
+  .pdp-ingr__inner--reversed .pdp-ingr__content-col {
+    order: 1;
+  }
+}
+.pdp-ingr__img-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pdp-ingr__img {
+  width: 100%;
+  max-width: 460px;
+  border-radius: 24px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto;
+}
+.pdp-ingr__sticker {
+  position: absolute;
+  bottom: 20px;
+  right: 0;
+  background: #F9C61D;
+  color: #021D49;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
+  padding: 10px 18px;
+  box-shadow: 0 4px 16px rgba(2,29,73,0.15);
+  white-space: nowrap;
+}
+@media (min-width: 768px) {
+  .pdp-ingr__sticker {
+    bottom: 28px;
+    right: 24px;
+    font-size: 0.9rem;
+  }
+}
+.pdp-ingr__heading {
+  color: #021D49;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  margin-bottom: 10px;
+}
+.pdp-ingr__subheading {
+  color: #021D49;
+  opacity: 0.7;
+  font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+.pdp-ingr__badges {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.pdp-ingr__badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 14px;
+  padding: 12px 16px;
+  border: 1px solid rgba(2,29,73,0.08);
+  backdrop-filter: blur(4px);
+}
+.pdp-ingr__badge-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #F9C61D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.pdp-ingr__badge-img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+}
+.pdp-ingr__badge-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #F9C61D;
+  flex-shrink: 0;
+  margin-left: 6px;
+  margin-right: 4px;
+}
+.pdp-ingr__badge-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.pdp-ingr__badge-name {
+  color: #021D49;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+.pdp-ingr__badge-desc {
+  color: #021D49;
+  opacity: 0.65;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+.pdp-ingr__tagline {
+  color: #021D49;
+  font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+  line-height: 1.6;
+  margin-bottom: 24px;
+  padding-left: 16px;
+  border-left: 3px solid #F9C61D;
+}
+.pdp-ingr__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #021D49;
+  color: #F9C61D;
+  text-decoration: none;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 14px 28px;
+  border-radius: 999px;
+  transition: background 0.2s, color 0.2s;
+}
+.pdp-ingr__cta:hover {
+  background: #F9C61D;
+  color: #021D49;
+}
+@media (max-width: 639px) {
+  .pdp-ingr { padding: 40px 0; }
+  .pdp-ingr__badge { padding: 10px 12px; gap: 10px; }
+  .pdp-ingr__badge-icon { width: 36px; height: 36px; }
+}
+</style>
+
+{% schema %}
+{
+  "name": "PDP — Ingredients",
+  "class": "pdp-ingredients-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#FFF8E6"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Clean Ingredients"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Nothing fake, nothing hidden. Just real food."
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product / ingredient image"
+    },
+    {
+      "type": "select",
+      "id": "image_side",
+      "label": "Image position",
+      "options": [
+        { "value": "left",  "label": "Left"  },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "text",
+      "id": "sticker_text",
+      "label": "Image badge text (optional)",
+      "default": "No artificial flavours",
+      "info": "Short text pill that appears over the image"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline / closing line",
+      "default": "Every ingredient has a reason to be here. We chose real over easy, every single time."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA button text",
+      "default": "See full ingredients"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA button link"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient",
+      "name": "Ingredient callout",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon image (optional)"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Ingredient name",
+          "default": "Whey Protein"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Short description",
+          "default": "High-quality source of complete protein"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP — Ingredients",
+      "blocks": [
+        { "type": "ingredient", "settings": { "name": "Whey Protein Concentrate", "description": "Complete amino acid profile, fast-absorbing" } },
+        { "type": "ingredient", "settings": { "name": "Cocoa Powder", "description": "Rich in antioxidants, no added sugar" } },
+        { "type": "ingredient", "settings": { "name": "Oats", "description": "Slow-release carbs for sustained energy" } },
+        { "type": "ingredient", "settings": { "name": "Natural Sweetener", "description": "No aspartame, no sucralose" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

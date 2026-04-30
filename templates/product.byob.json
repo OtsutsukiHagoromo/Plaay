@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "byob-builder": {
+      "type": "byob-builder",
+      "settings": {
+        "bg_color": "#021D49",
+        "heading": "Build Your Box",
+        "subheading": "Mix & match your favourite Plaay flavours — your box, your rules.",
+        "tier_1_qty": 6,
+        "tier_1_saving": "Save 10%",
+        "tier_1_popular": false,
+        "tier_2_qty": 12,
+        "tier_2_saving": "Save 15%",
+        "tier_2_popular": true,
+        "tier_3_qty": 24,
+        "tier_3_saving": "Save 20%",
+        "tier_3_popular": false,
+        "grid_bg": "#f4f4f4",
+        "picker_heading": "Choose Your Flavours",
+        "atc_label": "Add Box to Cart"
+      }
+    }
+  },
+  "order": ["byob-builder"]
+}

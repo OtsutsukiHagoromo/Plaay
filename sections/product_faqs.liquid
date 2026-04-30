@@ -1,0 +1,66 @@
+{% assign background_color = section.settings.background_color %}
+{% assign title = section.settings.title %}
+
+<div style="background-color: {{ background_color }};">
+  <div class="container py-12 md:py-16">
+    {% if title != blank %}
+      <h2 class="text-dark-blue text-[54px] mb-9 font-walsheim-bold">
+        {{ title }}
+      </h2>
+    {% endif %}
+
+    {% if section.blocks.size > 0 %}
+      <div class="flex flex-col md:flex-row md:flex-wrap">
+        {% for block in section.blocks %}
+          <div class="w-full {% unless forloop.last %}pb-4 {% endunless %} {% cycle 'md:pr-10 lg:pr-14 xl:pr-20', 'md:pl-10 lg:pl-14 xl:pl-20' %} md:w-1/2">
+            {% render 'content-accordion', heading: block.settings.title, content: block.settings.answer, product_accordion: true, color: 'dark-blue' %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product FAQs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "FAQs"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#F9C61D"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Your answer here</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product FAQs"
+    }
+  ]
+}
+{% endschema %}

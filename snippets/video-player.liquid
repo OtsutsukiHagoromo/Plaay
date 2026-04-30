@@ -1,0 +1,57 @@
+<video-player data-module="video-player">
+  <video
+    class="video_controls standard_video_player relative object-bottom {% if poster_cover %} {{ poster_cover }} {% else %} object-cover {% endif %} w-full {% if rounded %} rounded-2xl {% endif %} {{height}} {{width}}"
+    playsinline
+    oncontextmenu="return false;"
+    {% if autoplay == true %}
+      autoplay ="true"
+      muted="false"
+      controls
+      loop
+    {% endif %}
+    {% if autoplay == true %}autoplaymuteddefaultMutedloop{% endif %}
+    preload="auto"
+    {% if poster != blank %}
+      {% if no_src %}
+        poster="{{ poster }}"
+      {% else %}
+        poster="{{ poster | img_url: '2400x1600' }}"
+      {% endif %}
+    {% endif %}>
+    {% if sources %}
+      {% for source in sources %}
+        <source src="{{ source.url }}"playsinlinetype="{{ source.mime_type }}">
+      {% endfor %}
+    {% else %}
+      <source src="{{ src }}"playsinlinetype="video/mp4">
+      <source src="{{ src }}"playsinlinetype="video/ogg">
+    {% endif %}
+  </video>
+  {% if controls %}
+  <div class="absolute h-24 text-white transition-all duration-200 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer play_button top-1/2 left-1/2">
+    {% render 'icon-play' %}
+  </div>
+  {% comment %} pause button {% endcomment %}
+  <div class="absolute h-0 text-white transition-all duration-200 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer pause_button top-1/2 left-1/2">
+    {% render 'icon-pause' %}
+  </div>
+  {% endif %}
+</video-player>
+
+<style>
+  /* Mobile specific poster image */
+
+   .video-main .h-96 {
+      height: 715px;
+    }
+  
+  @media only screen and (max-width: 767px) {
+    .standard_video_player_container video {
+      object-position:center ;
+    }
+
+    .video-main .h-96 {
+      height: 35rem;
+    }
+  }
+</style>

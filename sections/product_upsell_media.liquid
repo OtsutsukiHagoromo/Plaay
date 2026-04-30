@@ -1,0 +1,249 @@
+{% liquid 
+  assign slide_blocks = section.blocks | where: 'type', 'slide'
+  assign slide_block_size = slide_blocks | size
+  assign image_height_mobile = section.settings.image_height_mobile
+  assign image_height_tablet = section.settings.image_height_tablet
+  assign image_height_desktop = section.settings.image_height_desktop
+  assign autoplay_speed = section.settings.autoplay_speed
+%}
+
+{% style %}
+  .upsell-media-wrap .inner_container {
+    position: relative;
+}
+ .upsell-media-wrap button.glide__arrow.glide__arrow--left {
+    position: absolute;
+    left: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+ .upsell-media-wrap button.glide__arrow.glide__arrow--right {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+  @media only screen and (min-width: 768px) and(max-width: 1024px) {
+    #product_upsell-{{ section.id }} .upsell_content, #product_upsell-{{ section.id }} .main_image {
+      height: {{ image_height_tablet | append: 'px' }}
+    }
+  }
+  @media only screen and (min-width: 1024px) {
+    #product_upsell-{{ section.id }} .upsell_content, #product_upsell-{{ section.id }} .main_image {
+      height: {{ image_height_desktop | append: 'px' }}
+    }
+  }
+  @media screen and (max-width: 475px) {
+    .upsell-media-wrap .glide__slide .upsell_content{
+      flex-direction:column;
+      text-align:center;
+    }
+    .upsell-media-wrap .glide__slide .upsell_content a.btn {
+    margin-left: auto;
+    margin-right: auto;
+}
+.upsell-media-wrap .glide__slide .upsell_content img {
+    margin: 0 auto;
+}
+  }
+{% endstyle %}
+
+<product-upsell-media data-module="product-upsell-media">
+  <div id="product_upsell-{{ section.id }}" class="upsell-media-wrap" style="background-color: {{ background_color }};">
+    <div class="{% if slide_block_size > 1 %} glide upsell_media_glide {% endif %}" data-autoplay="{{ autoplay_speed }}">
+      <div {% if slide_block_size > 1 %}class="relative glide__track"data-glide-el="track"{% endif %}>
+        <ul class="{% if slide_block_size > 1 %} glide__slides {% endif %}">
+          {% for block in slide_blocks %}
+            {% liquid 
+              assign background_color = block.settings.background_color
+              assign reverse_content = block.settings.reverse_content 
+              assign image_desktop = block.settings.image_desktop 
+              assign image_mobile = block.settings.image_mobile 
+              assign upsell_image = block.settings.upsell_image 
+              assign upsell_heading = block.settings.upsell_heading 
+              assign upsell_product = block.settings.upsell_product
+              assign button_style = block.settings.button_style
+              assign button_text = block.settings.button_text
+            %}
+            <li class="{% if slide_block_size > 1 %} glide__slide {% endif %}" style="background-color: {{ background_color }};">
+              <div class="inner_container flex flex-col | md:h-[520px] | lg:flex-row">
+                {% comment %} upsell content {% endcomment %}
+                <div class="upsell_content w-full flex px-6 pt-14 pb-20 max-w-3xl | md:mx-auto md:py-20 | lg:w-1/2 lg:pr-20 | xl:pl-14 xl:pr-32 | 2xl:pr-52 {% if reverse_content %} md:order-1 {% else %} order-1 md:order-first {% endif %}">
+                  {% if upsell_image != blank %}
+                    {% render 'img', type: 'img', img: upsell_image, lazy: true, class: 'object-contain max-h-60 md:max-h-[330px] w-1/2' %}
+                  {% endif %}
+                  <div class="flex flex-col justify-center pl-4 | md:pl-8 | lg:pl-14 ">
+                    {% if upsell_heading != blank %}
+                      <h2 class="text-dark-blue text-2xl leading-none font-walsheim-black uppercase | md:text-4xl">{{ upsell_heading }}</h2>
+                    {% endif %}
+                
+                      {% render 'btn', href: upsell_product.url, style: button_style, width: 'auto', additional_class: 'text-xs w-auto max-w-[200px] text-center rounded-lg mt-8 max-w-[200px]', no_translation: true, copy: button_text %}
+                    
+                  </div>
+                </div>
+          <div class="glide__arrows flex items-center justify-center w-full mt-5 mb-8 {% if hide_arrows_mobile %} hidden {% unless hide_arrows_desktop %} md:block {% endunless %} {% endif %} | {% if hide_arrows_desktop %} md:hidden {% endif %} md:mb-0 md:mt-0 {% unless article %} md:ml-10 {% endunless %} md:w-auto" data-glide-el="controls">
+            <button data-glide-dir="<" class="glide__arrow glide__arrow--left text-0 mr-5 group">
+              slide left
+              <span class="flex h-6 w-6 transform rotate-180 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+                {% render 'icon-slider-arrow' %}
+              </span>
+            </button>
+            <button data-glide-dir=">" class="glide__arrow glide__arrow--right text-0 ml-5 group">
+              slide right
+              <span class="flex h-6 w-6 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+                {% render 'icon-slider-arrow' %}
+              </span>
+            </button>
+          </div> 
+                {% comment %} images {% endcomment %}
+                <div class="main_image w-full h-full | lg:w-1/2">
+                  {% if image_desktop != blank %}
+                    {% render 'img', type: 'img', img: image_desktop, lazy: true, class: 'object-cover h-full w-full hidden md:block' %}
+                  {% endif %}
+                  {% if image_mobile != blank %}
+                    {% render 'img', type: 'img', img: image_mobile, lazy: true, class: 'object-cover h-[360px] w-full md:hidden' %}
+                  {% endif %}
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+        {% if slide_block_size > 1 %}
+          <div class="absolute flex items-center justify-center mb-3 transform -translate-x-1/2 glide__bullets bottom-0 left-1/2" data-glide-el="controls[nav]">
+            {% for block in slide_blocks %}
+              <button class="glide__bullet h-4 w-4 bg-[#A8A8A8] opacity-50 rounded-full transition-all duration-200 {% unless forloop.first %} ml-3 {% endunless %}" data-glide-dir="={{ forloop.index0 }}"></button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</product-upsell-media>
+
+{% schema %}
+  {
+    "name": "Product upsell (media)",
+    "settings": [
+      {
+        "type": "range",
+        "id": "image_height_desktop",
+        "label": "Image height (desktop)",
+        "min": 100,
+        "max": 900,
+        "step": 20,
+        "default": 480
+      }, {
+        "type": "range",
+        "id": "image_height_tablet",
+        "label": "Image height (tablet)",
+        "min": 100,
+        "max": 900,
+        "step": 20,
+        "default": 400
+      }, {
+        "type": "range",
+        "id": "image_height_mobile",
+        "label": "Image height (mobile)",
+        "min": 100,
+        "max": 900,
+        "step": 20,
+        "default": 300
+      }, {
+        "type": "range",
+        "id": "autoplay_speed",
+        "label": "Autoplay speed",
+        "min": 0,
+        "max": 9900,
+        "default": 0,
+        "step": 100,
+        "info": "Set this to 0 to disable autoplay."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "slide",
+        "name": "Slide",
+        "settings": [
+          {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background color",
+            "default": "#F5F5F5"
+          },
+          {
+            "type": "checkbox",
+            "id": "reverse_content",
+            "label": "Reverse content?",
+            "default": false
+          },
+          {
+            "type": "header",
+            "content": "Images (right side)"
+          },
+          {
+            "type": "image_picker",
+            "label": "Image (desktop)",
+            "id": "image_desktop",
+            "info": "Image aspect ratio: 1200px width x 500px height"
+          }, {
+            "type": "image_picker",
+            "label": "Image (mobile)",
+            "id": "image_mobile",
+            "info": "Image aspect ratio: 800px width x  400px height"
+          }, {
+            "type": "header",
+            "content": "Upsell content (left side)"
+          }, {
+            "type": "image_picker",
+            "id": "upsell_image",
+            "label": "Upsell image"
+          }, {
+            "type": "text",
+            "id": "upsell_heading",
+            "label": "Upsell heading",
+            "default": "Feels like findind that ultimate shop to binge on"
+          }, {
+            "type": "product",
+            "id": "upsell_product",
+            "label": "Upsell product"
+          }, {
+            "type": "select",
+            "id": "button_style",
+            "label": "Button style",
+            "options": [
+              {
+                "label": "Blue",
+                "value": "blue"
+              },
+              {
+                "label": "White",
+                "value": "white"
+              },
+              {
+                "label": "Yellow",
+                "value": "yellow"
+              },
+              {
+                "label": "White border",
+                "value": "white-border"
+              }, {
+                "label": "Blue border",
+                "value": "blue-border"
+              }
+            ]
+          }, {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button text",
+            "default": "Shop this product"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product upsell (media)"
+      }
+    ]
+  }
+{% endschema %}

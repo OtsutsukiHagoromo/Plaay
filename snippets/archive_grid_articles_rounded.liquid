@@ -1,0 +1,58 @@
+{% liquid 
+  assign article_one = block.settings.article_one 
+  assign article_two = block.settings.article_two 
+  assign article_three = block.settings.article_three 
+  assign article_four = block.settings.article_four 
+  
+  assign cols_desktop_large = block.settings.number_of_columns_desktop_large 
+  assign cols_desktop = block.settings.number_of_columns_desktop
+  assign cols_tablet = block.settings.number_of_columns_tablet 
+  assign cols_mobile = block.settings.number_of_columns_mobile
+
+  assign background_color = block.settings.background_color
+
+  assign padding_bottom_mobile = block.settings.padding_bottom_mobile
+  assign padding_top_mobile = block.settings.padding_top_mobile
+  assign padding_bottom_desktop = block.settings.padding_bottom_desktop 
+  assign padding_top_desktop = block.settings.padding_top_desktop
+%}
+
+{% style %}
+  @media only screen and (max-width: 1023px){
+    #grid_articles-rounded-{{ block.id }}{
+      padding-top: {{ padding_top_mobile }}px;
+      padding-bottom: {{ padding_bottom_mobile }}px;
+    }
+  }
+  @media only screen and (min-width: 1024px){
+    #grid_articles-rounded-{{ block.id }}{
+      padding-top: {{ padding_top_desktop }}px;
+      padding-bottom: {{ padding_bottom_desktop }}px;
+    }
+  }
+{% endstyle %}
+
+<div style="background-color: {{ background_color }};">
+  <div id="grid_articles-rounded-{{ block.id }}" class="container grid grid-cols-{{ cols_mobile }} | md:grid-cols-{{ cols_tablet }} | lg:grid-cols-{{ cols_desktop }} | xl:grid-cols-{{ cols_desktop_large }}">
+    {% if article_one != blank %}
+      <div class="md:mx-5 md:my-3 | lg:mx-7 lg:my-4 | xl:mx-8">
+        {% render 'archive-article-rounded', article: article_one %}
+      </div>
+    {% endif %}
+    {% if article_two != blank %}
+      <div class="mt-4 | md:mt-0 md:mx-5 md:my-3 | lg:mx-7 lg:my-4 | xl:mx-8">
+        {% render 'archive-article-rounded', article: article_two %}
+      </div>
+    {% endif %}
+    {% if article_three != blank %}
+      <div class="mt-4 | md:mt-0 md:mx-5 md:my-3 | lg:mx-7 lg:my-4 | xl:mx-8">
+        {% render 'archive-article-rounded', article: article_three %}
+      </div>
+    {% endif %}
+    {% if article_four != blank %}
+      <div class="mt-4 | md:mt-0 md:mx-5 md:my-3 | lg:mx-7 lg:my-4 | xl:mx-8">
+        {% render 'archive-article-rounded', article: article_four %}
+      </div>
+    {% endif %}
+  </div>
+</div>

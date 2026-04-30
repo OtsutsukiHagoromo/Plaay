@@ -1,0 +1,281 @@
+{% liquid
+  assign article_additional_images = article.metafields.arena.image 
+  assign products_featured_in_this_article = article.metafields.arena.product_featured_in_this_article 
+
+  assign background_color = section.settings.background_color
+  assign banner_height_mobile = section.settings.banner_height_mobile 
+  assign banner_height_tablet = section.settings.banner_height_tablet 
+  assign banner_height_desktop = section.settings.banner_height_desktop 
+  assign banner_height_desktop_large = section.settings.banner_height_desktop
+  assign show_author = section.settings.show_author
+%}
+
+{% style %}
+  .article-content * {
+    font-family: 'walsheim-regular';
+    font-size: 14px;
+  }
+  .article-content h1,
+  .article-content h2,
+  .article-content h3,
+  .article-content h4,
+  .article-content h5,
+  .article-content h6 {
+    font-family: 'walsheim-bold';
+    font-size: 24px;
+  }
+  .article-content h1 *,
+  .article-content h2 *,
+  .article-content h3 *,
+  .article-content h4 *,
+  .article-content h5 *,
+  .article-content h6 * {
+    font-family: 'walsheim-bold';
+    font-size: 24px;
+  }
+  .article-content table tr td img {
+    width: 100%;
+    object-fit: cover;
+    max-height: 400px;
+  }
+  .article_banner {
+    height: {{ banner_height_mobile | append: 'px' }}
+    ;
+  }
+
+  .additional_content h1,
+  .additional_content h2,
+  .additional_content h3,
+  .additional_content h4,
+  .additional_content h5,
+  .additional_content h6 {
+    font-size: 24px;
+    font-family: 'walsheim-medium';
+    line-height: 1;
+    color: rgb(2, 29, 73);
+  }
+  .additional_content p {
+    font-family: 'walsheim-regular';
+    font-size: 14px;
+    color: rgb(2, 29, 73);
+  }
+
+  @media only screen and (min-width: 768px) and(max-width: 1023px) {
+    .article_banner {
+      height: {{ banner_height_tablet | append: 'px' }}
+    }
+  }
+  @media only screen and (min-width: 1024px) and(max-width: 1535px) {
+    .article_banner {
+      height: {{ banner_height_desktop | append: 'px' }}
+    }
+  }
+  @media only screen and (min-width: 1536px) {
+    .article_banner {
+      height: {{ banner_height_desktop_large | append: 'px' }}
+    }
+  }
+
+
+  @media only screen and (max-width: 1024px) {
+    .article-content table tr {
+      display: flex;
+      flex-direction: column;
+    }
+    .article-content table tr td {
+      width: 100% !important;
+      margin-top: 20px;
+    }
+  }
+  @media only screen and (min-width: 1024px) {
+    .article-content table tr td:nth-of-type(even) {
+      padding-left: 40px;
+    }
+  }
+{% endstyle %}
+
+<div style="background: {{ background_color }};">
+  <div class="relative md:container md:pt-[180px] | xl:pt-[240px]">
+    {% comment %} article hero {% endcomment %}
+    {% if article.image != blank %}
+      <div class="article_banner w-full">
+        {% render 'img', type: 'img', img: article.image, eager: true, class: 'h-full w-full object-cover' %}
+      </div>
+    {% endif %}
+    {% comment %} main article content {% endcomment %}
+    <div class="flex flex-col bg-white pt-10 | md:pt-0 md:bg-opacity-0 md:flex-row">
+      {% comment %} share on social media {% endcomment %}
+      <div class="flex flex-row items-center px-4 justify-start flex-wrap | md:flex-nowrap md:justify-start md:px-0 md:flex-col md:w-1/5">
+        <p class="text-base font-walsheim-black text-dark-blue uppercase pt-5 w-full pb-4 | md:pb-0 md:w-auto md:pt-10">{{ 'article.share' | t }}</p>
+        <a
+          href="http://twitter.com/share?text=text goes here&url={{canonical_url}}"
+          class="md:mt-6 rounded-full border border-dark-blue text-dark-blue p-2 transition-all duration-200 | md:ml-0 | hover:border-red hover:text-white hover:bg-dark-blue"
+          target="_blank"
+          rel="noopener">
+          <span class="flex w-6 h-6 p-[2px] text-0">
+            Twitter
+            {% render 'icon-twitter' %}
+          </span>
+        </a>
+        <a
+          href="https://www.facebook.com/sharer/sharer.php?u={{canonical_url}}"
+          class="ml-6 md:mt-6 rounded-full border border-dark-blue text-dark-blue p-2 transition-all duration-200 | md:ml-0 | hover:border-red hover:text-white hover:bg-dark-blue"
+          target="_blank"
+          rel="noopener">
+          <span class="flex w-6 h-6 p-[2px] text-0">
+            Facebook
+            {% render 'icon-facebook' %}
+          </span>
+        </a>
+        <a
+          href="https://instagram.com/mozzocoffee"
+          class="ml-6 md:mt-6 rounded-full border border-dark-blue text-dark-blue p-2 transition-all duration-200 | md:ml-0 | hover:border-red hover:text-white hover:bg-dark-blue"
+          rel="noopener">
+          <span class="flex w-6 h-6 p-[2px] text-0">
+            Instagram
+            {% render 'icon-instagram' %}
+          </span>
+        </a>
+        <a
+          href="http://pinterest.com/pin/create/button/?url={{canonical_url}}"
+          class="ml-6 md:mt-6 rounded-full border border-dark-blue text-dark-blue p-2 transition-all duration-200 | md:ml-0 | hover:border-red hover:text-white hover:bg-dark-blue"
+          rel="noopener">
+          <span class="flex h-6 w-6 p-[2px] text-0">
+            Pinterest
+            {% render 'icon-pinterest' %}
+          </span>
+        </a>
+      </div>
+      {% comment %} main article content {% endcomment %}
+      <div class="bg-white px-3 pt-8 | md:px-14 md:w-4/5 | xl:px-32 {% if article.image != blank %} md:mr-14 md:-mt-20 | xl:-mt-28 xl:mr-24 {% endif %}">
+        {% comment %} title {% endcomment %}
+        <h1 class="text-dark-blue text-left uppercase text-3xl px-9 | md:px-0 md:text-center md:text-[40px]">{{ article.title }}</h1>
+        {% comment %} read time / date / author {% endcomment %}
+        <div class="flex items-center justify-start mt-2 px-9 | md:px-0 md:justify-center">
+          {% if article.tags.size > 0 %}
+            <p class="font-walsheim text-dark-blue text-xs border-r border-black pr-2">
+              {% for tag in article.tags %}
+                {% if tag contains 'read_' %}
+                  {% assign split_tag = tag | split: 'read_' | last %}
+                  <span>
+                    {{ split_tag }} min Read
+                  </span>
+                {% endif %}
+              {% endfor %}
+            </p>
+          {% endif %}
+          <p class="{% if article.tags.size > 0 %} pl-2 {% endif %} font-walsheim text-dark-blue text-xs">{{ article.created_at | date: "%m %b %Y" }}</p>
+        </div>
+        {% if show_author %}
+          <p class="font-walsheim text-dark-blue text-left text-xs mt-1 mb-3 px-9 | md:px-0 md:text-center">{{ article.author }}</p>
+        {% endif %}
+        {% if article.content != blank %}
+          <div class="article-content mt-8 text-dark-blue font-walsheim pb-20 px-9 | md:px-0 md:mt-6">
+            {{ article.content }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% comment %} additional content {% endcomment %}
+    <div class="additional_content flex flex-col mt-4 pb-14 | md:pb-36 md:mt-20">
+      {% for article_image in article_additional_images %}
+        {% capture thecycle %}
+          {% cycle 'odd', 'even' %}{% endcapture %}
+        {% liquid 
+          assign textual_content = article.metafields.arena.textual_content[forloop.index0]
+          assign video = article.metafields.arena.video_url[forloop.index0]
+          assign reverse_content = article.metafields.arena.reverse_content[forloop.index0]
+          assign hide_media = article.metafields.arena.hide_media[forloop.index0]
+        %}
+        {% for prop in article_image %}
+          {% liquid 
+            assign image_src = prop.src 
+            assign image_alt = prop.alt
+          %}
+        {% endfor %}
+        <div class="flex flex-col mb-8 | md:mb-12 md:justify-between {% if reverse_content == 'true' %} md:flex-row {% else %} md:flex-row-reverse {% endif %}">
+          {% if textual_content != blank %}
+            <div class="px-10 text-dark-blue | md:px-0 {% unless hide_media == 'true' %} md:w-1/2 {% endunless %} {% if thecycle == 'even' %} {% unless hide_media == 'true' %} lg:w-1/4 {% endunless %} {% else %} md:flex md:flex-col md:justify-center {% unless hide_media == 'true' %} md:max-w-[600px] {% endunless %} {% endif %}">
+              {{ textual_content }}
+            </div>
+          {% endif %}
+          {% if video != blank %}
+            <div class="relative standard_video_player h-[340px] w-full {% if hide_media == 'true' %} hidden {% endif %} mb-7 {% if reverse_content == 'true' %} md:ml-10 {% else %} md:mr-10 {% endif %}">
+              {% render 'video-player', src: video, poster: image_src, no_src: true, controls: false, height: 'h-full', width: 'w-full' %}
+            </div>
+          {% else %}
+            {% if image_src != blank %}
+              <img
+                height="500"
+                width="500"
+                loading="lazy"
+                src="{{ image_src | image_url: 'master' }}"
+                alt="{{ image_alt }}"
+                class="{% if hide_media == 'true' %} hidden {% endif %} object-cover w-full max-h-[500px] | md:w-1/2 {% if thecycle == 'even' %} lg:w-3/4 lg:max-h-[360px] {% endif %} mb-7 {% if reverse_content == 'true' %} md:ml-10 {% else %} md:mr-10 {% endif %}" />
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% comment %} products featured in this article {% endcomment %}
+{% if products_featured_in_this_article != blank and products_featured_in_this_article.size > 0 %}
+  {% for featured_product in products_featured_in_this_article %}{% endfor %}
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Article template",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#F6F6F6"
+      },
+      {
+        "type": "range",
+        "id": "banner_height_mobile",
+        "label": "Banner height: mobile (0 - 767px)",
+        "min": 100,
+        "max": 800,
+        "default": 380,
+        "step": 20
+      },
+      {
+        "type": "range",
+        "id": "banner_height_tablet",
+        "label": "Banner height: tablet (768px - 1023px)",
+        "min": 100,
+        "max": 800,
+        "default": 440,
+        "step": 20
+      },
+      {
+        "type": "range",
+        "id": "banner_height_desktop",
+        "label": "Banner height: desktop (1024px - 1535px)",
+        "min": 100,
+        "max": 1000,
+        "default": 500,
+        "step": 20
+      }, {
+        "type": "range",
+        "id": "banner_height_desktop_large",
+        "label": "Banner height: desktop -large (1536px +)",
+        "min": 100,
+        "max": 1000,
+        "default": 600,
+        "step": 20
+      }, {
+        "type": "checkbox",
+        "id": "show_author",
+        "label": "Show author?",
+        "default": true,
+        "info": "Toggle the author credit that appears in the article"
+      }
+    ]
+  }
+{% endschema %}

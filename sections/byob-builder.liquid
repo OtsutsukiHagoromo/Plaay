@@ -1,0 +1,1082 @@
+{% comment %}
+  ============================================================
+  BYOB BUILDER — fully custom, zero apps, zero dependencies.
+  ============================================================
+
+  HOW IT WORKS
+  ─────────────────────────────────────────────────────────────
+  1. Create a product called "Build Your Box" in Shopify admin.
+     Give it 3 variants (one per tier), e.g.:
+       Variant 1 title → "Taster Box"     price → AED 65
+       Variant 2 title → "Builder Box"    price → AED 120
+       Variant 3 title → "Bulk Box"       price → AED 220
+  2. In Shopify admin create up to 3 Collections (one per category tab)
+     and add relevant products to each.
+  3. In the theme editor set Category 1/2/3 collections.
+  4. Set Tier 1/2/3 qty to match your variant bar counts.
+  5. Assign template "product.byob" to the "Build Your Box" product.
+
+  CART MECHANIC
+  ─────────────────────────────────────────────────────────────
+  When the customer clicks "Add Box to Cart" we POST ONE line item
+  to /cart/add.js:
+    • id         = the bundle variant ID (box size they chose)
+    • quantity   = 1
+    • properties = { "Cookies & Cream Bar": "x3", "Mocha Almond": "x1", … }
+  The properties are shown in cart / order emails so your team
+  knows exactly what to pack. No app needed.
+{% endcomment %}
+
+{%- assign t1q = section.settings.tier_1_qty | default: 6 -%}
+{%- assign t2q = section.settings.tier_2_qty | default: 12 -%}
+{%- assign t3q = section.settings.tier_3_qty | default: 24 -%}
+
+{%- assign cat1_col = collections[section.settings.cat_1_collection] -%}
+{%- assign cat2_col = collections[section.settings.cat_2_collection] -%}
+{%- assign cat3_col = collections[section.settings.cat_3_collection] -%}
+
+{%- assign cat1_label = section.settings.cat_1_label | default: 'Truffles' -%}
+{%- assign cat2_label = section.settings.cat_2_label | default: 'Chocolate Bars' -%}
+{%- assign cat3_label = section.settings.cat_3_label | default: 'Energy Bars' -%}
+
+{%- assign has_cat1 = false -%}
+{%- assign has_cat2 = false -%}
+{%- assign has_cat3 = false -%}
+{%- if cat1_col != blank and cat1_col.products_count > 0 -%}{%- assign has_cat1 = true -%}{%- endif -%}
+{%- if cat2_col != blank and cat2_col.products_count > 0 -%}{%- assign has_cat2 = true -%}{%- endif -%}
+{%- if cat3_col != blank and cat3_col.products_count > 0 -%}{%- assign has_cat3 = true -%}{%- endif -%}
+
+<div id="byob-{{ section.id }}" class="byob-wrap">
+
+  {%- comment -%}══════════════════════════════════
+    HERO + TIER TABS
+  ══════════════════════════════════{%- endcomment -%}
+  <div class="byob-hero" style="background:{{ section.settings.bg_color }};">
+    <div class="byob-container">
+      {% if section.settings.heading != blank %}
+        <h1 class="byob-hero__title font-walsheim-black">{{ section.settings.heading }}</h1>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="byob-hero__sub font-walsheim-regular">{{ section.settings.subheading }}</p>
+      {% endif %}
+
+      <div class="byob-tiers" role="tablist" aria-label="Choose your box size">
+        {%- for variant in product.variants -%}
+          {%- assign idx1 = forloop.index -%}
+          {%- assign tq_key  = 'tier_' | append: idx1 | append: '_qty' -%}
+          {%- assign ts_key  = 'tier_' | append: idx1 | append: '_saving' -%}
+          {%- assign tp_key  = 'tier_' | append: idx1 | append: '_popular' -%}
+          {%- assign tq      = section.settings[tq_key] | default: 6 | plus: 0 -%}
+          {%- assign tsaving = section.settings[ts_key] -%}
+          {%- assign tpop    = section.settings[tp_key] -%}
+
+          <button
+            class="byob-tier{% if forloop.first %} byob-tier--active{% endif %}"
+            role="tab"
+            data-tier-index="{{ forloop.index0 }}"
+            data-variant-id="{{ variant.id }}"
+            data-qty="{{ tq }}"
+            data-price-fmt="{{ variant.price | money }}"
+            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+
+            {%- if tpop -%}
+              <span class="byob-tier__popular font-walsheim-bold">Most Popular</span>
+            {%- endif -%}
+            {%- if tsaving != blank -%}
+              <span class="byob-tier__save font-walsheim-bold">{{ tsaving }}</span>
+            {%- endif -%}
+
+            <span class="byob-tier__qty font-walsheim-black">{{ tq }}</span>
+            <span class="byob-tier__unit font-walsheim-regular">bars</span>
+            <span class="byob-tier__name font-walsheim-bold">{{ variant.title }}</span>
+            <span class="byob-tier__price font-walsheim-black">{{ variant.price | money }}</span>
+          </button>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%}══════════════════════════════════
+    STICKY PROGRESS BAR
+  ══════════════════════════════════{%- endcomment -%}
+  <div class="byob-progress-wrap">
+    <div class="byob-container byob-progress-inner">
+      <div class="byob-progress-text font-walsheim-bold">
+        <span class="byob-count">0</span>&nbsp;of&nbsp;<span class="byob-needed">{{ t1q }}</span>&nbsp;selected
+      </div>
+      <div class="byob-bar-track">
+        <div class="byob-bar-fill"></div>
+      </div>
+      <div class="byob-progress-msg font-walsheim-regular">Add {{ t1q }} bars to complete your box</div>
+    </div>
+  </div>
+
+  {%- comment -%}══════════════════════════════════
+    PRODUCT PICKER GRID
+  ══════════════════════════════════{%- endcomment -%}
+  <div class="byob-picker" style="background:{{ section.settings.grid_bg }};">
+    <div class="byob-container">
+      {% if section.settings.picker_heading != blank %}
+        <h2 class="byob-picker__heading font-walsheim-black">{{ section.settings.picker_heading }}</h2>
+      {% endif %}
+
+      {%- comment -%} Category tab bar — only render if at least one category collection is configured {%- endcomment -%}
+      {%- if has_cat1 or has_cat2 or has_cat3 -%}
+        <div class="byob-cat-bar" role="tablist" aria-label="Filter by category">
+          <button
+            class="byob-cat-tab byob-cat-tab--active font-walsheim-bold"
+            data-cat="all"
+            role="tab"
+            aria-selected="true">
+            All
+          </button>
+          {%- if has_cat1 -%}
+            <button
+              class="byob-cat-tab font-walsheim-bold"
+              data-cat="1"
+              role="tab"
+              aria-selected="false">
+              {{ cat1_label }}
+            </button>
+          {%- endif -%}
+          {%- if has_cat2 -%}
+            <button
+              class="byob-cat-tab font-walsheim-bold"
+              data-cat="2"
+              role="tab"
+              aria-selected="false">
+              {{ cat2_label }}
+            </button>
+          {%- endif -%}
+          {%- if has_cat3 -%}
+            <button
+              class="byob-cat-tab font-walsheim-bold"
+              data-cat="3"
+              role="tab"
+              aria-selected="false">
+              {{ cat3_label }}
+            </button>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+
+      <div class="byob-grid">
+
+        {%- comment -%} Category 1 products {%- endcomment -%}
+        {%- if has_cat1 -%}
+          {%- for p in cat1_col.products -%}
+            {%- assign pv = p.selected_or_first_available_variant -%}
+            <div
+              class="byob-card"
+              data-variant-id="{{ pv.id }}"
+              data-product-title="{{ p.title | escape }}"
+              data-available="{{ pv.available }}"
+              data-cat="1">
+
+              <div class="byob-card__img-wrap">
+                <img
+                  src="{{ p.featured_image | image_url: width: 400 }}"
+                  alt="{{ p.title | escape }}"
+                  loading="lazy"
+                  class="byob-card__img"
+                  width="400"
+                  height="400">
+              </div>
+
+              <div class="byob-card__info">
+                <p class="byob-card__title font-walsheim-bold">{{ p.title }}</p>
+                {%- if pv.compare_at_price > pv.price -%}
+                  <p class="byob-card__price font-walsheim-regular">
+                    <s class="byob-card__was">{{ pv.compare_at_price | money }}</s>
+                    <span class="byob-card__now">{{ pv.price | money }}</span>
+                  </p>
+                {%- else -%}
+                  <p class="byob-card__price font-walsheim-regular">{{ pv.price | money }}</p>
+                {%- endif -%}
+              </div>
+
+              <div class="byob-card__controls">
+                {%- if pv.available -%}
+                  <button class="byob-minus" type="button" aria-label="Remove {{ p.title }}">−</button>
+                  <span class="byob-qty font-walsheim-bold">0</span>
+                  <button class="byob-plus"  type="button" aria-label="Add {{ p.title }}">+</button>
+                {%- else -%}
+                  <span class="byob-soldout font-walsheim-bold">Sold Out</span>
+                {%- endif -%}
+              </div>
+
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+
+        {%- comment -%} Category 2 products {%- endcomment -%}
+        {%- if has_cat2 -%}
+          {%- for p in cat2_col.products -%}
+            {%- assign pv = p.selected_or_first_available_variant -%}
+            <div
+              class="byob-card"
+              data-variant-id="{{ pv.id }}"
+              data-product-title="{{ p.title | escape }}"
+              data-available="{{ pv.available }}"
+              data-cat="2">
+
+              <div class="byob-card__img-wrap">
+                <img
+                  src="{{ p.featured_image | image_url: width: 400 }}"
+                  alt="{{ p.title | escape }}"
+                  loading="lazy"
+                  class="byob-card__img"
+                  width="400"
+                  height="400">
+              </div>
+
+              <div class="byob-card__info">
+                <p class="byob-card__title font-walsheim-bold">{{ p.title }}</p>
+                {%- if pv.compare_at_price > pv.price -%}
+                  <p class="byob-card__price font-walsheim-regular">
+                    <s class="byob-card__was">{{ pv.compare_at_price | money }}</s>
+                    <span class="byob-card__now">{{ pv.price | money }}</span>
+                  </p>
+                {%- else -%}
+                  <p class="byob-card__price font-walsheim-regular">{{ pv.price | money }}</p>
+                {%- endif -%}
+              </div>
+
+              <div class="byob-card__controls">
+                {%- if pv.available -%}
+                  <button class="byob-minus" type="button" aria-label="Remove {{ p.title }}">−</button>
+                  <span class="byob-qty font-walsheim-bold">0</span>
+                  <button class="byob-plus"  type="button" aria-label="Add {{ p.title }}">+</button>
+                {%- else -%}
+                  <span class="byob-soldout font-walsheim-bold">Sold Out</span>
+                {%- endif -%}
+              </div>
+
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+
+        {%- comment -%} Category 3 products {%- endcomment -%}
+        {%- if has_cat3 -%}
+          {%- for p in cat3_col.products -%}
+            {%- assign pv = p.selected_or_first_available_variant -%}
+            <div
+              class="byob-card"
+              data-variant-id="{{ pv.id }}"
+              data-product-title="{{ p.title | escape }}"
+              data-available="{{ pv.available }}"
+              data-cat="3">
+
+              <div class="byob-card__img-wrap">
+                <img
+                  src="{{ p.featured_image | image_url: width: 400 }}"
+                  alt="{{ p.title | escape }}"
+                  loading="lazy"
+                  class="byob-card__img"
+                  width="400"
+                  height="400">
+              </div>
+
+              <div class="byob-card__info">
+                <p class="byob-card__title font-walsheim-bold">{{ p.title }}</p>
+                {%- if pv.compare_at_price > pv.price -%}
+                  <p class="byob-card__price font-walsheim-regular">
+                    <s class="byob-card__was">{{ pv.compare_at_price | money }}</s>
+                    <span class="byob-card__now">{{ pv.price | money }}</span>
+                  </p>
+                {%- else -%}
+                  <p class="byob-card__price font-walsheim-regular">{{ pv.price | money }}</p>
+                {%- endif -%}
+              </div>
+
+              <div class="byob-card__controls">
+                {%- if pv.available -%}
+                  <button class="byob-minus" type="button" aria-label="Remove {{ p.title }}">−</button>
+                  <span class="byob-qty font-walsheim-bold">0</span>
+                  <button class="byob-plus"  type="button" aria-label="Add {{ p.title }}">+</button>
+                {%- else -%}
+                  <span class="byob-soldout font-walsheim-bold">Sold Out</span>
+                {%- endif -%}
+              </div>
+
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
+
+        {%- comment -%} Fallback: no categories configured {%- endcomment -%}
+        {%- unless has_cat1 or has_cat2 or has_cat3 -%}
+          <p class="byob-no-products font-walsheim-regular">
+            No collections selected — please set at least one Category collection in the section settings.
+          </p>
+        {%- endunless -%}
+
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%}══════════════════════════════════
+    STICKY FOOTER / ADD TO CART
+  ══════════════════════════════════{%- endcomment -%}
+  <div class="byob-footer" id="byob-footer-{{ section.id }}">
+    <div class="byob-container byob-footer__inner">
+      <div class="byob-footer__info">
+        <span class="byob-footer__count font-walsheim-regular">
+          <span class="byob-f-count">0</span>/<span class="byob-f-needed">{{ t1q }}</span> bars
+        </span>
+        <span class="byob-footer__price font-walsheim-black">-</span>
+      </div>
+      <button
+        class="byob-atc font-walsheim-bold"
+        id="byob-atc-{{ section.id }}"
+        type="button"
+        disabled
+        aria-disabled="true">
+        {{ section.settings.atc_label | default: 'Add Box to Cart' }}
+      </button>
+    </div>
+    <p class="byob-footer__msg font-walsheim-regular" id="byob-msg-{{ section.id }}"></p>
+  </div>
+
+</div>
+
+{%- comment -%}══════════════════════════════════
+  STYLES
+══════════════════════════════════{%- endcomment -%}
+<style>
+/* ─── Layout helpers ─────────────────────────────────────── */
+.byob-wrap { --byob-blue: #021D49; --byob-yellow: #F9C61D; }
+.byob-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+/* ─── Hero ───────────────────────────────────────────────── */
+.byob-hero { padding: 60px 0 52px; }
+.byob-hero__title {
+  color: var(--byob-yellow);
+  font-size: clamp(2rem, 5vw, 4rem);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  margin: 0 0 12px;
+  text-align: center;
+}
+.byob-hero__sub {
+  color: rgba(255,255,255,0.72);
+  font-size: clamp(0.88rem, 1.5vw, 1.05rem);
+  margin: 0 0 44px;
+  text-align: center;
+}
+
+/* ─── Tier tabs ──────────────────────────────────────────── */
+.byob-tiers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.byob-tier {
+  position: relative;
+  background: rgba(255,255,255,0.07);
+  border: 2px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 32px 16px 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: #fff;
+  text-align: center;
+  transition: border-color .2s, background .2s, transform .2s;
+}
+.byob-tier:hover,
+.byob-tier:focus-visible { border-color: var(--byob-yellow); transform: translateY(-3px); outline: none; }
+.byob-tier--active {
+  background: #fff;
+  border-color: var(--byob-yellow);
+  color: var(--byob-blue);
+  box-shadow: 0 8px 28px rgba(249,198,29,0.2);
+}
+/* "Most Popular" pill */
+.byob-tier__popular {
+  position: absolute;
+  top: -12px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--byob-yellow);
+  color: var(--byob-blue);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  padding: 4px 14px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+/* saving badge */
+.byob-tier__save {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: var(--byob-yellow);
+  color: var(--byob-blue);
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+.byob-tier--active .byob-tier__save { background: var(--byob-blue); color: var(--byob-yellow); }
+/* big number */
+.byob-tier__qty {
+  font-size: 2.8rem;
+  line-height: 1;
+  color: var(--byob-yellow);
+}
+.byob-tier--active .byob-tier__qty { color: var(--byob-blue); }
+.byob-tier__unit { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.65; }
+.byob-tier__name { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; }
+.byob-tier__price { font-size: 1.2rem; margin-top: 2px; }
+.byob-tier--active .byob-tier__price { color: var(--byob-blue); }
+
+/* ─── Progress bar ───────────────────────────────────────── */
+.byob-progress-wrap {
+  position: sticky; top: 0; z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid rgba(2,29,73,0.1);
+  padding: 12px 0;
+  box-shadow: 0 2px 8px rgba(2,29,73,0.06);
+}
+.byob-progress-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.byob-progress-text {
+  color: var(--byob-blue);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  min-width: 100px;
+}
+.byob-bar-track {
+  flex: 1;
+  min-width: 80px;
+  height: 7px;
+  background: rgba(2,29,73,0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.byob-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--byob-yellow);
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+.byob-progress-msg {
+  font-size: 0.75rem;
+  color: var(--byob-blue);
+  opacity: 0.6;
+  white-space: nowrap;
+}
+.byob-progress-msg.byob-msg--done { opacity: 1; color: #15803d; }
+.byob-progress-msg.byob-msg--over { opacity: 1; color: #dc2626; }
+
+/* ─── Category tab bar ───────────────────────────────────── */
+.byob-cat-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: var(--byob-blue);
+  border-radius: 14px;
+  padding: 10px 12px;
+  margin-bottom: 24px;
+  align-items: center;
+}
+.byob-cat-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 8px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .2s, color .2s;
+  line-height: 1;
+  white-space: nowrap;
+}
+.byob-cat-tab:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+.byob-cat-tab--active {
+  background: var(--byob-yellow);
+  color: var(--byob-blue);
+}
+.byob-cat-tab--active:hover {
+  background: var(--byob-yellow);
+  color: var(--byob-blue);
+}
+
+/* ─── Product grid ───────────────────────────────────────── */
+.byob-picker { padding: 44px 0 96px; }
+.byob-picker__heading {
+  color: var(--byob-blue);
+  font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin: 0 0 24px;
+}
+.byob-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+@media (min-width: 540px)  { .byob-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 900px)  { .byob-grid { grid-template-columns: repeat(4, 1fr); gap: 18px; } }
+@media (min-width: 1200px) { .byob-grid { grid-template-columns: repeat(5, 1fr); } }
+
+.byob-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(2,29,73,0.07);
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+  overflow: hidden;
+}
+.byob-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2,29,73,0.1); }
+.byob-card.byob-card--selected {
+  border-color: var(--byob-yellow);
+  box-shadow: 0 4px 18px rgba(249,198,29,0.28);
+}
+.byob-card.byob-card--maxed { opacity: 0.45; pointer-events: none; }
+.byob-card--hidden { display: none !important; }
+
+.byob-card__img-wrap {
+  aspect-ratio: 1 / 1;
+  background: #f4f4f4;
+  overflow: hidden;
+}
+.byob-card__img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  padding: 12px;
+  transition: transform .25s ease;
+}
+.byob-card:hover .byob-card__img { transform: scale(1.05); }
+
+.byob-card__info { padding: 10px 12px 6px; flex: 1; }
+.byob-card__title { color: var(--byob-blue); font-size: 0.75rem; text-transform: uppercase; line-height: 1.3; margin: 0 0 3px; }
+.byob-card__price { color: var(--byob-blue); font-size: 0.7rem; margin: 0; opacity: 0.6; }
+.byob-card__was   { text-decoration: line-through; }
+.byob-card__now   { font-weight: bold; opacity: 1; color: var(--byob-blue); }
+
+.byob-card__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px 12px;
+  gap: 0;
+}
+.byob-minus,
+.byob-plus {
+  width: 30px; height: 30px;
+  border: 1.5px solid var(--byob-blue);
+  background: transparent;
+  color: var(--byob-blue);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+.byob-minus { border-radius: 8px 0 0 8px; }
+.byob-plus  { border-radius: 0 8px 8px 0; }
+.byob-minus:hover:not(:disabled),
+.byob-plus:hover:not(:disabled)  { background: var(--byob-blue); color: var(--byob-yellow); }
+.byob-minus:disabled,
+.byob-plus:disabled { opacity: 0.28; cursor: default; pointer-events: none; }
+.byob-qty {
+  width: 34px; height: 30px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--byob-blue);
+  border-top: 1.5px solid var(--byob-blue);
+  border-bottom: 1.5px solid var(--byob-blue);
+  line-height: 28px;
+  flex-shrink: 0;
+}
+.byob-soldout { font-size: 0.65rem; color: var(--byob-blue); opacity: 0.4; text-transform: uppercase; letter-spacing: 0.06em; }
+.byob-no-products { color: var(--byob-blue); opacity: 0.55; font-size: 0.9rem; padding: 40px 0; }
+
+/* ─── Sticky footer ──────────────────────────────────────── */
+.byob-footer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 9000;
+  background: var(--byob-blue);
+  box-shadow: 0 -4px 28px rgba(2,29,73,0.3);
+  transform: translateY(110%);
+  transition: transform .3s ease;
+  padding: 12px 0;
+}
+.byob-footer.byob-footer--visible { transform: translateY(0); }
+.byob-footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.byob-footer__info   { display: flex; flex-direction: column; gap: 1px; }
+.byob-footer__count  { color: rgba(255,255,255,0.65); font-size: 0.72rem; }
+.byob-footer__price  { color: var(--byob-yellow); font-size: 1.3rem; line-height: 1.1; }
+.byob-footer__msg {
+  text-align: center;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.55);
+  margin: 4px 0 0;
+  padding: 0 20px;
+  min-height: 16px;
+}
+.byob-atc {
+  background: var(--byob-yellow);
+  color: var(--byob-blue);
+  border: none;
+  border-radius: 999px;
+  padding: 13px 32px;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background .2s, transform .15s, opacity .15s;
+}
+.byob-atc:not(:disabled):hover { background: #fff; transform: scale(1.02); }
+.byob-atc:disabled { opacity: 0.38; cursor: not-allowed; }
+.byob-atc.byob-loading { opacity: 0.6; pointer-events: none; }
+
+/* ─── Mobile tweaks ──────────────────────────────────────── */
+@media (max-width: 599px) {
+  .byob-hero { padding: 40px 0 36px; }
+  .byob-tiers { grid-template-columns: 1fr; max-width: 320px; }
+  .byob-progress-inner { gap: 8px; }
+  .byob-progress-msg { display: none; }
+  .byob-footer__inner { flex-wrap: wrap; }
+  .byob-atc { width: 100%; text-align: center; }
+  .byob-footer__info { flex-direction: row; align-items: center; gap: 8px; }
+  .byob-picker { padding-bottom: 80px; }
+  .byob-cat-bar { gap: 6px; padding: 8px 10px; }
+  .byob-cat-tab { font-size: 0.7rem; padding: 7px 14px; }
+}
+</style>
+
+{%- comment -%}══════════════════════════════════
+  JAVASCRIPT
+══════════════════════════════════{%- endcomment -%}
+<script>
+(function () {
+  'use strict';
+
+  /* ── DOM ──────────────────────────────────────────────── */
+  var wrap    = document.getElementById('byob-{{ section.id }}');
+  var footer  = document.getElementById('byob-footer-{{ section.id }}');
+  var atcBtn  = document.getElementById('byob-atc-{{ section.id }}');
+  var msgEl   = document.getElementById('byob-msg-{{ section.id }}');
+  if (!wrap || !footer || !atcBtn) return;
+
+  var countEl      = wrap.querySelector('.byob-count');
+  var neededEl     = wrap.querySelector('.byob-needed');
+  var fCountEl     = wrap.querySelector('.byob-f-count');
+  var fNeededEl    = wrap.querySelector('.byob-f-needed');
+  var fPriceEl     = wrap.querySelector('.byob-footer__price');
+  var barFill      = wrap.querySelector('.byob-bar-fill');
+  var progressMsg  = wrap.querySelector('.byob-progress-msg');
+
+  /* ── Tier data injected from Liquid ──────────────────── */
+  var TIERS = [
+    {%- for variant in product.variants -%}
+      {%- assign idx1   = forloop.index -%}
+      {%- assign tq_key = 'tier_' | append: idx1 | append: '_qty' -%}
+      {
+        variantId : {{ variant.id }},
+        name      : {{ variant.title | json }},
+        qty       : {{ section.settings[tq_key] | default: 6 | plus: 0 }},
+        priceFmt  : {{ variant.price | money | json }},
+        available : {{ variant.available }}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ];
+
+  var ATC_LABEL = {{ section.settings.atc_label | default: 'Add Box to Cart' | json }};
+
+  /* ── State ────────────────────────────────────────────── */
+  var state = {
+    tierIndex   : 0,
+    activeCat   : 'all',
+    // selected[variantId] = { qty: Number, title: String }
+    selected    : {}
+  };
+
+  function tier()  { return TIERS[state.tierIndex] || TIERS[0]; }
+  function total() { return Object.values(state.selected).reduce(function (s, v) { return s + v.qty; }, 0); }
+
+  /* ── Render ───────────────────────────────────────────── */
+  function render() {
+    var t   = tier();
+    var n   = total();
+    var rem = t.qty - n;
+    var pct = Math.min(100, Math.round(n / t.qty * 100));
+
+    /* counts */
+    if (countEl)   countEl.textContent   = n;
+    if (neededEl)  neededEl.textContent  = t.qty;
+    if (fCountEl)  fCountEl.textContent  = n;
+    if (fNeededEl) fNeededEl.textContent = t.qty;
+    if (fPriceEl)  fPriceEl.textContent  = t.priceFmt;
+
+    /* progress bar */
+    if (barFill) barFill.style.width = pct + '%';
+
+    if (progressMsg) {
+      progressMsg.classList.remove('byob-msg--done', 'byob-msg--over');
+      if (n === 0) {
+        progressMsg.textContent = 'Add ' + t.qty + ' bars to complete your box';
+      } else if (rem > 0) {
+        progressMsg.textContent = 'Add ' + rem + ' more bar' + (rem !== 1 ? 's' : '') + ' to complete your box';
+      } else if (n === t.qty) {
+        progressMsg.textContent = '✓ Box complete — ready to add to cart!';
+        progressMsg.classList.add('byob-msg--done');
+      } else {
+        progressMsg.textContent = 'Too many! Remove ' + (n - t.qty) + ' bar' + (n - t.qty !== 1 ? 's' : '');
+        progressMsg.classList.add('byob-msg--over');
+      }
+    }
+
+    /* ATC button */
+    var ready = (n === t.qty);
+    atcBtn.disabled = !ready;
+    atcBtn.setAttribute('aria-disabled', String(!ready));
+
+    /* cards */
+    wrap.querySelectorAll('.byob-card').forEach(function (card) {
+      var vid  = card.getAttribute('data-variant-id');
+      var cq   = state.selected[vid] ? state.selected[vid].qty : 0;
+      var plus = card.querySelector('.byob-plus');
+      var minus= card.querySelector('.byob-minus');
+      var qEl  = card.querySelector('.byob-qty');
+
+      if (plus)  plus.disabled  = (n >= t.qty);
+      if (minus) minus.disabled = (cq === 0);
+      if (qEl)   qEl.textContent = cq;
+
+      card.classList.toggle('byob-card--selected', cq > 0);
+      card.classList.toggle('byob-card--maxed',    n >= t.qty && cq === 0);
+    });
+  }
+
+  /* ── Category tab filtering ───────────────────────────── */
+  function applyTabFilter(cat) {
+    state.activeCat = cat;
+    wrap.querySelectorAll('.byob-card').forEach(function (card) {
+      var cardCat = card.getAttribute('data-cat');
+      if (cat === 'all' || cardCat === cat) {
+        card.classList.remove('byob-card--hidden');
+      } else {
+        card.classList.add('byob-card--hidden');
+      }
+    });
+    /* update active tab styles */
+    wrap.querySelectorAll('.byob-cat-tab').forEach(function (tab) {
+      var tabCat = tab.getAttribute('data-cat');
+      if (tabCat === cat) {
+        tab.classList.add('byob-cat-tab--active');
+        tab.setAttribute('aria-selected', 'true');
+      } else {
+        tab.classList.remove('byob-cat-tab--active');
+        tab.setAttribute('aria-selected', 'false');
+      }
+    });
+  }
+
+  wrap.querySelectorAll('.byob-cat-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      applyTabFilter(this.getAttribute('data-cat'));
+    });
+  });
+
+  /* ── Tier switching ───────────────────────────────────── */
+  wrap.querySelectorAll('.byob-tier').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var idx = parseInt(this.getAttribute('data-tier-index'), 10);
+      if (idx === state.tierIndex) return;
+      state.tierIndex = idx;
+      state.selected  = {};                       // clear picks on size change
+
+      wrap.querySelectorAll('.byob-tier').forEach(function (b) {
+        b.classList.remove('byob-tier--active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      this.classList.add('byob-tier--active');
+      this.setAttribute('aria-selected', 'true');
+
+      /* reset to "All" tab on tier switch */
+      applyTabFilter('all');
+      render();
+    });
+  });
+
+  /* ── Product card +/- ─────────────────────────────────── */
+  wrap.querySelectorAll('.byob-card').forEach(function (card) {
+    var vid   = card.getAttribute('data-variant-id');
+    var title = card.getAttribute('data-product-title');
+    var plus  = card.querySelector('.byob-plus');
+    var minus = card.querySelector('.byob-minus');
+
+    if (plus) {
+      plus.addEventListener('click', function () {
+        var t = tier();
+        if (total() >= t.qty) return;
+        if (!state.selected[vid]) state.selected[vid] = { qty: 0, title: title };
+        state.selected[vid].qty += 1;
+        render();
+      });
+    }
+    if (minus) {
+      minus.addEventListener('click', function () {
+        if (!state.selected[vid] || state.selected[vid].qty === 0) return;
+        state.selected[vid].qty -= 1;
+        if (state.selected[vid].qty === 0) delete state.selected[vid];
+        render();
+      });
+    }
+  });
+
+  /* ── Add to Cart ──────────────────────────────────────── */
+  atcBtn.addEventListener('click', function () {
+    var t = tier();
+    if (total() !== t.qty) return;
+
+    /* build line item properties — one key per flavour */
+    var props = { '_box': t.name };
+    Object.values(state.selected).forEach(function (item) {
+      if (item.qty > 0) props[item.title] = 'x' + item.qty;
+    });
+
+    atcBtn.classList.add('byob-loading');
+    atcBtn.textContent = 'Adding…';
+    if (msgEl) { msgEl.textContent = ''; msgEl.style.color = ''; }
+
+    fetch('/cart/add.js', {
+      method  : 'POST',
+      headers : { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body    : JSON.stringify({ id: t.variantId, quantity: 1, properties: props })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      if (data.status && data.status !== 200) throw new Error(data.description || 'Error adding to cart');
+
+      /* fire theme cart events (works with most Shopify themes) */
+      document.dispatchEvent(new CustomEvent('cart:refresh',   { bubbles: true }));
+      document.dispatchEvent(new CustomEvent('cart:open',      { bubbles: true }));
+      document.dispatchEvent(new CustomEvent('theme:cart:add', { bubbles: true }));
+
+      /* also try Shopify's native mini-cart approach */
+      var cartDrawer = document.getElementById('cart-drawer');
+      if (cartDrawer) cartDrawer.setAttribute('open', '');
+
+      if (msgEl) { msgEl.textContent = '✓ Your box has been added to cart!'; msgEl.style.color = 'var(--byob-yellow)'; }
+
+      setTimeout(function () {
+        state.selected  = {};
+        atcBtn.classList.remove('byob-loading');
+        atcBtn.textContent = ATC_LABEL;
+        if (msgEl) { msgEl.textContent = ''; msgEl.style.color = ''; }
+        render();
+      }, 3000);
+    })
+    .catch(function (err) {
+      atcBtn.classList.remove('byob-loading');
+      atcBtn.textContent = ATC_LABEL;
+      if (msgEl) { msgEl.textContent = err.message || 'Something went wrong. Please try again.'; msgEl.style.color = '#ff6b6b'; }
+      setTimeout(function () { if (msgEl) msgEl.textContent = ''; }, 5000);
+    });
+  });
+
+  /* ── Show sticky footer on scroll ────────────────────── */
+  var footerShown = false;
+  function showFooter() {
+    if (!footerShown) {
+      footer.classList.add('byob-footer--visible');
+      footerShown = true;
+    }
+  }
+  window.addEventListener('scroll', function () {
+    if (window.scrollY > 160) showFooter();
+  }, { passive: true });
+
+  /* ── Init ─────────────────────────────────────────────── */
+  render();
+  // Show footer immediately if already scrolled
+  if (window.scrollY > 160) showFooter();
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "BYOB Builder",
+  "class": "byob-builder-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Hero background colour",
+      "default": "#021D49"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Build Your Box"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Mix & match your favourite Plaay flavours — your box, your rules."
+    },
+    {
+      "type": "header",
+      "content": "Box Tiers",
+      "info": "Create your 'Build Your Box' product with exactly 3 variants. Tier 1 = Variant 1, Tier 2 = Variant 2, Tier 3 = Variant 3."
+    },
+    {
+      "type": "range",
+      "id": "tier_1_qty",
+      "label": "Tier 1 — bar count",
+      "min": 1, "max": 60, "step": 1, "default": 6
+    },
+    {
+      "type": "text",
+      "id": "tier_1_saving",
+      "label": "Tier 1 — saving badge (e.g. Save 10%)",
+      "default": "Save 10%"
+    },
+    {
+      "type": "checkbox",
+      "id": "tier_1_popular",
+      "label": "Tier 1 — show 'Most Popular' pill",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "tier_2_qty",
+      "label": "Tier 2 — bar count",
+      "min": 1, "max": 60, "step": 1, "default": 12
+    },
+    {
+      "type": "text",
+      "id": "tier_2_saving",
+      "label": "Tier 2 — saving badge",
+      "default": "Save 15%"
+    },
+    {
+      "type": "checkbox",
+      "id": "tier_2_popular",
+      "label": "Tier 2 — show 'Most Popular' pill",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "tier_3_qty",
+      "label": "Tier 3 — bar count",
+      "min": 1, "max": 60, "step": 1, "default": 24
+    },
+    {
+      "type": "text",
+      "id": "tier_3_saving",
+      "label": "Tier 3 — saving badge",
+      "default": "Save 20%"
+    },
+    {
+      "type": "checkbox",
+      "id": "tier_3_popular",
+      "label": "Tier 3 — show 'Most Popular' pill",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Product Picker"
+    },
+    {
+      "type": "text",
+      "id": "cat_1_label",
+      "label": "Category 1 label",
+      "default": "Truffles"
+    },
+    {
+      "type": "collection",
+      "id": "cat_1_collection",
+      "label": "Category 1 collection"
+    },
+    {
+      "type": "text",
+      "id": "cat_2_label",
+      "label": "Category 2 label",
+      "default": "Chocolate Bars"
+    },
+    {
+      "type": "collection",
+      "id": "cat_2_collection",
+      "label": "Category 2 collection"
+    },
+    {
+      "type": "text",
+      "id": "cat_3_label",
+      "label": "Category 3 label",
+      "default": "Energy Bars"
+    },
+    {
+      "type": "collection",
+      "id": "cat_3_collection",
+      "label": "Category 3 collection"
+    },
+    {
+      "type": "color",
+      "id": "grid_bg",
+      "label": "Grid background colour",
+      "default": "#f4f4f4"
+    },
+    {
+      "type": "text",
+      "id": "picker_heading",
+      "label": "Grid section heading",
+      "default": "Choose Your Flavours"
+    },
+    {
+      "type": "header",
+      "content": "Add to Cart"
+    },
+    {
+      "type": "text",
+      "id": "atc_label",
+      "label": "Button label",
+      "default": "Add Box to Cart"
+    }
+  ],
+  "presets": [
+    {
+      "name": "BYOB Builder"
+    }
+  ]
+}
+{% endschema %}

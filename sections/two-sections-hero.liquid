@@ -1,0 +1,760 @@
+{% liquid
+  assign height_desktop_large = section.settings.height_desktop_large
+  assign height_desktop = section.settings.height_desktop
+  assign height_tablet = section.settings.height_tablet
+  assign height_mobile = section.settings.height_mobile
+  assign autoplay_speed = section.settings.autoplay_speed | times: 10
+
+  assign slides = section.blocks | where: 'type', 'slide'
+  assign slides_size = slides | size
+%}
+
+{% style %}
+      #two-sections-overlay-{{ section.id }}{
+        height: {{ height_mobile | append: 'px' }}
+        ;
+      }
+      .main-hero-full-img {
+        display: block;
+        width: 100%;
+    }
+      .main-hero-full-img img{
+        display:block;
+        object-fit:cover;
+        object-position:center;
+      }
+    .m-img{
+        display:none;
+      }
+      @media only screen and (min-width: 768px) and(max-width: 1024px) {
+        #two-sections-overlay-{{ section.id }}{
+          height: {{ height_tablet | append: 'px' }}
+          ;
+        }
+      }
+      @media only screen and (min-width: 1025px) and(max-width: 1536px) {
+        #two-sections-overlay-{{ section.id }}{
+          height: {{ height_desktop | append: 'px' }}
+        }
+      }
+      @media only screen and (min-width: 1537px) {
+        #two-sections-overlay-{{ section.id }}{
+          height: {{ height_desktop_large | append: 'px' }}
+        }
+      }
+    @media screen and ( max-width:500px ){
+      .m-img{
+        display:block;
+        object-fit:contain;
+      }
+      img.desk-img {
+      display: none;
+  }
+      
+    }
+{% endstyle %}
+
+<div
+  id="two-sections-overlay-{{ section.id }}"
+  class="{% if slides_size > 1 %} glide {% endif %} two-sections-overlay relative flex flex-col | md:flex-row"
+>
+  <div class="h-full w-full {% if slides_size > 1 %} glide__track {% endif %}" data-glide-el="track">
+    <ul class="h-full {% if slides_size > 1 %} glide__slides {% endif %}">
+      {% for block in slides %}
+        {% liquid
+          assign hide_section_one_mobile = block.settings.hide_section_one_mobile
+          assign hide_section_two_mobile = block.settings.hide_section_two_mobile
+          assign title_color_mobile = block.settings.title_color_mobile
+          assign title_color_desktop = block.settings.title_color_desktop
+          assign heading_color_mobile = block.settings.heading_color_mobile
+          assign heading_color_desktop = block.settings.heading_color_desktop
+          assign title_tag_type = block.settings.title_tag_type
+          assign content_vertical_position_mobile = block.settings.content_vertical_position_mobile
+          assign content_horizontal_position_mobile = block.settings.content_horizontal_position_mobile
+          assign content_horizontal_position_desktop = block.settings.content_horizontal_position_desktop
+          assign content_vertical_position_desktop = block.settings.content_vertical_position_desktop
+          assign heading_size_mobile = block.settings.heading_size_mobile
+          assign heading_size_desktop = block.settings.heading_size_desktop
+          assign title_size_mobile = block.settings.title_size_mobile
+          assign title_size_desktop = block.settings.title_size_desktop
+          assign section_one_video_loop = block.settings.section_one_video_loop
+          assign section_two_video_loop = block.settings.section_two_video_loop
+
+          assign title = block.settings.title
+          assign title_mobile = block.settings.title_mobile
+          assign heading = block.settings.heading
+          assign heading_mobile = block.settings.heading_mobile
+          assign link_one = block.settings.link_one
+          assign link_one_text = block.settings.link_one_text
+          assign link_one_style = block.settings.link_one_style
+          assign link_one_style_mobile = block.settings.link_one_style_mobile
+          assign link_two = block.settings.link_two
+          assign link_two_text = block.settings.link_two_text
+          assign link_two_style = block.settings.link_two_style
+          assign link_two_style_mobile = block.settings.link_two_style_mobile
+
+          assign section_one_video = block.settings.section_one_video
+          assign section_one_image_mobile = block.settings.section_one_image_mobile
+          assign section_one_image_desktop = block.settings.section_one_image_desktop
+          assign section_two_video = block.settings.section_two_video
+          assign section_two_image_mobile = block.settings.section_two_image_mobile
+          assign section_two_image_desktop = block.settings.section_two_image_desktop
+        %}
+
+        <li id="slide-{{ block.id }}" class="relative flex h-full {% if slides_size > 1 %} glide__slide {% endif %}">
+          {% if block.settings.img != blank %}
+            <div style="width: 100%" class="main-hero-full-img">
+              <img
+                class="desk-img"
+                style="width: 100%; height: 100%;"
+                src="{{ block.settings.img | img_url : 'master' }}"
+              >
+              <img
+                class="mobile-img"
+                style="width: 100%; height: 100%;"
+                src="{{ block.settings.m-img | img_url : 'master' }}"
+              >
+            </div>
+          {% endif %}
+          {% if block.settings.img == blank %}
+            {% style %}
+              #slide-{{ block.id | append: ' ' }}.title_mobile {
+                color: {{ title_color_mobile }}
+                ;
+                font-size: {{ title_size_mobile | append: 'px' }}
+                ;
+              }
+              #slide-{{ block.id | append: ' ' }}.heading_mobile {
+                color: {{ heading_color_mobile }}
+                ;
+                font-size: {{ heading_size_mobile | append: 'px' }}
+              }
+              @media only screen and (min-width: 768px) {
+                #slide-{{ block.id | append: ' ' }}.title {
+                  color: {{ title_color_desktop }}
+                  ;
+                  font-size: {{ title_size_desktop | append: 'px' }}
+                  ;
+                }
+                #slide-{{ block.id | append: ' ' }}.heading {
+                  color: {{ heading_color_desktop }}
+                  ;
+                  font-size: {{ heading_size_desktop | append: 'px' }}
+                }
+              }
+            {% endstyle %}
+            {% comment %} section 1 {% endcomment %}
+            <div class="relative w-full h-full {% if hide_section_one_mobile %} hidden {% endif %} | md:block md:w-1/2">
+              {% if section_one_video != blank %}
+                {% comment %} video {% endcomment %}
+                <video
+                  class="object-cover w-full h-full"
+                  muted
+                  autoplay
+                  playsinline
+                  {% if section_one_video_loop == true %}
+                    loop
+                  {% endif %}
+                >
+                  <source
+                    src="{{ section_one_video }}"
+                    playsinline
+                    type="video/mp4"
+                  >
+                  <source
+                    src="{{ section_one_video }}"
+                    playsinline
+                    type="video/ogg"
+                  >
+                </video>
+              {% else %}
+                {% if section_one_image_mobile != blank %}
+                  {% render 'img',
+                    type: 'img',
+                    img: section_one_image_mobile,
+                    eager: true,
+                    class: 'object-cover object-top h-full w-full md:hidden'
+                  %}
+                {% endif %}
+                {% if section_one_image_desktop != blank %}
+                  {% render 'img',
+                    type: 'img',
+                    img: section_one_image_desktop,
+                    eager: true,
+                    class: 'object-cover object-top h-full w-full hidden md:block'
+                  %}
+                {% endif %}
+              {% endif %}
+            </div>
+            {% comment %} section 2 {% endcomment %}
+            <div class="relative w-full h-full {% if hide_section_two_mobile %} hidden {% endif %} | md:block md:w-1/2">
+              {% if section_two_video != blank %}
+                {% comment %} video {% endcomment %}
+                <video
+                  class="object-cover w-full h-full"
+                  muted
+                  autoplay
+                  playsinline
+                  {% if section_two_video_loop == true %}
+                    loop
+                  {% endif %}
+                >
+                  <source
+                    src="{{ section_two_video }}"
+                    playsinline
+                    type="video/mp4"
+                  >
+                  <source
+                    src="{{ section_two_video }}"
+                    playsinline
+                    type="video/ogg"
+                  >
+                </video>
+              {% else %}
+                {% comment %} image {% endcomment %}
+                {% if section_two_image_mobile != blank %}
+                  {% render 'img',
+                    type: 'img',
+                    img: section_two_image_mobile,
+                    eager: true,
+                    class: 'object-cover object-top h-full w-full md:hidden'
+                  %}
+                {% endif %}
+                {% if section_two_image_desktop != blank %}
+                  {% render 'img',
+                    type: 'img',
+                    img: section_two_image_desktop,
+                    eager: true,
+                    class: 'object-cover object-top h-full w-full hidden md:block'
+                  %}
+                {% endif %}
+              {% endif %}
+            </div>
+          {% endif %}
+          {% comment %} textual content {% endcomment %}
+          <div class="textual_content container absolute transform w-full py-4 left-1/2 -translate-x-1/2 {{ content_vertical_position_mobile }} {{ content_horizontal_position_mobile }} | {{ content_vertical_position_desktop }} {{ content_horizontal_position_desktop }}">
+            {% if title != blank %}
+              <h{{ title_tag_type }} class="title font-walsheim-black uppercase leading-none pt-24 hidden | md:block md:pt-0 md:max-w-xl md:mx-auto">
+                {{ title -}}
+              </h{{ title_tag_type }}>
+            {% endif %}
+            {% if title_mobile != blank %}
+              <h{{ title_tag_type }} class="title_mobile font-walsheim-black uppercase leading-none pt-24 | md:hidden md:pt-0 md:max-w-xl md:mx-auto">
+                {{ title_mobile -}}
+              </h{{ title_tag_type }}>
+            {% endif %}
+            {% if heading != blank %}
+              <h2 class="heading font-walsheim-black uppercase mt-3 hidden | md:block md:mt-2 md:max-w-xl md:mx-auto">
+                {{ heading }}
+              </h2>
+            {% endif %}
+            {% if heading_mobile != blank %}
+              <h2 class="heading_mobile font-walsheim-black uppercase mt-3 | md:hidden md:mt-2 md:max-w-xl md:mx-auto">
+                {{ heading_mobile }}
+              </h2>
+            {% endif %}
+            {% comment %} buttons {% endcomment %}
+            <div class="flex items-center justify-center mt-7">
+              {% if link_one != blank %}
+                {% render 'btn',
+                  href: link_one,
+                  style: link_one_style,
+                  copy: link_one_text,
+                  no_translation: true,
+                  additional_class: 'hidden mr-3 md:block',
+                  width: 'small'
+                %}
+                {% render 'btn',
+                  href: link_one,
+                  style: link_one_style_mobile,
+                  copy: link_one_text,
+                  no_translation: true,
+                  additional_class: 'mr-3 md:hidden',
+                  width: 'small'
+                %}
+              {% endif %}
+              {% if link_two != blank %}
+                {% render 'btn',
+                  href: link_two,
+                  style: link_two_style,
+                  copy: link_two_text,
+                  no_translation: true,
+                  additional_class: 'hidden ml-3 md:block',
+                  width: 'small'
+                %}
+                {% render 'btn',
+                  href: link_two,
+                  style: link_two_style_mobile,
+                  copy: link_two_text,
+                  no_translation: true,
+                  additional_class: 'ml-3 md:hidden',
+                  width: 'small'
+                %}
+              {% endif %}
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="glide__arrows hero-arrows flex items-center justify-center w-full mt-3  |  md:mb-0 md:mt-0  md:ml-10  md:w-auto" data-glide-el="controls">
+    <button data-glide-dir="<" class="glide__arrow glide__arrow--left text-0 mr-5 group">
+      slide left
+      <span class="flex h-6 w-6 transform rotate-180 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" focusable="false"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>
+      </span>
+    </button>
+    <button data-glide-dir=">" class="glide__arrow glide__arrow--right text-0 ml-5 group">
+      slide right
+      <span class="flex h-6 w-6 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" focusable="false"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>
+      </span>
+    </button>
+  </div>
+</div>
+
+{% if slides_size > 1 %}
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const sliderName = '#two-sections-overlay-' + `{{ section.id }}`;
+      const glideSliderContainer = sliderName;
+      const heroSlider = new Glide(glideSliderContainer, {
+        type: 'carousel',
+        autoplay: {{ autoplay_speed }},
+        keyboard: true,
+        perView: 1
+      });
+      heroSlider.mount();
+    });
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Two sections hero",
+  "class": "two-sections-overlay",
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "hide_section_one_mobile",
+          "label": "Hide section one on mobile",
+          "default": true,
+          "info": "When true, this section will dissapear on mobile"
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_section_two_mobile",
+          "label": "Hide section two on mobile",
+          "default": false,
+          "info": "When true, this section will dissapear on mobile"
+        },
+        {
+          "type": "color",
+          "id": "title_color_mobile",
+          "label": "Title text color (mobile)",
+          "default": "#021D49"
+        },
+        {
+          "type": "color",
+          "id": "title_color_desktop",
+          "label": "Title text color (desktop)",
+          "default": "#021D49"
+        }, {
+          "type": "color",
+          "id": "heading_color_mobile",
+          "label": "Heading text color (mobile)",
+          "default": "#021D49"
+        }, {
+          "type": "color",
+          "id": "heading_color_desktop",
+          "label": "Heading text color (desktop)",
+          "default": "#021D49"
+        }, {
+          "type": "select",
+          "id": "title_tag_type",
+          "label": "Title tag type",
+          "default": "1",
+          "info": "For SEO purposes, you should only have one h1 tag per page. If you already have a h1 on the page, you may want to make this title a h2.",
+          "options": [
+            {
+              "label": "h1",
+              "value": "1"
+            }, {
+              "label": "h2",
+              "value": "2"
+            }
+          ]
+        }, {
+          "type": "select",
+          "id": "content_vertical_position_mobile",
+          "label": "Content vertical position (mobile)",
+          "default": "top-0",
+          "options": [
+            {
+              "label": "top",
+              "value": "top-0"
+            }, {
+              "label": "center",
+              "value": "top-1/2 -translate-y-1/2"
+            }, {
+              "label": "bottom",
+              "value": "bottom-0 top-auto"
+            }
+          ]
+        }, {
+          "type": "select",
+          "id": "content_horizontal_position_mobile",
+          "label": "Content horizontal position (mobile)",
+          "default": "text-center",
+          "options": [
+            {
+              "label": "left",
+              "value": "text-left"
+            }, {
+              "label": "center",
+              "value": "text-center"
+            }, {
+              "label": "right",
+              "value": "text-right"
+            }
+          ]
+        }, {
+          "type": "select",
+          "id": "content_vertical_position_desktop",
+          "label": "Content vertical position (desktop)",
+          "default": "md:top-1/2 md:-translate-y-1/2",
+          "options": [
+            {
+              "label": "top",
+              "value": "md:top-32"
+            }, {
+              "label": "center",
+              "value": "md:top-1/2 md:-translate-y-1/2"
+            }, {
+              "label": "bottom",
+              "value": "md:bottom-0 md:top-auto"
+            }
+          ]
+        }, {
+          "type": "select",
+          "id": "content_horizontal_position_desktop",
+          "label": "Content horizontal position (desktop)",
+          "default": "md:text-center",
+          "options": [
+            {
+              "label": "left",
+              "value": "md:text-left"
+            }, {
+              "label": "center",
+              "value": "md:text-center"
+            }, {
+              "label": "right",
+              "value": "md:text-right"
+            }
+          ]
+        }, {
+          "type": "range",
+          "id": "title_size_desktop",
+          "label": "Title size (desktop)",
+          "min": 10,
+          "max": 100,
+          "default": 50,
+          "step": 2,
+          "unit": "px"
+        }, {
+          "type": "range",
+          "id": "title_size_mobile",
+          "label": "Title size (mobile)",
+          "min": 10,
+          "max": 100,
+          "default": 32,
+          "step": 2,
+          "unit": "px"
+        }, {
+          "type": "range",
+          "id": "heading_size_desktop",
+          "label": "Heading size (desktop)",
+          "min": 10,
+          "max": 80,
+          "default": 34,
+          "step": 2,
+          "unit": "px"
+        }, {
+          "type": "range",
+          "id": "heading_size_mobile",
+          "label": "Heading size (mobile)",
+          "min": 10,
+          "max": 100,
+          "default": 22,
+          "step": 2,
+          "unit": "px"
+        }, {
+          "type": "select",
+          "id": "link_one_style",
+          "label": "Link one style",
+          "default": "blue",
+          "options": [
+            {
+              "label": "Blue",
+              "value": "blue"
+            },
+            {
+              "label": "White",
+              "value": "white"
+            },
+            {
+              "label": "Yellow",
+              "value": "yellow"
+            },
+            {
+              "label": "White border",
+              "value": "white-border"
+            }, {
+              "label": "Blue border",
+              "value": "blue-border"
+            }
+          ]
+        }, {
+          "type": "select",
+          "id": "link_one_style_mobile",
+          "label": "Link one style (mobile)",
+          "default": "blue",
+          "options": [
+            {
+              "label": "Blue",
+              "value": "blue"
+            },
+            {
+              "label": "White",
+              "value": "white"
+            },
+            {
+              "label": "Yellow",
+              "value": "yellow"
+            },
+            {
+              "label": "White border",
+              "value": "white-border"
+            }, {
+              "label": "Blue border",
+              "value": "blue-border"
+            }
+          ]
+        }, {
+          "type": "select",
+          "id": "link_two_style",
+          "label": "Link two style",
+          "default": "white",
+          "options": [
+            {
+              "label": "Blue",
+              "value": "blue"
+            },
+            {
+              "label": "White",
+              "value": "white"
+            },
+            {
+              "label": "Yellow",
+              "value": "yellow"
+            },
+            {
+              "label": "White border",
+              "value": "white-border"
+            }, {
+              "label": "Blue border",
+              "value": "blue-border"
+            }
+          ]
+        }, {
+          "type": "select",
+          "id": "link_two_style_mobile",
+          "label": "Link two style (mobile)",
+          "default": "blue-border",
+          "options": [
+            {
+              "label": "Blue",
+              "value": "blue"
+            },
+            {
+              "label": "White",
+              "value": "white"
+            },
+            {
+              "label": "Yellow",
+              "value": "yellow"
+            },
+            {
+              "label": "White border",
+              "value": "white-border"
+            }, {
+              "label": "Blue border",
+              "value": "blue-border"
+            }
+          ]
+        }, {
+          "type": "checkbox",
+          "id": "section_one_video_loop",
+          "label": "Loop video (section one)",
+          "default": true
+        }, {
+          "type": "checkbox",
+          "id": "section_two_video_loop",
+          "label": "Loop video (section two)",
+          "default": true
+        }, {
+          "type": "header",
+          "content": "Textual content"
+        }, {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "making the world a little more plaayful",
+          "info": "This will be shown on mobile devices only."
+        }, {
+          "type": "text",
+          "id": "title_mobile",
+          "label": "Title mobile",
+          "default": "Spark moments of joy",
+          "info": "This will be shown on mobile devices only."
+        }, {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "one delicious bite at a time"
+        }, {
+          "type": "text",
+          "id": "heading_mobile",
+          "label": "Heading mobile"
+        }, {
+          "type": "url",
+          "id": "link_one",
+          "label": "Link one"
+        }, {
+          "type": "text",
+          "id": "link_one_text",
+          "label": "Link one (text)",
+          "default": "Shop our snacks"
+        }, {
+          "type": "url",
+          "id": "link_two",
+          "label": "Link two"
+        }, {
+          "type": "text",
+          "id": "link_two_text",
+          "label": "Link two text",
+          "default": "Why plaay"
+        },
+        {
+          "type":"image_picker",
+          "id":"img",
+          "label":"Slide Full Image"
+        },
+         {
+          "type":"image_picker",
+          "id":"m-img",
+          "label":"Slide Mobile Image"
+        },
+        {
+          "type": "header",
+          "content": "Section 1"
+        }, {
+          "type": "text",
+          "id": "section_one_video",
+          "label": "Video"
+        }, {
+          "type": "image_picker",
+          "label": "Image (desktop)",
+          "id": "section_one_image_desktop",
+          "info": "Image aspect ratio: 1200px width x 800px height"
+        }, {
+          "type": "image_picker",
+          "label": "Image (mobile)",
+          "id": "section_one_image_mobile",
+          "info": "Image aspect ratio: 800px width x 800px height"
+        }, {
+          "type": "header",
+          "content": "Section 2"
+        }, {
+          "type": "text",
+          "id": "section_two_video",
+          "label": "Video"
+        }, {
+          "type": "image_picker",
+          "label": "Image (desktop)",
+          "id": "section_two_image_desktop",
+          "info": "Image aspect ratio: 1200px width x 800px height"
+        }, {
+          "type": "image_picker",
+          "label": "Image (mobile)",
+          "id": "section_two_image_mobile",
+          "info": "Image aspect ratio: 800px width x 800px height"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "General settings"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed",
+      "min": 0,
+      "max": 1000,
+      "default": 500,
+      "step": 100,
+      "info": "Set to 0 to disable autoplay"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop_large",
+      "label": "Height: desktop - large (1536px +)",
+      "min": 200,
+      "max": 1200,
+      "default": 800,
+      "step": 10,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "label": "Height: desktop (1024px - 1535px)",
+      "min": 200,
+      "max": 1000,
+      "default": 700,
+      "step": 10,
+      "unit": "px"
+    }, {
+      "type": "range",
+      "id": "height_tablet",
+      "label": "Height: tablet (768px - 1023px)",
+      "min": 200,
+      "max": 1000,
+      "default": 700,
+      "step": 10,
+      "unit": "px"
+    }, {
+      "type": "range",
+      "id": "height_mobile",
+      "label": "Height: mobile (0 - 767px)",
+      "min": 200,
+      "max": 1000,
+      "default": 740,
+      "step": 10,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Two sections overlay"
+    }
+  ]
+}
+{% endschema %}

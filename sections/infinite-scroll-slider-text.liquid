@@ -1,0 +1,220 @@
+{% liquid
+  assign text = section.settings.text
+  assign mini_icon = section.settings.mini_icon
+  assign background_color = section.settings.background_color
+  assign text_color = section.settings.text_color
+  assign autoplay_speed = section.settings.autoplay_speed
+  assign autoplay_speed_mobile = section.settings.autoplay_speed_mobile
+  assign font_size = section.settings.font_size
+  assign font_size_mobile = section.settings.font_size_mobile
+  assign font_family = section.settings.font_family
+  assign direction = section.settings.direction
+  assign hide_on_mobile = section.settings.hide_on_mobile
+  assign hide_on_desktop = section.settings.hide_on_desktop
+%}
+
+{% style %}
+  @keyframes scroll {
+    0% {
+      transform: translateX(-10%);
+    }
+    50% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  .infinite_scroll_text span {
+    margin: 0 10px;
+    height: 18px;
+    display: flex;
+    align-items: end;
+  }
+  #infinite-scroll-text-container-{{ section.id }} .infinite_scroll_text{
+    animation: scroll {{ autoplay_speed_mobile }}s infinite linear {{ direction }};
+    font-size: {{ font_size_mobile }}px;
+  }
+
+  @keyframes marqueeLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-75%); }
+  }
+  
+  @keyframes marqueeRight {
+    0% { transform: translateX(-85%); }
+    100% { transform: translateX(0%); }
+  }
+
+  #infinite-scroll-text-container-{{ section.id }} .infinite_scroll_text{
+    animation: marqueeLeft 20s linear infinite;
+  }
+  
+  @media only screen and (min-width: 768px){
+    #infinite-scroll-text-container-{{ section.id }} .infinite_scroll_text{
+      animation: scroll {{ autoplay_speed }}s infinite linear {{ direction }};
+      font-size: {{ font_size }}px;
+    }
+    .infinite_scroll_text span {
+      height: 35px;
+    }
+    @keyframes scroll {
+      0% {
+        transform: translateX(-100%);
+      }
+      50% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+     #infinite-scroll-text-container-{{ section.id }} .infinite_scroll_text{
+        animation: marqueeLeft 20s linear infinite;
+      }
+  
+  }
+
+  autoplay_speed_mobile
+{% endstyle %}
+
+<div
+  id="infinite-scroll-text-container-{{ section.id }}"
+  class="py-4 | md:py-5 {% if hide_on_mobile %} hidden md:block {% endif %}"
+  style="background-color: {{ background_color }};"
+>
+  <div class="overflow-hidden">
+    {% if text != blank %}
+      <span
+        class="infinite_scroll_text w-max uppercase text-dark-blue font-bold leading-none flex items-center | 2xl:w-full {{ font_family }}"
+        style="color: {{ text_color }};"
+      >
+        {{ text }}
+        {% if mini_icon != blank %}
+          {% render 'img', type: 'img', img: mini_icon, lazy: true, class: 'object-contain h-10 w-10 ml-5' %}
+        {% endif %}
+      </span>
+    {% endif %}
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Infinite scroll text",
+  "class": "infinite-scroll-slider",
+  "settings": [
+    {
+      "id": "text",
+      "label": "Text",
+      "type": "text",
+      "default": "Truffles so good you don’t have to be 🥳"
+    },
+    {
+      "id": "mini_icon",
+      "label": "Mini icon",
+      "type": "image_picker"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#EFEFEF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFF"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed",
+      "default": 7,
+      "min": 1,
+      "max": 40,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed_mobile",
+      "label": "Autoplay speed (mobile)",
+      "default": 10,
+      "min": 1,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Font size",
+      "unit": "px",
+      "min": 10,
+      "max": 100,
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "label": "Font size (mobile)",
+      "unit": "px",
+      "min": 10,
+      "max": 100,
+      "default": 40
+    },
+    {
+      "type": "select",
+      "id": "font_family",
+      "label": "Font",
+      "default": "font-walsheim",
+      "options": [
+        {
+          "value": "font-walsheim",
+          "label": "Walsheim"
+        },
+        {
+          "value": "font-walsheim-black",
+          "label": "Walsheim black"
+        },
+        {
+          "value": "font-walsheim-bold",
+          "label": "Walsheim bold"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Direction",
+      "default": "reverse",
+      "options": [
+        {
+          "value": " ",
+          "label": "Forwards"
+        },
+        {
+          "value": "reverse",
+          "label": "Reverse"
+        }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile?",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_desktop",
+      "label": "Hide on desktop?",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Infinite scroll text"
+    }
+  ]
+}
+{% endschema %}

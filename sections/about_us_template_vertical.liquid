@@ -1,0 +1,456 @@
+{% liquid 
+  assign section_one_left_side_title = section.settings.section_one_left_side_title 
+  assign section_one_right_side_title = section.settings.section_one_right_side_title
+  assign section_one_left_side_background_color = section.settings.section_one_left_side_background_color
+  assign section_one_right_side_background_color = section.settings.section_one_right_side_background_color
+  assign section_one_left_side_text_color = section.settings.section_one_left_side_text_color
+  assign section_one_right_side_text_color = section.settings.section_one_right_side_text_color
+  assign section_one_point_left = section.blocks | where: 'type', 'section_one_point_left'
+  assign section_one_point_right = section.blocks | where: 'type', 'section_one_point_right'
+
+  assign prebiotic_image = section.settings.prebiotic_image
+  assign section_two_background_color = section.settings.section_two_background_color
+  assign section_two_text_color = section.settings.section_two_text_color
+  assign section_two_left_side_title = section.settings.section_two_left_side_title
+  assign section_two_right_side_title = section.settings.section_two_right_side_title
+  assign section_two_left_side_copy = section.settings.section_two_left_side_copy
+  assign section_two_right_side_copy = section.settings.section_two_right_side_copy
+
+  assign section_three_background_color = section.settings.section_three_background_color 
+  assign section_three_text_color = section.settings.section_three_text_color 
+  assign section_three_title = section.settings.section_three_title 
+  assign section_three_heading = section.settings.section_three_heading
+
+  assign section_four_background_color = section.settings.section_four_background_color
+  assign section_four_text_color = section.settings.section_four_text_color 
+  assign section_four_other_text_color = section.settings.section_four_other_text_color
+  assign section_four_title = section.settings.section_four_title 
+  assign section_four_single_word_text = section.settings.section_four_single_word_text
+  assign section_four_title_icon = section.settings.section_four_title_icon
+
+  assign section_four_end_of_animation_tube = section.settings.section_four_end_of_animation_tube 
+  assign section_four_end_of_animation_bar_one = section.settings.section_four_end_of_animation_bar_one 
+  assign section_four_end_of_animation_bar_two = section.settings.section_four_end_of_animation_bar_two
+  assign section_four_end_of_animation_bar_three = section.settings.section_four_end_of_animation_bar_three 
+  assign section_four_end_of_animation_bar_four = section.settings.section_four_end_of_animation_bar_four
+
+  assign shop_now_link = section.settings.shop_now_link
+  assign shop_now_text = section.settings.shop_now_text
+%}
+  <for-the-geeks-vertical data-module="for-the-geeks-vertical">
+
+  {% comment %} SECTION ONE {% endcomment %}
+
+  <div class=" | lg:flex">
+    {% comment %} left side {% endcomment %}
+    <div class="animate_section_container max-h-[1000px] h-[200vh] px-4 pb-8 overflow-clip | lg:w-1/2">
+      <div class="sticky top-0 overflow-hidden | lg:mx-auto lg:top-1/2 lg:transform lg:-translate-y-1/2 lg:px-16 lg:max-w-3xl">
+        <div class="animate_section pt-32 mx-auto max-w-[500px]" data-animation-section-one>
+          {% if section_one_left_side_title != blank %}
+            <h2 style="margin-top:-80px" class="uppercase pb-10 text-2xl | lg:text-4xl lg:pb-14" style="color: {{ section_one_left_side_text_color }};">{{ section_one_left_side_title }}</h2>
+          {% endif %}
+          <ul class="flex flex-col max-w-lg">
+            {% for block in section_one_point_left %}
+              {% liquid
+                  assign image = block.settings.image 
+                  assign title = block.settings.title
+                %}
+              <li class="flex items-center {% unless forloop.first %} mt-7 | lg:mt-10 {% endunless %}">
+                {% if image != blank %}
+                  {% render 'img', type: 'img', img: image, lazy: true, class: 'object-contain h-[54px] w-[54px] mr-2' %}
+                {% endif %}
+                {% if title != blank %}
+                  <p class="font-walsheim text-sm max-w-[340px] leading-[22px] | lg:text-lg" style="color: {{ section_one_left_side_text_color }};">{{ title }}</p>
+                {% endif %}
+              </li>
+            {% endfor %}
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% comment %} right side {% endcomment %}
+    <div class="animate_section_container max-h-[1000px] h-[200vh] px-4 overflow-clip | lg:w-1/2" style="background-color: {{ section_one_right_side_background_color }};">
+      <div class="sticky top-0 overflow-hidden | lg:mx-auto lg:top-1/2 lg:transform lg:-translate-y-1/2 lg:px-16 lg:max-w-3xl">
+        <div class="animate_section pt-32 mx-auto max-w-[500px]" >
+          {% if section_one_right_side_title != blank %}
+            <h2 class="uppercase pb-10 text-2xl | lg:text-4xl lg:pb-14" style="color: {{ section_one_right_side_text_color }};">{{ section_one_right_side_title }}</h2>
+          {% endif %}
+          <ul class="flex flex-col max-w-lg">
+            {% for block in section_one_point_right %}
+              {% liquid
+                assign image = block.settings.image 
+                assign title = block.settings.title
+              %}
+              <li class="flex items-center {% unless forloop.first %} mt-7 | lg:mt-10 {% endunless %}">
+                {% if image != blank %}
+                  {% render 'img', type: 'img', img: image, lazy: true, class: 'object-contain h-[54px] w-[54px] mr-2' %}
+                {% endif %}
+                {% if title != blank %}
+                  <p class="font-walsheim text-sm max-w-[340px] leading-[22px] | lg:text-lg" style="color: {{ section_one_left_side_text_color }};">{{ title }}</p>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %} section two {% endcomment %}
+  <div class=" | lg:flex" style="color: {{ section_two_text_color }}; background-color: {{ section_two_background_color }};">
+    <div class="animate_section_container prebiotic_section max-h-[600px] pb-[100px] h-[150vh] px-4 overflow-clip | lg:max-h-[1000px] lg:h-[160vh] lg:w-1/2">
+      <div class="sticky top-0 overflow-hidden max-w-[260px] mx-auto | lg:top-1/2 lg:transform lg:-translate-y-1/2 lg:px-16 lg:max-w-3xl lg:h-[250px]">
+        <div class="animate_section pt-32 max-w-[320px] mx-auto | lg:pt-0">
+          {% if section_two_left_side_title != blank %}
+            <h2 class="pb-10 uppercase text-5xl leading-none | lg:pb-11">
+              {{ section_two_left_side_title }}
+            </h2>
+          {% endif %}
+          {% if section_two_right_side_copy != blank %}
+            <p class="font-walsheim-bold text-[17px] leading-tight max-w-[260px]">{{ section_two_left_side_copy }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="animate_section_container prebiotic_section max-h-[600px] pb-[100px] h-[150vh] px-4 overflow-clip | lg:max-h-[1000px] lg:h-[160vh] lg:w-1/2">
+      <div class="sticky top-0 overflow-hidden max-w-[280px] mx-auto | lg:top-1/2 lg:transform lg:-translate-y-1/2 lg:px-16 lg:max-w-3xl lg:h-[250px]">
+        <div class="animate_section pt-32 max-w-[320px] mx-auto | lg:pt-0">
+          {% if section_two_right_side_title != blank %}
+            <h2 class="pb-10 uppercase text-5xl leading-none | lg:pb-11">
+              {{ section_two_right_side_title }}
+            </h2>
+          {% endif %}
+          {% if section_two_right_side_copy != blank %}
+            <p class="font-walsheim-bold text-[17px] leading-tight max-w-[280px]">{{ section_two_right_side_copy }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  {% comment %} section three {% endcomment %}
+  <div class="animate_section_container overflow-clip max-h-[1800px] h-[200vh] | lg:max-h-[1100px]" style="background-color: {{ section_three_background_color }}; color: {{ section_three_text_color }}">
+    <div class="container sticky top-0">
+      <div class="pt-1 transition-all duration-500 translate-y-full animate_section">
+        {% if section_three_title != blank %}
+          <h2 class="pb-4 leading-none uppercase text-4xl text-center mt-10 | lg:text-[64px]">
+            {{ section_three_title }}
+          </h2>
+        {% endif %}
+        {% if section_three_heading != blank %}
+          <h3 class="font-walsheim-bold text-2xl leading-none text-center | lg:text-[36px] lg:mt-[24px]">{{ section_three_heading }}</h3>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% comment %} section four {% endcomment %}
+  <div class="animate_section_container max-h-[700px] h-[200vh] overflow-clip | lg:max-h-[800px]" style="background-color: {{ section_four_background_color }}; color: {{ section_four_text_color }};">
+    <div class="h-[100vh] sticky top-0">
+      <div class="">
+        <div class="container pt-10 transition-all duration-500 translate-y-full animate_section">
+          {% if section_four_title != blank %}
+            {% assign section_four_title = section_four_title | split: ' ' %}
+            <h2 class="relative w-fit max-w-xs text-6xl text-center uppercase mx-auto leading-none mt-10 | md:max-w-none | lg:text-[64px]">
+              {% for section in section_four_title %}
+                <span {% if section_four_single_word_text == section %}style="color: {{ section_four_other_text_color }};"{% endif %}>{{ section }}</span>
+              {% endfor %}
+              {% if section_four_title_icon != blank %}
+                {% render 'img', type: 'img', img: section_four_title_icon, lazy: true, class: 'object-contain h-8 w-8 absolute -top-8 -right-2 lg:-right-7 lg:-top-3' %}
+              {% endif %}
+            </h2>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% comment %} section four continued {% endcomment %}
+  <div class="animate_section_container max-h-[900px] h-[500vh] sticky top-0" style="background-color: {{ section_four_background_color }};">
+    <div class="h-[100vh] max-h-[1200px] sticky top-0 desktop_candy_container">
+      {% comment %} focused image {% endcomment %}
+      <div class="fixed top-[320px] left-1/2 transform -translate-x-1/2 -translate-y-1/2 max-h-[100vh] h-[350px] w-[350px] flex items-center justify-center z-1 transition-all duration-200 overflow-hidden | lg:h-auto lg:w-auto lg:top-[375px]">
+        <canvas class="origin-center transform scale-[0.55] | lg:scale-[0.65] lg:top-[60%] | 2xl:scale-[0.85]" id="for_the_geeks_focused_image"></canvas>
+        {% if prebiotic_image != blank %}
+          {% render 'img', img: prebiotic_image, lazy: 'true', type: 'img', class: 'prebiotic_image transition-all duration-200 object-cover ml-3 absolute left-1/2 top-1/2 transform -translate-x-[600px] -translate-y-1/2 h-[134px] w-[134px] | lg:h-[161px] lg:w-[159px] lg:ml-4 2xl:h-[212px] 2xl:w-[210px] 2xl:ml-[24px]' %}
+        {% endif %}
+      </div>
+      <div class="relative h-full overflow-hidden animate_section z-1">
+        <div class="container h-full animate_candy_bars_desktop">
+          <div class="relative flex items-end h-full">
+            {% comment %} tube {% endcomment %}
+            {% if section_four_end_of_animation_tube != blank %}
+              <div class="mx-auto relative w-[250px] h-[400px] mb-[156px] z-2 | lg:block lg:h-[500px] lg:w-[400px] lg:mb-[114px] | xl:h-[540px] xl:w-[400px] | 2xl:h-[610px] 2xl:w-[370px]">
+                {% render 'img', type: 'img', img: section_four_end_of_animation_tube, lazy: true, class: 'object-contain mt-[14px] mx-auto w-full h-full relative z-1' %}
+                {% if shop_now_link != blank %}
+                  <a href="{{ shop_now_link }}" class=" font-walsheim-black text-[22px] text-center text-dark-blue uppercase flex items-center justify-center pt-10 | group">
+                    {{ shop_now_text }}
+                    <span class="flex text-dark-blue h-[30px] w-[30px] ml-3 transition-all duration-200 | group-hover:transform group-hover:translate-x-2">
+                      {% render 'icon-long-arrow' %}
+                    </span>
+                  </a>
+                {% endif %}
+
+                {% comment %} candy bars desktop {% endcomment %}
+                <div class="animate_candy_bars_desktop hidden | lg:block">
+                  {% if section_four_end_of_animation_bar_one != blank %}
+                    <div class="overflow-hidden absolute bottom-[212px] -left-[320px] w-[400px] h-[150px] transform | xl:-left-[294px] | 2xl:h-[200px] 2xl:w-[450px] 2xl:-left-[420px] 2xl:bottom-[230px]">
+                      {% render 'img', type: 'img', img: section_four_end_of_animation_bar_one, lazy: true, class: 'animate_bars_desktop_left transition-all duration-500 object-contain h-full w-full transform translate-x-full scale-0' %}
+                    </div>
+                  {% endif %}
+                  {% if section_four_end_of_animation_bar_two != blank %}
+                    <div class="overflow-hidden w-[400px] h-[150px] absolute bottom-0 -left-[320px] transform | xl:-left-[294px] | 2xl:h-[200px] 2xl:w-[450px] 2xl:-left-[420px]">
+                      {% render 'img', type: 'img', img: section_four_end_of_animation_bar_two, lazy: true, class: 'animate_bars_desktop_left transition-all duration-500 object-contain w-full h-full translate-x-full scale-0' %}
+                    </div>
+                  {% endif %}
+                  {% if section_four_end_of_animation_bar_three != blank %}
+                    <div class="overflow-hidden w-[400px] h-[150px] absolute bottom-[212px] -right-[320px] transform | xl:-right-[294px] | 2xl:-right-[418px] 2xl:w-[450px] 2xl:h-[200px] 2xl:bottom-[230px]">
+                      {% render 'img', type: 'img', img: section_four_end_of_animation_bar_three, lazy: true, class: 'animate_bars_desktop_right transition-all duration-500 object-contain w-full h-full -translate-x-full scale-0' %}
+                    </div>
+                  {% endif %}
+                  {% if section_four_end_of_animation_bar_four != blank %}
+                    <div class="overflow-hidden w-[400px] h-[150px] absolute bottom-0 -right-[320px] transform | xl:-right-[294px] | 2xl:h-[200px] 2xl:w-[450px] 2xl:-right-[418px]">
+                      {% render 'img', type: 'img', img: section_four_end_of_animation_bar_four, lazy: true, class: 'animate_bars_desktop_right transition-all duration-500 object-contain w-full h-full -translate-x-full scale-0' %}
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="animate_section_container max-h-[1200px] h-[500vh] sticky top-0 | lg:hidden" style="background-color: {{ section_four_background_color }};">
+    <div class="h-[100vh] max-h-[1200px] sticky top-0 desktop_candy_container">
+      <div class="h-full overflow-hidden">
+        <div class="container h-full animate_candy_bars_desktop">
+          {% comment %} candy bars mobile {% endcomment %}
+          <div class="animate_candy_bars_mobile pt-32 | lg:hidden">
+            {% if section_four_end_of_animation_bar_one != blank %}
+              <div class="overflow-hidden w-full relative h-[134px] transform -rotate-[16deg] -ml-[10%]">
+                {% render 'img', type: 'img', img: section_four_end_of_animation_bar_one, lazy: true, class: 'animate_bars_mobile_left transition-all duration-500 object-contain h-full w-full absolute left-0 transform' %}
+              </div>
+            {% endif %}
+            {% if section_four_end_of_animation_bar_two != blank %}
+              <div class="overflow-hidden w-full relative h-[107px] transform -rotate-[16deg] -mt-5 ml-[10%]">
+                {% render 'img', type: 'img', img: section_four_end_of_animation_bar_two, lazy: true, class: 'animate_bars_mobile_right transition-all duration-500 object-contain w-full h-full absolute left-0 transform' %}
+              </div>
+            {% endif %}
+            {% if section_four_end_of_animation_bar_three != blank %}
+              <div class="overflow-hidden h-[114px] transform -rotate-[16deg] mt-12 w-full relative -ml-[10%]">
+                {% render 'img', type: 'img', img: section_four_end_of_animation_bar_three, lazy: true, class: 'animate_bars_mobile_left transition-all duration-500 object-contain w-full h-full absolute left-0 transform' %}
+              </div>
+            {% endif %}
+            {% if section_four_end_of_animation_bar_four != blank %}
+              <div class="overflow-hidden h-[112px] transform -rotate-[16deg] mt-1 w-full relative ml-[10%]">
+                {% render 'img', type: 'img', img: section_four_end_of_animation_bar_four, lazy: true, class: 'animate_bars_mobile_right transition-all duration-500 object-contain w-full h-full absolute left-0 transform' %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</for-the-geeks-vertical>
+{% schema %}
+  {
+    "name": "For the geeks - vertical",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Not just grass fed whey protein"
+      },
+      {
+        "type": "text",
+        "id": "section_one_left_side_title",
+        "label": "Left side (title)",
+        "default": "Not just grass fed whey protein"
+      },
+      {
+        "type": "text",
+        "id": "section_one_right_side_title",
+        "label": "Right side (title)",
+        "default": "Not just vegan protein"
+      },
+      {
+        "type": "color",
+        "id": "section_one_left_side_background_color",
+        "label": "Left side (background color)",
+        "default": "#FFF"
+      }, {
+        "type": "color",
+        "id": "section_one_right_side_background_color",
+        "label": "Right side (background color)",
+        "default": "#FAD1D2"
+      }, {
+        "type": "color",
+        "id": "section_one_left_side_text_color",
+        "label": "Left side (text color)",
+        "default": "#021D49"
+      }, {
+        "type": "color",
+        "id": "section_one_right_side_text_color",
+        "label": "Right side (text color)",
+        "default": "#021D49"
+      }, {
+        "type": "header",
+        "content": "Prebiotic  / Probiotic"
+      }, {
+        "type": "image_picker",
+        "id": "prebiotic_image",
+        "label": "Prebiotic / Probiotic image"
+      }, {
+        "type": "color",
+        "id": "section_two_background_color",
+        "label": "Background color",
+        "default": "#021D49"
+      }, {
+        "type": "color",
+        "id": "section_two_text_color",
+        "label": "Text color",
+        "default": "#FFF"
+      }, {
+        "type": "text",
+        "id": "section_two_left_side_title",
+        "label": "Left side (title)",
+        "default": "Prebiotic"
+      }, {
+        "type": "text",
+        "id": "section_two_right_side_title",
+        "label": "Right side (title)",
+        "default": "Probiotic"
+      }, {
+        "type": "text",
+        "id": "section_two_left_side_copy",
+        "label": "Left side (copy)",
+        "default": "We’re enriching your gut with an effective dose of Inulin - a pre-bacteria that gives the bacteria in your gut the nutrients it needs to stay alive."
+      }, {
+        "type": "text",
+        "id": "section_two_right_side_copy",
+        "label": "Right side (copy)",
+        "default": "We’re adding up to 8 billion CFU new bacteria into your gut, with a pro-bacteria that is able to withstand the acidic environment of your stomach (which has a Ph of between 0.8 and 3.5, stronger than a really sour lemon), allowing it make its way to your small and large intestines."
+      }, {
+        "type": "header",
+        "content": "Not just vegan dark chocolate"
+      }, {
+        "type": "color",
+        "id": "section_three_background_color",
+        "label": "Background color",
+        "default": "#FAD1D2"
+      }, {
+        "type": "color",
+        "id": "section_three_text_color",
+        "label": "Text color",
+        "default": "#021D49"
+      }, {
+        "type": "text",
+        "id": "section_three_title",
+        "label": "Title",
+        "default": "Not just vegan dark chocolate"
+      }, {
+        "type": "text",
+        "id": "section_three_heading",
+        "label": "Heading",
+        "default": "Made in house with coconut nectar. No soy lecithin"
+      }, {
+        "type": "header",
+        "content": "One wholesome moment of joy"
+      }, {
+        "type": "color",
+        "id": "section_four_background_color",
+        "label": "Background color",
+        "default": "#F5C08D"
+      }, {
+        "type": "color",
+        "id": "section_four_text_color",
+        "label": "Text color",
+        "default": "#021D49"
+      }, {
+        "type": "color",
+        "id": "section_four_other_text_color",
+        "default": "#FFF",
+        "label": "Text color (single word)"
+      }, {
+        "type": "text",
+        "id": "section_four_title",
+        "label": "Title",
+        "default": "One wholesome moment of joy"
+      }, {
+        "type": "text",
+        "id": "section_four_single_word_text",
+        "label": "Different color text",
+        "default": "joy",
+        "info": "Please enter the word you would like to be colored differently. Please type it exactly as it is spelt in the setting above."
+      }, {
+        "type": "image_picker",
+        "id": "section_four_title_icon",
+        "label": "Title icon"
+      }, {
+        "type": "image_picker",
+        "label": "End of animation tube",
+        "id": "section_four_end_of_animation_tube"
+      }, {
+        "type": "image_picker",
+        "label": "End of animation bar 1",
+        "id": "section_four_end_of_animation_bar_one"
+      }, {
+        "type": "image_picker",
+        "label": "End of animation bar 2",
+        "id": "section_four_end_of_animation_bar_two"
+      }, {
+        "type": "image_picker",
+        "label": "End of animation bar 3",
+        "id": "section_four_end_of_animation_bar_three"
+      }, {
+        "type": "image_picker",
+        "label": "End of animation bar 4",
+        "id": "section_four_end_of_animation_bar_four"
+      }, {
+        "type": "url",
+        "id": "shop_now_link",
+        "label": "Shop now link",
+        "default": "/"
+      }, {
+        "type": "text",
+        "label": "Shop now text",
+        "id": "shop_now_text",
+        "default": "Shop now"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "section_one_point_left",
+        "name": "Section one (point - l)",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "point text"
+          }, {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          }
+        ]
+      }, {
+        "type": "section_one_point_right",
+        "name": "Section one (point - r)",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "point text"
+          }, {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

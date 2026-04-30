@@ -1,0 +1,380 @@
+{% liquid 
+  assign slides = section.blocks | where: 'type', 'slide'
+  assign slides_size = slides | size
+  assign background_color = section.settings.background_color
+  assign autoplay = section.settings.autoplay
+  assign autoplay_speed = section.settings.autoplay_speed
+  assign autoplay_mode = section.settings.autoplay_mode
+  assign autoplay_on_mobile = section.settings.autoplay_on_mobile
+  assign font_size = section.settings.font_size
+  assign font_size_mobile = section.settings.font_size_mobile
+  assign font_family = section.settings.font_family
+  assign provide_container_desktop = section.settings.provide_container_desktop
+  assign provide_container = section.settings.provide_container
+  assign hide_on_mobile = section.settings.hide_on_mobile
+
+  assign slides_shown_desktop_extra_extra_extra_large = section.settings.slides_shown_desktop_extra_extra_extra_large
+  assign slides_shown_desktop_extra_extra_large = section.settings.slides_shown_desktop_extra_extra_large
+  assign slides_shown_desktop_extra_large = section.settings.slides_shown_desktop_extra_large
+  assign slides_shown_desktop_large = section.settings.slides_shown_desktop_large
+  assign slides_shown_desktop = section.settings.slides_shown_desktop
+  assign slides_shown_tablet = section.settings.slides_shown_tablet
+  assign slides_shown_mobile = section.settings.slides_shown_mobile
+  assign slides_shown_mobile_small = section.settings.slides_shown_mobile_small
+%}
+
+
+{% if slides_size >= 4 %}
+  {% assign slider_per_view_desktop = 4 %}
+{% else %}
+  {% assign slider_per_view_desktop = slides_size %}
+{% endif %}
+
+{% style %}
+  #glide-{{ section.id }}.slide_text {
+    font-size: {{ font_size }}px;
+  }
+  @media only screen and (max-width: 768px) {
+    #glide-{{ section.id }}.slide_text {
+      font-size: {{ font_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<div
+  class="glide {% if hide_on_mobile %} hidden md:block {% endif %}"
+  id="glide-{{ section.id }}"
+  style="background-color: {{ background_color }}; height: {{ section.settings.section_height }}px;">
+  <div class="glide__track h-full {% if provide_container %} container {% endif %} {% if provide_container_desktop %} md:container {% endif %}" data-glide-el="track">
+    <ul class="glide__slides h-full">
+      {% for slide in slides %}
+        {% liquid 
+          assign image = slide.settings.image
+          assign text = slide.settings.text
+          assign larger_image = slide.settings.larger_image 
+          assign link = slide.settings.link
+        %}
+        <li class="glide__slide slider__frame flex items-center">
+          {% if link != blank %}
+            <a href="{{ link }}" class="mx-auto">
+            <div class="flip">
+            {% endif %}
+            {% if image != blank %}
+              {% if larger_image %}
+                {% render 'img', type: 'img', img: image, lazy: true, class: 'object-contain h-24 mx-auto w-52' %}
+              {% else %}
+                {% render 'img', type: 'img', img: image, lazy: true, class: 'object-contain h-10 w-10' %}
+              {% endif %}
+              <button class="infinite__btn blue border btn duration-200 font-walsheim-medium items-center justify-center mr-3 px-3 py-3 relative rounded-md text-sm transition-all uppercase w-44">shop now</button>
+            {% endif %}
+            {% if text != blank %}
+              <span class="slide_text uppercase text-dark-blue ml-3 {{ font_family }}">{{ text }}</span>
+            {% endif %}
+            {% if link != blank %}
+              </div>
+            </a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    <div data-glide-el="controls" bis_skin_checked="1">
+    <button class="slider__arrow slider__arrow--prev glide__arrow glide__arrow--prev" data-glide-dir="<">
+      <svg width="100%" height="100%" viewBox="0 0 80 127" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0.499449 20.3033L42.4994 63.3033L0 106.803C0.4 125.203 14.5 127.47 21.5 126.303L77 70.3032C81.8 63.5032 79 57.1366 77 54.8032L22.9994 1.30332C2.99945 -4.69668 -0.333885 11.47 0.499449 20.3033Z" fill="currentColor"></path>
+      </svg>
+    </button>
+
+    <button class="slider__arrow slider__arrow--next glide__arrow glide__arrow--next" data-glide-dir=">">
+      <svg width="100%" height="100%" viewBox="0 0 80 127" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0.499449 20.3033L42.4994 63.3033L0 106.803C0.4 125.203 14.5 127.47 21.5 126.303L77 70.3032C81.8 63.5032 79 57.1366 77 54.8032L22.9994 1.30332C2.99945 -4.69668 -0.333885 11.47 0.499449 20.3033Z" fill="currentColor"></path>
+      </svg>
+    </button>
+  </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    {% if autoplay %}
+      const infinite_slider = new Glide(document.querySelector("#glide-{{ section.id }}"), {
+        startAt: 0,
+        autoplay: {% if autoplay_on_mobile %}0{% else %}{{ autoplay_speed }}{% endif %},
+        animationDuration: 5000,
+        perView: {{ slides_shown_desktop_extra_extra_extra_large }},
+        type: 'carousel',
+        animationTimingFunc: `{{ autoplay_mode }}`,
+        breakpoints: {
+          2100: {
+            perView: {{ slides_shown_desktop_extra_extra_large }}
+         
+          },
+          1536: {
+            perView: {{ slides_shown_desktop_extra_large }}
+          },
+          1280: {
+            perView: {{ slides_shown_desktop_large }}
+          },
+          1024: {
+            perView: {{ slides_shown_desktop }}
+          },
+          768: {
+            perView: {{ slides_shown_tablet }},
+            autoplay: {{ autoplay_speed }}
+          },
+          640: {
+            perView: {{ slides_shown_mobile }},
+           autoplay: true
+          },
+          400: {
+            perView: {{ slides_shown_mobile_small }},
+            autoplay: true
+          }
+        }
+      });
+      infinite_slider.mount();
+    {% else %}
+      const infinite_slider = new Glide(document.querySelector("#glide-{{ section.id }}"), {
+        type: 'carousel',
+        startAt: 0,
+        animationDuration: 500,
+        perView: {{ slides_shown_desktop_extra_extra_extra_large }},
+        animationTimingFunc: `{{ autoplay_mode }}`,
+        breakpoints: {
+          2100: {
+            perView: {{ slides_shown_desktop_extra_extra_large }}
+          },
+          1536: {
+            perView: {{ slides_shown_desktop_extra_large }}
+          },
+          1280: {
+            perView: {{ slides_shown_desktop_large }}
+          },
+          1024: {
+            perView: {{ slides_shown_desktop }}
+          },
+          768: {
+            perView: {{ slides_shown_tablet }}
+          },
+          640: {
+            perView: {{ slides_shown_mobile }},
+            autoplay: {{ autoplay_speed }},
+            animationDuration: 500,
+          },
+          400: {
+            perView: {{ slides_shown_mobile_small }},
+            autoplay: {{ autoplay_speed }},
+            animationDuration: 500,
+          }
+        }
+      });
+      infinite_slider.mount();
+    {% endif %}
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Infinite scroll slider",
+    "class": "infinite-scroll-slider",
+    "settings": [
+      {
+        "type": "range",
+        "id": "section_height",
+        "label": "Section height",
+        "info": "unit is in px",
+        "min": 60,
+        "max": 200,
+        "default": 120,
+        "step": 2
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_on_mobile",
+        "label": "Hide on mobile?",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "provide_container",
+        "label": "Provide container",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "provide_container_desktop",
+        "label": "Provide container (desktop only)",
+        "default": false
+      }, {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#EFEFEF"
+      }, {
+        "type": "range",
+        "id": "slides_shown_desktop_extra_extra_extra_large",
+        "label": "Slides shown desktop - extra extra extra large (2100px + )",
+        "min": 1,
+        "max": 6,
+        "default": 4,
+        "step": 0.5
+      }, {
+        "type": "range",
+        "id": "slides_shown_desktop_extra_extra_large",
+        "label": "Slides shown desktop - extra extra large (1536px - 2099px)",
+        "min": 1,
+        "max": 6,
+        "default": 4,
+        "step": 0.5
+      }, {
+        "type": "range",
+        "id": "slides_shown_desktop_extra_large",
+        "label": "Slides shown desktop - extra large (1280px - 1535px)",
+        "min": 1,
+        "max": 6,
+        "default": 4.5,
+        "step": 0.5
+      }, {
+        "type": "range",
+        "id": "slides_shown_desktop_large",
+        "label": "Slides shown: desktop - large (1024px - 1279px)",
+        "min": 1,
+        "max": 6,
+        "default": 4,
+        "step": 0.5
+      }, {
+        "type": "range",
+        "id": "slides_shown_desktop",
+        "label": "Slides shown: desktop (768px - 1023px)",
+        "min": 1,
+        "max": 6,
+        "default": 3,
+        "step": 0.5
+      }, {
+        "type": "range",
+        "id": "slides_shown_tablet",
+        "label": "Slides shown: tablet (640px - 767px)",
+        "min": 1,
+        "max": 6,
+        "default": 1.5,
+        "step": 0.5
+      }, {
+        "type": "range",
+        "id": "slides_shown_mobile",
+        "label": "Slides shown: mobile (400px - 639px)",
+        "min": 1,
+        "max": 6,
+        "default": 1,
+        "step": 0.5
+      }, {
+        "type": "range",
+        "id": "slides_shown_mobile_small",
+        "label": "Slides shown: mobile small (0 - 400px)",
+        "min": 1,
+        "max": 6,
+        "default": 1,
+        "step": 0.5
+      }, {
+        "type": "checkbox",
+        "id": "autoplay",
+        "label": "Autoplay?",
+        "default": true
+      }, {
+        "type": "range",
+        "id": "autoplay_speed",
+        "label": "Autoplay speed",
+        "default": 500,
+        "min": 100,
+        "max": 3000,
+        "step": 100
+      }, {
+        "type": "select",
+        "id": "autoplay_mode",
+        "info": "Select the mode for the autoplay",
+        "label": "Autoplay mode",
+        "default": "linear",
+        "options": [
+          {
+            "value": "linear",
+            "label": "Linear"
+          }, {
+            "value": "ease",
+            "label": "Ease"
+          }, {
+            "value": "ease-in-out",
+            "label": "Ease in out"
+          }
+        ]
+      }, {
+        "type": "checkbox",
+        "id": "autoplay_on_mobile",
+        "label": "Autoplay on mobile only?",
+        "default": false
+      }, {
+        "type": "range",
+        "id": "font_size",
+        "label": "Font size",
+        "unit": "px",
+        "min": 10,
+        "max": 100,
+        "default": 22
+      }, {
+        "type": "range",
+        "id": "font_size_mobile",
+        "label": "Font size (mobile)",
+        "unit": "px",
+        "min": 10,
+        "max": 100,
+        "default": 22
+      }, {
+        "type": "select",
+        "id": "font_family",
+        "label": "Font",
+        "default": "font-walsheim",
+        "options": [
+          {
+            "value": "font-walsheim",
+            "label": "Walsheim"
+          }, {
+            "value": "font-walsheim-black",
+            "label": "Walsheim black"
+          }, {
+            "value": "font-walsheim-bold",
+            "label": "Walsheim bold"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "type": "slide",
+        "name": "Slide",
+        "settings": [
+          {
+            "type": "image_picker",
+            "label": "Image",
+            "id": "image"
+          }, {
+            "type": "checkbox",
+            "label": "Larger image?",
+            "id": "larger_image",
+            "default": false,
+            "info": "Check this for a larger image"
+          }, {
+            "type": "text",
+            "label": "Text",
+            "id": "text"
+          }, {
+            "type": "url",
+            "id": "link",
+            "label": "Link"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Infinite scroll slider"
+      }
+    ]
+  }
+{% endschema %}

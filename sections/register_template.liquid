@@ -1,0 +1,172 @@
+{% comment %} THIS WILL ALL BE REMOVED, IT'S JUST HERE SO I CAN REGISTER {% endcomment %}
+
+{% liquid 
+  assign background_color = section.settings.background_color
+  assign title = section.settings.title 
+  assign text_color = section.settings.text_color
+  assign account_benefits_title = section.settings.benefit_title
+  assign account_benefits = section.blocks | where: 'type', 'account_benefit'
+  assign account_benefits_size = account_benefits | size
+  assign background_color_main = section.settings.background_color_main
+%}
+
+  <div class="">
+  {% comment %} banner {% endcomment %}
+  <div class="pt-32 pb-14 | md:pt-44 md:pb-20" style="background-color: {{ background_color }}; box-shadow: 2px 5px 12px -3px rgba(0,0,0,0.75);">
+    <h1 class="text-center text-2xl font-walsheim-bold uppercase" style="color: {{ text_color }}">
+      {% if title != blank %}
+        {{ title }}
+      {% else %}
+        {{ 'account.register.title' | t }}
+      {% endif %}
+    </h1>
+  </div>
+  <div style="background-color: {{ background_color_main }};">
+    <div class="container relative pt-12 | md:pt-20 md:flex md:items-start md:justify-center">
+      {% comment %} Benefits {% endcomment %}
+      <div class="md:mr-5 md:w-1/2 md:max-w-[500px]">
+        {% if account_benefits_title != blank %}
+          <h2 class="text-dark-blue text-sm pb-5">
+            {{ account_benefits_title }}
+          </h2>
+        {% endif %}
+        {% if account_benefits_size > 0 %}
+          <div class="pb-14">
+            {% for benefit in account_benefits %}
+              {% liquid
+              assign benefit_image = benefit.settings.benefit_image
+              assign benefit_label = benefit.settings.benefit_label
+            %}
+              <div class="flex items-center {% unless forloop.last %} border-b border-dark-blue border-opacity-25 pb-3 {% endunless %} {% unless forloop.first %} mt-3 {% endunless %} pl-6">
+                {% if benefit_image != blank %}
+                  {% render 'img', type: 'img', img: benefit.settings.benefit_image, lazy: true, class: 'object-contain mr-3 h-4 w-4' %}
+                {% endif %}
+                {% if benefit_label != blank %}
+                  <p class="text-sm text-dark-blue font-walsheim">{{ benefit_label }}</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      {% comment %} Register Form {% endcomment %}
+      {% form 'create_customer', class: 'flex flex-col md:w-1/2 md:ml-5 md:max-w-[500px]' %}
+
+        {% comment %} first and last name {% endcomment %}
+        <input
+          type="text"
+          value=""
+          name="customer[first_name]"
+          placeholder="{{ 'account.first-name' | t }}*"
+          class="text-sm my-2 text-dark-blue opacity-100 outline-none py-[10px] pl-3 font-walsheim-medium rounded border border-black border-opacity-25 | placeholder:bold placeholder:text-dark-blue" />
+        <input
+        type="text"
+          value=""
+          name="customer[last_name]"
+          placeholder="{{ 'account.last-name' | t }}*"
+          required
+          class="text-sm my-2 text-dark-blue opacity-100 outline-none py-[10px] pl-3 font-walsheim-medium rounded border border-black border-opacity-25 | placeholder:bold placeholder:text-dark-blue" />
+        {% comment %} email address {% endcomment %}
+        <input
+        type="email"
+          value=""
+          name="customer[email]"
+          placeholder="{{ 'account.email' | t }}*"
+          required
+          class="text-sm my-2 text-dark-blue opacity-100 outline-none py-[10px] pl-3 font-walsheim-medium rounded border border-black border-opacity-25 | placeholder:bold placeholder:text-dark-blue" />
+        {% comment %} password {% endcomment %}
+        <input
+        type="password"
+          value=""
+          name="customer[password]"
+          placeholder="{{ 'account.password' | t }}*"
+          required
+          class="text-sm my-2 text-dark-blue opacity-100 outline-none py-[10px] pl-3 font-walsheim-medium rounded border border-black border-opacity-25 | placeholder:bold placeholder:text-dark-blue" />
+        {% comment %} submit button {% endcomment %}
+        {% render 'btn', type: 'submit', style: 'blue', copy: 'account.sign-up', width: 'full', additional_class: 'mx-auto mt-3 rounded-lg' %}
+
+        {% comment %} already have an account? {% endcomment %}
+        <p class="text-dark-blue mt-5 text-center font-walsheim-medium mb-4 tracking-wider text-sm">{{ 'account.already-have-account' | t }}
+          <a class="underline underline-offset-2" href='/account/login'>{{ 'account.log-in' | t }}</a>
+        </p>
+        {% comment %} errors {% endcomment %}
+        <div class="text-dark-blue text-center text-sm pb-10 font-walsheim">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    (function() {
+      var REDIRECT_PATH = '/account';
+
+      var selector = '#create_customer, form[action$="/account"][method="post"]',
+        $form = document.querySelectorAll(selector)[0];
+
+      if ($form) {
+        $redirect = document.createElement('input');
+        $redirect.setAttribute('name', 'return_to');
+        $redirect.setAttribute('type', 'hidden');
+        $redirect.value = REDIRECT_PATH;
+        $form.appendChild($redirect);
+      }
+    })();
+  });
+</script>
+
+{% schema %}
+  {
+    "name": "Register",
+    "settings": [
+      {
+        "type": "color",
+        "label": "Background color (banner)",
+        "id": "background_color",
+        "default": "#021D49"
+      },
+      {
+        "type": "color",
+        "label": "Text color (banner)",
+        "id": "text_color",
+        "default": "#FFF"
+      },
+      {
+        "type": "text",
+        "label": "Title",
+        "id": "title",
+        "default": "Create an account"
+      },
+      {
+        "type": "text",
+        "id": "benefit_title",
+        "label": "Benefit title",
+        "default": "Your account enables you to:"
+      }, {
+        "type": "color",
+        "id": "background_color_main",
+        "label": "Background color (main form)",
+        "default": "#F4F4F4"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "account_benefit",
+        "name": "Account benefit",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "benefit_image",
+            "label": "Benefit image"
+          }, {
+            "type": "text",
+            "id": "benefit_label",
+            "label": "Benefit label"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

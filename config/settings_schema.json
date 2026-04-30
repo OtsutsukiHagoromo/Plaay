@@ -1,0 +1,235 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Shopify Theme Lab",
+    "theme_version": "1.0.0",
+    "theme_author": "THEME_AUTHOR",
+    "theme_documentation_url": "https:\/\/THEME_DOCUMENTATION_URL.com",
+    "theme_support_url": "https:\/\/THEME_SUPPORT_URL.com"
+  },
+  {
+    "name": "t:settings_schema.custom_settings.name",
+    "settings": [
+      {
+        "type": "header",
+        "content": "t:settings_schema.custom_settings.settings.header"
+      },
+      {
+        "type": "paragraph",
+        "content": "t:settings_schema.custom_settings.settings.paragraph"
+      }
+    ]
+  },
+  {
+    "name": "t:settings_schema.favicon.name",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "t:settings_schema.favicon.settings.label",
+        "info": "t:settings_schema.favicon.settings.info"
+      }
+    ]
+  },
+  {
+    "name": "Recharge",
+    "settings": [
+      {
+        "type": "text",
+        "id": "global_recharge_point_one",
+        "label": "Global recharge point one",
+        "default": "Free Shipping",
+        "info": "This point will appear across all Recharge products."
+      },
+      {
+        "type": "text",
+        "id": "global_recharge_point_two",
+        "label": "Global recharge point two",
+        "default": "20% Off Regular Price",
+        "info": "This point will appear across all Recharge products."
+      },
+      {
+        "type": "text",
+        "id": "global_recharge_point_three",
+        "label": "Global recharge point three",
+        "default": "Skip Cancel Anytime",
+        "info": "This point will appear across all Recharge products."
+      }
+    ]
+  },
+  {
+    "name": "Collection",
+    "settings": [
+      {
+        "type": "link_list",
+        "id": "ingredients_icons_link_list",
+        "label": "Ingredients icons (link list)",
+        "info": "Use this setting to upload you menu of icons."
+      }
+    ]
+  },
+  {
+    "name": "Cart Drawer",
+    "settings": [
+      {
+        "type": "color",
+        "id": "cart_drawer_background",
+        "label": "Cart drawer background",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "header",
+        "content": "Upsell tiers"
+      },
+      {
+        "type": "number",
+        "id": "cart_tier_ship",
+        "label": "Free shipping threshold (AED)",
+        "default": 75
+      },
+      {
+        "type": "number",
+        "id": "cart_tier_1_spend",
+        "label": "Tier 1 spend threshold (AED)",
+        "default": 175
+      },
+      {
+        "type": "text",
+        "id": "cart_tier_1_label",
+        "label": "Tier 1 reward label",
+        "default": "5% off"
+      },
+      {
+        "type": "number",
+        "id": "cart_tier_2_spend",
+        "label": "Tier 2 spend threshold (AED)",
+        "default": 200
+      },
+      {
+        "type": "text",
+        "id": "cart_tier_2_label",
+        "label": "Tier 2 reward label",
+        "default": "10% off"
+      },
+      {
+        "type": "number",
+        "id": "cart_tier_3_spend",
+        "label": "Tier 3 spend threshold (AED)",
+        "default": 350
+      },
+      {
+        "type": "text",
+        "id": "cart_tier_3_label",
+        "label": "Tier 3 reward label",
+        "default": "10% off + free gift"
+      },
+      {
+        "type": "range",
+        "id": "product_recommendations_limit",
+        "label": "Product recommendations limit",
+        "min": 1,
+        "max": 10,
+        "default": 4
+      },
+      {
+        "type": "collection",
+        "id": "backup_recommendations_collection",
+        "label": "Backup recommendations collection"
+      },
+      {
+        "type": "product",
+        "id": "backup_recommendations_product",
+        "label": "Backup recommendations product",
+        "info": "This product will be used as a source for recommendations when there are no products in the cart."
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Cart promotion settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_promotion_icon",
+        "label": "Hide promotion icon?",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "cart_promotion_text_part_one",
+        "label": "Cart promotion text (part 1)",
+        "default": "Spend"
+      },
+      {
+        "type": "text",
+        "id": "cart_promotion_text_part_two",
+        "label": "Cart promotion text (part 2)",
+        "default": "More to get free worldwide delivery"
+      },
+      {
+        "type": "number",
+        "id": "cart_promotion_threshold",
+        "label": "Cart promotion limit",
+        "info": "Set your threshold that users will need to achieve to get their promotion",
+        "default": 25
+      },
+      {
+        "info": "This message will display when users have reached their threshold",
+        "label": "Success message",
+        "id": "cart_promotion_success_message",
+        "default": "Congratulations! you have qualified for free delivery",
+        "type": "text"
+      },
+      {
+        "type": "color",
+        "id": "cart_promotion_background_color",
+        "label": "Cart promotion background color",
+        "default": "#F5C08D"
+      },
+      {
+        "type": "color",
+        "id": "cart_promotion_progress_color",
+        "label": "Cart promotion progress color",
+        "default": "#FF6600"
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_cart_promotion",
+        "label": "Hide promotion?",
+        "default": false
+      },
+      {
+        "type": "product_list",
+        "id": "Sample_product",
+        "label": "Select Sample Products",
+        "limit": 12
+      }
+    ]
+  },
+  {
+    "name": "Product Tiles",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "hide_product_discount",
+        "label": "Hide product discount on tiles?",
+        "default": false
+      }
+    ]
+  },
+  {
+    "name": "Reviews",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "hide_tap_me_functionality",
+        "label": "Hide tap me functionality?",
+        "default": false,
+        "info": "When this is clicked, tap me buttons will be removed from review \/ video sections"
+      }
+    ]
+  }
+]

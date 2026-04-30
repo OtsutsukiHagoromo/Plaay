@@ -1,0 +1,1 @@
+ var edd_exclude_product = 'not_set';

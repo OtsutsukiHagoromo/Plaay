@@ -1,0 +1,223 @@
+{% comment %}
+  PLAAY — Wishlist Page
+  File: sections/plaay-wishlist-page.liquid
+
+  Client-side rendered wishlist page.
+  Reads product handles from localStorage "plaay_wishlist",
+  fetches each via /products/{handle}.js, renders a matching
+  product grid with Remove + ATC actions.
+{% endcomment %}
+
+<div
+  class="plaay-wl-page"
+  style="background: {{ section.settings.bg_color }}; min-height: 60vh;">
+  <div class="container py-16">
+
+    <h1 class="plaay-wl-page__title font-walsheim-black text-dark-blue">
+      {{ section.settings.heading | default: 'My Wishlist' }}
+    </h1>
+
+    {% comment %} Empty state — shown until JS confirms list is empty {% endcomment %}
+    <div class="plaay-wl-page__empty" id="plaay-wl-empty" style="display:none;">
+      <p class="font-walsheim text-dark-blue" style="opacity:0.6;font-size:1.1rem;margin-bottom:1.5rem;">
+        {{ section.settings.empty_text | default: 'Your wishlist is empty. Start adding your favourites!' }}
+      </p>
+      <a href="{{ section.settings.empty_cta_url | default: '/collections/all' }}"
+         class="btn blue font-walsheim-bold uppercase"
+         style="display:inline-block;padding:14px 32px;font-size:0.85rem;letter-spacing:0.05em;border-radius:10px;text-decoration:none;">
+        {{ section.settings.empty_cta_text | default: 'Shop All' }}
+      </a>
+    </div>
+
+    {% comment %} Loading spinner {% endcomment %}
+    <div class="plaay-wl-page__loading" id="plaay-wl-loading">
+      <div class="plaay-wl-spinner"></div>
+    </div>
+
+    {% comment %} Grid — populated by JS {% endcomment %}
+    <div
+      class="plaay-wl-page__grid"
+      id="plaay-wl-grid"
+      style="display:none;">
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function() {
+  var STORAGE_KEY = 'plaay_wishlist';
+  var grid    = document.getElementById('plaay-wl-grid');
+  var empty   = document.getElementById('plaay-wl-empty');
+  var loading = document.getElementById('plaay-wl-loading');
+
+  function getList() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch(e) { return []; }
+  }
+  function setList(list) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch(e) {}
+    window.dispatchEvent(new CustomEvent('plaay:wishlist:change'));
+  }
+
+  function formatMoney(cents) {
+    var amount = (cents / 100).toFixed(2);
+    return 'AED\u00a0' + amount.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function buildCard(p) {
+    var variant = p.variants[0];
+    var img = p.featured_image
+      ? p.featured_image.replace(/(\.[a-z]+)$/, '_400x$1')
+      : 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png';
+
+    var priceHtml = '';
+    if (variant.compare_at_price && variant.compare_at_price > variant.price) {
+      priceHtml = '<span class="plaay-wl-card__compare">' + formatMoney(variant.compare_at_price) + '</span> ' +
+                  '<span class="plaay-wl-card__price" style="color:#E11D24;">' + formatMoney(variant.price) + '</span>';
+    } else {
+      priceHtml = '<span class="plaay-wl-card__price">' + formatMoney(variant.price) + '</span>';
+    }
+
+    var div = document.createElement('div');
+    div.className = 'plaay-wl-card';
+    div.setAttribute('data-wl-card', p.handle);
+    div.innerHTML =
+      '<a href="/products/' + p.handle + '" class="plaay-wl-card__img-wrap">' +
+        '<img src="' + img + '" alt="' + p.title.replace(/"/g, '&quot;') + '" class="plaay-wl-card__img" loading="lazy">' +
+      '</a>' +
+      '<div class="plaay-wl-card__body">' +
+        '<a href="/products/' + p.handle + '" class="plaay-wl-card__name font-walsheim-bold">' + p.title + '</a>' +
+        '<p class="plaay-wl-card__price-row font-walsheim-bold">' + priceHtml + '</p>' +
+        '<div class="plaay-wl-card__actions">' +
+          '<button type="button" class="plaay-wl-card__atc btn blue font-walsheim-bold uppercase" data-variant="' + variant.id + '">' +
+            'Add to Cart' +
+          '</button>' +
+          '<button type="button" class="plaay-wl-card__remove font-walsheim" data-handle="' + p.handle + '" aria-label="Remove from wishlist">' +
+            '&times; Remove' +
+          '</button>' +
+        '</div>' +
+      '</div>';
+    return div;
+  }
+
+  function addToCart(variantId, btn) {
+    btn.disabled = true;
+    btn.textContent = 'Adding…';
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: 1 })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function() {
+      btn.textContent = 'Added!';
+      window.dispatchEvent(new CustomEvent('cart:refresh'));
+      setTimeout(function() {
+        btn.textContent = 'Add to Cart';
+        btn.disabled = false;
+      }, 1800);
+    })
+    .catch(function() {
+      btn.textContent = 'Error';
+      btn.disabled = false;
+    });
+  }
+
+  function render() {
+    var handles = getList();
+    loading.style.display = 'flex';
+    grid.style.display    = 'none';
+    empty.style.display   = 'none';
+    grid.innerHTML = '';
+
+    if (!handles.length) {
+      loading.style.display = 'none';
+      empty.style.display = 'block';
+      return;
+    }
+
+    var fetches = handles.map(function(h) {
+      return fetch('/products/' + h + '.js')
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .catch(function() { return null; });
+    });
+
+    Promise.all(fetches).then(function(products) {
+      loading.style.display = 'none';
+      products = products.filter(Boolean);
+      if (!products.length) {
+        empty.style.display = 'block';
+        return;
+      }
+      grid.style.display = 'grid';
+      products.forEach(function(p) {
+        var card = buildCard(p);
+        /* ATC */
+        card.querySelector('.plaay-wl-card__atc').addEventListener('click', function() {
+          addToCart(this.getAttribute('data-variant'), this);
+        });
+        /* Remove */
+        card.querySelector('.plaay-wl-card__remove').addEventListener('click', function() {
+          var h = this.getAttribute('data-handle');
+          var list = getList().filter(function(x) { return x !== h; });
+          setList(list);
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.9)';
+          setTimeout(function() {
+            card.remove();
+            if (!grid.children.length) {
+              grid.style.display = 'none';
+              empty.style.display = 'block';
+            }
+          }, 260);
+        });
+        grid.appendChild(card);
+      });
+    });
+  }
+
+  render();
+  window.addEventListener('plaay:wishlist:change', render);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wishlist Page",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background colour",
+      "default": "#F4F1EC"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Page heading",
+      "default": "My Wishlist"
+    },
+    {
+      "type": "text",
+      "id": "empty_text",
+      "label": "Empty wishlist message",
+      "default": "Your wishlist is empty. Start adding your favourites!"
+    },
+    {
+      "type": "url",
+      "id": "empty_cta_url",
+      "label": "Empty state CTA link",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "empty_cta_text",
+      "label": "Empty state CTA text",
+      "default": "Shop All"
+    }
+  ],
+  "presets": [
+    { "name": "Wishlist Page" }
+  ]
+}
+{% endschema %}

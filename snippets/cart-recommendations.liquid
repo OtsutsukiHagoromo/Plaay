@@ -1,0 +1,27 @@
+{%- liquid
+  assign id = false
+  if cart.items.size > 0
+    for line_item in cart.items
+      if forloop.first
+        assign id = line_item.product_id
+        break
+      endif
+    endfor
+  endif
+-%}
+
+{% if id %}
+<cart-recommendations
+  class="group/recommendations"
+  data-module="cart-recommendations"
+  data-backup-product="{{ settings.backup_recommendations_product.id }}"
+  data-url="{{ routes.product_recommendations_url }}"
+  data-id="{{- id -}}">
+  <div class="plaay-cart-upsell border-t border-dark-blue border-opacity-10 px-6 py-4">
+    <h4 class="plaay-cart-upsell__heading font-walsheim-bold text-dark-blue uppercase text-xs tracking-widest mb-3">
+      Complete the Set
+    </h4>
+    <div class="plaay-cart-upsell__track flex gap-3 overflow-x-auto pb-2" data-recommendations></div>
+  </div>
+</cart-recommendations>
+{% endif %}

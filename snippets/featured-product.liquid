@@ -1,0 +1,65 @@
+{% liquid 
+  assign desktop_image = desktop_image
+  assign mobile_image = mobile_image
+  assign featured_product = featured_product
+%}
+
+<div class="relative h-full">
+  <form
+    data-add-to-cart
+    id="add-to-cart-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
+    action="/cart/add"
+    method="post"
+    data-productid="{{product.id}}"
+    data-title="{{ featured_product.title }}"
+    class="content_container h-full | md:max-h-[484px] | xl:max-h-[1030px]">
+    <select
+      name="id"
+      id="productSelect"
+      class="hidden">
+      {% for variant in product.variants %}
+        {% if variant.available %}
+          <option value="{{variant.id}}">
+            {{ variant.title }} - {{ variant.price | money }}
+          </option>
+        {% else %}
+          <option disabled="disabled">
+            {{ variant.title }} - Sold out
+          </option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    {% if desktop_image != blank %}
+      {% render 'img', type: 'img', lazy: true, img: desktop_image, class: 'hidden object-cover h-full w-full rounded-xl md:block md:max-h-[484px] xl:max-h-[1030px]' %}
+    {% endif %}
+    {% if mobile_image != blank %}
+      {% render 'img', type: 'img', lazy: true, img: mobile_image, class: 'object-cover w-full h-full rounded-xl md:hidden', height: 500, width: 560 %}
+    {% endif %}
+    {% if featured_product != blank %}
+      <div class="absolute bottom-0 left-0 px-5 pt-8 pb-4 w-full | lg:px-9 lg:flex lg:items-center">
+        <div class="flex items-center | lg:mr-2 csutom-info">
+          <span class="text-white capitalize font-walsheim-bold text-lg mr-5 card-product-title">{{ featured_product.title }}</span>
+          {% render 'product-price', product: featured_product, text_white: true, large_text: true %}
+        </div>
+        {% comment %} add to cart button {% endcomment %}
+        <div class="flex justify flex-col w-full | lg:ml-2 lg:w-auto lg:flex-row">
+          {% comment %} quick add functionality {% endcomment %}
+          {% if featured_product.selling_plan_groups.size > 0 %}
+            {% render 'btn', type: 'button', copy: 'action.quick-add', style: 'white-underline', additional_class: 'text-left text-base block font-walsheim-bold activate_popup pt-1 pb-0', width: 'small', product: featured_product %}
+          {% else %}
+            <quick-add
+              data-module="quick-add"
+              data-id="{{- featured_product.first_available_variant.id -}}"
+              class="w-full">
+              <input
+                type="hidden"
+                name="quantity"
+                value="1">
+              {% render 'btn', type: 'button', copy: 'action.add-to-cart', style: 'white-underline', additional_class: 'text-left text-base block font-walsheim-bold pt-1 pb-0', width: 'small', is_add_to_cart: true, product: featured_product %}
+            </quick-add>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  </form>
+</div>

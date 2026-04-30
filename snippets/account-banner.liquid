@@ -1,0 +1,34 @@
+{% assign page_url = canonical_url | split: '.com' | last %}
+
+<div class="relative pt-32 pb-14 shadow-lg | lg:pb-20 lg:pt-40" style="background: {{ section.settings.background_color }};">
+  <div class="container">
+    {% if section.settings.show_users_name %}
+      <h1 class="text-center text-[35px] pt-12 text-dark-blue uppercase font-walsheim-bold | lg:text-left lg:text-[65px]">
+        {{ customer.name }}
+      </h1>
+    {% endif %}
+    <h2 class="text-[22px] text-dark-blue text-center font-walsheim-bold uppercase | lg:text-left">
+      {% if page_url == '/account' %}
+        {{ 'account.account-area.title' | t }}
+      {% elsif page_url contains '/orders' %}
+        {{ 'account.account-area.orders-title' | t }}
+      {% else %}
+        {{ 'account.account-area.address-title' | t }}
+      {% endif %}
+    </h2>
+
+    <div class="relative max-w-[200px] mx-auto mt-8 | lg:hidden">
+      <select onChange="window.location.href=this.value" class="bg-white bg-opacity-0 w-full text-center text-dark-blue font-walsheim-bold text-base py-2 border-b border-dark-blue | focus:outline-none">
+        <option name="account-overview" value="/account">{{ 'account.account-area.account-overview' | t }}</option>
+        <option name="addresses" value="/account/addresses">{{ 'account.account-area.addresses' | t }}</option>
+        <option name="manage-subscriptions" value="">{{ 'account.account-area.manage-subscriptions' | t }}</option>
+      </select>
+      <span class="text-dark-blue h-[10px] w-[10px] flex absolute right-5 top-1/2 transform -translate-y-1/2">
+        {% render 'icon-arrow-down' %}
+      </span>
+    </div>
+    <p class="font-walsheim text-center mt-4 underline | lg:hidden">
+      {{ 'Logout' | customer_logout_link }}
+    </p>
+  </div>
+</div>

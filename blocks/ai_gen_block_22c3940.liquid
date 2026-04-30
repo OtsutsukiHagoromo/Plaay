@@ -1,0 +1,333 @@
+{% doc %}
+  @prompt
+    section which showcases any particular selected collection like it is being showcased but instead of manually adding any product it auto fetches from the products in the colelction, they are coming at all like how it should visually, for design and everything just duplicate code for Featured product section and just build function to select collection instead of manually selecting and addiung products
+    
+    code for it is this
+    {% liquid 
+      assign title = section.settings.title
+      assign description = section.settings.description
+      assign background_color = section.settings.background_color
+    
+      assign column_size_desktop_extra_large = section.settings.column_size_desktop_extra_large
+      assign column_size_desktop_large = section.settings.column_size_desktop_large
+      assign column_size_desktop = section.settings.column_size_desktop
+      assign column_size_tablet = section.settings.column_size_tablet
+      assign column_size_mobile = section.settings.column_size_mobile 
+      assign column_size_mobile_small = section.settings.column_size_mobile_small
+    
+      assign see_all_link_text = section.settings.see_all_link_text
+      assign see_all_link = section.settings.see_all_link
+      assign products = section.blocks | where: 'type', 'product'
+      assign extra_bottom_padding = section.settings.extra_bottom_padding 
+      assign extra_top_padding = section.settings.extra_top_padding
+      assign hide_arrows_desktop = section.settings.hide_arrows_desktop
+      assign hide_arrows_mobile = section.settings.hide_arrows_mobile
+      assign hide_bullets = section.settings.hide_bullets
+    
+      assign products_featured_in_this_article = article.metafields.arena.product_featured_in_this_article
+    %}
+    
+    <product-tile data-module="product-tile">
+      <div data-product-slider id="featured-products-{{ section.id }}" class="py-6 | md:py-8 {% if extra_top_padding %} pt-10 md:pt-18 {% endif %} {% if extra_bottom_padding %} pb-10 md:pb-18 {% endif %}" data-section-id="{{ section.id }}" style="background-color: {{ background_color }};">
+        <div class="container">
+          {% comment %} products {% endcomment %}
+          <div id="featured_products_slider-{{ section.id }}" class="glide featured-main">
+            <div class="view-all-flex glide__arrow-container w-auto block flex-col justify-center {% if description != blank %} flex-wrap {% endif %} | md:pb-10 {% if article %} md:flex-col {% else %} md:flex-row {% endif %}">
+              {% comment %} title & description {% endcomment %}
+              {% if title != blank %}
+    <h2 class="text-center text-dark-blue mr-4 mb-7 | md:mb-0 {% if article %} text-lg md:text-2xl {% else %} text-4xl md:text-9xl uppercase {% endif %}">{{ title }}</h2>
+    
+              {% endif %}
+              {% if description != blank %}
+                <p class="text-center text-dark-blue mx-auto max-w-3xl py-2 text-sm | md:flex-100 md:order-1 md:text-base | lg:text-lg">{{ description }}</p>
+              {% endif %} 
+    
+               {% if see_all_link != blank %}
+                  <a href="{{ see_all_link }}" class="custom-view-aall block uppercase underline text-xl underline-offset-2 font-walsheim-bold mt-4 text-center transition-all duration-200 text-dark-blue | hover:no-underline">
+                    {% if see_all_link_text != blank %}
+                      {{ see_all_link_text }}
+                    {% else %}
+                      {{ 'action.see_all' | t }}
+                    {% endif %}
+                  </a>
+                {% endif %}
+            </div>
+              <div class="glide__arrows flex items-center justify-center w-full mt-3 {% if hide_arrows_mobile %} hidden {% unless hide_arrows_desktop %} md:block {% endunless %} {% endif %} | {% if hide_arrows_desktop %} md:hidden {% endif %} md:mb-0 md:mt-0 {% unless article %} md:ml-10 {% endunless %} md:w-auto" data-glide-el="controls">
+                <button data-glide-dir="<" class="glide__arrow glide__arrow--left text-0 mr-5 group">
+                  slide left
+                  <span class="flex h-6 w-6 transform rotate-180 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+                    {% comment %}{% render 'icon-slider-arrow' %}{% endcomment %}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" focusable="false"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>
+                  </span>
+                </button>
+                <button data-glide-dir=">" class="glide__arrow glide__arrow--right text-0 ml-5 group">
+                  slide right
+                  <span class="flex h-6 w-6 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+                     {% comment %}{% render 'icon-slider-arrow' %}{% endcomment %}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" focusable="false"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>
+                  </span>
+                </button>
+              </div>
+              {% comment %}
+              {% endcomment %}
+              <!-- <button data-glide-dir="<" class="featured-button glide__arrow glide__arrow--left text-0 mr-5 group">
+                  slide left
+                  <span class="flex h-6
+{% enddoc %}
+{% liquid 
+  assign title = block.settings.title
+  assign description = block.settings.description
+  assign background_color = block.settings.background_color
+
+  assign column_size_desktop_extra_large = block.settings.column_size_desktop_extra_large
+  assign column_size_desktop_large = block.settings.column_size_desktop_large
+  assign column_size_desktop = block.settings.column_size_desktop
+  assign column_size_tablet = block.settings.column_size_tablet
+  assign column_size_mobile = block.settings.column_size_mobile 
+  assign column_size_mobile_small = block.settings.column_size_mobile_small
+
+  assign see_all_link_text = block.settings.see_all_link_text
+  assign see_all_link = block.settings.see_all_link
+  assign selected_collection = block.settings.collection
+  assign product_limit = block.settings.product_limit
+  assign extra_bottom_padding = block.settings.extra_bottom_padding 
+  assign extra_top_padding = block.settings.extra_top_padding
+  assign hide_arrows_desktop = block.settings.hide_arrows_desktop
+  assign hide_arrows_mobile = block.settings.hide_arrows_mobile
+  assign hide_bullets = block.settings.hide_bullets
+
+  assign ai_gen_id = block.id | replace: '_', '' | downcase
+%}
+
+<product-tile data-module="product-tile">
+  <div data-product-slider id="featured-products-{{ ai_gen_id }}" class="py-6 | md:py-8 {% if extra_top_padding %} pt-10 md:pt-18 {% endif %} {% if extra_bottom_padding %} pb-10 md:pb-18 {% endif %}" data-section-id="{{ ai_gen_id }}" style="background-color: {{ background_color }};" {{ block.shopify_attributes }}>
+    <div class="container">
+      <div id="featured_products_slider-{{ ai_gen_id }}" class="glide featured-main">
+        <div class="view-all-flex glide__arrow-container w-auto block flex-col justify-center {% if description != blank %} flex-wrap {% endif %} | md:pb-10 md:flex-row">
+          {% if title != blank %}
+            <h2 class="text-center text-dark-blue mr-4 mb-7 | md:mb-0 text-4xl md:text-9xl uppercase">{{ title }}</h2>
+          {% endif %}
+          {% if description != blank %}
+            <p class="text-center text-dark-blue mx-auto max-w-3xl py-2 text-sm | md:flex-100 md:order-1 md:text-base | lg:text-lg">{{ description }}</p>
+          {% endif %} 
+
+          {% if see_all_link != blank %}
+            <a href="{{ see_all_link }}" class="custom-view-aall block uppercase underline text-xl underline-offset-2 font-walsheim-bold mt-4 text-center transition-all duration-200 text-dark-blue | hover:no-underline">
+              {% if see_all_link_text != blank %}
+                {{ see_all_link_text }}
+              {% else %}
+                See all
+              {% endif %}
+            </a>
+          {% endif %}
+        </div>
+        <div class="glide__arrows flex items-center justify-center w-full mt-3 {% if hide_arrows_mobile %} hidden {% unless hide_arrows_desktop %} md:block {% endunless %} {% endif %} | {% if hide_arrows_desktop %} md:hidden {% endif %} md:mb-0 md:mt-0 md:ml-10 md:w-auto" data-glide-el="controls">
+          <button data-glide-dir="<" class="glide__arrow glide__arrow--left text-0 mr-5 group">
+            slide left
+            <span class="flex h-6 w-6 transform rotate-180 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" focusable="false"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>
+            </span>
+          </button>
+          <button data-glide-dir=">" class="glide__arrow glide__arrow--right text-0 ml-5 group">
+            slide right
+            <span class="flex h-6 w-6 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40" focusable="false"><path d="m15.5 0.932-4.3 4.38 14.5 14.6-14.5 14.5 4.3 4.4 14.6-14.6 4.4-4.3-4.4-4.4-14.6-14.6z"></path></svg>
+            </span>
+          </button>
+        </div>
+        <div class="glide__track" data-glide-el="track">
+          <ul class="glide__slides">
+            {% if selected_collection != blank %}
+              {% for product in selected_collection.products limit: product_limit %}
+                <li class="glide__slide" data-column-size-desktop-extra-large="{{ column_size_desktop_extra_large }}" data-column-size-desktop-large="{{ column_size_desktop_large }}" data-column-size-desktop="{{ column_size_desktop }}" data-column-size-tablet="{{ column_size_tablet }}" data-column-size-mobile="{{ column_size_mobile }}" data-column-size-mobile-small="{{ column_size_mobile_small }}">
+                  {% render 'product-tile', product: product %}
+                </li>
+              {% endfor %}
+            {% else %}
+              <li class="glide__slide">
+                <div class="text-center text-dark-blue py-10">
+                  <p class="text-lg">Please select a collection to display products</p>
+                </div>
+              </li>
+            {% endif %}
+          </ul>
+        </div>
+        {% unless hide_bullets %}
+          <div class="glide__bullets flex items-center justify-center mt-6" data-glide-el="controls[nav]">
+            {% if selected_collection != blank %}
+              {% for product in selected_collection.products limit: product_limit %}
+                <button class="glide__bullet mx-1" data-glide-dir="={{ forloop.index0 }}"></button>
+              {% endfor %}
+            {% endif %}
+          </div>
+        {% endunless %}
+      </div>
+    </div>
+  </div>
+</product-tile>
+
+{% schema %}
+{
+  "name": "Collection products",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "label": "Number of products",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Featured products"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "url",
+      "id": "see_all_link",
+      "label": "See all link"
+    },
+    {
+      "type": "text",
+      "id": "see_all_link_text",
+      "label": "See all link text",
+      "default": "See all"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "column_size_desktop_extra_large",
+      "label": "Columns (desktop extra large)",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "column_size_desktop_large",
+      "label": "Columns (desktop large)",
+      "min": 1,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "column_size_desktop",
+      "label": "Columns (desktop)",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "column_size_tablet",
+      "label": "Columns (tablet)",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "column_size_mobile",
+      "label": "Columns (mobile)",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "column_size_mobile_small",
+      "label": "Columns (mobile small)",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "extra_top_padding",
+      "label": "Extra top padding",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "extra_bottom_padding",
+      "label": "Extra bottom padding",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Slider controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_arrows_desktop",
+      "label": "Hide arrows on desktop",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_arrows_mobile",
+      "label": "Hide arrows on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_bullets",
+      "label": "Hide bullets",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection products"
+    }
+  ]
+}
+{% endschema %}

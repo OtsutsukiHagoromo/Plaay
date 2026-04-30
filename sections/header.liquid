@@ -1,0 +1,458 @@
+{% liquid 
+ assign logo = section.settings.logo 
+ assign link_list_left = section.settings.link_list_left 
+ assign link_list_right = section.settings.link_list_right
+ assign hide_search_desktop = section.settings.hide_search_desktop
+ assign hide_search_mobile = section.settings.hide_search_mobile
+ assign dropdown_menu_images = section.blocks | where: 'type', 'dropdown_menu_image'
+ assign scroll_sticky = section.settings.scroll_sticky
+%}
+
+{% style %}
+  .dropdown_menu::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    top: -4px;
+    background: white;
+    left: 80px;
+    transform: rotate(45deg);
+  }
+  .dropdown_menu::after {
+    content: '';
+    width: 100%;
+    position: absolute;
+    height: 36px;
+    background: white;
+    left: 0;
+    top: -36px;
+    opacity: 0;
+  }
+  @media only screen and (min-width: 1023px) {
+    .navigation_search::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      position: absolute;
+      top: -4px;
+      background: white;
+      left: 50%;
+      transform: rotate(45deg);
+    }
+  }
+  .navigation_search.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  @media only screen and (max-width: 1023px) {
+    .dropdown_parent.active .dropdown_menu {
+      max-height: none;
+    }
+    .dropdown_parent.active .dropdown_arrow {
+      transform: rotate(0deg);
+    }
+  }
+{% endstyle %}
+
+<main-navigation data-module="main-navigation">
+  <header class="fixed top-16 z-9 w-full transform left-1/2 -translate-x-1/2 px-4 | lg:top-10 lg:mt-5 lg:px-7">
+    <div class="inner_container {% if scroll_sticky %} scroll-sticky {% endif %} transform transition-all duration-200 bg-white flex items-center justify-between container rounded-2xl py-3 | lg:py-0 lg:px-8" style="box-shadow: 1px 6px 14px -14px #000000;">
+      {% comment %} left {% endcomment %}
+      <div class="w-2/5 flex items-center justify-between pr-8">
+        {% comment %} hamburger icon {% endcomment %}
+        <div class="flex items-center cursor-pointer | xl:hidden">
+          <button class="hamburger_icon hamburger hamburger--spin bg-transparent" type="button">
+            <span class="hamburger-box">
+              <span class="hamburger-inner text-opacity-0 text-0">menu open</span>
+            </span>
+          </button>
+        </div>
+        {% comment %} menu {% endcomment %}
+        {% if link_list_left != blank %}
+          <ul class="items-center w-full hidden | xl:flex">
+            {% for link in linklists[link_list_left].links %}
+              <li class="{% if link.links != blank %} dropdown_parent {% endif %} relative text-dark-blue text-base font-bold text-center font-walsheim-bold tracking-widest py-5 group | lg:text-sm {% unless forloop.last %} pr-10 {% endunless %}">
+                {% if link.links != blank %}
+                  <span>{{ link.title }}</span>
+                {% else %}
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                {% endif %}
+                {% if link.links != blank %}
+                  <span class="dropdown_arrow text-dark-blue h-2 w-2 inline-block cursor-pointer transform rotate-180 transition-all duration-200 | group-hover:rotate-0">
+                    {% render 'icon-dropdown-arrow' %}
+                  </span>
+                  <ul class="custom-icon dropdown_menu ease-in-out transition-maxHeight duration-500 | lg:transition-transform lg:duration-200 lg:scale-0 lg:origin-top-left lg:absolute lg:left-0 lg:bg-white lg:rounded-[20px] lg:px-4 lg:py-7 lg:text-left lg:min-w-[280px] lg:w-max lg:top-auto lg:mt-9 {% if forloop.first %} lg:-ml-7 {% else %} lg:-ml-9 {% endif %} | group-hover:scale-100">
+                    {% for link in link.links %}
+                      {% assign lowercase_title = link.title | downcase %}
+                      <li class="py-3 font-walsheim-bold text-xs tracking-wide flex items-center">
+                        {% for block in dropdown_menu_images %}
+                          {% assign dropdown_item = block.settings.dropdown_item %}
+                          {% assign image = block.settings.image %}
+
+                          {% if dropdown_item == lowercase_title %}
+                            {% render 'img', type: 'img', img: image, lazy: true, class: 'object-cover h-12 w-12 rounded mr-3' %}
+                          {% endif %}
+                        {% endfor %}
+
+                        <a href="{{ link.url }}" class="">{{ link.title }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      {% comment %} logo {% endcomment %}
+      <div class="w-1/3 | lg:w-1/5">
+        {% if logo != blank %}
+          <a href="{{ routes.root_url }}" class="text-0 flex">
+            {% render 'img', type: 'img', img: logo, lazy: true, class: 'mx-auto object-contain w-20 lg:w-24', height: 36, width: 96 %}
+            {{ 'action.logo' | t }}
+          </a>
+        {% endif %}
+      </div>
+
+      {% comment %} account / cart {% endcomment %}
+      <div class="w-2/5 flex items-center justify-end pl-8 | lg:justify-end">
+        {% comment %} menu {% endcomment %}
+        {% if link_list_right != blank %}
+          <ul class="items-center w-full hidden | lg:w-auto xl:flex lg:mr-9">
+            {% for link in linklists[link_list_right].links %}
+              <li class="{% if link.links != blank %} dropdown_parent {% endif %} py-5 transition-all duration-200 text-dark-blue text-base font-bold text-center font-walsheim-bold tracking-widest relative group | lg:text-sm {% unless forloop.last %} pr-10 {% endunless %}">
+                {% if link.links != blank %}
+                  <span>{{ link.title }}</span>
+                {% else %}
+                  <a href="{{ link.url }}">{{ link.title }}</a>
+                {% endif %}
+                {% if link.links != blank %}
+                  <span class="dropdown_arrow text-dark-blue h-2 w-2 inline-block cursor-pointer transform rotate-180 transition-all duration-200 | group-hover:rotate-0">
+                    {% render 'icon-dropdown-arrow' %}
+                  </span>
+                  <ul class="dropdown_menu transition-transform duration-200 ease-in-out | lg:scale-0 lg:origin-top-left lg:absolute lg:left-0 lg:bg-white lg:rounded-[20px] lg:px-4 lg:py-7 lg:text-left lg:min-w-[280px] lg:w-max lg:top-auto lg:mt-9 lg:-ml-9 | group-hover:scale-100">
+                    {% for link in link.links %}
+                      {% assign lowercase_title = link.title | downcase %}
+                      <li class="py-3 font-walsheim-bold text-xs tracking-wide flex items-center">
+                        {% for block in dropdown_menu_images %}
+                          {% assign dropdown_item = block.settings.dropdown_item %}
+                          {% assign image = block.settings.image %}
+
+                          {% if dropdown_item == lowercase_title %}
+                            {% render 'img', type: 'img', img: image, lazy: true, class: 'object-cover h-12 w-12 rounded mr-3' %}
+                          {% endif %}
+                        {% endfor %}
+
+                        <a href="{{ link.url }}">{{ link.title }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        {% if shop.customer_accounts_enabled %}
+          {% if customer %}
+            <a href="{{ routes.account_url }}" class="text-0 text-dark-blue tracking-widest font-walsheim-bold hidden | lg:capitalize lg:text-sm lg:font-bold lg:pr-6">
+              <span class="flex cursor-pointer h-5 w-5 text-dark-blue | lg:hidden">
+                {% render 'icon-account' %}
+              </span>
+              {{ 'action.account' | t }}
+            </a>
+          {% else %}
+            <a href="/account/login" class="account-link text-0 text-dark-blue tracking-widest hidden font-walsheim-bold | lg:block lg:capitalize lg:text-sm lg:font-bold lg:pr-6">
+              <span class="h-5 w-5 cursor-pointer flex text-dark-blue | lg:hidden">
+                {% render 'icon-account' %}
+              </span>
+              {{ 'action.account' | t }}
+            </a>
+          {% endif %}
+        {% endif %}
+
+        {% comment %} search desktop {% endcomment %}
+        {% unless hide_search_desktop %}
+          <span class="search_icon w-5 h-5 cursor-pointer text-dark-blue hidden relative | lg:mr-6 lg:flex">
+            {% render 'icon-search-alternate' %}
+            {% comment %} search {% endcomment %}
+            <form
+              action="/search"
+              method="get"
+              role="search"
+              class="search navigation_search invisible transition-all duration-200 origin-top-left transform opacity-0 absolute top-14 min-w-[300px] -left-[142px] px-3 py-5 bg-white rounded-[20px]">
+              <input
+                type="search"
+                name="q"
+                placeholder="Search"
+                aria-expanded="false"
+                autocorrect="off"
+                spellcheck="false"
+                class="py-1 px-4 text-sm w-full" />
+            </form>
+          </span>
+        {% endunless %}
+        {% comment %} account / search {% endcomment %}
+        <div class="flex items-center justify-center mr-4">
+          {% comment %} account {% endcomment %}
+          {% if shop.customer_accounts_enabled %}
+            {% if customer %}
+              <a href="{{ routes.account_url }}" class="text-0 text-dark-blue tracking-widest font-walsheim-bold pr-4">
+                <span class="flex cursor-pointer h-5 w-5 text-dark-blue">
+                  {% render 'icon-account' %}
+                </span>
+                {{ 'action.account' | t }}
+              </a>
+            {% else %}
+              <a href="/account/login" class="text-0 text-dark-blue tracking-widest font-walsheim-bold">
+                <span class="h-5 w-5 cursor-pointer flex text-dark-blue | lg:hidden">
+                  {% render 'icon-account' %}
+                </span>
+                {{ 'action.account' | t }}
+              </a>
+            {% endif %}
+          {% endif %}
+          {% comment %} search {% endcomment %}
+          {% unless hide_search_mobile %}
+            <span class="search_icon w-5 h-5 cursor-pointer text-dark-blue flex relative">
+              {% render 'icon-search-alternate' %}
+            </span>
+          {% endunless %}
+        </div>
+        <a
+          href="/pages/wishlist"
+          class="plaay-header-wishlist text-0 hidden items-center justify-center text-dark-blue relative mr-4 | lg:flex"
+          aria-label="Wishlist">
+          <svg class="plaay-header-wishlist__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" fill="none"/>
+          </svg>
+          <span class="plaay-header-wishlist__count" data-wl-count hidden>0</span>
+          Wishlist
+        </a>
+        <button
+          type="button"
+          class="header__icon--cart text-0 flex items-center transition-all duration-200 | lg:h-10 lg:flex lg:items-center lg:tracking-wider lg:text-sm lg:font-bold lg:bg-grey-ef lg:leading-none lg:px-4 lg:rounded-2xl | lg:hover:bg-dark-blue lg:hover:text-grey-ef">
+          <span class="flex h-5 w-5 cursor-pointer text-dark-blue | lg:hidden">
+            {% render 'icon-bag' %}
+          </span>
+          {{ 'action.cart' | t }}
+          <span class="ml-2 font-walsheim-regular-new text-xs" data-cart-count>
+            <span>{{ cart.item_count }}</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+  {% comment %} mobile menu {% endcomment %}
+  <div class="mobile_menu fixed max-w-md py-4 transform top-0 left-0 h-full w-full bg-white z-20 -translate-x-full transition-all duration-300 | xl:hidden">
+    {% comment %} close cross {% endcomment %}
+    <span class="mobile_menu_cross h-4 w-4 flex cursor-pointer text-black absolute right-4">
+      {% render 'icon-cross-alternate' %}
+    </span>
+    {% comment %} logo {% endcomment %}
+    {% if logo != blank %}
+      {% render 'img', type: 'img', img: logo, eager: true, class: 'object-contain w-20 h-8 mx-auto mt-10' %}
+    {% endif %}
+    {% comment %} menus {% endcomment %}
+    <div class="mt-[70px] border-b border-black border-opacity-10">
+      {% if link_list_left != blank %}
+        <ul class="w-full flex flex-col">
+          {% for link in linklists[link_list_left].links %}
+            <li class="{% if link.links != blank %} dropdown_parent {% endif %} relative text-dark-blue text-base font-bold tracking-widest border-t border-black border-opacity-10 px-14 py-5 font-walsheim-bold group | lg:text-sm {% unless forloop.last %} pr-10 {% endunless %}">
+              {% if link.links != blank %}
+                <span>{{ link.title }}</span>
+              {% else %}
+                <a href="{{ link.url }}">{{ link.title }}</a>
+              {% endif %}
+              {% if link.links != blank %}
+                <span class="dropdown_arrow text-dark-blue h-2 w-2 inline-block cursor-pointer transform rotate-180 transition-all duration-200">
+                  {% render 'icon-dropdown-arrow' %}
+                </span>
+                <div class="overflow-hidden relative">
+                  <ul class="dropdown_menu transition-all duration-200 ease-in-out max-h-0">
+                    {% for link in link.links %}
+                      {% assign lowercase_title = link.title | downcase %}
+                      <li class="py-3 font-walsheim-bold text-sm tracking-wide flex items-center mr-3">
+                        {% for block in dropdown_menu_images %}
+                          {% assign dropdown_item = block.settings.dropdown_item %}
+                          {% assign image = block.settings.image %}
+
+                          {% if dropdown_item == lowercase_title %}
+                            <a href="{{ link.url }}">
+                              {% render 'img', type: 'img', img: image, lazy: true, class: 'object-cover h-12 w-12 rounded mr-3' %}
+                            </a>
+                          {% endif %}
+                        {% endfor %}
+
+                        <a href="{{ link.url }}">{{ link.title }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if link_list_right != blank %}
+        <ul class="w-full flex flex-col">
+          {% for link in linklists[link_list_right].links %}
+            <li class="{% if link.links != blank %} dropdown_parent {% endif %} relative text-dark-blue text-base font-bold tracking-widest border-t border-black border-opacity-10 px-14 py-5 font-walsheim-bold group | lg:text-sm {% unless forloop.last %} pr-10 {% endunless %}">
+              {% if link.links != blank %}
+                <span>{{ link.title }}</span>
+              {% else %}
+                <a href="{{ link.url }}">{{ link.title }}</a>
+              {% endif %}
+              {% if link.links != blank %}
+                <span class="dropdown_arrow text-dark-blue h-2 w-2 inline-block cursor-pointer transform rotate-180 transition-all duration-200">
+                  {% render 'icon-dropdown-arrow' %}
+                </span>
+                <div class="overflow-hidden relative">
+                  <ul class="dropdown_menu transition-all duration-200 ease-in-out max-h-0">
+                    {% for link in link.links %}
+                      {% assign lowercase_title = link.title | downcase %}
+                      <li class="py-3 font-walsheim-bold text-sm tracking-wide flex items-center mr-3">
+                        {% for block in dropdown_menu_images %}
+                          {% assign dropdown_item = block.settings.dropdown_item %}
+                          {% assign image = block.settings.image %}
+
+                          {% if dropdown_item == lowercase_title %}
+                            <a href="{{ link.url }}">
+                              {% render 'img', type: 'img', img: image, lazy: true, class: 'object-cover h-12 w-12 rounded mr-3' %}
+                            </a>
+                          {% endif %}
+                        {% endfor %}
+
+                        <a href="{{ link.url }}">{{ link.title }}</a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      <a href="/pages/wishlist" class="plaay-mobile-wishlist flex items-center justify-between text-dark-blue text-base font-bold tracking-widest border-t border-black border-opacity-10 px-14 py-5 font-walsheim-bold">
+        <span class="flex items-center">
+          <span class="plaay-mobile-wishlist__icon-wrap">
+            <svg class="plaay-header-wishlist__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.8" fill="none"/>
+            </svg>
+          </span>
+          Wishlist
+        </span>
+        <span class="plaay-mobile-wishlist__count" data-wl-count hidden>0</span>
+      </a>
+    </div>
+    {% unless hide_search_mobile %}
+      <form
+        action="/search"
+        method="get"
+        role="search"
+        class="search navigation_search invisible transition-all duration-200 origin-top-left transform opacity-0 min-w-[300px] border-b border-black border-opacity-10 py-5 bg-white">
+        <input
+          type="search"
+          name="q"
+          placeholder="Search"
+          aria-expanded="false"
+          autocorrect="off"
+          spellcheck="false"
+          class="py-1 px-14 text-sm w-full" />
+      </form>
+    {% endunless %}
+  </div>
+</main-navigation>
+
+<script>
+  (function() {
+    var STORAGE_KEY = 'plaay_wishlist';
+
+    function getWishlist() {
+      try {
+        var list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        return Array.isArray(list) ? list : [];
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function updateWishlistCount() {
+      var count = getWishlist().length;
+      document.querySelectorAll('[data-wl-count]').forEach(function(el) {
+        el.textContent = count;
+        el.hidden = count === 0;
+      });
+      document.querySelectorAll('.plaay-header-wishlist, .plaay-mobile-wishlist').forEach(function(link) {
+        link.classList.toggle('has-items', count > 0);
+      });
+    }
+
+    updateWishlistCount();
+    window.addEventListener('plaay:wishlist:change', updateWishlistCount);
+    window.addEventListener('storage', function(event) {
+      if (event.key === STORAGE_KEY) updateWishlistCount();
+    });
+  })();
+</script>
+
+{% schema %}
+  {
+    "name": "t:sections.header.name",
+    "settings": [
+      {
+        "type": "image_picker",
+        "label": "Logo",
+        "id": "logo"
+      },
+      {
+        "type": "link_list",
+        "label": "Link list (left side)",
+        "id": "link_list_left"
+      },
+      {
+        "type": "link_list",
+        "label": "Link list (right side)",
+        "id": "link_list_right"
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_search_desktop",
+        "label": "Hide search on desktop?",
+        "default": true
+      }, {
+        "type": "checkbox",
+        "id": "hide_search_mobile",
+        "label": "Hide search on mobile?",
+        "default": true
+      }, {
+        "type": "checkbox",
+        "id": "scroll_sticky",
+        "label": "Sticky on scroll?",
+        "info": "When this is checked, the header will disappear when scrolling down and reappear when scrolling back up.",
+        "default": false
+      }
+    ],
+    "blocks": [
+      {
+        "type": "dropdown_menu_image",
+        "name": "Dropdown menu image",
+        "settings": [
+          {
+            "type": "image_picker",
+            "label": "Image",
+            "id": "image"
+          }, {
+            "type": "text",
+            "id": "dropdown_item",
+            "label": "Dropdown item to link to",
+            "info": "please type out the name of the dropdown item you would like this image to appear next to. Please keep the wording all lowercase."
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

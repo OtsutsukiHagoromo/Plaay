@@ -1,0 +1,301 @@
+<style>
+  .byob-tiers {
+    background-color: {{ section.settings.background_color }};
+    width: 100%;
+    padding: 64px 24px;
+    box-sizing: border-box;
+  }
+
+  .byob-tiers__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .byob-tiers__section-heading {
+    font-family: var(--font-walsheim-black, 'GT Walsheim', sans-serif);
+    font-size: clamp(28px, 4vw, 44px);
+    color: {{ section.settings.text_color }};
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin: 0 0 48px;
+    line-height: 1.1;
+  }
+
+  .byob-tiers__steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    position: relative;
+  }
+
+  /* Connecting line between steps on desktop */
+  .byob-tiers__steps::before {
+    content: '';
+    position: absolute;
+    top: 28px; /* centre of the number circle */
+    left: calc(16.66% + 12px);
+    right: calc(16.66% + 12px);
+    height: 2px;
+    background-color: rgba(249, 198, 29, 0.3);
+    z-index: 0;
+  }
+
+  .byob-tiers__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Yellow numbered circle */
+  .byob-tiers__step-number {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #F9C61D;
+    color: #021D49;
+    font-family: var(--font-walsheim-black, 'GT Walsheim', sans-serif);
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .byob-tiers__step-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 20px;
+    color: #F9C61D;
+  }
+
+  .byob-tiers__step-heading {
+    font-family: var(--font-walsheim-bold, 'GT Walsheim', sans-serif);
+    font-size: 20px;
+    color: {{ section.settings.text_color }};
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    line-height: 1.2;
+  }
+
+  .byob-tiers__step-desc {
+    font-family: var(--font-walsheim-regular, 'GT Walsheim', sans-serif);
+    font-size: 15px;
+    color: {{ section.settings.text_color }};
+    opacity: 0.8;
+    margin: 0;
+    line-height: 1.6;
+    max-width: 260px;
+  }
+
+  /* Divider between steps (desktop) */
+  .byob-tiers__step-divider {
+    display: none;
+  }
+
+  /* Mobile: stack vertically */
+  @media (max-width: 768px) {
+    .byob-tiers {
+      padding: 52px 20px;
+    }
+
+    .byob-tiers__steps {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .byob-tiers__steps::before {
+      display: none;
+    }
+
+    .byob-tiers__step {
+      padding: 0;
+    }
+
+    .byob-tiers__section-heading {
+      margin-bottom: 36px;
+    }
+  }
+</style>
+
+{%- comment -%}
+  SVG lookup for each icon_choice value.
+  Supported values: gift_box, chocolate_bar, truck
+{%- endcomment -%}
+
+{%- capture svg_gift_box -%}
+<svg class="byob-tiers__step-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- Box body -->
+  <rect x="8" y="26" width="44" height="26" rx="3" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <!-- Lid -->
+  <rect x="6" y="18" width="48" height="10" rx="2" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <!-- Ribbon vertical -->
+  <line x1="30" y1="18" x2="30" y2="52" stroke="#F9C61D" stroke-width="2.5"/>
+  <!-- Ribbon horizontal (on lid only) -->
+  <line x1="6" y1="23" x2="54" y2="23" stroke="#F9C61D" stroke-width="2.5"/>
+  <!-- Bow left -->
+  <path d="M30 18 C22 8 12 10 18 18" stroke="#F9C61D" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <!-- Bow right -->
+  <path d="M30 18 C38 8 48 10 42 18" stroke="#F9C61D" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+</svg>
+{%- endcapture -%}
+
+{%- capture svg_chocolate_bar -%}
+<svg class="byob-tiers__step-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- Outer wrapper / wrapper top -->
+  <rect x="10" y="14" width="40" height="32" rx="4" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <!-- Grid lines horizontal -->
+  <line x1="10" y1="25" x2="50" y2="25" stroke="#F9C61D" stroke-width="2"/>
+  <line x1="10" y1="35" x2="50" y2="35" stroke="#F9C61D" stroke-width="2"/>
+  <!-- Grid lines vertical -->
+  <line x1="23" y1="14" x2="23" y2="46" stroke="#F9C61D" stroke-width="2"/>
+  <line x1="37" y1="14" x2="37" y2="46" stroke="#F9C61D" stroke-width="2"/>
+  <!-- Wrapper fold hint -->
+  <path d="M10 18 Q30 12 50 18" stroke="#F9C61D" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.5"/>
+</svg>
+{%- endcapture -%}
+
+{%- capture svg_truck -%}
+<svg class="byob-tiers__step-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <!-- Cargo box -->
+  <rect x="4" y="18" width="32" height="22" rx="2" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <!-- Cab -->
+  <path d="M36 28h10l6 8v4H36V28z" stroke="#F9C61D" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+  <!-- Wheels -->
+  <circle cx="14" cy="42" r="5" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <circle cx="46" cy="42" r="5" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <!-- Ground line -->
+  <line x1="2" y1="47" x2="58" y2="47" stroke="#F9C61D" stroke-width="1.5" opacity="0.35"/>
+  <!-- Cab window -->
+  <path d="M38 29h6l4 6H38V29z" stroke="#F9C61D" stroke-width="1.5" stroke-linejoin="round" fill="none" opacity="0.6"/>
+</svg>
+{%- endcapture -%}
+
+<section class="byob-tiers" id="byob-tiers-section">
+  <div class="byob-tiers__inner">
+
+    {%- if section.settings.section_heading != blank -%}
+      <h2 class="byob-tiers__section-heading font-walsheim-black">{{ section.settings.section_heading }}</h2>
+    {%- endif -%}
+
+    <div class="byob-tiers__steps">
+      {%- assign step_count = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- assign step_count = step_count | plus: 1 -%}
+        <div class="byob-tiers__step" {{ block.shopify_attributes }}>
+
+          <div class="byob-tiers__step-number font-walsheim-black">{{ step_count }}</div>
+
+          {%- case block.settings.icon_choice -%}
+            {%- when 'gift_box' -%}   {{ svg_gift_box }}
+            {%- when 'chocolate_bar' -%} {{ svg_chocolate_bar }}
+            {%- when 'truck' -%}      {{ svg_truck }}
+            {%- else -%}              {{ svg_gift_box }}
+          {%- endcase -%}
+
+          <h3 class="byob-tiers__step-heading font-walsheim-bold">{{ block.settings.heading }}</h3>
+          <p class="byob-tiers__step-desc font-walsheim-regular">{{ block.settings.description }}</p>
+
+        </div>
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "BYOB How It Works",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_heading",
+      "label": "Section heading",
+      "default": "How It Works"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#021D49"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon_choice",
+          "label": "Icon",
+          "options": [
+            { "value": "gift_box",      "label": "Gift / Box" },
+            { "value": "chocolate_bar", "label": "Chocolate Bar" },
+            { "value": "truck",         "label": "Delivery Truck" }
+          ],
+          "default": "gift_box"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Step heading",
+          "default": "Pick Your Box Size"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Step description",
+          "default": "Choose 6, 12, or 24 bars"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "BYOB How It Works",
+      "category": "BYOB",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "icon_choice": "gift_box",
+            "heading": "Pick Your Box Size",
+            "description": "Choose 6, 12, or 24 bars"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon_choice": "chocolate_bar",
+            "heading": "Choose Your Flavours",
+            "description": "Mix & match anything from our range"
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon_choice": "truck",
+            "heading": "We'll Deliver It Fresh",
+            "description": "Free delivery on orders over AED 75"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

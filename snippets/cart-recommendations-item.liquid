@@ -1,0 +1,19 @@
+<div
+  class="plaay-upsell-card flex-shrink-0"
+  data-cart-recommendation-item
+  data-product-id="{{ product.id }}">
+  <a href="{{ product.url }}" class="plaay-upsell-card__img-wrap block mb-2">
+    {% render 'img', type: 'img', lazy: true, img: product.featured_image, class: 'plaay-upsell-card__img object-contain w-full h-full' %}
+  </a>
+  <p class="plaay-upsell-card__title font-walsheim-bold text-dark-blue uppercase truncate">{{ product.title | truncate: 30 }}</p>
+  <p class="plaay-upsell-card__price font-walsheim-bold text-dark-blue text-sm mb-2">{{ product.price | money }}</p>
+  <quick-add data-module="quick-add" data-id="{{ product.first_available_variant.id }}">
+    <input type="hidden" name="quantity" value="1">
+    <button
+      type="button"
+      class="plaay-upsell-card__btn font-walsheim-bold text-dark-blue text-xs uppercase w-full"
+      data-add>
+      + Add
+    </button>
+  </quick-add>
+</div>

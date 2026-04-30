@@ -1,0 +1,28 @@
+<div class="min-h-[100vh]" style="background-color: {{ section.settings.background_color }}; color: {{ section.settings.text_color }};">
+  <div class="container pt-32 pb-10 | md:pt-40 md:pb-20">
+    <h1 class="pb-10 text-5xl | md:text-11xl">
+      {{ page.title }}</h1>
+    <div class="admin_content font-walsheim">
+      {{ page.content }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Default page",
+    "settings": [
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Background color",
+        "default": "#FFF"
+      }, {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "#021D49"
+      }
+    ]
+  }
+{% endschema %}

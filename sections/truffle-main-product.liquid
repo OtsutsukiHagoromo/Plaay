@@ -1,0 +1,1123 @@
+{% liquid
+  assign background_color = section.settings.background_color
+  assign show_exact_ingredients = section.settings.show_exact_ingredients
+
+  assign exact_ingredients = product.metafields.arena.exact_ingredients
+  assign subtitle_text = product.metafields.arena.subtitle_text
+
+  assign product_images_size = product.images | size
+
+  assign size_option_name = section.settings.size_option_name | default: 'Pack Size'
+%}
+
+{% comment %} Resolve the product option that should drive truffle pack sizes. {% endcomment %}
+{% liquid
+  assign configured_size_option = size_option_name | downcase | strip
+  assign size_option_index = nil
+  assign size_option_label = size_option_name
+  assign options_count = product.options_with_values | size
+
+  for option in product.options_with_values
+    assign option_name_down = option.name | downcase | strip
+    if option_name_down == configured_size_option or option_name_down contains 'size' or option_name_down contains 'pack' or option_name_down contains 'weight'
+      assign size_option_index = forloop.index0
+      break
+    endif
+  endfor
+
+  if size_option_index == nil and options_count > 0
+    assign size_option_index = options_count | minus: 1
+  endif
+%}
+
+{% comment %} ── Build unique size list ── {% endcomment %}
+{%- assign unique_sizes = '' -%}
+{%- for variant in product.variants -%}
+  {%- assign this_size = variant.options[size_option_index] -%}
+  {%- if this_size != blank -%}
+    {%- assign size_token = '||' | append: this_size | append: '||' -%}
+    {%- assign current_sizes = '||' | append: unique_sizes | append: '||' -%}
+    {%- unless current_sizes contains size_token -%}
+      {%- if unique_sizes == '' -%}
+        {%- assign unique_sizes = this_size -%}
+      {%- else -%}
+        {%- assign unique_sizes = unique_sizes | append: '||' | append: this_size -%}
+      {%- endif -%}
+    {%- endunless -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- assign unique_size_arr = unique_sizes | split: '||' -%}
+
+{% style %}
+  #product-gallery-thumbnails-{{ section.id }} .glide__slide--active img{
+    border: 2px solid #FFF;
+  }
+
+  /* ── Truffle flavour picker ─────────────────────────── */
+  .truffle-flavour-selector {
+    margin: 16px 0 20px;
+  }
+
+  /* ── Pack size pills ────────────────────────────────── */
+  .truffle-sizes-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 20px;
+    padding-top: 22px; /* room for the "Most Popular" floating badge */
+  }
+  .truffle-size-tile {
+    cursor: pointer;
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    padding: 10px 20px 11px;
+    border-radius: 100px;
+    background: #F0F2F5;
+    border: 1.5px solid transparent;
+    transition: background .18s, border-color .18s, box-shadow .18s;
+    text-align: center;
+    min-width: 90px;
+  }
+  .truffle-size-tile:hover {
+    border-color: #021D49;
+    background: #E8EBF0;
+  }
+  .truffle-size-tile.truffle-size--active {
+    background: #021D49;
+    border-color: #021D49;
+    box-shadow: 0 4px 14px rgba(2,29,73,0.22);
+  }
+  .truffle-size-tile.truffle-size--unavailable {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .truffle-size__name {
+    display: block;
+    font-size: 0.72rem;
+    color: rgba(2,29,73,0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: var(--font-walsheim-bold, inherit);
+    line-height: 1.2;
+    transition: color .18s;
+  }
+  .truffle-size-tile.truffle-size--active .truffle-size__name {
+    color: rgba(249,198,29,0.75);
+  }
+  .truffle-size__price {
+    display: block;
+    font-size: 1.05rem;
+    color: #021D49;
+    font-family: var(--font-walsheim-black, inherit);
+    line-height: 1.2;
+    transition: color .18s;
+  }
+  .truffle-size-tile.truffle-size--active .truffle-size__price {
+    color: #F9C61D;
+  }
+  .truffle-size__per {
+    display: block;
+    font-size: 0.58rem;
+    color: rgba(2,29,73,0.5);
+    margin-top: 1px;
+    font-family: var(--font-walsheim-regular, inherit);
+    line-height: 1.3;
+    transition: color .18s;
+  }
+  .truffle-size-tile.truffle-size--active .truffle-size__per {
+    color: rgba(249,198,29,0.65);
+  }
+  .truffle-size__best {
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #F9C61D;
+    color: #021D49;
+    font-size: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+    font-family: var(--font-walsheim-bold, inherit);
+    box-shadow: 0 1px 4px rgba(2,29,73,0.15);
+  }
+
+  .truffle-atc-wrap quick-add > .mb-5,
+  .truffle-atc-wrap .variant_type {
+    display: none;
+  }
+
+
+  /* ── Variant JSON (hidden) ──────────────────────────── */
+  #truffle-variant-data-{{ section.id }} { display: none; }
+{% endstyle %}
+
+{% comment %} Output all variant data as JSON for JS {% endcomment %}
+<script id="truffle-variant-data-{{ section.id }}" type="application/json">
+[
+  {%- for variant in product.variants -%}
+    {
+      "id": {{ variant.id }},
+      "options": {{ variant.options | json }},
+      "option1": {{ variant.option1 | json }},
+      "option2": {{ variant.option2 | json }},
+      "price": {{ variant.price }},
+      "priceFmt": {{ variant.price | money | json }},
+      "compareAtPrice": {{ variant.compare_at_price | default: 0 }},
+      "available": {{ variant.available }},
+      "imageUrl": {{ variant.featured_image.src | image_url: width: 800 | json }}
+    }{% unless forloop.last %},{% endunless %}
+  {%- endfor -%}
+]
+</script>
+
+<quantity-adjuster data-module="quantity-adjuster">
+  <div class="hidden"></div>
+</quantity-adjuster>
+<quick-add data-module="quick-add"></quick-add>
+
+<div style="background-color: {{ background_color }};">
+  <div class="container flex flex-col py-14 | md:pb-16 md:pt-44 | lg:flex-row">
+
+    {% comment %} main gallery {% endcomment %}
+    <div class="w-full relative | lg:w-[55%]">
+      {%- render 'plaay-badge', product: product -%}
+      <div {% if product_images_size > 1 %} class="glide" {% endif %} id="product-gallery-{{ section.id }}">
+        {% if product_images_size > 1 %}
+          <div class="glide__arrows z-10 flex items-center justify-center w-full | lg:mb-0 lg:mt-0 lg:ml-10 lg:w-auto" data-glide-el="controls">
+            <button data-glide-dir="<" class="glide__arrow glide__arrow--left text-0 group absolute z-1 left-0 top-1/2 transform -translate-y-1/2 mr-5 | lg:-left-8">
+              slide left
+              <span class="flex h-6 w-6 transform rotate-180 text-dark-blue transition-all duration-200 | group-hover:opacity-100">
+                {% render 'icon-slider-arrow' %}
+              </span>
+            </button>
+            <button data-glide-dir=">" class="glide__arrow glide__arrow--right text-0 group absolute right-0 z-1 top-1/2 transform -translate-y-1/2 ml-5 | lg:-right-8">
+              slide right
+              <span class="flex h-6 w-6 text-dark-blue transition-all duration-200 | group-hover:opacity-100">
+                {% render 'icon-slider-arrow' %}
+              </span>
+            </button>
+          </div>
+        {% endif %}
+        <div {% if product_images_size > 1 %} class="glide__track w-full max-w-[800px] mx-auto" data-glide-el="track" {% endif %}>
+          <ul {% if product_images_size > 1 %} class="glide__slides" {% endif %}>
+            {% for image in product.images %}
+              <li {% if product_images_size > 1 %} class="glide__slide px-8 | md:px-0" {% endif %} data-index="{{ forloop.index0 }}">
+                {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain h-[420px] mx-auto lg:w-full lg:h-[600px] xl:object-cover', height: 420, width: 550, forloop_data: forloop.index %}
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% if product_images_size > 1 %}
+          <div class="glide__bullets flex items-center justify-center my-5 | md:hidden" data-glide-el="controls[nav]">
+            {% for image in product.images %}
+              <button class="glide__bullet h-4 w-4 bg-dark-blue opacity-50 rounded-full transition-all duration-200 {% unless forloop.first %} ml-3 {% endunless %}" data-glide-dir="={{ forloop.index0 }}"></button>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      {% comment %} thumbnail slider {% endcomment %}
+      {% if product_images_size > 1 %}
+        <div class="glide mt-2 max-w-md mx-auto hidden | md:block" id="product-gallery-thumbnails-{{ section.id }}">
+          <div class="glide__arrows z-10 flex items-center justify-center w-full mt-8 mb-14 | md:mb-0 md:mt-0 md:ml-10 md:w-auto" data-glide-el="controls">
+            <button data-glide-dir="<" class="glide__arrow glide__arrow--left text-0 group absolute -left-16 top-1/2 transform -translate-y-1/2 mr-5 | lg:-left-8 ">
+              slide left
+              <span class="flex h-6 w-6 transform rotate-180 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+                {% render 'icon-slider-arrow' %}
+              </span>
+            </button>
+            <button data-glide-dir=">" class="glide__arrow glide__arrow--right text-0 group absolute -right-16 top-1/2 transform -translate-y-1/2 ml-5 | lg:-right-8">
+              slide right
+              <span class="flex h-6 w-6 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+                {% render 'icon-slider-arrow' %}
+              </span>
+            </button>
+          </div>
+          <div class="glide__track max-w-[380px] mx-auto" data-glide-el="track">
+            <ul class="glide__slides">
+              {% for image in product.images %}
+                <li class="glide__slide thumbnail_slide">
+                  <div class="block h-20 w-20 border-0.5 border-opacity-20 border-black">
+                    {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain mx-auto h-full cursor-pointer w-full', forloop_data: forloop.index0 %}
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} product information {% endcomment %}
+    <div class="w-full mt-5 | lg:mt-0 lg:w-1/2 lg:flex lg:flex-col lg:justify-center lg:max-w-md lg:ml-10 | xl:ml-14 | 2xl:ml-20">
+      {% comment %} title {% endcomment %}
+      <div class="plaay-pdp-title-row">
+        {%- render 'plaay-badge', product: product, inline: true -%}
+        <h1 class="text-5xl leading-none uppercase text-dark-blue font-walsheim-bold pdp-title"> {{ product.title }} </h1>
+        {%- render 'plaay-wishlist-heart', product: product, style: 'pdp' -%}
+      </div>
+      {%- render 'plaay-trust-badges', product: product -%}
+
+      <!-- Add Offer Callout Block Here -->
+      {% for block in section.blocks %}
+        {% if block.type == 'offer_callout' %}
+          <div class="product-block-offer-callout" {{ block.shopify_attributes }}>
+            <svg class="clip-left" width="27" height="62" viewBox="0 0 27 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M5 1H26V61H20H3L11.5 52L2 48.4C4.66667 46 9.9 41.2 9.5 41.2C9.1 41.2 5.33333 37.6 3.5 35.8L11 28L4.5 23.8L9.5 17.2L5 12.4L10.5 7.6L5 1Z" fill="#FECE55" stroke="#404040" stroke-width="2"></path>
+              <rect x="24" y="2" width="6" height="58" fill="#FECE55"></rect>
+            </svg>
+
+            <div class="larg">
+              <div class="bloc">
+                <p><span class="oc-copy">{{ block.settings.coupon_text }}</span></p>
+              </div>
+            </div>
+
+            <svg class="clip-right" width="27" height="62" viewBox="0 0 27 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 61H1L1 0.999996H7H24L15.5 10L25 13.6C22.3333 16 17.1 20.8 17.5 20.8C17.9 20.8 21.6667 24.4 23.5 26.2L16 34L22.5 38.2L17.5 44.8L22 49.6L16.5 54.4L22 61Z" fill="#FECE55" stroke="#404040" stroke-width="2"></path>
+              <rect y="2" width="3" height="58" fill="#FECE55"></rect>
+            </svg>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <style>
+      .product-block-offer-callout {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 600px;
+        margin: 15px auto;
+        height: 62px;
+        background: #FECE55;
+        border-top: 2px solid #404040;
+        border-bottom: 2px solid #404040;
+        position: relative;
+        font-family: inherit;
+      }
+      .product-block-offer-callout .larg {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 15px;
+        flex: 1;
+        height: 100%;
+      }
+      .product-block-offer-callout .lightning svg {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+      }
+      .product-block-offer-callout .bloc p,
+      .product-block-offer-callout .bloc h6 {
+        margin: 0;
+        line-height: 1.3;
+        color: #404040;
+      }
+      .product-block-offer-callout .bloc p {
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+      .product-block-offer-callout .bloc h6 {
+        font-size: 0.9em;
+        font-weight: normal;
+      }
+      .product-block-offer-callout .oc-copy {
+        font-weight: bold;
+      }
+      .product-block-offer-callout .clip-left {
+        position: absolute;
+        left: -15px;
+      }
+      .product-block-offer-callout .clip-right {
+        position: absolute;
+        right: -15px;
+      }
+      @media (max-width: 768px) {
+        .product-block-offer-callout {
+          max-width: 90%;
+          height: 62px;
+          margin: 10px auto;
+        }
+        .product-block-offer-callout .larg { gap: 8px; padding: 0 10px; justify-content: center; }
+        .product-block-offer-callout .bloc p { font-size: 1em; }
+        .product-block-offer-callout .bloc h6 { font-size: 0.8em; }
+        .product-block-offer-callout .lightning svg { width: 18px; height: 18px; }
+      }
+      @media (max-width: 480px) {
+        .product-block-offer-callout {
+          height: 62px;
+          flex-wrap: wrap;
+          padding: 4px 0;
+        }
+        .product-block-offer-callout .larg {
+          flex-direction: column;
+          text-align: center;
+          gap: 1px;
+          justify-content: center;
+        }
+        .product-block-offer-callout .clip-left {
+          position: absolute;
+          left: -15px;
+        }
+        .product-block-offer-callout .clip-right {
+          position: absolute;
+          right: -15px;
+        }
+        .product-block-offer-callout .bloc p { font-size: 0.9em; }
+        .product-block-offer-callout .bloc h6 { font-size: 0.75em; }
+      }
+      </style>
+      <!-- End Offer Callout Block Here -->
+
+      {% if subtitle_text != blank %}
+        <p class="my-3 text-sm text-dark-blue">{{ subtitle_text }}</p>
+      {% endif %}
+
+      {% render 'product-price', product: product %}
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}
+           {% render block %}
+        {% endcase %}
+      {% endfor %}
+
+      <!-- product-discount-text.liquid START -->
+      <div class="main-discount-wrapper">
+        {% for block in section.blocks %}
+          {% if block.type == 'discount' and block.settings.show_discount_text %}
+            <div class="disc-top-curve disc disc-main-text">
+              {{ block.settings.discount_prefix }}
+              <span style="color: {{ block.settings.highlight_color }};">
+                {{ block.settings.discount_highlight }}
+              </span>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <!-- product-discount-text.liquid END -->
+
+
+      <div class="choose-flovor truffle-flavour-selector">
+        {% render 'flavor-option', variant_selector_style: section.settings.variant_selector_style, show_size_selector: false, show_variety_selector: false %}
+      </div>
+
+      {% if size_option_index != nil and unique_sizes != blank %}
+        {%- assign selected_size = product.selected_or_first_available_variant.options[size_option_index] -%}
+        {%- assign popular_size_compact = section.settings.popular_size_value | downcase | remove: ' ' -%}
+        <p class="text-xs uppercase text-dark-blue font-walsheim-bold mb-2" style="letter-spacing:0.07em;">{{ size_option_label }}</p>
+        <div class="truffle-sizes-row" id="truffle-sizes-row-{{ section.id }}" data-size-option-index="{{ size_option_index }}">
+          {%- for size_val in unique_size_arr -%}
+            {%- assign rep_size_variant = nil -%}
+            {%- for v in product.variants -%}
+              {%- if v.options[size_option_index] == size_val and rep_size_variant == nil -%}
+                {%- assign rep_size_variant = v -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if rep_size_variant != nil -%}
+              {%- assign size_down = size_val | downcase | remove: ' ' -%}
+              {%- assign pack_count = 1 -%}
+              {%- if size_down contains '*' -%}
+                {%- assign pack_count = size_down | split: '*' | first | plus: 0 -%}
+              {%- elsif size_down contains 'x' -%}
+                {%- assign pack_count = size_down | split: 'x' | first | plus: 0 -%}
+              {%- endif -%}
+              {%- if pack_count < 1 -%}
+                {%- assign pack_count = 1 -%}
+              {%- endif -%}
+              {%- assign truffles_per_pack = 1 -%}
+              {%- if size_down contains '30' -%}
+                {%- assign truffles_per_pack = 2 -%}
+              {%- elsif size_down contains '60' -%}
+                {%- assign truffles_per_pack = 4 -%}
+              {%- endif -%}
+              {%- assign total_truffles = pack_count | times: truffles_per_pack -%}
+              {%- if total_truffles < 1 -%}
+                {%- assign total_truffles = 1 -%}
+              {%- endif -%}
+              {%- assign size_compact = size_val | downcase | remove: ' ' -%}
+              {%- assign is_popular = false -%}
+              {%- if section.settings.show_size_badge and popular_size_compact != blank and size_compact == popular_size_compact -%}
+                {%- assign is_popular = true -%}
+              {%- endif -%}
+              <button
+                type="button"
+                class="truffle-size-tile{% if selected_size == size_val %} truffle-size--active{% endif %}{% unless rep_size_variant.available %} truffle-size--unavailable{% endunless %}"
+                data-size="{{ size_val | escape }}"
+                data-price="{{ rep_size_variant.price }}"
+                data-price-fmt="{{ rep_size_variant.price | money | escape }}">
+                {%- if is_popular -%}
+                  <span class="truffle-size__best font-walsheim-bold">{{ section.settings.popular_size_badge_text | default: 'Most Popular' }}</span>
+                {%- endif -%}
+                <span class="truffle-size__name font-walsheim-bold">{{ size_val }}</span>
+                <span class="truffle-size__price font-walsheim-black">{{ rep_size_variant.price | money }}</span>
+                {%- if section.settings.show_size_per_truffle -%}
+                  <span class="truffle-size__per font-walsheim-regular">
+                    {%- assign total_truffles_float = total_truffles | times: 1.0 -%}
+                    {%- assign per_price = rep_size_variant.price | divided_by: total_truffles_float -%}
+                    {{ per_price | money }} per truffle
+                  </span>
+                {%- endif -%}
+              </button>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {% endif %}
+
+      <div class="truffle-atc-wrap">
+        {% render 'product.add-to-cart', product: product %}
+      </div>
+      {%- render 'plaay-delivery-promise' -%}
+
+      {% comment %} PDP Info Tabs {% endcomment %}
+      {%- liquid
+        assign first_tab = 'shipping'
+        if show_exact_ingredients and exact_ingredients != blank
+          assign first_tab = 'ingredients'
+        endif
+        if product.description != blank
+          assign first_tab = 'info'
+        endif
+        assign sid = section.id
+      -%}
+      <div class="plaay-pdp-tabs" id="plaay-pdp-tabs-{{ sid }}">
+
+        <div class="plaay-pdp-tabs__nav" role="tablist" aria-label="Product details">
+          {% if product.description != blank %}
+            <button
+              class="plaay-pdp-tabs__tab{% if first_tab == 'info' %} is-active{% endif %} font-walsheim-bold"
+              role="tab"
+              data-tab="info-{{ sid }}"
+              aria-selected="{% if first_tab == 'info' %}true{% else %}false{% endif %}">
+              {{ section.settings.tab_info_label | default: 'Product Info' }}
+            </button>
+          {% endif %}
+          {% if show_exact_ingredients and exact_ingredients != blank %}
+            <button
+              class="plaay-pdp-tabs__tab{% if first_tab == 'ingredients' %} is-active{% endif %} font-walsheim-bold"
+              role="tab"
+              data-tab="ingredients-{{ sid }}"
+              aria-selected="{% if first_tab == 'ingredients' %}true{% else %}false{% endif %}">
+              {{ section.settings.tab_ingredients_label | default: 'Ingredients' }}
+            </button>
+          {% endif %}
+          <button
+            class="plaay-pdp-tabs__tab{% if first_tab == 'shipping' %} is-active{% endif %} font-walsheim-bold"
+            role="tab"
+            data-tab="shipping-{{ sid }}"
+            aria-selected="{% if first_tab == 'shipping' %}true{% else %}false{% endif %}">
+            {{ section.settings.tab_shipping_label | default: 'Shipping & Returns' }}
+          </button>
+        </div>
+
+        {% if product.description != blank %}
+          <div
+            class="plaay-pdp-tabs__panel{% unless first_tab == 'info' %} is-hidden{% endunless %} rte font-walsheim text-dark-blue"
+            data-panel="info-{{ sid }}"
+            role="tabpanel">
+            {{ product.description }}
+          </div>
+        {% endif %}
+
+        {% if show_exact_ingredients and exact_ingredients != blank %}
+          <div
+            class="plaay-pdp-tabs__panel{% unless first_tab == 'ingredients' %} is-hidden{% endunless %} font-walsheim text-dark-blue"
+            data-panel="ingredients-{{ sid }}"
+            role="tabpanel">
+            {{ exact_ingredients }}
+          </div>
+        {% endif %}
+
+        <div
+          class="plaay-pdp-tabs__panel{% unless first_tab == 'shipping' %} is-hidden{% endunless %} rte font-walsheim text-dark-blue"
+          data-panel="shipping-{{ sid }}"
+          role="tabpanel">
+          {% if section.settings.shipping_returns_content != blank %}
+            {{ section.settings.shipping_returns_content }}
+          {% else %}
+            <p><strong>Free delivery</strong> on all orders over AED 75.</p>
+            <p>Same-day delivery in Dubai (order before 2 PM). 1-2 business days across the UAE.</p>
+            <p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate.</p>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <script>
+      (function(){
+        var wrap = document.getElementById('plaay-pdp-tabs-{{ sid }}');
+        if (!wrap) return;
+        var tabs   = wrap.querySelectorAll('.plaay-pdp-tabs__tab');
+        var panels = wrap.querySelectorAll('.plaay-pdp-tabs__panel');
+        tabs.forEach(function(tab) {
+          tab.addEventListener('click', function() {
+            tabs.forEach(function(t){ t.classList.remove('is-active'); t.setAttribute('aria-selected','false'); });
+            panels.forEach(function(p){ p.classList.add('is-hidden'); });
+            tab.classList.add('is-active');
+            tab.setAttribute('aria-selected','true');
+            var panel = wrap.querySelector('[data-panel="' + tab.dataset.tab + '"]');
+            if (panel) panel.classList.remove('is-hidden');
+          });
+        });
+      })();
+      </script>
+      {% comment %} end PDP Info Tabs {% endcomment %}
+
+    </div>
+  </div>
+</div>
+
+
+{%- assign sticky_variant = product.selected_or_first_available_variant -%}
+
+{% comment %} ── Mobile sticky ATC (shown on mobile when inline button scrolls out) ── {% endcomment %}
+<div id="plaay-sticky-mobile" class="plaay-sticky-mobile" aria-hidden="true">
+  <div style="padding:10px 16px 14px">
+    {% comment %} Row 1 — price + qty {% endcomment %}
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="display:flex;flex-direction:column;gap:1px">
+        {%- if sticky_variant.compare_at_price > sticky_variant.price -%}
+          <span class="plaay-sticky-compare font-walsheim-regular text-dark-blue" style="font-size:11px;text-decoration:line-through;opacity:0.45;line-height:1">{{ sticky_variant.compare_at_price | money }}</span>
+        {%- else -%}
+          <span class="plaay-sticky-compare font-walsheim-regular text-dark-blue" style="font-size:11px;text-decoration:line-through;opacity:0.45;line-height:1;display:none">{{ sticky_variant.compare_at_price | money }}</span>
+        {%- endif -%}
+        <span class="plaay-sticky-mobile-price font-walsheim-bold text-dark-blue" style="font-size:22px;line-height:1">{{ sticky_variant.price | money }}</span>
+      </div>
+      <div style="display:flex;align-items:center;border:1.5px solid #021D49;border-radius:10px;overflow:hidden;height:40px">
+        <button type="button" class="plaay-mobile-minus font-walsheim-bold text-dark-blue" style="padding:0 14px;height:100%;font-size:20px;line-height:1;background:transparent;border:none;cursor:pointer">−</button>
+        <span class="plaay-mobile-qty font-walsheim-bold text-dark-blue" style="padding:0 12px;font-size:15px;border-left:1px solid rgba(2,29,73,0.2);border-right:1px solid rgba(2,29,73,0.2);height:100%;display:flex;align-items:center;min-width:40px;justify-content:center">1</span>
+        <button type="button" class="plaay-mobile-plus font-walsheim-bold text-dark-blue" style="padding:0 14px;height:100%;font-size:20px;line-height:1;background:transparent;border:none;cursor:pointer">+</button>
+      </div>
+    </div>
+    {% comment %} Row 2 — full-width ATC button {% endcomment %}
+    <button type="button" class="btn blue font-walsheim-bold uppercase plaay-mobile-submit" style="width:100%;padding:16px;font-size:15px;letter-spacing:0.05em">
+      {{ 'product.add_to_cart.add_to_bag' | t }}
+    </button>
+  </div>
+</div>
+
+{% comment %} ── Desktop sticky ATC bar ── {% endcomment %}
+<div id="plaay-sticky-atc" class="plaay-sticky-atc" aria-hidden="true">
+  <div class="container flex items-center justify-between">
+    <p class="font-walsheim-black uppercase text-dark-blue leading-tight truncate flex-1 hidden xl:block" style="font-size:13px;margin-right:2rem">{{ product.title }}</p>
+    <div style="display:flex;align-items:center;gap:20px;margin-left:auto;flex-shrink:0">
+      {% comment %} Price block — always render both spans, JS shows/hides compare {% endcomment %}
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+        <span class="plaay-sticky-compare font-walsheim-regular text-dark-blue" style="font-size:11px;text-decoration:line-through;opacity:0.5;line-height:1;{% unless sticky_variant.compare_at_price > sticky_variant.price %}display:none{% endunless %}">{{ sticky_variant.compare_at_price | money }}</span>
+        <span class="plaay-sticky-price font-walsheim-bold text-dark-blue" style="font-size:20px;line-height:1">{{ sticky_variant.price | money }}</span>
+      </div>
+      {% comment %} Quantity selector {% endcomment %}
+      <div class="plaay-sticky-qty-wrap" style="display:flex;align-items:center;border:1.5px solid #021D49;border-radius:10px;overflow:hidden;height:44px">
+        <button type="button" class="plaay-sticky-minus font-walsheim-bold text-dark-blue" style="padding:0 16px;height:100%;font-size:22px;line-height:1;background:transparent;border:none;cursor:pointer">−</button>
+        <span class="plaay-sticky-qty font-walsheim-bold text-dark-blue" style="padding:0 14px;font-size:15px;border-left:1px solid rgba(2,29,73,0.2);border-right:1px solid rgba(2,29,73,0.2);height:100%;display:flex;align-items:center;min-width:44px;justify-content:center">1</span>
+        <button type="button" class="plaay-sticky-plus font-walsheim-bold text-dark-blue" style="padding:0 16px;height:100%;font-size:22px;line-height:1;background:transparent;border:none;cursor:pointer">+</button>
+      </div>
+      {% comment %} ATC button {% endcomment %}
+      <button type="button" class="btn blue font-walsheim-bold uppercase plaay-sticky-submit" style="padding:13px 32px;font-size:14px;white-space:nowrap;letter-spacing:0.05em">
+        {{ 'product.add_to_cart.add_to_bag' | t }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  /* ════════════════════════════════════════════════════
+     TRUFFLE VARIANT SWITCHER
+  ════════════════════════════════════════════════════ */
+  var SECTION_ID = '{{ section.id }}';
+  var SIZE_OPTION_INDEX = {{ size_option_index | default: 0 }};
+  var SELECTED_OPTIONS = {{ product.selected_or_first_available_variant.options | json }};
+
+  var variantDataEl = document.getElementById('truffle-variant-data-' + SECTION_ID);
+  if (!variantDataEl) return;
+
+  var TRUFFLE_VARIANTS = JSON.parse(variantDataEl.textContent);
+  var sizesRow = document.getElementById('truffle-sizes-row-' + SECTION_ID);
+
+  var state = {
+    selectedSize: SELECTED_OPTIONS[SIZE_OPTION_INDEX] || (TRUFFLE_VARIANTS[0] && TRUFFLE_VARIANTS[0].options ? TRUFFLE_VARIANTS[0].options[SIZE_OPTION_INDEX] : '')
+  };
+
+  function variantSize(variant) {
+    return variant && variant.options ? variant.options[SIZE_OPTION_INDEX] : '';
+  }
+
+  function findVariant(size) {
+    var fallback = null;
+
+    for (var i = 0; i < TRUFFLE_VARIANTS.length; i++) {
+      var variant = TRUFFLE_VARIANTS[i];
+      if (variantSize(variant) !== size) continue;
+      if (!fallback) fallback = variant;
+
+      var matchesNonSizeOptions = true;
+      for (var optionIndex = 0; optionIndex < SELECTED_OPTIONS.length; optionIndex++) {
+        if (optionIndex === SIZE_OPTION_INDEX) continue;
+        if (SELECTED_OPTIONS[optionIndex] && variant.options[optionIndex] !== SELECTED_OPTIONS[optionIndex]) {
+          matchesNonSizeOptions = false;
+          break;
+        }
+      }
+
+      if (matchesNonSizeOptions) return variant;
+    }
+
+    return fallback;
+  }
+
+  function formatMoney(cents) {
+    /* Simple AED formatter matching Shopify money format */
+    var aed = (cents / 100).toFixed(2);
+    /* Remove trailing .00 for whole numbers */
+    if (aed.endsWith('.00')) aed = aed.slice(0, -3);
+    return 'AED ' + aed;
+  }
+
+  function getTruffleCount(sizeStr) {
+    var size = String(sizeStr || '').toLowerCase().replace(/\s+/g, '');
+    var packCount = 1;
+
+    if (size.indexOf('*') > -1) {
+      packCount = parseInt(size.split('*')[0], 10) || 1;
+    } else if (size.indexOf('x') > -1) {
+      packCount = parseInt(size.split('x')[0], 10) || 1;
+    }
+
+    var trufflesPerPack = 1;
+    if (size.indexOf('30') > -1) {
+      trufflesPerPack = 2;
+    } else if (size.indexOf('60') > -1) {
+      trufflesPerPack = 4;
+    }
+
+    return Math.max(1, packCount * trufflesPerPack);
+  }
+
+  function calcPerTruffle(price, sizeStr) {
+    return formatMoney(price / getTruffleCount(sizeStr)) + ' per truffle';
+  }
+
+  function syncNativeSelectors(variant) {
+    if (!variant) return;
+
+    var form = document.querySelector('.truffle-atc-wrap .product-page-form');
+    if (!form) return;
+
+    var quickAdd = form.querySelector('quick-add');
+    if (quickAdd) quickAdd.dataset.id = String(variant.id);
+
+    var productSelect = form.querySelector('#productSelect');
+    if (productSelect) {
+      productSelect.value = String(variant.id);
+      productSelect.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+
+    var variantInput = form.querySelector('[data-variant-id]');
+    if (variantInput) variantInput.value = String(variant.id);
+
+    form.querySelectorAll('.variant_type select, .variants_container').forEach(function(select, index) {
+      if (variant.options && variant.options[index] !== undefined) {
+        select.value = variant.options[index];
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+  }
+
+  function updatePriceDisplay(variant) {
+    if (!variant) return;
+
+    document.querySelectorAll('.product_discount_price, .product_price, .plaay-sticky-price').forEach(function(priceEl) {
+      priceEl.textContent = variant.priceFmt;
+    });
+
+    document.querySelectorAll('.plaay-sticky-compare').forEach(function(compareEl) {
+      if (variant.compareAtPrice && variant.compareAtPrice > variant.price) {
+        compareEl.textContent = formatMoney(variant.compareAtPrice);
+        compareEl.style.display = '';
+      } else {
+        compareEl.style.display = 'none';
+      }
+    });
+  }
+
+  function applySelection() {
+    var variant = findVariant(state.selectedSize);
+
+    if (variant) {
+      syncNativeSelectors(variant);
+      updatePriceDisplay(variant);
+    }
+
+    if (!sizesRow) return;
+
+    sizesRow.querySelectorAll('.truffle-size-tile').forEach(function(tile) {
+      var tileSize = tile.getAttribute('data-size');
+      var tileVariant = findVariant(tileSize);
+      var priceSpan = tile.querySelector('.truffle-size__price');
+      var perSpan = tile.querySelector('.truffle-size__per');
+
+      tile.classList.toggle('truffle-size--active', tileSize === state.selectedSize);
+      tile.classList.toggle('truffle-size--unavailable', tileVariant ? !tileVariant.available : true);
+
+      if (tileVariant && priceSpan) priceSpan.textContent = tileVariant.priceFmt;
+      if (tileVariant && perSpan) perSpan.textContent = calcPerTruffle(tileVariant.price, tileSize);
+    });
+  }
+
+  /* ── Size tile click ── */
+  if (sizesRow) {
+    sizesRow.querySelectorAll('.truffle-size-tile').forEach(function(tile) {
+      tile.addEventListener('click', function() {
+        if (this.classList.contains('truffle-size--unavailable')) return;
+        state.selectedSize = this.getAttribute('data-size');
+        applySelection();
+      });
+    });
+  }
+
+  /* ── Init ── */
+  try { applySelection(); } catch(e) {}
+
+})();
+</script>
+
+<script>
+(function() {
+  /* ════════════════════════════════════════════════════
+     TRUFFLE — STICKY BARS (independent IIFE so variant
+     switcher errors can't block this from initialising)
+  ════════════════════════════════════════════════════ */
+  function initStickyBars() {
+    var inlineAtc = document.querySelector('.product_page_atc');
+    var desktopBar = document.getElementById('plaay-sticky-atc');
+    var mobileBar  = document.getElementById('plaay-sticky-mobile');
+    if (!inlineAtc) return;
+
+    var isMobile = function() { return window.innerWidth < 1024; };
+
+    // Force both bars into position:fixed off-screen regardless of stylesheet
+    var baseStyle = 'position:fixed;bottom:0;left:0;right:0;z-index:9998;' +
+                    'background:#fff;border-top:1px solid rgba(2,29,73,0.12);' +
+                    'box-shadow:0 -4px 24px rgba(2,29,73,0.1);' +
+                    'transition:transform 0.3s ease;transform:translateY(110%);pointer-events:none;';
+
+    if (desktopBar) {
+      desktopBar.setAttribute('style', baseStyle + 'padding:16px 0;display:none;');
+    }
+    if (mobileBar) {
+      mobileBar.setAttribute('style', baseStyle + 'display:none;');
+    }
+
+    function showBar(bar) {
+      if (!bar) return;
+      bar.style.display = 'block';
+      bar.offsetHeight; // eslint-disable-line no-unused-expressions
+      bar.style.transform = 'translateY(0)';
+      bar.style.pointerEvents = 'auto';
+    }
+    function hideBar(bar) {
+      if (!bar) return;
+      bar.style.transform = 'translateY(110%)';
+      bar.style.pointerEvents = 'none';
+    }
+
+    // Intersection observer — show correct bar when inline ATC leaves viewport
+    var observer = new IntersectionObserver(function(entries) {
+      var notVisible = !entries[0].isIntersecting;
+      if (isMobile()) {
+        if (notVisible) { showBar(mobileBar); hideBar(desktopBar); }
+        else             { hideBar(mobileBar); }
+      } else {
+        if (notVisible) { showBar(desktopBar); hideBar(mobileBar); }
+        else             { hideBar(desktopBar); }
+      }
+    }, { threshold: 0 });
+    observer.observe(inlineAtc);
+
+    // ── Price sync ──
+    var getPriceEl = function() {
+      return document.querySelector('.product_page_atc .product_discount_price') ||
+             document.querySelector('.product_page_atc .product_price') ||
+             document.querySelector('.product_discount_price') ||
+             document.querySelector('.product_price');
+    };
+    var syncPrice = function() {
+      var el = getPriceEl();
+      var txt = el ? el.textContent.trim() : '';
+      if (!txt) return;
+      var dp  = desktopBar && desktopBar.querySelector('.plaay-sticky-price');
+      var mp  = mobileBar  && mobileBar.querySelector('.plaay-sticky-mobile-price');
+      var mcp = mobileBar  && mobileBar.querySelector('.plaay-sticky-compare');
+      if (dp) dp.textContent = txt;
+      if (mp) mp.textContent = txt;
+      var compareEl = document.querySelector('.discount_price_exists');
+      var compareTxt = compareEl ? compareEl.textContent.trim() : '';
+      if (mcp && compareTxt) {
+        mcp.textContent = compareTxt;
+        mcp.style.display = 'inline';
+      }
+      var sc = desktopBar && desktopBar.querySelector('.plaay-sticky-compare');
+      if (sc && compareTxt) {
+        sc.textContent = compareTxt;
+        sc.style.display = '';
+      }
+    };
+    syncPrice();
+    document.querySelectorAll('.product_discount_price,.product_price').forEach(function(el) {
+      new MutationObserver(syncPrice).observe(el, { childList: true, subtree: true, characterData: true });
+    });
+
+    // ── Desktop qty +/- ──
+    var qty = 1;
+    var qtyDisplay = desktopBar && desktopBar.querySelector('.plaay-sticky-qty');
+    var inlineQtyInput = document.querySelector('quick-add input[name="quantity"],input[name="quantity"]');
+    if (desktopBar) {
+      desktopBar.querySelector('.plaay-sticky-minus').addEventListener('click', function() {
+        if (qty > 1) { qty--; if (qtyDisplay) qtyDisplay.textContent = qty; if (inlineQtyInput) inlineQtyInput.value = qty; }
+      });
+      desktopBar.querySelector('.plaay-sticky-plus').addEventListener('click', function() {
+        qty++; if (qtyDisplay) qtyDisplay.textContent = qty; if (inlineQtyInput) inlineQtyInput.value = qty;
+      });
+      desktopBar.querySelector('.plaay-sticky-submit').addEventListener('click', function() {
+        if (inlineQtyInput) inlineQtyInput.value = qty;
+        inlineAtc.click();
+      });
+    }
+
+    // ── Mobile qty +/- ──
+    var mobileQty = 1;
+    var mobileQtyDisplay = mobileBar && mobileBar.querySelector('.plaay-mobile-qty');
+    if (mobileBar) {
+      mobileBar.querySelector('.plaay-mobile-minus').addEventListener('click', function() {
+        if (mobileQty > 1) { mobileQty--; if (mobileQtyDisplay) mobileQtyDisplay.textContent = mobileQty; if (inlineQtyInput) inlineQtyInput.value = mobileQty; }
+      });
+      mobileBar.querySelector('.plaay-mobile-plus').addEventListener('click', function() {
+        mobileQty++; if (mobileQtyDisplay) mobileQtyDisplay.textContent = mobileQty; if (inlineQtyInput) inlineQtyInput.value = mobileQty;
+      });
+      mobileBar.querySelector('.plaay-mobile-submit').addEventListener('click', function() {
+        if (inlineQtyInput) inlineQtyInput.value = mobileQty;
+        inlineAtc.click();
+      });
+    }
+
+    // ── Sync variant label in mobile bar ──
+    var mobileVariantEl = mobileBar && mobileBar.querySelector('.plaay-sticky-mobile-variant');
+    if (mobileVariantEl) {
+      var variantSelSticky = document.querySelector('select#productSelect,select[name="id"]');
+      if (variantSelSticky) {
+        variantSelSticky.addEventListener('change', function() {
+          var opt = variantSelSticky.options[variantSelSticky.selectedIndex];
+          if (opt) mobileVariantEl.textContent = opt.text.split(' - ')[0].trim();
+        });
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initStickyBars);
+  } else {
+    initStickyBars();
+  }
+})();
+</script>
+
+{% if product_images_size > 1 %}
+  <script type="module">
+    document.addEventListener("DOMContentLoaded", () => {
+      const productGallerySlider = new Glide("#product-gallery-{{ section.id }}", {
+        type: 'carousel',
+        perView: 1,
+        startAt: 0,
+        focusAt: 'center'
+      });
+      const productGalleryThumbnailsSlider = new Glide("#product-gallery-thumbnails-{{ section.id }}", {
+        type: 'carousel',
+        perView: 4,
+        startAt: 0
+      });
+      productGallerySlider.mount({ });
+      productGalleryThumbnailsSlider.mount({ });
+
+      productGallerySlider.on("run", (e) => {
+        productGalleryThumbnailsSlider.go(e.direction);
+      });
+      productGalleryThumbnailsSlider.on("run", (e) => {
+        productGallerySlider.go(e.direction);
+      });
+      document.querySelectorAll('.thumbnail_slide').forEach(el => {
+        el.addEventListener('click', (e) => {
+          productGallerySlider.go('=' + `${e.target.dataset.index}`);
+          productGalleryThumbnailsSlider.go('=' + `${e.target.dataset.index}`);
+        });
+      });
+    });
+  </script>
+{% endif %}
+{% render 'rebuy-templates-fbt' %}
+
+{% schema %}
+{
+  "name": "Truffle Product",
+  "settings": [
+    {
+      "type": "color",
+      "label": "Background color",
+      "id": "background_color",
+      "default": "#F4F4F4"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_exact_ingredients",
+      "label": "Show exact ingredients?",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "price_color",
+      "label": "Price Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "variant_selector_style",
+      "label": "Flavour selector style",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "Dropdown list"
+        },
+        {
+          "value": "swatches",
+          "label": "Image swatches"
+        }
+      ],
+      "default": "swatches"
+    },
+    {
+      "type": "text",
+      "id": "size_option_name",
+      "label": "Pack size option name",
+      "default": "Pack Size",
+      "info": "Must match the option name on the product (e.g. 'Pack Size')."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_per_truffle",
+      "label": "Show price per truffle on size tiles",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_size_badge",
+      "label": "Show popular badge on one size",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "popular_size_value",
+      "label": "Popular size value",
+      "default": "10*60gm",
+      "info": "Must match the size option value, ignoring spaces."
+    },
+    {
+      "type": "text",
+      "id": "popular_size_badge_text",
+      "label": "Popular size badge text",
+      "default": "Most Popular"
+    },
+    {
+      "type": "text",
+      "id": "tab_info_label",
+      "label": "Tab 1 label",
+      "default": "Product Info",
+      "info": "Shown only when the product has a description."
+    },
+    {
+      "type": "text",
+      "id": "tab_ingredients_label",
+      "label": "Tab 2 label",
+      "default": "Ingredients",
+      "info": "Shown only when exact ingredients are enabled and available."
+    },
+    {
+      "type": "text",
+      "id": "tab_shipping_label",
+      "label": "Tab 3 label",
+      "default": "Shipping & Returns"
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_returns_content",
+      "label": "Shipping & Returns content",
+      "default": "<p><strong>Free delivery</strong> on all orders over AED 75. Same-day delivery in Dubai (order before 2 PM). 1-2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "discount",
+      "name": "Discount Text",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_discount_text",
+          "label": "Show this text",
+          "default": true
+        },
+        {
+          "type": "richtext",
+          "id": "discount_prefix",
+          "label": "Discount Text",
+          "default": "<p>Get 10% off on your</p>"
+        },
+        {
+          "type": "richtext",
+          "id": "discount_highlight",
+          "label": "Highlighted Text",
+          "default": "<p>first order</p>"
+        },
+        {
+          "type": "color",
+          "id": "highlight_color",
+          "label": "Highlight Color",
+          "default": "#FF0000"
+        }
+      ]
+    },
+    {
+      "type": "offer_callout",
+      "name": "Offer Callout Banner",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "coupon_code",
+          "label": "Coupon Code",
+          "default": "TRU35"
+        },
+        {
+          "type": "text",
+          "id": "coupon_text",
+          "label": "Offer Text",
+          "default": "Get Flat 35% Off on orders above AED 99"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Truffle Product"
+    }
+  ]
+}
+{% endschema %}

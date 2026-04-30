@@ -1,0 +1,67 @@
+{% liquid 
+  assign backup_hero_background_color = section.settings.backup_hero_background_color
+  assign backup_hero_description = section.settings.backup_hero_description
+
+  assign hero_description = collection.metafields.arena.hero_description
+  assign hero_background_color = collection.metafields.arena.hero_background_color
+%}
+
+{% style %}
+  .collection_hero {
+    {% if hero_background_color != blank %}
+      background: {{ hero_background_color }}
+      ;
+    {% else %}
+      background: {{ backup_hero_background_color }}
+      ;
+    {% endif %}
+  }
+{% endstyle %}
+
+<div class="relative overflow-hidden collection_hero">
+  <div class="container pt-28 pb-10 relative z-1 | md:pb-12 md:pt-40 md:max-w-md | lg:max-w-xl | xl:max-w-2xl">
+    {% comment %} title / description {% endcomment %}
+  {% if collection.handle != 'all' %}
+  <h1 class="leading-none text-center uppercase text-dark-blue text-9xl">
+    {{ collection.title }}
+  </h1>
+    {% else %}
+      <h1 class="leading-none text-center uppercase text-dark-blue text-9xl">
+    OUR CHOCOLATE SNACK HACKS
+  </h1>
+{% endif %}
+
+    {% if backup_hero_description != blank or hero_description != blank %}
+      <div class="mt-4 text-2xl text-center uppercase text-dark-blue font-walsheim-bold">
+        {% if hero_description != blank %}
+          {{ hero_description }}
+        {% else %}
+          {{ backup_hero_description }}
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Collection hero basic",
+    "settings": [
+      {
+        "type": "color",
+        "id": "backup_hero_background_color",
+        "label": "Backup background color",
+        "default": "#F5C08D"
+      }, {
+        "type": "text",
+        "id": "backup_hero_description",
+        "label": "Backup description",
+        "default": "Lorem ipsum dolor sit amet adipiscing elitsed do"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Collection hero basic"
+      }
+    ]
+  }
+{% endschema %}

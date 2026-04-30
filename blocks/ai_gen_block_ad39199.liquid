@@ -1,0 +1,447 @@
+{% doc %}
+  @prompt
+    Create a section for Collection pages called “Collection Header Image”.
+    
+    It should be a simple banner image section (not clickable).
+    
+    Requirements
+    
+    Desktop image upload + optional separate mobile image upload
+    
+    Optional heading + optional subheading (toggle on/off)
+    
+    Text position controls (left/center/right + top/middle/bottom)
+    
+    Overlay toggle with opacity slider (for readability)
+    
+    Height selector: small / medium / large / adapt to image
+    
+    Full width toggle + content width option (default Dawn style)
+    
+    Lazy-load images
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-collection-header-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    display: block;
+  }
+
+  .ai-collection-header-container-{{ ai_gen_id }} {
+    {% if block.settings.full_width %}
+      width: 100%;
+      padding: 0;
+    {% else %}
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    {% endif %}
+  }
+
+  .ai-collection-header-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    overflow: hidden;
+    {% if block.settings.full_width %}
+      border-radius: 0;
+    {% else %}
+      border-radius: 8px;
+    {% endif %}
+    {% case block.settings.height %}
+      {% when 'small' %}
+        height: 300px;
+      {% when 'medium' %}
+        height: 500px;
+      {% when 'large' %}
+        height: 700px;
+      {% when 'adapt' %}
+        height: auto;
+    {% endcase %}
+  }
+
+  .ai-collection-header-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-collection-header-image-{{ ai_gen_id }}.ai-collection-header-adapt-{{ ai_gen_id }} {
+    height: auto;
+  }
+
+  .ai-collection-header-mobile-image-{{ ai_gen_id }} {
+    display: none;
+  }
+
+  .ai-collection-header-overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: {{ block.settings.overlay_opacity }};
+    pointer-events: none;
+  }
+
+  .ai-collection-header-content-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    {% case block.settings.text_vertical %}
+      {% when 'top' %}
+        align-items: flex-start;
+      {% when 'middle' %}
+        align-items: center;
+      {% when 'bottom' %}
+        align-items: flex-end;
+    {% endcase %}
+    {% case block.settings.text_horizontal %}
+      {% when 'left' %}
+        justify-content: flex-start;
+      {% when 'center' %}
+        justify-content: center;
+      {% when 'right' %}
+        justify-content: flex-end;
+    {% endcase %}
+    padding: 40px;
+    z-index: 1;
+  }
+
+  .ai-collection-header-text-wrapper-{{ ai_gen_id }} {
+    {% case block.settings.text_horizontal %}
+      {% when 'left' %}
+        text-align: left;
+      {% when 'center' %}
+        text-align: center;
+      {% when 'right' %}
+        text-align: right;
+    {% endcase %}
+    max-width: 800px;
+  }
+
+  .ai-collection-header-heading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0 0 16px 0;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .ai-collection-header-subheading-{{ ai_gen_id }} {
+    font-size: {{ block.settings.subheading_size }}px;
+    color: {{ block.settings.text_color }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .ai-collection-header-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-collection-header-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-collection-header-empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-collection-header-desktop-image-{{ ai_gen_id }} {
+      {% if block.settings.mobile_image %}
+        display: none;
+      {% endif %}
+    }
+
+    .ai-collection-header-mobile-image-{{ ai_gen_id }} {
+      {% if block.settings.mobile_image %}
+        display: block;
+      {% endif %}
+    }
+
+    .ai-collection-header-wrapper-{{ ai_gen_id }} {
+      {% case block.settings.height %}
+        {% when 'small' %}
+          height: 200px;
+        {% when 'medium' %}
+          height: 350px;
+        {% when 'large' %}
+          height: 500px;
+        {% when 'adapt' %}
+          height: auto;
+      {% endcase %}
+    }
+
+    .ai-collection-header-content-{{ ai_gen_id }} {
+      padding: 20px;
+    }
+
+    .ai-collection-header-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.7 }}px;
+    }
+
+    .ai-collection-header-subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-collection-header-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-collection-header-container-{{ ai_gen_id }}">
+    <div class="ai-collection-header-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.desktop_image %}
+        <img
+          src="{{ block.settings.desktop_image | image_url: width: 2000 }}"
+          alt="{{ block.settings.desktop_image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.desktop_image.width }}"
+          height="{{ block.settings.desktop_image.height }}"
+          class="ai-collection-header-image-{{ ai_gen_id }} ai-collection-header-desktop-image-{{ ai_gen_id }} {% if block.settings.height == 'adapt' %}ai-collection-header-adapt-{{ ai_gen_id }}{% endif %}"
+        >
+      {% else %}
+        <div class="ai-collection-header-placeholder-{{ ai_gen_id }}">
+          {{ 'collection-apparel-1' | placeholder_svg_tag }}
+          <div class="ai-collection-header-empty-state-{{ ai_gen_id }}">
+            Add a desktop image to get started
+          </div>
+        </div>
+      {% endif %}
+
+      {% if block.settings.mobile_image %}
+        <img
+          src="{{ block.settings.mobile_image | image_url: width: 1000 }}"
+          alt="{{ block.settings.mobile_image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.mobile_image.width }}"
+          height="{{ block.settings.mobile_image.height }}"
+          class="ai-collection-header-image-{{ ai_gen_id }} ai-collection-header-mobile-image-{{ ai_gen_id }} {% if block.settings.height == 'adapt' %}ai-collection-header-adapt-{{ ai_gen_id }}{% endif %}"
+        >
+      {% endif %}
+
+      {% if block.settings.show_overlay %}
+        <div class="ai-collection-header-overlay-{{ ai_gen_id }}"></div>
+      {% endif %}
+
+      {% if block.settings.show_heading or block.settings.show_subheading %}
+        <div class="ai-collection-header-content-{{ ai_gen_id }}">
+          <div class="ai-collection-header-text-wrapper-{{ ai_gen_id }}">
+            {% if block.settings.show_heading and block.settings.heading != blank %}
+              <h1 class="ai-collection-header-heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h1>
+            {% endif %}
+            {% if block.settings.show_subheading and block.settings.subheading != blank %}
+              <div class="ai-collection-header-subheading-{{ ai_gen_id }}">{{ block.settings.subheading }}</div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection header image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "desktop_image",
+      "label": "Desktop image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile image (optional)"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Banner height",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Full width",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Text content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Collection name"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "checkbox",
+      "id": "show_subheading",
+      "label": "Show subheading",
+      "default": true
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover our latest collection"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "label": "Subheading size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Text position"
+    },
+    {
+      "type": "select",
+      "id": "text_horizontal",
+      "label": "Horizontal alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "text_vertical",
+      "label": "Vertical alignment",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overlay",
+      "label": "Show overlay",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.3
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection header image"
+    }
+  ]
+}
+{% endschema %}

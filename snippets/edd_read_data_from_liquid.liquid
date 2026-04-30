@@ -1,0 +1,627 @@
+{{ "edd_specific_product_msg.js" | asset_url | script_tag }}
+{{ "edd_collection_msg.js" | asset_url | script_tag }}
+{{ "edd_product_tag_msg.js" | asset_url | script_tag }}
+{{ "edd_product_vendor_msg.js" | asset_url | script_tag }}
+{{ "edd_all_product_msg.js" | asset_url | script_tag }}
+{{ "edd_exclude_product.js" | asset_url | script_tag }}
+{{ "edd_general_settings.js" | asset_url | script_tag }}
+
+  {% if template contains 'product'  %}
+  
+<!-- get collection --> 
+{% assign collection_id = 'not_set' %}
+{% assign pro_collection = product.collections.first %}
+{% if pro_collection %}
+{% assign collection_id = product.collections.first.id  %}
+{% endif %}
+
+
+{% assign product_id = product.id  %}
+{% assign product_title = product.title  %}
+{% assign product_handle = product.handle  %}
+{% assign product_tag = product.tags  %}
+{% assign product_type = product.type || replace:'`',''  %}
+{% assign product_vendor = product.vendor  %}
+{% assign product_avaiable = product.available  %}
+
+
+    
+{% assign product_weight = product.variants[0].weight  %}
+{% assign collection = collection_id %}
+{% assign tagCount = 0 %}
+{% assign collectionCount = 0 %}
+
+{% assign product_qty = 0 %}
+{% for variant in product.variants %}
+{% if variant.inventory_quantity > 0 %}
+{% assign product_qty = product_qty | plus: variant.inventory_quantity %}
+{% endif %}
+{% endfor %}
+
+<div class='sb_info metafield_update' style='display:none'>
+<div class='sb_store_date'>{{ "now" | date: "%b %d, %Y %H:%M" }}</div>
+<div >Product Tag : {% for getproduct_tag in product.tags %}
+    <div> {{tagCount}} : 
+    <span class='edd_product_tag product_tag_{{tagCount}}'>{{getproduct_tag}}</span> 
+    {% assign tagCount = tagCount | plus: 1 %}  
+    </div>{% endfor %}
+</div>
+<div >Product Collection : {% for getCollection in  product.collections %}
+    <div> {{collectionCount}} : 
+    <span class='edd_product_collection product_collection_{{collectionCount}}'>{{getCollection.id}}</span> 
+    {% assign collectionCount = collectionCount | plus: 1 %}  
+    </div>
+{% endfor %}
+</div>
+</div>
+{% endif %}
+
+{%- assign templateBase = template  -%}
+{% assign edd_is_homepage = '0' %}
+{%- if templateBase == 'index' -%}
+  {% assign edd_is_homepage = '1' %}
+{% endif %}
+
+<script>
+ //console.log('file : edd_read_data_from_liquid_for_location')
+  var edd_meta_migrate = '1';
+  var edd_is_homepage = '0';
+
+  var edd_is_homepage = '';
+  var edd_product_id = '';
+  var edd_product_title = '';
+  var edd_product_handle = '';
+  var edd_product_type = '';
+  var edd_product_vendor = '';
+  var edd_check_collection_id = '';
+  var edd_product_qty = '';
+  var edd_product_weight = '';
+  var product_avaiable = '';
+  var edd_product_tag = new Array();
+  var edd_collection_id = new Array();
+
+  var edd_zipcode_enable = '0';
+  var edd_zipcode_list = 'not_set';
+
+  var set_vaction_msg = '0';
+  
+  var product_have_qty = 0;
+  var edd_message = 'not_set';
+  var edd_preview_design = 'not_set';
+  var set_specific_msg = 0;
+  var is_exclude_product = '0';
+  var edd_data;
+  var edd_store_country,edd_store_country_code ,edd_user_country ,edd_user_country_code,edd_app_plan,edd_country_name,edd_country_code,edd_store_id;
+
+
+  var is_set_msg_for_product = '0';
+  var is_set_msg_for_product_type = '0';
+  var is_set_msg_for_product_tag = '0';
+  var is_set_msg_for_product_vendor = '0';
+  var is_set_msg_for_all_product = '0';
+  var is_set_msg_for_collection = '0';
+  var product_locations=[];
+  var locationId_having_max_qty;
+  var is_rule_set_for_location = '0';
+  var get_product_location_response = '0';
+  if(typeof edd_options.is_rule_set_for_location != 'undefined'){
+      is_rule_set_for_location = edd_options.is_rule_set_for_location;
+    }
+    //console.log('is_rule_set_for_location  '+is_rule_set_for_location)
+
+  if(typeof delivery_shop !== 'undefined'){
+      edd_shop = delivery_shop;           
+    }else{           
+      edd_shop = Shopify.shop;
+    } 
+  
+  
+
+  if(edd_is_homepage == '1' ){
+   
+    
+    
+  }else{
+
+     edd_product_id = `{{ product_id }}`;
+     edd_product_title = `{{ product_title }}`;
+     edd_product_handle = `{{ product_handle }}`;
+     edd_product_type = `{{ product_type }}`;
+     edd_product_vendor = `{{ product_vendor }}`;
+     edd_check_collection_id = `{{ collection_id }}`;
+     edd_product_qty = `{{ product_qty }}`;
+     edd_product_weight = `{{ product_weight }}`;
+     product_avaiable = `{{ product_avaiable }}`;
+     edd_product_tag = new Array();
+     edd_collection_id = new Array();
+            
+      for (i = 0; i < document.getElementsByClassName("edd_product_tag").length; i++) {
+          edd_product_tag.push(document.querySelector(".product_tag_"+i).innerText);
+      }
+
+      
+      for (i = 0; i < document.getElementsByClassName("edd_product_collection").length; i++) {
+          edd_collection_id.push(document.querySelector(".product_collection_"+i).innerText);
+      }
+
+    
+  }
+  
+
+
+
+
+  
+function setEDDCookie(cname, cvalue){
+      const d = new Date();
+      d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+      let expires = "expires="+d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function getEDDCookie(cname){
+      let name = cname + "=";
+  let decodedCookie = document.cookie;
+      let ca = decodedCookie.split(';');
+      for(let i = 0; i <ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+  
+function checkEDDCookie($){
+        var check_edd_data = getEDDCookie("edd_data");
+ 
+        if (check_edd_data != ""){
+          check_edd_data = JSON.parse(check_edd_data);
+          setEDDCountry(check_edd_data);
+  
+        }else {
+
+          
+            //checkUserCountry($);
+            checkSBAppExtension = setInterval(function(){
+            //console.log(typeof check_theme_extention)
+            //console.log( check_theme_extention)
+            if(typeof check_theme_extention != 'undefined'  ){
+              if(check_theme_extention == 'theme_extension'){
+                clearInterval(checkSBAppExtension)
+                checkUserCountry($);
+              }
+            }
+          },2000)
+       
+        }
+}
+  
+function setEDDCountry(check_edd_data){
+ edd_store_country_name = check_edd_data.store_country_name;
+ edd_store_country_code = check_edd_data.store_country_code;
+ edd_user_country_name = check_edd_data.user_country_name;
+ edd_user_country_code = check_edd_data.user_country_code;
+
+ edd_app_plan = check_edd_data.plan;
+ edd_store_id = check_edd_data.store_id;
+ edd_trial_store = check_edd_data.trial_store;
+ edd_allowed_store = check_edd_data.allowed_store;
+  
+  if(edd_store_id > 2614 || edd_shop == 'purrfetto.myshopify.com' ||  edd_shop == 'estimated-delivery-date-time.myshopify.com'){
+    //console.log('Qty => based on product qty');
+    if(edd_product_qty > 0){product_have_qty = 1;}
+  }else{
+       // console.log('Qty => based on product avaiable');
+    if(product_avaiable == 'true'){product_have_qty = 1;}
+  }
+
+  var is_vaction_msg_on = 'false';
+  if(typeof edd_options.is_vaction_msg_on != 'undefined'){
+    is_vaction_msg_on = edd_options.is_vaction_msg_on;
+  }
+
+  if(is_vaction_msg_on == 'true' && typeof edd_options.vacation_message != 'undefined' && typeof edd_options.schedule_date != 'undefined' && typeof edd_options.schedule_end_date != 'undefined'){
+      vacation_message = edd_options.vacation_message; 
+      schedule_date = edd_options.schedule_date; 
+      schedule_end_date = edd_options.schedule_end_date; 
+     
+     
+      if((new Date() > new Date(schedule_date)) && (new Date() < new Date(schedule_end_date)) ){
+        //console.log('=> set vacation_message')
+        set_vaction_msg = '1';
+        is_rule_set_for_location = '0';
+         edd_preview_design = {"animation_class":"no_effect","preview_design":"set","highlight_color":"not_set","color":"#000","border":"transparent","font_size":"16","text_align":"unset","text_transform":"unset","font_weight":"unset","font_style":"unset","background_option":"color","background":"transparent","margin":"0px 0px 0px 0px ","padding":"10px 10px 10px 10px ","border_radius":"0px "};
+      }
+      
+    }
+
+ // console.log('set_vaction_msg =  '+set_vaction_msg )
+  
+  if(is_rule_set_for_location == '0'){
+    //console.log('=> location wise edd message not set')
+    //getSpecificEDDMsg();
+    if(set_vaction_msg == '1'){
+      if(typeof edd_exclude_product != 'undefined' && edd_exclude_product != 'not_set' && edd_exclude_product.filter(e => e.check_rule_for  == edd_product_id).length > 0){
+        is_exclude_product = '1';
+        //console.log('=> exclude product');
+      }else{
+      edd_message = edd_options.vacation_message;
+      set_specific_msg = 1;
+      }
+    }else{
+      getSpecificEDDMsg();
+    }
+  }else{
+   // console.log('=> location wise edd message  set')
+    checkLocation = setInterval(function(){
+     // console.log('get_product_location_response '+get_product_location_response)
+      if(get_product_location_response == '1'){
+        clearInterval(checkLocation)
+        getSpecificEDDMsg();
+        
+      }
+    },500)
+  }
+  
+  
+
+  if(set_specific_msg == 1){
+      edd_country_name = edd_user_country_name;
+      edd_country_code = edd_user_country_code;
+    }else{
+      edd_country_name = edd_store_country_name;
+      edd_country_code = edd_store_country_code;
+    }
+
+}
+  
+/* changelog */
+ /* function checkUserCountry($){
+
+   $.ajax({
+           url: "//estimated-delivery-days.setubridgeapps.com/estimated-delivery-days/app/src/public/checkEDDPayment",
+           data : {shop:edd_shop},
+           type:"POST",
+           success: function(response){ 
+             edd_data = response;
+             check_edd_data = JSON.parse(edd_data);
+             
+
+             setEDDCountry(check_edd_data);
+
+             checkEddDataInterval = setInterval(function(){
+                var check_edd_data = getEDDCookie("edd_data");
+ 
+                if (check_edd_data == ""){
+                 setEDDCookie("edd_data", edd_data);
+                 clearInterval(checkEddDataInterval);
+                }
+
+             },700);
+             
+             
+             
+             
+           }
+         })
+  } */
+/* changelog */
+
+
+var loadScriptInLiquidData = function (url, callback) {
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    if (script.readyState) {
+      script.onreadystatechange = function () {
+        if (script.readyState == 'loaded' || script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else {
+      script.onload = function () {
+        callback();
+      };
+    }
+    script.src = url;
+    document.getElementsByTagName('head') [0].appendChild(script);
+  };
+
+  /* check Jquery loaded in theme or not */
+  if((typeof jQuery === 'undefined') || (parseFloat(jQuery.fn.jquery) < 1.7)){
+    loadScriptInLiquidData('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js', function () {
+      jQuery191 = jQuery.noConflict(true);
+      checkEDDCookie(jQuery191);
+      if(location.href.includes("/products/")){
+        getProductLocation(jQuery191);
+      }else{
+        get_product_location_response = '1';
+      }
+    });
+
+  }else{
+
+    checkEDDCookie(jQuery);
+    if(location.href.includes("/products/")){
+        getProductLocation(jQuery);
+      }else{
+        get_product_location_response = '1';
+      }
+  }
+
+  function getProductLocation($){
+  /* location wise edd */
+
+   /* if(is_rule_set_for_location == '1'){
+      location_ids = edd_options.sb_location;
+      location_ids = location_ids.toString();
+      //console.log('=> make request for product location from shopify')
+      //console.log('edd_product_id => '+edd_product_id)
+      //console.log('location_ids => '+location_ids)
+       $.ajax({
+             url: "//estimated-delivery-days.setubridgeapps.com/estimated-delivery-days/app/src/public/getProductLocation",
+             data : {shop:edd_shop,product_id:edd_product_id,location_ids:location_ids},
+             type:"GET",
+             success: function(response){
+               get_product_location_response = '1';
+               locationId_having_max_qty = response.locationId_having_max_qty;
+               product_locations = response.location_id;
+               //console.log('=> get product locations')
+               //console.log(product_locations)
+             }
+          })
+    } */
+    /* location wise edd */
+}
+
+  function getSpecificEDDMsg(){
+  //console.log('call function getSpecificEDDMsg')
+  if(typeof edd_exclude_product != 'undefined' && edd_exclude_product != 'not_set' && edd_exclude_product.filter(e => e.check_rule_for  == edd_product_id).length > 0){
+    is_exclude_product = '1';
+    //console.log('=> exclude product');
+  }
+  
+  else {
+
+    if(typeof edd_specific_product_msg != 'undefined' && edd_specific_product_msg != 'not_set' && edd_specific_product_msg.filter(e => e.check_rule_for  == edd_product_id).length > 0){
+      //console.log('Specific Mesage type => Product ');
+       setEddMessageFromLiquid(edd_specific_product_msg,edd_product_id,'product');
+
+    }
+  
+
+    if(set_specific_msg == 0 && typeof edd_collection_msg != 'undefined' && edd_collection_msg != 'not_set' ){
+      //console.log('Specific Mesage type => Collection ');
+        for(var c=0; c<edd_collection_id.length; c++){
+         setEddMessageFromLiquid(edd_collection_msg,edd_collection_id[c],'collection');
+         if(is_set_msg_for_collection == '1'){
+          break;
+        }
+        }
+    }
+   
+
+    if(set_specific_msg == 0 && typeof edd_product_vendor_msg != 'undefined' && edd_product_vendor_msg != 'not_set'  && edd_product_vendor_msg.filter(e => e.check_rule_for  == edd_product_vendor).length > 0){
+      //console.log('Specific Mesage type => Product Vendor');
+      setEddMessageFromLiquid(edd_product_vendor_msg,edd_product_vendor,'vendor');
+    }
+       
+
+     if(set_specific_msg == 0 && typeof edd_product_tag_msg != 'undefined' && edd_product_tag_msg != 'not_set'){
+       // console.log('Specific Mesage type => Product Tag');
+       for(var t=0; t<edd_product_tag.length; t++){
+         setEddMessageFromLiquid(edd_product_tag_msg,edd_product_tag[t],'tag');
+        if(is_set_msg_for_product_tag == '1'){
+          break;
+        }
+       }        
+      }
+
+    if(set_specific_msg == 0 && typeof edd_all_product_msg != 'undefined' && edd_all_product_msg != 'not_set'  && edd_all_product_msg.filter(e => e.check_rule_for  == 'all_product').length > 0){
+        //console.log('Specific Mesage type => All Product');
+        setEddMessageFromLiquid(edd_all_product_msg,'all_product','all_product');
+      }    
+    }  
+  }
+
+  function checkLocationWiseEddMessage(edd_msg_list,check_with,edd_rule_type,check_with_location_id){
+    //console.log(edd_msg_list)
+      pass_edd__in_out_stock_spe_c = edd_msg_list.filter(e => e.location_id == check_with_location_id &&  e.check_rule_for  == check_with && e.is_instock == product_have_qty && e.country_code == edd_user_country_code  && e.is_enable == '1')  ;
+      pass_edd_both_edd_spe_c = edd_msg_list.filter(e => e.location_id == check_with_location_id && e.check_rule_for  == check_with && e.is_instock == 2 && e.country_code == edd_user_country_code  && e.is_enable == '1') ;
+      pass_edd__in_out_stock_all_c = edd_msg_list.filter(e =>e.location_id == check_with_location_id && e.check_rule_for  == check_with && e.is_instock == product_have_qty && e.country_code == 'all_country'  && e.is_enable == '1') ; 
+      pass_edd_both_edd_all_c = edd_msg_list.filter(e => e.location_id == check_with_location_id && e.check_rule_for  == check_with && e.is_instock == 2 && e.country_code == 'all_country'  && e.is_enable == '1') ;
+    return {'check_edd__in_out_stock_spe_c':pass_edd__in_out_stock_spe_c,
+                'check_edd_both_edd_spe_c':pass_edd_both_edd_spe_c,
+                'check_edd__in_out_stock_all_c':pass_edd__in_out_stock_all_c,
+                'check_edd_both_edd_all_c':pass_edd_both_edd_all_c}
+  }
+  function checkZipcodeWiseEddMessage(check_edd_msg){
+    get_edd_msg_arr = check_edd_msg[0];
+    for(i=0;i<check_edd_msg.length;i++){
+       if(typeof(check_edd_msg[i].zipcode_enable) != "undefined"){
+         if(check_edd_msg[i].zipcode_enable == "1"){
+           get_edd_msg_arr = check_edd_msg[i];
+           break;
+         }
+      }
+    }  
+    //console.log(get_edd_msg_arr)
+    return get_edd_msg_arr;
+  }
+  function setEddMessageFromLiquid(edd_msg_list,check_with,edd_rule_type){
+      
+      check_edd__in_out_stock_spe_c = [];
+      check_edd_both_edd_spe_c = [];
+      check_edd__in_out_stock_all_c = [];
+      check_edd_both_edd_all_c = [];
+      checkLocationData = {'check_edd__in_out_stock_spe_c':[],'check_edd_both_edd_spe_c':[],'check_edd__in_out_stock_all_c':[],'check_edd_both_edd_all_c':[]};
+      check_with_location_id = 'not_set';
+    /* check location wise message */
+    if(is_rule_set_for_location == '1'){
+      set_edd_in_out_spe_c = 0;
+      set_edd_both_spe_c = 0;
+      set_edd_in_out_all = 0;
+      set_edd_both_all = 0;
+     
+     /* check with location max qty having */
+       checkLocationData = checkLocationWiseEddMessage(edd_msg_list,check_with,edd_rule_type,locationId_having_max_qty);
+       if(checkLocationData.check_edd__in_out_stock_spe_c.length > 0 && set_edd_in_out_spe_c == 0 ){
+                  set_edd_in_out_spe_c = 1;
+                  check_edd__in_out_stock_spe_c = checkLocationData.check_edd__in_out_stock_spe_c;
+          }
+          if(checkLocationData.check_edd_both_edd_spe_c.length > 0 && set_edd_both_spe_c == 0){
+                  set_edd_both_spe_c = 1;
+                  check_edd_both_edd_spe_c = checkLocationData.check_edd_both_edd_spe_c;
+          }
+          if(checkLocationData.check_edd__in_out_stock_all_c.length > 0 && set_edd_in_out_all == 0){
+                  set_edd_in_out_all = 1;
+                  check_edd__in_out_stock_all_c = checkLocationData.check_edd__in_out_stock_all_c;
+          }
+          if(checkLocationData.check_edd_both_edd_all_c.length > 0 && set_edd_both_all == 0){
+                  set_edd_both_all = 1;
+                  check_edd_both_edd_all_c = checkLocationData.check_edd_both_edd_all_c;
+          }
+
+        /* check with location all location if location having a max qty => message is not set */
+      for(i=0;i<product_locations.length;i++){
+        check_with_location_id = product_locations[i];
+        //console.log('check with '+check_with_location_id)
+
+        
+        checkLocationData = checkLocationWiseEddMessage(edd_msg_list,check_with,edd_rule_type,check_with_location_id);
+        //console.log(checkLocationData);
+        //console.log(' check_with_location_id '+check_with_location_id+' locationId_having_max_qty '+locationId_having_max_qty +'check_edd_both_edd_all_c '+set_edd_in_out_all)
+        //if(locationId_having_max_qty == check_with_location_id){
+        //  console.log('get the max location ')
+          if(checkLocationData.check_edd__in_out_stock_spe_c.length > 0 && set_edd_in_out_spe_c == 0 ){
+                  set_edd_in_out_spe_c = 1;
+                  check_edd__in_out_stock_spe_c = checkLocationData.check_edd__in_out_stock_spe_c;
+          }
+          if(checkLocationData.check_edd_both_edd_spe_c.length > 0 && set_edd_both_spe_c == 0){
+                  set_edd_both_spe_c = 1;
+                  check_edd_both_edd_spe_c = checkLocationData.check_edd_both_edd_spe_c;
+          }
+          if(checkLocationData.check_edd__in_out_stock_all_c.length > 0 && set_edd_in_out_all == 0){
+                  set_edd_in_out_all = 1;
+                  check_edd__in_out_stock_all_c = checkLocationData.check_edd__in_out_stock_all_c;
+          }
+          if(checkLocationData.check_edd_both_edd_all_c.length > 0 && set_edd_both_all == 0){
+            //console.log('set edd msg')
+                  set_edd_both_all = 1;
+                  check_edd_both_edd_all_c = checkLocationData.check_edd_both_edd_all_c;
+           // console.log(check_edd_both_edd_all_c)
+          }
+      //  console.log('set_edd_both_all '+set_edd_both_all +' length  '+checkLocationData.check_edd_both_edd_all_c.length)
+        //}
+      //console.log(check_edd_both_edd_all_c)
+        }
+      }
+   // console.log('***********')
+    //console.log(check_edd_both_edd_all_c)
+    /* check location wise message */
+    
+      // check_edd__in_out_stock_spe_c = edd_msg_list.filter(e => e.location_id == check_with_location_id &&  e.check_rule_for  == check_with && e.is_instock == product_have_qty && e.country_code == edd_user_country_code  && e.is_enable == '1')  ;
+      // check_edd_both_edd_spe_c = edd_msg_list.filter(e => e.location_id == check_with_location_id && e.check_rule_for  == check_with && e.is_instock == 2 && e.country_code == edd_user_country_code  && e.is_enable == '1') ;
+      // check_edd__in_out_stock_all_c = edd_msg_list.filter(e =>e.location_id == check_with_location_id && e.check_rule_for  == check_with && e.is_instock == product_have_qty && e.country_code == 'all_country'  && e.is_enable == '1') ; 
+      // check_edd_both_edd_all_c = edd_msg_list.filter(e => e.location_id == check_with_location_id && e.check_rule_for  == check_with && e.is_instock == 2 && e.country_code == 'all_country'  && e.is_enable == '1') ;
+
+    if(check_edd__in_out_stock_spe_c.length == 0){
+      // console.log('witout location 1')
+             check_edd__in_out_stock_spe_c = edd_msg_list.filter(e =>  e.location_enable == '0' && e.check_rule_for  == check_with && e.is_instock == product_have_qty && e.country_code == edd_user_country_code  && e.is_enable == '1')  ;
+     }
+    if(check_edd_both_edd_spe_c.length == 0){
+     // console.log('witout location 2')
+             check_edd_both_edd_spe_c = edd_msg_list.filter(e =>  e.location_enable == '0' && e.check_rule_for  == check_with && e.is_instock == 2 && e.country_code == edd_user_country_code  && e.is_enable == '1') ;
+     }
+    if(check_edd__in_out_stock_all_c.length == 0){
+      //console.log('witout location 3')
+             check_edd__in_out_stock_all_c = edd_msg_list.filter(e => e.location_enable == '0' && e.check_rule_for  == check_with && e.is_instock == product_have_qty && e.country_code == 'all_country'  && e.is_enable == '1') ; 
+     }
+    if(check_edd_both_edd_all_c.length == 0){
+     // console.log('witout location 4')
+             check_edd_both_edd_all_c = edd_msg_list.filter(e => e.location_enable == '0' && e.check_rule_for  == check_with && e.is_instock == 2 && e.country_code == 'all_country'  && e.is_enable == '1') ;
+     }
+    
+    //console.log('check zipcode');
+     //console.log(check_edd__in_out_stock_all_c)
+    // console.log(typeof check_edd__in_out_stock_all_c[0].zipcode_enable);
+    // console.log(check_edd__in_out_stock_all_c[0].zipcode_enable);
+    // console.log(check_edd__in_out_stock_all_c[0].zipcode_list)
+    
+    if(check_edd__in_out_stock_spe_c.length > 0){
+     // console.log('instock specific country')
+      check_edd_msg = checkZipcodeWiseEddMessage(check_edd__in_out_stock_spe_c);
+     // console.log('instock all country '+check_edd_msg.length)
+      edd_zipcode_enable = check_edd_msg.zipcode_enable;
+      edd_zipcode_list = check_edd_msg.zipcode_list;
+      edd_preview_design = check_edd_msg.preview_design;
+      edd_message = check_edd_msg.message;
+      set_specific_msg = 1;
+      checkSpecificMsgFor(edd_rule_type);
+      sb_edd_rule_list = check_edd__in_out_stock_spe_c;
+    }
+    else if(check_edd_both_edd_spe_c.length > 0){
+       //console.log('both specific country')
+      check_edd_msg = checkZipcodeWiseEddMessage(check_edd_both_edd_spe_c);
+      //console.log('instock all country '+check_edd_msg.length)
+      edd_zipcode_enable = check_edd_msg.zipcode_enable;
+      edd_zipcode_list = check_edd_msg.zipcode_list;
+      edd_preview_design = check_edd_msg.preview_design;
+      edd_message = check_edd_msg.message;
+      set_specific_msg = 1;
+      checkSpecificMsgFor(edd_rule_type);
+      sb_edd_rule_list = check_edd_both_edd_spe_c;
+    }
+    else if(check_edd__in_out_stock_all_c.length > 0){
+     // console.log('instock all country '+check_edd__in_out_stock_all_c.length)
+      check_edd_msg = checkZipcodeWiseEddMessage(check_edd__in_out_stock_all_c);
+      //console.log(check_edd_msg)
+      edd_zipcode_enable = check_edd_msg.zipcode_enable;
+      edd_zipcode_list = check_edd_msg.zipcode_list;
+      edd_preview_design = check_edd_msg.preview_design;
+      edd_message = check_edd_msg.message;
+      set_specific_msg = 1;
+      checkSpecificMsgFor(edd_rule_type);
+      sb_edd_rule_list = check_edd__in_out_stock_all_c;
+    }
+    else if(check_edd_both_edd_all_c.length > 0){
+      //console.log('both all country')
+      //console.log(check_edd_both_edd_all_c)
+      check_edd_msg = checkZipcodeWiseEddMessage(check_edd_both_edd_all_c);
+      //console.log('instock all country '+check_edd_msg.length)
+      edd_zipcode_enable = check_edd_msg.zipcode_enable;
+      edd_zipcode_list = check_edd_msg.zipcode_list;
+      edd_preview_design = check_edd_msg.preview_design;
+      edd_message = check_edd_msg.message;
+      set_specific_msg = 1;
+      checkSpecificMsgFor(edd_rule_type);
+      sb_edd_rule_list = check_edd_both_edd_all_c;
+    }
+
+    //console.log('******************* display edd messsge *****************')
+    //console.log(edd_message)
+  }
+
+   function checkSpecificMsgFor(edd_rule_type){
+    if(edd_rule_type == 'product'){
+      is_set_msg_for_product = '1';
+    }
+    if(edd_rule_type == 'collection'){
+      is_set_msg_for_collection = '1';
+      is_set_msg_for_collection_for_collection = '1';
+    }
+    if(edd_rule_type == 'tag'){
+      is_set_msg_for_product_tag = '1';
+      is_set_msg_for_product_tag_for_location = '1';
+    }
+    if(edd_rule_type == 'vendor'){
+      is_set_msg_for_product_vendor = '1';
+    }
+    if(edd_rule_type == 'all_product'){
+      is_set_msg_for_all_product = '1';
+    }
+  }
+</script>

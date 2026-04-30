@@ -1,0 +1,293 @@
+{% style %}
+.retailer-logos {
+    display: block;
+    position: relative;
+    padding: 80px 0;
+}
+.logos-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 30px;
+}
+  .top-head {
+    text-align: center;
+}
+.top-head h2 {
+    font-size: 90px;
+    line-height: 1;
+    font-family: 'walsheim-black';
+}
+  .top-head img {
+    display: block;
+    margin: auto;
+    width: 100%;
+    max-width: 350px;
+}
+.logo-item {
+    width: 14.28%;
+    padding: 15px 8px;
+}
+.logo-item-inner {
+    padding-bottom: 100%;
+    display: block;
+    position: relative;
+    background: #fff;
+    border-radius: 100%;
+    height: 100%;
+    overflow:hidden;
+}
+  .logo-item-inner img {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 100%;
+    object-fit: contain;
+    padding: 25px;
+    transition: .3s linear;
+}
+.retailer-logo-bg-inner {
+    display: block;
+    position: relative;
+}
+  .retailer-logo-bg-inner img {
+    position: absolute;
+    transition: .3s linear;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+  .retailer-logo-bg-inner .mob-bg {
+  display:none;
+}
+  .logo-item-inner button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 5px;
+    right: 0;
+    margin: auto;
+    height: max-content;
+    width: fit-content;
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s linear;
+    padding: 5px 10px;
+}
+  {% for block in section.blocks %}
+  {% if block.settings.btn_url != blank %}
+  .logo-item-inner-{{ block.id }}:hover img {
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s linear;
+}
+  .logo-item-inner-{{ block.id }}:hover button {
+    opacity: 1;
+    visibility: visible;
+    transition: .3s linear;
+}
+    {% endif %}
+    {% endfor %}
+  .logo-item-inner a {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+  .logo-item-inner a button:hover {
+    background: #021D49 !important;
+    color:#fff !important;
+}
+
+@media screen and (max-width:1400px){
+   .top-head h2 {
+    font-size: 70px;
+}
+
+}
+@media screen and (max-width:1280px){
+.logo-item {
+    width: 20%;
+}
+}  
+@media screen and (max-width:1024px){
+  .retailer-logo-bg-inner {
+    padding-bottom: 103%;
+}
+  .logo-item {
+    width: 20%;
+    padding: 8px;
+}
+  .top-head h2 {
+    font-size: 60px;
+}
+}
+
+@media screen and (max-width:821px){
+  .retailer-logos {
+    margin-top: 0;
+}
+  .logo-item-inner img {
+    padding: 18px;
+}
+  .logo-item {
+    width: 25%;
+}
+}
+@media screen and (max-width:600px){
+  .top-head h2 {
+    font-size: 40px;
+}
+}
+@media screen and (max-width:500px){
+.logo-item {
+    width: 33.333%;
+}
+  .top-head img {
+    max-width: 220px;
+}
+.retailer-logos .container {
+    bottom: 60px;
+}
+.retailer-logo-bg-inner {
+    padding-bottom: 325%;
+}
+.retailer-logo-bg-inner .mob-bg {
+  display:block;
+  }
+.retailer-logo-bg-inner .desktop-bg {
+  display:none;
+  }
+   .top-head h2 {
+    font-size: 32px;
+}
+  .logo-item-inner img {
+    padding: 14px;
+}
+  .retailer-logos {
+    padding: 40px 0;
+}
+}
+@media screen and (max-width:400px){
+
+}
+{% endstyle %}
+<div class="retailer-logos" style="{% if section.settings.bg_color != blank %} background:{{ section.settings.bg_color }}{% endif %}">
+  {% if section.settings.bg_img != blank %}
+    <div class="retailer-logo-bg">
+      <div class="retailer-logo-bg-inner">
+        <img class="desktop-bg" src="{{ section.settings.bg_img | img_url : 'master' }}"/>
+        {% if section.settings.bg_mob != blank %}
+          <img class="mob-bg" src="{{ section.settings.bg_mob | img_url : 'master' }}"/>
+        {% endif %}  
+      </div> 
+    </div>
+  {% endif %}  
+  <div class="container">
+    {% if section.settings.head != blank %}
+      <div class="top-head" style="{% if section.settings.h_color != blank %}color:{{ section.settings.h_color }}{% endif %}">
+        <h2>{{ section.settings.head }} </h2>
+        {% if section.settings.line != blank %}
+          <img src="{{ section.settings.line | img_url : 'master' }}"/>
+        {% endif %}
+      </div>
+    {% endif %}
+    <div class="logos-row">
+      {% for block in section.blocks %}
+        <div class="logo-item">
+          <div class="logo-item-inner logo-item-inner-{{ block.id }}">
+            {% if block.settings.btn_url != blank %}
+              <a href="{{ block.settings.btn_url }}" target="_blank">
+            {% endif %}
+            {% if block.settings.img != blank %}
+              <img src="{{ block.settings.img | img_url : '180x' }}"/>
+            {% endif %}
+            {% if block.settings.btn_url != blank %}
+              <button class="blue border btn logo-btn">Shop Now </button>
+            {% endif %}
+            {% if block.settings.btn_url != blank %}
+              </a>
+            {% endif %}  
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Retailer Logos",
+    "settings": [
+    {
+      "type": "image_picker",
+      "id": "bg_img",
+      "info": "Background Image",
+      "label": "BG Image Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_mob",
+      "info": "Background Image",
+      "label": "BG Image Mobile"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section BG Color"
+    },
+    {
+      "type": "text",
+      "id": "head",
+      "label": "Section Heading"
+    },
+    {
+       "type": "color",
+      "id": "h_color",
+      "label": "Heading Color"
+    },
+    {
+      "type": "image_picker",
+      "id": "line",
+      "label": "Heading Bottom Line"
+    },
+      
+    ],
+    "blocks":[
+  {
+    "type": "gallery",
+    "name": "Logo",
+    "settings":[
+      {
+        "type": "image_picker",
+        "id": "img",
+        "label": "Logo"
+      },
+      {
+        "type": "url",
+        "id": "btn_url",
+        "label": "Logo Url"
+      }
+    ]
+  }
+],
+      "presets": [
+    {
+      "name": "Retailer Logos",
+    }
+  ]
+  }
+{% endschema %}

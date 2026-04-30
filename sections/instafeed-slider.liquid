@@ -1,0 +1,54 @@
+{{ 'instafeed-slider.static.scss' | asset_url | stylesheet_tag }}
+
+{% liquid 
+  assign title = section.settings.title 
+  assign description = section.settings.description 
+  assign instagram_post_limit = section.settings.instagram_post_limit
+%}
+<instafeed-slider data-module="instafeed-slider">
+  <div>
+    <div class="container pt-11 pb-16 | lg:pt-16 lg:pb-[76px]">
+      {% if title != blank %}
+        <h2 class="uppercase text-center text-dark-blue text-4xl | lg:text-11xl"> {{ title}} </h2>
+      {% endif %}
+      {% if description != blank %}
+        <p class="text-center mt-2 text-dark-blue text-lg">{{ description }}</p>
+      {% endif %}
+      <ul class="custom_instagram_slider mt-7 | lg:mt-[68px]" data-limit="{{ instagram_post_limit }}"></ul>
+    </div>
+  </div>
+</instafeed-slider>
+
+{% schema %}
+{
+  "name": "Instafeed slider (custom)",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Plaay Community"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Description",
+      "default": "Take a look at some of our latest Instagram activity!"
+    },
+    {
+      "type": "range",
+      "id": "instagram_post_limit",
+      "label": "Instagram post limit",
+      "min": 3,
+      "max": 24,
+      "default": 12,
+      "info": "Set a limit to the number of Instagram posts shown in the slider."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instafeed slider (custom)"
+    }
+  ]
+}
+{% endschema %}

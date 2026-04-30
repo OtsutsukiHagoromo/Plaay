@@ -1,0 +1,233 @@
+{%- liquid
+  assign sort_by = results.sort_by | default: results.default_sort_by
+  assign total_active_values = 0
+  assign ingredients_icons_link_list = settings.ingredients_icons_link_list
+  if results.url
+    assign results_url = results.url
+  else
+    assign terms = results.terms | escape
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  endif
+-%}
+
+{% style %}
+  @media only screen and (min-width: 1024px){
+    .filter_wrapper.active .facets-wrap{
+      box-shadow: 0px 4px 6px 2px rgb(0 0 0 / 25%);
+    }
+  }
+  .filter_wrapper.active ul{
+    max-height: 24rem;
+  }
+  .filter_wrapper.active .arrow{
+    transform: rotate(180deg);
+  }
+  .filter_checkbox:checked + .fake_checkbox{
+    background: #021D49;
+  }
+
+  #FacetsWrapperDesktop.active{
+    transform: translateX(0);
+  }
+  .nutritional_info_toggle.active .label{
+    opacity: 1;
+  }
+  .nutritional_info_toggle.active .toggle{
+    margin-left: 20px;
+  }
+  .nutritional_info_toggle.active .toggle_container{
+    background: #F9C61D;
+  }
+
+  select[name='sort_by'].active ~ span {
+    transform: rotate(180deg);
+  }
+{% endstyle %}
+
+
+<div>
+  <div class="container">
+   
+    <div class="facets-container facets-container-drawer flex items-center justify-center md:justify-between py-4 flex-wrap">
+      <div class="flex items-center open_filter mr-4 | hidden">
+        <span class="h-4 w-4 flex text-dark-blue mr-2">
+          {% render 'icon-filter' %}
+        </span>
+        <h2 class="facets__heading caption-large text-base uppercase text-dark-blue"  tabindex="-1">{{ 'collection.facets.filter_by_label' | t }}</h2>
+      </div>
+      <facet-filters-form class="facets small-hide">
+        <form id="FacetFiltersForm" class="facets__form">
+          {%- if results.terms -%}
+            <input type="hidden" name="q" value="{{ results.terms | escape }}">
+            <input name="options[prefix]" type="hidden" value="last">
+          {%- endif -%}
+
+          {% comment %} Heading is the first tabbable element on filter type horizontal {% endcomment %}
+          <div id="FacetsWrapperDesktop" class="transition-all duration-200  w-80 h-full flex items-start flex-col bg-white z-20 | lg:transform-none lg:items-center lg:z-1 lg:flex-row lg:static lg:w-auto">
+           {% comment %}  <div class="flex items-center w-full px-7 py-8 border-b border-black border-opacity-10 justify-between | lg:mr-4 lg:justify-start lg:border-none lg:py-0 lg:px-0 lg:w-auto">
+              <div class="flex items-center mr-2">
+                <span class="h-4 w-4 flex text-dark-blue mr-2">
+                  {% render 'icon-filter' %}
+                </span>
+                <h2 class="facets__heading caption-large text-base uppercase text-dark-blue" tabindex="-1">{{ 'collection.facets.filter_by_label' | t }}</h2>
+              </div>
+              <span class="filter_close_mobile text-dark-blue h-4 w-4 flex cursor-pointer | lg:hidden">
+                {% render 'icon-cross-thin' %}
+              </span>
+            </div>{% endcomment %}
+            {% comment %} Pills are right below the title for filter type vertical {% endcomment %}
+            {%- if filter_type == 'vertical' -%}
+              <div class="active-facets active-facets-desktop">
+                <div class="active-facets-vertical-filter">
+                  {%- unless results.filters == empty -%}
+                    <h2 class="facets__heading facets__heading--vertical caption-large text-body" tabindex="-1">{{ 'collection.facets.filter_by_label' | t }}</h2>
+                  {%- endunless -%}
+                  <facet-remove class="active-facets__button-wrapper">
+                    <a href="{{ results_url }}" class="active-facets__button-remove underlined-link">
+                      <span>{{ 'collection.facets.clear_all' | t }}</span>
+                    </a>
+                  </facet-remove>
+                </div>
+                {%- for filter in results.filters -%}
+                  {%- for value in filter.active_values -%}
+                    <facet-remove>
+                      <a href="{{ value.url_to_remove }}" class="active-facets__button active-facets__button--light">
+                        <span class="active-facets__button-inner button button--tertiary">
+                          {{ filter.label }}: {{ value.label | escape }}
+                          <span class="h-3 w-3 flex text-dark-blue">
+                            {% render 'icon-close' %}
+                          </span>
+                          <span class="visually-hidden">{{ 'collection.facets.clear_filter' | t }}</span>
+                        </span>
+                      </a>
+                    </facet-remove>
+                  {%- endfor -%}
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
+
+            {% comment %} Filters for both horizontal and vertical filter {% endcomment %}
+            {%- for filter in results.filters -%}
+              {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+              {% case filter.type %}
+              {% when 'boolean' or 'list' %}
+                <div id="Details-{{ forloop.index }}-{{ section.id }}" 
+                class="filter_wrapper facets__disclosure-vertical js-filter px-7 relative w-full py-4  | lg:px-5 lg:border-none lg:py-0 lg:w-auto {% if filter.label == 'Calories' or filter.label == 'Ingredients' %} lg:w-[160px] {% endif %}" 
+                data-index="{{ forloop.index }}">
+                  <div class="facets__summary caption-large focus-offset relative z-3 cursor-pointer" aria-label="{{ filter.label }} ({{ 'collection.facets.filters_selected.one' | t: count: filter.active_values.size }})">
+                    <div class="flex items-center justify-between | lg:justify-start">
+                      <div class="facets__heading caption-large text-base uppercase text-dark-blue text-xs uppercase text-dark-blue mr-3 font-walsheim-bold flex items-center">{{ filter.label | escape }}
+                        <div class="facets__selected no-js-hidden{% if filter.active_values.size == 0 %} hidden {% endif %}"> ({{ filter.active_values.size }})</div>
+                      </div>
+                      <div class="flex h-3 w-3 text-dark-blue arrow transition-all duration-200">
+                        {% render 'icon-caret' %}
+                      </div>
+                    </div>
+                  </div> 
+                  <div id="Facet-{{ forloop.index }}-{{ section.id }}" class="parent-display facets__display">
+                    <fieldset class="facets-wrap parent-wrap {% if filter_type == 'vertical' %} facets-wrap-vertical{% endif %} | w-full overflow-hidden | lg:absolute lg:left-0 lg:bg-white lg:z-2 lg:rounded-xl lg:-mt-6 {% if filter.label == 'Ingredients' %} lg:w-[168px] {% elsif filter.label == 'Calories' %} lg:w-[200px] {% else %} lg:w-[140px] {% endif %}">
+                      <legend class="visually-hidden text-0">{{ filter.label | escape }}</legend>
+                      <ul class="{% if filter_type != 'vertical' %} facets__list{% endif %} list-unstyled no-js-hidden flex flex-col transition-all duration-300 max-h-0" role="list">
+                        {%- for value in filter.values -%}
+                          <li class="list-menu__item facets__item {% if filter.label == 'Calories' %} py-4 {% else %} py-2 {% endif %} flex items-center lg:px-5 {% if forloop.index > 10 and filter_type == 'vertical' %} show-more-item hidden{% endif %} {% if forloop.first %} pt-7 lg:pt-10 {% elsif forloop.last %} pb-6 {% endif %}">
+                            <div class="text-dark-blue w-full relative text-xs uppercase font-bold flex items-center relative facet-checkbox{% if value.count == 0 and value.active == false %} opacity-50 facet-checkbox--disabled{% endif %}">
+                              <label class="text-0 absolute mr-2" for="Filter-{{ filter.label | escape }}-{{ forloop.index }}">{{ value.value }}</label>
+                              <input type="checkbox"
+                                class="filter_checkbox mr-2 h-4 border border-dark-blue opacity-0 relative z-1 w-full"
+                                name="{{ value.param_name }}"
+                                value="{{ value.value }}"
+                                id="Filter-{{ filter.label | escape }}-{{ forloop.index }}"
+                                {% if value.active %}checked{% endif %}
+                                {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                              >
+                              <span class="fake_checkbox mr-2 h-4 w-4 border border-dark-blue absolute left-0 transition-all duration-200 rounded {% if value.count == 0 %} cursor-not-allowed {% endif %}"></span>
+                              <span aria-hidden="true" class="absolute mr-2 left-7 w-fullMinus20">{{ value.label | escape }} ({{ value.count }})</span>
+                            </div>
+                            {% comment %} icons {% endcomment %}
+                            {% assign filter_label = filter.label | downcase %}
+                            {% assign value_label = value.value | downcase %}
+                            {% if filter_label == 'ingredients' %}
+                              {% if ingredients_icons_link_list != blank %}
+                                {% for link in linklists[ingredients_icons_link_list].links %}
+                                  {% assign link_name = link.title | downcase %}
+                                  {% if link_name == value_label %}
+                                    <img loading="lazy" src="{{ link.url }}" alt="{{ link.title }}" class="h-6 w-6 object-contain ml-2"/>
+                                  {% endif %}
+                                {% endfor %}
+                              {% endif %}
+                            {% endif %}
+                          </li> 
+                        {%- endfor -%}
+                      </ul>
+                    </fieldset>
+                  </div>
+                </div>
+              {% endcase %}
+            {%- endfor -%}
+            <noscript>
+              <button type="submit" class="facets__button-no-js button button--secondary">{{ 'collection.facets.filter_button' | t }}</button>
+            </noscript>
+            <div class="loading_dots transition-all duration-200 flex items-center w-full justify-center py-16 | hidden">
+              <div class="h-4 w-4 rounded-full transition-all duration-200 relative mr-2">
+                <div class="dot h-0 w-0 bg-dark-blue rounded-full transition-all duration-200 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+              </div>
+              <div class="h-4 w-4 rounded-full transition-all duration-200 relative mr-2">
+                <div class="dot h-0 w-0 bg-dark-blue rounded-full transition-all duration-200 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+              </div>
+              <div class="h-4 w-4 rounded-full transition-all duration-200 relative mr-2">
+                <div class="dot h-0 w-0 bg-dark-blue rounded-full transition-all duration-200 absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
+              </div>
+            </div>
+          </div>
+
+          {% if results.current_vendor or results.current_type %}
+            <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+          {% endif %}
+        </form>
+      </facet-filters-form>
+
+      <facet-filters-form class="facets | hidden flex items-center w-auto mt-0 | xs:mt-0 xs:w-auto mobile-facet">
+        {% comment %} nutritional information {% endcomment %}
+        <div class="nutritional_info_toggle flex items-center w-full | xs:w-auto xs:mr-5 | lg:mr-10">
+          <span class="label opacity-70 transition-all duration-200 mr-2 text-dark-blue uppercase text-xxs font-walsheim-bold leading-none"> {{ 'collection.facets.nutritional_info' | t }}</span>
+          <div class="toggle_container rounded-3xl w-[38px] h-5 cursor-pointer bg-grey-80 flex items-center justify-start transition-all duration-200">
+            <div class="toggle bg-white rounded-full h-[14px] w-[14px] relative transition-all duration-200 ml-1">
+            </div>
+          </div>
+        </div>
+        {% comment %} sort by {% endcomment %}
+        <form id="FacetSortDrawerForm" class="facets__form">
+          <div class="facet-filters sorting caption small-hide">
+            <div class="facet-filters__field flex items-center">
+              <div class="select flex items-center relative">
+                {%- assign sort_by = results.sort_by | default: results.default_sort_by -%}
+                <select name="sort_by" class="facet-filters__sort select__select caption-large text-xs uppercase font-walsheim-bold pl-4 pr-2 py-2 text-dark-blue max-w-[120px] bg-white bg-opacity-0" id="SortBy" aria-describedby="a11y-refresh-page-message">
+                  <option class="py-2"> {{ 'collection.facets.sort_by_label' | t }}</option>
+                  {%- for option in results.sort_options -%}
+                    <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected="selected"{% endif %} class="py-2">{{ option.name | escape }}</option>
+                  {%- endfor -%}
+                </select>
+                <span class="flex h-3 w-3 text-dark-blue transition-all duration-150 absolute right-0 -z-1">
+                  {% render 'icon-caret' %}
+                </span>
+              </div>
+            </div>
+
+            <noscript>
+              <button type="submit" class="facets__button-no-js button button--secondary">{{ 'collection.facets.sort_button' | t }}</button>
+            </noscript>
+          </div>
+
+          {% if results.current_vendor or results.current_type %}
+            <input type="hidden" name="q" value="{{ results.current_vendor }}{{ results.current_type }}">
+          {% endif %}
+      
+          {%- if results.terms -%}
+            <input type="hidden" name="q" value="{{ results.terms | escape }}">
+            <input name="options[prefix]" type="hidden" value="last">
+          {%- endif -%}
+        </form>
+      </facet-filters-form>
+    </div>
+  </div>
+</div>

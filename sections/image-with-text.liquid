@@ -1,0 +1,145 @@
+{{ 'nws-img-w-text.css' | asset_url | stylesheet_tag }}
+{% style %}
+  .nws-img-w-text {
+    {% if section.settings.slct-bg == 'gradient' %}background:{{ section.settings.section_background_gradient }};{% endif %}
+    {% if section.settings.slct-bg == 'solid' %}background:{{ section.settings.section-background }};{% endif %}
+    {% if section.settings.slct-bg == 'image' %}background-image:url({{ section.settings.bg_img | img_url: 'master'}});
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center; {% endif %}
+  }
+{% endstyle %}
+<!-- nws-img-w-text.liquid -->
+<div class="nws-img-w-text nws-same-padding{% if section.settings.section-extra-class != blank %}{{ section.settings.section-extra-class }}{% endif %}">
+  <div class="nws-custom-container">
+    {% if section.settings['section-heading'] != blank %}
+      <h2 class="nws-section-heading">{{ section.settings['section-heading'] }}</h2>
+    {% endif %}
+    {% if section.settings.section_desc != blank %}
+      <div class="nws-section-desc">{{ section.settings.section_desc }}</div>
+    {% endif %}
+    <div class="nws-custom-row">
+      {% for block in section.blocks %}
+        <div class="nws-blocks-grid">
+          <div class="nws-media-col">
+            {% if block.settings.img %}
+              <div class="nws-img-wrapper">
+                <img
+                  src="{{ block.settings.img | img_url: "master" }}"
+                  width="auto"
+                  height="auto"
+                  class="nws-img"
+                >
+              </div>
+            {% endif %}
+          </div>
+          <div class="nws-media-info">
+            {% if block.settings.blck_heading != blank %}
+              <h2 class="nws-block-heading">{{ block.settings.blck_heading }}</h2>
+            {% endif %}
+            {% if block.settings.blck_content != blank %}
+              <div class="nws-block-content">{{ block.settings.blck_content }}</div>
+            {% endif %}
+            {% if block.settings.btn_lbl != blank %}
+              <div class="nws-btn-wrapper">
+                <a href="{{ block.settings.btn_url }}" class="nws-block-btn">{{ block.settings.btn_lbl }}</a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "Nws Image With Text",
+  "disabled_on": {
+  "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "select",
+      "options": [
+        { "value": "gradient", "label": "Gradient" },
+        { "value": "solid", "label": "Background Solid Color"},
+        { "value": "image", "label": "Background Image"}
+        ],
+      "id": "slct-bg",
+      "default": "solid",
+      "label": "Section Background Type"
+    },
+    {
+      "type": "color_background",
+      "label": "Section Background Gradient",
+      "id": "section_background_gradient"
+    },
+    {
+      "type": "color",
+      "id": "section-background",
+      "info": "Background",
+      "label": "Section Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_img",
+      "info": "Background Image",
+      "label": "BG Image"
+    },
+     {
+      "type": "text",
+      "id": "section-extra-class",
+      "info": "Add section class (without.). Use spaces to add multiple classes",
+      "label": "Section Class"
+    },
+    {
+      "type": "text",
+      "id": "section-heading",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "section_desc",
+      "label": "Description"
+    }
+  ],
+"blocks":[
+  {
+    "type": "gallery",
+    "name": "Row",
+    "settings":[
+      {
+        "type": "image_picker",
+        "id": "img",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "blck_heading",
+        "label": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "blck_content",
+        "label": "Content"
+      },
+      {
+        "type": "text",
+        "id": "btn_lbl",
+        "label": "Button Label"
+      },
+      {
+        "type": "url",
+        "id": "btn_url",
+        "label": "Paste Url"
+      }
+    ]
+  }
+],
+  "presets": [
+    {
+      "name": "Nws Image With Text",
+    }
+  ]
+}
+{% endschema %}

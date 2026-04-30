@@ -1,0 +1,70 @@
+{% assign background_image = section.settings.background_image %}
+<div class="w-full | lg:pr-14">
+  <div>
+    <div class="border-b border-black border-opacity-30 hidden | md:flex md:items-center">
+      <div class="w-1/5 "></div>
+      <div class="pb-2 font-alternate-gothic text-3xl w-2/5">
+        {{- 'line-item-table.heading.product' | t -}}
+      </div>
+      <div class="pb-2 font-alternate-gothic text-3xl w-1/5">
+        {{- 'line-item-table.heading.price' | t -}}
+      </div>
+      <div class="pb-2 font-alternate-gothic text-3xl w-1/5">
+        {{- 'line-item-table.heading.quantity' | t -}}
+      </div>
+    </tr>
+  </div>
+  <div>
+    {%- for item in cart.items -%}
+      {% for product in collections.all.products %}
+        {% if  product.id == item.product_id %}
+          {% assign product_heading = product.metafields.arena.heading %}
+        {% endif %}
+      {% endfor %}
+      {% if item.selling_plan_allocation.selling_plan.name != blank %}
+        {% assign is_subscription = true %}
+        {% assign subscription_name = item.selling_plan_allocation.selling_plan.name %}
+      {% else %}
+        {% assign is_subscription = false %}
+      {% endif %}
+      <div class="border-b border-black border-opacity-30 flex flex-wrap items-center">
+        <div class="w-1/2 py-2 | md:py-3 md:w-3/5 md:flex md:items-center">
+          {% comment %} product image {% endcomment %}
+          <a href="{{ item.url }}" class="md:flex items-center | md:w-2/6">
+            <div class="w-full h-32 relative max-w-180px | md:max-w-none">
+              {%- render 'img', img:item.image, type:'img', lazy:true, class:'object-contain h-full w-full md:w-4/5' -%}
+            </div>
+          </a>
+          <div class="flex flex-col | md:w-3/5">
+            {% comment %} title / variant / subscription type {% endcomment %}
+            <div>
+              <h3 class="uppercase font-acumin-black text-2xl">{{- item.title -}}</h3>
+              {% if product_heading != blank %}
+                <h4 class="font-henderson text-xxs mb-1 uppercase">{{ product_heading }}</h4>
+              {% endif %}
+              {% if item.selling_plan_allocation.selling_plan.name != blank %}
+                <span class="text-sm">{{ subscription_name }}</span>
+              {% endif %}
+            </div>
+            {% comment %} remove button {% endcomment %}
+            <a href="{{ routes.cart_change_url | append: '?id=' | append: item.id | append: '&quantity=0' }}" class="mt-3 capitalize text-sm underline hidden | md:block">
+              {{- 'cart.remove' | t -}}
+            </a>
+          </div>
+        </div>
+        {% comment %} price {% endcomment %}
+        <div class="w-1/2 order-1 pb-2 | md:w-1/5 md:order-none">
+          {%- render 'product.price', product:item.product, is_cart:true, subscription:is_subscription -%}
+          {% comment %} remove button mobile {% endcomment %}
+          <a href="{{ routes.cart_change_url | append: '?id=' | append: item.id | append: '&quantity=0' }}" class="mt-3 capitalize text-sm underline block | md:hidden">
+            {{- 'cart.remove' | t -}}
+          </a>
+        </div>
+        <div class="flex w-1/2 justify-end py-2 | md:justify-start md:w-1/5">
+          {%- render 'quantity.update', line:forloop.index, quantity: item.quantity, inventory_quantity:item.variant.inventory_quantity, inventory_policy:item.variant.inventory_policy -%}
+        </div>
+      </div>
+    {%- endfor -%}
+    </div>
+  </div>
+</div>

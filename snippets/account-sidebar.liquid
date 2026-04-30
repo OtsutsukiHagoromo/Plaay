@@ -1,0 +1,46 @@
+{% assign page_url = canonical_url | split: '.com' | last %}
+  <div class="relative justify-between items-start flex | lg:justify-start lg:flex-col lg:w-full">
+  {% comment %} account tab selector {% endcomment %}
+  <ul class="flex-col w-full text-lg text-dark-blue font-walsheim-bold bg-white rounded-xl pt-11 pb-32 hidden | lg:px-6 lg:py-10 lg:flex lg:text-left | xl:px-6">
+    <li class="border-b border-dark-blue pb-3 lg:text-left lg:justify-start lg:mt-4 {% if page_url == '/account' %} underline text-purple-dark {% endif %}" data-tab="0">
+      <a href="/account">
+        {{ 'account.account-area.account-overview' | t }}
+      </a>
+    </li>
+
+    <li class="border-b border-dark-blue pb-3 mt-3 cursor-pointer {% if page_url == '/account/addresses' %} underline text-purple-dark {% endif %}">
+      <a href="/account/addresses">
+        {{ 'account.account-area.addresses' | t }}
+      </a>
+    </li>
+
+    <li class="border-b border-dark-blue mt-3 pb-3 cursor-pointer">
+      <a href="/tools/recurring/login">
+        {{ 'account.account-area.manage-subscriptions' | t }}
+      </a>
+    </li>
+
+    <li class="cursor-pointer text-[#979797] mt-3 logout-button">{{ 'Logout' | customer_logout_link }}</li>
+  </ul>
+  {% comment %} account details {% endcomment %}
+  <div class="rounded-xl py-5 w-full mt-9 | lg:px-6 lg:bg-white lg:mt-16 lg:py-11 | xl:px-6">
+    <h2 class="text-xl text-dark-blue font-walsheim-bold ">{{ 'account.account-area.account-details' | t }}</h2>
+    <div class="flex flex-col pt-7 pb-13 text-lg text-dark-blue font-walsheim">
+      <span>{{ customer.default_address.first_name }} {{ customer.default_address.last_name }}</span>
+      {% if customer.default_address.address1 %}
+        <span>{{ customer.default_address.address1 }}</span>
+      {% endif %}
+      {% if customer.default_address.address2 %}
+        <span>{{ customer.default_address.address2 }}</span>
+      {% endif %}
+      {% if customer.default_address.city %}
+        <span>{{ customer.default_address.city }}</span>
+      {% endif %}
+      <span>{{ customer.default_address.country }}</span>
+    </div>
+
+    {% unless page_url contains '/address' %}
+      {% render 'btn', href: '/account/addresses', style: 'blue', copy: 'View Addresses', no_translation: true, additional_class: 'flex w-full font-walsheim-bold max-w-[320px] text-sm rounded md:max-w-[240px]', width: 'full' %}
+    {% endunless %}
+  </div>
+</div>

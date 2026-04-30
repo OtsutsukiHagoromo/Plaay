@@ -1,0 +1,50 @@
+{% comment %}
+  PLAAY — Badge Snippet
+  File: snippets/plaay-badge.liquid
+
+  Usage:
+    {% render 'plaay-badge', product: product %}           — absolute on cards
+    {% render 'plaay-badge', product: product, inline: true %} — inline on PDP
+
+  Tag products in Shopify Admin with:
+    badge:bestseller  |  badge:new  |  badge:limited
+    badge:favourite   |  badge:staff  |  badge:gift
+{% endcomment %}
+
+{% assign badge_text = '' %}
+{% assign badge_class = '' %}
+
+{% for tag in product.tags %}
+  {% assign tag_lower = tag | downcase | strip %}
+
+  {% if tag_lower == 'badge:bestseller' and badge_text == '' %}
+    {% assign badge_text = 'Bestseller' %}
+    {% assign badge_class = 'plaay-badge--bestseller' %}
+
+  {% elsif tag_lower == 'badge:new' and badge_text == '' %}
+    {% assign badge_text = 'Just Launched' %}
+    {% assign badge_class = 'plaay-badge--new' %}
+
+  {% elsif tag_lower == 'badge:limited' and badge_text == '' %}
+    {% assign badge_text = 'Limited Batch' %}
+    {% assign badge_class = 'plaay-badge--limited' %}
+
+  {% elsif tag_lower == 'badge:favourite' and badge_text == '' %}
+    {% assign badge_text = 'Fan Favourite' %}
+    {% assign badge_class = 'plaay-badge--favourite' %}
+
+  {% elsif tag_lower == 'badge:staff' and badge_text == '' %}
+    {% assign badge_text = 'Staff Pick' %}
+    {% assign badge_class = 'plaay-badge--staff' %}
+
+  {% elsif tag_lower == 'badge:gift' and badge_text == '' %}
+    {% assign badge_text = 'Gift Ready' %}
+    {% assign badge_class = 'plaay-badge--gift' %}
+  {% endif %}
+{% endfor %}
+
+{% if badge_text != '' %}
+  <span class="plaay-badge {{ badge_class }}{% if inline %} plaay-badge--inline{% endif %}">
+    {{ badge_text }}
+  </span>
+{% endif %}

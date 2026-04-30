@@ -1,0 +1,344 @@
+<!-- snippets/flavor-option.liquid -->
+{% assign use_dropdown = false %}
+{% if variant_selector_style == 'dropdown' %}
+  {% assign use_dropdown = true %}
+{% endif %}
+{% assign render_size_selector = true %}
+{% if show_size_selector == false %}
+  {% assign render_size_selector = false %}
+{% endif %}
+{% assign render_variety_selector = true %}
+{% if show_variety_selector == false %}
+  {% assign render_variety_selector = false %}
+{% endif %}
+
+{% if product.metafields.dev.choose_your_flavour.value %}
+  <div class="product__section-content__block plaay-selector-block">
+    <h4 class="swatch__title"><span>Choose Your Flavour</span></h4>
+    {% if use_dropdown %}
+      {%- assign flavour_products = product.metafields.dev.choose_your_flavour.value -%}
+      <div class="plaay-imgdrop" data-open="false">
+        <button type="button" class="plaay-imgdrop__btn" aria-haspopup="listbox">
+          {%- assign flavour_matched = false -%}
+          {%- for pro in flavour_products -%}
+            {%- if product.id == pro.id -%}
+              {%- assign flavour_matched = true -%}
+              <img src="{{ pro.featured_image | image_url: width: 80 }}" alt="{{ pro.title }}" class="plaay-imgdrop__thumb">
+              <span class="plaay-imgdrop__label">{{ pro.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- unless flavour_matched -%}
+            <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title }}" class="plaay-imgdrop__thumb">
+            <span class="plaay-imgdrop__label">{{ product.title }}</span>
+          {%- endunless -%}
+          <svg class="plaay-imgdrop__chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="plaay-imgdrop__panel" role="listbox">
+          {%- for pro in flavour_products -%}
+            <a href="{{ pro.url }}" class="plaay-imgdrop__item {% if product.id == pro.id %}plaay-imgdrop__item--active{% endif %}" role="option" {% if product.id == pro.id %}aria-selected="true"{% else %}aria-selected="false"{% endif %}>
+              <img src="{{ pro.featured_image | image_url: width: 80 }}" alt="{{ pro.title }}" class="plaay-imgdrop__item-img">
+              <span class="plaay-imgdrop__item-name">{{ pro.title }}</span>
+              {% if product.id == pro.id %}
+                <svg class="plaay-imgdrop__check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              {% endif %}
+            </a>
+          {%- endfor -%}
+        </div>
+      </div>
+    {% else %}
+      <div class="product-atc-bar__colors" color_type="solid">
+        {% for pro in product.metafields.dev.choose_your_flavour.value %}
+          <div class="product-atc-bar__other-content {% if product.id == pro.id %}active{% endif %}">
+            <a href="{{ pro.url }}">
+              <img class="js" src="{{ pro.featured_image | img_url: '' }}" data-aspectratio="" data-sizes="auto" alt="{{ pro.title }}">
+              <p class="product-bar-title">{{ pro.title }}</p>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% if render_size_selector and product.metafields.custom.choose_your_size.value %}
+  <div class="product__section-content__block plaay-selector-block">
+    {% assign show_contact_us = false %}
+    {% for collection in product.collections %}
+      {% if collection.title == 'Limited Editions' %}{% assign show_contact_us = true %}{% endif %}
+    {% endfor %}
+    <h4 class="swatch__title"><span>{% if show_contact_us %}Choose Your Exclusive{% else %}Choose Your Size{% endif %}</span></h4>
+    {% if use_dropdown %}
+      {%- assign size_products = product.metafields.custom.choose_your_size.value -%}
+      <div class="plaay-imgdrop" data-open="false">
+        <button type="button" class="plaay-imgdrop__btn" aria-haspopup="listbox">
+          {%- assign size_matched = false -%}
+          {%- for prox in size_products -%}
+            {%- if product.id == prox.id -%}
+              {%- assign size_matched = true -%}
+              <img src="{{ prox.featured_image | image_url: width: 80 }}" alt="{{ prox.title }}" class="plaay-imgdrop__thumb">
+              <span class="plaay-imgdrop__label">{{ prox.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- unless size_matched -%}
+            <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title }}" class="plaay-imgdrop__thumb">
+            <span class="plaay-imgdrop__label">{{ product.title }}</span>
+          {%- endunless -%}
+          <svg class="plaay-imgdrop__chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="plaay-imgdrop__panel" role="listbox">
+          {%- for prox in size_products -%}
+            <a href="{{ prox.url }}" class="plaay-imgdrop__item {% if product.id == prox.id %}plaay-imgdrop__item--active{% endif %}" role="option" {% if product.id == prox.id %}aria-selected="true"{% else %}aria-selected="false"{% endif %}>
+              <img src="{{ prox.featured_image | image_url: width: 80 }}" alt="{{ prox.title }}" class="plaay-imgdrop__item-img">
+              <span class="plaay-imgdrop__item-name">{{ prox.title }}</span>
+              {% if product.id == prox.id %}
+                <svg class="plaay-imgdrop__check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              {% endif %}
+            </a>
+          {%- endfor -%}
+        </div>
+      </div>
+    {% else %}
+      <div class="product-atc-bar__colors" color_type="solid">
+        {% for prox in product.metafields.custom.choose_your_size.value %}
+          <div class="product-atc-bar__other-content {% if product.id == prox.id %}active{% endif %}">
+            <a href="{{ prox.url }}">
+              <img class="js" src="{{ prox.featured_image | img_url: '' }}" data-aspectratio="" data-sizes="auto" alt="{{ prox.title }}">
+              <p class="product-bar-title">{{ prox.title }}</p>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% if render_variety_selector and product.metafields.custom.choose_your_variety.value %}
+  <div class="product__section-content__block plaay-selector-block">
+    {% assign show_contact_us = false %}
+    {% for collection in product.collections %}
+      {% if collection.title == 'Limited Editions' %}{% assign show_contact_us = true %}{% endif %}
+    {% endfor %}
+    <h4 class="swatch__title"><span>{% if show_contact_us %}Choose Your Exclusive{% else %}Choose Your Variety{% endif %}</span></h4>
+    {% if use_dropdown %}
+      {%- assign variety_products = product.metafields.custom.choose_your_variety.value -%}
+      <div class="plaay-imgdrop" data-open="false">
+        <button type="button" class="plaay-imgdrop__btn" aria-haspopup="listbox">
+          {%- assign variety_matched = false -%}
+          {%- for proy in variety_products -%}
+            {%- if product.id == proy.id -%}
+              {%- assign variety_matched = true -%}
+              <img src="{{ proy.featured_image | image_url: width: 80 }}" alt="{{ proy.title }}" class="plaay-imgdrop__thumb">
+              <span class="plaay-imgdrop__label">{{ proy.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- unless variety_matched -%}
+            <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title }}" class="plaay-imgdrop__thumb">
+            <span class="plaay-imgdrop__label">{{ product.title }}</span>
+          {%- endunless -%}
+          <svg class="plaay-imgdrop__chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="plaay-imgdrop__panel" role="listbox">
+          {%- for proy in variety_products -%}
+            <a href="{{ proy.url }}" class="plaay-imgdrop__item {% if product.id == proy.id %}plaay-imgdrop__item--active{% endif %}" role="option" {% if product.id == proy.id %}aria-selected="true"{% else %}aria-selected="false"{% endif %}>
+              <img src="{{ proy.featured_image | image_url: width: 80 }}" alt="{{ proy.title }}" class="plaay-imgdrop__item-img">
+              <span class="plaay-imgdrop__item-name">{{ proy.title }}</span>
+              {% if product.id == proy.id %}
+                <svg class="plaay-imgdrop__check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              {% endif %}
+            </a>
+          {%- endfor -%}
+        </div>
+      </div>
+    {% else %}
+      <div class="product-atc-bar__colors" color_type="solid">
+        {% for proy in product.metafields.custom.choose_your_variety.value %}
+          <div class="product-atc-bar__other-content {% if product.id == proy.id %}active{% endif %}">
+            <a href="{{ proy.url }}">
+              <img class="js" src="{{ proy.featured_image | img_url: '' }}" data-aspectratio="" data-sizes="auto" alt="{{ proy.title }}">
+              <p class="product-bar-title">{{ proy.title }}</p>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endif %}
+
+<style>
+  .plaay-selector-block {
+    margin-bottom: 20px;
+  }
+  h4.swatch__title span {
+    color: #021d49;
+    margin-bottom: 12px;
+    display: inline-block;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    font-family: inherit;
+  }
+
+  /* ── Swatch styles ── */
+  .product-atc-bar__colors {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 10px;
+    margin-bottom: 8px;
+  }
+  .product-atc-bar__other-content {
+    position: relative;
+    width: 90px;
+    flex: 0 0 90px;
+  }
+  .product-atc-bar__other-content img {
+    border-radius: 50px;
+    padding: 5px;
+    background: #fff;
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
+  }
+  .product-atc-bar__other-content.active img {
+    border: 2px solid #000;
+  }
+  @media screen and (max-width: 750px) {
+    .product-atc-bar__other-content { width: 85px; flex: 0 0 85px; }
+    .product-atc-bar__other-content img { width: 70px; height: 70px; }
+  }
+
+  /* ── Custom image dropdown ── */
+  .plaay-imgdrop {
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .plaay-imgdrop__btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #fff;
+    border: 1.5px solid rgba(2,29,73,0.25);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s;
+  }
+  .plaay-imgdrop__btn:hover,
+  .plaay-imgdrop[data-open="true"] .plaay-imgdrop__btn {
+    border-color: #021D49;
+  }
+  .plaay-imgdrop__thumb {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: #f5f5f5;
+    flex-shrink: 0;
+  }
+  .plaay-imgdrop__label {
+    flex: 1;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #021D49;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .plaay-imgdrop__chevron {
+    color: #021D49;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .plaay-imgdrop[data-open="true"] .plaay-imgdrop__chevron {
+    transform: rotate(180deg);
+  }
+  .plaay-imgdrop__panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1.5px solid rgba(2,29,73,0.2);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(2,29,73,0.12);
+    z-index: 50;
+    overflow: hidden;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .plaay-imgdrop[data-open="true"] .plaay-imgdrop__panel {
+    display: block;
+  }
+  .plaay-imgdrop__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    text-decoration: none;
+    transition: background 0.15s;
+    border-bottom: 1px solid rgba(2,29,73,0.06);
+  }
+  .plaay-imgdrop__item:last-child {
+    border-bottom: none;
+  }
+  .plaay-imgdrop__item:hover {
+    background: #f5f5f5;
+  }
+  .plaay-imgdrop__item--active {
+    background: rgba(249,198,29,0.1);
+  }
+  .plaay-imgdrop__item-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: #f5f5f5;
+    flex-shrink: 0;
+  }
+  .plaay-imgdrop__item-name {
+    flex: 1;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #021D49;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .plaay-imgdrop__check {
+    color: #021D49;
+    flex-shrink: 0;
+  }
+</style>
+
+<script>
+  (function() {
+    function initImgDrops() {
+      document.querySelectorAll('.plaay-imgdrop').forEach(function(drop) {
+        var btn = drop.querySelector('.plaay-imgdrop__btn');
+        if (!btn || btn._imgDropInit) return;
+        btn._imgDropInit = true;
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var isOpen = drop.dataset.open === 'true';
+          // Close all others
+          document.querySelectorAll('.plaay-imgdrop[data-open="true"]').forEach(function(d) {
+            d.dataset.open = 'false';
+          });
+          drop.dataset.open = isOpen ? 'false' : 'true';
+        });
+      });
+    }
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.plaay-imgdrop')) {
+        document.querySelectorAll('.plaay-imgdrop[data-open="true"]').forEach(function(d) {
+          d.dataset.open = 'false';
+        });
+      }
+    });
+    document.addEventListener('DOMContentLoaded', initImgDrops);
+    // Also run immediately in case DOM is already ready
+    if (document.readyState !== 'loading') initImgDrops();
+  })();
+</script>

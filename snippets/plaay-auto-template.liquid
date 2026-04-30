@@ -1,0 +1,56 @@
+{% comment %}
+  PLAAY — Auto Template Assignment (Server-Side Redirect)
+  File: snippets/plaay-auto-template.liquid
+
+  Include this at the TOP of theme.liquid (inside <head>) to auto-redirect
+  products to the correct named template based on their tags.
+
+  Rules (first match wins):
+    tag "template:truffle"  → /products/{handle}?view=truffle
+    tag "template:bars"     → /products/{handle}?view=bars
+    tag "template:gifting"  → /products/{handle}?view=gifting
+
+  How Shopify named templates work:
+    product.bars    → templates/product.bars.json    → sections/bars-main-product.liquid
+    product.truffle → templates/product.truffle.json → sections/truffle-main-product.liquid
+    product.gifting → templates/product.gifting.json → sections/gifting-main-product.liquid
+
+  Usage in theme.liquid:
+    {% render 'plaay-auto-template' %}
+
+  IMPORTANT: This snippet only executes on product pages and only if the
+  current URL doesn't already have a ?view= parameter (prevents redirect loop).
+{% endcomment %}
+
+{% if request.page_type == 'product' %}
+  {% unless request.path contains '?' %}
+    {%- assign auto_view = '' -%}
+
+    {%- for tag in product.tags -%}
+      {%- assign tag_lc = tag | downcase | strip -%}
+      {%- if tag_lc == 'template:truffle' and auto_view == '' -%}
+        {%- assign auto_view = 'truffle' -%}
+      {%- elsif tag_lc == 'template:bars' and auto_view == '' -%}
+        {%- assign auto_view = 'bars' -%}
+      {%- elsif tag_lc == 'template:gifting' and auto_view == '' -%}
+        {%- assign auto_view = 'gifting' -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if auto_view != '' -%}
+      {%- comment -%}
+        We can't do server-side 302 in Liquid, so we use a minimal JS redirect.
+        The meta refresh is a fallback for no-JS environments.
+      {%- endcomment -%}
+      <meta http-equiv="refresh" content="0;url={{ product.url }}?view={{ auto_view }}">
+      <script>
+        (function() {
+          var url = {{ product.url | json }} + '?view={{ auto_view }}';
+          if (window.location.href.indexOf('?view=') === -1) {
+            window.location.replace(url);
+          }
+        })();
+      </script>
+    {%- endif -%}
+  {% endunless %}
+{% endif %}

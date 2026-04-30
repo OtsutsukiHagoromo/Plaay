@@ -1,0 +1,20 @@
+<div class="flex flex-col h-full">
+  <a href="{{ article.url }}" class="text-0">
+    {{ article.title }}
+    {% render 'img', type: 'img', lazy: true, img: article.image, class: 'object-cover w-full aspect-square max-h-[170px] lg:max-h-[200px] 2xl:max-h-[240px]' %}
+  </a>
+  <div class="flex flex-col justify-between h-full">
+    <h2 class="text-dark-blue pt-5 font-walsheim-bold text-xl | lg:text-5xl">{{ article.title }}</h2>
+    {% if article.excerpt != blank %}
+      <div class="article_excerpt pt-6 text-dark-blue font-walsheim-medium text-xs | lg:text-lg">{{ article.excerpt | truncatewords: 32 }}</div>
+    {% else %}
+      <div class="pt-6 text-dark-blue font-walsheim-medium text-xs | lg:text-lg">{{ article.content | strip_html | truncatewords: 32 }}</div>
+    {% endif %}
+    <a href="{{ article.url }}" class="flex items-center text-sm font-walsheim font-bold text-dark-blue mt-4 group group">
+      {{ 'article.read-article' | t }}
+      <span class="h-3 w-5 mt-[2px] flex text-dark-blue transition-all duration-200 ml-2 group-hover:ml-4">
+        {% render 'icon-long-arrow' %}
+      </span>
+    </a>
+  </div>
+</div>
