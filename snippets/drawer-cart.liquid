@@ -8,7 +8,7 @@
   data-module="drawer-cart"
   data-drawer="cart">
   <div class="translate-x-full opacity-0 invisible fixed inset-y-0 right-0 w-screen md:w-[65vw] lg:max-w-[620px] z-[17500] transition-all duration-500 group-active/cart:translate-x-0 group-active/cart:opacity-100 group-active/cart:visible" data-drawer>
-    <div class="relative flex w-full h-full z-10 flex-col" style="background-color: {{ settings.cart_drawer_background | default: '#ffffff' }}">
+    <div class="relative flex w-full h-full min-h-0 overflow-hidden z-10 flex-col" style="background-color: {{ settings.cart_drawer_background | default: '#ffffff' }}">
 
       {% comment %} Header {% endcomment %}
       <div class="flex items-center justify-between px-6 py-4 border-b border-dark-blue border-opacity-10 flex-shrink-0">

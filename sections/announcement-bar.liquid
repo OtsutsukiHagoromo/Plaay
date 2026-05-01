@@ -12,6 +12,17 @@
   .announcement_bar{
     background-color: {{ background_color }};
     color: {{ text_color }};
+    min-height: 44px;
+  }
+  .announcement_bar .container {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .announcement_bar .swiper-slide {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
   }
   @media only screen and (max-width: 768px){
     .announcement_bar{

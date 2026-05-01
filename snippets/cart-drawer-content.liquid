@@ -1,9 +1,9 @@
-<div class="flex flex-1 min-h-0 flex-col" data-cart-drawer-content data-cart-item-count="{{ cart.item_count }}">
+<div class="flex flex-1 min-h-0 flex-col overflow-hidden" data-cart-drawer-content data-cart-item-count="{{ cart.item_count }}">
   <div class="flex-shrink-0 px-5 pt-4 pb-2{% if cart.item_count == 0 %} hidden{% endif %}">
     {%- render 'cart-tier-bar' -%}
   </div>
 
-  <div class="flex-1 overflow-y-auto min-h-0" data-cart-items>
+  <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain" data-cart-items>
     {% if cart.item_count > 0 %}
       <div class="cart_items_container px-4 pb-2">
         {%- render 'cart-drawer-items' -%}
@@ -17,7 +17,7 @@
     {% endif %}
   </div>
 
-  <div class="flex-shrink-0 border-t border-dark-blue border-opacity-10 px-5 pt-4 pb-5">
+  <div class="sticky bottom-0 z-20 flex-shrink-0 border-t border-dark-blue border-opacity-10 bg-white px-5 pt-4 pb-5 shadow-[0_-8px_24px_rgba(2,29,73,0.08)]">
     {% if cart.item_count > 0 %}
       <div data-cart-drawer-footer>
         {%- render 'cart-drawer-footer' -%}
