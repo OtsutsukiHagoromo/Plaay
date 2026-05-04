@@ -1766,12 +1766,13 @@
         "product_HYCRPe",
         "product_VXqVkq"
       ],
+      "disabled": true,
       "settings": {
         "title": "Truffles",
         "description": "",
         "background_color": "#ffffff",
-        "product_source": "manual",
-        "featured_collection": "",
+        "product_source": "collection",
+        "featured_collection": "chocolate-truffles",
         "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
@@ -1888,13 +1889,14 @@
         "product_imYEYc",
         "product_mkxW86"
       ],
+      "disabled": true,
       "name": "Featured products",
       "settings": {
         "title": "Energy Bars ",
         "description": "",
         "background_color": "#ffffff",
-        "product_source": "manual",
-        "featured_collection": "",
+        "product_source": "collection",
+        "featured_collection": "energy-bars",
         "collection_product_limit": 12,
         "extra_top_padding": false,
         "extra_bottom_padding": false,
@@ -2514,6 +2516,77 @@
         "related_articles_grid_desktop_large": 4,
         "hide_related_articles": false
       }
+    },
+    "pdp_social_proof_EhzVqa": {
+      "type": "pdp-social-proof",
+      "blocks": {
+        "trust_badge_CpkVbW": {
+          "type": "trust_badge",
+          "settings": {
+            "label": "No Refined Sugar"
+          }
+        },
+        "trust_badge_eK6Cbe": {
+          "type": "trust_badge",
+          "settings": {
+            "label": "100% Clean Ingredients"
+          }
+        },
+        "trust_badge_NBTiQH": {
+          "type": "trust_badge",
+          "settings": {
+            "label": "Halal certified"
+          }
+        },
+        "trust_badge_GYxe3G": {
+          "type": "trust_badge",
+          "settings": {
+            "label": "Made in the UAE"
+          }
+        },
+        "review_xngXi9": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Honestly the best chocolate snack I've tried. Tastes great and no chalky aftertaste.",
+            "reviewer": "Aisha K.",
+            "tag": "Verified buyer"
+          }
+        },
+        "review_4DjCAi": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "My kids love these. Feels good knowing exactly what's in them.",
+            "reviewer": "Omar J.",
+            "tag": "Verified buyer"
+          }
+        },
+        "review_LiYpLU": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Perfect post-gym snack. High protein, genuinely delicious - ordering again.",
+            "reviewer": "Priya S.",
+            "tag": "Verified buyer"
+          }
+        }
+      },
+      "block_order": [
+        "trust_badge_CpkVbW",
+        "trust_badge_eK6Cbe",
+        "trust_badge_NBTiQH",
+        "trust_badge_GYxe3G",
+        "review_xngXi9",
+        "review_4DjCAi",
+        "review_LiYpLU"
+      ],
+      "name": "PDP — Social Proof",
+      "settings": {
+        "background_color": "#F4F4F4",
+        "heading": "Loved by thousands",
+        "rating_text": "4.9 out of 5 from 2,000+ reviews"
+      }
     }
   },
   "order": [
@@ -2540,6 +2613,7 @@
     "e6d51720-1295-476b-9afe-9dcb07476eec",
     "instafeed_y9eagG",
     "1671195971148aab85",
-    "related_articles_JgEJHR"
+    "related_articles_JgEJHR",
+    "pdp_social_proof_EhzVqa"
   ]
 }
