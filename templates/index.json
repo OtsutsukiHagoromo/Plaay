@@ -1561,7 +1561,7 @@
         "description": "",
         "background_color": "#ffffff",
         "product_source": "collection",
-        "featured_collection": "",
+        "featured_collection": "chocolate-big-bars",
         "collection_product_limit": 12,
         "extra_top_padding": false,
         "extra_bottom_padding": false,
