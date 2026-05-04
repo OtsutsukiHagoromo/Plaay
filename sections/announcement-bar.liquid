@@ -11,23 +11,32 @@
 {% style %}
   .announcement_bar{
     background-color: {{ background_color }};
-    color: {{ text_color }};
     min-height: 44px;
   }
   .announcement_bar .container {
     padding-top: 8px;
     padding-bottom: 8px;
   }
-  .announcement_bar .swiper-slide {
+  .announcement_bar__track {
+    position: relative;
+  }
+  .announcement_bar__slide {
+    color: var(--announcement-text-color);
+    display: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.2;
   }
+  .announcement_bar__slide.is-active {
+    display: block;
+  }
   @media only screen and (max-width: 768px){
     .announcement_bar{
       background-color: {{ background_color_mobile }};
-      color: {{ text_color_mobile }}; 
+    }
+    .announcement_bar__slide {
+      color: var(--announcement-text-color-mobile, var(--announcement-text-color));
     }
   }
 {% endstyle %}
@@ -35,12 +44,8 @@
 {% if announcement_text_size > 0 %}
   <announcement-bar data-module="announcement-bar">
     <div class="announcement_bar fixed top-0 w-full z-10">
-      <!-- Swiper CSS -->
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-
       <div class="container py-2">
-        <div class="swiper" data-autoplay="7000">
-          <div class="swiper-wrapper" style="align-items:center;">
+        <div class="announcement_bar__track" data-announcement-rotator data-autoplay="{{ autoplay }}">
             {% for block in announcement_text %}
               {% liquid 
                 assign text = block.settings.text
@@ -49,30 +54,57 @@
                 assign text_style = block.settings.text_style
               %}
               {% if text != blank %}
-                <div class="swiper-slide text-sm text-center font-bold float-left transition-all duration-500 {{ text_style }}">
+                <div
+                  class="announcement_bar__slide text-sm text-center font-bold transition-all duration-500 {{ text_style }}{% if forloop.first %} is-active{% endif %}"
+                  style="--announcement-text-color: {{ text_color }}; --announcement-text-color-mobile: {{ text_color_mobile }};"
+                  {{ block.shopify_attributes }}
+                >
                   {{ text }}
                 </div>
               {% endif %}
             {% endfor %}
-          </div>
         </div>
       </div>
 
-      <!-- Swiper JS -->
-      <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-
-      <!-- Swiper Init -->
       <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          new Swiper('.swiper', {
-            loop: true,
-            autoplay: {
-              delay: 7000,
-              disableOnInteraction: false,
-            },
-            slidesPerView: 1,
+        (function() {
+          function mountAnnouncementRotator(scope) {
+            var track = scope.querySelector('[data-announcement-rotator]');
+            if (!track || track.dataset.rotatorMounted === 'true') return;
+
+            var slides = track.querySelectorAll('.announcement_bar__slide');
+            var delay = parseInt(track.dataset.autoplay, 10);
+
+            if (slides.length <= 1 || !delay || delay <= 0) return;
+
+            track.dataset.rotatorMounted = 'true';
+
+            var currentIndex = 0;
+            setInterval(function() {
+              slides[currentIndex].classList.remove('is-active');
+              currentIndex = (currentIndex + 1) % slides.length;
+              slides[currentIndex].classList.add('is-active');
+            }, delay);
+          }
+
+          function initAnnouncementBar() {
+            document.querySelectorAll('announcement-bar').forEach(function(bar) {
+              mountAnnouncementRotator(bar);
+            });
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAnnouncementBar);
+          } else {
+            initAnnouncementBar();
+          }
+
+          document.addEventListener('shopify:section:load', function(event) {
+            if (event.target && event.target.querySelector('announcement-bar')) {
+              initAnnouncementBar();
+            }
           });
-        });
+        })();
       </script>
     </div>
   </announcement-bar>

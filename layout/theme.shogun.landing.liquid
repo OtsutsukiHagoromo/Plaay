@@ -16,6 +16,7 @@ This file can be re-written at any time.
       rel="preconnect"
       href="https://cdn.shopify.com"
       crossorigin>
+    <link rel="dns-prefetch" href="https://www.bugherd.com">
     <link
       rel="preload"
       href="{{ 'bundle.theme.css' | asset_url }}"
@@ -47,6 +48,7 @@ This file can be re-written at any time.
     {% endif %}
 
     {{ 'bundle.theme.css' | asset_url | stylesheet_tag }}
+    {% render 'head.fonts' %}
 
     {%- if template -%}
       {%- capture file_name -%}bundle.{{- template | remove: 'customers/' -}}.css{%- endcapture -%}
@@ -98,12 +100,6 @@ This file can be re-written at any time.
         cart_url: '{{ routes.cart_url }}'
       };
     </script>
-
-    {% comment %} bugherd {% endcomment %}
-    <script
-      type="text/javascript"
-      src="https://www.bugherd.com/sidebarv2.js?apikey=vunxekqg5ov0xe3ajrxzrw"
-      async="true"></script>
   {% render 'delivery_coder' %} 
 
   {% render 'shogun-head' %}
@@ -116,11 +112,38 @@ This file can be re-written at any time.
   
   {{ content_for_layout }}
   
-  <script async src="{{ 'bundle.theme.js' | asset_url }}"></script>
-<script async src="{{ file_name | asset_url }}"></script>
-<script src="{{ 'glide.static.js' | asset_url }}"></script>
-<script src="{{ 'glide.static.min.js' | asset_url }}"></script>
-<script>var check_edd_data_from_liquid = '1';</script>
+  <script defer src="{{ 'bundle.theme.js' | asset_url }}"></script>
+  {%- if template -%}
+    {%- capture file_name -%}bundle.{{- template | remove: 'customers/' -}}.js{%- endcapture -%}
+    <script defer src="{{ file_name | asset_url }}"></script>
+  {%- endif -%}
+<script defer src="{{ 'glide.static.min.js' | asset_url }}"></script>
+  {% unless request.design_mode %}
+    <script>
+      (function() {
+        function loadScript(src) {
+          var script = document.createElement('script');
+          script.src = src;
+          script.async = true;
+          document.head.appendChild(script);
+        }
+
+        function loadWhenIdle(callback) {
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(callback, { timeout: 2000 });
+          } else {
+            setTimeout(callback, 1500);
+          }
+        }
+
+        window.addEventListener('load', function() {
+          loadWhenIdle(function() {
+            loadScript('https://www.bugherd.com/sidebarv2.js?apikey=vunxekqg5ov0xe3ajrxzrw');
+          });
+        }, { once: true });
+      })();
+    </script>
+  {% endunless %}
   <style type="text/css">
     body, html {
       width: 100% !important;

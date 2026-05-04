@@ -143,28 +143,46 @@
       
       {%- assign second_image = product.media[1] -%} 
       {%- assign featured_image = product.featured_image -%}
+      {%- assign second_image_preview = second_image.preview_image | default: second_image -%}
+      {%- capture product_tile_sizes -%}(min-width: 1536px) 280px, (min-width: 1280px) 22vw, (min-width: 1024px) 28vw, (min-width: 640px) 30vw, 46vw{%- endcapture -%}
     
       {% if eager_load == true %}
         <img
           src="{{ featured_image | image_url: width: 533 }}"
+          srcset="{{ featured_image | image_url: width: 320 }} 320w, {{ featured_image | image_url: width: 480 }} 480w, {{ featured_image | image_url: width: 640 }} 640w, {{ featured_image | image_url: width: 800 }} 800w"
+          sizes="{{ product_tile_sizes }}"
           alt="{{ product.title }}"
+          width="{{ featured_image.width }}"
+          height="{{ featured_image.height }}"
+          fetchpriority="high"
+          decoding="async"
           class="product_tile_featured_image transition-all duration-300 ease-in-out h-60 object-contain w-full"
         >
       {% else %}
         <img
           src="{{ featured_image | image_url: width: 533 }}"
+          srcset="{{ featured_image | image_url: width: 320 }} 320w, {{ featured_image | image_url: width: 480 }} 480w, {{ featured_image | image_url: width: 640 }} 640w, {{ featured_image | image_url: width: 800 }} 800w"
+          sizes="{{ product_tile_sizes }}"
           alt="{{ product.title }}"
           loading="lazy"
+          width="{{ featured_image.width }}"
+          height="{{ featured_image.height }}"
+          decoding="async"
           class="product_tile_featured_image transition-all duration-300 ease-in-out h-60 object-contain w-full"
         >
       {% endif %}
     
       {% if second_image != blank %}
         <img
-          src="{{ second_image | image_url: width: 533 }}"
+          src="{{ second_image_preview | image_url: width: 533 }}"
+          srcset="{{ second_image_preview | image_url: width: 320 }} 320w, {{ second_image_preview | image_url: width: 480 }} 480w, {{ second_image_preview | image_url: width: 640 }} 640w, {{ second_image_preview | image_url: width: 800 }} 800w"
+          sizes="{{ product_tile_sizes }}"
           alt="{{ product.title }}"
+          width="{{ second_image_preview.width }}"
+          height="{{ second_image_preview.height }}"
           class="product_tile_secondary_image absolute inset-0 transition-opacity duration-300 ease-in-out opacity-0 h-60 object-contain w-full"
           loading="lazy"
+          decoding="async"
         >
       {% endif %}
     </a>

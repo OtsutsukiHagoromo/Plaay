@@ -1,27 +1,6 @@
 <!doctype html>
 <html lang="{{ request.locale.iso_code }}">
   <head>
-
- <style>
-    @font-face {
-      font-family: 'Libre Barcode 128';
-      src: url('https://cdn.shopify.com/s/files/1/0662/4722/9657/files/LibreBarcode39-Regular.ttf?v=1759394754') format('truetype');
-    }
-    </style>
-
-<!-- Hotjar Tracking Code for Site 5268120 (name missing) -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:5268120,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
-    
-    <!-- GSSTART Infinite Scroll code start. Do not change --><script type="text/javascript" src="https://gravity-apps.com/shopify/js/shopify/infinitescroll7349.js?v=a55687c0bba538cfea254c604eb054a4"></script> <!-- nfinite Scroll code end. Do not change GSEND -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -30,9 +9,16 @@
       rel="preconnect"
       href="https://cdn.shopify.com"
       crossorigin>
+    <link rel="dns-prefetch" href="https://static.hotjar.com">
+    <link rel="dns-prefetch" href="https://gravity-apps.com">
+    <link rel="dns-prefetch" href="https://www.bugherd.com">
     <link
       rel="preload"
       href="{{ 'bundle.theme.css' | asset_url }}"
+      as="style">
+    <link
+      rel="preload"
+      href="{{ 'custom.css' | asset_url }}"
       as="style">
     <link
       rel="preload"
@@ -62,6 +48,7 @@
 
     {{ 'bundle.theme.css' | asset_url | stylesheet_tag }}
     {{ 'custom.css' | asset_url | stylesheet_tag }}
+    {% render 'head.fonts' %}
 
     {%- if template -%}
       {%- capture file_name -%}bundle.{{- template | remove: 'customers/' -}}.css{%- endcapture -%}
@@ -113,12 +100,6 @@
         cart_url: '{{ routes.cart_url }}'
       };
     </script>
-
-    {% comment %} bugherd {% endcomment %}
-    <script
-      type="text/javascript"
-      src="https://www.bugherd.com/sidebarv2.js?apikey=vunxekqg5ov0xe3ajrxzrw"
-      async="true"></script>
   {% render 'delivery_coder' %} 
   {% render 'shogun-head' %}
 </head>
@@ -135,13 +116,50 @@
     {%- render 'drawers' -%}
     {% section 'footer' %}
 
-    <script async src="{{ 'bundle.theme.js' | asset_url }}"></script>
+    <script defer src="{{ 'bundle.theme.js' | asset_url }}"></script>
     {%- if template -%}
       {%- capture file_name -%}bundle.{{- template | remove: 'customers/' -}}.js{%- endcapture -%}
-      <script async src="{{ file_name | asset_url }}"></script>
+      <script defer src="{{ file_name | asset_url }}"></script>
     {%- endif -%}
-    <script src="{{ 'glide.static.min.js' | asset_url }}"></script>
-  <script>var check_edd_data_from_liquid = '1';</script>{% render 'edd_read_data_from_liquid' %}
+    <script defer src="{{ 'glide.static.min.js' | asset_url }}"></script>
+    {% if template contains 'collection' or template contains 'search' %}
+      <script defer src="https://gravity-apps.com/shopify/js/shopify/infinitescroll7349.js?v=a55687c0bba538cfea254c604eb054a4"></script>
+    {% endif %}
+    {% if template contains 'product' %}
+      <script>var check_edd_data_from_liquid = '1';</script>{% render 'edd_read_data_from_liquid' %}
+    {% endif %}
+    {% unless request.design_mode %}
+      <script>
+        window.hj = window.hj || function() {
+          (window.hj.q = window.hj.q || []).push(arguments);
+        };
+        window._hjSettings = { hjid: 5268120, hjsv: 6 };
+
+        (function() {
+          function loadScript(src) {
+            var script = document.createElement('script');
+            script.src = src;
+            script.async = true;
+            document.head.appendChild(script);
+          }
+
+          function loadWhenIdle(callback) {
+            if ('requestIdleCallback' in window) {
+              window.requestIdleCallback(callback, { timeout: 2000 });
+            } else {
+              setTimeout(callback, 1500);
+            }
+          }
+
+          window.addEventListener('load', function() {
+            loadWhenIdle(function() {
+              loadScript('https://static.hotjar.com/c/hotjar-' + window._hjSettings.hjid + '.js?sv=' + window._hjSettings.hjsv);
+              loadScript('https://www.bugherd.com/sidebarv2.js?apikey=vunxekqg5ov0xe3ajrxzrw');
+            });
+          }, { once: true });
+        })();
+      </script>
+    {% endunless %}
 
       <script>
         var headerCartButton = document.querySelector('.header__icon--cart');

@@ -24,9 +24,9 @@
 {%- endif -%}
 
 {%- if lazy -%}
-  <img {% if forloop_data %}data-index="{{ forloop_data }}"{% endif %}loading="lazy"class="{{ class_list }} {{ class }}"srcset="{{ srcset }}"sizes="{{sizes}}"src="{{ src }}"alt="{{ alt }}"{% if height %}height="{{height}}"{% endif %}{% if width %}width="{{width}}"{% endif %} />
+  <img {% if forloop_data %}data-index="{{ forloop_data }}" {% endif %}loading="lazy" decoding="async" class="{{ class_list }} {{ class }}" srcset="{{ srcset }}" sizes="{{sizes}}" src="{{ src }}" alt="{{ alt }}"{% if height %} height="{{height}}"{% endif %}{% if width %} width="{{width}}"{% endif %} />
 {% elsif eager %}
-  <img {% if forloop_data %}data-index="{{ forloop_data }}"{% endif %}loading="eager"class="{{ class_list }} {{ class }}"srcset="{{ srcset }}"sizes="{{sizes}}"src="{{ src }}"alt="{{ alt }}"{% if height %}height="{{height}}"{% endif %}{% if width %}width="{{width}}"{% endif %} />
+  <img {% if forloop_data %}data-index="{{ forloop_data }}" {% endif %}loading="eager" fetchpriority="high" decoding="async" class="{{ class_list }} {{ class }}" srcset="{{ srcset }}" sizes="{{sizes}}" src="{{ src }}" alt="{{ alt }}"{% if height %} height="{{height}}"{% endif %}{% if width %} width="{{width}}"{% endif %} />
 {%- else -%}
-  <img {% if forloop_data %}data-index="{{ forloop_data }}"{% endif %}class="{{ class_list }} {{ class }}"srcset="{{ srcset }}"sizes="{{sizes}}"src="{{ src }}"alt="{{ alt }}"{% if height %}height="{{height}}"{% endif %}{% if width %}width="{{width}}"{% endif %} />
+  <img {% if forloop_data %}data-index="{{ forloop_data }}" {% endif %}decoding="async" class="{{ class_list }} {{ class }}" srcset="{{ srcset }}" sizes="{{sizes}}" src="{{ src }}" alt="{{ alt }}"{% if height %} height="{{height}}"{% endif %}{% if width %} width="{{width}}"{% endif %} />
 {%- endif -%}
