@@ -31,7 +31,7 @@
 -%}
 
 {%- if show_trust_badges -%}
-<div class="plaay-trust-strip mt-5 mb-3" aria-label="Product trust markers">
+<div class="plaay-trust-strip mt-5 mb-3{% if preset == 'bars-truffles-icons' %} plaay-trust-strip--compact-icons{% endif %}" aria-label="Product trust markers">
   {%- if preset == 'bars-truffles-icons' -%}
     <div class="plaay-trust-item">
       <img

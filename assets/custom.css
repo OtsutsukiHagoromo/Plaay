@@ -3187,6 +3187,53 @@ input#email_01K3QYXE95MP3N5RAFP8B1PPVS {
   .plaay-trust-label { font-size: 11px; }
 }
 
+.plaay-trust-strip--compact-icons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px 10px;
+  overflow: visible;
+  width: 100%;
+  padding-bottom: 0;
+}
+
+.plaay-trust-strip--compact-icons .plaay-trust-item {
+  min-width: 0;
+  width: 100%;
+  gap: 5px;
+}
+
+.plaay-trust-strip--compact-icons .plaay-trust-img {
+  width: 34px;
+  height: 34px;
+}
+
+.plaay-trust-strip--compact-icons .plaay-trust-label {
+  font-size: 8px;
+  line-height: 1.25;
+  letter-spacing: 0.04em;
+  max-width: 78px;
+  margin: 0 auto;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .plaay-trust-strip--compact-icons {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 16px 10px;
+    align-items: start;
+  }
+
+  .plaay-trust-strip--compact-icons .plaay-trust-img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .plaay-trust-strip--compact-icons .plaay-trust-label {
+    font-size: 9px;
+    max-width: 86px;
+  }
+}
+
 /* ══════════════════════════════════════════
    PLAAY — Cart Discount Code Accordion
    ══════════════════════════════════════════ */
