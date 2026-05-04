@@ -2355,6 +2355,104 @@ input#email_01K3QYXE95MP3N5RAFP8B1PPVS {
   color: #F9C61D;
 }
 
+.plaay-sticky-mobile__inner {
+  padding: 10px 12px 12px !important;
+  box-sizing: border-box;
+}
+
+.plaay-sticky-mobile__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+  min-width: 0;
+}
+
+.plaay-sticky-mobile__price {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.plaay-sticky-mobile__qty-wrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #021D49;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 40px;
+  flex: 0 0 auto;
+}
+
+.plaay-sticky-mobile__qty-wrap button {
+  padding: 0 12px !important;
+  height: 100%;
+  font-size: 19px !important;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.plaay-sticky-mobile__qty {
+  padding: 0 10px !important;
+  font-size: 14px !important;
+  border-left: 1px solid rgba(2,29,73,0.2);
+  border-right: 1px solid rgba(2,29,73,0.2);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  min-width: 34px !important;
+  justify-content: center;
+}
+
+.plaay-sticky-mobile__submit {
+  width: 100% !important;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 14px 12px !important;
+  font-size: 13px !important;
+  line-height: 1.1;
+  letter-spacing: 0.04em !important;
+  box-sizing: border-box;
+}
+
+@media (max-width: 420px) {
+  .plaay-sticky-mobile__inner {
+    padding: 8px 10px 10px !important;
+  }
+
+  .plaay-sticky-mobile__row {
+    gap: 8px;
+  }
+
+  .plaay-sticky-mobile .plaay-sticky-mobile-price {
+    font-size: 18px !important;
+  }
+
+  .plaay-sticky-mobile .plaay-sticky-compare {
+    font-size: 10px !important;
+  }
+
+  .plaay-sticky-mobile__qty-wrap button {
+    padding: 0 10px !important;
+    font-size: 18px !important;
+  }
+
+  .plaay-sticky-mobile__qty {
+    padding: 0 8px !important;
+    min-width: 30px !important;
+  }
+
+  .plaay-sticky-mobile__submit {
+    font-size: 12px !important;
+    padding: 13px 10px !important;
+  }
+}
+
 /* ═══════════════════════════════════════════════════════
    PLAAY CRO PHASE 3 — FREQUENTLY BOUGHT TOGETHER
    ═══════════════════════════════════════════════════════ */
@@ -3249,6 +3347,63 @@ input#email_01K3QYXE95MP3N5RAFP8B1PPVS {
   .plaay-trust-strip--compact-icons .plaay-trust-item:nth-child(4),
   .plaay-trust-strip--compact-icons .plaay-trust-item:nth-child(5) {
     grid-column: span 1;
+  }
+}
+
+.plaay-trust-strip--tag-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px 8px;
+  width: 100%;
+  overflow: visible;
+  padding-bottom: 0;
+  max-width: 360px;
+}
+
+.plaay-trust-strip--tag-grid .plaay-trust-item {
+  min-width: 0;
+  max-width: none;
+  width: 100%;
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  gap: 6px;
+}
+
+.plaay-trust-strip--tag-grid .plaay-trust-item:hover {
+  background: none;
+  border-color: transparent;
+}
+
+.plaay-trust-strip--tag-grid .plaay-trust-img {
+  width: 44px;
+  height: 44px;
+}
+
+.plaay-trust-strip--tag-grid .plaay-trust-label {
+  font-size: 8.5px;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  max-width: 78px;
+  margin: 0 auto;
+  text-wrap: balance;
+}
+
+@media (min-width: 768px) {
+  .plaay-trust-strip--tag-grid {
+    max-width: 420px;
+    gap: 18px 12px;
+  }
+
+  .plaay-trust-strip--tag-grid .plaay-trust-img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .plaay-trust-strip--tag-grid .plaay-trust-label {
+    font-size: 10px;
+    max-width: 92px;
   }
 }
 

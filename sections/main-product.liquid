@@ -435,10 +435,10 @@
 
 {% comment %} ── Mobile sticky ATC (shown on mobile when inline button scrolls out) ── {% endcomment %}
 <div id="plaay-sticky-mobile" class="plaay-sticky-mobile" aria-hidden="true">
-  <div style="padding:10px 16px 14px">
+  <div class="plaay-sticky-mobile__inner" style="padding:10px 16px 14px">
     {% comment %} Row 1 — price + qty {% endcomment %}
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div style="display:flex;flex-direction:column;gap:1px">
+    <div class="plaay-sticky-mobile__row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="plaay-sticky-mobile__price" style="display:flex;flex-direction:column;gap:1px">
         {%- if sticky_variant.compare_at_price > sticky_variant.price -%}
           <span class="plaay-sticky-compare font-walsheim-regular text-dark-blue" style="font-size:11px;text-decoration:line-through;opacity:0.45;line-height:1">{{ sticky_variant.compare_at_price | money }}</span>
         {%- else -%}
@@ -446,14 +446,14 @@
         {%- endif -%}
         <span class="plaay-sticky-mobile-price font-walsheim-bold text-dark-blue" style="font-size:22px;line-height:1">{{ sticky_variant.price | money }}</span>
       </div>
-      <div style="display:flex;align-items:center;border:1.5px solid #021D49;border-radius:10px;overflow:hidden;height:40px">
+      <div class="plaay-sticky-mobile__qty-wrap" style="display:flex;align-items:center;border:1.5px solid #021D49;border-radius:10px;overflow:hidden;height:40px">
         <button type="button" class="plaay-mobile-minus font-walsheim-bold text-dark-blue" style="padding:0 14px;height:100%;font-size:20px;line-height:1;background:transparent;border:none;cursor:pointer">−</button>
-        <span class="plaay-mobile-qty font-walsheim-bold text-dark-blue" style="padding:0 12px;font-size:15px;border-left:1px solid rgba(2,29,73,0.2);border-right:1px solid rgba(2,29,73,0.2);height:100%;display:flex;align-items:center;min-width:40px;justify-content:center">1</span>
+        <span class="plaay-mobile-qty plaay-sticky-mobile__qty font-walsheim-bold text-dark-blue" style="padding:0 12px;font-size:15px;border-left:1px solid rgba(2,29,73,0.2);border-right:1px solid rgba(2,29,73,0.2);height:100%;display:flex;align-items:center;min-width:40px;justify-content:center">1</span>
         <button type="button" class="plaay-mobile-plus font-walsheim-bold text-dark-blue" style="padding:0 14px;height:100%;font-size:20px;line-height:1;background:transparent;border:none;cursor:pointer">+</button>
       </div>
     </div>
     {% comment %} Row 2 — full-width ATC button {% endcomment %}
-    <button type="button" class="btn blue font-walsheim-bold uppercase plaay-mobile-submit" style="width:100%;padding:16px;font-size:15px;letter-spacing:0.05em">
+    <button type="button" class="btn blue font-walsheim-bold uppercase plaay-mobile-submit plaay-sticky-mobile__submit" style="width:100%;padding:16px;font-size:15px;letter-spacing:0.05em">
       {{ 'product.add_to_cart.add_to_bag' | t }}
     </button>
   </div>
@@ -759,4 +759,3 @@
   ]
 }
 {% endschema %}
-
