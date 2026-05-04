@@ -2468,55 +2468,6 @@
         "provide_margin_top": false
       }
     },
-    "1726656192da5e6d75": {
-      "type": "apps",
-      "blocks": {
-        "rebuy_personalization_engine_rebuy_widget_DF3nWm": {
-          "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-widget/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
-          "settings": {
-            "enabled": true,
-            "id": "167671",
-            "product_id_enabled": true,
-            "collection_id_enabled": false
-          }
-        }
-      },
-      "block_order": [
-        "rebuy_personalization_engine_rebuy_widget_DF3nWm"
-      ],
-      "settings": {}
-    },
-    "e6d51720-1295-476b-9afe-9dcb07476eec": {
-      "type": "instafeed-slider",
-      "settings": {
-        "title": "Straight From The Feed",
-        "description": "The latest buzz from the Plaayground—see what everyoneʼs loving!",
-        "instagram_post_limit": 12
-      }
-    },
-    "instafeed_y9eagG": {
-      "type": "instafeed",
-      "settings": {
-        "heading_size": 20,
-        "feed_width": 100,
-        "html_area": ""
-      }
-    },
-    "1671195971148aab85": {
-      "type": "apps",
-      "settings": {}
-    },
-    "related_articles_JgEJHR": {
-      "type": "related_articles",
-      "settings": {
-        "related_articles_title": "Related articles",
-        "related_articles_grid_mobile": 2,
-        "related_articles_grid_tablet": 2,
-        "related_articles_grid_desktop": 3,
-        "related_articles_grid_desktop_large": 4,
-        "hide_related_articles": false
-      }
-    },
     "pdp_social_proof_EhzVqa": {
       "type": "pdp-social-proof",
       "blocks": {
@@ -2587,6 +2538,55 @@
         "heading": "Loved by thousands",
         "rating_text": "4.9 out of 5 from 2,000+ reviews"
       }
+    },
+    "1726656192da5e6d75": {
+      "type": "apps",
+      "blocks": {
+        "rebuy_personalization_engine_rebuy_widget_DF3nWm": {
+          "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-widget/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
+          "settings": {
+            "enabled": true,
+            "id": "167671",
+            "product_id_enabled": true,
+            "collection_id_enabled": false
+          }
+        }
+      },
+      "block_order": [
+        "rebuy_personalization_engine_rebuy_widget_DF3nWm"
+      ],
+      "settings": {}
+    },
+    "e6d51720-1295-476b-9afe-9dcb07476eec": {
+      "type": "instafeed-slider",
+      "settings": {
+        "title": "Straight From The Feed",
+        "description": "The latest buzz from the Plaayground—see what everyoneʼs loving!",
+        "instagram_post_limit": 12
+      }
+    },
+    "instafeed_y9eagG": {
+      "type": "instafeed",
+      "settings": {
+        "heading_size": 20,
+        "feed_width": 100,
+        "html_area": ""
+      }
+    },
+    "1671195971148aab85": {
+      "type": "apps",
+      "settings": {}
+    },
+    "related_articles_JgEJHR": {
+      "type": "related_articles",
+      "settings": {
+        "related_articles_title": "Related articles",
+        "related_articles_grid_mobile": 2,
+        "related_articles_grid_tablet": 2,
+        "related_articles_grid_desktop": 3,
+        "related_articles_grid_desktop_large": 4,
+        "hide_related_articles": false
+      }
     }
   },
   "order": [
@@ -2609,11 +2609,11 @@
     "cfd29eca-49e3-4778-ad49-c635383324c8",
     "09dfb8e0-abe1-4ef8-910f-1531e59122ad",
     "3ee422c3-fa09-46a2-a29c-13a01c96c18e",
+    "pdp_social_proof_EhzVqa",
     "1726656192da5e6d75",
     "e6d51720-1295-476b-9afe-9dcb07476eec",
     "instafeed_y9eagG",
     "1671195971148aab85",
-    "related_articles_JgEJHR",
-    "pdp_social_proof_EhzVqa"
+    "related_articles_JgEJHR"
   ]
 }
