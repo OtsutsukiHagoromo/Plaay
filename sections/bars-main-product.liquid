@@ -325,7 +325,6 @@
         <h1 class="text-5xl leading-none uppercase text-dark-blue font-walsheim-bold pdp-title">{{ product.title }}</h1>
         {%- render 'plaay-wishlist-heart', product: product, style: 'pdp' -%}
       </div>
-      {%- render 'plaay-trust-badges', product: product, preset: 'bars-truffles-icons' -%}
 
       {% comment %} ── BARS ENHANCEMENT 1: Nutritional Highlights Strip ── {% endcomment %}
       {%- liquid
@@ -418,6 +417,7 @@
             {% render block %}
         {% endcase %}
       {% endfor %}
+      {%- render 'plaay-trust-badges', product: product, preset: 'bars-truffles-icons' -%}
 
       {% comment %} Discount text block {% endcomment %}
       <div class="main-discount-wrapper">

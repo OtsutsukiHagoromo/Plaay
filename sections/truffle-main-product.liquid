@@ -262,7 +262,6 @@
         <h1 class="text-5xl leading-none uppercase text-dark-blue font-walsheim-bold pdp-title"> {{ product.title }} </h1>
         {%- render 'plaay-wishlist-heart', product: product, style: 'pdp' -%}
       </div>
-      {%- render 'plaay-trust-badges', product: product, preset: 'bars-truffles-icons' -%}
 
       <!-- Add Offer Callout Block Here -->
       {% for block in section.blocks %}
@@ -387,6 +386,7 @@
            {% render block %}
         {% endcase %}
       {% endfor %}
+      {%- render 'plaay-trust-badges', product: product, preset: 'bars-truffles-icons' -%}
 
       <!-- product-discount-text.liquid START -->
       <div class="main-discount-wrapper">
