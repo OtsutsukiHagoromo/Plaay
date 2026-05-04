@@ -91,13 +91,13 @@
         "type": "number",
         "id": "cart_tier_1_spend",
         "label": "Tier 1 spend threshold (AED)",
-        "default": 175
+        "default": 250
       },
       {
         "type": "text",
         "id": "cart_tier_1_label",
         "label": "Tier 1 reward label",
-        "default": "5% off"
+        "default": "Mystery Gift"
       },
       {
         "type": "number",
