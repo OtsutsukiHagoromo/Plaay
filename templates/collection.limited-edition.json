@@ -1,1 +1,158 @@
-{"sections":{"63fdba3d-c584-464b-8a33-248b0d7094f2":{"type":"collection-hero-basic","disabled":true,"settings":{"backup_hero_background_color":"#f5c08d","backup_hero_description":""}},"collection_hero":{"type":"collection_hero","blocks":{"956f8b66-0a69-4a34-a272-a7a140cc15fb":{"type":"usp","settings":{"image":"shopify://shop_images/Group_3565_1_30246fde-c18e-43c0-9078-9f2427ae1b04.png","text":"KETO FRIENDLY"}},"d9779278-6bef-4ffe-b7da-e96ba5cb136d":{"type":"usp","settings":{"image":"shopify://shop_images/Group_3560_1_0f9f32c6-784f-4e12-b491-bc46d09b8484.png","text":"HAPPY GUT"}},"58f4665b-25b3-4586-99b7-03815693af95":{"type":"usp","settings":{"image":"shopify://shop_images/Group_3565_1_30246fde-c18e-43c0-9078-9f2427ae1b04.png","text":"VEGAN FRIENDLY"}},"c75986c1-b747-4d11-bdb0-d3b20ff805bd":{"type":"usp","settings":{"image":"shopify://shop_images/Group_3562_1_b4fe72b7-92c0-4772-94d8-6e1318e63009.png","text":"12G PROTEIN"}}},"block_order":["956f8b66-0a69-4a34-a272-a7a140cc15fb","d9779278-6bef-4ffe-b7da-e96ba5cb136d","58f4665b-25b3-4586-99b7-03815693af95","c75986c1-b747-4d11-bdb0-d3b20ff805bd"],"disabled":true,"settings":{"backup_hero_image":"shopify://shop_images/Frame_1253_1_1.png","backup_hero_background_color":"#f5c08d","backup_hero_description":""}},"blocks_tJakVN":{"type":"_blocks","blocks":{"ai_gen_block_900bb11_kHy6KQ":{"type":"ai_gen_block_900bb11","name":"Spacer","settings":{"spacing_desktop":100,"spacing_mobile":110,"background_color":"#ffffff"},"blocks":{}},"ai_gen_block_ad39199_tDj9aW":{"type":"ai_gen_block_ad39199","settings":{"desktop_image":"shopify://shop_images/Website_Banner_Desktop_Version_.jpg_3.jpg","mobile_image":"shopify://shop_images/Website_Banner_Mobile_Version.jpg_4.jpg","height":"adapt","full_width":true,"show_heading":false,"heading":"","heading_size":48,"show_subheading":false,"subheading":"","subheading_size":18,"text_color":"#ffffff","text_horizontal":"center","text_vertical":"middle","show_overlay":false,"overlay_color":"#000000","overlay_opacity":0.3},"blocks":{}}},"block_order":["ai_gen_block_900bb11_kHy6KQ","ai_gen_block_ad39199_tDj9aW"],"settings":{}},"main":{"type":"main-collection","settings":{"default_background_color":"#fad1d2","backup_featured_product_one":"","backup_featured_product_two":"","empty_collection_heading":"Looks like there are no products in this collection...","empty_collection_copy":"Why not try looking in another one of our collections.","empty_collection_link":"/","empty_collection_link_text":"Return home"}},"plaay_frequently_bought":{"type":"plaay-frequently-bought","settings":{"heading":"Frequently bought","description":"Feature a hand-picked collection of products shoppers often add alongside this category.","background_color":"#ffffff","source_collection":"","product_limit":8,"autoplay":0,"see_all_text":"Shop collection","column_size_desktop_extra_large":4,"column_size_desktop_large":4,"column_size_desktop":4,"column_size_tablet":3,"column_size_mobile":1.2,"column_size_mobile_small":1.2,"hide_arrows_desktop":false,"hide_arrows_mobile":false,"hide_bullets":true,"compact_mobile_grid":true,"hide_atc_on_tiles":false}},"plaay_recently_viewed":{"type":"plaay-recently-viewed","settings":{"heading":"Previously viewed","max_products":6}}},"order":["63fdba3d-c584-464b-8a33-248b0d7094f2","collection_hero","blocks_tJakVN","main","plaay_frequently_bought","plaay_recently_viewed"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "63fdba3d-c584-464b-8a33-248b0d7094f2": {
+      "type": "collection-hero-basic",
+      "disabled": true,
+      "settings": {
+        "backup_hero_background_color": "#f5c08d",
+        "backup_hero_description": ""
+      }
+    },
+    "collection_hero": {
+      "type": "collection_hero",
+      "blocks": {
+        "956f8b66-0a69-4a34-a272-a7a140cc15fb": {
+          "type": "usp",
+          "settings": {
+            "image": "shopify://shop_images/Group_3565_1_30246fde-c18e-43c0-9078-9f2427ae1b04.png",
+            "text": "KETO FRIENDLY"
+          }
+        },
+        "d9779278-6bef-4ffe-b7da-e96ba5cb136d": {
+          "type": "usp",
+          "settings": {
+            "image": "shopify://shop_images/Group_3560_1_0f9f32c6-784f-4e12-b491-bc46d09b8484.png",
+            "text": "HAPPY GUT"
+          }
+        },
+        "58f4665b-25b3-4586-99b7-03815693af95": {
+          "type": "usp",
+          "settings": {
+            "image": "shopify://shop_images/Group_3565_1_30246fde-c18e-43c0-9078-9f2427ae1b04.png",
+            "text": "VEGAN FRIENDLY"
+          }
+        },
+        "c75986c1-b747-4d11-bdb0-d3b20ff805bd": {
+          "type": "usp",
+          "settings": {
+            "image": "shopify://shop_images/Group_3562_1_b4fe72b7-92c0-4772-94d8-6e1318e63009.png",
+            "text": "12G PROTEIN"
+          }
+        }
+      },
+      "block_order": [
+        "956f8b66-0a69-4a34-a272-a7a140cc15fb",
+        "d9779278-6bef-4ffe-b7da-e96ba5cb136d",
+        "58f4665b-25b3-4586-99b7-03815693af95",
+        "c75986c1-b747-4d11-bdb0-d3b20ff805bd"
+      ],
+      "disabled": true,
+      "settings": {
+        "backup_hero_image": "shopify://shop_images/Frame_1253_1_1.png",
+        "backup_hero_background_color": "#f5c08d",
+        "backup_hero_description": ""
+      }
+    },
+    "blocks_tJakVN": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_900bb11_kHy6KQ": {
+          "type": "ai_gen_block_900bb11",
+          "name": "Spacer",
+          "settings": {
+            "spacing_desktop": 100,
+            "spacing_mobile": 110,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        },
+        "ai_gen_block_ad39199_tDj9aW": {
+          "type": "ai_gen_block_ad39199",
+          "settings": {
+            "desktop_image": "shopify://shop_images/Website_Banner_Desktop_Version_.jpg_3.jpg",
+            "mobile_image": "shopify://shop_images/Website_Banner_Mobile_Version.jpg_4.jpg",
+            "height": "adapt",
+            "full_width": true,
+            "show_heading": false,
+            "heading": "",
+            "heading_size": 48,
+            "show_subheading": false,
+            "subheading": "",
+            "subheading_size": 18,
+            "text_color": "#ffffff",
+            "text_horizontal": "center",
+            "text_vertical": "middle",
+            "show_overlay": false,
+            "overlay_color": "#000000",
+            "overlay_opacity": 0.3
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_900bb11_kHy6KQ",
+        "ai_gen_block_ad39199_tDj9aW"
+      ],
+      "settings": {}
+    },
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "default_background_color": "#fad1d2",
+        "backup_featured_product_one": "",
+        "backup_featured_product_two": "",
+        "empty_collection_heading": "Looks like there are no products in this collection...",
+        "empty_collection_copy": "Why not try looking in another one of our collections.",
+        "empty_collection_link": "/",
+        "empty_collection_link_text": "Return home"
+      }
+    },
+    "plaay_frequently_bought": {
+      "type": "plaay-frequently-bought",
+      "settings": {
+        "heading": "Frequently bought",
+        "description": "Feature a hand-picked collection of products shoppers often add alongside this category.",
+        "background_color": "#ffffff",
+        "source_collection": "",
+        "product_limit": 8,
+        "autoplay": 0,
+        "see_all_text": "Shop collection",
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1.2,
+        "column_size_mobile_small": 1.2,
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": true,
+        "compact_mobile_grid": true,
+        "hide_atc_on_tiles": false
+      }
+    },
+    "plaay_recently_viewed": {
+      "type": "plaay-recently-viewed",
+      "settings": {
+        "heading": "Previously viewed",
+        "max_products": 6
+      }
+    }
+  },
+  "order": [
+    "63fdba3d-c584-464b-8a33-248b0d7094f2",
+    "collection_hero",
+    "blocks_tJakVN",
+    "main",
+    "plaay_frequently_bought",
+    "plaay_recently_viewed"
+  ]
+}
