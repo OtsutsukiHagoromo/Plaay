@@ -3284,53 +3284,44 @@ input#email_01K3QYXE95MP3N5RAFP8B1PPVS {
   color: #27ae60;
 }
 
-.plaay-applied-promo {
-  padding: 10px 12px;
-  border-radius: 16px;
+.plaay-promo-summary {
+  display: flex;
+  justify-content: flex-end;
 }
 
-.plaay-applied-promo__top {
+.plaay-promo-summary__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  max-width: 100%;
+}
+
+.plaay-promo-summary__chip,
+.plaay-promo-summary__save {
+  display: inline-flex;
   align-items: center;
-}
-
-.plaay-applied-promo__saved,
-.plaay-applied-promo__eyebrow {
-  line-height: 1.2;
-}
-
-.plaay-applied-promo__remove {
-  flex-shrink: 0;
-  border: none;
-  background: transparent;
-  padding: 0;
-  font-size: 11px;
+  min-height: 26px;
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 10.5px;
   line-height: 1;
-  color: rgba(2,29,73,0.55);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
-  transition: color 0.15s ease;
+  white-space: nowrap;
 }
 
-.plaay-applied-promo__remove:hover,
-.plaay-applied-promo__remove:focus-visible {
+.plaay-promo-summary__chip {
+  border: 1px solid rgba(2,29,73,0.12);
+  background: rgba(2,29,73,0.05);
   color: #021D49;
+  font-family: walsheim-bold, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.plaay-applied-promo__remove:disabled {
-  opacity: 0.5;
-  cursor: wait;
-}
-
-.plaay-applied-promo__line {
-  padding: 8px 10px;
-  border-radius: 12px;
-}
-
-.plaay-applied-promo__code,
-.plaay-applied-promo__amount {
-  font-size: 12px;
-  line-height: 1.2;
+.plaay-promo-summary__save {
+  background: #021D49;
+  color: #F9C61D;
+  font-family: walsheim-bold, sans-serif;
 }
 
 /* ════════════════════════════════════════════
@@ -3568,17 +3559,15 @@ cart-drawer [data-drawer] .border-b.border-dark-blue.border-opacity-10.flex-shri
     font-size: 10.5px;
   }
 
-  .plaay-applied-promo {
-    padding: 9px 10px;
+  .plaay-promo-summary__chips {
+    gap: 5px;
   }
 
-  .plaay-applied-promo__line {
-    padding: 7px 9px;
-  }
-
-  .plaay-applied-promo__code,
-  .plaay-applied-promo__amount {
-    font-size: 11px;
+  .plaay-promo-summary__chip,
+  .plaay-promo-summary__save {
+    min-height: 24px;
+    padding: 5px 9px;
+    font-size: 10px;
   }
 }
 

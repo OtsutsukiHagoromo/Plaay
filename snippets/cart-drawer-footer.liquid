@@ -8,42 +8,6 @@
   endif
 %}
 
-{% if cart.cart_level_discount_applications.size > 0 or has_discounted_total %}
-  <div class="plaay-applied-promo mb-3 rounded-2xl border border-dark-blue border-opacity-10 bg-[#f8f8f4] px-4 py-3">
-    <div class="plaay-applied-promo__top flex items-start justify-between gap-3">
-      <div class="flex min-w-0 flex-col gap-1">
-        <span class="plaay-applied-promo__eyebrow text-[11px] font-walsheim-bold uppercase tracking-[0.14em] text-dark-blue opacity-70">Applied promo</span>
-        {% if has_discounted_total %}
-          <span class="plaay-applied-promo__saved text-xs font-walsheim-bold text-[#138a4a]">You saved {{ total_savings | money }}</span>
-        {% endif %}
-      </div>
-      {% if cart.cart_level_discount_applications.size > 0 %}
-        <button
-          type="button"
-          class="plaay-applied-promo__remove font-walsheim-bold"
-          data-remove-discount>
-          Remove
-        </button>
-      {% endif %}
-    </div>
-
-    {% if cart.cart_level_discount_applications.size > 0 %}
-      <div class="mt-2 flex flex-col gap-2">
-        {% for discount in cart.cart_level_discount_applications %}
-          <div class="plaay-applied-promo__line flex items-center justify-between gap-3 rounded-xl bg-white px-3 py-2">
-            <span class="plaay-applied-promo__code text-sm font-walsheim-bold text-dark-blue">{{ discount.title }}</span>
-            <span class="plaay-applied-promo__amount text-sm font-walsheim-bold text-[#138a4a]">-{{ discount.total_allocated_amount | money }}</span>
-          </div>
-        {% endfor %}
-      </div>
-    {% elsif has_discounted_total %}
-      <div class="plaay-applied-promo__line mt-2 rounded-xl bg-white px-3 py-2 text-sm font-walsheim-bold text-dark-blue">
-        Discount applied at checkout
-      </div>
-    {% endif %}
-  </div>
-{% endif %}
-
 {% comment %} Subtotal row - data-cart-total carries the raw fils value for JS tier bar updates {% endcomment %}
 <div class="flex items-center justify-between py-3 border-t border-dark-blue border-opacity-10">
   <span class="text-dark-blue text-base font-walsheim-bold uppercase tracking-wide">{{ 'cart-drawer.total' | t }}</span>
@@ -54,6 +18,28 @@
     {% endif %}
   </div>
 </div>
+{% if cart.cart_level_discount_applications.size > 0 or has_discounted_total %}
+  <div class="plaay-promo-summary -mt-1 mb-3">
+    <div class="plaay-promo-summary__chips">
+      {% if cart.cart_level_discount_applications.size > 0 %}
+        {% for discount in cart.cart_level_discount_applications %}
+          <span class="plaay-promo-summary__chip">
+            {{ discount.title }}
+          </span>
+        {% endfor %}
+      {% else %}
+        <span class="plaay-promo-summary__chip">
+          Promo applied
+        </span>
+      {% endif %}
+      {% if has_discounted_total %}
+        <span class="plaay-promo-summary__save">
+          You saved {{ total_savings | money }}
+        </span>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
 <p class="text-xs text-dark-blue opacity-40 font-walsheim text-right -mt-1 mb-3">
   {% if has_discounted_total %}
     Savings of {{ total_savings | money }} included. Taxes &amp; shipping calculated at checkout
