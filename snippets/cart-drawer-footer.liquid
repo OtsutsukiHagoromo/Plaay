@@ -9,25 +9,35 @@
 %}
 
 {% if cart.cart_level_discount_applications.size > 0 or has_discounted_total %}
-  <div class="mb-3 rounded-2xl border border-dark-blue border-opacity-10 bg-[#f8f8f4] px-4 py-3">
-    <div class="flex items-center justify-between gap-3">
-      <span class="text-[11px] font-walsheim-bold uppercase tracking-[0.14em] text-dark-blue opacity-70">Applied promo</span>
-      {% if has_discounted_total %}
-        <span class="text-xs font-walsheim-bold text-[#138a4a]">You saved {{ total_savings | money }}</span>
+  <div class="plaay-applied-promo mb-3 rounded-2xl border border-dark-blue border-opacity-10 bg-[#f8f8f4] px-4 py-3">
+    <div class="plaay-applied-promo__top flex items-start justify-between gap-3">
+      <div class="flex min-w-0 flex-col gap-1">
+        <span class="plaay-applied-promo__eyebrow text-[11px] font-walsheim-bold uppercase tracking-[0.14em] text-dark-blue opacity-70">Applied promo</span>
+        {% if has_discounted_total %}
+          <span class="plaay-applied-promo__saved text-xs font-walsheim-bold text-[#138a4a]">You saved {{ total_savings | money }}</span>
+        {% endif %}
+      </div>
+      {% if cart.cart_level_discount_applications.size > 0 %}
+        <button
+          type="button"
+          class="plaay-applied-promo__remove font-walsheim-bold"
+          data-remove-discount>
+          Remove
+        </button>
       {% endif %}
     </div>
 
     {% if cart.cart_level_discount_applications.size > 0 %}
       <div class="mt-2 flex flex-col gap-2">
         {% for discount in cart.cart_level_discount_applications %}
-          <div class="flex items-center justify-between gap-3 rounded-xl bg-white px-3 py-2">
-            <span class="text-sm font-walsheim-bold text-dark-blue">{{ discount.title }}</span>
-            <span class="text-sm font-walsheim-bold text-[#138a4a]">-{{ discount.total_allocated_amount | money }}</span>
+          <div class="plaay-applied-promo__line flex items-center justify-between gap-3 rounded-xl bg-white px-3 py-2">
+            <span class="plaay-applied-promo__code text-sm font-walsheim-bold text-dark-blue">{{ discount.title }}</span>
+            <span class="plaay-applied-promo__amount text-sm font-walsheim-bold text-[#138a4a]">-{{ discount.total_allocated_amount | money }}</span>
           </div>
         {% endfor %}
       </div>
     {% elsif has_discounted_total %}
-      <div class="mt-2 rounded-xl bg-white px-3 py-2 text-sm font-walsheim-bold text-dark-blue">
+      <div class="plaay-applied-promo__line mt-2 rounded-xl bg-white px-3 py-2 text-sm font-walsheim-bold text-dark-blue">
         Discount applied at checkout
       </div>
     {% endif %}

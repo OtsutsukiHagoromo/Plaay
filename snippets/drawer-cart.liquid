@@ -181,5 +181,41 @@
       }
     });
 
+    document.addEventListener('click', function(e) {
+      var removeBtn = e.target.closest && e.target.closest('[data-remove-discount]');
+      if (!removeBtn) return;
+
+      e.preventDefault();
+      if (removeBtn.disabled) return;
+
+      removeBtn.disabled = true;
+      removeBtn.textContent = 'Removing...';
+
+      fetch('/discount/CLEAR')
+        .then(function() {
+          if (window.plaayRefreshCartDrawer) {
+            return window.plaayRefreshCartDrawer();
+          }
+          return Promise.resolve();
+        })
+        .then(function() {
+          return fetch('/cart.js');
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(cart) {
+          if (window.plaayTierBar) {
+            window.plaayTierBar.update(cart.total_price);
+          }
+        })
+        .catch(function() {
+          var returnTo = encodeURIComponent(window.location.pathname + window.location.search);
+          window.location.href = '/discount/CLEAR?redirect=' + returnTo;
+        })
+        .finally(function() {
+          removeBtn.disabled = false;
+          removeBtn.textContent = 'Remove';
+        });
+    });
+
   })();
 </script>
