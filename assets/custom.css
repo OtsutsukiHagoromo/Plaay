@@ -3284,6 +3284,242 @@ input#email_01K3QYXE95MP3N5RAFP8B1PPVS {
   color: #27ae60;
 }
 
+/* ════════════════════════════════════════════
+   PLAAY — Cart Drawer Density Tuning
+   Keeps the design intact while showing more content at once
+   ════════════════════════════════════════════ */
+cart-drawer [data-drawer] .border-b.border-dark-blue.border-opacity-10.flex-shrink-0 {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+
+cart-drawer [data-drawer] .border-b.border-dark-blue.border-opacity-10.flex-shrink-0 h3 {
+  font-size: 1.85rem;
+}
+
+cart-drawer [data-drawer] .border-b.border-dark-blue.border-opacity-10.flex-shrink-0 [data-cart-drawer-count-wrapper] {
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
+}
+
+[data-cart-drawer-content] > .sticky {
+  padding: 14px 18px 16px;
+  box-shadow: 0 -6px 20px rgba(2,29,73,0.06);
+}
+
+[data-cart-drawer-footer] .mb-3.rounded-2xl {
+  margin-bottom: 10px;
+  padding: 11px 13px;
+  border-radius: 16px;
+}
+
+[data-cart-drawer-footer] .mb-3.rounded-2xl .rounded-xl {
+  border-radius: 12px;
+  padding: 8px 10px;
+}
+
+[data-cart-drawer-footer] [data-subtotal] span:first-child {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+[data-cart-drawer-footer] p.text-xs.text-dark-blue {
+  font-size: 11px;
+  margin-bottom: 10px;
+}
+
+.plaay-discount-wrap {
+  margin-bottom: 8px;
+}
+
+.plaay-discount-toggle {
+  font-size: 11.5px;
+}
+
+.plaay-discount-row {
+  padding-top: 8px;
+}
+
+.plaay-discount-input {
+  height: 36px;
+  font-size: 12px;
+}
+
+.plaay-discount-apply-btn {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 11px;
+}
+
+.plaay-cart-checkout-btn {
+  padding: 15px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.plaay-cart-continue-btn {
+  font-size: 11.5px;
+}
+
+.plaay-tier-bar {
+  padding: 0 0 2px;
+}
+
+.plaay-tier-bar__msg {
+  font-size: 12px;
+  margin-bottom: 9px;
+}
+
+.plaay-tier-bar__track {
+  height: 6px;
+  margin-bottom: 8px;
+}
+
+.plaay-tier-bar__pill {
+  font-size: 10px;
+  padding: 3px 8px;
+}
+
+.plaay-cart-upsell {
+  padding-top: 14px;
+  padding-bottom: 12px;
+}
+
+.plaay-cart-upsell__heading {
+  margin-bottom: 10px;
+}
+
+.plaay-cart-upsell__track {
+  gap: 10px;
+}
+
+.plaay-upsell-card {
+  width: 176px;
+  flex-basis: 176px;
+  border-radius: 14px;
+}
+
+.plaay-upsell-card__img-wrap {
+  padding: 10px;
+}
+
+.plaay-upsell-card__body {
+  padding: 10px;
+  gap: 8px;
+}
+
+.plaay-upsell-card__price {
+  font-size: 16px;
+}
+
+.plaay-upsell-card__btn {
+  min-height: 38px;
+  padding: 8px 10px;
+}
+
+@media (max-width: 767px) {
+  cart-drawer [data-drawer] .border-b.border-dark-blue.border-opacity-10.flex-shrink-0 {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  cart-drawer [data-drawer] .border-b.border-dark-blue.border-opacity-10.flex-shrink-0 h3 {
+    font-size: 1.65rem;
+  }
+
+  [data-cart-drawer-content] > .sticky {
+    padding: 12px 14px 14px;
+  }
+
+  .cart_items_container {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .plaay-cart-item {
+    gap: 10px;
+    padding: 14px 12px;
+  }
+
+  .plaay-cart-item__img-wrap {
+    width: 74px;
+    height: 74px;
+  }
+
+  .plaay-cart-item__info {
+    gap: 7px;
+  }
+
+  .plaay-cart-item__title {
+    font-size: 10.5px;
+  }
+
+  .plaay-cart-item__actions {
+    gap: 8px 10px;
+  }
+
+  .plaay-cart-item__price-remove {
+    min-width: 76px;
+    gap: 4px;
+  }
+
+  .plaay-cart-item__price {
+    min-width: 76px;
+  }
+
+  .plaay-cart-item__price .line-through {
+    font-size: 11px;
+  }
+
+  .plaay-cart-item__price span:last-child {
+    font-size: 16px;
+  }
+
+  .plaay-tier-bar__msg {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .plaay-tier-bar__pills {
+    gap: 4px;
+  }
+
+  .plaay-tier-bar__pill {
+    font-size: 9.5px;
+    padding: 3px 7px;
+  }
+
+  .plaay-cart-upsell {
+    padding-left: 14px;
+    padding-right: 14px;
+    padding-top: 12px;
+    padding-bottom: 10px;
+  }
+
+  .plaay-upsell-card {
+    width: 156px;
+    flex-basis: 156px;
+  }
+
+  .plaay-upsell-card__title {
+    font-size: 9.5px;
+    min-height: 2.5em;
+  }
+
+  .plaay-upsell-card__price {
+    font-size: 15px;
+  }
+
+  .plaay-upsell-card__btn {
+    min-height: 36px;
+    font-size: 10.5px;
+  }
+}
+
 /* ══════════════════════════════════════════
    PLAAY — Cart Empty State
    ══════════════════════════════════════════ */
