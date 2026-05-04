@@ -9,13 +9,18 @@
   class="plaay-recently-viewed"
   id="plaay-rv-{{ section.id }}"
   data-section-id="{{ section.id }}"
-  style="display:none"
+  {% unless request.design_mode %}style="display:none"{% endunless %}
   aria-label="{{ section.settings.heading | default: 'Recently Viewed' }}">
 
   <div class="container py-10 | md:py-14">
     <h2 class="plaay-rv__heading font-walsheim-black text-dark-blue uppercase text-2xl mb-6">
       {{ section.settings.heading | default: 'Recently Viewed' }}
     </h2>
+    <div class="plaay-rv__empty" id="plaay-rv-empty-{{ section.id }}"{% unless request.design_mode %} hidden{% endunless %}>
+      <p class="font-walsheim text-dark-blue">
+        This section fills automatically after shoppers browse a few products.
+      </p>
+    </div>
     <div class="plaay-rv__grid" id="plaay-rv-grid-{{ section.id }}">
       <!-- filled by JS -->
     </div>
@@ -27,6 +32,13 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+  }
+  .plaay-rv__empty {
+    padding: 18px 20px;
+    border: 1px dashed rgba(2,29,73,0.18);
+    border-radius: 14px;
+    background: rgba(2,29,73,0.03);
+    margin-bottom: 16px;
   }
   @media (min-width: 640px)  { .plaay-rv__grid { grid-template-columns: repeat(3, 1fr); } }
   @media (min-width: 1024px) { .plaay-rv__grid { grid-template-columns: repeat({{ section.settings.max_products | default: 6 | at_most: 6 }}, 1fr); } }
@@ -100,11 +112,14 @@
       var list = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
       /* exclude the product currently being viewed */
       list = list.filter(function(h) { return h !== CURRENT; }).slice(0, MAX);
-      if (!list.length) return;
-
       var section = document.getElementById('plaay-rv-' + SECTION_ID);
       var grid    = document.getElementById('plaay-rv-grid-' + SECTION_ID);
+      var empty   = document.getElementById('plaay-rv-empty-' + SECTION_ID);
       if (!section || !grid) return;
+      if (!list.length) {
+        if (empty) empty.hidden = false;
+        return;
+      }
 
       var pending = list.length;
       var results = {};
@@ -118,7 +133,7 @@
           .catch(function() {})
           .finally(function() {
             pending--;
-            if (pending === 0) renderCards(list, results, section, grid);
+            if (pending === 0) renderCards(list, results, section, grid, empty);
           });
       });
     } catch(e) {}
@@ -129,7 +144,7 @@
     return 'AED ' + (n.endsWith('.00') ? n.slice(0, -3) : n);
   }
 
-  function renderCards(order, data, section, grid) {
+  function renderCards(order, data, section, grid, empty) {
     var html = '';
     order.forEach(function(handle) {
       var p = data[handle];
@@ -151,6 +166,7 @@
     });
     if (!html) return;
     grid.innerHTML = html;
+    if (empty) empty.hidden = true;
     section.style.display = '';
   }
 
@@ -159,6 +175,12 @@
   } else {
     render();
   }
+
+  document.addEventListener('shopify:section:load', function(event) {
+    if (event.detail && event.detail.sectionId === SECTION_ID) {
+      render();
+    }
+  });
 })();
 </script>
 
