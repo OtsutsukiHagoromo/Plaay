@@ -2453,6 +2453,7 @@
         "1faa7c4b-03a1-4319-bc3c-9b284f9930f0",
         "7bb1ff7a-9c74-4bf1-a790-fe2f9bca4926"
       ],
+      "disabled": true,
       "settings": {
         "title": "What Makes Us 100% Clean",
         "background_color": "#f5c08d",
@@ -2534,7 +2535,7 @@
       ],
       "name": "PDP — Social Proof",
       "settings": {
-        "background_color": "#F4F4F4",
+        "background_color": "#f4f4f4",
         "heading": "Loved by thousands",
         "rating_text": "4.9 out of 5 from 2,000+ reviews"
       }
