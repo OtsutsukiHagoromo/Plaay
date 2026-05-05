@@ -234,7 +234,7 @@
 
 
   {% comment %} mobile menu {% endcomment %}
-  <div class="mobile_menu fixed max-w-md py-4 transform top-0 left-0 h-full w-full bg-white z-20 -translate-x-full transition-all duration-300 | xl:hidden">
+  <div class="mobile_menu fixed max-w-md py-4 transform top-0 left-0 h-full w-full bg-white z-20 -translate-x-full transition-all duration-300 overflow-y-auto overscroll-contain | xl:hidden">
     {% comment %} close cross {% endcomment %}
     <span class="mobile_menu_cross h-4 w-4 flex cursor-pointer text-black absolute right-4">
       {% render 'icon-cross-alternate' %}
@@ -359,6 +359,27 @@
           {% endif %}
         </div>
       {% endif %}
+      <div class="plaay-mobile-menu-trust border-t border-black border-opacity-10 px-8 py-6">
+        <p class="plaay-mobile-menu-trust__eyebrow font-walsheim-bold">Why Plaay</p>
+        <div class="plaay-mobile-menu-trust__grid">
+          <div class="plaay-mobile-menu-trust__item">
+            <span class="plaay-mobile-menu-trust__dot" aria-hidden="true"></span>
+            <span class="plaay-mobile-menu-trust__label">100% Clean Ingredients</span>
+          </div>
+          <div class="plaay-mobile-menu-trust__item">
+            <span class="plaay-mobile-menu-trust__dot" aria-hidden="true"></span>
+            <span class="plaay-mobile-menu-trust__label">Free Delivery AED 75+</span>
+          </div>
+          <div class="plaay-mobile-menu-trust__item">
+            <span class="plaay-mobile-menu-trust__dot" aria-hidden="true"></span>
+            <span class="plaay-mobile-menu-trust__label">Made in UAE</span>
+          </div>
+          <div class="plaay-mobile-menu-trust__item">
+            <span class="plaay-mobile-menu-trust__dot" aria-hidden="true"></span>
+            <span class="plaay-mobile-menu-trust__label">Halal Certified</span>
+          </div>
+        </div>
+      </div>
     </div>
     {% unless hide_search_mobile %}
       <form
