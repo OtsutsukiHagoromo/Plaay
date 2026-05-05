@@ -193,7 +193,7 @@
         <div class="flex items-center justify-center mr-4">
           {% comment %} account {% endcomment %}
           {% if shop.customer_accounts_enabled %}
-            <a href="{{ account_href }}" class="text-0 text-dark-blue tracking-widest font-walsheim-bold pr-4 plaay-account-icon-link">
+            <a href="{{ account_href }}" class="text-0 text-dark-blue tracking-widest font-walsheim-bold plaay-account-icon-link hidden | lg:flex lg:pr-4">
               <span class="h-5 w-5 cursor-pointer flex text-dark-blue">
                 {% render 'icon-account' %}
               </span>
@@ -336,7 +336,7 @@
       </a>
       {% if shop.customer_accounts_enabled %}
         <div class="border-t border-black border-opacity-10 px-14 py-5">
-          <a href="{{ account_href }}" class="plaay-mobile-account flex items-center justify-between text-dark-blue text-base font-bold tracking-widest font-walsheim-bold">
+          <a href="{{ account_href }}" class="plaay-mobile-account flex items-center {% if customer %}justify-between{% else %}justify-start{% endif %} text-dark-blue text-base font-bold tracking-widest font-walsheim-bold">
             <span class="flex items-center">
               <span class="plaay-mobile-wishlist__icon-wrap">
                 {% render 'icon-account' %}
@@ -347,9 +347,9 @@
                 Sign in
               {% endif %}
             </span>
-            <span class="text-xs uppercase tracking-[0.18em] opacity-50">
-              {% if customer %}Orders{% else %}Login{% endif %}
-            </span>
+            {% if customer %}
+              <span class="text-xs uppercase tracking-[0.18em] opacity-50">Orders</span>
+            {% endif %}
           </a>
           {% if customer %}
             <div class="mt-4 grid grid-cols-2 gap-3">

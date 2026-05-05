@@ -578,8 +578,13 @@
       (function(){
         var wrap = document.getElementById('plaay-pdp-tabs-{{ sid }}');
         if (!wrap) return;
+        var nav = wrap.querySelector('.plaay-pdp-tabs__nav');
         var tabs   = wrap.querySelectorAll('.plaay-pdp-tabs__tab');
         var panels = wrap.querySelectorAll('.plaay-pdp-tabs__panel');
+        function focusActiveTab(tab) {
+          if (!nav || !tab || typeof tab.scrollIntoView !== 'function') return;
+          tab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
         tabs.forEach(function(tab) {
           tab.addEventListener('click', function() {
             tabs.forEach(function(t){ t.classList.remove('is-active'); t.setAttribute('aria-selected','false'); });
@@ -588,6 +593,7 @@
             tab.setAttribute('aria-selected','true');
             var panel = wrap.querySelector('[data-panel="' + tab.dataset.tab + '"]');
             if (panel) panel.classList.remove('is-hidden');
+            focusActiveTab(tab);
           });
         });
       })();
