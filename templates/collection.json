@@ -1,983 +1,79 @@
 {
     "sections":  {
-                     "bars_main_product_tgjzzE":  {
-                                                      "type":  "bars-main-product",
-                                                      "name":  "Bars Product Page",
-                                                      "settings":  {
-                                                                       "background_color":  "#f4f4f4",
-                                                                       "price_color":  "#000000",
-                                                                       "variant_selector_style":  "dropdown",
-                                                                       "enable_subscribe_push":  true,
-                                                                       "show_description":  true,
-                                                                       "show_exact_ingredients":  true,
-                                                                       "tab_info_label":  "Product Info",
-                                                                       "tab_ingredients_label":  "Ingredients",
-                                                                       "tab_shipping_label":  "Shipping \u0026 Returns",
-                                                                       "shipping_returns_content":  "\u003cp\u003e\u003cstrong\u003eFree delivery\u003c/strong\u003e on all orders over AED 75. Same-day delivery in Dubai (order before 2 PM). 1Ã¢â‚¬â€œ2 business days across the UAE.\u003c/p\u003e\u003cp\u003e\u003cstrong\u003eReturns:\u003c/strong\u003e We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.\u003c/p\u003e"
-                                                                   }
-                                                  },
-                     "pdp_stats_bar_h7z9pz":  {
-                                                  "type":  "pdp-stats-bar",
-                                                  "blocks":  {
-                                                                 "stat_NNMaRA":  {
-                                                                                     "type":  "stat",
-                                                                                     "settings":  {
-                                                                                                      "value":  "10g",
-                                                                                                      "label":  "Protein"
-                                                                                                  }
-                                                                                 },
-                                                                 "stat_bPrmcb":  {
-                                                                                     "type":  "stat",
-                                                                                     "settings":  {
-                                                                                                      "value":  "0g",
-                                                                                                      "label":  "Sugar"
-                                                                                                  }
-                                                                                 },
-                                                                 "stat_DErghU":  {
-                                                                                     "type":  "stat",
-                                                                                     "settings":  {
-                                                                                                      "value":  "100",
-                                                                                                      "label":  "Calories"
-                                                                                                  }
-                                                                                 },
-                                                                 "stat_UTm8tU":  {
-                                                                                     "type":  "stat",
-                                                                                     "settings":  {
-                                                                                                      "value":  "Keto",
-                                                                                                      "label":  "Friendly"
-                                                                                                  }
-                                                                                 },
-                                                                 "stat_LNATfX":  {
-                                                                                     "type":  "stat",
-                                                                                     "settings":  {
-                                                                                                      "value":  "Clean",
-                                                                                                      "label":  "Ingredients"
-                                                                                                  }
-                                                                                 },
-                                                                 "stat_GiaGXC":  {
-                                                                                     "type":  "stat",
-                                                                                     "settings":  {
-                                                                                                      "value":  "Halal",
-                                                                                                      "label":  "Certified"
-                                                                                                  }
-                                                                                 }
-                                                             },
-                                                  "block_order":  [
-                                                                      "stat_NNMaRA",
-                                                                      "stat_bPrmcb",
-                                                                      "stat_DErghU",
-                                                                      "stat_UTm8tU",
-                                                                      "stat_LNATfX",
-                                                                      "stat_GiaGXC"
-                                                                  ],
-                                                  "disabled":  true,
-                                                  "name":  "PDP Ã¢â‚¬â€ Stats Bar",
-                                                  "settings":  {
-                                                                   "background_color":  "#f4f4f4",
-                                                                   "heading":  "Snacking Made Simple"
-                                                               }
-                                              },
-                     "174471010040db00af":  {
-                                                "type":  "apps",
-                                                "settings":  {
-
-                                                             }
-                                            },
-                     "marquee_slider_H7hNaz":  {
-                                                   "type":  "marquee-slider",
-                                                   "blocks":  {
-                                                                  "logo_cDma4D":  {
-                                                                                      "type":  "logo",
-                                                                                      "settings":  {
-                                                                                                       "icon_text":  "On-the go cravings",
-                                                                                                       "com_logo":  "shopify://shop_images/On_the_go_cravings.png"
-                                                                                                   }
-                                                                                  },
-                                                                  "logo_mkALDF":  {
-                                                                                      "type":  "logo",
-                                                                                      "settings":  {
-                                                                                                       "icon_text":  "Nutritionist-Made",
-                                                                                                       "com_logo":  "shopify://shop_images/Nutriotionist_Made.png"
-                                                                                                   }
-                                                                                  },
-                                                                  "logo_MmHFMD":  {
-                                                                                      "type":  "logo",
-                                                                                      "settings":  {
-                                                                                                       "icon_text":  "Guilt-Free Indulgence",
-                                                                                                       "com_logo":  "shopify://shop_images/Guilt_Free_Indulgence.png"
-                                                                                                   }
-                                                                                  },
-                                                                  "logo_QXaPrM":  {
-                                                                                      "type":  "logo",
-                                                                                      "settings":  {
-                                                                                                       "icon_text":  "Refined Sugar Free",
-                                                                                                       "com_logo":  "shopify://shop_images/Refined_Sugar_Free_21dbf860-6c60-4e0b-8263-3b4fe300fac6.png"
-                                                                                                   }
-                                                                                  },
-                                                                  "logo_FGKrxQ":  {
-                                                                                      "type":  "logo",
-                                                                                      "settings":  {
-                                                                                                       "icon_text":  "Gluten Free",
-                                                                                                       "com_logo":  "shopify://shop_images/Gluten_Free_91e2abf3-be8f-41be-accc-0d7752590ca2.png"
-                                                                                                   }
-                                                                                  },
-                                                                  "logo_T3JVWf":  {
-                                                                                      "type":  "logo",
-                                                                                      "settings":  {
-                                                                                                       "icon_text":  "Soy Free",
-                                                                                                       "com_logo":  "shopify://shop_images/Soy_Free_221e8805-4814-43c7-8be4-fc7591d56000.png"
-                                                                                                   }
-                                                                                  }
-                                                              },
-                                                   "block_order":  [
-                                                                       "logo_cDma4D",
-                                                                       "logo_mkALDF",
-                                                                       "logo_MmHFMD",
-                                                                       "logo_QXaPrM",
-                                                                       "logo_FGKrxQ",
-                                                                       "logo_T3JVWf"
-                                                                   ],
-                                                   "disabled":  true,
-                                                   "name":  "Marquee Slider",
-                                                   "settings":  {
-                                                                    "gap":  30,
-                                                                    "duration":  20,
-                                                                    "background_color":  "#021d49"
-                                                                }
-                                               },
-                     "scrolling_content_PjwFEy":  {
-                                                      "type":  "scrolling-content",
-                                                      "blocks":  {
-                                                                     "slide_Qt9wmX":  {
-                                                                                          "type":  "slide",
-                                                                                          "settings":  {
-                                                                                                           "image":  "shopify://shop_images/Gluten_Free_1536x_71e65f8e-3e20-4b59-ae74-db3e97da01b6.png",
-                                                                                                           "title":  "Naturally Gluten Free",
-                                                                                                           "image-2":  "shopify://shop_images/Refined_Sugar_1536x_cd031bb6-e973-4609-9802-08155ba79873.png",
-                                                                                                           "title-2":  "Refined Sugar Free",
-                                                                                                           "image-3":  "shopify://shop_images/Soy_Free_1536x_20e25085-4e83-4ef8-b0b7-517bfa72b758.png",
-                                                                                                           "title-3":  "Soy Free",
-                                                                                                           "image-4":  "shopify://shop_images/Halal_1536x_a1b24aeb-ef4a-4450-a8f2-2689c83d333d.png",
-                                                                                                           "title-4":  "Halal"
-                                                                                                       }
-                                                                                      },
-                                                                     "slide_CQ9HmX":  {
-                                                                                          "type":  "slide",
-                                                                                          "settings":  {
-                                                                                                           "image":  "shopify://shop_images/Gluten_Free_1536x_71e65f8e-3e20-4b59-ae74-db3e97da01b6.png",
-                                                                                                           "title":  "Naturally Gluten Free",
-                                                                                                           "image-2":  "shopify://shop_images/Refined_Sugar_1536x_cd031bb6-e973-4609-9802-08155ba79873.png",
-                                                                                                           "title-2":  "Refined Sugar Free",
-                                                                                                           "image-3":  "shopify://shop_images/Soy_Free_1536x_20e25085-4e83-4ef8-b0b7-517bfa72b758.png",
-                                                                                                           "title-3":  "Soy Free",
-                                                                                                           "image-4":  "shopify://shop_images/Halal_1536x_a1b24aeb-ef4a-4450-a8f2-2689c83d333d.png",
-                                                                                                           "title-4":  "Halal"
-                                                                                                       }
-                                                                                      },
-                                                                     "slide_Pgzgkc":  {
-                                                                                          "type":  "slide",
-                                                                                          "settings":  {
-                                                                                                           "image":  "shopify://shop_images/Gluten_Free_1536x_71e65f8e-3e20-4b59-ae74-db3e97da01b6.png",
-                                                                                                           "title":  "Naturally Gluten Free",
-                                                                                                           "image-2":  "shopify://shop_images/Refined_Sugar_1536x_cd031bb6-e973-4609-9802-08155ba79873.png",
-                                                                                                           "title-2":  "Refined Sugar Free",
-                                                                                                           "image-3":  "shopify://shop_images/Soy_Free_1536x_20e25085-4e83-4ef8-b0b7-517bfa72b758.png",
-                                                                                                           "title-3":  "Soy Free",
-                                                                                                           "image-4":  "shopify://shop_images/Halal_1536x_a1b24aeb-ef4a-4450-a8f2-2689c83d333d.png",
-                                                                                                           "title-4":  "Halal"
-                                                                                                       }
-                                                                                      },
-                                                                     "slide_4w4hCx":  {
-                                                                                          "type":  "slide",
-                                                                                          "settings":  {
-                                                                                                           "image":  "shopify://shop_images/Gluten_Free_1536x_71e65f8e-3e20-4b59-ae74-db3e97da01b6.png",
-                                                                                                           "title":  "Naturally Gluten Free",
-                                                                                                           "image-2":  "shopify://shop_images/Refined_Sugar_1536x_cd031bb6-e973-4609-9802-08155ba79873.png",
-                                                                                                           "title-2":  "Refined Sugar Free",
-                                                                                                           "image-3":  "shopify://shop_images/Soy_Free_1536x_20e25085-4e83-4ef8-b0b7-517bfa72b758.png",
-                                                                                                           "title-3":  "Soy Free",
-                                                                                                           "image-4":  "shopify://shop_images/Halal_1536x_a1b24aeb-ef4a-4450-a8f2-2689c83d333d.png",
-                                                                                                           "title-4":  "Halal"
-                                                                                                       }
-                                                                                      }
-                                                                 },
-                                                      "block_order":  [
-                                                                          "slide_Qt9wmX",
-                                                                          "slide_CQ9HmX",
-                                                                          "slide_Pgzgkc",
-                                                                          "slide_4w4hCx"
-                                                                      ],
-                                                      "disabled":  true,
-                                                      "name":  "Scrolling content",
-                                                      "settings":  {
-                                                                       "background":  "#021d49",
-                                                                       "padding_top":  36,
-                                                                       "padding_bottom":  36
-                                                                   }
-                                                  },
-                     "richtext_hVDgQC":  {
-                                             "type":  "richtext",
-                                             "blocks":  {
-                                                            "heading_c3TdFj":  {
-                                                                                   "type":  "heading",
-                                                                                   "settings":  {
-                                                                                                    "heading":  "LOVE AT FIRST BITE",
-                                                                                                    "color":  "#021d49",
-                                                                                                    "font_size_desktop":  62,
-                                                                                                    "font_size_mobile":  40,
-                                                                                                    "spacing_top_desktop":  10,
-                                                                                                    "spacing_bottom_desktop":  10,
-                                                                                                    "spacing_top_mobile":  10,
-                                                                                                    "spacing_bottom_mobile":  10
-                                                                                                }
+                     "63fdba3d-c584-464b-8a33-248b0d7094f2":  {
+                                                                  "type":  "collection-hero-basic",
+                                                                  "disabled":  true,
+                                                                  "settings":  {
+                                                                                   "backup_hero_background_color":  "#f5c08d",
+                                                                                   "backup_hero_description":  ""
                                                                                }
+                                                              },
+                     "collection_hero":  {
+                                             "type":  "collection_hero",
+                                             "blocks":  {
+                                                            "956f8b66-0a69-4a34-a272-a7a140cc15fb":  {
+                                                                                                         "type":  "usp",
+                                                                                                         "settings":  {
+                                                                                                                          "image":  "shopify://shop_images/Group_3565_1_30246fde-c18e-43c0-9078-9f2427ae1b04.png",
+                                                                                                                          "text":  "KETO FRIENDLY"
+                                                                                                                      }
+                                                                                                     },
+                                                            "d9779278-6bef-4ffe-b7da-e96ba5cb136d":  {
+                                                                                                         "type":  "usp",
+                                                                                                         "settings":  {
+                                                                                                                          "image":  "shopify://shop_images/Group_3560_1_0f9f32c6-784f-4e12-b491-bc46d09b8484.png",
+                                                                                                                          "text":  "HAPPY GUT"
+                                                                                                                      }
+                                                                                                     },
+                                                            "58f4665b-25b3-4586-99b7-03815693af95":  {
+                                                                                                         "type":  "usp",
+                                                                                                         "settings":  {
+                                                                                                                          "image":  "shopify://shop_images/Group_3565_1_30246fde-c18e-43c0-9078-9f2427ae1b04.png",
+                                                                                                                          "text":  "VEGAN FRIENDLY"
+                                                                                                                      }
+                                                                                                     },
+                                                            "c75986c1-b747-4d11-bdb0-d3b20ff805bd":  {
+                                                                                                         "type":  "usp",
+                                                                                                         "settings":  {
+                                                                                                                          "image":  "shopify://shop_images/Group_3562_1_b4fe72b7-92c0-4772-94d8-6e1318e63009.png",
+                                                                                                                          "text":  "12G PROTEIN"
+                                                                                                                      }
+                                                                                                     }
                                                         },
                                              "block_order":  [
-                                                                 "heading_c3TdFj"
+                                                                 "956f8b66-0a69-4a34-a272-a7a140cc15fb",
+                                                                 "d9779278-6bef-4ffe-b7da-e96ba5cb136d",
+                                                                 "58f4665b-25b3-4586-99b7-03815693af95",
+                                                                 "c75986c1-b747-4d11-bdb0-d3b20ff805bd"
                                                              ],
+                                             "disabled":  true,
                                              "settings":  {
-                                                              "bkg_color":  "#ffffff",
-                                                              "full_width":  true,
-                                                              "enable_style":  false,
-                                                              "spacing_top_desktop":  10,
-                                                              "spacing_bottom_desktop":  10,
-                                                              "spacing_top_mobile":  10,
-                                                              "spacing_bottom_mobile":  10
+                                                              "backup_hero_image":  "shopify://shop_images/Frame_1253_1_1.png",
+                                                              "backup_hero_background_color":  "#f5c08d",
+                                                              "backup_hero_description":  ""
                                                           }
                                          },
-                     "apps_6td8dD":  {
-                                         "type":  "apps",
-                                         "blocks":  {
-                                                        "reelfy_videos_reelfy_section_bQp6qF":  {
-                                                                                                    "type":  "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
-                                                                                                    "settings":  {
-                                                                                                                     "gallery_id":  18785,
-                                                                                                                     "title":  "LOVE AT FIRST BITE",
-                                                                                                                     "subtitle":  "",
-                                                                                                                     "heading_size":  "1",
-                                                                                                                     "heading_align":  "center",
-                                                                                                                     "heading_color":  "",
-                                                                                                                     "desc_style":  "subtitle",
-                                                                                                                     "desc_color":  "",
-                                                                                                                     "custom_class":  "",
-                                                                                                                     "background_color":  "",
-                                                                                                                     "padding_top":  0,
-                                                                                                                     "padding_bottom":  0,
-                                                                                                                     "padding_left_right":  0
-                                                                                                                 }
-                                                                                                }
-                                                    },
-                                         "block_order":  [
-                                                             "reelfy_videos_reelfy_section_bQp6qF"
-                                                         ],
-                                         "settings":  {
-
-                                                      }
-                                     },
-                     "review_gif_video_UQj4ik":  {
-                                                     "type":  "review_gif_video",
-                                                     "blocks":  {
-                                                                    "image_iXXVkM":  {
-                                                                                         "type":  "image",
-                                                                                         "settings":  {
-                                                                                                          "image":  "shopify://shop_images/first-bite-1.gif",
-                                                                                                          "height":  280,
-                                                                                                          "review_text":  "\u003cp\u003eThis is literally the best! Has single-handedly eliminated my chocolate and doughnut cravings!!\u003c/p\u003e",
-                                                                                                          "review_heading":  "Yoga Instructor, Dubai",
-                                                                                                          "slider_bg_color":  "rgba(0,0,0,0)",
-                                                                                                          "star_rating":  5
-                                                                                                      }
-                                                                                     },
-                                                                    "image_YrtNe7":  {
-                                                                                         "type":  "image",
-                                                                                         "settings":  {
-                                                                                                          "image":  "shopify://shop_images/firstbite5.gif",
-                                                                                                          "height":  280,
-                                                                                                          "review_text":  "\u003cp\u003eHonestly, this is my no-brainer snack for crazy days. Tastes amazing, \u0026 keeps me going! \u003c/p\u003e",
-                                                                                                          "review_heading":  "Always-on CEO",
-                                                                                                          "slider_bg_color":  "rgba(0,0,0,0)",
-                                                                                                          "star_rating":  5
-                                                                                                      }
-                                                                                     },
-                                                                    "image_pCqMbn":  {
-                                                                                         "type":  "image",
-                                                                                         "settings":  {
-                                                                                                          "image":  "shopify://shop_images/first-bite-6.gif",
-                                                                                                          "height":  280,
-                                                                                                          "review_text":  "\u003cp\u003eFavorite flavour hands down will be the peanut butter truffle! It just melts in your mouth!\u003c/p\u003e",
-                                                                                                          "review_heading":  "Creative Designer, Abu Dhabi",
-                                                                                                          "slider_bg_color":  "rgba(0,0,0,0)",
-                                                                                                          "star_rating":  5
-                                                                                                      }
-                                                                                     },
-                                                                    "image_g78EeV":  {
-                                                                                         "type":  "image",
-                                                                                         "settings":  {
-                                                                                                          "image":  "shopify://shop_images/ezgif-3-8df9b851d4_a81fae6c-c3c9-4bfa-a352-c82a89a3a291.gif",
-                                                                                                          "height":  280,
-                                                                                                          "review_text":  "\u003cp\u003e100% Hooked! Perfect snack after my runsÃ¢â‚¬â€always hits the spot!\u003c/p\u003e",
-                                                                                                          "review_heading":  "Recreational Runner",
-                                                                                                          "slider_bg_color":  "rgba(0,0,0,0)",
-                                                                                                          "star_rating":  5
-                                                                                                      }
-                                                                                     }
-                                                                },
-                                                     "block_order":  [
-                                                                         "image_iXXVkM",
-                                                                         "image_YrtNe7",
-                                                                         "image_pCqMbn",
-                                                                         "image_g78EeV"
-                                                                     ],
-                                                     "disabled":  false,
-                                                     "settings":  {
-                                                                      "heading":  "",
-                                                                      "text":  "",
-                                                                      "per_view_desktop_large":  4,
-                                                                      "per_view_desktop":  4,
-                                                                      "per_view_tablet":  3,
-                                                                      "per_view_mobile":  2,
-                                                                      "autoplay_speed":  0,
-                                                                      "desktop_vertical_padding":  13,
-                                                                      "mobile_vertical_padding":  5,
-                                                                      "enable_style":  false,
-                                                                      "spacing_top_desktop":  0,
-                                                                      "spacing_bottom_desktop":  0,
-                                                                      "spacing_top_mobile":  0,
-                                                                      "spacing_bottom_mobile":  0
-                                                                  }
-                                                 },
-                     "custom_coupon_banner_mDjXri":  {
-                                                         "type":  "custom-coupon-banner",
-                                                         "disabled":  true,
-                                                         "name":  "Custom Coupon Banner",
-                                                         "settings":  {
-                                                                          "coupon_text":  "Limited Time Offer: 20% OFF All Truffle Packs",
-                                                                          "coupon_code":  ""
-                                                                      }
-                                                     },
-                     "1736144550483a252b":  {
-                                                "type":  "apps",
-                                                "blocks":  {
-                                                               "rebuy_personalization_engine_rebuy_widget_pKgDcm":  {
-                                                                                                                        "type":  "shopify://apps/rebuy-personalization-engine/blocks/rebuy-widget/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
-                                                                                                                        "settings":  {
-                                                                                                                                         "enabled":  true,
-                                                                                                                                         "id":  "149733",
-                                                                                                                                         "product_id_enabled":  true,
-                                                                                                                                         "collection_id_enabled":  false
-                                                                                                                                     }
-                                                                                                                    }
-                                                           },
-                                                "block_order":  [
-                                                                    "rebuy_personalization_engine_rebuy_widget_pKgDcm"
-                                                                ],
-                                                "settings":  {
-
-                                                             }
-                                            },
-                     "1736138805fe25981f":  {
-                                                "type":  "apps",
-                                                "blocks":  {
-                                                               "rebuy_personalization_engine_rebuy_widget_BKBT3m":  {
-                                                                                                                        "type":  "shopify://apps/rebuy-personalization-engine/blocks/rebuy-widget/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
-                                                                                                                        "settings":  {
-                                                                                                                                         "enabled":  true,
-                                                                                                                                         "id":  "192200",
-                                                                                                                                         "product_id_enabled":  true,
-                                                                                                                                         "collection_id_enabled":  false
-                                                                                                                                     }
-                                                                                                                    }
-                                                           },
-                                                "block_order":  [
-                                                                    "rebuy_personalization_engine_rebuy_widget_BKBT3m"
-                                                                ],
-                                                "settings":  {
-
-                                                             }
-                                            },
-                     "product_faqs_a34mfY":  {
-                                                 "type":  "product_faqs",
-                                                 "blocks":  {
-                                                                "faq_RMHnCA":  {
-                                                                                   "type":  "faq",
-                                                                                   "settings":  {
-                                                                                                    "title":  "Why Plaay?",
-                                                                                                    "answer":  "\u003cp\u003eBecause chocolate shouldn\u0027t be a trade-off. Most chocolates are loaded with refined sugar, cheap fillers, and ingredients that leave you bloated, sluggish, or guilty afterwards. We built Plaay to change that. Every product we make is 100% clean Ã¢â‚¬â€ that means:Ã‚Â· No refined sugar (we use coconut sugar that\u0027s gentler on your body).Ã‚Â· No preservatives, artificial emulsifiers, or shady additives.Ã‚Â· No soy, no gluten, no artificial sweeteners.Ã‚Â· Only real, good-for-you ingredients your body actually knows how to process. The result? Chocolate that tastes as indulgent as your classics, but without the crash, the guilt, or the compromise.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_aWg6GA":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "",
-                                                                                                    "answer":  "\u003cp\u003eYour answer here\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_hLYHy4":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "Do you offer discounts?",
-                                                                                                    "answer":  "\u003cp\u003eNew here? Snack smarter. Get 25% off on your first order with code LETSPLAAY25.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_kfXhMH":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "Do I need to set up an account?",
-                                                                                                    "answer":  "\u003cp\u003eYou do not need to set up an account at Plaay. However, you will enjoy a lot of additional benefits if you register with us such as:  reviewing your purchase history, previewing our new products and receiving emails about our latest updates/offers, saving your details such as your delivery address and payment details for a more convenient experience when you place your next order, tracking the status of your order and other requests.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_P9fJJn":  {
-                                                                                   "type":  "faq",
-                                                                                   "settings":  {
-                                                                                                    "title":  "Where are Plaay products made?",
-                                                                                                    "answer":  "\u003cp\u003eAll our products are made in our own newly-established facilities in the UAE. \u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_iC64DM":  {
-                                                                                   "type":  "faq",
-                                                                                   "settings":  {
-                                                                                                    "title":  "What dark chocolate does Plaay use?",
-                                                                                                    "answer":  "\u003cp\u003eWe make our in-house blend of 70% dark chocolate made with coconut nectar, cacao butter and sunflower lecithin.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_cpMCTh":  {
-                                                                                   "type":  "faq",
-                                                                                   "settings":  {
-                                                                                                    "title":  "What is the shelf-life of Plaay products?",
-                                                                                                    "answer":  "\u003cp\u003eThe shelf-life of all Plaay products is 12 months. \u003cbr/\u003eThe shelf life for limited edition products may vary.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_BCrDKn":  {
-                                                                                   "type":  "faq",
-                                                                                   "settings":  {
-                                                                                                    "title":  "Do Plaay products contain refined sugar?",
-                                                                                                    "answer":  "\u003cp\u003eNot an ounce. We only use coconut nectar and dates. No refined sugar what so ever.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_3PFpK9":  {
-                                                                                   "type":  "faq",
-                                                                                   "settings":  {
-                                                                                                    "title":  "How should I store the chocolate truffles and bars?",
-                                                                                                    "answer":  "\u003cp\u003ePlaay products should be kept refrigerated to avoid melting and temperature fluctuations. Note: They are best consumed at Room Temperature.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_nMemka":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "How can I track my order?",
-                                                                                                    "answer":  "\u003cp\u003eYou will receive an order confirmation email containing your order reference number and other important details. You may call or email our customer support team and provide these details, so we can give you an update regarding your order. \u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_UQppVL":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "How do you ship your products?",
-                                                                                                    "answer":  "\u003cp\u003eWe have our local logistics partners with temperature-controlled vehicles to make sure that your order arrives in perfect condition.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_ULp3dH":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "Where are the packages shipped from?",
-                                                                                                    "answer":  "\u003cp\u003eAll our products are shipped from our distribution center which is located in Business Bay \u0026 DIP Dubai, United Arab Emirates.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_YaNxjU":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "Can I place an order through a phone call?",
-                                                                                                    "answer":  "\u003cp\u003eAll orders must be placed on our website. If you encounter technical issues while placing an order online, you may reach out to our customer support team for an assistance.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_LYcBpX":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "Which payment methods does Plaay accept?",
-                                                                                                    "answer":  "\u003cp\u003eWe accept online payments using MasterCard, Visa, and Apple Pay.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_3rtwEK":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "How much does Plaay charge for the shipping?",
-                                                                                                    "answer":  "\u003cp\u003eShipping is free for all orders over AED 75. For smaller orders, we charge a delivery fee of AED 15.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_dt7WKU":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "Which countries does Plaay delivery service cover?",
-                                                                                                    "answer":  "\u003cp\u003eWe currently deliver across UAE. We are also available in KSA via third-party online platforms. As for the rest of the world? Not yetÃ¢â‚¬Â¦ but we\u0027re on our way!\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_xJtqkq":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "Can I add a message to my order and send it as a gift?",
-                                                                                                    "answer":  "\u003cp\u003eYes, you may inform us regarding this before placing your order or immediately after placing it. You may also write the message on the \"Delivery Instructions\" option upon checkout. Please note that the order will be sent with our regular packaging as we do not have gift wrappers at the moment. \u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_zyDQaB":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "Can I put multiple delivery addresses for a single order?",
-                                                                                                    "answer":  "\u003cp\u003eYou will need to place your order individually for each delivery address.\u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_wdtBRr":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "Is there a possibility that my order will not be fulfilled or will not be delivered on time?",
-                                                                                                    "answer":  "\u003cp\u003eWe always make sure that all orders are processed and delivered on time. Delays happen very rarely, and if it does, we will certainly notify you at once and assist you should you require any modifications. \u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_hfRVHD":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "Who can I contact if I encounter a technical issue while placing an order or if I have a query?",
-                                                                                                    "answer":  "\u003cp\u003eShould you require any assistance or you have any queries, please feel free to reach out to our customer support team at +971-56-996-9522 or send an email to hello@shopplaay.com (Monday - Saturday 9:00 AM till 5:00 PM, excluding holidays). \u003c/p\u003e"
-                                                                                                }
-                                                                               },
-                                                                "faq_xXmXWm":  {
-                                                                                   "type":  "faq",
-                                                                                   "disabled":  true,
-                                                                                   "settings":  {
-                                                                                                    "title":  "What should I do if the payment has been deducted from my card but there is no confirmation email?",
-                                                                                                    "answer":  "\u003cp\u003ePlease share your name and registered email address with us to confirm your order and payment.\u003c/p\u003e"
-                                                                                                }
-                                                                               }
-                                                            },
-                                                 "block_order":  [
-                                                                     "faq_RMHnCA",
-                                                                     "faq_aWg6GA",
-                                                                     "faq_hLYHy4",
-                                                                     "faq_kfXhMH",
-                                                                     "faq_P9fJJn",
-                                                                     "faq_iC64DM",
-                                                                     "faq_cpMCTh",
-                                                                     "faq_BCrDKn",
-                                                                     "faq_3PFpK9",
-                                                                     "faq_nMemka",
-                                                                     "faq_UQppVL",
-                                                                     "faq_ULp3dH",
-                                                                     "faq_YaNxjU",
-                                                                     "faq_LYcBpX",
-                                                                     "faq_3rtwEK",
-                                                                     "faq_dt7WKU",
-                                                                     "faq_xJtqkq",
-                                                                     "faq_zyDQaB",
-                                                                     "faq_wdtBRr",
-                                                                     "faq_hfRVHD",
-                                                                     "faq_xXmXWm"
-                                                                 ],
-                                                 "name":  "Product FAQs",
-                                                 "settings":  {
-                                                                  "title":  "FAQs",
-                                                                  "background_color":  "#f9c61d"
-                                                              }
-                                             },
-                     "blocks_JRjbnL":  {
-                                           "type":  "_blocks",
-                                           "blocks":  {
-                                                          "ai_gen_block_9cfa683_9Fhdzy":  {
-                                                                                              "type":  "ai_gen_block_9cfa683",
-                                                                                              "settings":  {
-                                                                                                               "custom_html":  "\u003cstyle\u003e\n.faq-ext{\nbackground:#F9C61D;\npadding:32px 0 40px;\ntext-align:center\n}\n.faq-ext a{\nfont-size:24px;\nfont-weight:600;\ncolor:#081D48;\ntext-decoration:underline\n}\n.faq-ext a:hover{opacity:.8}\n\u003c/style\u003e\n\n\u003cdiv class=\"faq-ext\"\u003e\n  \u003ca href=\"https://shopplaay.com/pages/faqs\"\u003eExplore All FAQs Ã¢â€ â€™\u003c/a\u003e\n\u003c/div\u003e",
-                                                                                                               "desktop_width_percent":  100,
-                                                                                                               "padding":  0,
-                                                                                                               "background_color":  "#ffffff",
-                                                                                                               "border_radius":  0
-                                                                                                           },
-                                                                                              "blocks":  {
-
-                                                                                                         }
-                                                                                          }
-                                                      },
-                                           "block_order":  [
-                                                               "ai_gen_block_9cfa683_9Fhdzy"
-                                                           ],
-                                           "name":  "Custom HTML",
-                                           "settings":  {
-
-                                                        }
-                                       },
-                     "infinite_scroll_slider_FJdViW":  {
-                                                           "type":  "infinite-scroll-slider",
-                                                           "blocks":  {
-                                                                          "slide_3BNGcw":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Localy_Logo_EN_1200x1200_6b81cd61-5cb4-4951-82a5-46748d36c1ff.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_GB8tWG":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Wild_The_Moon_Logo.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_Tz9KxA":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Ivy_s_Secret_Garden_Logo.webp",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_AmKRX6":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Spinneys-Logo-Vector_svg.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  "https://www.spinneys.com/en-ae/search/?q=Plaay"
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_djw3YG":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Waitrose_Logo_svg.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  "https://www.waitrose.ae/en/search/?q=plaay"
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_aBLL8n":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/noon_c17fc7aa-a9ab-4156-8854-ecb90eadfd14.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  "https://apps.apple.com/us/app/noon-shopping-food-grocery/id1269038866?mt=8"
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_MyJagD":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/tmart.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  "https://pzwv.adj.st/?c=ae\u0026s=ds\u0026t=2\u0026i=199dd31c-0e47-4a07-bdf0-d6440ee0f391\u0026adj_t=ubpopz9_qyj4s1t\u0026adj_campaign=other_other_mix_gro_ma_ae_display_Plaay\u0026adj_adgroup=Social\u0026adj_creative=Allproducts\u0026adj_deeplink=talabat%3A%2F%2F%3Fc%3Dae%26s%3Dds%26t%3D2%26i%3D199dd31c-0e47-4a07-bdf0-d6440ee0f391\u0026adj_fallback=https%3A%2F%2Fwww.talabat.com%2Fuae%2Ftalabat-mart%3Futm_campaign%3Dother_other_web_gro_ma_ae_display_Plaay%26utm_source%3DSocial%26utm_medium%3Dother"
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_UdTcNy":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/careem_f7267597-bafe-447a-b477-c8947731987a.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_bnDP6P":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/deliveroo_fcfa4527-9435-4226-8df4-a5f40bb2aa61.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  "https://deliveroo.ae/menu/dubai/dubai-investment-park-2/plaay-cocoa-and-chocolate-candies-dip?utm_campaign=organic\u0026utm_medium=referrer\u0026utm_source=menu_share"
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_7mN7z9":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/amazon_31c6a1c2-92d5-4112-87ec-e4c7e24a9875.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  "https://www.amazon.ae/s?k=Plaay\u0026ref=bl_dp_s_web_0"
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_EqaaPJ":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/kibson.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  "https://www.kibsons.com/en/origin/plaay"
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_iVfPCW":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/logo_SmilesMarket_EN.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_zzFUDP":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/choitrams.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  "https://www.choithrams.com/en/search/?q=plaay"
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_nUdqQi":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/grandiose.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  "https://www.grandiose.ae/search/?q=plaay"
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_hNj9Jt":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/almaya_208a3af1-6501-46e2-8e9b-65f336ad0829.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_ptYiKK":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/enoc.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_y9R9Cz":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/emrat.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_adNAeP":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/allday.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_YhDECK":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Coop.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_3LMYhK":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/scuzi_a72cf9bf-58e8-487f-bf24-0655523f5a73.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_aeJyxn":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/zoom_4fae3570-38da-4e2f-bc6c-b3c4000fe285.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_KAknVq":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Colored.svg",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_RPhxLc":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Cycle_Souq.svg",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_KBj9GQ":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Everyday_Roastery.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_XDaqDj":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Motion_Cycling.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_cMehtG":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/pilates.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_pcVjqi":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/hotel_Indigo.jpg",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_HL6tcM":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/AVANI_Hotels___Resorts_Corporate_Logo.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_eGTVrh":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/IHG-Logo.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_xztmRn":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/mediaone-logo.svg",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_LNdbFL":  {
-                                                                                               "type":  "slide",
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/Pauls.svg",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           },
-                                                                          "slide_yqDJVA":  {
-                                                                                               "type":  "slide",
-                                                                                               "disabled":  true,
-                                                                                               "settings":  {
-                                                                                                                "image":  "shopify://shop_images/smiles.png",
-                                                                                                                "larger_image":  true,
-                                                                                                                "text":  "",
-                                                                                                                "link":  ""
-                                                                                                            }
-                                                                                           }
-                                                                      },
-                                                           "block_order":  [
-                                                                               "slide_3BNGcw",
-                                                                               "slide_GB8tWG",
-                                                                               "slide_Tz9KxA",
-                                                                               "slide_AmKRX6",
-                                                                               "slide_djw3YG",
-                                                                               "slide_aBLL8n",
-                                                                               "slide_MyJagD",
-                                                                               "slide_UdTcNy",
-                                                                               "slide_bnDP6P",
-                                                                               "slide_7mN7z9",
-                                                                               "slide_EqaaPJ",
-                                                                               "slide_iVfPCW",
-                                                                               "slide_zzFUDP",
-                                                                               "slide_nUdqQi",
-                                                                               "slide_hNj9Jt",
-                                                                               "slide_ptYiKK",
-                                                                               "slide_y9R9Cz",
-                                                                               "slide_adNAeP",
-                                                                               "slide_YhDECK",
-                                                                               "slide_3LMYhK",
-                                                                               "slide_aeJyxn",
-                                                                               "slide_KAknVq",
-                                                                               "slide_RPhxLc",
-                                                                               "slide_KBj9GQ",
-                                                                               "slide_XDaqDj",
-                                                                               "slide_cMehtG",
-                                                                               "slide_pcVjqi",
-                                                                               "slide_HL6tcM",
-                                                                               "slide_eGTVrh",
-                                                                               "slide_xztmRn",
-                                                                               "slide_LNdbFL",
-                                                                               "slide_yqDJVA"
-                                                                           ],
-                                                           "disabled":  true,
-                                                           "settings":  {
-                                                                            "section_height":  130,
-                                                                            "hide_on_mobile":  false,
-                                                                            "provide_container":  false,
-                                                                            "provide_container_desktop":  false,
-                                                                            "background_color":  "#f7c744",
-                                                                            "slides_shown_desktop_extra_extra_extra_large":  4,
-                                                                            "slides_shown_desktop_extra_extra_large":  4,
-                                                                            "slides_shown_desktop_extra_large":  4,
-                                                                            "slides_shown_desktop_large":  4,
-                                                                            "slides_shown_desktop":  3,
-                                                                            "slides_shown_tablet":  2,
-                                                                            "slides_shown_mobile":  1,
-                                                                            "slides_shown_mobile_small":  1,
-                                                                            "autoplay":  false,
-                                                                            "autoplay_speed":  2500,
-                                                                            "autoplay_mode":  "linear",
-                                                                            "autoplay_on_mobile":  false,
-                                                                            "font_size":  22,
-                                                                            "font_size_mobile":  22,
-                                                                            "font_family":  "font-walsheim"
-                                                                        }
-                                                       },
-                     "us_vs_them_image_Tq3dCR":  {
-                                                     "type":  "us_vs_them_image",
-                                                     "disabled":  true,
-                                                     "settings":  {
-                                                                      "us_text":  "Us",
-                                                                      "title":  "Them",
-                                                                      "heading":  "What makes us 100% Clean?",
-                                                                      "background_color_left":  "#fad1d2",
-                                                                      "background_color_right":  "#f6f6f6",
-                                                                      "sv_vs_image":  "shopify://shop_images/us-vs-them.png"
-                                                                  }
-                                                 },
+                     "main":  {
+                                  "type":  "main-collection",
+                                  "settings":  {
+                                                   "usp_show":  true,
+                                                   "usp_bg":  "#021d49",
+                                                   "usp_1_text":  "Free shipping AED 75+",
+                                                   "usp_2_text":  "No refined sugar",
+                                                   "usp_3_text":  "Made in UAE",
+                                                   "usp_4_text":  "Halal certified",
+                                                   "usp_5_text":  "Gluten free",
+                                                   "usp_6_text":  "Soy free",
+                                                   "compact_mobile_grid":  false,
+                                                   "default_background_color":  "#fad1d2",
+                                                   "backup_featured_product_one":  "",
+                                                   "backup_featured_product_two":  "",
+                                                   "empty_collection_heading":  "Looks like there are no products in this collection...",
+                                                   "empty_collection_copy":  "Why not try looking in another one of our collections.",
+                                                   "empty_collection_link":  "/",
+                                                   "empty_collection_link_text":  "Return home"
+                                               }
+                              },
                      "apps_reelfy_collection":  {
                                                     "type":  "apps",
                                                     "blocks":  {
@@ -1006,25 +102,127 @@
                                                     "settings":  {
 
                                                                  }
-                                                }
+                                                },
+                     "review_gif_video_collection_default":  {
+                                                                 "type":  "review_gif_video",
+                                                                 "blocks":  {
+                                                                                "image_fBXgHA":  {
+                                                                                                     "type":  "image",
+                                                                                                     "settings":  {
+                                                                                                                      "image":  "shopify://shop_images/first-bite-1.gif",
+                                                                                                                      "height":  280,
+                                                                                                                      "review_text":  "\u003cp\u003eThis is literally the best! Has single-handedly eliminated my chocolate and doughnut cravings!!\u003c/p\u003e",
+                                                                                                                      "review_heading":  "Yoga Instructor, Dubai",
+                                                                                                                      "slider_bg_color":  "rgba(0,0,0,0)",
+                                                                                                                      "star_rating":  5
+                                                                                                                  }
+                                                                                                 },
+                                                                                "image_ddGtem":  {
+                                                                                                     "type":  "image",
+                                                                                                     "settings":  {
+                                                                                                                      "image":  "shopify://shop_images/firstbite5.gif",
+                                                                                                                      "height":  280,
+                                                                                                                      "review_text":  "\u003cp\u003eHonestly, this is my no-brainer snack for crazy days. Tastes amazing, \u0026 keeps me going! \u003c/p\u003e",
+                                                                                                                      "review_heading":  "Always-on CEO",
+                                                                                                                      "slider_bg_color":  "rgba(0,0,0,0)",
+                                                                                                                      "star_rating":  5
+                                                                                                                  }
+                                                                                                 },
+                                                                                "image_8LWUTT":  {
+                                                                                                     "type":  "image",
+                                                                                                     "settings":  {
+                                                                                                                      "image":  "shopify://shop_images/first-bite-6.gif",
+                                                                                                                      "height":  280,
+                                                                                                                      "review_text":  "\u003cp\u003eFavorite flavour hands down will be the peanut butter truffle! It just melts in your mouth!\u003c/p\u003e",
+                                                                                                                      "review_heading":  "Creative Designer, Abu Dhabi",
+                                                                                                                      "slider_bg_color":  "rgba(0,0,0,0)",
+                                                                                                                      "star_rating":  5
+                                                                                                                  }
+                                                                                                 },
+                                                                                "image_qPrjNW":  {
+                                                                                                     "type":  "image",
+                                                                                                     "settings":  {
+                                                                                                                      "image":  "shopify://shop_images/ezgif-3-8df9b851d4_a81fae6c-c3c9-4bfa-a352-c82a89a3a291.gif",
+                                                                                                                      "height":  280,
+                                                                                                                      "review_text":  "\u003cp\u003e100% Hooked! Perfect snack after my runsâ€”always hits the spot!\u003c/p\u003e",
+                                                                                                                      "review_heading":  "Recreational Runner",
+                                                                                                                      "slider_bg_color":  "rgba(0,0,0,0)",
+                                                                                                                      "star_rating":  5
+                                                                                                                  }
+                                                                                                 }
+                                                                            },
+                                                                 "block_order":  [
+                                                                                     "image_fBXgHA",
+                                                                                     "image_ddGtem",
+                                                                                     "image_8LWUTT",
+                                                                                     "image_qPrjNW"
+                                                                                 ],
+                                                                 "settings":  {
+                                                                                  "heading":  "LOVE AT FIRST BITE",
+                                                                                  "text":  "",
+                                                                                  "per_view_desktop_large":  4,
+                                                                                  "per_view_desktop":  4,
+                                                                                  "per_view_tablet":  3,
+                                                                                  "per_view_mobile":  2,
+                                                                                  "autoplay_speed":  0,
+                                                                                  "desktop_vertical_padding":  11,
+                                                                                  "mobile_vertical_padding":  5,
+                                                                                  "enable_style":  false,
+                                                                                  "spacing_top_desktop":  0,
+                                                                                  "spacing_bottom_desktop":  0,
+                                                                                  "spacing_top_mobile":  0,
+                                                                                  "spacing_bottom_mobile":  0
+                                                                              }
+                                                             },
+                     "featured_products_collection_default":  {
+                                                                  "type":  "featured_products",
+                                                                  "name":  "Featured products",
+                                                                  "settings":  {
+                                                                                   "title":  "Featured favourites",
+                                                                                   "description":  "More Plaay picks worth adding to your stash.",
+                                                                                   "background_color":  "#ffffff",
+                                                                                   "product_source":  "collection",
+                                                                                   "featured_collection":  "shopify://collections/variety-packs",
+                                                                                   "collection_product_limit":  8,
+                                                                                   "extra_top_padding":  true,
+                                                                                   "extra_bottom_padding":  false,
+                                                                                   "column_size_desktop_extra_large":  4,
+                                                                                   "column_size_desktop_large":  4,
+                                                                                   "column_size_desktop":  4,
+                                                                                   "column_size_tablet":  3,
+                                                                                   "column_size_mobile":  1.2,
+                                                                                   "column_size_mobile_small":  1.2,
+                                                                                   "autoplay":  0,
+                                                                                   "see_all_link":  "/collections/variety-packs",
+                                                                                   "see_all_link_text":  "Shop variety packs",
+                                                                                   "hide_arrows_desktop":  false,
+                                                                                   "hide_arrows_mobile":  false,
+                                                                                   "hide_bullets":  true,
+                                                                                   "compact_mobile_grid":  true,
+                                                                                   "hide_atc_on_tiles":  false
+                                                                               },
+                                                                  "blocks":  {
+
+                                                                             },
+                                                                  "block_order":  [
+
+                                                                                  ]
+                                                              },
+                     "plaay_recently_viewed":  {
+                                                   "type":  "plaay-recently-viewed",
+                                                   "settings":  {
+                                                                    "heading":  "Previously viewed",
+                                                                    "max_products":  6
+                                                                }
+                                               }
                  },
     "order":  [
-                  "bars_main_product_tgjzzE",
-                  "apps_6td8dD",
-                  "pdp_social_proof_plaay",
-                  "review_gif_video_UQj4ik",
-                  "pdp_stats_bar_h7z9pz",
-                  "174471010040db00af",
-                  "marquee_slider_H7hNaz",
-                  "scrolling_content_PjwFEy",
-                  "richtext_hVDgQC",
-                  "custom_coupon_banner_mDjXri",
-                  "1736144550483a252b",
-                  "1736138805fe25981f",
-                  "product_faqs_a34mfY",
-                  "blocks_JRjbnL",
-                  "infinite_scroll_slider_FJdViW",
-                  "us_vs_them_image_Tq3dCR",
-                  "apps_reelfy_collection"
+                  "63fdba3d-c584-464b-8a33-248b0d7094f2",
+                  "collection_hero",
+                  "main",
+                  "apps_reelfy_collection",
+                  "review_gif_video_collection_default",
+                  "featured_products_collection_default",
+                  "plaay_recently_viewed"
               ]
 }

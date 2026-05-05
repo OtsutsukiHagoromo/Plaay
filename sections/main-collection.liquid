@@ -45,39 +45,30 @@
     {% render 'collection_filters', results: collection %}
   </facet-filters-form>{% endcomment %}
 
-  {% comment %} ── Collection USP bar ── {% endcomment %}
+  {% comment %} Collection USP bar {% endcomment %}
   {% if section.settings.usp_show %}
-  <div class="plaay-coll-usp" style="background: {{ section.settings.usp_bg }};">
-    <div class="container">
-      <div class="plaay-coll-usp__track">
-        {% for i in (1..6) %}
-          {% case i %}
-            {% when 1 %}{% assign usp_text = section.settings.usp_1_text %}
-            {% when 2 %}{% assign usp_text = section.settings.usp_2_text %}
-            {% when 3 %}{% assign usp_text = section.settings.usp_3_text %}
-            {% when 4 %}{% assign usp_text = section.settings.usp_4_text %}
-            {% when 5 %}{% assign usp_text = section.settings.usp_5_text %}
-            {% when 6 %}{% assign usp_text = section.settings.usp_6_text %}
-          {% endcase %}
-          {% if usp_text != blank %}
-            <div class="plaay-coll-usp__item">
-              <span class="plaay-coll-usp__icon" aria-hidden="true"></span>
-              <span class="plaay-coll-usp__label font-walsheim-bold">{{ usp_text }}</span>
-            </div>
-          {% endif %}
-        {% endfor %}
+    <div class="plaay-coll-usp" style="background: {{ section.settings.usp_bg }};">
+      <div class="container">
+        <div class="plaay-coll-usp__track">
+          {% for i in (1..6) %}
+            {% case i %}
+              {% when 1 %}{% assign usp_text = section.settings.usp_1_text %}
+              {% when 2 %}{% assign usp_text = section.settings.usp_2_text %}
+              {% when 3 %}{% assign usp_text = section.settings.usp_3_text %}
+              {% when 4 %}{% assign usp_text = section.settings.usp_4_text %}
+              {% when 5 %}{% assign usp_text = section.settings.usp_5_text %}
+              {% when 6 %}{% assign usp_text = section.settings.usp_6_text %}
+            {% endcase %}
+            {% if usp_text != blank %}
+              <div class="plaay-coll-usp__item">
+                <span class="plaay-coll-usp__icon" aria-hidden="true"></span>
+                <span class="plaay-coll-usp__label font-walsheim-bold">{{ usp_text }}</span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
       </div>
     </div>
-  </div>
-{% endif %}
-              <span class="plaay-coll-usp__label font-walsheim-bold">{{ usp_text }}</span>
-            </div>
-            {% unless forloop.last %}<span class="plaay-coll-usp__sep" aria-hidden="true">·</span>{% endunless %}
-          {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-  </div>
   {% endif %}
 
   <div style="background: {{ background_color }};">

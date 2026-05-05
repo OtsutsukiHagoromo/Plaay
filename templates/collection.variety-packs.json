@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
     "sections":  {
                      "63fdba3d-c584-464b-8a33-248b0d7094f2":  {
@@ -549,29 +540,6 @@
                                                                        "collection_product_limit":  12
                                                                    }
                                                   },
-                     "plaay_frequently_bought":  {
-                                                     "type":  "plaay-frequently-bought",
-                                                     "settings":  {
-                                                                      "heading":  "Add best-selling bars",
-                                                                      "description":  "Variety-pack shoppers often top up with best-selling bars to build a bigger stash in one order.",
-                                                                      "background_color":  "#ffffff",
-                                                                      "source_collection":  "shopify://collections/chocolate-bars",
-                                                                      "product_limit":  8,
-                                                                      "autoplay":  0,
-                                                                      "see_all_text":  "Shop bars",
-                                                                      "column_size_desktop_extra_large":  4,
-                                                                      "column_size_desktop_large":  4,
-                                                                      "column_size_desktop":  4,
-                                                                      "column_size_tablet":  3,
-                                                                      "column_size_mobile":  1.2,
-                                                                      "column_size_mobile_small":  1.2,
-                                                                      "hide_arrows_desktop":  false,
-                                                                      "hide_arrows_mobile":  false,
-                                                                      "hide_bullets":  true,
-                                                                      "compact_mobile_grid":  true,
-                                                                      "hide_atc_on_tiles":  false
-                                                                  }
-                                                 },
                      "plaay_recently_viewed":  {
                                                    "type":  "plaay-recently-viewed",
                                                    "settings":  {
@@ -687,7 +655,6 @@
                   "main",
                   "apps_reelfy_collection",
                   "review_gif_video_collection_variety",
-                  "plaay_frequently_bought",
                   "featured_products_XUGdAQ",
                   "featured_products_GtGJNw",
                   "featured_products_qwJdjY",
