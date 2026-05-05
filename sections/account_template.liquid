@@ -17,6 +17,30 @@
         </div>
 
         <div class="overflow-hidden all-accounts-container | lg:w-3/4 lg:ml-8">
+          {% if customer.orders.size != 0 %}
+            {% assign latest_order = customer.orders.first %}
+            {% capture latest_reorder_path %}
+              /cart/
+              {%- for item in latest_order.line_items -%}
+                {%- if item.variant_id != blank and item.quantity > 0 -%}
+                  {{ item.variant_id }}:{{ item.quantity }}{% unless forloop.last %},{% endunless %}
+                {%- endif -%}
+              {%- endfor -%}
+            {% endcapture %}
+            <div class="rounded-[28px] bg-dark-blue px-6 py-7 text-white mb-8 | lg:px-10 lg:py-9">
+              <div class="flex flex-col gap-5 | lg:flex-row lg:items-end lg:justify-between">
+                <div class="max-w-xl">
+                  <p class="text-xs uppercase tracking-[0.22em] opacity-70 font-walsheim-bold">Quick reorder</p>
+                  <h2 class="text-3xl leading-none font-walsheim-black uppercase mt-3 | lg:text-5xl">Restock your last order in one tap</h2>
+                  <p class="text-sm opacity-80 mt-3 font-walsheim">Order #{{ latest_order.order_number }} from {{ latest_order.created_at | date: "%b %d, %Y" }} is ready to be added back to cart.</p>
+                </div>
+                <div class="flex flex-col gap-3 | lg:items-end">
+                  {% render 'btn', href: latest_reorder_path | strip, width: 'small', style: 'yellow', copy: 'Order Again', no_translation: true, additional_class: 'min-w-[210px] text-center' %}
+                  <a href="{{ latest_order.customer_url }}" class="text-white text-xs uppercase tracking-[0.18em] opacity-75 underline underline-offset-4">Review last order</a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
           {% comment %} account overview {% endcomment %}
           <div class="bg-white py-9 px-7 w-full | lg:max-w-2xl lg:rounded-xl">
             <div class="border-t border-b border-black border-opacity-25 pt-8 pb-12 flex flex-col | lg:flex-row lg:pb-16">
@@ -95,7 +119,18 @@
                             </span>
                           </div>
                         </div>
-                        {% render 'btn', href: customer_order.customer_url, width: 'small', style: 'blue', copy: 'account.account-area.view-order', additional_class: 'flex', additional_class: 'w-1/2 ml-2' %}
+                        {% capture reorder_path %}
+                          /cart/
+                          {%- for item in customer_order.line_items -%}
+                            {%- if item.variant_id != blank and item.quantity > 0 -%}
+                              {{ item.variant_id }}:{{ item.quantity }}{% unless forloop.last %},{% endunless %}
+                            {%- endif -%}
+                          {%- endfor -%}
+                        {% endcapture %}
+                        <div class="flex flex-col gap-2 w-1/2 ml-2">
+                          {% render 'btn', href: customer_order.customer_url, width: 'small', style: 'blue', copy: 'account.account-area.view-order', additional_class: 'flex w-full justify-center' %}
+                          {% render 'btn', href: reorder_path | strip, width: 'small', style: 'blue-border', copy: 'Order Again', no_translation: true, additional_class: 'flex w-full justify-center' %}
+                        </div>
                       </div>
                     </div>
                   </div>

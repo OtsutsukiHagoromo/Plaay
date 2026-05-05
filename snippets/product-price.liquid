@@ -3,7 +3,7 @@
     {{ shop.currency }} {{- product.price | money_without_currency -}}
   </span>
   {% if product.compare_at_price %}
-    <span class="product_compare_at_price line-through font-walsheim-black text-center ml-1 {% if text_white %}text-white{% else %}text-dark-blue{% endif %} {% if large_text %}text-xl{% else %}text-base{% endif %}">
+    <span class="product_compare_at_price product_compare_at_price--sale line-through font-walsheim-black text-center ml-1 {% if text_white %}text-white{% endif %} {% if large_text %}text-xl{% else %}text-base{% endif %}">
       {{ shop.currency }} {{ product.compare_at_price | money_without_currency }}
     </span>
   {% endif %}

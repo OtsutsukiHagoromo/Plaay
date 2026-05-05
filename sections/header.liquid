@@ -6,6 +6,14 @@
  assign hide_search_mobile = section.settings.hide_search_mobile
  assign dropdown_menu_images = section.blocks | where: 'type', 'dropdown_menu_image'
  assign scroll_sticky = section.settings.scroll_sticky
+ assign account_href = routes.account_login_url
+ assign account_label = 'action.account' | t
+ if customer
+   assign account_href = routes.account_url
+   if customer.first_name != blank
+     assign account_label = customer.first_name
+   endif
+ endif
 %}
 
 {% style %}
@@ -155,21 +163,9 @@
           </ul>
         {% endif %}
         {% if shop.customer_accounts_enabled %}
-          {% if customer %}
-            <a href="{{ routes.account_url }}" class="text-0 text-dark-blue tracking-widest font-walsheim-bold hidden | lg:capitalize lg:text-sm lg:font-bold lg:pr-6">
-              <span class="flex cursor-pointer h-5 w-5 text-dark-blue | lg:hidden">
-                {% render 'icon-account' %}
-              </span>
-              {{ 'action.account' | t }}
-            </a>
-          {% else %}
-            <a href="/account/login" class="account-link text-0 text-dark-blue tracking-widest hidden font-walsheim-bold | lg:block lg:capitalize lg:text-sm lg:font-bold lg:pr-6">
-              <span class="h-5 w-5 cursor-pointer flex text-dark-blue | lg:hidden">
-                {% render 'icon-account' %}
-              </span>
-              {{ 'action.account' | t }}
-            </a>
-          {% endif %}
+          <a href="{{ account_href }}" class="plaay-account-pill hidden items-center text-dark-blue font-walsheim-bold | xl:inline-flex">
+            {{ account_label }}
+          </a>
         {% endif %}
 
         {% comment %} search desktop {% endcomment %}
@@ -197,21 +193,12 @@
         <div class="flex items-center justify-center mr-4">
           {% comment %} account {% endcomment %}
           {% if shop.customer_accounts_enabled %}
-            {% if customer %}
-              <a href="{{ routes.account_url }}" class="text-0 text-dark-blue tracking-widest font-walsheim-bold pr-4">
-                <span class="flex cursor-pointer h-5 w-5 text-dark-blue">
-                  {% render 'icon-account' %}
-                </span>
-                {{ 'action.account' | t }}
-              </a>
-            {% else %}
-              <a href="/account/login" class="text-0 text-dark-blue tracking-widest font-walsheim-bold">
-                <span class="h-5 w-5 cursor-pointer flex text-dark-blue | lg:hidden">
-                  {% render 'icon-account' %}
-                </span>
-                {{ 'action.account' | t }}
-              </a>
-            {% endif %}
+            <a href="{{ account_href }}" class="text-0 text-dark-blue tracking-widest font-walsheim-bold pr-4 plaay-account-icon-link">
+              <span class="h-5 w-5 cursor-pointer flex text-dark-blue">
+                {% render 'icon-account' %}
+              </span>
+              {{ account_label }}
+            </a>
           {% endif %}
           {% comment %} search {% endcomment %}
           {% unless hide_search_mobile %}
@@ -347,6 +334,31 @@
         </span>
         <span class="plaay-mobile-wishlist__count" data-wl-count hidden>0</span>
       </a>
+      {% if shop.customer_accounts_enabled %}
+        <div class="border-t border-black border-opacity-10 px-14 py-5">
+          <a href="{{ account_href }}" class="plaay-mobile-account flex items-center justify-between text-dark-blue text-base font-bold tracking-widest font-walsheim-bold">
+            <span class="flex items-center">
+              <span class="plaay-mobile-wishlist__icon-wrap">
+                {% render 'icon-account' %}
+              </span>
+              {% if customer %}
+                My account
+              {% else %}
+                Sign in
+              {% endif %}
+            </span>
+            <span class="text-xs uppercase tracking-[0.18em] opacity-50">
+              {% if customer %}Orders{% else %}Login{% endif %}
+            </span>
+          </a>
+          {% if customer %}
+            <div class="mt-4 grid grid-cols-2 gap-3">
+              <a href="/account" class="rounded-2xl border border-dark-blue border-opacity-15 px-4 py-3 text-xs font-walsheim-bold uppercase tracking-[0.14em] text-dark-blue text-center">Order history</a>
+              <a href="/tools/recurring/login" class="rounded-2xl bg-dark-blue px-4 py-3 text-xs font-walsheim-bold uppercase tracking-[0.14em] text-white text-center">Subscriptions</a>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
     </div>
     {% unless hide_search_mobile %}
       <form

@@ -1,4 +1,4 @@
-﻿{
+{
     "sections":  {
                      "main":  {
                                   "type":  "truffle-main-product",
@@ -104,7 +104,7 @@
                                                                       "stat_GiaGXC"
                                                                   ],
                                                   "disabled":  true,
-                                                  "name":  "PDP â€” Stats Bar",
+                                                  "name":  "PDP Ã¢â‚¬â€ Stats Bar",
                                                   "settings":  {
                                                                    "background_color":  "#f4f4f4",
                                                                    "heading":  "Snacking Made Simple"
@@ -285,10 +285,10 @@
                                                                                                     "type":  "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
                                                                                                     "settings":  {
                                                                                                                      "gallery_id":  18785,
-                                                                                                                     "title":  "",
+                                                                                                                     "title":  "LOVE AT FIRST BITE",
                                                                                                                      "subtitle":  "",
                                                                                                                      "heading_size":  "1",
-                                                                                                                     "heading_align":  "left",
+                                                                                                                     "heading_align":  "center",
                                                                                                                      "heading_color":  "",
                                                                                                                      "desc_style":  "subtitle",
                                                                                                                      "desc_color":  "",
@@ -348,7 +348,7 @@
                                                                                          "settings":  {
                                                                                                           "image":  "shopify://shop_images/ezgif-3-8df9b851d4_a81fae6c-c3c9-4bfa-a352-c82a89a3a291.gif",
                                                                                                           "height":  280,
-                                                                                                          "review_text":  "\u003cp\u003e100% Hooked! Perfect snack after my runsâ€”always hits the spot!\u003c/p\u003e",
+                                                                                                          "review_text":  "\u003cp\u003e100% Hooked! Perfect snack after my runsÃ¢â‚¬â€always hits the spot!\u003c/p\u003e",
                                                                                                           "review_heading":  "Recreational Runner",
                                                                                                           "slider_bg_color":  "rgba(0,0,0,0)",
                                                                                                           "star_rating":  5
@@ -435,7 +435,7 @@
                                                                                    "type":  "faq",
                                                                                    "settings":  {
                                                                                                     "title":  "Why Plaay?",
-                                                                                                    "answer":  "\u003cp\u003eBecause chocolate shouldn\u0027t be a trade-off. Most chocolates are loaded with refined sugar, cheap fillers, and ingredients that leave you bloated, sluggish, or guilty afterwards. We built Plaay to change that. Every product we make is 100% clean â€” that means:Â· No refined sugar (we use coconut sugar that\u0027s gentler on your body).Â· No preservatives, artificial emulsifiers, or shady additives.Â· No soy, no gluten, no artificial sweeteners.Â· Only real, good-for-you ingredients your body actually knows how to process. The result? Chocolate that tastes as indulgent as your classics, but without the crash, the guilt, or the compromise.\u003c/p\u003e"
+                                                                                                    "answer":  "\u003cp\u003eBecause chocolate shouldn\u0027t be a trade-off. Most chocolates are loaded with refined sugar, cheap fillers, and ingredients that leave you bloated, sluggish, or guilty afterwards. We built Plaay to change that. Every product we make is 100% clean Ã¢â‚¬â€ that means:Ã‚Â· No refined sugar (we use coconut sugar that\u0027s gentler on your body).Ã‚Â· No preservatives, artificial emulsifiers, or shady additives.Ã‚Â· No soy, no gluten, no artificial sweeteners.Ã‚Â· Only real, good-for-you ingredients your body actually knows how to process. The result? Chocolate that tastes as indulgent as your classics, but without the crash, the guilt, or the compromise.\u003c/p\u003e"
                                                                                                 }
                                                                                },
                                                                 "faq_aWg6GA":  {
@@ -550,7 +550,7 @@
                                                                                    "disabled":  true,
                                                                                    "settings":  {
                                                                                                     "title":  "Which countries does Plaay delivery service cover? ",
-                                                                                                    "answer":  "\u003cp\u003eWe currently deliver across UAE. We are also available in KSA via third-party online platforms. As for the rest of the world? Not yetâ€¦ but we\u0027re on our way!\u003c/p\u003e"
+                                                                                                    "answer":  "\u003cp\u003eWe currently deliver across UAE. We are also available in KSA via third-party online platforms. As for the rest of the world? Not yetÃ¢â‚¬Â¦ but we\u0027re on our way!\u003c/p\u003e"
                                                                                                 }
                                                                                },
                                                                 "faq_xJtqkq":  {
@@ -629,7 +629,7 @@
                                                           "ai_gen_block_9cfa683_9Fhdzy":  {
                                                                                               "type":  "ai_gen_block_9cfa683",
                                                                                               "settings":  {
-                                                                                                               "custom_html":  "\u003cstyle\u003e\n.faq-ext{\nbackground:#F9C61D;\npadding:32px 0 40px;\ntext-align:center\n}\n.faq-ext a{\nfont-size:24px;\nfont-weight:600;\ncolor:#081D48;\ntext-decoration:underline\n}\n.faq-ext a:hover{opacity:.8}\n\u003c/style\u003e\n\n\u003cdiv class=\"faq-ext\"\u003e\n  \u003ca href=\"https://shopplaay.com/pages/faqs\"\u003eExplore All FAQs →\u003c/a\u003e\n\u003c/div\u003e",
+                                                                                                               "custom_html":  "\u003cstyle\u003e\n.faq-ext{\nbackground:#F9C61D;\npadding:32px 0 40px;\ntext-align:center\n}\n.faq-ext a{\nfont-size:24px;\nfont-weight:600;\ncolor:#081D48;\ntext-decoration:underline\n}\n.faq-ext a:hover{opacity:.8}\n\u003c/style\u003e\n\n\u003cdiv class=\"faq-ext\"\u003e\n  \u003ca href=\"https://shopplaay.com/pages/faqs\"\u003eExplore All FAQs â†’\u003c/a\u003e\n\u003c/div\u003e",
                                                                                                                "desktop_width_percent":  100,
                                                                                                                "padding":  0,
                                                                                                                "background_color":  "#ffffff",
@@ -1103,11 +1103,83 @@
                                                 "settings":  {
 
                                                              }
-                                            }
+                                            },
+                     "pdp_social_proof_plaay":  {
+                                                    "type":  "pdp-social-proof",
+                                                    "blocks":  {
+                                                                   "trust_badge_CpkVbW":  {
+                                                                                              "type":  "trust_badge",
+                                                                                              "settings":  {
+                                                                                                               "label":  "No Refined Sugar"
+                                                                                                           }
+                                                                                          },
+                                                                   "trust_badge_eK6Cbe":  {
+                                                                                              "type":  "trust_badge",
+                                                                                              "settings":  {
+                                                                                                               "label":  "100% Clean Ingredients"
+                                                                                                           }
+                                                                                          },
+                                                                   "trust_badge_NBTiQH":  {
+                                                                                              "type":  "trust_badge",
+                                                                                              "settings":  {
+                                                                                                               "label":  "Halal certified"
+                                                                                                           }
+                                                                                          },
+                                                                   "trust_badge_GYxe3G":  {
+                                                                                              "type":  "trust_badge",
+                                                                                              "settings":  {
+                                                                                                               "label":  "Made in the UAE"
+                                                                                                           }
+                                                                                          },
+                                                                   "review_xngXi9":  {
+                                                                                         "type":  "review",
+                                                                                         "settings":  {
+                                                                                                          "rating":  5,
+                                                                                                          "quote":  "Honestly the best chocolate snack I\u0027ve tried. Tastes great and no chalky aftertaste.",
+                                                                                                          "reviewer":  "Aisha K.",
+                                                                                                          "tag":  "Verified buyer"
+                                                                                                      }
+                                                                                     },
+                                                                   "review_4DjCAi":  {
+                                                                                         "type":  "review",
+                                                                                         "settings":  {
+                                                                                                          "rating":  5,
+                                                                                                          "quote":  "My kids love these. Feels good knowing exactly what\u0027s in them.",
+                                                                                                          "reviewer":  "Omar J.",
+                                                                                                          "tag":  "Verified buyer"
+                                                                                                      }
+                                                                                     },
+                                                                   "review_LiYpLU":  {
+                                                                                         "type":  "review",
+                                                                                         "settings":  {
+                                                                                                          "rating":  5,
+                                                                                                          "quote":  "Perfect post-gym snack. High protein, genuinely delicious - ordering again.",
+                                                                                                          "reviewer":  "Priya S.",
+                                                                                                          "tag":  "Verified buyer"
+                                                                                                      }
+                                                                                     }
+                                                               },
+                                                    "block_order":  [
+                                                                        "trust_badge_CpkVbW",
+                                                                        "trust_badge_eK6Cbe",
+                                                                        "trust_badge_NBTiQH",
+                                                                        "trust_badge_GYxe3G",
+                                                                        "review_xngXi9",
+                                                                        "review_4DjCAi",
+                                                                        "review_LiYpLU"
+                                                                    ],
+                                                    "name":  "PDP â€” Social Proof",
+                                                    "settings":  {
+                                                                     "background_color":  "#f4f4f4",
+                                                                     "heading":  "Loved by thousands",
+                                                                     "rating_text":  "4.9 out of 5 from 2,000+ reviews"
+                                                                 }
+                                                }
                  },
     "order":  [
                   "main",
                   "apps_6td8dD",
+                  "pdp_social_proof_plaay",
                   "review_gif_video_UQj4ik",
                   "pdp_stats_bar_h7z9pz",
                   "174471010040db00af",

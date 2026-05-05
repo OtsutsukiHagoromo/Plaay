@@ -13,13 +13,197 @@
   [data-desktop-category].active {
     text-decoration: underline;
   }
+  .plaay-contact-hero {
+    max-width: 960px;
+    margin: 0 auto 3.5rem;
+    text-align: center;
+  }
+  .plaay-contact-kicker {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.55rem 1rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.55);
+    color: #021D49;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-family: var(--font-walsheim-bold, inherit);
+  }
+  .plaay-contact-heading {
+    color: #021D49;
+    font-family: var(--font-walsheim-black, inherit);
+    font-size: clamp(2.6rem, 7vw, 5.8rem);
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+    text-transform: uppercase;
+    margin: 1.25rem auto 0;
+    max-width: 12ch;
+  }
+  .plaay-contact-copy {
+    max-width: 660px;
+    margin: 1.2rem auto 0;
+    color: rgba(2,29,73,0.8);
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+  .plaay-contact-points {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin-top: 2rem;
+  }
+  .plaay-contact-point {
+    background: rgba(255,255,255,0.88);
+    border: 1px solid rgba(2,29,73,0.08);
+    border-radius: 22px;
+    padding: 1.1rem 1rem;
+    box-shadow: 0 14px 32px rgba(2,29,73,0.06);
+  }
+  .plaay-contact-point strong {
+    display: block;
+    color: #021D49;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    font-family: var(--font-walsheim-bold, inherit);
+  }
+  .plaay-contact-point span {
+    color: #021D49;
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+  .plaay-contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: 24px;
+    align-items: start;
+  }
+  .plaay-contact-aside,
+  .plaay-contact-form-shell {
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 22px 48px rgba(2,29,73,0.12);
+  }
+  .plaay-contact-aside {
+    background: rgba(2,29,73,0.92);
+    color: #fff;
+    padding: 2rem 1.75rem;
+  }
+  .plaay-contact-aside h2 {
+    font-family: var(--font-walsheim-black, inherit);
+    font-size: clamp(2rem, 4vw, 3.3rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .plaay-contact-aside p {
+    margin-top: 1rem;
+    opacity: 0.86;
+    line-height: 1.7;
+    font-size: 0.96rem;
+  }
+  .plaay-contact-meta {
+    display: grid;
+    gap: 12px;
+    margin-top: 1.5rem;
+  }
+  .plaay-contact-meta-item {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px;
+    padding: 0.95rem 1rem;
+  }
+  .plaay-contact-meta-item strong {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.7;
+    margin-bottom: 0.35rem;
+  }
+  .plaay-contact-meta-item a,
+  .plaay-contact-meta-item span {
+    color: #fff;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .plaay-contact-form-shell {
+    background: rgba(255,255,255,0.92);
+    padding: 1.75rem;
+  }
+  .plaay-contact-form-shell h2 {
+    color: #021D49;
+    font-family: var(--font-walsheim-black, inherit);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.9rem;
+  }
+  .plaay-contact-form-shell .plaay-contact-copy {
+    margin: 0 0 1.4rem;
+    max-width: none;
+    text-align: left;
+  }
+  @media (max-width: 989px) {
+    .plaay-contact-points,
+    .plaay-contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 767px) {
+    .plaay-contact-hero {
+      margin-bottom: 2.25rem;
+    }
+    .plaay-contact-points {
+      gap: 10px;
+    }
+    .plaay-contact-point,
+    .plaay-contact-aside,
+    .plaay-contact-form-shell {
+      border-radius: 22px;
+    }
+    .plaay-contact-form-shell {
+      padding: 1.35rem;
+    }
+  }
 {% endstyle %}
 
 {% comment %} faq section {% endcomment %}
 <contact-faqs data-module="contact-faqs">
   <div style="background-color: {{ background_color }};">
     <div class="container pt-28 pb-14 | md:pb-32 md:pt-40">
-      <h1 class="text-dark-blue text-center font-walsheim-bold text-2xl | md:text-7xl md:pt-10">{{ page.title }}</h1>
+      <div class="plaay-contact-hero">
+        <span class="plaay-contact-kicker">{{ page.title }}</span>
+        <h1 class="plaay-contact-heading">
+          {% if contact_title != blank %}
+            {{ contact_title }}
+          {% else %}
+            {{ page.title }}
+          {% endif %}
+        </h1>
+        {% if contact_copy != blank %}
+          <p class="plaay-contact-copy">{{ contact_copy }}</p>
+        {% endif %}
+        <div class="plaay-contact-points">
+          <div class="plaay-contact-point">
+            <strong>Email us</strong>
+            <span>hello@shopplaay.com</span>
+          </div>
+          <div class="plaay-contact-point">
+            <strong>Call or WhatsApp</strong>
+            <span>+971 56 996 9522</span>
+          </div>
+          <div class="plaay-contact-point">
+            <strong>Support window</strong>
+            <span>Mon to Sat, 9 AM to 5 PM</span>
+          </div>
+        </div>
+      </div>
       {% comment %} categories {% endcomment %}
       {% if faq_categories.size > 0 %}
         <div class="relative flex justify-center items-center max-w-[260px] mx-auto mt-8 border-b border-dark-blue pb-3 mb-12 | md:hidden">
@@ -93,20 +277,31 @@
           {{ 'contact.response' | t }}
         </p>
       {% else %}
-        {% comment %} title {% endcomment %}
-        <h2 class="text-2xl font-bold text-left font-walsheim-bold" style="color: {{ text_color }};">
-          {% if contact_title != blank %}
-            {{ contact_title }}
-          {% else %}
-            {{ 'contact.title' | t }}
-          {% endif %}
-        </h2>
-
-        {% comment %} description {% endcomment %}
-        {% if contact_copy != blank %}
-          <div class="font-georgia text-md text-left | md:max-w-lg" style="color: {{ text_color }};">{{ contact_copy }}</div>
-        {% endif %}
-        <div class="mt-5 | md:mt-8">
+        <div class="plaay-contact-grid">
+          <div class="plaay-contact-aside">
+            <h2>We reply fast, and we actually help.</h2>
+            <p>Questions about ingredients, delivery, subscriptions, gifting, or the right snack-hack for your routine? Send us a note and we’ll point you in the right direction.</p>
+            <div class="plaay-contact-meta">
+              <div class="plaay-contact-meta-item">
+                <strong>Best for</strong>
+                <span>Order help, delivery questions, product guidance, and collabs.</span>
+              </div>
+              <div class="plaay-contact-meta-item">
+                <strong>Email</strong>
+                <a href="mailto:hello@shopplaay.com">hello@shopplaay.com</a>
+              </div>
+              <div class="plaay-contact-meta-item">
+                <strong>Phone / WhatsApp</strong>
+                <a href="tel:+971569969522">+971 56 996 9522</a>
+              </div>
+            </div>
+          </div>
+          <div class="plaay-contact-form-shell">
+            <h2>Send us a message</h2>
+            {% if contact_copy != blank %}
+              <div class="plaay-contact-copy" style="color: {{ text_color }};">{{ contact_copy }}</div>
+            {% endif %}
+            <div class="mt-5 | md:mt-8">
           {% comment %} name {% endcomment %}
           <div class="w-full mb-4">
             {% if show_labels %}
@@ -161,6 +356,8 @@
           {% comment %} submit button {% endcomment %}
           <div class="flex flex-wrap justify-between items-center mt-1 max-w-lg | md:mt-2">
             {% render 'btn', copy: 'action.send', width: 'full', style: 'blue', additional_class: 'text-sm py-3 font-walsheim-bold rounded-lg capitalize' %}
+          </div>
+        </div>
           </div>
         </div>
         {% comment %} form errors {% endcomment %}

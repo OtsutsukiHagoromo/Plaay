@@ -1,4 +1,4 @@
-﻿{
+{
     "sections":  {
                      "collection_hero":  {
                                              "type":  "collection_hero",
@@ -167,17 +167,17 @@
                                   "settings":  {
                                                    "usp_show":  true,
                                                    "usp_bg":  "#021d49",
-                                                   "usp_1_icon":  "ðŸš€",
+                                                   "usp_1_icon":  "Ã°Å¸Å¡â‚¬",
                                                    "usp_1_text":  "Free shipping AED 75+",
-                                                   "usp_2_icon":  "ðŸŒ¿",
+                                                   "usp_2_icon":  "Ã°Å¸Å’Â¿",
                                                    "usp_2_text":  "No refined sugar",
-                                                   "usp_3_icon":  "ðŸ‡¦ðŸ‡ª",
+                                                   "usp_3_icon":  "Ã°Å¸â€¡Â¦Ã°Å¸â€¡Âª",
                                                    "usp_3_text":  "Made in UAE",
-                                                   "usp_4_icon":  "âœ…",
+                                                   "usp_4_icon":  "Ã¢Å“â€¦",
                                                    "usp_4_text":  "Halal certified",
-                                                   "usp_5_icon":  "ðŸŒ¾",
+                                                   "usp_5_icon":  "Ã°Å¸Å’Â¾",
                                                    "usp_5_text":  "Gluten free",
-                                                   "usp_6_icon":  "ðŸŒ±",
+                                                   "usp_6_icon":  "Ã°Å¸Å’Â±",
                                                    "usp_6_text":  "Soy free",
                                                    "compact_mobile_grid":  false,
                                                    "default_background_color":  "#fad1d2",
@@ -401,7 +401,7 @@
                                                                                                   "settings":  {
                                                                                                                    "image":  "shopify://shop_images/ezgif-3-8df9b851d4_a81fae6c-c3c9-4bfa-a352-c82a89a3a291.gif",
                                                                                                                    "height":  280,
-                                                                                                                   "review_text":  "\u003cp\u003e100% Hooked! Perfect snack after my runs—always hits the spot!\u003c/p\u003e",
+                                                                                                                   "review_text":  "\u003cp\u003e100% Hooked! Perfect snack after my runsâ€”always hits the spot!\u003c/p\u003e",
                                                                                                                    "review_heading":  "Recreational Runner",
                                                                                                                    "slider_bg_color":  "rgba(0,0,0,0)",
                                                                                                                    "star_rating":  5
@@ -415,7 +415,7 @@
                                                                                   "image_qPrjNW"
                                                                               ],
                                                               "settings":  {
-                                                                               "heading":  "Loved at first bite",
+                                                                               "heading":  "LOVE AT FIRST BITE",
                                                                                "text":  "",
                                                                                "per_view_desktop_large":  4,
                                                                                "per_view_desktop":  4,
@@ -430,13 +430,43 @@
                                                                                "spacing_top_mobile":  0,
                                                                                "spacing_bottom_mobile":  0
                                                                            }
-                                                          }
+                                                          },
+                     "apps_reelfy_collection":  {
+                                                    "type":  "apps",
+                                                    "blocks":  {
+                                                                   "reelfy_videos_reelfy_section_bQp6qF":  {
+                                                                                                               "type":  "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
+                                                                                                               "settings":  {
+                                                                                                                                "gallery_id":  18785,
+                                                                                                                                "title":  "LOVE AT FIRST BITE",
+                                                                                                                                "subtitle":  "",
+                                                                                                                                "heading_size":  "1",
+                                                                                                                                "heading_align":  "center",
+                                                                                                                                "heading_color":  "",
+                                                                                                                                "desc_style":  "subtitle",
+                                                                                                                                "desc_color":  "",
+                                                                                                                                "custom_class":  "",
+                                                                                                                                "background_color":  "",
+                                                                                                                                "padding_top":  0,
+                                                                                                                                "padding_bottom":  0,
+                                                                                                                                "padding_left_right":  0
+                                                                                                                            }
+                                                                                                           }
+                                                               },
+                                                    "block_order":  [
+                                                                        "reelfy_videos_reelfy_section_bQp6qF"
+                                                                    ],
+                                                    "settings":  {
+
+                                                                 }
+                                                }
                  },
     "order":  [
                   "collection_hero",
                   "17718271832c64ccc8",
                   "marquee_slider_YYHhN3",
                   "main",
+                  "apps_reelfy_collection",
                   "review_gif_video_collection_bars",
                   "plaay_frequently_bought",
                   "featured_products_nWdXj9",

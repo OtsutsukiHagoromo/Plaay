@@ -1,1 +1,288 @@
-{"sections":{"contact_page_template":{"type":"contact_page_template","blocks":{"80cbc303-329f-4d99-892e-eece92174128":{"type":"faq_category","disabled":true,"settings":{"title":"Popular"}},"c34769db-6cef-41ae-b4e7-505e8d848365":{"type":"faq_category","disabled":true,"settings":{"title":"Product"}},"609568e9-ebe0-4969-b3c1-3c5408b87420":{"type":"faq_category","disabled":true,"settings":{"title":"Order and Shipping"}},"0c06aebf-c05c-4dc1-9bed-8aafef560462":{"type":"faq","disabled":true,"settings":{"title":"Why Plaay?","answer":"<p>As grown-ups, we forget the importance of plaay in our lives. Our mission is to spark those moments of joy for you while you are busy adulting. We aim to do this not just with deliciousness in every bite you'll experience but also with the impact our clean ingredients have on your gut. We all know 90% of our serotonin, our happy hormone is produced in our gut, and at Plaay we understand the importance of the gut and brain connection. We are dedicated to creating delicious ways of taking care of your gut, so you can plaay at life. <\/p>","category":"Popular"}},"74b6912b-6244-49a2-84f2-f8490b2a85fe":{"type":"faq","disabled":true,"settings":{"title":"Do you offer discounts?","answer":"<p>There is a 20% discount for all new customers. The code is PLAAYER20. <\/p>","category":"Popular"}},"806cb8cf-ae9e-4997-ab77-be032471f4a6":{"type":"faq","disabled":true,"settings":{"title":"Do I need an account?","answer":"<p>You do not need to set up an account at Plaay. However, you will enjoy a lot of additional benefits if you register with us such as:  <\/p><ul><li>reviewing your purchase history<\/li><li>previewing our new products and receiving emails about our latest updates\/offers<\/li><li>saving your details such as your delivery address and payment details for a more convenient experience when you place your next order<\/li><li>tracking the status of your order and other requests.<\/li><\/ul>","category":"Popular"}},"bc8662a4-1741-481a-88ee-d1a6c2a2ab4f":{"type":"faq","settings":{"title":"Where are Plaay products made?","answer":"<p>All our products are made in our own newly-established facilities in the UAE. <\/p>","category":"Product"}},"d4e979b8-019d-417b-b2aa-8f6e6477ffa2":{"type":"faq","settings":{"title":"Does Plaay use 100% dark chocolate?","answer":"<p>No. We make our chocolate in house with coconut nectar, cacao butter and sunflower lecithin. No nasty soy lecithin.<\/p>","category":"Product"}},"dd20038f-ed99-4f7e-9c87-4420f5fca01f":{"type":"faq","settings":{"title":"What is the shelf-life of Plaay products? ","answer":"<p>The shelf-life of all Plaay products is 12 months. <\/p>","category":"Product"}},"53b5d18b-7fbc-4e41-a7f0-a07df19667c2":{"type":"faq","settings":{"title":"Do Plaay products contain added sugar?","answer":"<p>Not an ounce. We only use coconut nectar and dates. No refined sugar what so ever.<\/p>","category":"Product"}},"b2c56c7a-9266-4ffb-b26c-c074638c2405":{"type":"faq","settings":{"title":"How should I store the chocolate truffles and bars? ","answer":"<p>Plaay products should be stored at temperature between 18°C to 22°C. <\/p>","category":"Product"}},"7846cd34-0290-49fa-a9f7-4d4d56139ca9":{"type":"faq","settings":{"title":"How can I track my order? ","answer":"<p>You will receive an order confirmation email containing your order reference number and other important details. You may call or email our customer support team and provide these details, so we can give you an update regarding your order. <\/p>","category":"Order and Shipping"}},"ba601bce-9bf3-4f29-8d57-4406edb9d3cd":{"type":"faq","settings":{"title":"How do you ship your products? ","answer":"<p>We have our local logistics partners with temperature-controlled vehicles to make sure that your order arrives in perfect condition.<\/p>","category":"Order and Shipping"}},"54fc097e-d6e0-4ac4-9e44-c2cfa3545653":{"type":"faq","settings":{"title":"Where are the packages shipped from? ","answer":"<p>All our products are shipped from our distribution center which is located in Business Bay & DIP Dubai, United Arab Emirates.<\/p>","category":"Order and Shipping"}},"47b3815a-d515-4301-845c-819a94224dc6":{"type":"faq","settings":{"title":"Can I place an order through a phone call?  ","answer":"<p>All orders must be placed on our website. If you encounter technical issues while placing an order online, you may reach out to our customer support team for an assistance.<\/p>","category":"Order and Shipping"}},"a09cbb6d-29b8-496f-b9ab-bb6b7a60f195":{"type":"faq","settings":{"title":"Which payment methods does Plaay accept? ","answer":"<p>We accept online payments using MasterCard, Visa, and Apple Pay.<\/p>","category":"Order and Shipping"}},"3daeafa8-c5bb-42a7-b1dc-3e960f4ccfb7":{"type":"faq","settings":{"title":"How much does Plaay charge for the shipping? ","answer":"<p>Shipping is free all across Dubai.<\/p>","category":"Order and Shipping"}},"678bb6e5-d649-482c-bef9-b35efadb218b":{"type":"faq","settings":{"title":"Which countries does Plaay delivery service cover?","answer":"<p>We currently deliver across Dubai only. We will post updated details once we start shipping to other emirates and other countries. <\/p>","category":"Order and Shipping"}},"8d4284f6-dc9a-4a8f-9381-272a0692fa80":{"type":"faq","settings":{"title":"Can I add a message to my order and send it as a gift?  ","answer":"<p>Yes, you may inform us regarding this before placing your order or immediately after placing it. You may also write the message on the \"Delivery Instructions\" option upon checkout. Please note that the order will be sent with our regular packaging as we do not have gift wrappers at the moment. <\/p>","category":"Order and Shipping"}},"7d07eab0-2bd1-48f0-affe-d42c515266fb":{"type":"faq","settings":{"title":"Can I put multiple delivery addresses for a single order? ","answer":"<p>You will need to place your order individually for each delivery address.<\/p>","category":"Order and Shipping"}},"9bb3423f-054e-460d-b930-f5d571826087":{"type":"faq","settings":{"title":"Is there a possibility that my order will not be fulfilled or will not be delivered on time? ","answer":"<p>We always make sure that all orders are processed and delivered on time. Delays happen very rarely, and if it does, we will certainly notify you at once and assist you should you require any modifications. <\/p>","category":"Order and Shipping"}},"dc572148-5c39-4f7e-8a1f-daa66bb58b78":{"type":"faq","settings":{"title":"Who can I contact if I encounter a technical issue while placing an order or if I have a query? ","answer":"<p>Should you require any assistance or you have any queries, please feel free to reach out to our customer support team at +971-56-996-9522 or send an email to <a href=\"mailto:hello@shopplaay.com\">hello@shopplaay.com<\/a> (Monday - Saturday 9:00 AM till 5:00 PM, excluding holidays). <\/p>","category":"Order and Shipping"}},"bdb25a97-5a5e-4a55-a382-9daafa9cf75c":{"type":"faq","settings":{"title":"What should I do if the payment has been deducted from my card but there is no confirmation email? ","answer":"<p>Please share your name and registered email address with us to confirm your order and paym<\/p>","category":"Order and Shipping"}},"5845bd14-f895-477d-bda5-34c43b1c898b":{"type":"faq_category","disabled":true,"settings":{"title":"Diet and Nutrition"}},"643f3e26-6c0b-42b3-89a9-0d66ddc53e43":{"type":"faq","settings":{"title":"Are Plaay products vegan\/keto?","answer":"<p>Yes. We have 2 vegan (no soy) and 2 whey (grass-fed) products in every category. For now, it’s the Truffles and Energy Bars.<\/p>","category":"Diet and Nutrition"}},"d04a5df2-687e-4fb0-9643-f21f259bd9ab":{"type":"faq","settings":{"title":"Are Plaay products safe for kids?","answer":"<p>Yes, it’s all safe. However, if you are aware that your child has a certain allergy, please see our list of allergens at the back.<\/p>","category":"Diet and Nutrition"}},"f3becf33-3ee2-47ce-a86b-378aa1b90113":{"type":"faq","settings":{"title":"Can a diabetic snack on Plaay products?","answer":"<p>Yes. Our truffles would be the best snack for diabetics or those looking to go Keto. Our bars have more carbs per portion.    <\/p>","category":"Diet and Nutrition"}},"4af6031e-c0ee-4d39-8b74-a94a782a12dd":{"type":"faq","settings":{"title":"Can lactating women consume Plaay products? ","answer":"<p>Yes. There is no problem consuming our Plaay truffles or bars during pregnancy. We only use natural ingredients. But since every pregnancy is different and sometimes the process can also get you to become sensitive to certain ingredients, it is best to check all ingredients.   <\/p>","category":"Diet and Nutrition"}},"9d05687d-46f8-48d8-ae6a-2bdadf348a7f":{"type":"faq","settings":{"title":"Is Plaay suitable for people who want to lose weight? ","answer":"<p>Anything eaten in the right quantities can help you lose weight. What sets Plaay apart is the blood sugar balance you'll achieve because of our macros and the bonus effect of the pre and probiotics on your gut health. It’s a win-win all the way at Plaay.  <\/p>","category":"Diet and Nutrition"}}},"block_order":["80cbc303-329f-4d99-892e-eece92174128","c34769db-6cef-41ae-b4e7-505e8d848365","609568e9-ebe0-4969-b3c1-3c5408b87420","0c06aebf-c05c-4dc1-9bed-8aafef560462","74b6912b-6244-49a2-84f2-f8490b2a85fe","806cb8cf-ae9e-4997-ab77-be032471f4a6","bc8662a4-1741-481a-88ee-d1a6c2a2ab4f","d4e979b8-019d-417b-b2aa-8f6e6477ffa2","dd20038f-ed99-4f7e-9c87-4420f5fca01f","53b5d18b-7fbc-4e41-a7f0-a07df19667c2","b2c56c7a-9266-4ffb-b26c-c074638c2405","7846cd34-0290-49fa-a9f7-4d4d56139ca9","ba601bce-9bf3-4f29-8d57-4406edb9d3cd","54fc097e-d6e0-4ac4-9e44-c2cfa3545653","47b3815a-d515-4301-845c-819a94224dc6","a09cbb6d-29b8-496f-b9ab-bb6b7a60f195","3daeafa8-c5bb-42a7-b1dc-3e960f4ccfb7","678bb6e5-d649-482c-bef9-b35efadb218b","8d4284f6-dc9a-4a8f-9381-272a0692fa80","7d07eab0-2bd1-48f0-affe-d42c515266fb","9bb3423f-054e-460d-b930-f5d571826087","dc572148-5c39-4f7e-8a1f-daa66bb58b78","bdb25a97-5a5e-4a55-a382-9daafa9cf75c","5845bd14-f895-477d-bda5-34c43b1c898b","643f3e26-6c0b-42b3-89a9-0d66ddc53e43","d04a5df2-687e-4fb0-9643-f21f259bd9ab","f3becf33-3ee2-47ce-a86b-378aa1b90113","4af6031e-c0ee-4d39-8b74-a94a782a12dd","9d05687d-46f8-48d8-ae6a-2bdadf348a7f"],"custom_css":["contact-faqs .container {padding-top: 7rem; padding-bottom: 3rem;}","h2.text-2xl.font-bold.text-left.font-walsheim-bold {display: none;}","@media screen and (max-width: 600px) {.container.relative.pt-14 {padding-top: 0; }}"],"settings":{"background_color":"#f9c61d","background_image":"shopify:\/\/shop_images\/Contact_Us_Banner_1920x800_95bb7760-db19-4d65-8a09-fed47b61d5c4.jpg","background_image_mobile":"shopify:\/\/shop_images\/Website_Banner_Mobile_contact.jpg","contact_title":"Got Questions? We've Got Chocolate!","contact_copy":"We get it — clean and indulgent sounds too good to be true. But it’s real, and we’re here to talk all about it. Slide into our inbox anytime.","show_labels":false,"text_color":"#021d49"}}},"order":["contact_page_template"]}
+{
+    "sections":  {
+                     "contact_page_template":  {
+                                                   "type":  "contact_page_template",
+                                                   "blocks":  {
+                                                                  "80cbc303-329f-4d99-892e-eece92174128":  {
+                                                                                                               "type":  "faq_category",
+                                                                                                               "disabled":  true,
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Popular"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "c34769db-6cef-41ae-b4e7-505e8d848365":  {
+                                                                                                               "type":  "faq_category",
+                                                                                                               "disabled":  true,
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Product"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "609568e9-ebe0-4969-b3c1-3c5408b87420":  {
+                                                                                                               "type":  "faq_category",
+                                                                                                               "disabled":  true,
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "0c06aebf-c05c-4dc1-9bed-8aafef560462":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "disabled":  true,
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Why Plaay?",
+                                                                                                                                "answer":  "\u003cp\u003eAs grown-ups, we forget theÂ importanceÂ of plaay in our lives.Â Our mission is to spark those moments of joy for you while you are busy adulting. We aim to do this not just withÂ deliciousnessÂ in every bite you\u0027llÂ experienceÂ but also with theÂ impactÂ our clean ingredients have on your gut. We all know 90% of our serotonin, our happy hormone is produced in our gut, and at Plaay we understand theÂ importanceÂ of the gut and brain connection. We are dedicated to creating delicious ways of taking care of your gut, so you can plaay at life.Â \u003c/p\u003e",
+                                                                                                                                "category":  "Popular"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "74b6912b-6244-49a2-84f2-f8490b2a85fe":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "disabled":  true,
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Do you offer discounts?",
+                                                                                                                                "answer":  "\u003cp\u003eThere is a 20% discount for all new customers. The code is PLAAYER20.Â \u003c/p\u003e",
+                                                                                                                                "category":  "Popular"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "806cb8cf-ae9e-4997-ab77-be032471f4a6":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "disabled":  true,
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Do I need an account?",
+                                                                                                                                "answer":  "\u003cp\u003eYou do not need to set up an account at Plaay. However, you will enjoy a lot of additional benefits if you register with us such as:Â Â \u003c/p\u003e\u003cul\u003e\u003cli\u003ereviewing your purchase history\u003c/li\u003e\u003cli\u003epreviewing our new products and receiving emails about our latest updates/offers\u003c/li\u003e\u003cli\u003esaving your details such as your delivery address and payment details for a more convenient experience when you place your next order\u003c/li\u003e\u003cli\u003etracking the status of your order and other requests.\u003c/li\u003e\u003c/ul\u003e",
+                                                                                                                                "category":  "Popular"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "bc8662a4-1741-481a-88ee-d1a6c2a2ab4f":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Where are Plaay products made?",
+                                                                                                                                "answer":  "\u003cp\u003eAll our products are made in our own newly-established facilities in the UAE.Â \u003c/p\u003e",
+                                                                                                                                "category":  "Product"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "d4e979b8-019d-417b-b2aa-8f6e6477ffa2":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Does Plaay use 100% dark chocolate?",
+                                                                                                                                "answer":  "\u003cp\u003eNo. We make our chocolate in house with coconut nectar, cacao butter and sunflower lecithin. No nasty soy lecithin.\u003c/p\u003e",
+                                                                                                                                "category":  "Product"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "dd20038f-ed99-4f7e-9c87-4420f5fca01f":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "What is the shelf-life of Plaay products?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eThe shelf-life of all Plaay products is 12 months.Â \u003c/p\u003e",
+                                                                                                                                "category":  "Product"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "53b5d18b-7fbc-4e41-a7f0-a07df19667c2":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Do Plaay products contain added sugar?",
+                                                                                                                                "answer":  "\u003cp\u003eNot an ounce. We only use coconut nectar and dates. No refined sugar what so ever.\u003c/p\u003e",
+                                                                                                                                "category":  "Product"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "b2c56c7a-9266-4ffb-b26c-c074638c2405":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "How should I store the chocolate truffles and bars?Â ",
+                                                                                                                                "answer":  "\u003cp\u003ePlaay products should be stored at temperature betweenÂ 18Â°C to 22Â°C.Â \u003c/p\u003e",
+                                                                                                                                "category":  "Product"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "7846cd34-0290-49fa-a9f7-4d4d56139ca9":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "How can I track my order?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eYou will receive an order confirmation email containing your order reference number and other important details. You may call or email our customer support team and provide these details, so we can give you an update regarding your order.Â \u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "ba601bce-9bf3-4f29-8d57-4406edb9d3cd":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "How do you ship your products?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eWe have our local logistics partners with temperature-controlled vehicles to make sure thatÂ your order arrives in perfect condition.\u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "54fc097e-d6e0-4ac4-9e44-c2cfa3545653":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Where are the packages shipped from?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eAll our products are shipped from our distribution center which is located in Business Bay \u0026 DIP Dubai, United Arab Emirates.\u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "47b3815a-d515-4301-845c-819a94224dc6":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Can I place an order through a phone call?Â Â ",
+                                                                                                                                "answer":  "\u003cp\u003eAll orders must be placed on our website. If you encounter technical issues while placing an order online, you may reach out to our customer support team for an assistance.\u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "a09cbb6d-29b8-496f-b9ab-bb6b7a60f195":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Which payment methods does Plaay accept?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eWe accept online payments using MasterCard, Visa, and Apple Pay.\u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "3daeafa8-c5bb-42a7-b1dc-3e960f4ccfb7":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "How much does Plaay charge for the shipping?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eShipping is free all across Dubai.\u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "678bb6e5-d649-482c-bef9-b35efadb218b":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Which countries does Plaay delivery service cover?",
+                                                                                                                                "answer":  "\u003cp\u003eWe currently deliver across Dubai only. We will post updated details once we start shipping toÂ other emirates and other countries.Â \u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "8d4284f6-dc9a-4a8f-9381-272a0692fa80":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Can I add a message to my order and send it as a gift?Â Â ",
+                                                                                                                                "answer":  "\u003cp\u003eYes, you may inform us regarding this before placing your order or immediately after placing it.Â You may also write the message on the \"Delivery Instructions\" option upon checkout. PleaseÂ note that the order will be sent with our regular packaging as we do not have gift wrappers atÂ the moment.Â \u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "7d07eab0-2bd1-48f0-affe-d42c515266fb":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Can I put multiple delivery addresses for a single order?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eYou will need to place your order individually for each delivery address.\u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "9bb3423f-054e-460d-b930-f5d571826087":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Is there a possibility that my order will not be fulfilled or will not be delivered on time?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eWe always make sure that all orders are processed and delivered on time. Delays happen very rarely, and if it does, we will certainly notify you at once and assist youÂ should you require any modifications.Â \u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "dc572148-5c39-4f7e-8a1f-daa66bb58b78":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Who can I contact if I encounter a technical issue while placing an order or if I have a query?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eShould you require any assistance or you have any queries, please feel free to reach out to our customer support team at +971-56-996-9522 or send an email toÂ \u003ca href=\"mailto:hello@shopplaay.com\"\u003ehello@shopplaay.com\u003c/a\u003eÂ (Monday - Saturday 9:00 AM till 5:00 PM, excluding holidays).Â \u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "bdb25a97-5a5e-4a55-a382-9daafa9cf75c":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "What should I do if the payment has been deducted from my card but there is no confirmation email?Â ",
+                                                                                                                                "answer":  "\u003cp\u003ePlease share your name and registered email address with us to confirm your order andÂ paym\u003c/p\u003e",
+                                                                                                                                "category":  "Order and Shipping"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "5845bd14-f895-477d-bda5-34c43b1c898b":  {
+                                                                                                               "type":  "faq_category",
+                                                                                                               "disabled":  true,
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Diet and Nutrition"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "643f3e26-6c0b-42b3-89a9-0d66ddc53e43":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Are Plaay products vegan/keto?",
+                                                                                                                                "answer":  "\u003cp\u003eYes. We have 2 vegan (no soy) and 2 whey (grass-fed) products in every category. For now, itâ€™s the Truffles and Energy Bars.\u003c/p\u003e",
+                                                                                                                                "category":  "Diet and Nutrition"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "d04a5df2-687e-4fb0-9643-f21f259bd9ab":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Are Plaay products safe for kids?",
+                                                                                                                                "answer":  "\u003cp\u003eYes, itâ€™s all safe. However, if you are aware that your child has a certain allergy, please see our list of allergens at the back.\u003c/p\u003e",
+                                                                                                                                "category":  "Diet and Nutrition"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "f3becf33-3ee2-47ce-a86b-378aa1b90113":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Can a diabetic snack on Plaay products?",
+                                                                                                                                "answer":  "\u003cp\u003eYes. Our truffles would be the best snack for diabetics or those looking to go Keto. Our bars have more carbs per portion.Â Â Â Â \u003c/p\u003e",
+                                                                                                                                "category":  "Diet and Nutrition"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "4af6031e-c0ee-4d39-8b74-a94a782a12dd":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Can lactating women consume Plaay products?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eYes. There is no problem consuming our Plaay truffles or bars during pregnancy. We only use natural ingredients. But since everyÂ pregnancyÂ isÂ differentÂ and sometimes the process can also get you to become sensitive to certain ingredients, it is best to check allÂ ingredients.Â Â Â \u003c/p\u003e",
+                                                                                                                                "category":  "Diet and Nutrition"
+                                                                                                                            }
+                                                                                                           },
+                                                                  "9d05687d-46f8-48d8-ae6a-2bdadf348a7f":  {
+                                                                                                               "type":  "faq",
+                                                                                                               "settings":  {
+                                                                                                                                "title":  "Is Plaay suitable for people who want to lose weight?Â ",
+                                                                                                                                "answer":  "\u003cp\u003eAnything eaten in the right quantities can help you lose weight. What sets Plaay apart is the blood sugar balance you\u0027ll achieve because of our macros and the bonus effect of the pre and probiotics on your gut health. Itâ€™s a win-win all the way at Plaay.Â Â \u003c/p\u003e",
+                                                                                                                                "category":  "Diet and Nutrition"
+                                                                                                                            }
+                                                                                                           }
+                                                              },
+                                                   "block_order":  [
+                                                                       "80cbc303-329f-4d99-892e-eece92174128",
+                                                                       "c34769db-6cef-41ae-b4e7-505e8d848365",
+                                                                       "609568e9-ebe0-4969-b3c1-3c5408b87420",
+                                                                       "0c06aebf-c05c-4dc1-9bed-8aafef560462",
+                                                                       "74b6912b-6244-49a2-84f2-f8490b2a85fe",
+                                                                       "806cb8cf-ae9e-4997-ab77-be032471f4a6",
+                                                                       "bc8662a4-1741-481a-88ee-d1a6c2a2ab4f",
+                                                                       "d4e979b8-019d-417b-b2aa-8f6e6477ffa2",
+                                                                       "dd20038f-ed99-4f7e-9c87-4420f5fca01f",
+                                                                       "53b5d18b-7fbc-4e41-a7f0-a07df19667c2",
+                                                                       "b2c56c7a-9266-4ffb-b26c-c074638c2405",
+                                                                       "7846cd34-0290-49fa-a9f7-4d4d56139ca9",
+                                                                       "ba601bce-9bf3-4f29-8d57-4406edb9d3cd",
+                                                                       "54fc097e-d6e0-4ac4-9e44-c2cfa3545653",
+                                                                       "47b3815a-d515-4301-845c-819a94224dc6",
+                                                                       "a09cbb6d-29b8-496f-b9ab-bb6b7a60f195",
+                                                                       "3daeafa8-c5bb-42a7-b1dc-3e960f4ccfb7",
+                                                                       "678bb6e5-d649-482c-bef9-b35efadb218b",
+                                                                       "8d4284f6-dc9a-4a8f-9381-272a0692fa80",
+                                                                       "7d07eab0-2bd1-48f0-affe-d42c515266fb",
+                                                                       "9bb3423f-054e-460d-b930-f5d571826087",
+                                                                       "dc572148-5c39-4f7e-8a1f-daa66bb58b78",
+                                                                       "bdb25a97-5a5e-4a55-a382-9daafa9cf75c",
+                                                                       "5845bd14-f895-477d-bda5-34c43b1c898b",
+                                                                       "643f3e26-6c0b-42b3-89a9-0d66ddc53e43",
+                                                                       "d04a5df2-687e-4fb0-9643-f21f259bd9ab",
+                                                                       "f3becf33-3ee2-47ce-a86b-378aa1b90113",
+                                                                       "4af6031e-c0ee-4d39-8b74-a94a782a12dd",
+                                                                       "9d05687d-46f8-48d8-ae6a-2bdadf348a7f"
+                                                                   ],
+                                                   "custom_css":  [
+                                                                      "contact-faqs .container {padding-top: 7rem; padding-bottom: 3rem;}",
+                                                                      "h2.text-2xl.font-bold.text-left.font-walsheim-bold {display: none;}",
+                                                                      "@media screen and (max-width: 600px) {.container.relative.pt-14 {padding-top: 0; }}"
+                                                                  ],
+                                                   "settings":  {
+                                                                    "background_color":  "#f9c61d",
+                                                                    "background_image":  "shopify://shop_images/Contact_Us_Banner_1920x800_95bb7760-db19-4d65-8a09-fed47b61d5c4.jpg",
+                                                                    "background_image_mobile":  "shopify://shop_images/Website_Banner_Mobile_contact.jpg",
+                                                                    "contact_title":  "Got Questions? We\u0027ve Got Chocolate!",
+                                                                    "contact_copy":  "We get it â€” clean and indulgent sounds too good to be true. But itâ€™s real, and weâ€™re here to talk all about it. Slide into our inbox anytime.",
+                                                                    "show_labels":  false,
+                                                                    "text_color":  "#021d49"
+                                                                }
+                                               }
+                 },
+    "order":  [
+                  "contact_page_template"
+              ]
+}

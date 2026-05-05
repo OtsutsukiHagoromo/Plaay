@@ -52,16 +52,24 @@
       <div class="plaay-coll-usp__track">
         {% for i in (1..6) %}
           {% case i %}
-            {% when 1 %}{% assign usp_icon = section.settings.usp_1_icon %}{% assign usp_text = section.settings.usp_1_text %}
-            {% when 2 %}{% assign usp_icon = section.settings.usp_2_icon %}{% assign usp_text = section.settings.usp_2_text %}
-            {% when 3 %}{% assign usp_icon = section.settings.usp_3_icon %}{% assign usp_text = section.settings.usp_3_text %}
-            {% when 4 %}{% assign usp_icon = section.settings.usp_4_icon %}{% assign usp_text = section.settings.usp_4_text %}
-            {% when 5 %}{% assign usp_icon = section.settings.usp_5_icon %}{% assign usp_text = section.settings.usp_5_text %}
-            {% when 6 %}{% assign usp_icon = section.settings.usp_6_icon %}{% assign usp_text = section.settings.usp_6_text %}
+            {% when 1 %}{% assign usp_text = section.settings.usp_1_text %}
+            {% when 2 %}{% assign usp_text = section.settings.usp_2_text %}
+            {% when 3 %}{% assign usp_text = section.settings.usp_3_text %}
+            {% when 4 %}{% assign usp_text = section.settings.usp_4_text %}
+            {% when 5 %}{% assign usp_text = section.settings.usp_5_text %}
+            {% when 6 %}{% assign usp_text = section.settings.usp_6_text %}
           {% endcase %}
           {% if usp_text != blank %}
             <div class="plaay-coll-usp__item">
-              {% if usp_icon != blank %}<span class="plaay-coll-usp__icon" aria-hidden="true">{{ usp_icon }}</span>{% endif %}
+              <span class="plaay-coll-usp__icon" aria-hidden="true"></span>
+              <span class="plaay-coll-usp__label font-walsheim-bold">{{ usp_text }}</span>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
               <span class="plaay-coll-usp__label font-walsheim-bold">{{ usp_text }}</span>
             </div>
             {% unless forloop.last %}<span class="plaay-coll-usp__sep" aria-hidden="true">·</span>{% endunless %}
