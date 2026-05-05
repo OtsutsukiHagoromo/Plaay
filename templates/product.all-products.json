@@ -25,6 +25,25 @@
         "shipping_returns_content": "<p><strong>Free delivery</strong> on all orders over AED 75. Same-day delivery in Dubai (order before 2 PM). 1Ã¢â‚¬â€œ2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
       }
     },
+    "blocks_dKL7zR": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_900bb11_Yr9gpw": {
+          "type": "ai_gen_block_900bb11",
+          "settings": {
+            "spacing_desktop": 50,
+            "spacing_mobile": 30,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_900bb11_Yr9gpw"
+      ],
+      "name": "Spacer",
+      "settings": {}
+    },
     "apps_6td8dD": {
       "type": "apps",
       "blocks": {
@@ -122,6 +141,288 @@
         "heading": "Loved by thousands",
         "rating_text": "4.9 out of 5 from 2,000+ reviews"
       }
+    },
+    "richtext_hVDgQC": {
+      "type": "richtext",
+      "blocks": {
+        "heading_c3TdFj": {
+          "type": "heading",
+          "settings": {
+            "heading": "LOVE AT FIRST BITE",
+            "color": "#021d49",
+            "font_size_desktop": 62,
+            "font_size_mobile": 40,
+            "spacing_top_desktop": 10,
+            "spacing_bottom_desktop": 10,
+            "spacing_top_mobile": 10,
+            "spacing_bottom_mobile": 10
+          }
+        }
+      },
+      "block_order": [
+        "heading_c3TdFj"
+      ],
+      "settings": {
+        "bkg_color": "#ffffff",
+        "full_width": true,
+        "enable_style": false,
+        "spacing_top_desktop": 10,
+        "spacing_bottom_desktop": 10,
+        "spacing_top_mobile": 10,
+        "spacing_bottom_mobile": 10
+      }
+    },
+    "1736144550483a252b": {
+      "type": "apps",
+      "blocks": {
+        "rebuy_personalization_engine_rebuy_widget_pKgDcm": {
+          "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-widget/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
+          "settings": {
+            "enabled": true,
+            "id": "149733",
+            "product_id_enabled": true,
+            "collection_id_enabled": false
+          }
+        }
+      },
+      "block_order": [
+        "rebuy_personalization_engine_rebuy_widget_pKgDcm"
+      ],
+      "settings": {}
+    },
+    "1736138805fe25981f": {
+      "type": "apps",
+      "blocks": {
+        "rebuy_personalization_engine_rebuy_widget_BKBT3m": {
+          "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-widget/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
+          "settings": {
+            "enabled": true,
+            "id": "192200",
+            "product_id_enabled": true,
+            "collection_id_enabled": false
+          }
+        }
+      },
+      "block_order": [
+        "rebuy_personalization_engine_rebuy_widget_BKBT3m"
+      ],
+      "settings": {}
+    },
+    "product_faqs_a34mfY": {
+      "type": "product_faqs",
+      "blocks": {
+        "faq_RMHnCA": {
+          "type": "faq",
+          "settings": {
+            "title": "Why Plaay?",
+            "answer": "<p>Because chocolate shouldn't be a trade-off. Most chocolates are loaded with refined sugar, cheap fillers, and ingredients that leave you bloated, sluggish, or guilty afterwards. We built Plaay to change that. Every product we make is 100% clean Ã¢â‚¬â€ that means:Ã‚Â· No refined sugar (we use coconut sugar that's gentler on your body).Ã‚Â· No preservatives, artificial emulsifiers, or shady additives.Ã‚Â· No soy, no gluten, no artificial sweeteners.Ã‚Â· Only real, good-for-you ingredients your body actually knows how to process. The result? Chocolate that tastes as indulgent as your classics, but without the crash, the guilt, or the compromise.</p>"
+          }
+        },
+        "faq_aWg6GA": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "",
+            "answer": "<p>Your answer here</p>"
+          }
+        },
+        "faq_hLYHy4": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "Do you offer discounts?",
+            "answer": "<p>New here? Snack smarter. Get 25% off on your first order with code LETSPLAAY25.</p>"
+          }
+        },
+        "faq_kfXhMH": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "Do I need to set up an account?",
+            "answer": "<p>You do not need to set up an account at Plaay. However, you will enjoy a lot of additional benefits if you register with us such as:  reviewing your purchase history, previewing our new products and receiving emails about our latest updates/offers, saving your details such as your delivery address and payment details for a more convenient experience when you place your next order, tracking the status of your order and other requests.</p>"
+          }
+        },
+        "faq_P9fJJn": {
+          "type": "faq",
+          "settings": {
+            "title": "Where are Plaay products made?",
+            "answer": "<p>All our products are made in our own newly-established facilities in the UAE. </p>"
+          }
+        },
+        "faq_iC64DM": {
+          "type": "faq",
+          "settings": {
+            "title": "What dark chocolate does Plaay use?",
+            "answer": "<p>We make our in-house blend of 70% dark chocolate made with coconut nectar, cacao butter and sunflower lecithin.</p>"
+          }
+        },
+        "faq_cpMCTh": {
+          "type": "faq",
+          "settings": {
+            "title": "What is the shelf-life of Plaay products?",
+            "answer": "<p>The shelf-life of all Plaay products is 12 months. <br/>The shelf life for limited edition products may vary.</p>"
+          }
+        },
+        "faq_BCrDKn": {
+          "type": "faq",
+          "settings": {
+            "title": "Do Plaay products contain refined sugar?",
+            "answer": "<p>Not an ounce. We only use coconut nectar and dates. No refined sugar what so ever.</p>"
+          }
+        },
+        "faq_3PFpK9": {
+          "type": "faq",
+          "settings": {
+            "title": "How should I store the chocolate truffles and bars?",
+            "answer": "<p>Plaay products should be kept refrigerated to avoid melting and temperature fluctuations. Note: They are best consumed at Room Temperature.</p>"
+          }
+        },
+        "faq_nMemka": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "How can I track my order?",
+            "answer": "<p>You will receive an order confirmation email containing your order reference number and other important details. You may call or email our customer support team and provide these details, so we can give you an update regarding your order. </p>"
+          }
+        },
+        "faq_UQppVL": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "How do you ship your products?",
+            "answer": "<p>We have our local logistics partners with temperature-controlled vehicles to make sure that your order arrives in perfect condition.</p>"
+          }
+        },
+        "faq_ULp3dH": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "Where are the packages shipped from?",
+            "answer": "<p>All our products are shipped from our distribution center which is located in Business Bay & DIP Dubai, United Arab Emirates.</p>"
+          }
+        },
+        "faq_YaNxjU": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "Can I place an order through a phone call?",
+            "answer": "<p>All orders must be placed on our website. If you encounter technical issues while placing an order online, you may reach out to our customer support team for an assistance.</p>"
+          }
+        },
+        "faq_LYcBpX": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "Which payment methods does Plaay accept?",
+            "answer": "<p>We accept online payments using MasterCard, Visa, and Apple Pay.</p>"
+          }
+        },
+        "faq_3rtwEK": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "How much does Plaay charge for the shipping?",
+            "answer": "<p>Shipping is free for all orders over AED 75. For smaller orders, we charge a delivery fee of AED 15.</p>"
+          }
+        },
+        "faq_dt7WKU": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "Which countries does Plaay delivery service cover?",
+            "answer": "<p>We currently deliver across UAE. We are also available in KSA via third-party online platforms. As for the rest of the world? Not yetÃ¢â‚¬Â¦ but we're on our way!</p>"
+          }
+        },
+        "faq_xJtqkq": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "Can I add a message to my order and send it as a gift?",
+            "answer": "<p>Yes, you may inform us regarding this before placing your order or immediately after placing it. You may also write the message on the \"Delivery Instructions\" option upon checkout. Please note that the order will be sent with our regular packaging as we do not have gift wrappers at the moment. </p>"
+          }
+        },
+        "faq_zyDQaB": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "Can I put multiple delivery addresses for a single order?",
+            "answer": "<p>You will need to place your order individually for each delivery address.</p>"
+          }
+        },
+        "faq_wdtBRr": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "Is there a possibility that my order will not be fulfilled or will not be delivered on time?",
+            "answer": "<p>We always make sure that all orders are processed and delivered on time. Delays happen very rarely, and if it does, we will certainly notify you at once and assist you should you require any modifications. </p>"
+          }
+        },
+        "faq_hfRVHD": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "Who can I contact if I encounter a technical issue while placing an order or if I have a query?",
+            "answer": "<p>Should you require any assistance or you have any queries, please feel free to reach out to our customer support team at +971-56-996-9522 or send an email to hello@shopplaay.com (Monday - Saturday 9:00 AM till 5:00 PM, excluding holidays). </p>"
+          }
+        },
+        "faq_xXmXWm": {
+          "type": "faq",
+          "disabled": true,
+          "settings": {
+            "title": "What should I do if the payment has been deducted from my card but there is no confirmation email?",
+            "answer": "<p>Please share your name and registered email address with us to confirm your order and payment.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_RMHnCA",
+        "faq_aWg6GA",
+        "faq_hLYHy4",
+        "faq_kfXhMH",
+        "faq_P9fJJn",
+        "faq_iC64DM",
+        "faq_cpMCTh",
+        "faq_BCrDKn",
+        "faq_3PFpK9",
+        "faq_nMemka",
+        "faq_UQppVL",
+        "faq_ULp3dH",
+        "faq_YaNxjU",
+        "faq_LYcBpX",
+        "faq_3rtwEK",
+        "faq_dt7WKU",
+        "faq_xJtqkq",
+        "faq_zyDQaB",
+        "faq_wdtBRr",
+        "faq_hfRVHD",
+        "faq_xXmXWm"
+      ],
+      "name": "Product FAQs",
+      "settings": {
+        "title": "FAQs",
+        "background_color": "#f9c61d"
+      }
+    },
+    "blocks_JRjbnL": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_9cfa683_9Fhdzy": {
+          "type": "ai_gen_block_9cfa683",
+          "settings": {
+            "custom_html": "<style>\n.faq-ext{\nbackground:#F9C61D;\npadding:32px 0 40px;\ntext-align:center\n}\n.faq-ext a{\nfont-size:24px;\nfont-weight:600;\ncolor:#081D48;\ntext-decoration:underline\n}\n.faq-ext a:hover{opacity:.8}\n</style>\n\n<div class=\"faq-ext\">\n  <a href=\"https://shopplaay.com/pages/faqs\">Explore All FAQs</a>\n</div>",
+            "desktop_width_percent": 100,
+            "padding": 0,
+            "background_color": "#ffffff",
+            "border_radius": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_9cfa683_9Fhdzy"
+      ],
+      "name": "Custom HTML",
+      "settings": {}
     },
     "review_gif_video_UQj4ik": {
       "type": "review_gif_video",
@@ -392,36 +693,6 @@
         "padding_bottom": 36
       }
     },
-    "richtext_hVDgQC": {
-      "type": "richtext",
-      "blocks": {
-        "heading_c3TdFj": {
-          "type": "heading",
-          "settings": {
-            "heading": "LOVE AT FIRST BITE",
-            "color": "#021d49",
-            "font_size_desktop": 62,
-            "font_size_mobile": 40,
-            "spacing_top_desktop": 10,
-            "spacing_bottom_desktop": 10,
-            "spacing_top_mobile": 10,
-            "spacing_bottom_mobile": 10
-          }
-        }
-      },
-      "block_order": [
-        "heading_c3TdFj"
-      ],
-      "settings": {
-        "bkg_color": "#ffffff",
-        "full_width": true,
-        "enable_style": false,
-        "spacing_top_desktop": 10,
-        "spacing_bottom_desktop": 10,
-        "spacing_top_mobile": 10,
-        "spacing_bottom_mobile": 10
-      }
-    },
     "custom_coupon_banner_mDjXri": {
       "type": "custom-coupon-banner",
       "disabled": true,
@@ -430,258 +701,6 @@
         "coupon_text": "Limited Time Offer: 20% OFF All Truffle Packs",
         "coupon_code": ""
       }
-    },
-    "1736144550483a252b": {
-      "type": "apps",
-      "blocks": {
-        "rebuy_personalization_engine_rebuy_widget_pKgDcm": {
-          "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-widget/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
-          "settings": {
-            "enabled": true,
-            "id": "149733",
-            "product_id_enabled": true,
-            "collection_id_enabled": false
-          }
-        }
-      },
-      "block_order": [
-        "rebuy_personalization_engine_rebuy_widget_pKgDcm"
-      ],
-      "settings": {}
-    },
-    "1736138805fe25981f": {
-      "type": "apps",
-      "blocks": {
-        "rebuy_personalization_engine_rebuy_widget_BKBT3m": {
-          "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-widget/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
-          "settings": {
-            "enabled": true,
-            "id": "192200",
-            "product_id_enabled": true,
-            "collection_id_enabled": false
-          }
-        }
-      },
-      "block_order": [
-        "rebuy_personalization_engine_rebuy_widget_BKBT3m"
-      ],
-      "settings": {}
-    },
-    "product_faqs_a34mfY": {
-      "type": "product_faqs",
-      "blocks": {
-        "faq_RMHnCA": {
-          "type": "faq",
-          "settings": {
-            "title": "Why Plaay?",
-            "answer": "<p>Because chocolate shouldn't be a trade-off. Most chocolates are loaded with refined sugar, cheap fillers, and ingredients that leave you bloated, sluggish, or guilty afterwards. We built Plaay to change that. Every product we make is 100% clean Ã¢â‚¬â€ that means:Ã‚Â· No refined sugar (we use coconut sugar that's gentler on your body).Ã‚Â· No preservatives, artificial emulsifiers, or shady additives.Ã‚Â· No soy, no gluten, no artificial sweeteners.Ã‚Â· Only real, good-for-you ingredients your body actually knows how to process. The result? Chocolate that tastes as indulgent as your classics, but without the crash, the guilt, or the compromise.</p>"
-          }
-        },
-        "faq_aWg6GA": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "",
-            "answer": "<p>Your answer here</p>"
-          }
-        },
-        "faq_hLYHy4": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "Do you offer discounts?",
-            "answer": "<p>New here? Snack smarter. Get 25% off on your first order with code LETSPLAAY25.</p>"
-          }
-        },
-        "faq_kfXhMH": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "Do I need to set up an account?",
-            "answer": "<p>You do not need to set up an account at Plaay. However, you will enjoy a lot of additional benefits if you register with us such as:  reviewing your purchase history, previewing our new products and receiving emails about our latest updates/offers, saving your details such as your delivery address and payment details for a more convenient experience when you place your next order, tracking the status of your order and other requests.</p>"
-          }
-        },
-        "faq_P9fJJn": {
-          "type": "faq",
-          "settings": {
-            "title": "Where are Plaay products made?",
-            "answer": "<p>All our products are made in our own newly-established facilities in the UAE. </p>"
-          }
-        },
-        "faq_iC64DM": {
-          "type": "faq",
-          "settings": {
-            "title": "What dark chocolate does Plaay use?",
-            "answer": "<p>We make our in-house blend of 70% dark chocolate made with coconut nectar, cacao butter and sunflower lecithin.</p>"
-          }
-        },
-        "faq_cpMCTh": {
-          "type": "faq",
-          "settings": {
-            "title": "What is the shelf-life of Plaay products?",
-            "answer": "<p>The shelf-life of all Plaay products is 12 months. <br/>The shelf life for limited edition products may vary.</p>"
-          }
-        },
-        "faq_BCrDKn": {
-          "type": "faq",
-          "settings": {
-            "title": "Do Plaay products contain refined sugar?",
-            "answer": "<p>Not an ounce. We only use coconut nectar and dates. No refined sugar what so ever.</p>"
-          }
-        },
-        "faq_3PFpK9": {
-          "type": "faq",
-          "settings": {
-            "title": "How should I store the chocolate truffles and bars?",
-            "answer": "<p>Plaay products should be kept refrigerated to avoid melting and temperature fluctuations. Note: They are best consumed at Room Temperature.</p>"
-          }
-        },
-        "faq_nMemka": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "How can I track my order?",
-            "answer": "<p>You will receive an order confirmation email containing your order reference number and other important details. You may call or email our customer support team and provide these details, so we can give you an update regarding your order. </p>"
-          }
-        },
-        "faq_UQppVL": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "How do you ship your products?",
-            "answer": "<p>We have our local logistics partners with temperature-controlled vehicles to make sure that your order arrives in perfect condition.</p>"
-          }
-        },
-        "faq_ULp3dH": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "Where are the packages shipped from?",
-            "answer": "<p>All our products are shipped from our distribution center which is located in Business Bay & DIP Dubai, United Arab Emirates.</p>"
-          }
-        },
-        "faq_YaNxjU": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "Can I place an order through a phone call?",
-            "answer": "<p>All orders must be placed on our website. If you encounter technical issues while placing an order online, you may reach out to our customer support team for an assistance.</p>"
-          }
-        },
-        "faq_LYcBpX": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "Which payment methods does Plaay accept?",
-            "answer": "<p>We accept online payments using MasterCard, Visa, and Apple Pay.</p>"
-          }
-        },
-        "faq_3rtwEK": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "How much does Plaay charge for the shipping?",
-            "answer": "<p>Shipping is free for all orders over AED 75. For smaller orders, we charge a delivery fee of AED 15.</p>"
-          }
-        },
-        "faq_dt7WKU": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "Which countries does Plaay delivery service cover?",
-            "answer": "<p>We currently deliver across UAE. We are also available in KSA via third-party online platforms. As for the rest of the world? Not yetÃ¢â‚¬Â¦ but we're on our way!</p>"
-          }
-        },
-        "faq_xJtqkq": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "Can I add a message to my order and send it as a gift?",
-            "answer": "<p>Yes, you may inform us regarding this before placing your order or immediately after placing it. You may also write the message on the \"Delivery Instructions\" option upon checkout. Please note that the order will be sent with our regular packaging as we do not have gift wrappers at the moment. </p>"
-          }
-        },
-        "faq_zyDQaB": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "Can I put multiple delivery addresses for a single order?",
-            "answer": "<p>You will need to place your order individually for each delivery address.</p>"
-          }
-        },
-        "faq_wdtBRr": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "Is there a possibility that my order will not be fulfilled or will not be delivered on time?",
-            "answer": "<p>We always make sure that all orders are processed and delivered on time. Delays happen very rarely, and if it does, we will certainly notify you at once and assist you should you require any modifications. </p>"
-          }
-        },
-        "faq_hfRVHD": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "Who can I contact if I encounter a technical issue while placing an order or if I have a query?",
-            "answer": "<p>Should you require any assistance or you have any queries, please feel free to reach out to our customer support team at +971-56-996-9522 or send an email to hello@shopplaay.com (Monday - Saturday 9:00 AM till 5:00 PM, excluding holidays). </p>"
-          }
-        },
-        "faq_xXmXWm": {
-          "type": "faq",
-          "disabled": true,
-          "settings": {
-            "title": "What should I do if the payment has been deducted from my card but there is no confirmation email?",
-            "answer": "<p>Please share your name and registered email address with us to confirm your order and payment.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "faq_RMHnCA",
-        "faq_aWg6GA",
-        "faq_hLYHy4",
-        "faq_kfXhMH",
-        "faq_P9fJJn",
-        "faq_iC64DM",
-        "faq_cpMCTh",
-        "faq_BCrDKn",
-        "faq_3PFpK9",
-        "faq_nMemka",
-        "faq_UQppVL",
-        "faq_ULp3dH",
-        "faq_YaNxjU",
-        "faq_LYcBpX",
-        "faq_3rtwEK",
-        "faq_dt7WKU",
-        "faq_xJtqkq",
-        "faq_zyDQaB",
-        "faq_wdtBRr",
-        "faq_hfRVHD",
-        "faq_xXmXWm"
-      ],
-      "name": "Product FAQs",
-      "settings": {
-        "title": "FAQs",
-        "background_color": "#f9c61d"
-      }
-    },
-    "blocks_JRjbnL": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_9cfa683_9Fhdzy": {
-          "type": "ai_gen_block_9cfa683",
-          "settings": {
-            "custom_html": "<style>\n.faq-ext{\nbackground:#F9C61D;\npadding:32px 0 40px;\ntext-align:center\n}\n.faq-ext a{\nfont-size:24px;\nfont-weight:600;\ncolor:#081D48;\ntext-decoration:underline\n}\n.faq-ext a:hover{opacity:.8}\n</style>\n\n<div class=\"faq-ext\">\n  <a href=\"https://shopplaay.com/pages/faqs\">Explore All FAQs Ã¢â€ â€™</a>\n</div>",
-            "desktop_width_percent": 100,
-            "padding": 0,
-            "background_color": "#ffffff",
-            "border_radius": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_9cfa683_9Fhdzy"
-      ],
-      "name": "Custom HTML",
-      "settings": {}
     },
     "infinite_scroll_slider_FJdViW": {
       "type": "infinite-scroll-slider",
@@ -1049,19 +1068,20 @@
   },
   "order": [
     "bars_main_product_tgjzzE",
+    "blocks_dKL7zR",
     "apps_6td8dD",
     "pdp_social_proof_plaay",
+    "richtext_hVDgQC",
+    "1736144550483a252b",
+    "1736138805fe25981f",
+    "product_faqs_a34mfY",
+    "blocks_JRjbnL",
     "review_gif_video_UQj4ik",
     "pdp_stats_bar_h7z9pz",
     "174471010040db00af",
     "marquee_slider_H7hNaz",
     "scrolling_content_PjwFEy",
-    "richtext_hVDgQC",
     "custom_coupon_banner_mDjXri",
-    "1736144550483a252b",
-    "1736138805fe25981f",
-    "product_faqs_a34mfY",
-    "blocks_JRjbnL",
     "infinite_scroll_slider_FJdViW",
     "us_vs_them_image_Tq3dCR"
   ]
