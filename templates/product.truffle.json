@@ -41,10 +41,10 @@
         "offer_callout_truffle"
       ],
       "settings": {
-        "background_color": "#F4F4F4",
+        "background_color": "#f4f4f4",
         "show_exact_ingredients": true,
         "price_color": "#000000",
-        "variant_selector_style": "swatches",
+        "variant_selector_style": "dropdown",
         "size_option_name": "Pack Size",
         "show_size_per_truffle": true,
         "show_size_badge": true,
@@ -54,6 +54,176 @@
         "tab_ingredients_label": "Ingredients",
         "tab_shipping_label": "Shipping & Returns",
         "shipping_returns_content": "<p><strong>Free delivery</strong> on all orders over AED 75. Same-day delivery in Dubai (order before 2 PM). 1-2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
+      }
+    },
+    "apps_6td8dD": {
+      "type": "apps",
+      "blocks": {
+        "reelfy_videos_reelfy_section_bQp6qF": {
+          "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
+          "settings": {
+            "gallery_id": 18785,
+            "title": "LOVE AT FIRST BITE",
+            "subtitle": "",
+            "heading_size": "1",
+            "heading_align": "center",
+            "heading_color": "",
+            "desc_style": "subtitle",
+            "desc_color": "",
+            "custom_class": "",
+            "background_color": "",
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left_right": 0
+          }
+        }
+      },
+      "block_order": [
+        "reelfy_videos_reelfy_section_bQp6qF"
+      ],
+      "settings": {}
+    },
+    "pdp_social_proof_plaay": {
+      "type": "pdp-social-proof",
+      "blocks": {
+        "trust_badge_CpkVbW": {
+          "type": "trust_badge",
+          "settings": {
+            "label": "No Refined Sugar"
+          }
+        },
+        "trust_badge_eK6Cbe": {
+          "type": "trust_badge",
+          "settings": {
+            "label": "100% Clean Ingredients"
+          }
+        },
+        "trust_badge_NBTiQH": {
+          "type": "trust_badge",
+          "settings": {
+            "label": "Halal certified"
+          }
+        },
+        "trust_badge_GYxe3G": {
+          "type": "trust_badge",
+          "settings": {
+            "label": "Made in the UAE"
+          }
+        },
+        "review_xngXi9": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Honestly the best chocolate snack I've tried. Tastes great and no chalky aftertaste.",
+            "reviewer": "Aisha K.",
+            "tag": "Verified buyer"
+          }
+        },
+        "review_4DjCAi": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "My kids love these. Feels good knowing exactly what's in them.",
+            "reviewer": "Omar J.",
+            "tag": "Verified buyer"
+          }
+        },
+        "review_LiYpLU": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Perfect post-gym snack. High protein, genuinely delicious - ordering again.",
+            "reviewer": "Priya S.",
+            "tag": "Verified buyer"
+          }
+        }
+      },
+      "block_order": [
+        "trust_badge_CpkVbW",
+        "trust_badge_eK6Cbe",
+        "trust_badge_NBTiQH",
+        "trust_badge_GYxe3G",
+        "review_xngXi9",
+        "review_4DjCAi",
+        "review_LiYpLU"
+      ],
+      "name": "PDP â€” Social Proof",
+      "settings": {
+        "background_color": "#f4f4f4",
+        "heading": "Loved by thousands",
+        "rating_text": "4.9 out of 5 from 2,000+ reviews"
+      }
+    },
+    "review_gif_video_UQj4ik": {
+      "type": "review_gif_video",
+      "blocks": {
+        "image_iXXVkM": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/first-bite-1.gif",
+            "height": 280,
+            "review_text": "<p>This is literally the best! Has single-handedly eliminated my chocolate and doughnut cravings!!</p>",
+            "review_heading": "Yoga Instructor, Dubai",
+            "slider_bg_color": "rgba(0,0,0,0)",
+            "star_rating": 5
+          }
+        },
+        "image_YrtNe7": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/firstbite5.gif",
+            "height": 280,
+            "review_text": "<p>Honestly, this is my no-brainer snack for crazy days. Tastes amazing, & keeps me going! </p>",
+            "review_heading": "Always-on CEO",
+            "slider_bg_color": "rgba(0,0,0,0)",
+            "star_rating": 5
+          }
+        },
+        "image_pCqMbn": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/first-bite-6.gif",
+            "height": 280,
+            "review_text": "<p>Favorite flavour hands down will be the peanut butter truffle! It just melts in your mouth!</p>",
+            "review_heading": "Creative Designer, Abu Dhabi",
+            "slider_bg_color": "rgba(0,0,0,0)",
+            "star_rating": 5
+          }
+        },
+        "image_g78EeV": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/ezgif-3-8df9b851d4_a81fae6c-c3c9-4bfa-a352-c82a89a3a291.gif",
+            "height": 280,
+            "review_text": "<p>100% Hooked! Perfect snack after my runsÃ¢â‚¬â€always hits the spot!</p>",
+            "review_heading": "Recreational Runner",
+            "slider_bg_color": "rgba(0,0,0,0)",
+            "star_rating": 5
+          }
+        }
+      },
+      "block_order": [
+        "image_iXXVkM",
+        "image_YrtNe7",
+        "image_pCqMbn",
+        "image_g78EeV"
+      ],
+      "disabled": true,
+      "settings": {
+        "heading": "",
+        "text": "",
+        "per_view_desktop_large": 4,
+        "per_view_desktop": 4,
+        "per_view_tablet": 3,
+        "per_view_mobile": 2,
+        "autoplay_speed": 0,
+        "desktop_vertical_padding": 13,
+        "mobile_vertical_padding": 5,
+        "enable_style": false,
+        "spacing_top_desktop": 0,
+        "spacing_bottom_desktop": 0,
+        "spacing_top_mobile": 0,
+        "spacing_bottom_mobile": 0
       }
     },
     "pdp_stats_bar_h7z9pz": {
@@ -258,6 +428,7 @@
       "blocks": {
         "heading_c3TdFj": {
           "type": "heading",
+          "disabled": true,
           "settings": {
             "heading": "LOVE AT FIRST BITE",
             "color": "#021d49",
@@ -281,104 +452,6 @@
         "spacing_bottom_desktop": 10,
         "spacing_top_mobile": 10,
         "spacing_bottom_mobile": 10
-      }
-    },
-    "apps_6td8dD": {
-      "type": "apps",
-      "blocks": {
-        "reelfy_videos_reelfy_section_bQp6qF": {
-          "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
-          "settings": {
-            "gallery_id": 18785,
-            "title": "LOVE AT FIRST BITE",
-            "subtitle": "",
-            "heading_size": "1",
-            "heading_align": "center",
-            "heading_color": "",
-            "desc_style": "subtitle",
-            "desc_color": "",
-            "custom_class": "",
-            "background_color": "",
-            "padding_top": 0,
-            "padding_bottom": 0,
-            "padding_left_right": 0
-          }
-        }
-      },
-      "block_order": [
-        "reelfy_videos_reelfy_section_bQp6qF"
-      ],
-      "settings": {}
-    },
-    "review_gif_video_UQj4ik": {
-      "type": "review_gif_video",
-      "blocks": {
-        "image_iXXVkM": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/first-bite-1.gif",
-            "height": 280,
-            "review_text": "<p>This is literally the best! Has single-handedly eliminated my chocolate and doughnut cravings!!</p>",
-            "review_heading": "Yoga Instructor, Dubai",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        },
-        "image_YrtNe7": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/firstbite5.gif",
-            "height": 280,
-            "review_text": "<p>Honestly, this is my no-brainer snack for crazy days. Tastes amazing, & keeps me going! </p>",
-            "review_heading": "Always-on CEO",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        },
-        "image_pCqMbn": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/first-bite-6.gif",
-            "height": 280,
-            "review_text": "<p>Favorite flavour hands down will be the peanut butter truffle! It just melts in your mouth!</p>",
-            "review_heading": "Creative Designer, Abu Dhabi",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        },
-        "image_g78EeV": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/ezgif-3-8df9b851d4_a81fae6c-c3c9-4bfa-a352-c82a89a3a291.gif",
-            "height": 280,
-            "review_text": "<p>100% Hooked! Perfect snack after my runsÃ¢â‚¬â€always hits the spot!</p>",
-            "review_heading": "Recreational Runner",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        }
-      },
-      "block_order": [
-        "image_iXXVkM",
-        "image_YrtNe7",
-        "image_pCqMbn",
-        "image_g78EeV"
-      ],
-      "settings": {
-        "heading": "",
-        "text": "",
-        "per_view_desktop_large": 4,
-        "per_view_desktop": 4,
-        "per_view_tablet": 3,
-        "per_view_mobile": 2,
-        "autoplay_speed": 0,
-        "desktop_vertical_padding": 13,
-        "mobile_vertical_padding": 5,
-        "enable_style": false,
-        "spacing_top_desktop": 0,
-        "spacing_bottom_desktop": 0,
-        "spacing_top_mobile": 0,
-        "spacing_bottom_mobile": 0
       }
     },
     "custom_coupon_banner_mDjXri": {
@@ -456,14 +529,14 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "Do I need to set up an account? ",
+            "title": "Do I need to set up an account?",
             "answer": "<p>You do not need to set up an account at Plaay. However, you will enjoy a lot of additional benefits if you register with us such as:  reviewing your purchase history, previewing our new products and receiving emails about our latest updates/offers, saving your details such as your delivery address and payment details for a more convenient experience when you place your next order, tracking the status of your order and other requests.</p>"
           }
         },
         "faq_P9fJJn": {
           "type": "faq",
           "settings": {
-            "title": "Where are Plaay products made? ",
+            "title": "Where are Plaay products made?",
             "answer": "<p>All our products are made in our own newly-established facilities in the UAE. </p>"
           }
         },
@@ -477,7 +550,7 @@
         "faq_cpMCTh": {
           "type": "faq",
           "settings": {
-            "title": "What is the shelf-life of Plaay products? ",
+            "title": "What is the shelf-life of Plaay products?",
             "answer": "<p>The shelf-life of all Plaay products is 12 months. <br/>The shelf life for limited edition products may vary.</p>"
           }
         },
@@ -491,7 +564,7 @@
         "faq_3PFpK9": {
           "type": "faq",
           "settings": {
-            "title": "How should I store the chocolate truffles and bars? ",
+            "title": "How should I store the chocolate truffles and bars?",
             "answer": "<p>Plaay products should be kept refrigerated to avoid melting and temperature fluctuations. Note: They are best consumed at Room Temperature.</p>"
           }
         },
@@ -499,7 +572,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "How can I track my order? ",
+            "title": "How can I track my order?",
             "answer": "<p>You will receive an order confirmation email containing your order reference number and other important details. You may call or email our customer support team and provide these details, so we can give you an update regarding your order. </p>"
           }
         },
@@ -507,7 +580,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "How do you ship your products? ",
+            "title": "How do you ship your products?",
             "answer": "<p>We have our local logistics partners with temperature-controlled vehicles to make sure that your order arrives in perfect condition.</p>"
           }
         },
@@ -515,7 +588,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "Where are the packages shipped from? ",
+            "title": "Where are the packages shipped from?",
             "answer": "<p>All our products are shipped from our distribution center which is located in Business Bay & DIP Dubai, United Arab Emirates.</p>"
           }
         },
@@ -523,7 +596,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "Can I place an order through a phone call?  ",
+            "title": "Can I place an order through a phone call?",
             "answer": "<p>All orders must be placed on our website. If you encounter technical issues while placing an order online, you may reach out to our customer support team for an assistance.</p>"
           }
         },
@@ -531,7 +604,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "Which payment methods does Plaay accept? ",
+            "title": "Which payment methods does Plaay accept?",
             "answer": "<p>We accept online payments using MasterCard, Visa, and Apple Pay.</p>"
           }
         },
@@ -547,7 +620,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "Which countries does Plaay delivery service cover? ",
+            "title": "Which countries does Plaay delivery service cover?",
             "answer": "<p>We currently deliver across UAE. We are also available in KSA via third-party online platforms. As for the rest of the world? Not yetÃ¢â‚¬Â¦ but we're on our way!</p>"
           }
         },
@@ -555,7 +628,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "Can I add a message to my order and send it as a gift?  ",
+            "title": "Can I add a message to my order and send it as a gift?",
             "answer": "<p>Yes, you may inform us regarding this before placing your order or immediately after placing it. You may also write the message on the \"Delivery Instructions\" option upon checkout. Please note that the order will be sent with our regular packaging as we do not have gift wrappers at the moment. </p>"
           }
         },
@@ -563,7 +636,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "Can I put multiple delivery addresses for a single order? ",
+            "title": "Can I put multiple delivery addresses for a single order?",
             "answer": "<p>You will need to place your order individually for each delivery address.</p>"
           }
         },
@@ -571,7 +644,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "Is there a possibility that my order will not be fulfilled or will not be delivered on time? ",
+            "title": "Is there a possibility that my order will not be fulfilled or will not be delivered on time?",
             "answer": "<p>We always make sure that all orders are processed and delivered on time. Delays happen very rarely, and if it does, we will certainly notify you at once and assist you should you require any modifications. </p>"
           }
         },
@@ -579,7 +652,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "Who can I contact if I encounter a technical issue while placing an order or if I have a query? ",
+            "title": "Who can I contact if I encounter a technical issue while placing an order or if I have a query?",
             "answer": "<p>Should you require any assistance or you have any queries, please feel free to reach out to our customer support team at +971-56-996-9522 or send an email to hello@shopplaay.com (Monday - Saturday 9:00 AM till 5:00 PM, excluding holidays). </p>"
           }
         },
@@ -587,7 +660,7 @@
           "type": "faq",
           "disabled": true,
           "settings": {
-            "title": "What should I do if the payment has been deducted from my card but there is no confirmation email? ",
+            "title": "What should I do if the payment has been deducted from my card but there is no confirmation email?",
             "answer": "<p>Please share your name and registered email address with us to confirm your order and payment.</p>"
           }
         }
@@ -1062,6 +1135,7 @@
             "products": [],
             "show_media_only": false,
             "display_order": "media_first",
+            "card_grouping": "per_media",
             "columns_desktop": 3,
             "rows_desktop": 3,
             "columns_mobile": "2",
@@ -1090,80 +1164,29 @@
       ],
       "settings": {}
     },
-    "pdp_social_proof_plaay": {
-      "type": "pdp-social-proof",
+    "blocks_xHARVm": {
+      "type": "_blocks",
       "blocks": {
-        "trust_badge_CpkVbW": {
-          "type": "trust_badge",
+        "ai_gen_block_900bb11_9zLTEF": {
+          "type": "ai_gen_block_900bb11",
           "settings": {
-            "label": "No Refined Sugar"
-          }
-        },
-        "trust_badge_eK6Cbe": {
-          "type": "trust_badge",
-          "settings": {
-            "label": "100% Clean Ingredients"
-          }
-        },
-        "trust_badge_NBTiQH": {
-          "type": "trust_badge",
-          "settings": {
-            "label": "Halal certified"
-          }
-        },
-        "trust_badge_GYxe3G": {
-          "type": "trust_badge",
-          "settings": {
-            "label": "Made in the UAE"
-          }
-        },
-        "review_xngXi9": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "Honestly the best chocolate snack I've tried. Tastes great and no chalky aftertaste.",
-            "reviewer": "Aisha K.",
-            "tag": "Verified buyer"
-          }
-        },
-        "review_4DjCAi": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "My kids love these. Feels good knowing exactly what's in them.",
-            "reviewer": "Omar J.",
-            "tag": "Verified buyer"
-          }
-        },
-        "review_LiYpLU": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "Perfect post-gym snack. High protein, genuinely delicious - ordering again.",
-            "reviewer": "Priya S.",
-            "tag": "Verified buyer"
-          }
+            "spacing_desktop": 50,
+            "spacing_mobile": 30,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "trust_badge_CpkVbW",
-        "trust_badge_eK6Cbe",
-        "trust_badge_NBTiQH",
-        "trust_badge_GYxe3G",
-        "review_xngXi9",
-        "review_4DjCAi",
-        "review_LiYpLU"
+        "ai_gen_block_900bb11_9zLTEF"
       ],
-      "name": "PDP â€” Social Proof",
-      "settings": {
-        "background_color": "#f4f4f4",
-        "heading": "Loved by thousands",
-        "rating_text": "4.9 out of 5 from 2,000+ reviews"
-      }
+      "name": "Spacer",
+      "settings": {}
     }
   },
   "order": [
     "main",
+    "blocks_xHARVm",
     "apps_6td8dD",
     "pdp_social_proof_plaay",
     "review_gif_video_UQj4ik",
