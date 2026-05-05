@@ -4272,9 +4272,145 @@ footer content-accordion .footer-accordion__trigger > span:first-child {
   border-color: #021d49;
 }
 
+.plaay-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 18px;
+  margin-right: 14px;
+}
+
+.plaay-header-utility {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid rgba(2, 29, 73, 0.08);
+  background: #fff;
+  color: #021d49;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.plaay-header-utility:hover {
+  background: #021d49;
+  color: #fff;
+  border-color: #021d49;
+  transform: translateY(-1px);
+}
+
+.plaay-header-utility--search {
+  border: 1px solid rgba(2, 29, 73, 0.08);
+  background: #fff;
+  color: inherit;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
 .plaay-account-icon-link {
   position: relative;
   z-index: 2;
+}
+
+.plaay-desktop-search {
+  position: relative;
+}
+
+.plaay-search-panel {
+  min-width: 360px;
+  width: 360px;
+  z-index: 20;
+}
+
+.plaay-search-panel__shell {
+  padding: 18px;
+  background: #fff;
+  border: 1px solid rgba(2, 29, 73, 0.08);
+  border-radius: 22px;
+  box-shadow: 0 24px 50px rgba(2, 29, 73, 0.14);
+}
+
+.plaay-search-panel__label {
+  display: block;
+  margin-bottom: 10px;
+  color: #021d49;
+  font-family: var(--font-walsheim-bold, "walsheim-bold", sans-serif);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.plaay-search-panel__row {
+  display: flex;
+  gap: 10px;
+}
+
+.plaay-search-panel__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 46px;
+  border: 1px solid rgba(2, 29, 73, 0.14);
+  border-radius: 14px;
+  padding: 0 14px;
+  color: #021d49;
+  font-size: 14px;
+  background: #f8f9fc;
+}
+
+.plaay-search-panel__input:focus {
+  outline: none;
+  border-color: #021d49;
+  background: #fff;
+}
+
+.plaay-search-panel__submit {
+  height: 46px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 14px;
+  background: #021d49;
+  color: #f9c61d;
+  font-family: var(--font-walsheim-bold, "walsheim-bold", sans-serif);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.plaay-search-panel__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.plaay-search-panel__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(2, 29, 73, 0.05);
+  color: #021d49;
+  font-family: var(--font-walsheim-bold, "walsheim-bold", sans-serif);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plaay-desktop-search .navigation_search.active {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.header__icon--cart {
+  flex-shrink: 0;
 }
 
 .plaay-mobile-account .plaay-mobile-wishlist__icon-wrap {
