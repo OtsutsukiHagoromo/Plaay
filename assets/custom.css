@@ -3949,3 +3949,289 @@ cart-drawer [data-drawer] .border-b.border-dark-blue.border-opacity-10.flex-shri
   color: #021D49;
   border: 1.5px solid rgba(249,198,29,0.5);
 }
+
+/* ==========================================
+   PLAAY - Typography & consistency pass
+   ========================================== */
+:root {
+  --plaay-ink: #021D49;
+  --plaay-accent: #F9C61D;
+  --plaay-muted: rgba(2, 29, 73, 0.66);
+  --plaay-border: rgba(2, 29, 73, 0.12);
+  --plaay-card-radius: 18px;
+  --plaay-copy: clamp(14px, 0.95vw, 16px);
+  --plaay-small-copy: clamp(12px, 0.8vw, 14px);
+  --plaay-heading-tight: 0.98;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  color: var(--plaay-ink);
+  font-family: var(--font-walsheim-regular, "walsheim-regular", sans-serif);
+}
+
+body p,
+body li,
+body label,
+body input,
+body select,
+body textarea,
+.rte p,
+.rte li {
+  line-height: 1.5;
+}
+
+main p,
+main li,
+main label,
+main input,
+main select,
+main textarea {
+  font-size: var(--plaay-copy);
+}
+
+:where(main, .shopify-section, footer) h1,
+:where(main, .shopify-section, footer) h2,
+:where(main, .shopify-section, footer) h3,
+:where(main, .shopify-section, footer) h4 {
+  color: var(--plaay-ink);
+  letter-spacing: -0.03em;
+  line-height: var(--plaay-heading-tight);
+}
+
+:where(main, .shopify-section, footer) h5,
+:where(main, .shopify-section, footer) h6 {
+  color: var(--plaay-ink);
+  line-height: 1.18;
+}
+
+.btn,
+button.rebuy-button,
+#rebuy-add-to-cart-button,
+.plaay-cart-checkout-btn,
+.plaay-mobile-submit,
+.plaay-sticky-submit {
+  border-radius: 14px;
+  font-size: 14px !important;
+  letter-spacing: 0.07em !important;
+}
+
+.card-product-title {
+  font-size: clamp(15px, 1vw, 18px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.product_price {
+  font-size: clamp(15px, 1vw, 18px) !important;
+  line-height: 1.05;
+}
+
+.product_compare_at_price {
+  font-size: clamp(12px, 0.85vw, 15px) !important;
+  line-height: 1.05;
+  opacity: 0.52;
+}
+
+.product_tile {
+  border-color: var(--plaay-border);
+  border-radius: var(--plaay-card-radius);
+  box-shadow: 0 14px 34px rgba(2, 29, 73, 0.06);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.product_tile:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 40px rgba(2, 29, 73, 0.1);
+}
+
+.content_container {
+  border-radius: var(--plaay-card-radius);
+}
+
+.plaay-pdp-title-row {
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.plaay-pdp-title-row .pdp-title,
+.pdp-title {
+  font-size: clamp(2.2rem, 3.7vw, 4.2rem);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+}
+
+.plaay-trust-strip {
+  gap: 14px;
+  margin-top: 14px;
+  margin-bottom: 18px;
+}
+
+.plaay-trust-label {
+  font-size: clamp(10px, 0.72vw, 12px);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+.plaay-tier-bar__msg,
+.plaay-discount-toggle,
+.plaay-discount-input,
+.plaay-discount-apply-btn,
+.plaay-promo-summary__chip,
+.plaay-promo-summary__save {
+  font-size: var(--plaay-small-copy);
+}
+
+.plaay-discount-toggle {
+  line-height: 1.3;
+}
+
+.plaay-cart-checkout-btn {
+  font-size: 15px !important;
+}
+
+.plaay-cart-continue-btn,
+.plaay-discount-msg {
+  font-size: 13px;
+}
+
+.rebuy-bundle-title,
+#rebuy-bundle-title {
+  font-family: var(--font-walsheim-black, "walsheim-black", sans-serif) !important;
+  font-size: clamp(28px, 3vw, 42px) !important;
+  line-height: 0.96 !important;
+  letter-spacing: -0.04em !important;
+  text-transform: uppercase;
+  color: var(--plaay-ink) !important;
+}
+
+.rebuy-product-title,
+.rebuy-product-title-link {
+  font-size: 14px !important;
+  line-height: 1.22 !important;
+  letter-spacing: -0.01em;
+}
+
+.rebuy-product-price,
+.rebuy-price-amount,
+#rebuy-bundle-total-price {
+  line-height: 1.05 !important;
+}
+
+body footer h2 {
+  font-size: clamp(34px, 5vw, 62px) !important;
+  line-height: 0.92 !important;
+  letter-spacing: -0.05em;
+}
+
+footer .footer-flex {
+  gap: 38px;
+}
+
+.footer-brand-info,
+.footer-brand-info div,
+.footer-brand-info p,
+footer li,
+footer li a,
+.footer-newsletter label.field__label,
+.footer-newsletter .field input {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.footer-brand-info h5,
+footer .links-heading {
+  margin-bottom: 14px;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.footer-social-links a {
+  margin-top: 16px !important;
+}
+
+.footer-newsletter .field {
+  padding: 8px;
+}
+
+.footer-newsletter .field button {
+  min-width: 124px;
+  font-family: var(--font-walsheim-bold, "walsheim-bold", sans-serif);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 11px 12px;
+}
+
+.footer-newsletter label.field__label {
+  max-width: 100%;
+  margin-bottom: 12px;
+  opacity: 0.88;
+}
+
+@media (max-width: 749px) {
+  main p,
+  main li,
+  main label,
+  main input,
+  main select,
+  main textarea {
+    font-size: 14px;
+  }
+
+  .card-product-title {
+    font-size: 14px;
+  }
+
+  .product_price {
+    font-size: 15px !important;
+  }
+
+  .product_compare_at_price {
+    font-size: 12px !important;
+  }
+
+  .plaay-pdp-title-row .pdp-title,
+  .pdp-title {
+    font-size: clamp(2rem, 9vw, 3.2rem);
+  }
+
+  .plaay-trust-strip {
+    gap: 10px;
+    margin-top: 12px;
+    margin-bottom: 14px;
+  }
+
+  .plaay-trust-label {
+    font-size: 10px;
+  }
+
+  .rebuy-bundle-title,
+  #rebuy-bundle-title {
+    font-size: 24px !important;
+  }
+
+  .footer-brand-info h5,
+  footer .links-heading {
+    font-size: 12px;
+  }
+
+  .footer-brand-info,
+  .footer-brand-info div,
+  .footer-brand-info p,
+  footer li,
+  footer li a,
+  .footer-newsletter label.field__label,
+  .footer-newsletter .field input {
+    font-size: 13px;
+  }
+
+  .footer-newsletter .field button {
+    min-width: 110px;
+    font-size: 12px;
+  }
+}
