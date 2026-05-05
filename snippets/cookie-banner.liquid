@@ -1,17 +1,184 @@
+<style>
+  [data-module="cookie-banner"] {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    z-index: 9400;
+    display: flex;
+    justify-content: center;
+    padding: 0 12px;
+    pointer-events: none;
+  }
+
+  [data-module="cookie-banner"].hidden {
+    display: none;
+  }
+
+  .plaay-cookie-banner {
+    width: min(440px, 100%);
+    background: #021d49;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    box-shadow: 0 20px 48px rgba(2, 29, 73, 0.32);
+    padding: 18px 18px 16px;
+    pointer-events: auto;
+  }
+
+  .plaay-cookie-banner__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .plaay-cookie-banner__title {
+    margin: 0;
+    color: #fff;
+    font-family: var(--font-walsheim-black, "walsheim-black", sans-serif);
+    font-size: 1.2rem;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .plaay-cookie-banner__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .plaay-cookie-banner__copy {
+    margin: 10px 0 0;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .plaay-cookie-banner__actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .plaay-cookie-banner__btn {
+    flex: 1 1 0;
+    min-height: 46px;
+    border-radius: 999px;
+    padding: 0 18px;
+    font-family: var(--font-walsheim-bold, "walsheim-bold", sans-serif);
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+  }
+
+  .plaay-cookie-banner__btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .plaay-cookie-banner__btn--primary {
+    background: #f9c61d;
+    color: #021d49;
+    border: 1px solid #f9c61d;
+  }
+
+  .plaay-cookie-banner__btn--secondary {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  body.template-productbyob [data-module="cookie-banner"] {
+    bottom: calc(env(safe-area-inset-bottom) + 92px);
+  }
+
+  @media (max-width: 767px) {
+    [data-module="cookie-banner"] {
+      bottom: calc(env(safe-area-inset-bottom) + 12px);
+      padding: 0 10px;
+    }
+
+    body.template-productbyob [data-module="cookie-banner"] {
+      bottom: calc(env(safe-area-inset-bottom) + 84px);
+    }
+
+    .plaay-cookie-banner {
+      border-radius: 18px;
+      padding: 16px 14px 14px;
+    }
+
+    .plaay-cookie-banner__title {
+      font-size: 1.05rem;
+    }
+
+    .plaay-cookie-banner__copy {
+      font-size: 0.88rem;
+    }
+
+    .plaay-cookie-banner__actions {
+      flex-direction: column;
+    }
+
+    .plaay-cookie-banner__btn {
+      width: 100%;
+    }
+  }
+</style>
+
 <div class="hidden" data-module="cookie-banner">
-  <div class="fixed inset-x-0 bottom-0 bg-black text-white z-[1000] p-4">
-    <div class="container mx-auto">
-      <div class="flex flex-col md:flex-row items-center justify-between md:space-x-4">
-        <div class="basis-2/3">
-          <h3 class="text-2xl text-white font-semibold mb-2">Cookie Policy</h3>
-          <p class="text-white mb-4 md:mb-0">This site requires cookies to be accepted to allow the best site experience possible. By continuing to browse the site you are agreeing to our use of cookies
-          </p>
-        </div>
-        <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 w-full md:w-auto">
-          <button class="bg-white w-full md:w-auto px-5 py-2 text-sm text-black uppercase border  border-white border-solid transition-all hover:bg-transparent hover:text-white" data-btn>Accept</button>
-          <button class="bg-white w-full md:w-auto px-5 py-2 text-sm text-black uppercase border  border-white border-solid transition-all hover:bg-transparent hover:text-white" data-btn>Close</button>
-        </div>
-      </div>
+  <div class="plaay-cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie preferences">
+    <div class="plaay-cookie-banner__top">
+      <h3 class="plaay-cookie-banner__title">Cookie Preferences</h3>
+      <button type="button" class="plaay-cookie-banner__close" data-btn aria-label="Dismiss cookie notice">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <p class="plaay-cookie-banner__copy">
+      We use cookies to keep the site smooth, remember your choices, and improve the Plaay experience.
+    </p>
+    <div class="plaay-cookie-banner__actions">
+      <button class="plaay-cookie-banner__btn plaay-cookie-banner__btn--primary" type="button" data-btn>Accept</button>
+      <button class="plaay-cookie-banner__btn plaay-cookie-banner__btn--secondary" type="button" data-btn>Dismiss</button>
     </div>
   </div>
 </div>
+
+<script>
+  (function () {
+    var cookieName = 'HL-cookie';
+    var storageKey = 'plaay-cookie-consent';
+
+    function persistConsent() {
+      try {
+        localStorage.setItem(storageKey, 'true');
+      } catch (e) {}
+
+      document.cookie = cookieName + '=true; max-age=315360000; path=/; SameSite=Lax';
+    }
+
+    try {
+      if (localStorage.getItem(storageKey) === 'true') {
+        persistConsent();
+      }
+    } catch (e) {}
+
+    document.addEventListener('click', function (event) {
+      if (event.target.closest('[data-module="cookie-banner"] [data-btn]')) {
+        persistConsent();
+      }
+    });
+  })();
+</script>

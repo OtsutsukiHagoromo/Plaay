@@ -61,7 +61,7 @@
       {% endif %}
 
       <div class="byob-tiers" role="tablist" aria-label="Choose your box size">
-        {%- for variant in product.variants -%}
+        {%- for variant in product.variants limit: 3 -%}
           {%- assign idx1 = forloop.index -%}
           {%- assign tq_key  = 'tier_' | append: idx1 | append: '_qty' -%}
           {%- assign ts_key  = 'tier_' | append: idx1 | append: '_saving' -%}
@@ -69,6 +69,11 @@
           {%- assign tq      = section.settings[tq_key] | default: 6 | plus: 0 -%}
           {%- assign tsaving = section.settings[ts_key] -%}
           {%- assign tpop    = section.settings[tp_key] -%}
+          {%- assign tier_display_name = variant.title -%}
+          {%- assign tier_display_name_down = tier_display_name | downcase -%}
+          {%- if tier_display_name_down contains 'bundle' or tier_display_name_down contains '/ byob' -%}
+            {%- assign tier_display_name = 'Build Your Box' -%}
+          {%- endif -%}
 
           <button
             class="byob-tier{% if forloop.first %} byob-tier--active{% endif %}"
@@ -88,7 +93,7 @@
 
             <span class="byob-tier__qty font-walsheim-black">{{ tq }}</span>
             <span class="byob-tier__unit font-walsheim-regular">bars</span>
-            <span class="byob-tier__name font-walsheim-bold">{{ variant.title }}</span>
+            <span class="byob-tier__name font-walsheim-bold">{{ tier_display_name }}</span>
             <span class="byob-tier__price font-walsheim-black">{{ variant.price | money }}</span>
           </button>
         {%- endfor -%}
@@ -699,7 +704,7 @@
 
   /* ── Tier data injected from Liquid ──────────────────── */
   var TIERS = [
-    {%- for variant in product.variants -%}
+    {%- for variant in product.variants limit: 3 -%}
       {%- assign idx1   = forloop.index -%}
       {%- assign tq_key = 'tier_' | append: idx1 | append: '_qty' -%}
       {
