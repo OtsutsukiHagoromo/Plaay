@@ -1,23 +1,24 @@
 <content-accordion data-module="content-accordion">
   <div data-accordion class="overflow-hidden" style="color: {{ color }};">
     <h2
-      class="flex justify-between relative items-center font-walsheim font-bold text-{{ color }} {% if product_accordion %} py-5 text-lg {% endif %}"
+      class="flex justify-between relative items-center font-walsheim font-bold {% if product_accordion %} py-5 text-lg {% else %} footer-accordion__trigger py-4 {% endif %}"
       data-accordion-trigger
+      style="color: {{ color }};"
     >
       <span>{{ heading }}</span>
 
-      <span data-accordion-plus class="w-3 transform transition-all duration-300 cursor-pointer text-{{ color }}">
+      <span data-accordion-plus class="w-3 transform transition-all duration-300 cursor-pointer" style="color: {{ color }};">
         {%- render 'icon-plus' -%}
       </span>
-      <span data-accordion-minus class="w-3 transition-all duration-300 absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer text-{{ color }}">
+      <span data-accordion-minus class="w-3 transition-all duration-300 absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer" style="color: {{ color }};">
         {%- render 'icon-minus' -%}
       </span>
     </h2>
 
     <div
-      class="accordion_content max-h-0 transition-all duration-700 border-b border-{{ color }} text-{{ color }}"
+      class="accordion_content max-h-0 transition-all duration-700 border-b"
       data-accordion-content
-      style="border-color: {{ color }}"
+      style="border-color: {{ color }}; color: {{ color }};"
     >
       <div class="pb-5 pt-3">
         {{ content }}
@@ -25,4 +26,3 @@
     </div>
   </div>
 </content-accordion>
-

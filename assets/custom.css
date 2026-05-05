@@ -4150,6 +4150,19 @@ footer .links-heading {
   text-transform: uppercase;
 }
 
+footer content-accordion .footer-accordion__trigger {
+  font-family: var(--font-walsheim-bold, "walsheim-bold", sans-serif);
+  font-size: 13px !important;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+footer content-accordion .footer-accordion__trigger > span:first-child {
+  display: block;
+  padding-right: 24px;
+}
+
 .footer-social-links a {
   margin-top: 16px !important;
 }
@@ -4218,6 +4231,10 @@ footer .links-heading {
   .footer-brand-info h5,
   footer .links-heading {
     font-size: 12px;
+  }
+
+  footer content-accordion .footer-accordion__trigger {
+    font-size: 12px !important;
   }
 
   .footer-brand-info,
