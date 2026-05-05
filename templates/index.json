@@ -1218,7 +1218,7 @@
         "title": "Our Best Selling Chocolate Snack-Hacks",
         "description": "Plaayer-approved faves—why not make them yours too?",
         "background_color": "#ffffff",
-        "product_source": "collection",
+        "product_source": "manual",
         "featured_collection": "shop-all",
         "collection_product_limit": 12,
         "extra_top_padding": true,
