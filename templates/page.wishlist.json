@@ -1,9 +1,37 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
+    "blocks_V6PbFJ": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_900bb11_Czxh9j": {
+          "type": "ai_gen_block_900bb11",
+          "settings": {
+            "spacing_desktop": 70,
+            "spacing_mobile": 60,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_900bb11_Czxh9j"
+      ],
+      "name": "Spacer",
+      "settings": {}
+    },
     "plaay_wishlist": {
       "type": "plaay-wishlist-page",
       "settings": {
-        "bg_color": "#F4F1EC",
+        "bg_color": "#f4f1ec",
         "heading": "My Wishlist",
         "empty_text": "Your wishlist is empty. Start adding your favourites!",
         "empty_cta_url": "/collections/all",
@@ -11,5 +39,8 @@
       }
     }
   },
-  "order": ["plaay_wishlist"]
+  "order": [
+    "blocks_V6PbFJ",
+    "plaay_wishlist"
+  ]
 }
