@@ -1,0 +1,483 @@
+{% liquid
+  assign section_bg = section.settings.section_bg
+  assign panel_bg = section.settings.panel_bg
+  assign accent_bg = section.settings.accent_bg
+  assign eyebrow = section.settings.eyebrow
+  assign heading = section.settings.heading
+  assign intro = section.settings.intro
+  assign badge_one = section.settings.badge_one
+  assign badge_two = section.settings.badge_two
+  assign badge_three = section.settings.badge_three
+  assign step_one_title = section.settings.step_one_title
+  assign step_one_text = section.settings.step_one_text
+  assign step_two_title = section.settings.step_two_title
+  assign step_two_text = section.settings.step_two_text
+  assign step_three_title = section.settings.step_three_title
+  assign step_three_text = section.settings.step_three_text
+  assign reassurance = section.settings.reassurance
+%}
+
+{% style %}
+  #shopify-section-{{ section.id }} .subscribe-save-benefits {
+    background: {{ section_bg }};
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-shell {
+    position: relative;
+    overflow: hidden;
+    border-radius: 32px;
+    background:
+      radial-gradient(circle at top right, rgba(249, 198, 29, 0.2), transparent 30%),
+      linear-gradient(145deg, {{ panel_bg }}, #ffffff 72%);
+    border: 1px solid rgba(2, 29, 73, 0.08);
+    box-shadow: 0 24px 70px rgba(2, 29, 73, 0.08);
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-shell::before,
+  #shopify-section-{{ section.id }} .subscribe-save-shell::after {
+    content: "";
+    position: absolute;
+    border-radius: 999px;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-shell::before {
+    width: 220px;
+    height: 220px;
+    right: -70px;
+    top: -90px;
+    background: rgba(249, 198, 29, 0.22);
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-shell::after {
+    width: 180px;
+    height: 180px;
+    left: -60px;
+    bottom: -90px;
+    background: rgba(2, 29, 73, 0.06);
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 28px;
+    padding: 28px 22px;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(2, 29, 73, 0.08);
+    color: #021d49;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-heading {
+    font-size: clamp(34px, 5vw, 72px);
+    line-height: 0.95;
+    text-transform: uppercase;
+    color: #021d49;
+    margin-top: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-intro {
+    max-width: 760px;
+    margin: 16px auto 0;
+    font-size: 18px;
+    line-height: 1.55;
+    color: rgba(2, 29, 73, 0.72);
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    background: #021d49;
+    color: #f9c61d;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    padding: 22px 18px 18px;
+    background: #ffffff;
+    border: 1px solid rgba(2, 29, 73, 0.08);
+    box-shadow: 0 14px 34px rgba(2, 29, 73, 0.05);
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-card__icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: {{ accent_bg }};
+    color: #021d49;
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-card__title {
+    color: #021d49;
+    font-size: 26px;
+    line-height: 0.98;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-card__text {
+    color: rgba(2, 29, 73, 0.72);
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-steps {
+    border-radius: 24px;
+    padding: 22px 18px;
+    background: rgba(2, 29, 73, 0.04);
+    border: 1px solid rgba(2, 29, 73, 0.08);
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-steps__title {
+    color: #021d49;
+    font-size: 28px;
+    line-height: 1;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-steps__grid {
+    display: grid;
+    gap: 14px;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-step {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 12px;
+    align-items: start;
+    padding: 14px 0;
+    border-top: 1px solid rgba(2, 29, 73, 0.09);
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-step:first-child {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-step__index {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #021d49;
+    color: #f9c61d;
+    font-size: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-step__title {
+    color: #021d49;
+    font-size: 19px;
+    line-height: 1.05;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-step__text {
+    color: rgba(2, 29, 73, 0.72);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  #shopify-section-{{ section.id }} .subscribe-save-reassurance {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 18px;
+    border-radius: 18px;
+    background: #ffffff;
+    border: 1px dashed rgba(2, 29, 73, 0.18);
+    color: #021d49;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .subscribe-save-inner {
+      padding: 42px 34px;
+    }
+
+    #shopify-section-{{ section.id }} .subscribe-save-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    #shopify-section-{{ section.id }} .subscribe-save-steps {
+      padding: 28px 24px;
+    }
+
+    #shopify-section-{{ section.id }} .subscribe-save-steps__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    #shopify-section-{{ section.id }} .subscribe-save-step {
+      grid-template-columns: 1fr;
+      gap: 14px;
+      padding: 0;
+      border-top: none;
+    }
+  }
+{% endstyle %}
+
+<section class="subscribe-save-benefits">
+  <div class="container py-8 md:py-12">
+    <div class="subscribe-save-shell">
+      <div class="subscribe-save-inner">
+        <div class="text-center">
+          {% if eyebrow != blank %}
+            <span class="subscribe-save-eyebrow font-walsheim-bold">{{ eyebrow }}</span>
+          {% endif %}
+          {% if heading != blank %}
+            <h2 class="subscribe-save-heading font-walsheim-black">{{ heading }}</h2>
+          {% endif %}
+          {% if intro != blank %}
+            <p class="subscribe-save-intro font-walsheim-regular">{{ intro }}</p>
+          {% endif %}
+
+          <div class="subscribe-save-badges">
+            {% if badge_one != blank %}<span class="subscribe-save-badge font-walsheim-bold">{{ badge_one }}</span>{% endif %}
+            {% if badge_two != blank %}<span class="subscribe-save-badge font-walsheim-bold">{{ badge_two }}</span>{% endif %}
+            {% if badge_three != blank %}<span class="subscribe-save-badge font-walsheim-bold">{{ badge_three }}</span>{% endif %}
+          </div>
+        </div>
+
+        <div class="subscribe-save-grid">
+          {% for block in section.blocks %}
+            {% if block.type == 'benefit' %}
+              <article class="subscribe-save-card" {{ block.shopify_attributes }}>
+                {% if block.settings.icon != blank %}
+                  <span class="subscribe-save-card__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+                {% endif %}
+                {% if block.settings.title != blank %}
+                  <h3 class="subscribe-save-card__title font-walsheim-black">{{ block.settings.title }}</h3>
+                {% endif %}
+                {% if block.settings.text != blank %}
+                  <p class="subscribe-save-card__text font-walsheim-regular">{{ block.settings.text }}</p>
+                {% endif %}
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="subscribe-save-steps">
+          <h3 class="subscribe-save-steps__title font-walsheim-black">How It Works</h3>
+          <div class="subscribe-save-steps__grid">
+            <div class="subscribe-save-step">
+              <span class="subscribe-save-step__index font-walsheim-black">1</span>
+              <div>
+                <h4 class="subscribe-save-step__title font-walsheim-black">{{ step_one_title }}</h4>
+                <p class="subscribe-save-step__text font-walsheim-regular">{{ step_one_text }}</p>
+              </div>
+            </div>
+            <div class="subscribe-save-step">
+              <span class="subscribe-save-step__index font-walsheim-black">2</span>
+              <div>
+                <h4 class="subscribe-save-step__title font-walsheim-black">{{ step_two_title }}</h4>
+                <p class="subscribe-save-step__text font-walsheim-regular">{{ step_two_text }}</p>
+              </div>
+            </div>
+            <div class="subscribe-save-step">
+              <span class="subscribe-save-step__index font-walsheim-black">3</span>
+              <div>
+                <h4 class="subscribe-save-step__title font-walsheim-black">{{ step_three_title }}</h4>
+                <p class="subscribe-save-step__text font-walsheim-regular">{{ step_three_text }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% if reassurance != blank %}
+          <div class="subscribe-save-reassurance font-walsheim-bold">{{ reassurance }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Subscribe Benefits",
+  "settings": [
+    {
+      "type": "color",
+      "id": "section_bg",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "panel_bg",
+      "label": "Panel background",
+      "default": "#fffaf2"
+    },
+    {
+      "type": "color",
+      "id": "accent_bg",
+      "label": "Accent color",
+      "default": "#f9c61d"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Built for repeat snackers"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Your chocolate fix, always handled."
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro",
+      "default": "Subscribe once and keep your stash stocked with better-for-you chocolate. You save on every recurring order, stay in control of your delivery schedule, and never scramble for your favourites again."
+    },
+    {
+      "type": "text",
+      "id": "badge_one",
+      "label": "Badge 1",
+      "default": "15% off every recurring order"
+    },
+    {
+      "type": "text",
+      "id": "badge_two",
+      "label": "Badge 2",
+      "default": "Skip, pause or swap anytime"
+    },
+    {
+      "type": "text",
+      "id": "badge_three",
+      "label": "Badge 3",
+      "default": "Delivered on your schedule"
+    },
+    {
+      "type": "text",
+      "id": "step_one_title",
+      "label": "Step 1 title",
+      "default": "Choose your go-to stash"
+    },
+    {
+      "type": "textarea",
+      "id": "step_one_text",
+      "label": "Step 1 text",
+      "default": "Pick your regular multipacks and lock in your favourites in just a few clicks."
+    },
+    {
+      "type": "text",
+      "id": "step_two_title",
+      "label": "Step 2 title",
+      "default": "Set your frequency"
+    },
+    {
+      "type": "textarea",
+      "id": "step_two_text",
+      "label": "Step 2 text",
+      "default": "Choose the cadence that fits your routine, from snack-drawer top-ups to full household restocks."
+    },
+    {
+      "type": "text",
+      "id": "step_three_title",
+      "label": "Step 3 title",
+      "default": "Stay flexible"
+    },
+    {
+      "type": "textarea",
+      "id": "step_three_text",
+      "label": "Step 3 text",
+      "default": "Pause, skip, swap flavours or cancel when you need to. No stress, no lock-in."
+    },
+    {
+      "type": "text",
+      "id": "reassurance",
+      "label": "Reassurance line",
+      "default": "No commitment panic. Cancel anytime."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon",
+          "default": "01"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Always save more"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Your subscription price stays better than regular one-off buying, so your routine costs less over time."
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Subscribe Benefits",
+      "blocks": [
+        {
+          "type": "benefit"
+        },
+        {
+          "type": "benefit"
+        },
+        {
+          "type": "benefit"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
