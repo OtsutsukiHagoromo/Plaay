@@ -168,6 +168,20 @@
         "@media screen and (max-width: 500px) {.row-start-3 {max-width: 100%; }}"
       ],
       "settings": {
+        "usp_show": true,
+        "usp_bg": "#021d49",
+        "usp_1_icon": "🚀",
+        "usp_1_text": "Free shipping AED 75+",
+        "usp_2_icon": "🌿",
+        "usp_2_text": "No refined sugar",
+        "usp_3_icon": "🇦🇪",
+        "usp_3_text": "Made in UAE",
+        "usp_4_icon": "✅",
+        "usp_4_text": "Halal certified",
+        "usp_5_icon": "🌾",
+        "usp_5_text": "Gluten free",
+        "usp_6_icon": "🌱",
+        "usp_6_text": "Soy free",
         "compact_mobile_grid": false,
         "default_background_color": "#fad1d2",
         "backup_featured_product_one": "",
@@ -224,6 +238,9 @@
         "title": "Chocolate Bar Multipacks",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -239,10 +256,37 @@
         "hide_arrows_mobile": false,
         "hide_bullets": true,
         "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false,
-        "product_source": "manual",
-        "featured_collection": "",
-        "collection_product_limit": 12
+        "hide_atc_on_tiles": false
+      }
+    },
+    "plaay_recently_viewed": {
+      "type": "plaay-recently-viewed",
+      "settings": {
+        "heading": "Previously viewed",
+        "max_products": 6
+      }
+    },
+    "plaay_frequently_bought": {
+      "type": "plaay-frequently-bought",
+      "settings": {
+        "heading": "Frequently bought",
+        "description": "Feature a hand-picked collection of products shoppers often add alongside this category.",
+        "background_color": "#ffffff",
+        "source_collection": "",
+        "product_limit": 8,
+        "autoplay": 0,
+        "see_all_text": "Shop collection",
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1.2,
+        "column_size_mobile_small": 1.2,
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": true,
+        "compact_mobile_grid": true,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_PfYUU8": {
@@ -298,6 +342,9 @@
         "title": "Energy Bar Multipacks",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": false,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -309,248 +356,11 @@
         "autoplay": 600,
         "see_all_link": "",
         "see_all_link_text": "Shop All Bars",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false,
-        "product_source": "manual",
-        "featured_collection": "",
-        "collection_product_limit": 12
-      }
-    },
-    "featured_products_rexqB7": {
-      "type": "featured_products",
-      "blocks": {
-        "product_iT3bHU": {
-          "type": "product",
-          "settings": {
-            "product": "70-dark-chocolate"
-          }
-        },
-        "product_GzApH7": {
-          "type": "product",
-          "settings": {
-            "product": "70-dark-chocolate-with-hazelnut"
-          }
-        },
-        "product_hkDDTK": {
-          "type": "product",
-          "settings": {
-            "product": "milk-chocolate-with-hazelnut"
-          }
-        },
-        "product_txKaWx": {
-          "type": "product",
-          "settings": {
-            "product": "milk-chocolate-with-toffee-almond"
-          }
-        }
-      },
-      "block_order": [
-        "product_iT3bHU",
-        "product_GzApH7",
-        "product_hkDDTK",
-        "product_txKaWx"
-      ],
-      "disabled": true,
-      "name": "Featured products",
-      "settings": {
-        "title": "Chocolate BarsÃ‚Â ",
-        "description": "",
-        "background_color": "#ffffff",
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1,
-        "column_size_mobile_small": 1,
-        "autoplay": 600,
-        "see_all_link": "",
-        "see_all_link_text": "Shop all bars",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": false,
-        "compact_mobile_grid": false,
-        "hide_atc_on_tiles": false,
-        "product_source": "manual",
-        "featured_collection": "",
-        "collection_product_limit": 12
-      }
-    },
-    "featured_products_3egeFJ": {
-      "type": "featured_products",
-      "blocks": {
-        "product_ferWKT": {
-          "type": "product",
-          "settings": {
-            "product": "pistachio-chocolate-bar-35g"
-          }
-        },
-        "product_MnzfNQ": {
-          "type": "product",
-          "settings": {
-            "product": "salted-caramel-bar-35g-1"
-          }
-        },
-        "product_dQLzBa": {
-          "type": "product",
-          "settings": {
-            "product": "cookies-and-cream-bar-35g-1"
-          }
-        },
-        "product_Q8G6Y9": {
-          "type": "product",
-          "settings": {
-            "product": "copy-of-mocha-almond-bar-35g"
-          }
-        },
-        "product_Kb98AL": {
-          "type": "product",
-          "settings": {
-            "product": "salty-peanut-bar-35g"
-          }
-        }
-      },
-      "block_order": [
-        "product_ferWKT",
-        "product_MnzfNQ",
-        "product_dQLzBa",
-        "product_Q8G6Y9",
-        "product_Kb98AL"
-      ],
-      "disabled": true,
-      "name": "Featured products",
-      "settings": {
-        "title": "Energy BarsÃ‚Â ",
-        "description": "",
-        "background_color": "#ffffff",
-        "extra_top_padding": false,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 600,
-        "see_all_link": "",
-        "see_all_link_text": "Shop All Bars",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": false,
-        "hide_atc_on_tiles": false,
-        "product_source": "manual",
-        "featured_collection": "",
-        "collection_product_limit": 12
-      }
-    },
-    "featured_products_zEm9dx": {
-      "type": "featured_products",
-      "blocks": {
-        "product_eQgFbN": {
-          "type": "product",
-          "settings": {
-            "product": "almond-brownie-60g-x-mocha-almond-bar"
-          }
-        },
-        "product_d9MEi8": {
-          "type": "product",
-          "settings": {
-            "product": "truffle-mix-x-bar-bunch"
-          }
-        },
-        "product_JCLEtz": {
-          "type": "product",
-          "settings": {
-            "product": "pistachio-truffle-60g-x-pistachio-bar"
-          }
-        },
-        "product_RPkHJP": {
-          "type": "product",
-          "settings": {
-            "product": "cashew-caramel-60g-x-cookies-cream"
-          }
-        },
-        "product_y6GbxT": {
-          "type": "product",
-          "settings": {
-            "product": "peanut-butter-truffle-60g-x-peanut-butter-bar"
-          }
-        },
-        "product_aH9rqY": {
-          "type": "product",
-          "settings": {
-            "product": "triple-chocolate-60g-x-salted-caramel-bar"
-          }
-        }
-      },
-      "block_order": [
-        "product_eQgFbN",
-        "product_d9MEi8",
-        "product_JCLEtz",
-        "product_RPkHJP",
-        "product_y6GbxT",
-        "product_aH9rqY"
-      ],
-      "disabled": true,
-      "name": "Featured products",
-      "settings": {
-        "title": "Cross Bundles",
-        "description": "",
-        "background_color": "#ffffff",
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 600,
-        "see_all_link": "",
-        "see_all_link_text": "",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": false,
-        "hide_atc_on_tiles": false,
-        "product_source": "manual",
-        "featured_collection": "",
-        "collection_product_limit": 12
-      }
-    },
-    "plaay_frequently_bought": {
-      "type": "plaay-frequently-bought",
-      "settings": {
-        "heading": "Frequently bought",
-        "description": "Feature a hand-picked collection of products shoppers often add alongside this category.",
-        "background_color": "#ffffff",
-        "source_collection": "",
-        "product_limit": 8,
-        "autoplay": 0,
-        "see_all_text": "Shop collection",
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
         "hide_bullets": true,
         "compact_mobile_grid": true,
         "hide_atc_on_tiles": false
-      }
-    },
-    "plaay_recently_viewed": {
-      "type": "plaay-recently-viewed",
-      "settings": {
-        "heading": "Previously viewed",
-        "max_products": 6
       }
     }
   },
@@ -559,12 +369,9 @@
     "17718271832c64ccc8",
     "marquee_slider_YYHhN3",
     "main",
-    "plaay_frequently_bought",
-    "plaay_recently_viewed",
     "featured_products_nWdXj9",
     "featured_products_PfYUU8",
-    "featured_products_rexqB7",
-    "featured_products_3egeFJ",
-    "featured_products_zEm9dx"
+    "plaay_recently_viewed",
+    "plaay_frequently_bought"
   ]
 }

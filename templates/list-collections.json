@@ -114,6 +114,9 @@
         "title": "VARIETY PACKS & Bundles",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": false,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 3,
@@ -127,7 +130,9 @@
         "see_all_link_text": "",
         "hide_arrows_desktop": true,
         "hide_arrows_mobile": false,
-        "hide_bullets": true
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_tp6nLM": {
@@ -176,6 +181,9 @@
         "title": "VARIETY PACKS & Bundles",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -189,7 +197,9 @@
         "see_all_link_text": "Shop All Variety Packs",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": true
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_paiHVL": {
@@ -278,6 +288,9 @@
         "title": "Chocolate Bars",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": false,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -291,7 +304,9 @@
         "see_all_link_text": "Shop All Bars",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": true
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_4HNJJT": {
@@ -382,6 +397,9 @@
         "title": "Truffles",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -395,7 +413,9 @@
         "see_all_link_text": "Shop All Truffles",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": true
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_wEy4Qn": {
@@ -484,6 +504,9 @@
         "title": "Energy Bars",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": false,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -497,7 +520,9 @@
         "see_all_link_text": "Shop All Bars",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": true
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_GtGJNw": {
@@ -553,6 +578,9 @@
         "title": "LIMITED EDITIONS",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "collection",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -566,7 +594,9 @@
         "see_all_link_text": "Shop All Limited Editions",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": false
+        "hide_bullets": false,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "richtext_yYaFf7": {
@@ -934,6 +964,9 @@
         "title": "TRUFFLES 60g",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -947,7 +980,9 @@
         "see_all_link_text": "Shop All Truffles",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": true
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_NRwik3": {
@@ -990,6 +1025,9 @@
         "title": "BIG BARS",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -1003,7 +1041,9 @@
         "see_all_link_text": "Shop All Bars",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": false
+        "hide_bullets": false,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_W9FiUK": {
@@ -1053,6 +1093,9 @@
         "title": "BARS",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -1066,7 +1109,9 @@
         "see_all_link_text": "Shop All Bars",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": true
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_AcfGFf": {
@@ -1116,6 +1161,9 @@
         "title": "Truffles 30g Multipacks",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -1129,7 +1177,9 @@
         "see_all_link_text": "Shop All Truffles",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": true
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_QgaECD": {
@@ -1179,6 +1229,9 @@
         "title": "Truffles 60g Multipacks",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -1192,7 +1245,9 @@
         "see_all_link_text": "Shop All Truffles",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": true
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     },
     "featured_products_teJPHq": {
@@ -1242,6 +1297,9 @@
         "title": "Bar Multipacks",
         "description": "",
         "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
         "column_size_desktop_extra_large": 4,
@@ -1255,7 +1313,9 @@
         "see_all_link_text": "Shop All Bars",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
-        "hide_bullets": true
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
       }
     }
   },
