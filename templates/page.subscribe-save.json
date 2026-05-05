@@ -1,1 +1,355 @@
-{"sections":{"custom_collection_hero_basic_zDXbRC":{"type":"custom-collection-hero-basic","name":"Custom hero basic","settings":{"backup_hero_background_color":"#f5c08d","heading_backup_hero_description":"Subscribe \u0026 Save","backup_hero_description":"Save 15% on every recurring order. Skip, pause or cancel anytime."}},"subscribe_save_benefits_cg7rXL":{"type":"subscribe-save-benefits","blocks":{"benefit_8iWf1m":{"type":"benefit","settings":{"icon":"01","title":"Save on every order","text":"Lock in a lower price every time your stash renews, so your regular chocolate habit costs less without any extra effort."}},"benefit_BC5w6Q":{"type":"benefit","settings":{"icon":"02","title":"Never run out","text":"Keep your bars, truffles and variety packs arriving on your schedule, whether that means weekly top-ups or monthly restocks."}},"benefit_A8mVfK":{"type":"benefit","settings":{"icon":"03","title":"Stay fully in control","text":"Pause, skip, swap flavours or cancel whenever you need to. It is built for flexibility, not lock-in."}}},"block_order":["benefit_8iWf1m","benefit_BC5w6Q","benefit_A8mVfK"],"settings":{"section_bg":"#ffffff","panel_bg":"#fffaf2","accent_bg":"#f9c61d","eyebrow":"Built for repeat snackers","heading":"Good chocolate, on repeat.","intro":"Subscribe once and keep your favourites stocked with less effort and better value. Pick your go-to packs, choose your delivery rhythm, and let Plaay handle the rest.","badge_one":"15% off every recurring order","badge_two":"Skip, pause or swap anytime","badge_three":"Delivered on your schedule","step_one_title":"Choose your stash","step_one_text":"Pick the multipacks you actually reorder so the page works like a restock shortcut, not just another browse.","step_two_title":"Set your frequency","step_two_text":"Choose a cadence that matches how fast your household goes through bars, truffles or variety packs.","step_three_title":"Manage it your way","step_three_text":"Need a break, want a different flavour mix, or just need to push a shipment back? You stay in control.","reassurance":"No lock-in. No stress. Cancel anytime."}},"custom_featured_product_xgw4eH":{"type":"custom-featured-product","blocks":{"product_WTDmkH":{"type":"product","settings":{"product":"plaayer-pack"}},"product_JENtLP":{"type":"product","settings":{"product":"og-plaayer-pack"}}},"block_order":["product_WTDmkH","product_JENtLP"],"name":"Custom Featured products","settings":{"title":"Variety Packs For Easy Refills","description":"Start with crowd-pleasing bundles that keep your snack drawer covered without having to rebuild your order every time.","background_color":"#ffffff","extra_top_padding":true,"extra_bottom_padding":false,"column_size_desktop_extra_large":4,"column_size_desktop_large":4,"column_size_desktop":4,"column_size_tablet":3,"column_size_mobile":1,"column_size_mobile_small":1,"see_all_link":"/","see_all_link_text":"","product_source":"manual","featured_collection":"","collection_product_limit":12}},"featured_products_AcfGFf":{"type":"featured_products","blocks":{"product_3xzUwD":{"type":"product","settings":{"product":"pistachio-truffles-10x30g"}},"product_ixCryb":{"type":"product","settings":{"product":"triple-chocolate-truffles-10x30g"}},"product_hXNphV":{"type":"product","settings":{"product":"almond-brownie-truffles-10x30g"}},"product_iewA3j":{"type":"product","settings":{"product":"cashew-caramel-truffles-10x30g"}},"product_AbUGPg":{"type":"product","settings":{"product":"peanut-butter-truffles-10x30g"}}},"block_order":["product_3xzUwD","product_ixCryb","product_hXNphV","product_iewA3j","product_AbUGPg"],"name":"Featured products","settings":{"title":"30g Truffle Multipacks","description":"Perfect if you want lighter, more frequent snack refills without running out between orders.","background_color":"#ffffff","extra_top_padding":true,"extra_bottom_padding":false,"column_size_desktop_extra_large":4,"column_size_desktop_large":4,"column_size_desktop":4,"column_size_tablet":3,"column_size_mobile":1.2,"column_size_mobile_small":1.2,"autoplay":600,"see_all_link":"","see_all_link_text":"","hide_arrows_desktop":false,"hide_arrows_mobile":false,"hide_bullets":true,"product_source":"manual","featured_collection":"","collection_product_limit":12}},"featured_products_XUGdAQ":{"type":"featured_products","blocks":{"product_Ck9kBh":{"type":"product","settings":{"product":"pistachio-chocolate-bar-x-12"}},"product_rGzGxB":{"type":"product","settings":{"product":"salted-caramel-bar-x12"}},"product_iDPb6W":{"type":"product","settings":{"product":"cookies-and-cream-bar-x12"}},"product_fwtPN9":{"type":"product","settings":{"product":"mocha-almond-bar-x12"}},"product_3w8X4C":{"type":"product","settings":{"product":"salty-peanut-bar-x12"}}},"block_order":["product_Ck9kBh","product_rGzGxB","product_iDPb6W","product_fwtPN9","product_3w8X4C"],"name":"Featured products","settings":{"title":"Bar Multipacks","description":"Your everyday favourites, set up for repeat delivery so the snack drawer never drops to zero.","background_color":"#ffffff","extra_top_padding":true,"extra_bottom_padding":false,"column_size_desktop_extra_large":4,"column_size_desktop_large":4,"column_size_desktop":4,"column_size_tablet":3,"column_size_mobile":1.2,"column_size_mobile_small":1.2,"autoplay":600,"see_all_link":"","see_all_link_text":"","hide_arrows_desktop":false,"hide_arrows_mobile":false,"hide_bullets":true,"product_source":"manual","featured_collection":"","collection_product_limit":12}},"featured_products_QgaECD":{"type":"featured_products","blocks":{"product_qiRADJ":{"type":"product","settings":{"product":"pistachio-truffles-10x60g"}},"product_9ALB9K":{"type":"product","settings":{"product":"triple-chocolate-truffles-1"}},"product_anKbjD":{"type":"product","settings":{"product":"almond-brownie-truffles-test"}},"product_qKWzUz":{"type":"product","settings":{"product":"copy-of-cashew-caramel-truffles-x10-cylinders"}},"product_gd9HWk":{"type":"product","settings":{"product":"peanut-butter-truffles-test"}}},"block_order":["product_qiRADJ","product_9ALB9K","product_anKbjD","product_qKWzUz","product_gd9HWk"],"name":"Featured products","settings":{"title":"60g Truffle Multipacks","description":"For bigger cravings and heavier repeat orders when you want your top picks to last longer between deliveries.","background_color":"#ffffff","extra_top_padding":true,"extra_bottom_padding":false,"column_size_desktop_extra_large":4,"column_size_desktop_large":4,"column_size_desktop":4,"column_size_tablet":3,"column_size_mobile":1.2,"column_size_mobile_small":1.2,"autoplay":600,"see_all_link":"","see_all_link_text":"","hide_arrows_desktop":false,"hide_arrows_mobile":false,"hide_bullets":true,"product_source":"manual","featured_collection":"","collection_product_limit":12}},"cu_countdown_timer_jbinj4":{"type":"cu-countdown-timer","disabled":true,"name":"Countdown Timer","settings":{"title":"SALE ENDS IN:","end_time":"2025-09-15T23:59:59"}}},"order":["custom_collection_hero_basic_zDXbRC","subscribe_save_benefits_cg7rXL","custom_featured_product_xgw4eH","featured_products_AcfGFf","featured_products_XUGdAQ","featured_products_QgaECD","cu_countdown_timer_jbinj4"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "custom_collection_hero_basic_zDXbRC": {
+      "type": "custom-collection-hero-basic",
+      "disabled": true,
+      "name": "Custom hero basic",
+      "settings": {
+        "backup_hero_background_color": "#f5c08d",
+        "heading_backup_hero_description": "Subscribe & Save",
+        "backup_hero_description": "Save 15% on every recurring order. Skip, pause or cancel anytime."
+      }
+    },
+    "blocks_gCr4KH": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_900bb11_UyBBEd": {
+          "type": "ai_gen_block_900bb11",
+          "settings": {
+            "spacing_desktop": 80,
+            "spacing_mobile": 50,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_900bb11_UyBBEd"
+      ],
+      "name": "Spacer",
+      "settings": {}
+    },
+    "subscribe_save_benefits_cg7rXL": {
+      "type": "subscribe-save-benefits",
+      "blocks": {
+        "benefit_8iWf1m": {
+          "type": "benefit",
+          "settings": {
+            "icon": "01",
+            "title": "Save on every order",
+            "text": "Lock in a lower price every time your stash renews, so your regular chocolate habit costs less without any extra effort."
+          }
+        },
+        "benefit_BC5w6Q": {
+          "type": "benefit",
+          "settings": {
+            "icon": "02",
+            "title": "Never run out",
+            "text": "Keep your bars, truffles and variety packs arriving on your schedule, whether that means weekly top-ups or monthly restocks."
+          }
+        },
+        "benefit_A8mVfK": {
+          "type": "benefit",
+          "settings": {
+            "icon": "03",
+            "title": "Stay fully in control",
+            "text": "Pause, skip, swap flavours or cancel whenever you need to. It is built for flexibility, not lock-in."
+          }
+        }
+      },
+      "block_order": [
+        "benefit_8iWf1m",
+        "benefit_BC5w6Q",
+        "benefit_A8mVfK"
+      ],
+      "settings": {
+        "section_bg": "#ffffff",
+        "panel_bg": "#fffaf2",
+        "accent_bg": "#f9c61d",
+        "eyebrow": "Built for repeat snackers",
+        "heading": "Good chocolate, on repeat.",
+        "intro": "Subscribe once and keep your favourites stocked with less effort and better value. Pick your go-to packs, choose your delivery rhythm, and let Plaay handle the rest.",
+        "badge_one": "15% off every recurring order",
+        "badge_two": "Skip, pause or swap anytime",
+        "badge_three": "Delivered on your schedule",
+        "step_one_title": "Choose your stash",
+        "step_one_text": "Pick the multipacks you actually reorder so the page works like a restock shortcut, not just another browse.",
+        "step_two_title": "Set your frequency",
+        "step_two_text": "Choose a cadence that matches how fast your household goes through bars, truffles or variety packs.",
+        "step_three_title": "Manage it your way",
+        "step_three_text": "Need a break, want a different flavour mix, or just need to push a shipment back? You stay in control.",
+        "reassurance": "No lock-in. No stress. Cancel anytime."
+      }
+    },
+    "custom_featured_product_xgw4eH": {
+      "type": "custom-featured-product",
+      "blocks": {
+        "product_WTDmkH": {
+          "type": "product",
+          "settings": {
+            "product": "plaayer-pack"
+          }
+        },
+        "product_JENtLP": {
+          "type": "product",
+          "settings": {
+            "product": "og-plaayer-pack"
+          }
+        }
+      },
+      "block_order": [
+        "product_WTDmkH",
+        "product_JENtLP"
+      ],
+      "name": "Custom Featured products",
+      "settings": {
+        "title": "Variety Packs For Easy Refills",
+        "description": "Start with crowd-pleasing bundles that keep your snack drawer covered without having to rebuild your order every time.",
+        "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
+        "extra_top_padding": true,
+        "extra_bottom_padding": false,
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1,
+        "column_size_mobile_small": 1,
+        "see_all_link": "/",
+        "see_all_link_text": "",
+        "compact_mobile_grid": false
+      }
+    },
+    "featured_products_AcfGFf": {
+      "type": "featured_products",
+      "blocks": {
+        "product_3xzUwD": {
+          "type": "product",
+          "settings": {
+            "product": "pistachio-truffles-10x30g"
+          }
+        },
+        "product_ixCryb": {
+          "type": "product",
+          "settings": {
+            "product": "triple-chocolate-truffles-10x30g"
+          }
+        },
+        "product_hXNphV": {
+          "type": "product",
+          "settings": {
+            "product": "almond-brownie-truffles-10x30g"
+          }
+        },
+        "product_iewA3j": {
+          "type": "product",
+          "settings": {
+            "product": "cashew-caramel-truffles-10x30g"
+          }
+        },
+        "product_AbUGPg": {
+          "type": "product",
+          "settings": {
+            "product": "peanut-butter-truffles-10x30g"
+          }
+        }
+      },
+      "block_order": [
+        "product_3xzUwD",
+        "product_ixCryb",
+        "product_hXNphV",
+        "product_iewA3j",
+        "product_AbUGPg"
+      ],
+      "name": "Featured products",
+      "settings": {
+        "title": "30g Truffle Multipacks",
+        "description": "Perfect if you want lighter, more frequent snack refills without running out between orders.",
+        "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
+        "extra_top_padding": true,
+        "extra_bottom_padding": false,
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1.2,
+        "column_size_mobile_small": 1.2,
+        "autoplay": 600,
+        "see_all_link": "",
+        "see_all_link_text": "",
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
+      }
+    },
+    "featured_products_XUGdAQ": {
+      "type": "featured_products",
+      "blocks": {
+        "product_Ck9kBh": {
+          "type": "product",
+          "settings": {
+            "product": "pistachio-chocolate-bar-x-12"
+          }
+        },
+        "product_rGzGxB": {
+          "type": "product",
+          "settings": {
+            "product": "salted-caramel-bar-x12"
+          }
+        },
+        "product_iDPb6W": {
+          "type": "product",
+          "settings": {
+            "product": "cookies-and-cream-bar-x12"
+          }
+        },
+        "product_fwtPN9": {
+          "type": "product",
+          "settings": {
+            "product": "mocha-almond-bar-x12"
+          }
+        },
+        "product_3w8X4C": {
+          "type": "product",
+          "settings": {
+            "product": "salty-peanut-bar-x12"
+          }
+        }
+      },
+      "block_order": [
+        "product_Ck9kBh",
+        "product_rGzGxB",
+        "product_iDPb6W",
+        "product_fwtPN9",
+        "product_3w8X4C"
+      ],
+      "name": "Featured products",
+      "settings": {
+        "title": "Bar Multipacks",
+        "description": "Your everyday favourites, set up for repeat delivery so the snack drawer never drops to zero.",
+        "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
+        "extra_top_padding": true,
+        "extra_bottom_padding": false,
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1.2,
+        "column_size_mobile_small": 1.2,
+        "autoplay": 600,
+        "see_all_link": "",
+        "see_all_link_text": "",
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
+      }
+    },
+    "featured_products_QgaECD": {
+      "type": "featured_products",
+      "blocks": {
+        "product_qiRADJ": {
+          "type": "product",
+          "settings": {
+            "product": "pistachio-truffles-10x60g"
+          }
+        },
+        "product_9ALB9K": {
+          "type": "product",
+          "settings": {
+            "product": "triple-chocolate-truffles-1"
+          }
+        },
+        "product_anKbjD": {
+          "type": "product",
+          "settings": {
+            "product": "almond-brownie-truffles-test"
+          }
+        },
+        "product_qKWzUz": {
+          "type": "product",
+          "settings": {
+            "product": "copy-of-cashew-caramel-truffles-x10-cylinders"
+          }
+        },
+        "product_gd9HWk": {
+          "type": "product",
+          "settings": {
+            "product": "peanut-butter-truffles-test"
+          }
+        }
+      },
+      "block_order": [
+        "product_qiRADJ",
+        "product_9ALB9K",
+        "product_anKbjD",
+        "product_qKWzUz",
+        "product_gd9HWk"
+      ],
+      "name": "Featured products",
+      "settings": {
+        "title": "60g Truffle Multipacks",
+        "description": "For bigger cravings and heavier repeat orders when you want your top picks to last longer between deliveries.",
+        "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "",
+        "collection_product_limit": 12,
+        "extra_top_padding": true,
+        "extra_bottom_padding": false,
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1.2,
+        "column_size_mobile_small": 1.2,
+        "autoplay": 600,
+        "see_all_link": "",
+        "see_all_link_text": "",
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": true,
+        "compact_mobile_grid": false,
+        "hide_atc_on_tiles": false
+      }
+    },
+    "cu_countdown_timer_jbinj4": {
+      "type": "cu-countdown-timer",
+      "disabled": true,
+      "name": "Countdown Timer",
+      "settings": {
+        "title": "SALE ENDS IN:",
+        "end_time": "2025-09-15T23:59:59"
+      }
+    }
+  },
+  "order": [
+    "custom_collection_hero_basic_zDXbRC",
+    "blocks_gCr4KH",
+    "subscribe_save_benefits_cg7rXL",
+    "custom_featured_product_xgw4eH",
+    "featured_products_AcfGFf",
+    "featured_products_XUGdAQ",
+    "featured_products_QgaECD",
+    "cu_countdown_timer_jbinj4"
+  ]
+}
