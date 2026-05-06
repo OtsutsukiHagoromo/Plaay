@@ -123,7 +123,7 @@
         "usp_6_icon": "🌱",
         "usp_6_text": "Soy free",
         "compact_mobile_grid": false,
-        "default_background_color": "#FFFFFF",
+        "default_background_color": "#ffffff",
         "backup_featured_product_one": "",
         "backup_featured_product_two": "",
         "empty_collection_heading": "Looks like there are no products in this collection...",
@@ -149,7 +149,7 @@
       "settings": {
         "title": "Limited Editions",
         "description": "Add some descriptive text to your section. This is great for SEO!",
-        "background_color": "#FFF",
+        "background_color": "#ffffff",
         "product_source": "collection",
         "featured_collection": "limited-editions",
         "collection_product_limit": 12,
@@ -163,7 +163,7 @@
         "column_size_mobile_small": 1,
         "see_all_link": "/",
         "see_all_link_text": "See all",
-        "compact_mobile_grid": false
+        "compact_mobile_grid": true
       }
     },
     "apps_reelfy_collection": {

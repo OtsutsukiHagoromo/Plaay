@@ -185,8 +185,8 @@
         "title": "VARIETY PACKS",
         "description": "",
         "background_color": "#ffffff",
-        "product_source": "manual",
-        "featured_collection": "",
+        "product_source": "collection",
+        "featured_collection": "variety-packs",
         "collection_product_limit": 12,
         "extra_top_padding": true,
         "extra_bottom_padding": false,
@@ -202,7 +202,7 @@
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
         "hide_bullets": true,
-        "compact_mobile_grid": false,
+        "compact_mobile_grid": true,
         "hide_atc_on_tiles": false
       }
     },
