@@ -23,18 +23,19 @@ body.overflow-hidden {
 
 .plaay-header-wishlist__count {
   position: absolute;
-  top: -8px;
-  right: -10px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
+  top: 1px;
+  right: 1px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
   border-radius: 999px;
   background: #F9C61D;
   color: #021D49;
   font-family: walsheim-bold, sans-serif;
   font-size: 10px;
-  line-height: 16px;
+  line-height: 18px;
   text-align: center;
+  z-index: 2;
 }
 
 .plaay-mobile-wishlist__icon-wrap {
@@ -4273,41 +4274,7 @@ footer content-accordion .footer-accordion__trigger > span:first-child {
 }
 
 .plaay-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-left: 18px;
-  margin-right: 14px;
-}
-
-.plaay-header-utility {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  border: 1px solid rgba(2, 29, 73, 0.08);
-  background: #fff;
-  color: #021d49;
-  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-}
-
-.plaay-header-utility:hover {
-  background: #021d49;
-  color: #fff;
-  border-color: #021d49;
-  transform: translateY(-1px);
-}
-
-.plaay-header-utility--search {
-  border: 1px solid rgba(2, 29, 73, 0.08);
-  background: #fff;
-  color: inherit;
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  cursor: pointer;
+  display: none;
 }
 
 .plaay-account-icon-link {
@@ -4420,6 +4387,54 @@ footer content-accordion .footer-accordion__trigger > span:first-child {
   width: 22px;
   height: 22px;
   margin-right: 12px;
+}
+
+@media (min-width: 1024px) {
+  .plaay-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 14px;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .plaay-header-utility {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: 1px solid rgba(2, 29, 73, 0.08);
+    background: #fff;
+    color: #021d49;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    overflow: visible;
+    flex-shrink: 0;
+  }
+
+  .plaay-header-utility:hover {
+    background: #021d49;
+    color: #fff;
+    border-color: #021d49;
+    transform: translateY(-1px);
+  }
+
+  .plaay-header-utility--search {
+    border: 1px solid rgba(2, 29, 73, 0.08);
+    background: #fff;
+    color: inherit;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .plaay-header-actions .plaay-header-wishlist {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .plaay-mobile-menu-trust {
@@ -4653,5 +4668,12 @@ footer .footer-flex {
 
   .plaay-coll-usp__item {
     min-height: 48px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .plaay-header-actions,
+  .plaay-account-pill {
+    display: none !important;
   }
 }
