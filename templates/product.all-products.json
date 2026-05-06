@@ -222,36 +222,6 @@
         "rating_text": "4.9 out of 5 from 2,000+ reviews"
       }
     },
-    "richtext_hVDgQC": {
-      "type": "richtext",
-      "blocks": {
-        "heading_c3TdFj": {
-          "type": "heading",
-          "settings": {
-            "heading": "LOVE AT FIRST BITE",
-            "color": "#021d49",
-            "font_size_desktop": 62,
-            "font_size_mobile": 40,
-            "spacing_top_desktop": 10,
-            "spacing_bottom_desktop": 10,
-            "spacing_top_mobile": 10,
-            "spacing_bottom_mobile": 10
-          }
-        }
-      },
-      "block_order": [
-        "heading_c3TdFj"
-      ],
-      "settings": {
-        "bkg_color": "#ffffff",
-        "full_width": true,
-        "enable_style": false,
-        "spacing_top_desktop": 10,
-        "spacing_bottom_desktop": 10,
-        "spacing_top_mobile": 10,
-        "spacing_bottom_mobile": 10
-      }
-    },
     "1736144550483a252b": {
       "type": "apps",
       "blocks": {
@@ -730,7 +700,6 @@
     "richtext_XzziaT",
     "apps_6td8dD",
     "pdp_social_proof_plaay",
-    "richtext_hVDgQC",
     "1736144550483a252b",
     "1736138805fe25981f",
     "product_faqs_a34mfY",
