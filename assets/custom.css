@@ -510,27 +510,36 @@ cart-drawer {
 
 /* Perks row */
 .plaay-sub-perks {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: nowrap;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 12px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.plaay-sub-perks::-webkit-scrollbar {
+  display: none;
 }
 .plaay-sub-perk {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
+  flex: 0 0 auto;
   font-family: walsheim-bold, sans-serif;
-  font-size: 11px;
+  font-size: 10px;
   color: #021D49;
   letter-spacing: 0.01em;
-  padding: 10px 12px;
-  border-radius: 12px;
+  white-space: nowrap;
+  padding: 9px 12px;
+  border-radius: 999px;
   background: rgba(2, 29, 73, 0.05);
-  line-height: 1.25;
+  line-height: 1;
 }
 .plaay-sub-perk__tick {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -546,7 +555,12 @@ cart-drawer {
 
 @media (max-width: 640px) {
   .plaay-sub-perks {
-    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .plaay-sub-perk {
+    font-size: 9px;
+    padding: 8px 10px;
   }
 }
 .plaay-sub-freq__heading {
@@ -2437,8 +2451,9 @@ input#email_01K3QYXE95MP3N5RAFP8B1PPVS {
 .plaay-sticky-plan-row {
   display: none;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
 .plaay-sticky-frequency-toggle {
@@ -2453,6 +2468,21 @@ input#email_01K3QYXE95MP3N5RAFP8B1PPVS {
   line-height: 1.2;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  flex: 0 0 auto;
+}
+
+.plaay-sticky-plan {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.plaay-sticky-benefits {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .plaay-sticky-frequency-options {
@@ -2497,6 +2527,35 @@ input#email_01K3QYXE95MP3N5RAFP8B1PPVS {
   align-items: flex-end;
   gap: 3px;
   min-width: 0;
+  width: min(300px, 28vw);
+  text-align: right;
+}
+
+.plaay-sticky-desktop__meta .plaay-sticky-plan {
+  max-width: 100%;
+}
+
+.plaay-sticky-desktop__meta .plaay-sticky-benefits {
+  font-size: 10px !important;
+  line-height: 1.15 !important;
+}
+
+.plaay-sticky-desktop__meta .plaay-sticky-frequency-options {
+  justify-content: flex-end;
+}
+
+.plaay-sticky-mobile__meta {
+  min-width: 0;
+}
+
+.plaay-sticky-mobile__meta .plaay-sticky-plan,
+.plaay-sticky-mobile__meta .plaay-sticky-benefits {
+  max-width: 100%;
+}
+
+.plaay-sticky-mobile__meta .plaay-sticky-benefits {
+  font-size: 10px !important;
+  line-height: 1.15 !important;
 }
 
 @media (max-width: 420px) {

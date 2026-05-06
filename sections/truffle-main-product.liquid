@@ -1011,6 +1011,16 @@
     buildStickyFrequencyOptions();
     bindStickyFrequencyControls();
 
+    function compactStickyBenefits(text) {
+      return (text || '')
+        .replace(/Free Shipping/ig, 'Free shipping')
+        .replace(/15%\s*Off\s*Regular\s*Price/ig, '15% off')
+        .replace(/Skip\s*Cancel\s*Anytime/ig, 'Skip anytime')
+        .replace(/\s*·\s*/g, ' · ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
     function syncPurchaseState() {
       var subWrap = document.querySelector('.plaay-sub-wrap');
       var isSubscription = !!document.querySelector('#plaay-tab-subscribe.plaay-sub-tab--active');
@@ -1020,7 +1030,7 @@
       var currentPrice = (isSubscription ? subscribeText : oneTimeText).trim();
       var compareText = '';
       var planLabel = isSubscription && activePlan ? ('Delivery every ' + activePlan.textContent.trim()) : '';
-      var benefitLabel = isSubscription && subWrap ? (subWrap.getAttribute('data-sticky-benefits') || '').trim() : '';
+      var benefitLabel = isSubscription && subWrap ? compactStickyBenefits((subWrap.getAttribute('data-sticky-benefits') || '').trim()) : '';
       var modeText = isSubscription ? 'Subscribe & Save' : 'One-Time Purchase';
       var submitLabel = isSubscription ? 'Subscribe now' : '{{ "product.add_to_cart.add_to_bag" | t }}';
 
