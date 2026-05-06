@@ -889,6 +889,7 @@
     var inlineAtc = document.querySelector('.product_page_atc');
     var desktopBar = document.getElementById('plaay-sticky-atc');
     var mobileBar  = document.getElementById('plaay-sticky-mobile');
+    var mobileMenu = document.querySelector('.mobile_menu');
     if (!inlineAtc) return;
 
     var isMobile = function() { return window.innerWidth < 1024; };
@@ -919,7 +920,16 @@
       bar.style.pointerEvents = 'none';
     }
 
+    function isMobileMenuOpen() {
+      return !!(mobileMenu && !mobileMenu.classList.contains('-translate-x-full'));
+    }
+
     function syncViewportBar() {
+      if (isMobile() && isMobileMenuOpen()) {
+        hideBar(mobileBar);
+        hideBar(desktopBar);
+        return;
+      }
       if (isMobile()) {
         showBar(mobileBar); hideBar(desktopBar);
       } else {
@@ -928,6 +938,14 @@
     }
     syncViewportBar();
     window.addEventListener('resize', syncViewportBar);
+    if (mobileMenu) {
+      new MutationObserver(syncViewportBar).observe(mobileMenu, { attributes: true, attributeFilter: ['class'] });
+    }
+    document.querySelectorAll('.hamburger_icon, .mobile_menu_cross').forEach(function(trigger) {
+      trigger.addEventListener('click', function() {
+        setTimeout(syncViewportBar, 20);
+      });
+    });
 
     function getVisibleText(selector) {
       var nodes = document.querySelectorAll(selector);

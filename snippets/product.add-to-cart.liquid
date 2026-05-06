@@ -57,6 +57,14 @@
   assign global_recharge_point_three = settings.global_recharge_point_three
   assign hide_inline_atc = hide_inline_atc | default: false
   assign hide_inline_quantity = hide_inline_quantity | default: false
+  assign has_subscription_plans = false
+
+  for selling_plan_group in product.selling_plan_groups
+    if selling_plan_group.selling_plans.size > 0
+      assign has_subscription_plans = true
+      break
+    endif
+  endfor
 
   capture sticky_subscription_benefits
     assign benefit_separator = ''
@@ -151,7 +159,7 @@
           <input type="hidden" name="quantity" value="1" data-quantity-input>
         {% endunless %}
         {% comment %} subscriptions — new clean toggle {% endcomment %}
-        {% if product.selling_plan_groups.size > 0 and show_subscribe != false %}
+        {% if has_subscription_plans and show_subscribe != false %}
           {% comment %} Extract discount % from first selling plan {% endcomment %}
           {% assign sub_discount = 0 %}
           {% for selling_plan_group in product.selling_plan_groups %}
@@ -397,7 +405,7 @@
           class="relative flex items-center justify-center w-full py-4 mb-4 text-m font-bold uppercase transition-all duration-200 rounded-lg btn mt-7 blue product_page_atc font-walsheim-bold{% if hide_inline_atc %} plaay-product-atc-proxy{% endif %}"
           {% if hide_inline_atc %}aria-hidden="true" tabindex="-1"{% endif %}>
         
-          <div class="text-sm product_discount_price relative z-1 font-walsheim-bold | {% if product.selling_plan_groups.size > 0 %} md:hidden {% endif %}">
+          <div class="text-sm product_discount_price relative z-1 font-walsheim-bold | {% if has_subscription_plans %} md:hidden {% endif %}">
             {{ current_variant.price | money | replace: ',', '.' }}
           </div>
           {%- comment -%} Show compare price only if product has 'Bundle' tag {%- endcomment -%}
@@ -405,7 +413,7 @@
             {{ current_variant.compare_at_price | money | replace: ',', '.' }}
           </div>
         
-          <span class="px-1 | {% if product.selling_plan_groups.size > 0 %} md:hidden {% endif %}">|</span>
+          <span class="px-1 | {% if has_subscription_plans %} md:hidden {% endif %}">|</span>
           <span class="hidden">{{ 'action.seo' | t }}</span>
           {{ 'product.add_to_cart.add_to_bag' | t }}
         </button>
