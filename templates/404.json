@@ -1,1 +1,28 @@
-{"sections":{"main":{"type":"main-404","settings":{"image":"shopify:\/\/shop_images\/Screenshot_2023-02-01_at_16.21_1_2_1.png","title":"Oops..","copy":"We can't seem to find the page you were looking for","background_color":"#ffffff","menu_title":"Get Back Into The Action","menu":"404-menu","menu_background_color":"#f6f5f3"}}},"order":["main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {
+        "image": "shopify://shop_images/Screenshot_2023-02-01_at_16.21_1_2_1.png",
+        "title": "Oops..",
+        "copy": "We can't seem to find the page you were looking for",
+        "background_color": "#ffffff",
+        "menu_title": "Get Back Into The Action",
+        "menu": "404-menu",
+        "menu_background_color": "#f6f5f3"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

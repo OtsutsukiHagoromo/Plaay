@@ -101,6 +101,103 @@
       ],
       "settings": {}
     },
+    "pdp_nutrition_gxcPA8": {
+      "type": "pdp-nutrition",
+      "blocks": {
+        "row_ejqtcT": {
+          "type": "row",
+          "settings": {
+            "name": "Total Fat",
+            "value": "4g",
+            "is_sub": false
+          }
+        },
+        "row_PTc9Xt": {
+          "type": "row",
+          "settings": {
+            "name": "Saturated Fat",
+            "value": "1.5g",
+            "is_sub": true
+          }
+        },
+        "row_4TEC9a": {
+          "type": "row",
+          "settings": {
+            "name": "Trans Fat",
+            "value": "0g",
+            "is_sub": true
+          }
+        },
+        "row_zJG4BN": {
+          "type": "row",
+          "settings": {
+            "name": "Cholesterol",
+            "value": "20mg",
+            "is_sub": false
+          }
+        },
+        "row_ttGV69": {
+          "type": "row",
+          "settings": {
+            "name": "Sodium",
+            "value": "140mg",
+            "is_sub": false
+          }
+        },
+        "row_8yeGAH": {
+          "type": "row",
+          "settings": {
+            "name": "Total Carbohydrate",
+            "value": "12g",
+            "is_sub": false
+          }
+        },
+        "row_7JJ7Mg": {
+          "type": "row",
+          "settings": {
+            "name": "Dietary Fibre",
+            "value": "1g",
+            "is_sub": true
+          }
+        },
+        "row_WeHPe8": {
+          "type": "row",
+          "settings": {
+            "name": "Total Sugars",
+            "value": "5g",
+            "is_sub": true
+          }
+        },
+        "row_QrW7nH": {
+          "type": "row",
+          "settings": {
+            "name": "Protein",
+            "value": "10g",
+            "is_sub": false
+          }
+        }
+      },
+      "block_order": [
+        "row_ejqtcT",
+        "row_PTc9Xt",
+        "row_4TEC9a",
+        "row_zJG4BN",
+        "row_ttGV69",
+        "row_8yeGAH",
+        "row_7JJ7Mg",
+        "row_WeHPe8",
+        "row_QrW7nH"
+      ],
+      "disabled": true,
+      "name": "PDP — Nutrition Facts",
+      "settings": {
+        "background_color": "#FFFFFF",
+        "heading": "Nutrition Facts",
+        "serving_size": "1 bar (40g)",
+        "calories": "150",
+        "disclaimer": "* Percent Daily Values are based on a 2,000 calorie diet."
+      }
+    },
     "pdp_social_proof_plaay": {
       "type": "pdp-social-proof",
       "blocks": {
@@ -257,6 +354,31 @@
         "rebuy_personalization_engine_rebuy_widget_BKBT3m"
       ],
       "settings": {}
+    },
+    "plaay_frequently_bought_jdkXKB": {
+      "type": "plaay-frequently-bought",
+      "disabled": true,
+      "name": "Frequently bought",
+      "settings": {
+        "heading": "Frequently bought",
+        "description": "Feature a hand-picked collection of products that shoppers often add alongside this category.",
+        "background_color": "#FFF",
+        "source_collection": "limited-editions",
+        "product_limit": 8,
+        "autoplay": 0,
+        "see_all_text": "Shop collection",
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1.2,
+        "column_size_mobile_small": 1.2,
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": true,
+        "compact_mobile_grid": true,
+        "hide_atc_on_tiles": false
+      }
     },
     "product_faqs_a34mfY": {
       "type": "product_faqs",
@@ -699,9 +821,11 @@
     "blocks_dKL7zR",
     "richtext_XzziaT",
     "apps_6td8dD",
+    "pdp_nutrition_gxcPA8",
     "pdp_social_proof_plaay",
     "1736144550483a252b",
     "1736138805fe25981f",
+    "plaay_frequently_bought_jdkXKB",
     "product_faqs_a34mfY",
     "blocks_JRjbnL",
     "review_gif_video_UQj4ik",
