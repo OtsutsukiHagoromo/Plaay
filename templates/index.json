@@ -1183,7 +1183,7 @@
         "product_HnPfWD": {
           "type": "product",
           "settings": {
-            "product": "triple-chocolate-truffles-1"
+            "product": "triple-chocolate-truffle"
           }
         },
         "product_PY7gpT": {
@@ -1201,7 +1201,7 @@
         "product_ct3qnA": {
           "type": "product",
           "settings": {
-            "product": "peanut-butter-truffles-test"
+            "product": "peanut-butter-truffle"
           }
         }
       },
@@ -2469,34 +2469,34 @@
         "provide_margin_top": false
       }
     },
-    "pdp_social_proof_EhzVqa": {
+    "pdp_social_proof_rB7dqT": {
       "type": "pdp-social-proof",
       "blocks": {
-        "trust_badge_CpkVbW": {
+        "trust_badge_yWBHTR": {
           "type": "trust_badge",
           "settings": {
             "label": "No Refined Sugar"
           }
         },
-        "trust_badge_eK6Cbe": {
+        "trust_badge_p3KAxK": {
           "type": "trust_badge",
           "settings": {
             "label": "100% Clean Ingredients"
           }
         },
-        "trust_badge_NBTiQH": {
+        "trust_badge_4VAyJg": {
           "type": "trust_badge",
           "settings": {
             "label": "Halal certified"
           }
         },
-        "trust_badge_GYxe3G": {
+        "trust_badge_h9C4Ah": {
           "type": "trust_badge",
           "settings": {
             "label": "Made in the UAE"
           }
         },
-        "review_xngXi9": {
+        "review_Mx3QYf": {
           "type": "review",
           "settings": {
             "rating": 5,
@@ -2505,7 +2505,7 @@
             "tag": "Verified buyer"
           }
         },
-        "review_4DjCAi": {
+        "review_YMCRaP": {
           "type": "review",
           "settings": {
             "rating": 5,
@@ -2514,7 +2514,7 @@
             "tag": "Verified buyer"
           }
         },
-        "review_LiYpLU": {
+        "review_BQTCNh": {
           "type": "review",
           "settings": {
             "rating": 5,
@@ -2522,18 +2522,68 @@
             "reviewer": "Priya S.",
             "tag": "Verified buyer"
           }
+        },
+        "review_jtKhht": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Finally found a chocolate snack that feels indulgent but still fits my routine.",
+            "reviewer": "Lina R.",
+            "tag": "Verified buyer"
+          }
+        },
+        "review_f63mF8": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "The texture, the flavour, the ingredients - Plaay absolutely nailed it.",
+            "reviewer": "Nadia M.",
+            "tag": "Verified buyer"
+          }
+        },
+        "review_atag6b": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "I ordered once out of curiosity and now keep a stash at home and at work.",
+            "reviewer": "Zayd H.",
+            "tag": "Verified buyer"
+          }
+        },
+        "review_YXmrHk": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Tried these for the ingredients, stayed for the taste. Genuinely addictive in the best way.",
+            "reviewer": "Farah A.",
+            "tag": "Verified buyer"
+          }
+        },
+        "review_cYkTRt": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "These are the easiest yes in my pantry now. Clean, satisfying, and actually crave-worthy.",
+            "reviewer": "Daniel T.",
+            "tag": "Verified buyer"
+          }
         }
       },
       "block_order": [
-        "trust_badge_CpkVbW",
-        "trust_badge_eK6Cbe",
-        "trust_badge_NBTiQH",
-        "trust_badge_GYxe3G",
-        "review_xngXi9",
-        "review_4DjCAi",
-        "review_LiYpLU"
+        "trust_badge_yWBHTR",
+        "trust_badge_p3KAxK",
+        "trust_badge_4VAyJg",
+        "trust_badge_h9C4Ah",
+        "review_Mx3QYf",
+        "review_YMCRaP",
+        "review_BQTCNh",
+        "review_jtKhht",
+        "review_f63mF8",
+        "review_atag6b",
+        "review_YXmrHk",
+        "review_cYkTRt"
       ],
-      "name": "PDP — Social Proof",
+      "name": "PDP â€” Social Proof",
       "settings": {
         "background_color": "#f4f4f4",
         "heading": "Loved by thousands",
@@ -2610,7 +2660,7 @@
     "cfd29eca-49e3-4778-ad49-c635383324c8",
     "09dfb8e0-abe1-4ef8-910f-1531e59122ad",
     "3ee422c3-fa09-46a2-a29c-13a01c96c18e",
-    "pdp_social_proof_EhzVqa",
+    "pdp_social_proof_rB7dqT",
     "1726656192da5e6d75",
     "e6d51720-1295-476b-9afe-9dcb07476eec",
     "instafeed_y9eagG",
