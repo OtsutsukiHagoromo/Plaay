@@ -8,85 +8,501 @@
   assign menu_background_color = section.settings.menu_background_color
 %}
 
-<div class="plaay-404" style="background-color: {{ background_color }};">
-  <div class="container pt-32 pb-12 | md:pt-44 md:pb-18">
-    <div class="rounded-[34px] overflow-hidden shadow-[0_22px_50px_rgba(2,29,73,0.12)]">
-      <div class="grid | lg:grid-cols-[1.05fr_0.95fr]">
-        <div class="px-7 py-10 | md:px-12 md:py-14 | lg:px-14" style="background-color: #F9C61D;">
-          <span class="inline-flex items-center rounded-full bg-white text-dark-blue font-walsheim-bold uppercase tracking-[0.16em] text-[11px] px-4 py-2">
-            Error 404
-          </span>
+<section class="plaay-404" style="--plaay-404-bg: {{ background_color }}; --plaay-404-panel: {{ menu_background_color }};">
+  <div class="container plaay-404__shell">
+    <div class="plaay-404__hero">
+      <div class="plaay-404__copy">
+        <span class="plaay-404__eyebrow font-walsheim-bold">Error 404</span>
 
-          {% if title != blank %}
-            <h1 class="mt-6 text-dark-blue uppercase font-walsheim-bold leading-[0.92] text-5xl | md:text-8xl">
-              {{ title }}
-            </h1>
-          {% endif %}
+        {% if title != blank %}
+          <h1 class="plaay-404__title font-walsheim-bold">{{ title }}</h1>
+        {% endif %}
 
+        <p class="plaay-404__lead font-walsheim-regular">
           {% if copy != blank %}
-            <p class="mt-5 max-w-xl text-dark-blue text-base leading-relaxed | md:text-lg">
-              {{ copy }}
-            </p>
+            {{ copy }}
+          {% else %}
+            We can't seem to find the page you were looking for.
           {% endif %}
+          Try a quick search, jump back into shopping, or use one of our best shortcuts below.
+        </p>
 
-          <div class="mt-8 flex flex-col gap-3 | sm:flex-row">
-            <a href="{{ routes.root_url }}" class="inline-flex items-center justify-center rounded-full bg-dark-blue px-6 py-3 text-sm font-walsheim-bold uppercase tracking-[0.12em] text-white transition-all duration-200 hover:-translate-y-[1px]">
-              Go Home
-            </a>
-            <a href="/collections/all" class="inline-flex items-center justify-center rounded-full border border-dark-blue border-opacity-15 bg-white px-6 py-3 text-sm font-walsheim-bold uppercase tracking-[0.12em] text-dark-blue transition-all duration-200 hover:border-dark-blue">
-              Shop All
-            </a>
-          </div>
+        <form action="{{ routes.search_url }}" method="get" role="search" class="plaay-404__search">
+          <label class="sr-only" for="plaay-404-search-{{ section.id }}">Search Plaay</label>
+          <input
+            id="plaay-404-search-{{ section.id }}"
+            type="search"
+            name="q"
+            placeholder="Search bars, truffles, bundles..."
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false">
+          <button type="submit" class="font-walsheim-bold">Search</button>
+        </form>
 
-          <div class="mt-8 grid gap-3 | sm:grid-cols-3">
-            <div class="rounded-[20px] bg-white bg-opacity-95 px-4 py-4">
-              <p class="text-[10px] uppercase tracking-[0.14em] text-dark-blue text-opacity-55 font-walsheim-bold">Fast fix</p>
-              <p class="mt-2 text-sm text-dark-blue font-walsheim-bold">Try search or jump into a collection.</p>
-            </div>
-            <div class="rounded-[20px] bg-white bg-opacity-95 px-4 py-4">
-              <p class="text-[10px] uppercase tracking-[0.14em] text-dark-blue text-opacity-55 font-walsheim-bold">Worth it</p>
-              <p class="mt-2 text-sm text-dark-blue font-walsheim-bold">Clean ingredients, zero boring snacks.</p>
-            </div>
-            <div class="rounded-[20px] bg-white bg-opacity-95 px-4 py-4">
-              <p class="text-[10px] uppercase tracking-[0.14em] text-dark-blue text-opacity-55 font-walsheim-bold">Need help?</p>
-              <p class="mt-2 text-sm text-dark-blue font-walsheim-bold">Reach us and we'll point you in the right direction.</p>
-            </div>
-          </div>
+        <div class="plaay-404__actions">
+          <a href="{{ routes.root_url }}" class="plaay-404__button plaay-404__button--primary font-walsheim-bold">Go home</a>
+          <a href="/collections/all" class="plaay-404__button plaay-404__button--secondary font-walsheim-bold">Shop all</a>
         </div>
 
-        <div class="relative flex items-center justify-center px-7 py-10 | md:px-10 md:py-14" style="background-color: {{ menu_background_color }};">
-          <div class="w-full max-w-[30rem]">
-            {% if image != blank %}
-              <div class="rounded-[28px] bg-white p-5 shadow-[0_16px_36px_rgba(2,29,73,0.08)] | md:p-7">
-                {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain w-full h-[180px] | md:h-[280px]' %}
-              </div>
-            {% endif %}
+        <div class="plaay-404__chips">
+          <span class="plaay-404__chip font-walsheim-bold">100% Clean Ingredients</span>
+          <span class="plaay-404__chip font-walsheim-bold">Free Delivery AED 75+</span>
+          <span class="plaay-404__chip font-walsheim-bold">Made in UAE</span>
+        </div>
+      </div>
 
-            {% if menu != blank %}
-              <div class="mt-6 rounded-[28px] bg-white px-5 py-6 shadow-[0_16px_36px_rgba(2,29,73,0.08)] | md:px-7 md:py-7">
-                {% if menu_title != blank %}
-                  <h2 class="text-dark-blue uppercase text-xs tracking-[0.16em] font-walsheim-bold">
-                    {{ menu_title }}
-                  </h2>
-                {% endif %}
-                <ul class="mt-4 grid gap-3 | sm:grid-cols-2">
-                  {% for link in linklists[menu].links %}
-                    <li>
-                      <a href="{{ link.url }}" class="flex items-center justify-between rounded-[18px] border border-dark-blue border-opacity-10 px-4 py-3 text-sm font-walsheim-bold text-dark-blue transition-all duration-200 hover:border-dark-blue hover:-translate-y-[1px]">
-                        <span>{{ link.title }}</span>
-                        <span aria-hidden="true">-></span>
-                      </a>
-                    </li>
-                  {% endfor %}
-                </ul>
-              </div>
-            {% endif %}
+      <div class="plaay-404__visual" style="background: var(--plaay-404-panel);">
+        <div class="plaay-404__visual-card">
+          {% if image != blank %}
+            <div class="plaay-404__image-frame">
+              {% render 'img', type: 'img', img: image, eager: true, class: 'plaay-404__image' %}
+            </div>
+          {% endif %}
+
+          <div class="plaay-404__note">
+            <p class="plaay-404__note-title font-walsheim-bold">Looks like this snack trail ended early.</p>
+            <p class="plaay-404__note-copy font-walsheim-regular">No stress. We left some better routes below so you can get back to the good stuff fast.</p>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="plaay-404__lower">
+      <div class="plaay-404__panel" style="background: var(--plaay-404-panel);">
+        {% if menu_title != blank %}
+          <div class="plaay-404__panel-head">
+            <h2 class="plaay-404__panel-title font-walsheim-bold">{{ menu_title }}</h2>
+            <p class="plaay-404__panel-copy font-walsheim-regular">Popular shortcuts shoppers usually want next.</p>
+          </div>
+        {% endif %}
+
+        {% if menu != blank %}
+          <div class="plaay-404__link-grid">
+            {% for link in linklists[menu].links %}
+              <a href="{{ link.url }}" class="plaay-404__link-card">
+                <span class="plaay-404__link-label font-walsheim-bold">{{ link.title }}</span>
+                <span class="plaay-404__link-arrow" aria-hidden="true">-&gt;</span>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="plaay-404__panel plaay-404__panel--help">
+        <div class="plaay-404__panel-head">
+          <h2 class="plaay-404__panel-title font-walsheim-bold">Still stuck?</h2>
+          <p class="plaay-404__panel-copy font-walsheim-regular">If you were trying to find something specific, our team can point you in the right direction.</p>
+        </div>
+
+        <div class="plaay-404__help-grid">
+          <a href="/pages/contact-us" class="plaay-404__help-card">
+            <span class="plaay-404__help-label font-walsheim-bold">Contact us</span>
+            <span class="plaay-404__help-text font-walsheim-regular">Questions, delivery help, subscriptions, gifting.</span>
+          </a>
+          <a href="/pages/subscribe-save" class="plaay-404__help-card">
+            <span class="plaay-404__help-label font-walsheim-bold">Subscribe &amp; save</span>
+            <span class="plaay-404__help-text font-walsheim-regular">Set up your snack routine and save on repeat orders.</span>
+          </a>
+          <a href="/pages/wishlist" class="plaay-404__help-card">
+            <span class="plaay-404__help-label font-walsheim-bold">Wishlist</span>
+            <span class="plaay-404__help-text font-walsheim-regular">Pick up where you left off with your saved favourites.</span>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+</section>
+
+<style>
+  .plaay-404 {
+    background:
+      radial-gradient(circle at top left, rgba(249, 198, 29, 0.24), transparent 26%),
+      radial-gradient(circle at bottom right, rgba(240, 139, 52, 0.14), transparent 24%),
+      var(--plaay-404-bg);
+  }
+
+  .plaay-404__shell {
+    padding-top: 8rem;
+    padding-bottom: 4rem;
+  }
+
+  .plaay-404__hero {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    align-items: stretch;
+  }
+
+  .plaay-404__copy,
+  .plaay-404__visual-card,
+  .plaay-404__panel {
+    border-radius: 32px;
+  }
+
+  .plaay-404__copy {
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    background: #f9c61d;
+    color: #021d49;
+    box-shadow: 0 24px 50px rgba(2, 29, 73, 0.12);
+  }
+
+  .plaay-404__copy::after {
+    content: "404";
+    position: absolute;
+    right: 1.25rem;
+    bottom: 0.5rem;
+    font-family: var(--font-walsheim-bold, "walsheim-bold", sans-serif);
+    font-size: clamp(4.5rem, 12vw, 8rem);
+    line-height: 1;
+    color: rgba(2, 29, 73, 0.09);
+    pointer-events: none;
+  }
+
+  .plaay-404__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .plaay-404__title {
+    margin: 1rem 0 0;
+    font-size: clamp(3.1rem, 7vw, 6.6rem);
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+
+  .plaay-404__lead {
+    max-width: 42rem;
+    margin: 1rem 0 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .plaay-404__search {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding: 0.85rem;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 12px 30px rgba(2, 29, 73, 0.08);
+  }
+
+  .plaay-404__search input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 52px;
+    padding: 0 18px;
+    border: 1px solid rgba(2, 29, 73, 0.12);
+    border-radius: 18px;
+    background: #fff;
+    color: #021d49;
+    font-size: 15px;
+  }
+
+  .plaay-404__search input:focus {
+    outline: none;
+    border-color: #021d49;
+  }
+
+  .plaay-404__search button {
+    flex-shrink: 0;
+    min-width: 132px;
+    height: 52px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 18px;
+    background: #021d49;
+    color: #f9c61d;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .plaay-404__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .plaay-404__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 22px;
+    border-radius: 999px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    text-transform: uppercase;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .plaay-404__button:hover {
+    transform: translateY(-1px);
+  }
+
+  .plaay-404__button--primary {
+    background: #021d49;
+    color: #fff;
+  }
+
+  .plaay-404__button--secondary {
+    border: 1px solid rgba(2, 29, 73, 0.12);
+    background: rgba(255, 255, 255, 0.94);
+    color: #021d49;
+  }
+
+  .plaay-404__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1.5rem;
+  }
+
+  .plaay-404__chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: rgba(2, 29, 73, 0.08);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .plaay-404__visual {
+    display: flex;
+    align-items: stretch;
+    min-height: 100%;
+    padding: 1.25rem;
+    border-radius: 32px;
+    box-shadow: 0 24px 50px rgba(2, 29, 73, 0.08);
+  }
+
+  .plaay-404__visual-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1.25rem;
+    background: linear-gradient(180deg, rgba(255,255,255,0.86) 0%, #ffffff 100%);
+    box-shadow: inset 0 0 0 1px rgba(2, 29, 73, 0.06);
+  }
+
+  .plaay-404__image-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: 1rem;
+    border-radius: 26px;
+    background:
+      radial-gradient(circle at 50% 12%, rgba(249, 198, 29, 0.3), transparent 48%),
+      #f7f5ef;
+  }
+
+  .plaay-404__image {
+    width: 100%;
+    max-width: 420px;
+    height: 100%;
+    max-height: 280px;
+    object-fit: contain;
+  }
+
+  .plaay-404__note {
+    margin-top: 1rem;
+    padding: 1.1rem 1.2rem;
+    border-radius: 22px;
+    background: #021d49;
+    color: #fff;
+  }
+
+  .plaay-404__note-title {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .plaay-404__note-copy {
+    margin: 0.45rem 0 0;
+    font-size: 0.94rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.78);
+  }
+
+  .plaay-404__lower {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    margin-top: 1.25rem;
+  }
+
+  .plaay-404__panel {
+    padding: 1.5rem;
+    box-shadow: 0 18px 42px rgba(2, 29, 73, 0.08);
+  }
+
+  .plaay-404__panel--help {
+    background: #ffffff;
+  }
+
+  .plaay-404__panel-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.15rem;
+  }
+
+  .plaay-404__panel-title {
+    margin: 0;
+    color: #021d49;
+    font-size: 1.25rem;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .plaay-404__panel-copy {
+    margin: 0;
+    color: rgba(2, 29, 73, 0.7);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .plaay-404__link-grid,
+  .plaay-404__help-grid {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .plaay-404__link-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plaay-404__link-card,
+  .plaay-404__help-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(2, 29, 73, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .plaay-404__link-card:hover,
+  .plaay-404__help-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(2, 29, 73, 0.18);
+    box-shadow: 0 14px 26px rgba(2, 29, 73, 0.08);
+  }
+
+  .plaay-404__link-label,
+  .plaay-404__help-label {
+    color: #021d49;
+    font-size: 0.92rem;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .plaay-404__link-arrow {
+    color: #021d49;
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.55;
+  }
+
+  .plaay-404__help-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .plaay-404__help-text {
+    color: rgba(2, 29, 73, 0.68);
+    font-size: 0.92rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 989px) {
+    .plaay-404__hero,
+    .plaay-404__lower {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 749px) {
+    .plaay-404__shell {
+      padding-top: 7rem;
+      padding-bottom: 3rem;
+    }
+
+    .plaay-404__copy,
+    .plaay-404__visual,
+    .plaay-404__visual-card,
+    .plaay-404__panel {
+      border-radius: 26px;
+    }
+
+    .plaay-404__copy,
+    .plaay-404__panel,
+    .plaay-404__visual {
+      padding: 1.25rem;
+    }
+
+    .plaay-404__title {
+      font-size: 3rem;
+    }
+
+    .plaay-404__lead {
+      font-size: 0.97rem;
+    }
+
+    .plaay-404__search {
+      flex-direction: column;
+    }
+
+    .plaay-404__search button {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .plaay-404__chips {
+      gap: 0.5rem;
+    }
+
+    .plaay-404__chip {
+      min-height: 36px;
+      font-size: 10px;
+      letter-spacing: 0.11em;
+    }
+
+    .plaay-404__image-frame {
+      min-height: 220px;
+    }
+
+    .plaay-404__link-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
 
 {% schema %}
   {
