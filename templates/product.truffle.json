@@ -132,6 +132,14 @@
       ],
       "settings": {}
     },
+    "plaay_recently_viewed_c8wzGC": {
+      "type": "plaay-recently-viewed",
+      "name": "Recently Viewed",
+      "settings": {
+        "heading": "Recently Viewed",
+        "max_products": 6
+      }
+    },
     "pdp_social_proof_plaay": {
       "type": "pdp-social-proof",
       "blocks": {
@@ -1183,6 +1191,7 @@
     "blocks_xHARVm",
     "richtext_39qxVU",
     "apps_6td8dD",
+    "plaay_recently_viewed_c8wzGC",
     "pdp_social_proof_plaay",
     "review_gif_video_UQj4ik",
     "pdp_stats_bar_h7z9pz",

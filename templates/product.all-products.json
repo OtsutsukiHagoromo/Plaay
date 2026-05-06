@@ -191,7 +191,7 @@
       "disabled": true,
       "name": "PDP — Nutrition Facts",
       "settings": {
-        "background_color": "#FFFFFF",
+        "background_color": "#ffffff",
         "heading": "Nutrition Facts",
         "serving_size": "1 bar (40g)",
         "calories": "150",
@@ -354,31 +354,6 @@
         "rebuy_personalization_engine_rebuy_widget_BKBT3m"
       ],
       "settings": {}
-    },
-    "plaay_frequently_bought_jdkXKB": {
-      "type": "plaay-frequently-bought",
-      "disabled": true,
-      "name": "Frequently bought",
-      "settings": {
-        "heading": "Frequently bought",
-        "description": "Feature a hand-picked collection of products that shoppers often add alongside this category.",
-        "background_color": "#FFF",
-        "source_collection": "limited-editions",
-        "product_limit": 8,
-        "autoplay": 0,
-        "see_all_text": "Shop collection",
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
-      }
     },
     "product_faqs_a34mfY": {
       "type": "product_faqs",
@@ -668,67 +643,6 @@
         "spacing_bottom_mobile": 0
       }
     },
-    "pdp_stats_bar_h7z9pz": {
-      "type": "pdp-stats-bar",
-      "blocks": {
-        "stat_NNMaRA": {
-          "type": "stat",
-          "settings": {
-            "value": "10g",
-            "label": "Protein"
-          }
-        },
-        "stat_bPrmcb": {
-          "type": "stat",
-          "settings": {
-            "value": "0g",
-            "label": "Sugar"
-          }
-        },
-        "stat_DErghU": {
-          "type": "stat",
-          "settings": {
-            "value": "100",
-            "label": "Calories"
-          }
-        },
-        "stat_UTm8tU": {
-          "type": "stat",
-          "settings": {
-            "value": "Keto",
-            "label": "Friendly"
-          }
-        },
-        "stat_LNATfX": {
-          "type": "stat",
-          "settings": {
-            "value": "Clean",
-            "label": "Ingredients"
-          }
-        },
-        "stat_GiaGXC": {
-          "type": "stat",
-          "settings": {
-            "value": "Halal",
-            "label": "Certified"
-          }
-        }
-      },
-      "block_order": [
-        "stat_NNMaRA",
-        "stat_bPrmcb",
-        "stat_DErghU",
-        "stat_UTm8tU",
-        "stat_LNATfX",
-        "stat_GiaGXC"
-      ],
-      "disabled": true,
-      "name": "PDP Ã¢â‚¬â€ Stats Bar",
-      "settings": {
-        "background_color": "#f4f4f4",
-        "heading": "Snacking Made Simple"
-      }
-    },
     "174471010040db00af": {
       "type": "apps",
       "settings": {}
@@ -814,6 +728,14 @@
         "background_color_right": "#f6f6f6",
         "sv_vs_image": "shopify://shop_images/us-vs-them.png"
       }
+    },
+    "plaay_recently_viewed_88xzxr": {
+      "type": "plaay-recently-viewed",
+      "name": "Recently Viewed",
+      "settings": {
+        "heading": "Recently Viewed",
+        "max_products": 6
+      }
     }
   },
   "order": [
@@ -822,14 +744,13 @@
     "richtext_XzziaT",
     "apps_6td8dD",
     "pdp_nutrition_gxcPA8",
+    "plaay_recently_viewed_88xzxr",
     "pdp_social_proof_plaay",
     "1736144550483a252b",
     "1736138805fe25981f",
-    "plaay_frequently_bought_jdkXKB",
     "product_faqs_a34mfY",
     "blocks_JRjbnL",
     "review_gif_video_UQj4ik",
-    "pdp_stats_bar_h7z9pz",
     "174471010040db00af",
     "scrolling_content_PjwFEy",
     "us_vs_them_image_Tq3dCR"
