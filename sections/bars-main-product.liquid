@@ -858,6 +858,7 @@
 
     function syncPurchaseState() {
       var subWrap = document.querySelector('.plaay-sub-wrap');
+      var hasSubscriptionUi = !!(subWrap && document.getElementById('plaay-tab-onetime') && document.getElementById('plaay-tab-subscribe'));
       var isSubscription = !!document.querySelector('#plaay-tab-subscribe.plaay-sub-tab--active');
       var oneTimeText = (document.querySelector('.plaay-sub-tab__price') || {}).textContent || '';
       var subscribeText = (document.querySelector('.plaay-sub-tab__disc-price') || {}).textContent || '';
@@ -894,12 +895,19 @@
         var compareEl = bar.querySelector('.plaay-sticky-compare');
         var submitEl = bar.querySelector('.plaay-sticky-submit, .plaay-mobile-submit');
 
-        if (modeEl) modeEl.textContent = modeText;
+        if (modeEl) {
+          if (hasSubscriptionUi) {
+            modeEl.textContent = modeText;
+            modeEl.style.display = '';
+          } else {
+            modeEl.style.display = 'none';
+          }
+        }
         if (planRowEl) {
-          planRowEl.style.display = planLabel ? 'flex' : 'none';
+          planRowEl.style.display = hasSubscriptionUi && planLabel ? 'flex' : 'none';
         }
         if (planEl) {
-          if (planLabel) {
+          if (hasSubscriptionUi && planLabel) {
             planEl.textContent = planLabel;
           } else {
             planEl.textContent = '';
