@@ -106,8 +106,24 @@
     },
     "main": {
       "type": "main-collection",
+      "disabled": true,
       "settings": {
-        "default_background_color": "#fad1d2",
+        "usp_show": false,
+        "usp_bg": "#021d49",
+        "usp_1_icon": "",
+        "usp_1_text": "Free shipping AED 75+",
+        "usp_2_icon": "🌿",
+        "usp_2_text": "No refined sugar",
+        "usp_3_icon": "🇦🇪",
+        "usp_3_text": "Made in UAE",
+        "usp_4_icon": "✅",
+        "usp_4_text": "Halal certified",
+        "usp_5_icon": "🌾",
+        "usp_5_text": "Gluten free",
+        "usp_6_icon": "🌱",
+        "usp_6_text": "Soy free",
+        "compact_mobile_grid": false,
+        "default_background_color": "#FFFFFF",
         "backup_featured_product_one": "",
         "backup_featured_product_two": "",
         "empty_collection_heading": "Looks like there are no products in this collection...",
@@ -116,82 +132,38 @@
         "empty_collection_link_text": "Return home"
       }
     },
-    "plaay_recently_viewed": {
-      "type": "plaay-recently-viewed",
-      "settings": {
-        "heading": "Previously viewed",
-        "max_products": 6
-      }
-    },
-    "review_gif_video_collection_limited": {
-      "type": "review_gif_video",
+    "custom_featured_product_QWVyCW": {
+      "type": "custom-featured-product",
       "blocks": {
-        "image_fBXgHA": {
-          "type": "image",
+        "product_ipgVrC": {
+          "type": "product",
           "settings": {
-            "image": "shopify://shop_images/first-bite-1.gif",
-            "height": 280,
-            "review_text": "<p>This is literally the best! Has single-handedly eliminated my chocolate and doughnut cravings!!</p>",
-            "review_heading": "Yoga Instructor, Dubai",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        },
-        "image_ddGtem": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/firstbite5.gif",
-            "height": 280,
-            "review_text": "<p>Honestly, this is my no-brainer snack for crazy days. Tastes amazing, & keeps me going! </p>",
-            "review_heading": "Always-on CEO",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        },
-        "image_8LWUTT": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/first-bite-6.gif",
-            "height": 280,
-            "review_text": "<p>Favorite flavour hands down will be the peanut butter truffle! It just melts in your mouth!</p>",
-            "review_heading": "Creative Designer, Abu Dhabi",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        },
-        "image_qPrjNW": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/ezgif-3-8df9b851d4_a81fae6c-c3c9-4bfa-a352-c82a89a3a291.gif",
-            "height": 280,
-            "review_text": "<p>100% Hooked! Perfect snack after my runsâ€”always hits the spot!</p>",
-            "review_heading": "Recreational Runner",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
+            "product": ""
           }
         }
       },
       "block_order": [
-        "image_fBXgHA",
-        "image_ddGtem",
-        "image_8LWUTT",
-        "image_qPrjNW"
+        "product_ipgVrC"
       ],
+      "name": "Custom Featured products",
       "settings": {
-        "heading": "LOVE AT FIRST BITE",
-        "text": "",
-        "per_view_desktop_large": 4,
-        "per_view_desktop": 4,
-        "per_view_tablet": 3,
-        "per_view_mobile": 2,
-        "autoplay_speed": 0,
-        "desktop_vertical_padding": 11,
-        "mobile_vertical_padding": 5,
-        "enable_style": false,
-        "spacing_top_desktop": 0,
-        "spacing_bottom_desktop": 0,
-        "spacing_top_mobile": 0,
-        "spacing_bottom_mobile": 0
+        "title": "Limited Editions",
+        "description": "Add some descriptive text to your section. This is great for SEO!",
+        "background_color": "#FFF",
+        "product_source": "collection",
+        "featured_collection": "limited-editions",
+        "collection_product_limit": 12,
+        "extra_top_padding": true,
+        "extra_bottom_padding": false,
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1,
+        "column_size_mobile_small": 1,
+        "see_all_link": "/",
+        "see_all_link_text": "See all",
+        "compact_mobile_grid": false
       }
     },
     "apps_reelfy_collection": {
@@ -199,9 +171,10 @@
       "blocks": {
         "reelfy_videos_reelfy_section_bQp6qF": {
           "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
+          "disabled": true,
           "settings": {
             "gallery_id": 18785,
-            "title": "LOVE AT FIRST BITE",
+            "title": "",
             "subtitle": "",
             "heading_size": "1",
             "heading_align": "center",
@@ -219,34 +192,14 @@
       "block_order": [
         "reelfy_videos_reelfy_section_bQp6qF"
       ],
+      "disabled": true,
       "settings": {}
     },
-    "featured_products_collection_fallback": {
-      "type": "featured_products",
-      "name": "Featured products",
+    "plaay_recently_viewed": {
+      "type": "plaay-recently-viewed",
       "settings": {
-        "title": "Keep exploring Plaay",
-        "description": "More clean indulgences shoppers often discover after limited drops.",
-        "background_color": "#ffffff",
-        "product_source": "collection",
-        "featured_collection": "shopify://collections/chocolate-truffles",
-        "collection_product_limit": 8,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 0,
-        "see_all_link": "/collections/chocolate-truffles",
-        "see_all_link_text": "Shop truffles",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
+        "heading": "Previously viewed",
+        "max_products": 6
       }
     }
   },
@@ -255,9 +208,8 @@
     "collection_hero",
     "blocks_tJakVN",
     "main",
+    "custom_featured_product_QWVyCW",
     "apps_reelfy_collection",
-    "review_gif_video_collection_limited",
-    "featured_products_collection_fallback",
     "plaay_recently_viewed"
   ]
 }
