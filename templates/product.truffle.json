@@ -799,7 +799,7 @@
         "ai_gen_block_9cfa683_9Fhdzy": {
           "type": "ai_gen_block_9cfa683",
           "settings": {
-            "custom_html": "<style>\n.faq-ext{\nbackground:#F9C61D;\npadding:32px 0 40px;\ntext-align:center\n}\n.faq-ext a{\nfont-size:24px;\nfont-weight:600;\ncolor:#081D48;\ntext-decoration:underline\n}\n.faq-ext a:hover{opacity:.8}\n</style>\n\n<div class=\"faq-ext\">\n  <a href=\"https://shopplaay.com/pages/faqs\">Explore All FAQs â†’</a>\n</div>",
+            "custom_html": "<style>\n.faq-ext{\nbackground:#F9C61D;\npadding:32px 0 40px;\ntext-align:center\n}\n.faq-ext a{\nfont-size:24px;\nfont-weight:600;\ncolor:#081D48;\ntext-decoration:underline\n}\n.faq-ext a:hover{opacity:.8}\n</style>\n\n<div class=\"faq-ext\">\n  <a href=\"https://shopplaay.com/pages/faqs\">Explore All FAQs'</a>\n</div>",
             "desktop_width_percent": 100,
             "padding": 0,
             "background_color": "#ffffff",
