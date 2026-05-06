@@ -4431,6 +4431,12 @@ footer content-accordion .footer-accordion__trigger > span:first-child {
     cursor: pointer;
   }
 
+  .plaay-header-utility--search svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+
   .plaay-header-actions .plaay-header-wishlist {
     width: 40px;
     height: 40px;
