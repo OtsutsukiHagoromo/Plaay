@@ -249,30 +249,30 @@
   {% comment %} mobile menu {% endcomment %}
   <div class="mobile_menu fixed max-w-md py-4 transform top-0 left-0 h-full w-full bg-white z-20 -translate-x-full transition-all duration-300 overflow-y-auto overscroll-contain | xl:hidden">
     {% comment %} close cross {% endcomment %}
-    <span class="mobile_menu_cross h-4 w-4 flex cursor-pointer text-black absolute right-4">
+    <span class="mobile_menu_cross h-4 w-4 flex cursor-pointer text-black absolute right-4 top-6">
       {% render 'icon-cross-alternate' %}
     </span>
     {% comment %} logo {% endcomment %}
     {% if logo != blank %}
-      {% render 'img', type: 'img', img: logo, eager: true, class: 'object-contain w-20 h-8 mx-auto mt-10' %}
+      {% render 'img', type: 'img', img: logo, eager: true, class: 'object-contain w-20 h-8 mx-auto mt-6' %}
     {% endif %}
     {% comment %} menus {% endcomment %}
-    <div class="mt-[70px] border-b border-black border-opacity-10">
+    <div class="mt-8 border-b border-black border-opacity-10">
       {% if link_list_left != blank %}
         <ul class="w-full flex flex-col">
           {% for link in linklists[link_list_left].links %}
-            <li class="{% if link.links != blank %} dropdown_parent {% endif %} relative text-dark-blue text-base font-bold tracking-widest border-t border-black border-opacity-10 px-14 py-5 font-walsheim-bold group | lg:text-sm {% unless forloop.last %} pr-10 {% endunless %}">
+            <li class="{% if link.links != blank %} dropdown_parent {% endif %}{% if forloop.first and link.links != blank %} active{% endif %} relative text-dark-blue text-base font-bold tracking-widest border-t border-black border-opacity-10 px-14 py-5 font-walsheim-bold group | lg:text-sm {% unless forloop.last %} pr-10 {% endunless %}">
               {% if link.links != blank %}
                 <span>{{ link.title }}</span>
               {% else %}
                 <a href="{{ link.url }}">{{ link.title }}</a>
               {% endif %}
               {% if link.links != blank %}
-                <span class="dropdown_arrow text-dark-blue h-2 w-2 inline-block cursor-pointer transform rotate-180 transition-all duration-200">
+                <span class="dropdown_arrow text-dark-blue h-2 w-2 inline-block cursor-pointer transform {% if forloop.first %}rotate-0{% else %}rotate-180{% endif %} transition-all duration-200">
                   {% render 'icon-dropdown-arrow' %}
                 </span>
                 <div class="overflow-hidden relative">
-                  <ul class="dropdown_menu transition-all duration-200 ease-in-out max-h-0">
+                  <ul class="dropdown_menu transition-all duration-200 ease-in-out {% if forloop.first %}max-h-[520px]{% else %}max-h-0{% endif %}">
                     {% for link in link.links %}
                       {% assign lowercase_title = link.title | downcase %}
                       <li class="py-3 font-walsheim-bold text-sm tracking-wide flex items-center mr-3">
