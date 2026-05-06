@@ -148,6 +148,44 @@
     box-shadow: 0 1px 4px rgba(2,29,73,0.15);
   }
 
+  @media (max-width: 640px) {
+    .truffle-sizes-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px 8px;
+      padding-top: 18px;
+    }
+
+    .truffle-size-tile {
+      min-width: 0;
+      width: 100%;
+      gap: 2px;
+      padding: 9px 8px 10px;
+      border-radius: 26px;
+    }
+
+    .truffle-size__name {
+      font-size: 0.66rem;
+      letter-spacing: 0.06em;
+    }
+
+    .truffle-size__price {
+      font-size: 0.88rem;
+      line-height: 1.15;
+    }
+
+    .truffle-size__per {
+      font-size: 0.54rem;
+      line-height: 1.25;
+    }
+
+    .truffle-size__best {
+      top: -10px;
+      font-size: 0.46rem;
+      padding: 3px 7px;
+    }
+  }
+
   .truffle-atc-wrap quick-add > .mb-5,
   .truffle-atc-wrap .variant_type {
     display: none;

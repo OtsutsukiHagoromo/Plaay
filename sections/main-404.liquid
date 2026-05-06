@@ -1,41 +1,93 @@
-{% liquid 
+{% liquid
   assign image = section.settings.image
-  assign title = section.settings.title 
-  assign copy = section.settings.copy 
+  assign title = section.settings.title
+  assign copy = section.settings.copy
   assign background_color = section.settings.background_color
   assign menu = section.settings.menu
   assign menu_title = section.settings.menu_title
   assign menu_background_color = section.settings.menu_background_color
 %}
-<div style="background-color: {{ background_color }};">
-  <div class="container pt-32 pb-10 flex flex-col | md:pb-16 md:pt-44 md:max-w-xl">
-    {% if image != blank %}
-      {% render 'img', type: 'img', img: image, eager: true, additional_class: 'object-cover w-full h-[120px] | md:h-[300px]' %}
-    {% endif %}
-    {% if title != blank %}
-      <h1 class="mt-6 text-dark-blue uppercase text-11xl text-center font-walsheim-bold">{{ title }}</h1>
-    {% endif %}
-    {% if copy != blank %}
-      <p class="text-dark-blue mt-1 text-center font-walsheim">{{ copy }}</p>
-    {% endif %}
-  </div>
-  {% if menu != blank %}
-    <div class="py-10" style="background-color: {{ menu_background_color }};">
-      <div class="container px-16 | md:px-0 md:max-w-xl">
-        {% if menu_title != blank %}
-          <h2 class="text-sm text-dark-blue mb-3">{{ menu_title }}</h2>
-        {% endif %}
-        <ul class="flex flex-col | md:flex-row md:items-start">
-          {% for link in linklists[menu].links %}
-            <li class="underline text-dark-blue font-walsheim text-sm {% unless forloop.first %} mt-4 md:mt-0 md:ml-10 {% endunless %} | hover:no-underline">
-              <a href="{{ link.url }}">{{ link.title }}</a>
-            </li>
-          {% endfor %}
-        </ul>
+
+<div class="plaay-404" style="background-color: {{ background_color }};">
+  <div class="container pt-32 pb-12 | md:pt-44 md:pb-18">
+    <div class="rounded-[34px] overflow-hidden shadow-[0_22px_50px_rgba(2,29,73,0.12)]">
+      <div class="grid | lg:grid-cols-[1.05fr_0.95fr]">
+        <div class="px-7 py-10 | md:px-12 md:py-14 | lg:px-14" style="background-color: #F9C61D;">
+          <span class="inline-flex items-center rounded-full bg-white text-dark-blue font-walsheim-bold uppercase tracking-[0.16em] text-[11px] px-4 py-2">
+            Error 404
+          </span>
+
+          {% if title != blank %}
+            <h1 class="mt-6 text-dark-blue uppercase font-walsheim-bold leading-[0.92] text-5xl | md:text-8xl">
+              {{ title }}
+            </h1>
+          {% endif %}
+
+          {% if copy != blank %}
+            <p class="mt-5 max-w-xl text-dark-blue text-base leading-relaxed | md:text-lg">
+              {{ copy }}
+            </p>
+          {% endif %}
+
+          <div class="mt-8 flex flex-col gap-3 | sm:flex-row">
+            <a href="{{ routes.root_url }}" class="inline-flex items-center justify-center rounded-full bg-dark-blue px-6 py-3 text-sm font-walsheim-bold uppercase tracking-[0.12em] text-white transition-all duration-200 hover:-translate-y-[1px]">
+              Go Home
+            </a>
+            <a href="/collections/all" class="inline-flex items-center justify-center rounded-full border border-dark-blue border-opacity-15 bg-white px-6 py-3 text-sm font-walsheim-bold uppercase tracking-[0.12em] text-dark-blue transition-all duration-200 hover:border-dark-blue">
+              Shop All
+            </a>
+          </div>
+
+          <div class="mt-8 grid gap-3 | sm:grid-cols-3">
+            <div class="rounded-[20px] bg-white bg-opacity-95 px-4 py-4">
+              <p class="text-[10px] uppercase tracking-[0.14em] text-dark-blue text-opacity-55 font-walsheim-bold">Fast fix</p>
+              <p class="mt-2 text-sm text-dark-blue font-walsheim-bold">Try search or jump into a collection.</p>
+            </div>
+            <div class="rounded-[20px] bg-white bg-opacity-95 px-4 py-4">
+              <p class="text-[10px] uppercase tracking-[0.14em] text-dark-blue text-opacity-55 font-walsheim-bold">Worth it</p>
+              <p class="mt-2 text-sm text-dark-blue font-walsheim-bold">Clean ingredients, zero boring snacks.</p>
+            </div>
+            <div class="rounded-[20px] bg-white bg-opacity-95 px-4 py-4">
+              <p class="text-[10px] uppercase tracking-[0.14em] text-dark-blue text-opacity-55 font-walsheim-bold">Need help?</p>
+              <p class="mt-2 text-sm text-dark-blue font-walsheim-bold">Reach us and we'll point you in the right direction.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative flex items-center justify-center px-7 py-10 | md:px-10 md:py-14" style="background-color: {{ menu_background_color }};">
+          <div class="w-full max-w-[30rem]">
+            {% if image != blank %}
+              <div class="rounded-[28px] bg-white p-5 shadow-[0_16px_36px_rgba(2,29,73,0.08)] | md:p-7">
+                {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain w-full h-[180px] | md:h-[280px]' %}
+              </div>
+            {% endif %}
+
+            {% if menu != blank %}
+              <div class="mt-6 rounded-[28px] bg-white px-5 py-6 shadow-[0_16px_36px_rgba(2,29,73,0.08)] | md:px-7 md:py-7">
+                {% if menu_title != blank %}
+                  <h2 class="text-dark-blue uppercase text-xs tracking-[0.16em] font-walsheim-bold">
+                    {{ menu_title }}
+                  </h2>
+                {% endif %}
+                <ul class="mt-4 grid gap-3 | sm:grid-cols-2">
+                  {% for link in linklists[menu].links %}
+                    <li>
+                      <a href="{{ link.url }}" class="flex items-center justify-between rounded-[18px] border border-dark-blue border-opacity-10 px-4 py-3 text-sm font-walsheim-bold text-dark-blue transition-all duration-200 hover:border-dark-blue hover:-translate-y-[1px]">
+                        <span>{{ link.title }}</span>
+                        <span aria-hidden="true">-></span>
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+          </div>
+        </div>
       </div>
     </div>
-  {% endif %}
+  </div>
 </div>
+
 {% schema %}
   {
     "name": "404",
