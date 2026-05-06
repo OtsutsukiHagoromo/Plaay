@@ -181,6 +181,24 @@
             "reviewer": "Zayd H.",
             "tag": "Verified buyer"
           }
+        },
+        "review_Rm8tKd": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "Tried these for the ingredients, stayed for the taste. Genuinely addictive in the best way.",
+            "reviewer": "Farah A.",
+            "tag": "Verified buyer"
+          }
+        },
+        "review_Wq3nJe": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "quote": "These are the easiest yes in my pantry now. Clean, satisfying, and actually crave-worthy.",
+            "reviewer": "Daniel T.",
+            "tag": "Verified buyer"
+          }
         }
       },
       "block_order": [
@@ -193,7 +211,9 @@
         "review_LiYpLU",
         "review_km2QfN",
         "review_Pj7dLs",
-        "review_Bv4hQx"
+        "review_Bv4hQx",
+        "review_Rm8tKd",
+        "review_Wq3nJe"
       ],
       "name": "PDP â€” Social Proof",
       "settings": {
