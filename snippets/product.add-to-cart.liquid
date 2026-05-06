@@ -145,7 +145,7 @@
           {% assign sub_disc_amt = current_variant.price | times: sub_discount | divided_by: 100.0 %}
           {% assign sub_final_price = current_variant.price | minus: sub_disc_amt %}
 
-          <div class="plaay-sub-wrap">
+          <div class="plaay-sub-wrap" data-sub-discount="{{ sub_discount }}">
             {% comment %} ── Pill toggle bar ── {% endcomment %}
             <div class="plaay-sub-toggle" role="group" aria-label="Purchase option">
               <button type="button" class="plaay-sub-tab plaay-sub-tab--active" id="plaay-tab-onetime" aria-pressed="true">
@@ -228,6 +228,48 @@
             var freqPanel  = document.getElementById('plaay-sub-freq');
             var radioOne   = document.getElementById('one_time_purchase');
             var radioSub   = document.getElementById('subscribe_and_save');
+            var subWrap    = document.querySelector('.plaay-sub-wrap');
+
+            function formatMoneyFromCents(cents) {
+              var amount = Number(cents || 0) / 100;
+              var parts = amount.toFixed(2).split('.');
+              return parts[0] + '.' + parts[1] + ' AED';
+            }
+
+            function updatePurchaseOptionPrices(variant) {
+              if (!variant) return;
+
+              var oneTimePrice = document.querySelector('.plaay-sub-tab__price');
+              var subscribePrice = document.querySelector('.plaay-sub-tab__disc-price');
+              var mainPrice = document.querySelector('.product_page_atc .product_discount_price');
+              var comparePrice = document.querySelector('.product_page_atc .product_price');
+              var discount = subWrap ? Number(subWrap.getAttribute('data-sub-discount') || 0) : 0;
+
+              if (oneTimePrice) {
+                oneTimePrice.textContent = formatMoneyFromCents(variant.price);
+              }
+
+              if (subscribePrice) {
+                var discounted = variant.price;
+                if (discount > 0) {
+                  discounted = Math.round(variant.price - ((variant.price * discount) / 100));
+                }
+                subscribePrice.textContent = formatMoneyFromCents(discounted);
+              }
+
+              if (mainPrice) {
+                mainPrice.textContent = formatMoneyFromCents(variant.price);
+              }
+
+              if (comparePrice) {
+                if (variant.compare_at_price && Number(variant.compare_at_price) > Number(variant.price)) {
+                  comparePrice.textContent = formatMoneyFromCents(variant.compare_at_price);
+                  comparePrice.classList.remove('hidden');
+                } else {
+                  comparePrice.classList.add('hidden');
+                }
+              }
+            }
 
             function activate(mode) {
               var isSub = mode === 'subscribe';
@@ -260,6 +302,11 @@
                 });
               });
             }
+
+            document.addEventListener('plaay:variant-changed', function(event) {
+              if (!event.detail || !event.detail.variant) return;
+              updatePurchaseOptionPrices(event.detail.variant);
+            });
           })();
           </script>
         {% endif %}

@@ -789,6 +789,17 @@
         compareEl.style.display = 'none';
       }
     });
+
+    document.dispatchEvent(new CustomEvent('plaay:variant-changed', {
+      detail: {
+        sectionId: SECTION_ID,
+        variant: {
+          id: variant.id,
+          price: variant.price,
+          compare_at_price: variant.compareAtPrice || 0
+        }
+      }
+    }));
   }
 
   function applySelection() {
