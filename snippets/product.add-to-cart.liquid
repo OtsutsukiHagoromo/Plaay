@@ -56,6 +56,24 @@
   assign global_recharge_point_two = settings.global_recharge_point_two
   assign global_recharge_point_three = settings.global_recharge_point_three
   assign hide_inline_atc = hide_inline_atc | default: false
+  assign hide_inline_quantity = hide_inline_quantity | default: false
+
+  capture sticky_subscription_benefits
+    assign benefit_separator = ''
+    if global_recharge_point_one != blank
+      echo global_recharge_point_one | strip_html | strip
+      assign benefit_separator = ' · '
+    endif
+    if global_recharge_point_two != blank
+      echo benefit_separator
+      echo global_recharge_point_two | strip_html | strip
+      assign benefit_separator = ' · '
+    endif
+    if global_recharge_point_three != blank
+      echo benefit_separator
+      echo global_recharge_point_three | strip_html | strip
+    endif
+  endcapture
 %}
 <div class="mt-6 border-t border-black border-opacity-40 pt-5 | md:mt-5 my---ele">
   {% if product.available %}
@@ -115,19 +133,23 @@
           </div>
         {%- endunless -%}
         {% comment %} whats inside one pack {% endcomment %}
-        <div class="flex items-start justify-between flex-col pb-5 | md:border-b md:border-black md:border-opacity-40 md:flex-row md:h-28  {% if whats_inside_one_pack != blank %}qty_and_img {% endif %}">
-          {% if whats_inside_one_pack != blank %}
-            <div class="flex flex-col">
-              <h2 class="text-dark-blue uppercase text-sm mb-2 font-walsheim-bold | md:mb-3">{{ 'product.whats_inside_one_pack' | t }}</h2>
-              {% render 'img', type: 'img', img: whats_inside_one_pack, lazy: true, class: 'object-contain', height: 56, width: 145 %}
+        {% unless hide_inline_quantity %}
+          <div class="flex items-start justify-between flex-col pb-5 | md:border-b md:border-black md:border-opacity-40 md:flex-row md:h-28  {% if whats_inside_one_pack != blank %}qty_and_img {% endif %}">
+            {% if whats_inside_one_pack != blank %}
+              <div class="flex flex-col">
+                <h2 class="text-dark-blue uppercase text-sm mb-2 font-walsheim-bold | md:mb-3">{{ 'product.whats_inside_one_pack' | t }}</h2>
+                {% render 'img', type: 'img', img: whats_inside_one_pack, lazy: true, class: 'object-contain', height: 56, width: 145 %}
+              </div>
+            {% endif %}
+            {% comment %} quantity {% endcomment %}
+            <div class="flex flex-col justify-between mt-8 w-full h-full | {% if whats_inside_one_pack != blank %} pack__qty md:w-fit {% else %} md:w-full {% endif %} md:mt-0">
+              <h2 class="text-dark-blue uppercase text-sm mb-4 font-walsheim-bold | md:mb-0">{{ 'product.how_many' | t }}</h2>
+              {% render 'custom-quantity', product_quantity: true %}
             </div>
-          {% endif %}
-          {% comment %} quantity {% endcomment %}
-          <div class="flex flex-col justify-between mt-8 w-full h-full | {% if whats_inside_one_pack != blank %} pack__qty md:w-fit {% else %} md:w-full {% endif %} md:mt-0">
-            <h2 class="text-dark-blue uppercase text-sm mb-4 font-walsheim-bold | md:mb-0">{{ 'product.how_many' | t }}</h2>
-            {% render 'custom-quantity', product_quantity: true %}
           </div>
-        </div>
+        {% else %}
+          <input type="hidden" name="quantity" value="1" data-quantity-input>
+        {% endunless %}
         {% comment %} subscriptions — new clean toggle {% endcomment %}
         {% if product.selling_plan_groups.size > 0 and show_subscribe != false %}
           {% comment %} Extract discount % from first selling plan {% endcomment %}
@@ -146,7 +168,7 @@
           {% assign sub_disc_amt = current_variant.price | times: sub_discount | divided_by: 100.0 %}
           {% assign sub_final_price = current_variant.price | minus: sub_disc_amt %}
 
-          <div class="plaay-sub-wrap" data-sub-discount="{{ sub_discount }}">
+          <div class="plaay-sub-wrap" data-sub-discount="{{ sub_discount }}" data-sticky-benefits="{{ sticky_subscription_benefits | strip | escape }}">
             {% comment %} ── Pill toggle bar ── {% endcomment %}
             <div class="plaay-sub-toggle" role="group" aria-label="Purchase option">
               <button type="button" class="plaay-sub-tab plaay-sub-tab--active" id="plaay-tab-onetime" aria-pressed="true">
@@ -418,7 +440,8 @@
         try {
           variantsJson = variantsJsonInput ? JSON.parse(variantsJsonInput.value) : [];
         } catch (e) {}
-        let quantity = elements.product_page_form.querySelector("[data-quantity]").getAttribute("value");
+        let quantityInput = elements.product_page_form.querySelector("[data-quantity-input], input[name='quantity']");
+        let quantity = quantityInput ? quantityInput.getAttribute("value") : "1";
         let product_price = document.querySelectorAll(".product_price");
         let product_discount_price = document.querySelectorAll(".product_discount_price");
         let selling_plan_radios = elements.product_page_form.querySelectorAll(".product_subscription");

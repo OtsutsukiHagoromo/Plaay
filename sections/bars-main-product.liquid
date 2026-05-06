@@ -497,7 +497,7 @@
         {% render 'flavor-option', variant_selector_style: section.settings.variant_selector_style %}
       </div>
 
-      {% render 'product.add-to-cart', product: product, show_subscribe: section.settings.enable_subscribe_push, hide_inline_atc: true %}
+      {% render 'product.add-to-cart', product: product, show_subscribe: section.settings.enable_subscribe_push, hide_inline_atc: true, hide_inline_quantity: true %}
       {%- render 'plaay-delivery-promise' -%}
 
       {% comment %} ── PDP Info Tabs ── {% endcomment %}
@@ -567,7 +567,7 @@
             {{ section.settings.shipping_returns_content }}
           {% else %}
             <p><strong>Free delivery</strong> on all orders over AED 75.</p>
-            <p>Same-day delivery in Dubai (order before 2 PM). 1–2 business days across the UAE.</p>
+            <p>Delivery takes 1–2 business days across the UAE.</p>
             <p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate.</p>
           {% endif %}
         </div>
@@ -624,6 +624,7 @@
     <div class="plaay-sticky-mobile__meta" style="display:flex;flex-direction:column;gap:2px;margin-bottom:10px">
       <span class="plaay-sticky-mode font-walsheim-bold text-dark-blue" style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;line-height:1.1">One-Time Purchase</span>
       <span class="plaay-sticky-plan font-walsheim-regular text-dark-blue" style="font-size:12px;opacity:0.65;line-height:1.2;display:none"></span>
+      <span class="plaay-sticky-benefits font-walsheim-regular text-dark-blue" style="font-size:11px;opacity:0.72;line-height:1.25;display:none"></span>
     </div>
     <div class="plaay-sticky-mobile__row" style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
       {%- if product.featured_image -%}
@@ -664,6 +665,7 @@
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
         <span class="plaay-sticky-mode font-walsheim-bold text-dark-blue" style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;line-height:1.1">One-Time Purchase</span>
         <span class="plaay-sticky-plan font-walsheim-regular text-dark-blue" style="font-size:12px;opacity:0.65;line-height:1.2;display:none"></span>
+        <span class="plaay-sticky-benefits font-walsheim-regular text-dark-blue" style="font-size:11px;opacity:0.72;line-height:1.25;display:none"></span>
         <span class="plaay-sticky-compare font-walsheim-regular text-dark-blue" style="font-size:11px;text-decoration:line-through;opacity:0.5;line-height:1;{% unless sticky_variant.compare_at_price > sticky_variant.price %}display:none{% endunless %}">{{ sticky_variant.compare_at_price | money }}</span>
         <span class="plaay-sticky-price font-walsheim-bold text-dark-blue" style="font-size:20px;line-height:1">{{ sticky_variant.price | money }}</span>
       </div>
@@ -769,12 +771,14 @@
     }
 
     function syncPurchaseState() {
+      var subWrap = document.querySelector('.plaay-sub-wrap');
       var isSubscription = !!document.querySelector('#plaay-tab-subscribe.plaay-sub-tab--active');
       var oneTimeText = (document.querySelector('.plaay-sub-tab__price') || {}).textContent || '';
       var subscribeText = (document.querySelector('.plaay-sub-tab__disc-price') || {}).textContent || '';
       var activePlan = document.querySelector('.plaay-sub-freq__opt.active');
       var currentPrice = (isSubscription ? subscribeText : oneTimeText).trim();
       var planLabel = isSubscription && activePlan ? ('Delivery every ' + activePlan.textContent.trim()) : '';
+      var benefitLabel = isSubscription && subWrap ? (subWrap.getAttribute('data-sticky-benefits') || '').trim() : '';
       var modeText = isSubscription ? 'Subscribe & Save' : 'One-Time Purchase';
       var submitLabel = isSubscription ? 'Subscribe now' : '{{ "product.add_to_cart.add_to_bag" | t }}';
       var compareText = '';
@@ -796,6 +800,7 @@
         if (!bar) return;
         var modeEl = bar.querySelector('.plaay-sticky-mode');
         var planEl = bar.querySelector('.plaay-sticky-plan');
+        var benefitsEl = bar.querySelector('.plaay-sticky-benefits');
         var priceEl = bar.querySelector('.plaay-sticky-price, .plaay-sticky-mobile-price');
         var compareEl = bar.querySelector('.plaay-sticky-compare');
         var submitEl = bar.querySelector('.plaay-sticky-submit, .plaay-mobile-submit');
@@ -808,6 +813,15 @@
           } else {
             planEl.textContent = '';
             planEl.style.display = 'none';
+          }
+        }
+        if (benefitsEl) {
+          if (benefitLabel) {
+            benefitsEl.textContent = benefitLabel;
+            benefitsEl.style.display = '';
+          } else {
+            benefitsEl.textContent = '';
+            benefitsEl.style.display = 'none';
           }
         }
         if (priceEl && currentPrice) priceEl.textContent = currentPrice;
@@ -994,7 +1008,7 @@
       "type": "richtext",
       "id": "shipping_returns_content",
       "label": "Shipping & Returns content",
-      "default": "<p><strong>Free delivery</strong> on all orders over AED 75. Same-day delivery in Dubai (order before 2 PM). 1–2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
+      "default": "<p><strong>Free delivery</strong> on all orders over AED 75. Delivery takes 1–2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
     }
   ],
   "blocks": [

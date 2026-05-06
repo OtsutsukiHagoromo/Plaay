@@ -435,6 +435,10 @@ cart-drawer {
   border-top: 1px solid rgba(2, 29, 73, 0.12);
 }
 
+.plaay-sub-wrap + .plaay-delivery-promise {
+  margin-top: 10px;
+}
+
 .plaay-sub-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -506,20 +510,23 @@ cart-drawer {
 
 /* Perks row */
 .plaay-sub-perks {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
 }
 .plaay-sub-perk {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 7px;
   font-family: walsheim-bold, sans-serif;
   font-size: 11px;
   color: #021D49;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(2, 29, 73, 0.05);
+  line-height: 1.25;
 }
 .plaay-sub-perk__tick {
   width: 14px;
@@ -535,6 +542,12 @@ cart-drawer {
   padding: 12px 14px;
   background: rgba(2, 29, 73, 0.04);
   border-radius: 10px;
+}
+
+@media (max-width: 640px) {
+  .plaay-sub-perks {
+    grid-template-columns: 1fr;
+  }
 }
 .plaay-sub-freq__heading {
   font-family: walsheim-bold, sans-serif;
