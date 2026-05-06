@@ -509,7 +509,7 @@
       {% endif %}
 
       <div class="truffle-atc-wrap">
-        {% render 'product.add-to-cart', product: product %}
+        {% render 'product.add-to-cart', product: product, hide_inline_atc: true %}
       </div>
       {%- render 'plaay-delivery-promise' -%}
 
@@ -623,6 +623,10 @@
 {% comment %} ── Mobile sticky ATC (shown on mobile when inline button scrolls out) ── {% endcomment %}
 <div id="plaay-sticky-mobile" class="plaay-sticky-mobile" aria-hidden="true">
   <div class="plaay-sticky-mobile__inner" style="padding:10px 16px 14px">
+    <div class="plaay-sticky-mobile__meta" style="display:flex;flex-direction:column;gap:2px;margin-bottom:10px">
+      <span class="plaay-sticky-mode font-walsheim-bold text-dark-blue" style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;line-height:1.1">One-Time Purchase</span>
+      <span class="plaay-sticky-plan font-walsheim-regular text-dark-blue" style="font-size:12px;opacity:0.65;line-height:1.2;display:none"></span>
+    </div>
     {% comment %} Row 1 — price + qty {% endcomment %}
     <div class="plaay-sticky-mobile__row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
       <div class="plaay-sticky-mobile__price" style="display:flex;flex-direction:column;gap:1px">
@@ -653,6 +657,8 @@
     <div style="display:flex;align-items:center;gap:20px;margin-left:auto;flex-shrink:0">
       {% comment %} Price block — always render both spans, JS shows/hides compare {% endcomment %}
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+        <span class="plaay-sticky-mode font-walsheim-bold text-dark-blue" style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;line-height:1.1">One-Time Purchase</span>
+        <span class="plaay-sticky-plan font-walsheim-regular text-dark-blue" style="font-size:12px;opacity:0.65;line-height:1.2;display:none"></span>
         <span class="plaay-sticky-compare font-walsheim-regular text-dark-blue" style="font-size:11px;text-decoration:line-through;opacity:0.5;line-height:1;{% unless sticky_variant.compare_at_price > sticky_variant.price %}display:none{% endunless %}">{{ sticky_variant.compare_at_price | money }}</span>
         <span class="plaay-sticky-price font-walsheim-bold text-dark-blue" style="font-size:20px;line-height:1">{{ sticky_variant.price | money }}</span>
       </div>
@@ -857,11 +863,11 @@
 
     var isMobile = function() { return window.innerWidth < 1024; };
 
-    // Force both bars into position:fixed off-screen regardless of stylesheet
+    // Force both bars into position:fixed regardless of stylesheet
     var baseStyle = 'position:fixed;bottom:0;left:0;right:0;z-index:9998;' +
                     'background:#fff;border-top:1px solid rgba(2,29,73,0.12);' +
                     'box-shadow:0 -4px 24px rgba(2,29,73,0.1);' +
-                    'transition:transform 0.3s ease;transform:translateY(110%);pointer-events:none;';
+                    'transition:transform 0.3s ease;transform:translateY(0);pointer-events:auto;';
 
     if (desktopBar) {
       desktopBar.setAttribute('style', baseStyle + 'padding:16px 0;display:none;');
@@ -873,28 +879,37 @@
     function showBar(bar) {
       if (!bar) return;
       bar.style.display = 'block';
-      bar.offsetHeight; // eslint-disable-line no-unused-expressions
       bar.style.transform = 'translateY(0)';
       bar.style.pointerEvents = 'auto';
     }
     function hideBar(bar) {
       if (!bar) return;
+      bar.style.display = 'none';
       bar.style.transform = 'translateY(110%)';
       bar.style.pointerEvents = 'none';
     }
 
-    // Intersection observer — show correct bar when inline ATC leaves viewport
-    var observer = new IntersectionObserver(function(entries) {
-      var notVisible = !entries[0].isIntersecting;
+    function syncViewportBar() {
       if (isMobile()) {
-        if (notVisible) { showBar(mobileBar); hideBar(desktopBar); }
-        else             { hideBar(mobileBar); }
+        showBar(mobileBar); hideBar(desktopBar);
       } else {
-        if (notVisible) { showBar(desktopBar); hideBar(mobileBar); }
-        else             { hideBar(desktopBar); }
+        showBar(desktopBar); hideBar(mobileBar);
       }
-    }, { threshold: 0 });
-    observer.observe(inlineAtc);
+    }
+    syncViewportBar();
+    window.addEventListener('resize', syncViewportBar);
+
+    function getVisibleText(selector) {
+      var nodes = document.querySelectorAll(selector);
+      for (var i = 0; i < nodes.length; i++) {
+        var text = (nodes[i].textContent || '').trim();
+        if (!text) continue;
+        var styles = window.getComputedStyle(nodes[i]);
+        if (styles.display === 'none' || styles.visibility === 'hidden') continue;
+        return text;
+      }
+      return '';
+    }
 
     // ── Price sync ──
     var getPriceEl = function() {
@@ -909,55 +924,119 @@
       if (!txt) return;
       var dp  = desktopBar && desktopBar.querySelector('.plaay-sticky-price');
       var mp  = mobileBar  && mobileBar.querySelector('.plaay-sticky-mobile-price');
-      var mcp = mobileBar  && mobileBar.querySelector('.plaay-sticky-compare');
       if (dp) dp.textContent = txt;
       if (mp) mp.textContent = txt;
-      var compareEl = document.querySelector('.discount_price_exists');
-      var compareTxt = compareEl ? compareEl.textContent.trim() : '';
-      if (mcp && compareTxt) {
-        mcp.textContent = compareTxt;
-        mcp.style.display = 'inline';
-      }
-      var sc = desktopBar && desktopBar.querySelector('.plaay-sticky-compare');
-      if (sc && compareTxt) {
-        sc.textContent = compareTxt;
-        sc.style.display = '';
-      }
     };
     syncPrice();
     document.querySelectorAll('.product_discount_price,.product_price').forEach(function(el) {
       new MutationObserver(syncPrice).observe(el, { childList: true, subtree: true, characterData: true });
     });
 
+    function setCompare(compareEl, text) {
+      if (!compareEl) return;
+      if (text) {
+        compareEl.textContent = text;
+        compareEl.style.display = '';
+      } else {
+        compareEl.style.display = 'none';
+      }
+    }
+
+    function syncPurchaseState() {
+      var isSubscription = !!document.querySelector('#plaay-tab-subscribe.plaay-sub-tab--active');
+      var oneTimeText = (document.querySelector('.plaay-sub-tab__price') || {}).textContent || '';
+      var subscribeText = (document.querySelector('.plaay-sub-tab__disc-price') || {}).textContent || '';
+      var activePlan = document.querySelector('.plaay-sub-freq__opt.active');
+      var currentPrice = (isSubscription ? subscribeText : oneTimeText).trim();
+      var compareText = '';
+      var planLabel = isSubscription && activePlan ? ('Delivery every ' + activePlan.textContent.trim()) : '';
+      var modeText = isSubscription ? 'Subscribe & Save' : 'One-Time Purchase';
+      var submitLabel = isSubscription ? 'Subscribe now' : '{{ "product.add_to_cart.add_to_bag" | t }}';
+
+      if (!currentPrice) {
+        currentPrice = getVisibleText('.product_discount_price');
+      }
+      if (!currentPrice) {
+        currentPrice = (desktopBar && desktopBar.querySelector('.plaay-sticky-price') ? desktopBar.querySelector('.plaay-sticky-price').textContent : '').trim();
+      }
+
+      if (isSubscription && oneTimeText.trim() && oneTimeText.trim() !== currentPrice) {
+        compareText = oneTimeText.trim();
+      } else {
+        compareText = getVisibleText('.product_price, .discount_price_exists');
+      }
+
+      [desktopBar, mobileBar].forEach(function(bar) {
+        if (!bar) return;
+        var modeEl = bar.querySelector('.plaay-sticky-mode');
+        var planEl = bar.querySelector('.plaay-sticky-plan');
+        var priceEl = bar.querySelector('.plaay-sticky-price, .plaay-sticky-mobile-price');
+        var compareEl = bar.querySelector('.plaay-sticky-compare');
+        var submitEl = bar.querySelector('.plaay-sticky-submit, .plaay-mobile-submit');
+
+        if (modeEl) modeEl.textContent = modeText;
+        if (planEl) {
+          if (planLabel) {
+            planEl.textContent = planLabel;
+            planEl.style.display = '';
+          } else {
+            planEl.textContent = '';
+            planEl.style.display = 'none';
+          }
+        }
+        if (priceEl && currentPrice) priceEl.textContent = currentPrice;
+        setCompare(compareEl, compareText);
+        if (submitEl && currentPrice) submitEl.textContent = currentPrice + ' | ' + submitLabel;
+      });
+    }
+    syncPurchaseState();
+    document.addEventListener('plaay:purchase-state-changed', syncPurchaseState);
+    document.addEventListener('plaay:variant-changed', function() {
+      syncPrice();
+      syncPurchaseState();
+    });
+    document.querySelectorAll('#plaay-tab-onetime, #plaay-tab-subscribe, [data-quick-add-selling-plan]').forEach(function(trigger) {
+      trigger.addEventListener('click', function() {
+        setTimeout(syncPurchaseState, 0);
+      });
+    });
+
     // ── Desktop qty +/- ──
-    var qty = 1;
+    var qty = parseInt((document.querySelector('quick-add input[name="quantity"],input[name="quantity"]') || {}).value, 10) || 1;
     var qtyDisplay = desktopBar && desktopBar.querySelector('.plaay-sticky-qty');
     var inlineQtyInput = document.querySelector('quick-add input[name="quantity"],input[name="quantity"]');
+    var mobileQtyDisplay = mobileBar && mobileBar.querySelector('.plaay-mobile-qty');
+
+    function renderQty() {
+      if (qtyDisplay) qtyDisplay.textContent = qty;
+      if (mobileQtyDisplay) mobileQtyDisplay.textContent = qty;
+      if (inlineQtyInput) inlineQtyInput.value = qty;
+    }
+    renderQty();
+
     if (desktopBar) {
       desktopBar.querySelector('.plaay-sticky-minus').addEventListener('click', function() {
-        if (qty > 1) { qty--; if (qtyDisplay) qtyDisplay.textContent = qty; if (inlineQtyInput) inlineQtyInput.value = qty; }
+        if (qty > 1) { qty--; renderQty(); }
       });
       desktopBar.querySelector('.plaay-sticky-plus').addEventListener('click', function() {
-        qty++; if (qtyDisplay) qtyDisplay.textContent = qty; if (inlineQtyInput) inlineQtyInput.value = qty;
+        qty++; renderQty();
       });
       desktopBar.querySelector('.plaay-sticky-submit').addEventListener('click', function() {
-        if (inlineQtyInput) inlineQtyInput.value = qty;
+        renderQty();
         inlineAtc.click();
       });
     }
 
     // ── Mobile qty +/- ──
-    var mobileQty = 1;
-    var mobileQtyDisplay = mobileBar && mobileBar.querySelector('.plaay-mobile-qty');
     if (mobileBar) {
       mobileBar.querySelector('.plaay-mobile-minus').addEventListener('click', function() {
-        if (mobileQty > 1) { mobileQty--; if (mobileQtyDisplay) mobileQtyDisplay.textContent = mobileQty; if (inlineQtyInput) inlineQtyInput.value = mobileQty; }
+        if (qty > 1) { qty--; renderQty(); }
       });
       mobileBar.querySelector('.plaay-mobile-plus').addEventListener('click', function() {
-        mobileQty++; if (mobileQtyDisplay) mobileQtyDisplay.textContent = mobileQty; if (inlineQtyInput) inlineQtyInput.value = mobileQty;
+        qty++; renderQty();
       });
       mobileBar.querySelector('.plaay-mobile-submit').addEventListener('click', function() {
-        if (inlineQtyInput) inlineQtyInput.value = mobileQty;
+        renderQty();
         inlineAtc.click();
       });
     }

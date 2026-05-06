@@ -55,6 +55,7 @@
   assign global_recharge_point_one = settings.global_recharge_point_one
   assign global_recharge_point_two = settings.global_recharge_point_two
   assign global_recharge_point_three = settings.global_recharge_point_three
+  assign hide_inline_atc = hide_inline_atc | default: false
 %}
 <div class="mt-6 border-t border-black border-opacity-40 pt-5 | md:mt-5 my---ele">
   {% if product.available %}
@@ -230,6 +231,22 @@
             var radioSub   = document.getElementById('subscribe_and_save');
             var subWrap    = document.querySelector('.plaay-sub-wrap');
 
+            function getActivePlanLabel() {
+              if (!freqPanel) return '';
+              var activePlan = freqPanel.querySelector('[data-quick-add-selling-plan].active');
+              return activePlan ? activePlan.textContent.trim() : '';
+            }
+
+            function emitPurchaseState() {
+              var isSub = tabSub && tabSub.classList.contains('plaay-sub-tab--active');
+              document.dispatchEvent(new CustomEvent('plaay:purchase-state-changed', {
+                detail: {
+                  isSubscription: Boolean(isSub),
+                  planLabel: isSub ? getActivePlanLabel() : ''
+                }
+              }));
+            }
+
             function formatMoneyFromCents(cents) {
               var amount = Number(cents || 0) / 100;
               var parts = amount.toFixed(2).split('.');
@@ -280,6 +297,7 @@
               if (freqPanel) freqPanel.style.display = isSub ? 'block' : 'none';
               var subInput = freqPanel ? freqPanel.querySelector('[data-subscription]') : null;
               if (subInput) subInput.value = isSub ? 'true' : 'false';
+              emitPurchaseState();
             }
 
             if (tabOnetime) tabOnetime.addEventListener('click', function() {
@@ -299,6 +317,7 @@
                   btn.classList.add('active');
                   var planInput = freqPanel.querySelector('[data-selling-plan-id]');
                   if (planInput) planInput.value = btn.dataset.value;
+                  emitPurchaseState();
                 });
               });
             }
@@ -306,7 +325,10 @@
             document.addEventListener('plaay:variant-changed', function(event) {
               if (!event.detail || !event.detail.variant) return;
               updatePurchaseOptionPrices(event.detail.variant);
+              emitPurchaseState();
             });
+
+            emitPurchaseState();
           })();
           </script>
         {% endif %}
@@ -336,7 +358,8 @@
         <button
           data-add
           type="button"
-          class="relative flex items-center justify-center w-full py-4 mb-4 text-m font-bold uppercase transition-all duration-200 rounded-lg btn mt-7 blue product_page_atc font-walsheim-bold">
+          class="relative flex items-center justify-center w-full py-4 mb-4 text-m font-bold uppercase transition-all duration-200 rounded-lg btn mt-7 blue product_page_atc font-walsheim-bold{% if hide_inline_atc %} plaay-product-atc-proxy{% endif %}"
+          {% if hide_inline_atc %}aria-hidden="true" tabindex="-1"{% endif %}>
         
           <div class="text-sm product_discount_price relative z-1 font-walsheim-bold | {% if product.selling_plan_groups.size > 0 %} md:hidden {% endif %}">
             {{ current_variant.price | money | replace: ',', '.' }}
@@ -390,6 +413,11 @@
         let variant_fieldsets = elements.product_page_form.querySelectorAll(".variant_type");
         let productSelectOptions = elements.product_page_form.querySelector("#productSelect").querySelectorAll("option");
         let variantId = elements.product_page_form.querySelector("[data-variant-id]");
+        let variantsJsonInput = elements.product_page_form.querySelector("[data-add-to-cart-variants]");
+        let variantsJson = [];
+        try {
+          variantsJson = variantsJsonInput ? JSON.parse(variantsJsonInput.value) : [];
+        } catch (e) {}
         let quantity = elements.product_page_form.querySelector("[data-quantity]").getAttribute("value");
         let product_price = document.querySelectorAll(".product_price");
         let product_discount_price = document.querySelectorAll(".product_discount_price");
@@ -419,6 +447,18 @@
               const discount = html_price.dataset.discount * price.slice(1).replace(",", ".") / 100;
               html_price.innerHTML = price.charAt(0) + Math.round((price.slice(1).replace(",", ".") - discount) * 100) / 100;
             });
+            const matchedVariant = variantsJson.find(variant => String(variant.id) === String(variant_id));
+            if (matchedVariant) {
+              document.dispatchEvent(new CustomEvent('plaay:variant-changed', {
+                detail: {
+                  variant: {
+                    id: matchedVariant.id,
+                    price: matchedVariant.price,
+                    compare_at_price: matchedVariant.compare_at_price || 0
+                  }
+                }
+              }));
+            }
             console.log(variant_text);
           });
         });
@@ -547,3 +587,24 @@
     customAddToCart.init();
   });
 </script>
+
+{% if hide_inline_atc %}
+  <style>
+    .plaay-product-atc-proxy {
+      position: fixed !important;
+      left: -9999px !important;
+      top: 0 !important;
+      width: 1px !important;
+      height: 1px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      overflow: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      clip: rect(0 0 0 0) !important;
+      clip-path: inset(50%) !important;
+      white-space: nowrap !important;
+    }
+  </style>
+{% endif %}
