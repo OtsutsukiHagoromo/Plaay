@@ -1805,7 +1805,7 @@ header.fixed .flex.items-center.justify-center.mr-4 {
   
 }
 @media screen and (max-width: 1024px) {
-  span.search_icon {
+  span.plaay-search-icon-wrap {
     margin-left: 1rem;
   }
   li.dropdown_parent {

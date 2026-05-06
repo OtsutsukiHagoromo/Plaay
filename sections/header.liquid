@@ -169,7 +169,7 @@
         {% endif %}
 
         <div class="plaay-header-actions hidden lg:flex">
-          <span class="search_icon plaay-desktop-search text-dark-blue relative flex" data-search-root="desktop">
+          <span class="plaay-search-icon-wrap plaay-desktop-search text-dark-blue relative flex" data-search-root="desktop">
             <button type="button" class="plaay-header-utility plaay-header-utility--search" aria-label="Search" aria-expanded="false" data-search-trigger>
               {% render 'icon-search-alternate' %}
             </button>
@@ -223,7 +223,7 @@
         </div>
         <div class="flex items-center justify-center mr-4 | lg:hidden">
           {% unless hide_search_mobile %}
-            <span class="search_icon w-5 h-5 cursor-pointer text-dark-blue flex relative" data-search-root="mobile-toggle">
+            <span class="plaay-search-icon-wrap w-5 h-5 cursor-pointer text-dark-blue flex relative" data-search-root="mobile-toggle">
               <button type="button" class="bg-transparent border-0 p-0 text-current flex items-center justify-center" aria-label="Search" aria-expanded="false" data-search-trigger>
                 {% render 'icon-search-alternate' %}
               </button>
