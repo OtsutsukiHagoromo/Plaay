@@ -599,15 +599,15 @@
         "hide_atc_on_tiles": false
       }
     },
-    "richtext_yYaFf7": {
+    "richtext_PmXHkL": {
       "type": "richtext",
       "blocks": {
-        "heading_AGyEP9": {
+        "heading_hDXmMr": {
           "type": "heading",
           "settings": {
             "heading": "LOVE AT FIRST BITE",
-            "color": "#ffffff",
-            "font_size_desktop": 64,
+            "color": "#021d49",
+            "font_size_desktop": 62,
             "font_size_mobile": 40,
             "spacing_top_desktop": 10,
             "spacing_bottom_desktop": 10,
@@ -617,18 +617,44 @@
         }
       },
       "block_order": [
-        "heading_AGyEP9"
+        "heading_hDXmMr"
       ],
-      "name": "RichText",
       "settings": {
-        "bkg_color": "#021d49",
+        "bkg_color": "#ffffff",
         "full_width": true,
         "enable_style": false,
-        "spacing_top_desktop": 0,
-        "spacing_bottom_desktop": 0,
-        "spacing_top_mobile": 0,
-        "spacing_bottom_mobile": 0
+        "spacing_top_desktop": 10,
+        "spacing_bottom_desktop": 10,
+        "spacing_top_mobile": 10,
+        "spacing_bottom_mobile": 10
       }
+    },
+    "apps_8GntjU": {
+      "type": "apps",
+      "blocks": {
+        "reelfy_videos_reelfy_section_iLwiPQ": {
+          "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
+          "settings": {
+            "gallery_id": 18785,
+            "title": "",
+            "subtitle": "",
+            "heading_size": "1",
+            "heading_align": "left",
+            "heading_color": "",
+            "desc_style": "subtitle",
+            "desc_color": "",
+            "custom_class": "",
+            "background_color": "",
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left_right": 0
+          }
+        }
+      },
+      "block_order": [
+        "reelfy_videos_reelfy_section_iLwiPQ"
+      ],
+      "settings": {}
     },
     "product_faqs_TVU9wg": {
       "type": "product_faqs",
@@ -845,6 +871,14 @@
       ],
       "custom_css": [],
       "settings": {}
+    },
+    "plaay_recently_viewed_QdXigz": {
+      "type": "plaay-recently-viewed",
+      "name": "Recently Viewed",
+      "settings": {
+        "heading": "Recently Viewed",
+        "max_products": 6
+      }
     }
   },
   "order": [
@@ -857,7 +891,9 @@
     "featured_products_4HNJJT",
     "featured_products_wEy4Qn",
     "featured_products_GtGJNw",
-    "richtext_yYaFf7",
+    "richtext_PmXHkL",
+    "apps_8GntjU",
+    "plaay_recently_viewed_QdXigz",
     "product_faqs_TVU9wg",
     "blocks_CfwrFk"
   ]
