@@ -132,40 +132,6 @@
         "empty_collection_link_text": "Return home"
       }
     },
-    "custom_featured_product_QWVyCW": {
-      "type": "custom-featured-product",
-      "blocks": {
-        "product_ipgVrC": {
-          "type": "product",
-          "settings": {
-            "product": ""
-          }
-        }
-      },
-      "block_order": [
-        "product_ipgVrC"
-      ],
-      "name": "Custom Featured products",
-      "settings": {
-        "title": "Limited Editions",
-        "description": "",
-        "background_color": "#ffffff",
-        "product_source": "collection",
-        "featured_collection": "limited-editions",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1,
-        "column_size_mobile_small": 1,
-        "see_all_link": "/",
-        "see_all_link_text": "See all",
-        "compact_mobile_grid": true
-      }
-    },
     "apps_reelfy_collection": {
       "type": "apps",
       "blocks": {
@@ -201,6 +167,34 @@
         "heading": "Previously viewed",
         "max_products": 6
       }
+    },
+    "featured_products_ctdBJU": {
+      "type": "featured_products",
+      "name": "Featured products",
+      "settings": {
+        "title": "Title goes here..",
+        "description": "Add some descriptive text to your section. This is great for SEO!",
+        "background_color": "#FFF",
+        "product_source": "collection",
+        "featured_collection": "limited-editions",
+        "collection_product_limit": 12,
+        "extra_top_padding": true,
+        "extra_bottom_padding": false,
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1,
+        "column_size_mobile_small": 1,
+        "autoplay": 600,
+        "see_all_link": "/",
+        "see_all_link_text": "See all",
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": false,
+        "compact_mobile_grid": true,
+        "hide_atc_on_tiles": false
+      }
     }
   },
   "order": [
@@ -208,8 +202,8 @@
     "collection_hero",
     "blocks_tJakVN",
     "main",
-    "custom_featured_product_QWVyCW",
     "apps_reelfy_collection",
-    "plaay_recently_viewed"
+    "plaay_recently_viewed",
+    "featured_products_ctdBJU"
   ]
 }
