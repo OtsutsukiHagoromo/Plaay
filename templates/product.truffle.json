@@ -56,6 +56,55 @@
         "shipping_returns_content": "<p><strong>Free delivery</strong> on all orders over AED 75. Same-day delivery in Dubai (order before 2 PM). 1-2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
       }
     },
+    "blocks_xHARVm": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_900bb11_9zLTEF": {
+          "type": "ai_gen_block_900bb11",
+          "settings": {
+            "spacing_desktop": 50,
+            "spacing_mobile": 30,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_900bb11_9zLTEF"
+      ],
+      "name": "Spacer",
+      "settings": {}
+    },
+    "richtext_39qxVU": {
+      "type": "richtext",
+      "blocks": {
+        "heading_U6a6LM": {
+          "type": "heading",
+          "settings": {
+            "heading": "LOVE AT FIRST BITE",
+            "color": "#021d49",
+            "font_size_desktop": 62,
+            "font_size_mobile": 40,
+            "spacing_top_desktop": 10,
+            "spacing_bottom_desktop": 10,
+            "spacing_top_mobile": 10,
+            "spacing_bottom_mobile": 10
+          }
+        }
+      },
+      "block_order": [
+        "heading_U6a6LM"
+      ],
+      "settings": {
+        "bkg_color": "#ffffff",
+        "full_width": true,
+        "enable_style": false,
+        "spacing_top_desktop": 10,
+        "spacing_bottom_desktop": 10,
+        "spacing_top_mobile": 10,
+        "spacing_bottom_mobile": 10
+      }
+    },
     "apps_6td8dD": {
       "type": "apps",
       "blocks": {
@@ -63,7 +112,7 @@
           "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
           "settings": {
             "gallery_id": 18785,
-            "title": "LOVE AT FIRST BITE",
+            "title": "",
             "subtitle": "",
             "heading_size": "1",
             "heading_align": "center",
@@ -1193,30 +1242,12 @@
         "judge_me_reviews_reviews_grid_widget_g8tBbq"
       ],
       "settings": {}
-    },
-    "blocks_xHARVm": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_900bb11_9zLTEF": {
-          "type": "ai_gen_block_900bb11",
-          "settings": {
-            "spacing_desktop": 50,
-            "spacing_mobile": 30,
-            "background_color": "#ffffff"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_900bb11_9zLTEF"
-      ],
-      "name": "Spacer",
-      "settings": {}
     }
   },
   "order": [
     "main",
     "blocks_xHARVm",
+    "richtext_39qxVU",
     "apps_6td8dD",
     "pdp_social_proof_plaay",
     "review_gif_video_UQj4ik",

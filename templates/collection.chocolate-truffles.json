@@ -200,33 +200,6 @@
         "empty_collection_link_text": "Return home"
       }
     },
-    "apps_reelfy_collection": {
-      "type": "apps",
-      "blocks": {
-        "reelfy_videos_reelfy_section_bQp6qF": {
-          "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
-          "settings": {
-            "gallery_id": 18785,
-            "title": "LOVE AT FIRST BITE",
-            "subtitle": "",
-            "heading_size": "1",
-            "heading_align": "center",
-            "heading_color": "",
-            "desc_style": "subtitle",
-            "desc_color": "",
-            "custom_class": "",
-            "background_color": "",
-            "padding_top": 0,
-            "padding_bottom": 0,
-            "padding_left_right": 0
-          }
-        }
-      },
-      "block_order": [
-        "reelfy_videos_reelfy_section_bQp6qF"
-      ],
-      "settings": {}
-    },
     "featured_products_GtGJNw": {
       "type": "featured_products",
       "blocks": {
@@ -588,6 +561,63 @@
         "heading": "Previously viewed",
         "max_products": 6
       }
+    },
+    "richtext_DG7c4j": {
+      "type": "richtext",
+      "blocks": {
+        "heading_m44ddq": {
+          "type": "heading",
+          "settings": {
+            "heading": "LOVE AT FIRST BITE",
+            "color": "#021d49",
+            "font_size_desktop": 62,
+            "font_size_mobile": 40,
+            "spacing_top_desktop": 10,
+            "spacing_bottom_desktop": 10,
+            "spacing_top_mobile": 10,
+            "spacing_bottom_mobile": 10
+          }
+        }
+      },
+      "block_order": [
+        "heading_m44ddq"
+      ],
+      "settings": {
+        "bkg_color": "#ffffff",
+        "full_width": true,
+        "enable_style": false,
+        "spacing_top_desktop": 10,
+        "spacing_bottom_desktop": 10,
+        "spacing_top_mobile": 10,
+        "spacing_bottom_mobile": 10
+      }
+    },
+    "apps_reelfy_collection": {
+      "type": "apps",
+      "blocks": {
+        "reelfy_videos_reelfy_section_bQp6qF": {
+          "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
+          "settings": {
+            "gallery_id": 18785,
+            "title": "",
+            "subtitle": "",
+            "heading_size": "1",
+            "heading_align": "center",
+            "heading_color": "",
+            "desc_style": "subtitle",
+            "desc_color": "",
+            "custom_class": "",
+            "background_color": "",
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left_right": 0
+          }
+        }
+      },
+      "block_order": [
+        "reelfy_videos_reelfy_section_bQp6qF"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -602,6 +632,7 @@
     "featured_products_QgaECD",
     "featured_products_XUGdAQ",
     "plaay_recently_viewed",
+    "richtext_DG7c4j",
     "apps_reelfy_collection"
   ]
 }

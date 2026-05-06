@@ -44,6 +44,36 @@
       "name": "Spacer",
       "settings": {}
     },
+    "richtext_XzziaT": {
+      "type": "richtext",
+      "blocks": {
+        "heading_7P6J7H": {
+          "type": "heading",
+          "settings": {
+            "heading": "LOVE AT FIRST BITE",
+            "color": "#021d49",
+            "font_size_desktop": 62,
+            "font_size_mobile": 40,
+            "spacing_top_desktop": 10,
+            "spacing_bottom_desktop": 10,
+            "spacing_top_mobile": 10,
+            "spacing_bottom_mobile": 10
+          }
+        }
+      },
+      "block_order": [
+        "heading_7P6J7H"
+      ],
+      "settings": {
+        "bkg_color": "#ffffff",
+        "full_width": true,
+        "enable_style": false,
+        "spacing_top_desktop": 10,
+        "spacing_bottom_desktop": 10,
+        "spacing_top_mobile": 10,
+        "spacing_bottom_mobile": 10
+      }
+    },
     "apps_6td8dD": {
       "type": "apps",
       "blocks": {
@@ -51,7 +81,7 @@
           "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
           "settings": {
             "gallery_id": 18785,
-            "title": "LOVE AT FIRST BITE",
+            "title": "",
             "subtitle": "",
             "heading_size": "1",
             "heading_align": "center",
@@ -591,68 +621,6 @@
       "type": "apps",
       "settings": {}
     },
-    "marquee_slider_H7hNaz": {
-      "type": "marquee-slider",
-      "blocks": {
-        "logo_cDma4D": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "On-the go cravings",
-            "com_logo": "shopify://shop_images/On_the_go_cravings.png"
-          }
-        },
-        "logo_mkALDF": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "Nutritionist-Made",
-            "com_logo": "shopify://shop_images/Nutriotionist_Made.png"
-          }
-        },
-        "logo_MmHFMD": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "Guilt-Free Indulgence",
-            "com_logo": "shopify://shop_images/Guilt_Free_Indulgence.png"
-          }
-        },
-        "logo_QXaPrM": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "Refined Sugar Free",
-            "com_logo": "shopify://shop_images/Refined_Sugar_Free_21dbf860-6c60-4e0b-8263-3b4fe300fac6.png"
-          }
-        },
-        "logo_FGKrxQ": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "Gluten Free",
-            "com_logo": "shopify://shop_images/Gluten_Free_91e2abf3-be8f-41be-accc-0d7752590ca2.png"
-          }
-        },
-        "logo_T3JVWf": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "Soy Free",
-            "com_logo": "shopify://shop_images/Soy_Free_221e8805-4814-43c7-8be4-fc7591d56000.png"
-          }
-        }
-      },
-      "block_order": [
-        "logo_cDma4D",
-        "logo_mkALDF",
-        "logo_MmHFMD",
-        "logo_QXaPrM",
-        "logo_FGKrxQ",
-        "logo_T3JVWf"
-      ],
-      "disabled": true,
-      "name": "Marquee Slider",
-      "settings": {
-        "gap": 30,
-        "duration": 20,
-        "background_color": "#021d49"
-      }
-    },
     "scrolling_content_PjwFEy": {
       "type": "scrolling-content",
       "blocks": {
@@ -723,366 +691,6 @@
         "padding_bottom": 36
       }
     },
-    "custom_coupon_banner_mDjXri": {
-      "type": "custom-coupon-banner",
-      "disabled": true,
-      "name": "Custom Coupon Banner",
-      "settings": {
-        "coupon_text": "Limited Time Offer: 20% OFF All Truffle Packs",
-        "coupon_code": ""
-      }
-    },
-    "infinite_scroll_slider_FJdViW": {
-      "type": "infinite-scroll-slider",
-      "blocks": {
-        "slide_3BNGcw": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Localy_Logo_EN_1200x1200_6b81cd61-5cb4-4951-82a5-46748d36c1ff.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_GB8tWG": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Wild_The_Moon_Logo.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_Tz9KxA": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Ivy_s_Secret_Garden_Logo.webp",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_AmKRX6": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Spinneys-Logo-Vector_svg.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.spinneys.com/en-ae/search/?q=Plaay"
-          }
-        },
-        "slide_djw3YG": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Waitrose_Logo_svg.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.waitrose.ae/en/search/?q=plaay"
-          }
-        },
-        "slide_aBLL8n": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/noon_c17fc7aa-a9ab-4156-8854-ecb90eadfd14.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://apps.apple.com/us/app/noon-shopping-food-grocery/id1269038866?mt=8"
-          }
-        },
-        "slide_MyJagD": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/tmart.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://pzwv.adj.st/?c=ae&s=ds&t=2&i=199dd31c-0e47-4a07-bdf0-d6440ee0f391&adj_t=ubpopz9_qyj4s1t&adj_campaign=other_other_mix_gro_ma_ae_display_Plaay&adj_adgroup=Social&adj_creative=Allproducts&adj_deeplink=talabat%3A%2F%2F%3Fc%3Dae%26s%3Dds%26t%3D2%26i%3D199dd31c-0e47-4a07-bdf0-d6440ee0f391&adj_fallback=https%3A%2F%2Fwww.talabat.com%2Fuae%2Ftalabat-mart%3Futm_campaign%3Dother_other_web_gro_ma_ae_display_Plaay%26utm_source%3DSocial%26utm_medium%3Dother"
-          }
-        },
-        "slide_UdTcNy": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/careem_f7267597-bafe-447a-b477-c8947731987a.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_bnDP6P": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/deliveroo_fcfa4527-9435-4226-8df4-a5f40bb2aa61.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://deliveroo.ae/menu/dubai/dubai-investment-park-2/plaay-cocoa-and-chocolate-candies-dip?utm_campaign=organic&utm_medium=referrer&utm_source=menu_share"
-          }
-        },
-        "slide_7mN7z9": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/amazon_31c6a1c2-92d5-4112-87ec-e4c7e24a9875.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.amazon.ae/s?k=Plaay&ref=bl_dp_s_web_0"
-          }
-        },
-        "slide_EqaaPJ": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/kibson.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.kibsons.com/en/origin/plaay"
-          }
-        },
-        "slide_iVfPCW": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/logo_SmilesMarket_EN.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_zzFUDP": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/choitrams.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.choithrams.com/en/search/?q=plaay"
-          }
-        },
-        "slide_nUdqQi": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/grandiose.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.grandiose.ae/search/?q=plaay"
-          }
-        },
-        "slide_hNj9Jt": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/almaya_208a3af1-6501-46e2-8e9b-65f336ad0829.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_ptYiKK": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/enoc.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_y9R9Cz": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/emrat.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_adNAeP": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/allday.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_YhDECK": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Coop.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_3LMYhK": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/scuzi_a72cf9bf-58e8-487f-bf24-0655523f5a73.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_aeJyxn": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/zoom_4fae3570-38da-4e2f-bc6c-b3c4000fe285.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_KAknVq": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Colored.svg",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_RPhxLc": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Cycle_Souq.svg",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_KBj9GQ": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Everyday_Roastery.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_XDaqDj": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Motion_Cycling.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_cMehtG": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/pilates.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_pcVjqi": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/hotel_Indigo.jpg",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_HL6tcM": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/AVANI_Hotels___Resorts_Corporate_Logo.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_eGTVrh": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/IHG-Logo.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_xztmRn": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/mediaone-logo.svg",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_LNdbFL": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Pauls.svg",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_yqDJVA": {
-          "type": "slide",
-          "disabled": true,
-          "settings": {
-            "image": "shopify://shop_images/smiles.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "slide_3BNGcw",
-        "slide_GB8tWG",
-        "slide_Tz9KxA",
-        "slide_AmKRX6",
-        "slide_djw3YG",
-        "slide_aBLL8n",
-        "slide_MyJagD",
-        "slide_UdTcNy",
-        "slide_bnDP6P",
-        "slide_7mN7z9",
-        "slide_EqaaPJ",
-        "slide_iVfPCW",
-        "slide_zzFUDP",
-        "slide_nUdqQi",
-        "slide_hNj9Jt",
-        "slide_ptYiKK",
-        "slide_y9R9Cz",
-        "slide_adNAeP",
-        "slide_YhDECK",
-        "slide_3LMYhK",
-        "slide_aeJyxn",
-        "slide_KAknVq",
-        "slide_RPhxLc",
-        "slide_KBj9GQ",
-        "slide_XDaqDj",
-        "slide_cMehtG",
-        "slide_pcVjqi",
-        "slide_HL6tcM",
-        "slide_eGTVrh",
-        "slide_xztmRn",
-        "slide_LNdbFL",
-        "slide_yqDJVA"
-      ],
-      "disabled": true,
-      "settings": {
-        "section_height": 130,
-        "hide_on_mobile": false,
-        "provide_container": false,
-        "provide_container_desktop": false,
-        "background_color": "#f7c744",
-        "slides_shown_desktop_extra_extra_extra_large": 4,
-        "slides_shown_desktop_extra_extra_large": 4,
-        "slides_shown_desktop_extra_large": 4,
-        "slides_shown_desktop_large": 4,
-        "slides_shown_desktop": 3,
-        "slides_shown_tablet": 2,
-        "slides_shown_mobile": 1,
-        "slides_shown_mobile_small": 1,
-        "autoplay": false,
-        "autoplay_speed": 2500,
-        "autoplay_mode": "linear",
-        "autoplay_on_mobile": false,
-        "font_size": 22,
-        "font_size_mobile": 22,
-        "font_family": "font-walsheim"
-      }
-    },
     "us_vs_them_image_Tq3dCR": {
       "type": "us_vs_them_image",
       "disabled": true,
@@ -1099,6 +707,7 @@
   "order": [
     "bars_main_product_tgjzzE",
     "blocks_dKL7zR",
+    "richtext_XzziaT",
     "apps_6td8dD",
     "pdp_social_proof_plaay",
     "richtext_hVDgQC",
@@ -1109,10 +718,7 @@
     "review_gif_video_UQj4ik",
     "pdp_stats_bar_h7z9pz",
     "174471010040db00af",
-    "marquee_slider_H7hNaz",
     "scrolling_content_PjwFEy",
-    "custom_coupon_banner_mDjXri",
-    "infinite_scroll_slider_FJdViW",
     "us_vs_them_image_Tq3dCR"
   ]
 }
