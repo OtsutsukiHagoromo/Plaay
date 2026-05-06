@@ -6,14 +6,14 @@
  assign hide_search_mobile = section.settings.hide_search_mobile
  assign dropdown_menu_images = section.blocks | where: 'type', 'dropdown_menu_image'
  assign scroll_sticky = section.settings.scroll_sticky
- assign account_href = routes.account_login_url
+ assign account_href = '/account/login'
  assign account_label = 'action.account' | t
  if customer
-   assign account_href = routes.account_url
+   assign account_href = '/account'
    if customer.first_name != blank
      assign account_label = customer.first_name
    endif
- endif
+  endif
 %}
 
 {% style %}
@@ -169,15 +169,16 @@
         {% endif %}
 
         <div class="plaay-header-actions hidden lg:flex">
-          <span class="search_icon plaay-desktop-search text-dark-blue relative flex" data-desktop-search>
-            <button type="button" class="plaay-header-utility plaay-header-utility--search" aria-label="Search">
+          <span class="search_icon plaay-desktop-search text-dark-blue relative flex" data-search-root="desktop">
+            <button type="button" class="plaay-header-utility plaay-header-utility--search" aria-label="Search" aria-expanded="false" data-search-trigger>
               {% render 'icon-search-alternate' %}
             </button>
             <form
               action="/search"
               method="get"
               role="search"
-              class="search navigation_search plaay-search-panel invisible transition-all duration-200 origin-top-right transform opacity-0 absolute top-[calc(100%+16px)] right-0 rounded-[22px]">
+              class="search navigation_search plaay-search-panel invisible transition-all duration-200 origin-top-right transform opacity-0 absolute top-[calc(100%+16px)] right-0 rounded-[22px]"
+              data-search-panel>
               <div class="plaay-search-panel__shell">
                 <label class="plaay-search-panel__label" for="desktop-search-input-{{ section.id }}">Search Plaay</label>
                 <div class="plaay-search-panel__row">
@@ -222,8 +223,10 @@
         </div>
         <div class="flex items-center justify-center mr-4 | lg:hidden">
           {% unless hide_search_mobile %}
-            <span class="search_icon w-5 h-5 cursor-pointer text-dark-blue flex relative">
-              {% render 'icon-search-alternate' %}
+            <span class="search_icon w-5 h-5 cursor-pointer text-dark-blue flex relative" data-search-root="mobile-toggle">
+              <button type="button" class="bg-transparent border-0 p-0 text-current flex items-center justify-center" aria-label="Search" aria-expanded="false" data-search-trigger>
+                {% render 'icon-search-alternate' %}
+              </button>
             </span>
           {% endunless %}
         </div>
@@ -396,7 +399,9 @@
         action="/search"
         method="get"
         role="search"
-        class="search navigation_search invisible transition-all duration-200 origin-top-left transform opacity-0 min-w-[300px] border-b border-black border-opacity-10 py-5 bg-white">
+        class="search navigation_search invisible transition-all duration-200 origin-top-left transform opacity-0 min-w-[300px] border-b border-black border-opacity-10 py-5 bg-white"
+        data-search-root="mobile-panel"
+        data-search-panel>
         <input
           type="search"
           name="q"
@@ -444,39 +449,70 @@
 
 <script>
   (function () {
-    var desktopSearch = document.querySelector('[data-desktop-search]');
-    if (!desktopSearch) return;
+    var desktopRoot = document.querySelector('[data-search-root="desktop"]');
+    var mobileTriggerRoot = document.querySelector('[data-search-root="mobile-toggle"]');
+    var mobilePanel = document.querySelector('[data-search-root="mobile-panel"]');
+    var bindings = [];
 
-    var panel = desktopSearch.querySelector('.navigation_search');
-    var input = desktopSearch.querySelector('input[type="search"]');
-    var trigger = desktopSearch.querySelector('.plaay-header-utility--search');
-    if (!panel || !trigger) return;
-
-    trigger.addEventListener('click', function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      panel.classList.toggle('active');
-      trigger.setAttribute('aria-expanded', panel.classList.contains('active') ? 'true' : 'false');
-      if (panel.classList.contains('active') && input) {
-        setTimeout(function () {
-          input.focus();
-        }, 20);
+    function setPanelState(panel, trigger, open) {
+      if (!panel || !trigger) return;
+      panel.classList.toggle('active', open);
+      panel.classList.toggle('invisible', !open);
+      panel.classList.toggle('opacity-0', !open);
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) {
+        var input = panel.querySelector('input[type="search"]');
+        if (input) {
+          setTimeout(function () {
+            input.focus();
+          }, 20);
+        }
       }
+    }
+
+    function bindSearch(root, panelOverride) {
+      if (!root) return;
+      var trigger = root.querySelector('[data-search-trigger]');
+      var panel = panelOverride || root.querySelector('[data-search-panel]');
+      if (!trigger || !panel) return;
+
+      bindings.push({ root: root, trigger: trigger, panel: panel });
+
+      trigger.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        var isOpen = panel.classList.contains('active');
+
+        bindings.forEach(function(binding) {
+          setPanelState(binding.panel, binding.trigger, false);
+        });
+
+        setPanelState(panel, trigger, !isOpen);
+      });
+
+      panel.addEventListener('click', function(event) {
+        event.stopPropagation();
+      });
+    }
+
+    bindSearch(desktopRoot);
+    bindSearch(mobileTriggerRoot, mobilePanel);
+
+    if (!bindings.length) return;
+
+    document.addEventListener('click', function(event) {
+      bindings.forEach(function(binding) {
+        if (!binding.root.contains(event.target) && !binding.panel.contains(event.target)) {
+          setPanelState(binding.panel, binding.trigger, false);
+        }
+      });
     });
 
-    document.addEventListener('click', function (event) {
-      if (!desktopSearch.contains(event.target)) {
-        panel.classList.remove('active');
-        trigger.setAttribute('aria-expanded', 'false');
-        return;
-      }
-    });
-
-    document.addEventListener('keydown', function (event) {
-      if (event.key === 'Escape') {
-        panel.classList.remove('active');
-        trigger.setAttribute('aria-expanded', 'false');
-      }
+    document.addEventListener('keydown', function(event) {
+      if (event.key !== 'Escape') return;
+      bindings.forEach(function(binding) {
+        setPanelState(binding.panel, binding.trigger, false);
+      });
     });
   })();
 </script>
