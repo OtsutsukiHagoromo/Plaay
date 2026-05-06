@@ -623,8 +623,12 @@
   <div class="plaay-sticky-mobile__inner" style="padding:10px 16px 14px">
     <div class="plaay-sticky-mobile__meta" style="display:flex;flex-direction:column;gap:2px;margin-bottom:10px">
       <span class="plaay-sticky-mode font-walsheim-bold text-dark-blue" style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;line-height:1.1">One-Time Purchase</span>
-      <span class="plaay-sticky-plan font-walsheim-regular text-dark-blue" style="font-size:12px;opacity:0.65;line-height:1.2;display:none"></span>
+      <div class="plaay-sticky-plan-row">
+        <span class="plaay-sticky-plan font-walsheim-regular text-dark-blue" style="font-size:12px;opacity:0.65;line-height:1.2"></span>
+        <button type="button" class="plaay-sticky-frequency-toggle">Change</button>
+      </div>
       <span class="plaay-sticky-benefits font-walsheim-regular text-dark-blue" style="font-size:11px;opacity:0.72;line-height:1.25;display:none"></span>
+      <div class="plaay-sticky-frequency-options"></div>
     </div>
     <div class="plaay-sticky-mobile__row" style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
       {%- if product.featured_image -%}
@@ -660,12 +664,27 @@
 {% comment %} ── Desktop sticky ATC bar ── {% endcomment %}
 <div id="plaay-sticky-atc" class="plaay-sticky-atc" aria-hidden="true">
   <div class="container flex items-center justify-between">
-    <p class="font-walsheim-black uppercase text-dark-blue leading-tight truncate flex-1 hidden xl:block" style="font-size:13px;margin-right:2rem">{{ product.title }}</p>
+    <div class="plaay-sticky-desktop__main">
+      {%- if product.featured_image -%}
+        <img
+          src="{{ product.featured_image | image_url: width: 96 }}"
+          alt="{{ product.title | escape }}"
+          width="52"
+          height="52"
+          class="plaay-sticky-thumb hidden lg:block"
+          loading="eager">
+      {%- endif -%}
+      <p class="font-walsheim-black uppercase text-dark-blue leading-tight truncate flex-1 hidden xl:block" style="font-size:13px;margin-right:1rem">{{ product.title }}</p>
+    </div>
     <div style="display:flex;align-items:center;gap:20px;margin-left:auto;flex-shrink:0">
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+      <div class="plaay-sticky-desktop__meta">
         <span class="plaay-sticky-mode font-walsheim-bold text-dark-blue" style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;line-height:1.1">One-Time Purchase</span>
-        <span class="plaay-sticky-plan font-walsheim-regular text-dark-blue" style="font-size:12px;opacity:0.65;line-height:1.2;display:none"></span>
+        <div class="plaay-sticky-plan-row">
+          <span class="plaay-sticky-plan font-walsheim-regular text-dark-blue" style="font-size:12px;opacity:0.65;line-height:1.2"></span>
+          <button type="button" class="plaay-sticky-frequency-toggle">Change</button>
+        </div>
         <span class="plaay-sticky-benefits font-walsheim-regular text-dark-blue" style="font-size:11px;opacity:0.72;line-height:1.25;display:none"></span>
+        <div class="plaay-sticky-frequency-options"></div>
         <span class="plaay-sticky-compare font-walsheim-regular text-dark-blue" style="font-size:11px;text-decoration:line-through;opacity:0.5;line-height:1;{% unless sticky_variant.compare_at_price > sticky_variant.price %}display:none{% endunless %}">{{ sticky_variant.compare_at_price | money }}</span>
         <span class="plaay-sticky-price font-walsheim-bold text-dark-blue" style="font-size:20px;line-height:1">{{ sticky_variant.price | money }}</span>
       </div>
@@ -770,6 +789,45 @@
       }
     }
 
+    function buildStickyFrequencyOptions() {
+      var sourceButtons = Array.prototype.slice.call(document.querySelectorAll('.plaay-sub-freq__opt'));
+      [desktopBar, mobileBar].forEach(function(bar) {
+        if (!bar) return;
+        var optionsWrap = bar.querySelector('.plaay-sticky-frequency-options');
+        if (!optionsWrap) return;
+        optionsWrap.innerHTML = '';
+        sourceButtons.forEach(function(sourceBtn) {
+          var optionBtn = document.createElement('button');
+          optionBtn.type = 'button';
+          optionBtn.className = 'plaay-sticky-frequency-option' + (sourceBtn.classList.contains('active') ? ' active' : '');
+          optionBtn.textContent = sourceBtn.textContent.trim();
+          optionBtn.addEventListener('click', function() {
+            sourceBtn.click();
+            buildStickyFrequencyOptions();
+            setTimeout(syncPurchaseState, 0);
+          });
+          optionsWrap.appendChild(optionBtn);
+        });
+      });
+    }
+
+    function bindStickyFrequencyControls() {
+      [desktopBar, mobileBar].forEach(function(bar) {
+        if (!bar) return;
+        var toggle = bar.querySelector('.plaay-sticky-frequency-toggle');
+        var optionsWrap = bar.querySelector('.plaay-sticky-frequency-options');
+        if (!toggle || !optionsWrap || toggle.dataset.bound === 'true') return;
+        toggle.dataset.bound = 'true';
+        toggle.addEventListener('click', function() {
+          var isOpen = optionsWrap.style.display === 'flex';
+          optionsWrap.style.display = isOpen ? 'none' : 'flex';
+          toggle.textContent = isOpen ? 'Change' : 'Hide';
+        });
+      });
+    }
+    buildStickyFrequencyOptions();
+    bindStickyFrequencyControls();
+
     function syncPurchaseState() {
       var subWrap = document.querySelector('.plaay-sub-wrap');
       var isSubscription = !!document.querySelector('#plaay-tab-subscribe.plaay-sub-tab--active');
@@ -799,21 +857,32 @@
       [desktopBar, mobileBar].forEach(function(bar) {
         if (!bar) return;
         var modeEl = bar.querySelector('.plaay-sticky-mode');
+        var planRowEl = bar.querySelector('.plaay-sticky-plan-row');
         var planEl = bar.querySelector('.plaay-sticky-plan');
         var benefitsEl = bar.querySelector('.plaay-sticky-benefits');
+        var frequencyToggle = bar.querySelector('.plaay-sticky-frequency-toggle');
+        var frequencyOptions = bar.querySelector('.plaay-sticky-frequency-options');
         var priceEl = bar.querySelector('.plaay-sticky-price, .plaay-sticky-mobile-price');
         var compareEl = bar.querySelector('.plaay-sticky-compare');
         var submitEl = bar.querySelector('.plaay-sticky-submit, .plaay-mobile-submit');
 
         if (modeEl) modeEl.textContent = modeText;
+        if (planRowEl) {
+          planRowEl.style.display = planLabel ? 'flex' : 'none';
+        }
         if (planEl) {
           if (planLabel) {
             planEl.textContent = planLabel;
-            planEl.style.display = '';
           } else {
             planEl.textContent = '';
-            planEl.style.display = 'none';
           }
+        }
+        if (frequencyOptions && !planLabel) {
+          frequencyOptions.style.display = 'none';
+        }
+        if (frequencyToggle) {
+          frequencyToggle.textContent = 'Change';
+          frequencyToggle.style.display = planLabel ? '' : 'none';
         }
         if (benefitsEl) {
           if (benefitLabel) {
@@ -828,6 +897,7 @@
         setCompare(compareEl, compareText);
         if (submitEl && currentPrice) submitEl.textContent = currentPrice + ' | ' + submitLabel;
       });
+      buildStickyFrequencyOptions();
     }
     syncPurchaseState();
     document.addEventListener('plaay:purchase-state-changed', syncPurchaseState);

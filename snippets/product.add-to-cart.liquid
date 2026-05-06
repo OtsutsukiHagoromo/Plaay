@@ -229,7 +229,7 @@
                 <input type="hidden" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id />
                 <input type="hidden" value="{{ product.variants | json | escape }}" data-variants />
                 <input type="hidden" value="false" data-subscription />
-                <input type="hidden" value="{{ product.selling_plan_groups[0].selling_plans[0].id }}" data-selling-plan-id />
+                <input type="hidden" name="selling_plan" value="{{ product.selling_plan_groups[0].selling_plans[0].id }}" data-selling-plan-id disabled />
               {%- endfor -%}
             </div>
 
@@ -318,7 +318,18 @@
               tabSub.setAttribute('aria-pressed', String(isSub));
               if (freqPanel) freqPanel.style.display = isSub ? 'block' : 'none';
               var subInput = freqPanel ? freqPanel.querySelector('[data-subscription]') : null;
+              var planInput = freqPanel ? freqPanel.querySelector('[data-selling-plan-id]') : null;
               if (subInput) subInput.value = isSub ? 'true' : 'false';
+              if (planInput) {
+                if (isSub) {
+                  var activePlan = freqPanel ? freqPanel.querySelector('[data-quick-add-selling-plan].active') : null;
+                  planInput.disabled = false;
+                  planInput.value = activePlan ? activePlan.dataset.value : planInput.value;
+                } else {
+                  planInput.disabled = true;
+                  planInput.value = '';
+                }
+              }
               emitPurchaseState();
             }
 
@@ -338,7 +349,10 @@
                   freqPanel.querySelectorAll('[data-quick-add-selling-plan]').forEach(function(b) { b.classList.remove('active'); });
                   btn.classList.add('active');
                   var planInput = freqPanel.querySelector('[data-selling-plan-id]');
-                  if (planInput) planInput.value = btn.dataset.value;
+                  if (planInput) {
+                    planInput.disabled = false;
+                    planInput.value = btn.dataset.value;
+                  }
                   emitPurchaseState();
                 });
               });

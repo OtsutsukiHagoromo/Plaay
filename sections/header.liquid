@@ -452,22 +452,30 @@
     var trigger = desktopSearch.querySelector('.plaay-header-utility--search');
     if (!panel || !trigger) return;
 
+    trigger.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      panel.classList.toggle('active');
+      trigger.setAttribute('aria-expanded', panel.classList.contains('active') ? 'true' : 'false');
+      if (panel.classList.contains('active') && input) {
+        setTimeout(function () {
+          input.focus();
+        }, 20);
+      }
+    });
+
     document.addEventListener('click', function (event) {
       if (!desktopSearch.contains(event.target)) {
         panel.classList.remove('active');
+        trigger.setAttribute('aria-expanded', 'false');
         return;
-      }
-
-      if (trigger.contains(event.target)) {
-        setTimeout(function () {
-          if (panel.classList.contains('active') && input) input.focus();
-        }, 20);
       }
     });
 
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape') {
         panel.classList.remove('active');
+        trigger.setAttribute('aria-expanded', 'false');
       }
     });
   })();
