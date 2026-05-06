@@ -148,7 +148,7 @@
       "name": "Custom Featured products",
       "settings": {
         "title": "Limited Editions",
-        "description": "Add some descriptive text to your section. This is great for SEO!",
+        "description": "",
         "background_color": "#ffffff",
         "product_source": "collection",
         "featured_collection": "limited-editions",
