@@ -2525,6 +2525,33 @@
                                                                                                            "reviewer":  "Priya S.",
                                                                                                            "tag":  "Verified buyer"
                                                                                                        }
+                                                                                      },
+                                                                    "review_km2QfN":  {
+                                                                                          "type":  "review",
+                                                                                          "settings":  {
+                                                                                                           "rating":  5,
+                                                                                                           "quote":  "Finally found a chocolate snack that feels indulgent but still fits my routine.",
+                                                                                                           "reviewer":  "Lina R.",
+                                                                                                           "tag":  "Verified buyer"
+                                                                                                       }
+                                                                                      },
+                                                                    "review_Pj7dLs":  {
+                                                                                          "type":  "review",
+                                                                                          "settings":  {
+                                                                                                           "rating":  5,
+                                                                                                           "quote":  "The texture, the flavour, the ingredients - Plaay absolutely nailed it.",
+                                                                                                           "reviewer":  "Nadia M.",
+                                                                                                           "tag":  "Verified buyer"
+                                                                                                       }
+                                                                                      },
+                                                                    "review_Bv4hQx":  {
+                                                                                          "type":  "review",
+                                                                                          "settings":  {
+                                                                                                           "rating":  5,
+                                                                                                           "quote":  "I ordered once out of curiosity and now keep a stash at home and at work.",
+                                                                                                           "reviewer":  "Zayd H.",
+                                                                                                           "tag":  "Verified buyer"
+                                                                                                       }
                                                                                       }
                                                                 },
                                                      "block_order":  [
@@ -2534,7 +2561,10 @@
                                                                          "trust_badge_GYxe3G",
                                                                          "review_xngXi9",
                                                                          "review_4DjCAi",
-                                                                         "review_LiYpLU"
+                                                                         "review_LiYpLU",
+                                                                         "review_km2QfN",
+                                                                         "review_Pj7dLs",
+                                                                         "review_Bv4hQx"
                                                                      ],
                                                      "name":  "PDP â€” Social Proof",
                                                      "settings":  {
