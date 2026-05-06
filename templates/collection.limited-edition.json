@@ -104,6 +104,34 @@
       ],
       "settings": {}
     },
+    "featured_products_ctdBJU": {
+      "type": "featured_products",
+      "name": "Featured products",
+      "settings": {
+        "title": "Title goes here..",
+        "description": "Add some descriptive text to your section. This is great for SEO!",
+        "background_color": "#FFF",
+        "product_source": "collection",
+        "featured_collection": "limited-editions",
+        "collection_product_limit": 12,
+        "extra_top_padding": true,
+        "extra_bottom_padding": false,
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1,
+        "column_size_mobile_small": 1,
+        "autoplay": 600,
+        "see_all_link": "/",
+        "see_all_link_text": "See all",
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": false,
+        "compact_mobile_grid": true,
+        "hide_atc_on_tiles": false
+      }
+    },
     "main": {
       "type": "main-collection",
       "disabled": true,
@@ -167,43 +195,15 @@
         "heading": "Previously viewed",
         "max_products": 6
       }
-    },
-    "featured_products_ctdBJU": {
-      "type": "featured_products",
-      "name": "Featured products",
-      "settings": {
-        "title": "Title goes here..",
-        "description": "Add some descriptive text to your section. This is great for SEO!",
-        "background_color": "#FFF",
-        "product_source": "collection",
-        "featured_collection": "limited-editions",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1,
-        "column_size_mobile_small": 1,
-        "autoplay": 600,
-        "see_all_link": "/",
-        "see_all_link_text": "See all",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": false,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
-      }
     }
   },
   "order": [
     "63fdba3d-c584-464b-8a33-248b0d7094f2",
     "collection_hero",
     "blocks_tJakVN",
+    "featured_products_ctdBJU",
     "main",
     "apps_reelfy_collection",
-    "plaay_recently_viewed",
-    "featured_products_ctdBJU"
+    "plaay_recently_viewed"
   ]
 }
