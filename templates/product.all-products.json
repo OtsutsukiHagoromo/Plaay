@@ -22,7 +22,7 @@
         "tab_info_label": "Product Info",
         "tab_ingredients_label": "Ingredients",
         "tab_shipping_label": "Shipping & Returns",
-        "shipping_returns_content": "<p><strong>Free delivery</strong> on all orders over AED 75. Same-day delivery in Dubai (order before 2 PM). 1-2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
+        "shipping_returns_content": "<p><strong>Free delivery</strong> on all orders over AED 75. <br/>1-2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
       }
     },
     "blocks_dKL7zR": {
@@ -196,6 +196,14 @@
         "serving_size": "1 bar (40g)",
         "calories": "150",
         "disclaimer": "* Percent Daily Values are based on a 2,000 calorie diet."
+      }
+    },
+    "plaay_recently_viewed_88xzxr": {
+      "type": "plaay-recently-viewed",
+      "name": "Recently Viewed",
+      "settings": {
+        "heading": "Recently Viewed",
+        "max_products": 6
       }
     },
     "pdp_social_proof_plaay": {
@@ -727,14 +735,6 @@
         "background_color_left": "#fad1d2",
         "background_color_right": "#f6f6f6",
         "sv_vs_image": "shopify://shop_images/us-vs-them.png"
-      }
-    },
-    "plaay_recently_viewed_88xzxr": {
-      "type": "plaay-recently-viewed",
-      "name": "Recently Viewed",
-      "settings": {
-        "heading": "Recently Viewed",
-        "max_products": 6
       }
     }
   },
