@@ -1,1 +1,43 @@
-{"sections":{"main":{"type":"main-page","settings":{}}},"order":["main"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {
+        "background_color": "#ffffff",
+        "text_color": "#021d49"
+      }
+    },
+    "blocks_cLJHiD": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_900bb11_Pxr8Ak": {
+          "type": "ai_gen_block_900bb11",
+          "settings": {
+            "spacing_desktop": 70,
+            "spacing_mobile": 50,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_900bb11_Pxr8Ak"
+      ],
+      "name": "Spacer",
+      "settings": {}
+    }
+  },
+  "order": [
+    "blocks_cLJHiD",
+    "main"
+  ]
+}
