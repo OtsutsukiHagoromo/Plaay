@@ -1,0 +1,84 @@
+{%- assign search_terms = search.terms -%}
+{%- assign result_count = search.results_count -%}
+
+<div class="container py-12 | lg:py-20">
+
+  {% comment %} Search form {% endcomment %}
+  <form action="/search" method="get" role="search" class="mb-10 max-w-2xl mx-auto">
+    <input type="hidden" name="type" value="product">
+    <div class="flex gap-3">
+      <input
+        type="search"
+        name="q"
+        value="{{ search_terms | escape }}"
+        placeholder="Search for products…"
+        aria-label="Search"
+        class="flex-1 border border-dark-blue border-opacity-20 rounded-full px-5 py-3 text-sm text-dark-blue font-walsheim focus:outline-none focus:border-dark-blue">
+      <button type="submit" class="btn yellow px-6 py-3 rounded-full text-sm uppercase font-walsheim-bold">Search</button>
+    </div>
+  </form>
+
+  {% if search_terms != blank %}
+    <p class="text-sm text-dark-blue opacity-60 font-walsheim mb-8 text-center">
+      {%- if result_count == 0 -%}
+        No results for &ldquo;{{ search_terms | escape }}&rdquo;
+      {%- else -%}
+        {{ result_count }} result{% if result_count != 1 %}s{% endif %} for &ldquo;{{ search_terms | escape }}&rdquo;
+      {%- endif -%}
+    </p>
+  {% endif %}
+
+  {% if result_count > 0 %}
+    {% paginate search.results by 24 %}
+      <product-tile
+        data-module="product-tile"
+        class="grid grid-cols-2 gap-5 | sm:grid-cols-3 sm:gap-8 | lg:grid-cols-4">
+        {% for item in search.results %}
+          {% if item.object_type == 'product' %}
+            <div data-product-tile class="w-full">
+              {% assign eager_load = forloop.first %}
+              {% render 'product-tile', product: item, eager_load: eager_load %}
+              {% render 'product-quick-add-popup', product: item %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </product-tile>
+
+      {% if paginate.pages > 1 %}
+        <div class="flex justify-center gap-3 mt-12">
+          {%- if paginate.previous -%}
+            <a href="{{ paginate.previous.url }}" class="btn blue-border px-5 py-2 text-sm rounded-md">← Prev</a>
+          {%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="btn blue-border px-5 py-2 text-sm rounded-md">{{ part.title }}</a>
+            {%- else -%}
+              <span class="btn yellow px-5 py-2 text-sm rounded-md">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}
+            <a href="{{ paginate.next.url }}" class="btn blue-border px-5 py-2 text-sm rounded-md">Next →</a>
+          {%- endif -%}
+        </div>
+      {% endif %}
+    {% endpaginate %}
+
+  {% elsif search_terms != blank %}
+    <div class="text-center py-16">
+      <p class="text-dark-blue font-walsheim text-base mb-6">We couldn't find any matches — try a different search or browse below.</p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a href="/collections/chocolate-bars" class="btn blue-border px-5 py-2 text-sm rounded-md">Chocolate Bars</a>
+        <a href="/collections/chocolate-truffles" class="btn blue-border px-5 py-2 text-sm rounded-md">Truffles</a>
+        <a href="/collections/variety-packs" class="btn blue-border px-5 py-2 text-sm rounded-md">Variety Packs</a>
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+
+{% schema %}
+{
+  "name": "Search results",
+  "settings": []
+}
+{% endschema %}

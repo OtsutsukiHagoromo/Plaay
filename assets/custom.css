@@ -4575,6 +4575,66 @@ footer content-accordion .footer-accordion__trigger > span:first-child {
   display: block;
 }
 
+/* Mobile search panel — outside .mobile_menu so position:fixed works */
+.plaay-mobile-search-panel {
+  display: none;
+  position: fixed;
+  top: 112px; /* fallback; JS overrides with actual header bottom */
+  left: 0;
+  right: 0;
+  z-index: 16000;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(2, 29, 73, 0.12);
+  border-top: 1px solid rgba(2, 29, 73, 0.08);
+}
+
+.plaay-mobile-search-panel.active {
+  display: block;
+}
+
+.plaay-mobile-search-panel__inner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+}
+
+.plaay-mobile-search-panel__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 1px solid rgba(2, 29, 73, 0.2);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #021d49;
+  background: #f8f8f8;
+  outline: none;
+}
+
+.plaay-mobile-search-panel__input:focus {
+  border-color: #021d49;
+  background: #fff;
+}
+
+.plaay-mobile-search-panel__submit {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #021d49;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+}
+
+.plaay-mobile-search-panel__submit svg {
+  width: 18px;
+  height: 18px;
+}
+
 .header__icon--cart {
   flex-shrink: 0;
 }

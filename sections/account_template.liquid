@@ -35,7 +35,7 @@
                   <p class="text-sm opacity-80 mt-3 font-walsheim">Order #{{ latest_order.order_number }} from {{ latest_order.created_at | date: "%b %d, %Y" }} is ready to be added back to cart.</p>
                 </div>
                 <div class="flex flex-col gap-3 | lg:items-end">
-                  <button type="button" class="btn relative font-walsheim-medium flex items-center transition-all px-3 uppercase py-3 duration-200 text-sm justify-center border rounded-md yellow w-44 min-w-[210px] text-center" data-plaay-reorder='{{ latest_reorder_json }}'>
+                  <button type="button" class="btn relative font-walsheim-medium flex items-center transition-all px-3 uppercase py-3 duration-200 text-sm justify-center border rounded-md yellow w-44 min-w-[210px] text-center" data-plaay-reorder='{{ latest_reorder_json | strip }}'>
                     <div class="flex items-center w-full justify-center">
                       <span class="hidden">{{ 'action.seo' | t }}</span>
                       Reorder
@@ -134,7 +134,7 @@
                         {%- assign order_reorder_json = '[' | append: _ori | append: ']' -%}
                         <div class="flex flex-col gap-2 w-1/2 ml-2">
                           {% render 'btn', href: customer_order.customer_url, width: 'small', style: 'blue', copy: 'account.account-area.view-order', additional_class: 'flex w-full justify-center' %}
-                          <button type="button" class="btn relative font-walsheim-medium flex items-center transition-all px-3 uppercase py-3 duration-200 text-sm justify-center border rounded-md blue-border w-44 flex w-full justify-center" data-plaay-reorder='{{ order_reorder_json }}'>
+                          <button type="button" class="btn relative font-walsheim-medium flex items-center transition-all px-3 uppercase py-3 duration-200 text-sm justify-center border rounded-md blue-border w-44 flex w-full justify-center" data-plaay-reorder='{{ order_reorder_json | strip }}'>
                             <div class="flex items-center w-full justify-center">
                               <span class="hidden">{{ 'action.seo' | t }}</span>
                               Reorder

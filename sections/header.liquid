@@ -396,25 +396,29 @@
         </div>
       </div>
     </div>
-    {% unless hide_search_mobile %}
-      <form
-        action="/search"
-        method="get"
-        role="search"
-        class="search navigation_search min-w-[300px] border-b border-black border-opacity-10 py-5 bg-white"
-        data-search-root="mobile-panel"
-        data-search-panel>
+  </div>
+  {% unless hide_search_mobile %}
+    <form
+      action="/search"
+      method="get"
+      role="search"
+      class="search navigation_search plaay-mobile-search-panel"
+      data-search-root="mobile-panel"
+      data-search-panel>
+      <div class="plaay-mobile-search-panel__inner">
         <input
           type="search"
           name="q"
-          placeholder="Search"
-          aria-expanded="false"
+          placeholder="Search Plaay…"
           autocorrect="off"
           spellcheck="false"
-          class="py-1 px-14 text-sm w-full" />
-      </form>
-    {% endunless %}
-  </div>
+          class="plaay-mobile-search-panel__input" />
+        <button type="submit" class="plaay-mobile-search-panel__submit" aria-label="Search">
+          {%- render 'icon-search-alternate' -%}
+        </button>
+      </div>
+    </form>
+  {% endunless %}
 </main-navigation>
 
 <script>
@@ -451,47 +455,61 @@
 
 <script>
   (function() {
-    var desktopRoot = document.querySelector('[data-search-root="desktop"]');
-    var desktopPanel = desktopRoot && desktopRoot.querySelector('[data-search-panel]');
-    var desktopTrigger = desktopRoot && desktopRoot.querySelector('[data-search-trigger]');
+    function bindSearchToggle(root, panel) {
+      if (!root || !panel) return;
+      var trigger = root.querySelector('[data-search-trigger]');
 
-    function closeDesktop() {
-      if (desktopPanel) desktopPanel.classList.remove('active');
-      if (desktopTrigger) desktopTrigger.setAttribute('aria-expanded', 'false');
-    }
+      function close() {
+        panel.classList.remove('active');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+      }
+      function open() {
+        panel.classList.add('active');
+        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+        var input = panel.querySelector('input[type="search"]');
+        if (input) setTimeout(function() { input.focus(); }, 20);
+      }
 
-    function openDesktop() {
-      if (desktopPanel) desktopPanel.classList.add('active');
-      if (desktopTrigger) desktopTrigger.setAttribute('aria-expanded', 'true');
-      var input = desktopPanel && desktopPanel.querySelector('input[type="search"]');
-      if (input) setTimeout(function() { input.focus(); }, 20);
-    }
+      if (trigger) {
+        trigger.addEventListener('click', function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          panel.classList.contains('active') ? close() : open();
+        });
+      }
 
-    if (desktopTrigger) {
-      desktopTrigger.addEventListener('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (desktopPanel && desktopPanel.classList.contains('active')) {
-          closeDesktop();
-        } else {
-          openDesktop();
-        }
+      panel.addEventListener('click', function(event) { event.stopPropagation(); });
+
+      document.addEventListener('click', function(event) {
+        if (!root.contains(event.target) && !panel.contains(event.target)) close();
+      });
+      document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') close();
       });
     }
 
-    if (desktopPanel) {
-      desktopPanel.addEventListener('click', function(event) { event.stopPropagation(); });
-    }
+    // Desktop
+    var desktopRoot = document.querySelector('[data-search-root="desktop"]');
+    bindSearchToggle(desktopRoot, desktopRoot && desktopRoot.querySelector('[data-search-panel]'));
 
-    document.addEventListener('click', function(event) {
-      if (desktopRoot && !desktopRoot.contains(event.target)) {
-        closeDesktop();
+    // Mobile (toggle root is separate from panel; position panel below header)
+    var mobileRoot = document.querySelector('[data-search-root="mobile-toggle"]');
+    var mobilePanel = document.querySelector('[data-search-root="mobile-panel"]');
+    if (mobileRoot && mobilePanel) {
+      var _origOpen = null;
+      var _headerEl = document.querySelector('header');
+      function positionMobilePanel() {
+        if (_headerEl && mobilePanel) {
+          mobilePanel.style.top = _headerEl.getBoundingClientRect().bottom + 'px';
+        }
       }
-    });
-
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') closeDesktop();
-    });
+      bindSearchToggle(mobileRoot, mobilePanel);
+      // Patch open to position before showing
+      var mobileTrigger = mobileRoot.querySelector('[data-search-trigger]');
+      if (mobileTrigger) {
+        mobileTrigger.addEventListener('click', positionMobilePanel, true);
+      }
+    }
   })();
 </script>
 
