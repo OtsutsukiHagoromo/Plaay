@@ -223,6 +223,7 @@
       "settings": {
         "title": "FAQs",
         "subtitle": "Everything you need to know about Plaay.",
+        "show_search": true,
         "background_color": "#f9c61d"
       }
     }

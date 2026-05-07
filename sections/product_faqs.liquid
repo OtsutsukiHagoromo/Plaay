@@ -148,6 +148,7 @@
     </div>
 
     {% if section.blocks.size > 0 %}
+      {% if section.settings.show_search %}
       <div class="pfaq-search-wrap">
         <svg class="pfaq-search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
@@ -162,6 +163,7 @@
           aria-label="Search FAQs"
         >
       </div>
+      {% endif %}
 
       <div class="pfaq-tabs" id="pfaq-tabs" style="display:none;" role="tablist" aria-label="FAQ categories"></div>
 
@@ -255,12 +257,14 @@
     });
   });
 
-  // Search
+  // Search (only present when show_search is enabled)
   if (searchEl) {
     searchEl.addEventListener('input', function() {
       searchQuery = this.value.trim().toLowerCase();
       filterItems();
     });
+  } else {
+    searchQuery = '';
   }
 
   function filterItems() {
@@ -302,6 +306,13 @@
       "id": "subtitle",
       "label": "Subtitle",
       "default": "Everything you need to know about Plaay."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search bar",
+      "default": false,
+      "info": "Enable on standalone FAQ pages. Keep off when used as a product page widget."
     },
     {
       "type": "text",

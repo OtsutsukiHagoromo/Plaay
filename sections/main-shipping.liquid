@@ -10,34 +10,50 @@
   }
   .ship-steps-bg { background-color: {{ section.settings.steps_bg }}; }
   .ship-highlight-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 768px) {
+    .ship-highlight-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
   }
   .ship-highlight-card {
     background: #fff;
     border: 2px solid #F9C61D;
-    border-radius: 20px;
-    padding: 32px 24px 28px;
+    border-radius: 16px;
+    padding: 20px 14px 18px;
     text-align: center;
-    flex: 1 1 200px;
-    max-width: 300px;
     transition: transform 0.25s, box-shadow 0.25s;
   }
+  @media (min-width: 768px) {
+    .ship-highlight-card {
+      flex: 1 1 200px;
+      max-width: 300px;
+      border-radius: 20px;
+      padding: 32px 24px 28px;
+    }
+  }
   .ship-highlight-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 16px 40px rgba(2,29,73,0.10);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(2,29,73,0.10);
   }
   .ship-highlight-icon {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     background: #F9C61D;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 18px;
+    margin: 0 auto 12px;
+  }
+  @media (min-width: 768px) {
+    .ship-highlight-icon { width: 64px; height: 64px; margin-bottom: 18px; }
   }
   .ship-steps-row {
     display: flex;
@@ -178,13 +194,33 @@
     transition: opacity 0.2s, transform 0.2s;
   }
   .ship-cta-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+  .ship-highlight-card h3 { font-size: 14px; margin-bottom: 6px; }
+  .ship-highlight-card p { font-size: 12px; }
+  @media (min-width: 768px) {
+    .ship-highlight-card h3 { font-size: 17px; margin-bottom: 8px; }
+    .ship-highlight-card p { font-size: 14px; }
+  }
   @media (max-width: 767px) {
-    .ship-highlight-card { flex: 1 1 100%; max-width: 100%; }
     .ship-step { flex: 1 1 100%; max-width: 100%; }
     .ship-cta-box { padding: 36px 24px; border-radius: 16px; }
-    .ship-zones-header,
-    .ship-zone-row { padding-left: 20px; padding-right: 20px; }
-    .ship-zone-row { flex-wrap: wrap; gap: 6px; }
+    .ship-zones-header { display: none; }
+    .ship-zone-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 16px 20px;
+    }
+    .ship-zone-row span[style*="flex: 1.5"],
+    .ship-zone-row span[style*="flex: 2"] { flex: unset; }
+  }
+  .ship-zones-note {
+    margin-top: 16px;
+    font-family: walsheim, sans-serif;
+    font-size: 13px;
+    color: rgba(2,29,73,0.55);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
   }
 {% endstyle %}
 
@@ -214,7 +250,7 @@
             <div class="ship-highlight-icon">
               {% case block.settings.icon %}
                 {% when 'truck' %}
-                  <div style="width:34px;height:34px;color:#021D49;">{% render 'icon-delivery-van' %}</div>
+                  <div style="width:28px;height:28px;color:#021D49;">{% render 'icon-delivery-van' %}</div>
                 {% when 'check' %}
                   <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="#021D49" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 {% when 'thermometer' %}
@@ -278,7 +314,7 @@
         {% if section.settings.zones_subheading != blank %}
           <p class="font-walsheim text-dark-blue" style="font-size: 15px; opacity: 0.65; margin-bottom: 32px; line-height: 1.6;">{{ section.settings.zones_subheading }}</p>
         {% endif %}
-        <div class="ship-zones-card">
+        <div class="ship-zones-card" style="max-width: 800px; margin: 0 auto 0;">
           <div class="ship-zones-header">
             <span style="flex: 2;">Region</span>
             <span style="flex: 1.5;">Delivery Time</span>
@@ -299,6 +335,9 @@
             </div>
           {% endfor %}
         </div>
+        {% if section.settings.zones_note != blank %}
+          <p class="ship-zones-note">⚑ {{ section.settings.zones_note }}</p>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -439,6 +478,12 @@
       "id": "zones_subheading",
       "label": "Zones subheading",
       "default": "We currently deliver across the UAE. Orders over AED 75 ship free."
+    },
+    {
+      "type": "textarea",
+      "id": "zones_note",
+      "label": "Zones footnote",
+      "default": "Deliveries operate Monday–Saturday, excluding public holidays."
     },
     {
       "type": "header",

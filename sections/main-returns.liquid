@@ -1,0 +1,324 @@
+{% style %}
+  .ret-hero { background-color: #021D49; color: #fff; }
+  .ret-policy-card {
+    background: #F9C61D;
+    border-radius: 20px;
+    padding: 32px 28px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .ret-exception-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  @media (max-width: 640px) {
+    .ret-exception-grid { grid-template-columns: 1fr; }
+  }
+  .ret-exception-card {
+    background: #fff;
+    border: 2px solid #F9C61D;
+    border-radius: 16px;
+    padding: 24px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .ret-exception-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #F9C61D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ret-steps-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .ret-step {
+    flex: 1 1 180px;
+    max-width: 220px;
+    text-align: center;
+    padding: 0 8px;
+    position: relative;
+  }
+  @media (max-width: 640px) {
+    .ret-step { flex: 1 1 100%; max-width: 100%; padding-bottom: 24px; }
+  }
+  .ret-step-num {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #021D49;
+    color: #F9C61D;
+    font-family: walsheim-bold, sans-serif;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .ret-step-arrow {
+    display: none;
+    color: rgba(2,29,73,0.25);
+    font-size: 28px;
+    font-family: walsheim-bold, sans-serif;
+    align-self: flex-start;
+    padding-top: 10px;
+    flex-shrink: 0;
+  }
+  @media (min-width: 641px) { .ret-step-arrow { display: block; } }
+  .ret-notes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  @media (max-width: 640px) { .ret-notes-grid { grid-template-columns: 1fr; } }
+  .ret-note-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 20px;
+    border-left: 4px solid #F9C61D;
+  }
+  .ret-contact-box {
+    background: #021D49;
+    border-radius: 20px;
+    padding: 44px 32px;
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .ret-contact-link {
+    display: inline-block;
+    background: #F9C61D;
+    color: #021D49;
+    border-radius: 999px;
+    padding: 12px 32px;
+    font-family: walsheim-bold, sans-serif;
+    font-size: 15px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .ret-contact-link:hover { opacity: 0.85; transform: translateY(-2px); }
+  .ret-divider { height: 1px; background: rgba(2,29,73,0.08); max-width: 720px; margin: 0 auto; }
+{% endstyle %}
+
+{%- comment -%} HERO {%- endcomment -%}
+<div class="ret-hero">
+  <div class="container pt-32 pb-16 md:pt-44 md:pb-20">
+    <p class="font-walsheim-bold uppercase" style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.45; margin-bottom: 16px; color: #F9C61D;">Policy</p>
+    <h1 class="font-walsheim-bold" style="font-size: clamp(40px, 7vw, 84px); line-height: 1.0; margin-bottom: 0; color: #fff;">{{ section.settings.headline }}</h1>
+    {% if section.settings.subheadline != blank %}
+      <p class="font-walsheim" style="font-size: 17px; max-width: 480px; margin-top: 18px; opacity: 0.6; line-height: 1.6; color: #fff;">{{ section.settings.subheadline }}</p>
+    {% endif %}
+  </div>
+</div>
+
+{%- comment -%} CORE POLICY STATEMENT {%- endcomment -%}
+<div style="background: #F5F3EE;">
+  <div class="container py-14 md:py-16">
+    <div class="ret-policy-card">
+      <p class="font-walsheim-bold text-dark-blue" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.55; margin-bottom: 12px;">Our Policy</p>
+      <h2 class="font-walsheim-bold text-dark-blue" style="font-size: clamp(22px, 3vw, 30px); margin-bottom: 12px; line-height: 1.2;">{{ section.settings.policy_headline }}</h2>
+      <p class="font-walsheim text-dark-blue" style="font-size: 15px; line-height: 1.7; opacity: 0.8; margin: 0;">{{ section.settings.policy_body }}</p>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} EXCEPTIONS {%- endcomment -%}
+<div style="background: #fff;">
+  <div class="container py-14 md:py-16">
+    <h2 class="font-walsheim-bold text-dark-blue" style="font-size: clamp(24px,3.5vw,36px); margin-bottom: 8px; max-width: 720px; margin-left: auto; margin-right: auto;">{{ section.settings.exceptions_heading }}</h2>
+    <p class="font-walsheim text-dark-blue" style="font-size: 15px; opacity: 0.6; margin-bottom: 28px; max-width: 720px; margin-left: auto; margin-right: auto; line-height: 1.6;">{{ section.settings.exceptions_sub }}</p>
+    <div class="ret-exception-grid">
+      <div class="ret-exception-card">
+        <div class="ret-exception-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" stroke="#021D49" stroke-width="1.8"/>
+            <path d="M12 8v4M12 16h.01" stroke="#021D49" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="font-walsheim-bold text-dark-blue" style="font-size: 15px; margin-bottom: 6px;">Damaged in delivery</p>
+          <p class="font-walsheim text-dark-blue" style="font-size: 13px; opacity: 0.65; margin: 0; line-height: 1.6;">If your order arrives damaged, contact us and we'll make it right.</p>
+        </div>
+      </div>
+      <div class="ret-exception-card">
+        <div class="ret-exception-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#021D49" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <p class="font-walsheim-bold text-dark-blue" style="font-size: 15px; margin-bottom: 6px;">Wrong items received</p>
+          <p class="font-walsheim text-dark-blue" style="font-size: 13px; opacity: 0.65; margin: 0; line-height: 1.6;">If we packed the wrong products, reach out immediately and we'll fix it.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} HOW TO CLAIM {%- endcomment -%}
+<div style="background: #F5F3EE;">
+  <div class="container py-14 md:py-16">
+    <h2 class="font-walsheim-bold text-dark-blue" style="font-size: clamp(24px,3.5vw,36px); margin-bottom: 48px; text-align: center;">{{ section.settings.steps_heading }}</h2>
+    <div class="ret-steps-row">
+      <div class="ret-step">
+        <div class="ret-step-num">1</div>
+        <h3 class="font-walsheim-bold text-dark-blue" style="font-size: 15px; margin-bottom: 6px;">Contact us within 48 hours</h3>
+        <p class="font-walsheim text-dark-blue" style="font-size: 13px; opacity: 0.65; max-width: 200px; margin: 0 auto; line-height: 1.6;">Email hello@shopplaay.com or call +971-56-996-9522.</p>
+      </div>
+      <div class="ret-step-arrow" aria-hidden="true">→</div>
+      <div class="ret-step">
+        <div class="ret-step-num">2</div>
+        <h3 class="font-walsheim-bold text-dark-blue" style="font-size: 15px; margin-bottom: 6px;">Send photos & description</h3>
+        <p class="font-walsheim text-dark-blue" style="font-size: 13px; opacity: 0.65; max-width: 200px; margin: 0 auto; line-height: 1.6;">Include clear photographs and a description of the issue.</p>
+      </div>
+      <div class="ret-step-arrow" aria-hidden="true">→</div>
+      <div class="ret-step">
+        <div class="ret-step-num">3</div>
+        <h3 class="font-walsheim-bold text-dark-blue" style="font-size: 15px; margin-bottom: 6px;">We resolve within 1–2 days</h3>
+        <p class="font-walsheim text-dark-blue" style="font-size: 13px; opacity: 0.65; max-width: 200px; margin: 0 auto; line-height: 1.6;">Replacements and refunds are processed within 1–2 business days.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} IMPORTANT NOTES {%- endcomment -%}
+<div style="background: #fff;">
+  <div class="container py-14 md:py-16">
+    <h2 class="font-walsheim-bold text-dark-blue" style="font-size: clamp(24px,3.5vw,36px); margin-bottom: 28px; max-width: 720px; margin-left: auto; margin-right: auto;">{{ section.settings.notes_heading }}</h2>
+    <div class="ret-notes-grid">
+      <div class="ret-note-card">
+        <p class="font-walsheim-bold text-dark-blue" style="font-size: 14px; margin-bottom: 6px;">48-hour window</p>
+        <p class="font-walsheim text-dark-blue" style="font-size: 13px; opacity: 0.65; margin: 0; line-height: 1.6;">All claims must be submitted within 48 hours of receiving your order.</p>
+      </div>
+      <div class="ret-note-card">
+        <p class="font-walsheim-bold text-dark-blue" style="font-size: 14px; margin-bottom: 6px;">Documentation required</p>
+        <p class="font-walsheim text-dark-blue" style="font-size: 13px; opacity: 0.65; margin: 0; line-height: 1.6;">Claims must include a description and photograph(s) of the issue.</p>
+      </div>
+      <div class="ret-note-card">
+        <p class="font-walsheim-bold text-dark-blue" style="font-size: 14px; margin-bottom: 6px;">1–2 business days</p>
+        <p class="font-walsheim text-dark-blue" style="font-size: 13px; opacity: 0.65; margin: 0; line-height: 1.6;">Replacements and refunds are processed within 1–2 business days once approved.</p>
+      </div>
+      <div class="ret-note-card">
+        <p class="font-walsheim-bold text-dark-blue" style="font-size: 14px; margin-bottom: 6px;">Right to limit</p>
+        <p class="font-walsheim text-dark-blue" style="font-size: 13px; opacity: 0.65; margin: 0; line-height: 1.6;">Plaay reserves the right to limit or restrict replacements and refunds.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} CONTACT {%- endcomment -%}
+<div style="background: #F5F3EE;">
+  <div class="container py-14 md:py-16">
+    <div class="ret-contact-box">
+      <p class="font-walsheim-bold" style="font-size: clamp(20px,3vw,28px); color: #fff; margin-bottom: 8px;">{{ section.settings.contact_heading }}</p>
+      <p class="font-walsheim" style="font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; max-width: 400px; margin: 0 auto;">
+        {{ section.settings.contact_hours }}
+      </p>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 24px;">
+        <a href="mailto:{{ section.settings.contact_email }}" class="ret-contact-link">{{ section.settings.contact_email }}</a>
+        <a href="tel:{{ section.settings.contact_phone | remove: ' ' | remove: '-' }}" class="ret-contact-link" style="background: transparent; border: 2px solid rgba(255,255,255,0.3); color: #fff;">{{ section.settings.contact_phone }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Returns & Refunds",
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Hero headline",
+      "default": "Returns & Refunds"
+    },
+    {
+      "type": "textarea",
+      "id": "subheadline",
+      "label": "Hero subheadline",
+      "default": "We want every order to be perfect. Here's what to do if something isn't right."
+    },
+    {
+      "type": "text",
+      "id": "policy_headline",
+      "label": "Policy headline",
+      "default": "No Return, No Refund Policy"
+    },
+    {
+      "type": "textarea",
+      "id": "policy_body",
+      "label": "Policy body text",
+      "default": "As our products are perishable, we follow a No Return, No Refund Policy. However, if your order arrives damaged or you receive the wrong items, just reach out to us — we'll make it right."
+    },
+    {
+      "type": "text",
+      "id": "exceptions_heading",
+      "label": "Exceptions heading",
+      "default": "When we can help"
+    },
+    {
+      "type": "textarea",
+      "id": "exceptions_sub",
+      "label": "Exceptions subtext",
+      "default": "You may request a refund or replacement under the following conditions."
+    },
+    {
+      "type": "text",
+      "id": "steps_heading",
+      "label": "How to claim heading",
+      "default": "How to make a claim"
+    },
+    {
+      "type": "text",
+      "id": "notes_heading",
+      "label": "Important notes heading",
+      "default": "Important to know"
+    },
+    {
+      "type": "text",
+      "id": "contact_heading",
+      "label": "Contact heading",
+      "default": "Need to make a claim?"
+    },
+    {
+      "type": "textarea",
+      "id": "contact_hours",
+      "label": "Contact hours text",
+      "default": "Monday–Saturday, 9:00 AM to 1:00 PM, excluding public holidays."
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact email",
+      "default": "hello@shopplaay.com"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Contact phone",
+      "default": "+971-56-996-9522"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Returns & Refunds"
+    }
+  ]
+}
+{% endschema %}

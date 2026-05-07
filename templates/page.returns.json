@@ -1,0 +1,22 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-returns",
+      "settings": {
+        "headline": "Returns & Refunds",
+        "subheadline": "We want every order to be perfect. Here's what to do if something isn't right.",
+        "policy_headline": "No Return, No Refund Policy",
+        "policy_body": "As our products are perishable, we follow a No Return, No Refund Policy. However, if your order arrives damaged or you receive the wrong items, just reach out to us — we'll make it right.",
+        "exceptions_heading": "When we can help",
+        "exceptions_sub": "You may request a refund or replacement under the following conditions.",
+        "steps_heading": "How to make a claim",
+        "notes_heading": "Important to know",
+        "contact_heading": "Need to make a claim?",
+        "contact_hours": "Monday–Saturday, 9:00 AM to 1:00 PM, excluding public holidays.",
+        "contact_email": "hello@shopplaay.com",
+        "contact_phone": "+971-56-996-9522"
+      }
+    }
+  },
+  "order": ["main"]
+}
