@@ -174,7 +174,7 @@
       ],
       "name": "Featured products",
       "settings": {
-        "title": "30g Truffle Multipacks",
+        "title": "Truffle Multipacks",
         "description": "Perfect if you want lighter, more frequent snack refills without running out between orders.",
         "background_color": "#ffffff",
         "product_source": "manual",
@@ -265,73 +265,6 @@
         "hide_atc_on_tiles": false
       }
     },
-    "featured_products_QgaECD": {
-      "type": "featured_products",
-      "blocks": {
-        "product_qiRADJ": {
-          "type": "product",
-          "settings": {
-            "product": "pistachio-truffles-10x60g"
-          }
-        },
-        "product_9ALB9K": {
-          "type": "product",
-          "settings": {
-            "product": "triple-chocolate-truffles-1"
-          }
-        },
-        "product_anKbjD": {
-          "type": "product",
-          "settings": {
-            "product": "almond-brownie-truffles-test"
-          }
-        },
-        "product_qKWzUz": {
-          "type": "product",
-          "settings": {
-            "product": "copy-of-cashew-caramel-truffles-x10-cylinders"
-          }
-        },
-        "product_gd9HWk": {
-          "type": "product",
-          "settings": {
-            "product": "peanut-butter-truffles-test"
-          }
-        }
-      },
-      "block_order": [
-        "product_qiRADJ",
-        "product_9ALB9K",
-        "product_anKbjD",
-        "product_qKWzUz",
-        "product_gd9HWk"
-      ],
-      "name": "Featured products",
-      "settings": {
-        "title": "60g Truffle Multipacks",
-        "description": "For bigger cravings and heavier repeat orders when you want your top picks to last longer between deliveries.",
-        "background_color": "#ffffff",
-        "product_source": "manual",
-        "featured_collection": "",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 600,
-        "see_all_link": "",
-        "see_all_link_text": "",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": false,
-        "hide_atc_on_tiles": false
-      }
-    },
     "cu_countdown_timer_jbinj4": {
       "type": "cu-countdown-timer",
       "disabled": true,
@@ -349,7 +282,6 @@
     "custom_featured_product_xgw4eH",
     "featured_products_AcfGFf",
     "featured_products_XUGdAQ",
-    "featured_products_QgaECD",
     "cu_countdown_timer_jbinj4"
   ]
 }
