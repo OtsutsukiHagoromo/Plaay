@@ -574,14 +574,15 @@
       // for native compare_at_price products Liquid already renders correctly on load.
       var compareEl = document.querySelector('.discount_price_exists');
       var compareTxt = compareEl ? compareEl.textContent.trim() : '';
-      if (mcp && compareTxt) {
-        mcp.textContent = compareTxt;
-        mcp.style.display = 'inline';
+      if (compareTxt === txt) compareTxt = '';
+      if (mcp) {
+        if (compareTxt) { mcp.textContent = compareTxt; mcp.style.display = 'inline'; }
+        else { mcp.style.display = 'none'; }
       }
       var sc = desktopBar && desktopBar.querySelector('.plaay-sticky-compare');
-      if (sc && compareTxt) {
-        sc.textContent = compareTxt;
-        sc.style.display = '';
+      if (sc) {
+        if (compareTxt) { sc.textContent = compareTxt; sc.style.display = ''; }
+        else { sc.style.display = 'none'; }
       }
     };
     syncPrice();
@@ -635,9 +636,13 @@
           }
         }
         if (priceEl && currentPrice) priceEl.textContent = currentPrice;
-        if (compareEl && compareText) {
-          compareEl.textContent = compareText;
-          compareEl.style.display = '';
+        if (compareEl) {
+          if (compareText && compareText !== currentPrice) {
+            compareEl.textContent = compareText;
+            compareEl.style.display = '';
+          } else {
+            compareEl.style.display = 'none';
+          }
         }
         if (submitEl) submitEl.textContent = submitLabel;
       });

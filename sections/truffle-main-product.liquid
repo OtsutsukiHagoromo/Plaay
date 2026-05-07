@@ -1042,6 +1042,7 @@
         compareText = oneTimeText.trim();
       } else {
         compareText = getVisibleText('.product_price, .discount_price_exists');
+        if (compareText === currentPrice) compareText = '';
       }
 
       [desktopBar, mobileBar].forEach(function(bar) {
