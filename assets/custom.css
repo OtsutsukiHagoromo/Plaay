@@ -4488,6 +4488,9 @@ footer content-accordion .footer-accordion__trigger > span:first-child {
   min-width: 360px;
   width: 360px;
   z-index: 20;
+  position: absolute;
+  top: calc(100% + 16px);
+  right: 0;
 }
 
 .plaay-search-panel__shell {
@@ -4569,9 +4572,7 @@ footer content-accordion .footer-accordion__trigger > span:first-child {
 }
 
 .plaay-desktop-search .navigation_search.active {
-  visibility: visible;
-  opacity: 1;
-  transform: translateY(0);
+  display: block;
 }
 
 .header__icon--cart {

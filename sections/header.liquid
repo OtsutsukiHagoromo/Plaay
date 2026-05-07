@@ -50,15 +50,10 @@
     }
   }
   .navigation_search {
-    visibility: hidden;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
+    display: none;
   }
   .navigation_search.active {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+    display: block;
   }
   @media only screen and (max-width: 1023px) {
     .dropdown_parent.active .dropdown_menu {
@@ -176,7 +171,7 @@
         {% endif %}
 
         <div class="plaay-header-actions hidden lg:flex">
-          <span class="plaay-search-icon-wrap plaay-desktop-search text-dark-blue relative flex" data-search-root="desktop">
+          <span class="plaay-search-icon-wrap plaay-desktop-search search_icon text-dark-blue relative flex" data-search-root="desktop">
             <button type="button" class="plaay-header-utility plaay-header-utility--search" aria-label="Search" aria-expanded="false" data-search-trigger>
               {% render 'icon-search-alternate' %}
             </button>
@@ -455,59 +450,49 @@
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var bindings = [];
+  (function() {
+    var desktopRoot = document.querySelector('[data-search-root="desktop"]');
+    var desktopPanel = desktopRoot && desktopRoot.querySelector('[data-search-panel]');
+    var desktopTrigger = desktopRoot && desktopRoot.querySelector('[data-search-trigger]');
 
-    function setPanelState(panel, trigger, open) {
-      if (!panel || !trigger) return;
-      panel.classList.toggle('active', open);
-      trigger.setAttribute('aria-expanded', String(open));
-      if (open) {
-        var input = panel.querySelector('input[type="search"]');
-        if (input) setTimeout(function() { input.focus(); }, 20);
-      }
+    function closeDesktop() {
+      if (desktopPanel) desktopPanel.classList.remove('active');
+      if (desktopTrigger) desktopTrigger.setAttribute('aria-expanded', 'false');
     }
 
-    function bindSearch(root, panelOverride) {
-      if (!root) return;
-      var trigger = root.querySelector('[data-search-trigger]');
-      var panel = panelOverride || root.querySelector('[data-search-panel]');
-      if (!trigger || !panel) return;
+    function openDesktop() {
+      if (desktopPanel) desktopPanel.classList.add('active');
+      if (desktopTrigger) desktopTrigger.setAttribute('aria-expanded', 'true');
+      var input = desktopPanel && desktopPanel.querySelector('input[type="search"]');
+      if (input) setTimeout(function() { input.focus(); }, 20);
+    }
 
-      bindings.push({ root: root, trigger: trigger, panel: panel });
-
-      trigger.addEventListener('click', function(event) {
+    if (desktopTrigger) {
+      desktopTrigger.addEventListener('click', function(event) {
         event.preventDefault();
         event.stopPropagation();
-        var isOpen = panel.classList.contains('active');
-        bindings.forEach(function(b) { setPanelState(b.panel, b.trigger, false); });
-        setPanelState(panel, trigger, !isOpen);
-      });
-
-      panel.addEventListener('click', function(event) { event.stopPropagation(); });
-    }
-
-    bindSearch(document.querySelector('[data-search-root="desktop"]'));
-    bindSearch(
-      document.querySelector('[data-search-root="mobile-toggle"]'),
-      document.querySelector('[data-search-root="mobile-panel"]')
-    );
-
-    if (!bindings.length) return;
-
-    document.addEventListener('click', function(event) {
-      bindings.forEach(function(b) {
-        if (!b.root.contains(event.target) && !b.panel.contains(event.target)) {
-          setPanelState(b.panel, b.trigger, false);
+        if (desktopPanel && desktopPanel.classList.contains('active')) {
+          closeDesktop();
+        } else {
+          openDesktop();
         }
       });
+    }
+
+    if (desktopPanel) {
+      desktopPanel.addEventListener('click', function(event) { event.stopPropagation(); });
+    }
+
+    document.addEventListener('click', function(event) {
+      if (desktopRoot && !desktopRoot.contains(event.target)) {
+        closeDesktop();
+      }
     });
 
     document.addEventListener('keydown', function(event) {
-      if (event.key !== 'Escape') return;
-      bindings.forEach(function(b) { setPanelState(b.panel, b.trigger, false); });
+      if (event.key === 'Escape') closeDesktop();
     });
-  });
+  })();
 </script>
 
 {% schema %}
