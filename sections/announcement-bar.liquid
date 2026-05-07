@@ -1,62 +1,58 @@
-{% liquid 
-  assign announcement_text = section.settings.announcement_text
+{% liquid
   assign background_color = section.settings.background_color
   assign background_color_mobile = section.settings.background_color_mobile
-  assign announcement_text = section.blocks | where: 'type', 'announcement_text'
-  assign announcement_text_size = announcement_text | size
+  assign announcement_blocks = section.blocks | where: 'type', 'announcement_text'
+  assign announcement_text_size = announcement_blocks | size
 
-  assign autoplay = section.settings.autoplay
+  assign total_chars = 0
+  for block in announcement_blocks
+    assign total_chars = total_chars | plus: block.settings.text.size
+  endfor
+  assign marquee_duration = total_chars | divided_by: 5
+  if marquee_duration < 14
+    assign marquee_duration = 14
+  endif
+  if marquee_duration > 40
+    assign marquee_duration = 40
+  endif
 %}
 
 {% style %}
   .announcement_bar {
     background-color: {{ background_color }};
-    min-height: 40px;
-  }
-  .announcement_bar .container {
-    padding-top: 0;
-    padding-bottom: 0;
-    max-width: 100%;
-    padding-left: 0;
-    padding-right: 0;
+    height: 40px;
+    overflow: hidden;
   }
   .announcement_bar__track {
-    position: relative;
-    overflow: hidden;
-  }
-  .announcement_bar__slide {
-    color: var(--announcement-text-color);
-    display: none;
-    overflow: hidden;
-    line-height: 1;
-    height: 40px;
-    align-items: center;
-  }
-  .announcement_bar__slide.is-active {
     display: flex;
+    align-items: center;
+    height: 40px;
+    overflow: hidden;
   }
   .announcement_bar__marquee {
     display: inline-flex;
     align-items: center;
-    animation: plaay-marquee var(--marquee-duration, 24s) linear infinite;
+    white-space: nowrap;
+    animation: plaay-marquee {{ marquee_duration }}s linear infinite;
     will-change: transform;
   }
-  .announcement_bar__slide:hover .announcement_bar__marquee {
+  .announcement_bar__marquee:hover {
     animation-play-state: paused;
   }
-  .announcement_bar__marquee-text {
-    white-space: nowrap;
+  .announcement_bar__item {
     display: inline-flex;
     align-items: center;
-    padding-right: 56px;
     font-size: 12px;
-    letter-spacing: 0.06em;
+    font-weight: bold;
+    letter-spacing: 0.07em;
+    padding-right: 0;
   }
   .announcement_bar__sep {
     display: inline-block;
-    margin: 0 28px 0 0;
-    opacity: 0.5;
-    font-size: 10px;
+    margin: 0 24px;
+    opacity: 0.45;
+    font-size: 9px;
+    line-height: 1;
   }
   @keyframes plaay-marquee {
     from { transform: translateX(0); }
@@ -66,10 +62,7 @@
     .announcement_bar {
       background-color: {{ background_color_mobile }};
     }
-    .announcement_bar__slide {
-      color: var(--announcement-text-color-mobile, var(--announcement-text-color));
-    }
-    .announcement_bar__marquee-text {
+    .announcement_bar__item {
       font-size: 11px;
     }
   }
@@ -78,75 +71,37 @@
 {% if announcement_text_size > 0 %}
   <announcement-bar data-module="announcement-bar">
     <div class="announcement_bar fixed top-0 w-full z-10">
-      <div class="container py-2">
-        <div class="announcement_bar__track" data-announcement-rotator data-autoplay="{{ autoplay }}">
-            {% for block in announcement_text %}
-              {% liquid 
-                assign text = block.settings.text
-                assign text_color = block.settings.text_color
-                assign text_color_mobile = block.settings.text_color_mobile 
-                assign text_style = block.settings.text_style
-              %}
-              {% if text != blank %}
-                {%- assign char_count = text | size -%}
-                {%- assign marquee_duration = char_count | times: 120 | divided_by: 10 -%}
-                {%- if marquee_duration < 12 -%}{%- assign marquee_duration = 12 -%}{%- endif -%}
-                {%- if marquee_duration > 40 -%}{%- assign marquee_duration = 40 -%}{%- endif -%}
-                <div
-                  class="announcement_bar__slide font-bold {{ text_style }}{% if forloop.first %} is-active{% endif %}"
-                  style="--announcement-text-color: {{ text_color }}; --announcement-text-color-mobile: {{ text_color_mobile }}; --marquee-duration: {{ marquee_duration }}s;"
-                  {{ block.shopify_attributes }}
-                >
-                  <div class="announcement_bar__marquee" aria-label="{{ text | escape }}">
-                    <span class="announcement_bar__marquee-text">{{ text }}<span class="announcement_bar__sep" aria-hidden="true">✦</span></span>
-                    <span class="announcement_bar__marquee-text" aria-hidden="true">{{ text }}<span class="announcement_bar__sep" aria-hidden="true">✦</span></span>
-                  </div>
-                </div>
-              {% endif %}
-            {% endfor %}
+      <div class="announcement_bar__track">
+        <div class="announcement_bar__marquee">
+          {%- comment -%} First copy {%- endcomment -%}
+          {%- for block in announcement_blocks -%}
+            {%- assign text = block.settings.text -%}
+            {%- assign text_color = block.settings.text_color -%}
+            {%- assign text_color_mobile = block.settings.text_color_mobile -%}
+            {%- assign text_style = block.settings.text_style -%}
+            {%- if text != blank -%}
+              <span
+                class="announcement_bar__item {{ text_style }}"
+                style="color: {{ text_color }};"
+                {{ block.shopify_attributes }}
+              >{{ text }}</span><span class="announcement_bar__sep" aria-hidden="true">✦</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- comment -%} Duplicate for seamless loop {%- endcomment -%}
+          {%- for block in announcement_blocks -%}
+            {%- assign text = block.settings.text -%}
+            {%- assign text_color = block.settings.text_color -%}
+            {%- assign text_style = block.settings.text_style -%}
+            {%- if text != blank -%}
+              <span
+                class="announcement_bar__item {{ text_style }}"
+                style="color: {{ text_color }};"
+                aria-hidden="true"
+              >{{ text }}</span><span class="announcement_bar__sep" aria-hidden="true">✦</span>
+            {%- endif -%}
+          {%- endfor -%}
         </div>
       </div>
-
-      <script>
-        (function() {
-          function mountAnnouncementRotator(scope) {
-            var track = scope.querySelector('[data-announcement-rotator]');
-            if (!track || track.dataset.rotatorMounted === 'true') return;
-
-            var slides = track.querySelectorAll('.announcement_bar__slide');
-            var delay = parseInt(track.dataset.autoplay, 10);
-
-            if (slides.length <= 1 || !delay || delay <= 0) return;
-
-            track.dataset.rotatorMounted = 'true';
-
-            var currentIndex = 0;
-            setInterval(function() {
-              slides[currentIndex].classList.remove('is-active');
-              currentIndex = (currentIndex + 1) % slides.length;
-              slides[currentIndex].classList.add('is-active');
-            }, delay);
-          }
-
-          function initAnnouncementBar() {
-            document.querySelectorAll('announcement-bar').forEach(function(bar) {
-              mountAnnouncementRotator(bar);
-            });
-          }
-
-          if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initAnnouncementBar);
-          } else {
-            initAnnouncementBar();
-          }
-
-          document.addEventListener('shopify:section:load', function(event) {
-            if (event.target && event.target.querySelector('announcement-bar')) {
-              initAnnouncementBar();
-            }
-          });
-        })();
-      </script>
     </div>
   </announcement-bar>
 {% endif %}
@@ -211,20 +166,6 @@
         "id": "background_color_mobile",
         "label": "Background color (mobile)",
         "default": "#F9C61D"
-      },
-      {
-        "type": "header",
-        "content": "Slider settings"
-      },
-      {
-        "type": "range",
-        "label": "Autoplay speed",
-        "info": "Set to 0 to turn off autoplay (value in milliseconds)",
-        "min": 1000,
-        "max": 9900,
-        "default": 4000,
-        "step": 100,
-        "id": "autoplay"
       }
     ]
   }
