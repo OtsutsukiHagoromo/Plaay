@@ -5,7 +5,7 @@
 
   {% comment %} Search form {% endcomment %}
   <form action="/search" method="get" role="search" class="mb-10 max-w-2xl mx-auto">
-    <input type="hidden" name="type" value="product">
+    <input type="hidden" name="type" value="product,collection">
     <div class="flex gap-3">
       <input
         type="search"
@@ -30,19 +30,49 @@
 
   {% if result_count > 0 %}
     {% paginate search.results by 24 %}
-      <product-tile
-        data-module="product-tile"
-        class="collection grid compact-grid | sm:grid-cols-2 sm:gap-6 | lg:grid-cols-4 lg:gap-10">
-        {% for item in search.results %}
-          {% if item.object_type == 'product' %}
-            <div data-product-tile class="w-full">
-              {% assign eager_load = forloop.first %}
-              {% render 'product-tile', product: item, eager_load: eager_load %}
-              {% render 'product-quick-add-popup', product: item %}
-            </div>
-          {% endif %}
-        {% endfor %}
-      </product-tile>
+
+      {%- assign product_results = search.results | where: "object_type", "product" -%}
+      {%- assign collection_results = search.results | where: "object_type", "collection" -%}
+
+      {% if product_results.size > 0 %}
+        {% if collection_results.size > 0 %}
+          <h2 class="text-base font-walsheim-bold text-dark-blue uppercase tracking-widest mb-5">Products</h2>
+        {% endif %}
+        <product-tile
+          data-module="product-tile"
+          class="collection grid compact-grid | sm:grid-cols-2 sm:gap-6 | lg:grid-cols-4 lg:gap-10">
+          {% for item in search.results %}
+            {% if item.object_type == 'product' %}
+              <div data-product-tile class="w-full">
+                {% assign eager_load = forloop.first %}
+                {% render 'product-tile', product: item, eager_load: eager_load %}
+                {% render 'product-quick-add-popup', product: item %}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </product-tile>
+      {% endif %}
+
+      {% if collection_results.size > 0 %}
+        <h2 class="text-base font-walsheim-bold text-dark-blue uppercase tracking-widest mt-14 mb-5">Collections</h2>
+        <div class="plaay-search-coll-grid">
+          {% for item in search.results %}
+            {% if item.object_type == 'collection' %}
+              <a href="{{ item.url }}" class="plaay-search-coll-card">
+                {% if item.featured_image %}
+                  {{ item.featured_image | image_url: width: 400 | image_tag: class: 'plaay-search-coll-card__img', alt: item.title }}
+                {% else %}
+                  <div class="plaay-search-coll-card__img plaay-search-coll-card__img--placeholder"></div>
+                {% endif %}
+                <p class="plaay-search-coll-card__title">{{ item.title }}</p>
+                {% if item.products_count %}
+                  <p class="plaay-search-coll-card__count">{{ item.products_count }} product{% if item.products_count != 1 %}s{% endif %}</p>
+                {% endif %}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
 
       {% if paginate.pages > 1 %}
         <div class="flex justify-center gap-3 mt-12">

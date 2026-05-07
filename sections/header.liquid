@@ -181,6 +181,7 @@
               role="search"
               class="search navigation_search plaay-search-panel absolute top-[calc(100%+16px)] right-0 rounded-[22px]"
               data-search-panel>
+              <input type="hidden" name="type" value="product,collection">
               <div class="plaay-search-panel__shell">
                 <label class="plaay-search-panel__label" for="desktop-search-input-{{ section.id }}">Search Plaay</label>
                 <div class="plaay-search-panel__row">
@@ -192,15 +193,17 @@
                     aria-expanded="false"
                     autocorrect="off"
                     spellcheck="false"
-                    class="plaay-search-panel__input" />
+                    class="plaay-search-panel__input"
+                    data-search-input />
                   <button type="submit" class="plaay-search-panel__submit">Search</button>
                 </div>
-                <div class="plaay-search-panel__links">
+                <div class="plaay-search-panel__links" data-search-quick-links>
                   <a href="/collections/chocolate-bars">Chocolate Bars</a>
                   <a href="/collections/chocolate-truffles">Chocolate Truffles</a>
                   <a href="/collections/variety-packs">Variety Packs</a>
                   <a href="/pages/subscribe-save">Subscribe &amp; Save</a>
                 </div>
+                <div class="plaay-search-live" data-search-live style="display:none"></div>
               </div>
             </form>
           </span>
@@ -405,6 +408,7 @@
       class="search navigation_search plaay-mobile-search-panel"
       data-search-root="mobile-panel"
       data-search-panel>
+      <input type="hidden" name="type" value="product,collection">
       <div class="plaay-search-panel__shell">
         <label class="plaay-search-panel__label" for="mobile-search-input-{{ section.id }}">Search Plaay</label>
         <div class="plaay-search-panel__row">
@@ -415,15 +419,17 @@
             placeholder="Bars, truffles, bundles..."
             autocorrect="off"
             spellcheck="false"
-            class="plaay-search-panel__input" />
+            class="plaay-search-panel__input"
+            data-search-input />
           <button type="submit" class="plaay-search-panel__submit">Search</button>
         </div>
-        <div class="plaay-search-panel__links">
+        <div class="plaay-search-panel__links" data-search-quick-links>
           <a href="/collections/chocolate-bars">Chocolate Bars</a>
           <a href="/collections/chocolate-truffles">Chocolate Truffles</a>
           <a href="/collections/variety-packs">Variety Packs</a>
           <a href="/pages/subscribe-save">Subscribe &amp; Save</a>
         </div>
+        <div class="plaay-search-live" data-search-live style="display:none"></div>
       </div>
     </form>
   {% endunless %}
@@ -518,6 +524,77 @@
         mobileTrigger.addEventListener('click', positionMobilePanel, true);
       }
     }
+  })();
+</script>
+
+<script>
+  (function() {
+    function initPredictiveSearch(panel) {
+      var input = panel.querySelector('[data-search-input]');
+      var quickLinks = panel.querySelector('[data-search-quick-links]');
+      var liveEl = panel.querySelector('[data-search-live]');
+      if (!input || !liveEl) return;
+
+      var timer;
+
+      function showQuick() {
+        liveEl.style.display = 'none';
+        liveEl.innerHTML = '';
+        if (quickLinks) quickLinks.style.display = '';
+      }
+
+      function renderResults(q, products, collections) {
+        var html = '';
+        if (collections.length === 0 && products.length === 0) {
+          html = '<p class="plaay-search-live__empty">No results for &ldquo;' + q + '&rdquo;</p>';
+        }
+        if (collections.length > 0) {
+          html += '<div class="plaay-search-live__group"><p class="plaay-search-live__group-label">Collections</p>';
+          collections.forEach(function(c) {
+            var img = c.featured_image
+              ? '<img src="' + c.featured_image.url + '&width=56" alt="" class="plaay-search-live__thumb">'
+              : '<div class="plaay-search-live__thumb plaay-search-live__thumb--empty"></div>';
+            html += '<a href="' + c.url + '" class="plaay-search-live__row">' + img + '<span class="plaay-search-live__row-title">' + c.title + '</span></a>';
+          });
+          html += '</div>';
+        }
+        if (products.length > 0) {
+          html += '<div class="plaay-search-live__group"><p class="plaay-search-live__group-label">Products</p>';
+          products.forEach(function(p) {
+            var img = p.featured_image
+              ? '<img src="' + p.featured_image.url + '&width=56" alt="" class="plaay-search-live__thumb">'
+              : '<div class="plaay-search-live__thumb plaay-search-live__thumb--empty"></div>';
+            var price = p.price_min ? '<span class="plaay-search-live__row-price">AED ' + (p.price_min / 100).toFixed(2) + '</span>' : '';
+            html += '<a href="' + p.url + '" class="plaay-search-live__row">' + img + '<span class="plaay-search-live__row-info"><span class="plaay-search-live__row-title">' + p.title + '</span>' + price + '</span></a>';
+          });
+          html += '</div>';
+        }
+        if (products.length > 0 || collections.length > 0) {
+          html += '<a href="/search?q=' + encodeURIComponent(q) + '&type=product%2Ccollection" class="plaay-search-live__view-all">View all results &rarr;</a>';
+        }
+        liveEl.innerHTML = html;
+      }
+
+      input.addEventListener('input', function() {
+        clearTimeout(timer);
+        var q = input.value.trim();
+        if (!q || q.length < 2) { showQuick(); return; }
+        if (quickLinks) quickLinks.style.display = 'none';
+        liveEl.style.display = 'block';
+        liveEl.innerHTML = '<p class="plaay-search-live__loading">Searching&hellip;</p>';
+        timer = setTimeout(function() {
+          fetch('/search/suggest.json?q=' + encodeURIComponent(q) + '&resources[type]=product,collection&resources[limit]=5')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+              var res = (data.resources && data.resources.results) || {};
+              renderResults(q, res.products || [], res.collections || []);
+            })
+            .catch(showQuick);
+        }, 300);
+      });
+    }
+
+    document.querySelectorAll('[data-search-panel]').forEach(initPredictiveSearch);
   })();
 </script>
 
