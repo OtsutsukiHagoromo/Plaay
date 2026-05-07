@@ -23,16 +23,17 @@
     <div class="plaay-promo-summary__chips">
       {% if cart.cart_level_discount_applications.size > 0 %}
         {% for discount in cart.cart_level_discount_applications %}
-          <span class="plaay-promo-summary__chip">
+          <span class="plaay-promo-summary__chip plaay-promo-summary__chip--dismissable">
             {{ discount.title }}
+            <button
+              type="button"
+              class="plaay-promo-summary__remove"
+              aria-label="Remove promo code"
+              data-plaay-discount-remove>
+              ×
+            </button>
           </span>
         {% endfor %}
-        <button
-          type="button"
-          class="plaay-promo-summary__remove font-walsheim-bold"
-          data-plaay-discount-remove>
-          Remove
-        </button>
       {% else %}
         <span class="plaay-promo-summary__chip">
           Promo applied
