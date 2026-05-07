@@ -1,0 +1,177 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-shipping",
+      "blocks": {
+        "hl_truck": {
+          "type": "highlight",
+          "settings": {
+            "icon": "truck",
+            "title": "UAE-Wide Delivery",
+            "description": "We deliver to all emirates with our local logistics partners."
+          }
+        },
+        "hl_free": {
+          "type": "highlight",
+          "settings": {
+            "icon": "tag",
+            "title": "Free Shipping",
+            "description": "Free delivery on all orders over AED 75. Just AED 15 flat fee below that."
+          }
+        },
+        "hl_temp": {
+          "type": "highlight",
+          "settings": {
+            "icon": "thermometer",
+            "title": "Temperature Controlled",
+            "description": "Your chocolate stays cool the entire journey — every single delivery."
+          }
+        },
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "title": "Place Your Order",
+            "description": "Browse our clean chocolate collection and check out securely on our website."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "title": "We Pack & Chill",
+            "description": "Your order is carefully packed and loaded into a temperature-controlled vehicle."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "title": "Delivered to Your Door",
+            "description": "Sit back and enjoy. Your Plaay order arrives fresh and on time."
+          }
+        },
+        "zone_dubai": {
+          "type": "zone",
+          "settings": {
+            "region": "Dubai",
+            "delivery_time": "Next day",
+            "free_label": "Free over AED 75",
+            "fee_note": "AED 15 below AED 75"
+          }
+        },
+        "zone_abudhabi": {
+          "type": "zone",
+          "settings": {
+            "region": "Abu Dhabi",
+            "delivery_time": "1–2 business days",
+            "free_label": "Free over AED 75",
+            "fee_note": "AED 15 below AED 75"
+          }
+        },
+        "zone_north": {
+          "type": "zone",
+          "settings": {
+            "region": "Sharjah, Ajman, RAK, UAQ",
+            "delivery_time": "1–2 business days",
+            "free_label": "Free over AED 75",
+            "fee_note": "AED 15 below AED 75"
+          }
+        },
+        "zone_east": {
+          "type": "zone",
+          "settings": {
+            "region": "Fujairah, Al Ain",
+            "delivery_time": "2–3 business days",
+            "free_label": "Free over AED 75",
+            "fee_note": "AED 15 below AED 75"
+          }
+        },
+        "zone_ksa": {
+          "type": "zone",
+          "settings": {
+            "region": "Saudi Arabia (KSA)",
+            "delivery_time": "Via third-party platforms",
+            "free_label": "",
+            "fee_note": "Check platform for fees"
+          }
+        },
+        "faq_cost": {
+          "type": "faq",
+          "settings": {
+            "question": "How much does shipping cost?",
+            "answer": "<p>Shipping is free on all orders over AED 75. For smaller orders, we charge a flat delivery fee of AED 15.</p>"
+          }
+        },
+        "faq_where": {
+          "type": "faq",
+          "settings": {
+            "question": "Where do you ship from?",
+            "answer": "<p>All products are shipped from our distribution center in Business Bay & DIP, Dubai, UAE.</p>"
+          }
+        },
+        "faq_temp": {
+          "type": "faq",
+          "settings": {
+            "question": "How do you keep the chocolate from melting?",
+            "answer": "<p>We use local logistics partners with temperature-controlled vehicles so your order arrives in perfect condition. We recommend storing Plaay products in the fridge and enjoying them at room temperature.</p>"
+          }
+        },
+        "faq_track": {
+          "type": "faq",
+          "settings": {
+            "question": "How can I track my order?",
+            "answer": "<p>You'll receive an order confirmation email with your order reference number. You can contact our support team via phone or email with these details for a delivery update.</p>"
+          }
+        },
+        "faq_intl": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you deliver outside the UAE?",
+            "answer": "<p>We currently deliver across the UAE. We're also available in KSA via third-party online platforms. International shipping to the rest of the world is on its way — stay tuned!</p>"
+          }
+        },
+        "faq_delay": {
+          "type": "faq",
+          "settings": {
+            "question": "What if my order is delayed?",
+            "answer": "<p>We always aim to process and deliver every order on time. In the rare case of a delay, we'll notify you immediately and help with any modifications needed. You can reach us at hello@shopplaay.com or +971-56-996-9522.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "hl_truck",
+        "hl_free",
+        "hl_temp",
+        "step_1",
+        "step_2",
+        "step_3",
+        "zone_dubai",
+        "zone_abudhabi",
+        "zone_north",
+        "zone_east",
+        "zone_ksa",
+        "faq_cost",
+        "faq_where",
+        "faq_temp",
+        "faq_track",
+        "faq_intl",
+        "faq_delay"
+      ],
+      "settings": {
+        "hero_bg": "#F9C61D",
+        "steps_bg": "#F5F3EE",
+        "eyebrow": "Delivery Information",
+        "headline": "Shipping & Delivery",
+        "subheadline": "Fresh, clean chocolate — delivered to your door in perfect condition.",
+        "highlights_heading": "What to expect",
+        "steps_heading": "How it works",
+        "zones_heading": "Delivery Zones",
+        "zones_subheading": "We currently deliver across the UAE. Orders over AED 75 ship free.",
+        "faq_heading": "Shipping FAQs",
+        "cta_heading": "Still have questions?",
+        "cta_text": "Our team is here to help. Reach out and we'll get back to you quickly.",
+        "cta_button_label": "Contact Us",
+        "cta_button_url": "/pages/contact"
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1,0 +1,579 @@
+{%- assign highlight_blocks = section.blocks | where: 'type', 'highlight' -%}
+{%- assign step_blocks = section.blocks | where: 'type', 'step' -%}
+{%- assign zone_blocks = section.blocks | where: 'type', 'zone' -%}
+{%- assign faq_blocks = section.blocks | where: 'type', 'faq' -%}
+
+{% style %}
+  .ship-hero {
+    background-color: {{ section.settings.hero_bg }};
+    color: #021D49;
+  }
+  .ship-steps-bg { background-color: {{ section.settings.steps_bg }}; }
+  .ship-highlight-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  .ship-highlight-card {
+    background: #fff;
+    border: 2px solid #F9C61D;
+    border-radius: 20px;
+    padding: 32px 24px 28px;
+    text-align: center;
+    flex: 1 1 200px;
+    max-width: 300px;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .ship-highlight-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(2,29,73,0.10);
+  }
+  .ship-highlight-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #F9C61D;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+  }
+  .ship-steps-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .ship-step {
+    flex: 1 1 180px;
+    max-width: 240px;
+    text-align: center;
+    padding: 0 8px;
+    position: relative;
+  }
+  .ship-step-num {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #021D49;
+    color: #F9C61D;
+    font-family: walsheim-bold, sans-serif;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+  }
+  .ship-step-arrow {
+    display: none;
+    color: #021D49;
+    font-size: 28px;
+    font-family: walsheim-bold, sans-serif;
+    align-self: flex-start;
+    padding-top: 14px;
+    opacity: 0.3;
+    flex-shrink: 0;
+  }
+  @media (min-width: 768px) {
+    .ship-step-arrow { display: block; }
+  }
+  .ship-zones-card {
+    border: 2px solid #F9C61D;
+    border-radius: 20px;
+    overflow: hidden;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .ship-zones-header {
+    display: flex;
+    background: #021D49;
+    padding: 14px 28px;
+  }
+  .ship-zones-header span {
+    font-family: walsheim-bold, sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.6);
+  }
+  .ship-zone-row {
+    display: flex;
+    align-items: center;
+    padding: 18px 28px;
+    border-bottom: 1px solid rgba(2,29,73,0.08);
+    transition: background 0.15s;
+  }
+  .ship-zone-row:last-child { border-bottom: none; }
+  .ship-zone-row:hover { background: #fffbee; }
+  .ship-zone-badge {
+    display: inline-block;
+    background: #F9C61D;
+    color: #021D49;
+    border-radius: 999px;
+    padding: 3px 12px;
+    font-family: walsheim-bold, sans-serif;
+    font-size: 12px;
+  }
+  .ship-faq-item { border-bottom: 1.5px solid rgba(2,29,73,0.15); }
+  .ship-faq-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    text-align: left;
+    font-family: walsheim-bold, sans-serif;
+    font-size: 15px;
+    color: #021D49;
+    gap: 16px;
+  }
+  .ship-faq-icon {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #021D49;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .ship-faq-trigger[aria-expanded="true"] .ship-faq-icon { transform: rotate(45deg); }
+  .ship-faq-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s ease;
+    font-family: walsheim, sans-serif;
+    font-size: 14px;
+    line-height: 1.75;
+    color: rgba(2,29,73,0.78);
+  }
+  .ship-faq-body.open { max-height: 600px; }
+  .ship-faq-body-inner { padding-bottom: 20px; }
+  .ship-faq-body-inner p { margin: 0 0 8px; }
+  .ship-faq-body-inner p:last-child { margin-bottom: 0; }
+  .ship-cta-box {
+    background: #021D49;
+    border-radius: 24px;
+    padding: 52px 40px;
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .ship-cta-btn {
+    display: inline-block;
+    background: #F9C61D;
+    color: #021D49;
+    border-radius: 999px;
+    padding: 14px 40px;
+    font-family: walsheim-bold, sans-serif;
+    font-size: 15px;
+    text-decoration: none;
+    margin-top: 24px;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .ship-cta-btn:hover { opacity: 0.85; transform: translateY(-2px); }
+  @media (max-width: 767px) {
+    .ship-highlight-card { flex: 1 1 100%; max-width: 100%; }
+    .ship-step { flex: 1 1 100%; max-width: 100%; }
+    .ship-cta-box { padding: 36px 24px; border-radius: 16px; }
+    .ship-zones-header,
+    .ship-zone-row { padding-left: 20px; padding-right: 20px; }
+    .ship-zone-row { flex-wrap: wrap; gap: 6px; }
+  }
+{% endstyle %}
+
+{%- comment -%} HERO {%- endcomment -%}
+<div class="ship-hero">
+  <div class="container pt-32 pb-16 md:pt-44 md:pb-20">
+    {% if section.settings.eyebrow != blank %}
+      <p class="font-walsheim-bold uppercase" style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.55; margin-bottom: 16px;">{{ section.settings.eyebrow }}</p>
+    {% endif %}
+    <h1 class="font-walsheim-bold" style="font-size: clamp(44px, 7vw, 88px); line-height: 1.0; margin-bottom: 0;">{{ section.settings.headline }}</h1>
+    {% if section.settings.subheadline != blank %}
+      <p class="font-walsheim" style="font-size: 17px; max-width: 480px; margin-top: 18px; opacity: 0.7; line-height: 1.6;">{{ section.settings.subheadline }}</p>
+    {% endif %}
+  </div>
+</div>
+
+{%- comment -%} HIGHLIGHTS {%- endcomment -%}
+{% if highlight_blocks.size > 0 %}
+  <div style="background: #fff;">
+    <div class="container py-14 md:py-16">
+      {% if section.settings.highlights_heading != blank %}
+        <h2 class="font-walsheim-bold text-dark-blue" style="font-size: clamp(28px,4vw,44px); margin-bottom: 40px; text-align: center;">{{ section.settings.highlights_heading }}</h2>
+      {% endif %}
+      <div class="ship-highlight-grid">
+        {% for block in highlight_blocks %}
+          <div class="ship-highlight-card" {{ block.shopify_attributes }}>
+            <div class="ship-highlight-icon">
+              {% case block.settings.icon %}
+                {% when 'truck' %}
+                  <div style="width:34px;height:34px;color:#021D49;">{% render 'icon-delivery-van' %}</div>
+                {% when 'check' %}
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="#021D49" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {% when 'thermometer' %}
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" stroke="#021D49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {% when 'clock' %}
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#021D49" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#021D49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {% when 'globe' %}
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#021D49" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="#021D49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {% when 'star' %}
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="#021D49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                {% when 'tag' %}
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="#021D49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="7" y1="7" x2="7.01" y2="7" stroke="#021D49" stroke-width="2.5" stroke-linecap="round"/></svg>
+                {% else %}
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#021D49" stroke-width="2"/><path d="M12 8v4l3 3" stroke="#021D49" stroke-width="2" stroke-linecap="round"/></svg>
+              {% endcase %}
+            </div>
+            <h3 class="font-walsheim-bold text-dark-blue" style="font-size: 17px; margin-bottom: 8px;">{{ block.settings.title }}</h3>
+            {% if block.settings.description != blank %}
+              <p class="font-walsheim text-dark-blue" style="font-size: 14px; opacity: 0.65; margin: 0; line-height: 1.6;">{{ block.settings.description }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{%- comment -%} HOW IT WORKS {%- endcomment -%}
+{% if step_blocks.size > 0 %}
+  <div class="ship-steps-bg">
+    <div class="container py-14 md:py-16">
+      {% if section.settings.steps_heading != blank %}
+        <h2 class="font-walsheim-bold text-dark-blue" style="font-size: clamp(28px,4vw,44px); margin-bottom: 48px; text-align: center;">{{ section.settings.steps_heading }}</h2>
+      {% endif %}
+      <div class="ship-steps-row">
+        {% for block in step_blocks %}
+          <div class="ship-step" {{ block.shopify_attributes }}>
+            <div class="ship-step-num">{{ forloop.index }}</div>
+            <h3 class="font-walsheim-bold text-dark-blue" style="font-size: 16px; margin-bottom: 8px;">{{ block.settings.title }}</h3>
+            {% if block.settings.description != blank %}
+              <p class="font-walsheim text-dark-blue" style="font-size: 14px; opacity: 0.65; max-width: 220px; margin: 0 auto; line-height: 1.6;">{{ block.settings.description }}</p>
+            {% endif %}
+          </div>
+          {% unless forloop.last %}
+            <div class="ship-step-arrow" aria-hidden="true">→</div>
+          {% endunless %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{%- comment -%} SHIPPING ZONES {%- endcomment -%}
+{% if zone_blocks.size > 0 %}
+  <div style="background: #fff;">
+    <div class="container py-14 md:py-16">
+      <div style="max-width: 800px; margin: 0 auto;">
+        {% if section.settings.zones_heading != blank %}
+          <h2 class="font-walsheim-bold text-dark-blue" style="font-size: clamp(28px,4vw,44px); margin-bottom: 12px;">{{ section.settings.zones_heading }}</h2>
+        {% endif %}
+        {% if section.settings.zones_subheading != blank %}
+          <p class="font-walsheim text-dark-blue" style="font-size: 15px; opacity: 0.65; margin-bottom: 32px; line-height: 1.6;">{{ section.settings.zones_subheading }}</p>
+        {% endif %}
+        <div class="ship-zones-card">
+          <div class="ship-zones-header">
+            <span style="flex: 2;">Region</span>
+            <span style="flex: 1.5;">Delivery Time</span>
+            <span style="flex: 2;">Shipping Fee</span>
+          </div>
+          {% for block in zone_blocks %}
+            <div class="ship-zone-row" {{ block.shopify_attributes }}>
+              <span style="flex: 2; font-family: walsheim-bold, sans-serif; font-size: 15px; color: #021D49;">{{ block.settings.region }}</span>
+              <span style="flex: 1.5; font-family: walsheim, sans-serif; font-size: 14px; color: rgba(2,29,73,0.7);">{{ block.settings.delivery_time }}</span>
+              <span style="flex: 2; display: flex; flex-direction: column; gap: 4px;">
+                {% if block.settings.free_label != blank %}
+                  <span class="ship-zone-badge">{{ block.settings.free_label }}</span>
+                {% endif %}
+                {% if block.settings.fee_note != blank %}
+                  <span style="font-family: walsheim, sans-serif; font-size: 13px; color: rgba(2,29,73,0.55);">{{ block.settings.fee_note }}</span>
+                {% endif %}
+              </span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{%- comment -%} SHIPPING FAQs {%- endcomment -%}
+{% if faq_blocks.size > 0 %}
+  <div style="background-color: #F9C61D;">
+    <div class="container py-14 md:py-16">
+      <div style="max-width: 760px; margin: 0 auto;">
+        {% if section.settings.faq_heading != blank %}
+          <h2 class="font-walsheim-bold text-dark-blue" style="font-size: clamp(28px,4vw,44px); margin-bottom: 32px;">{{ section.settings.faq_heading }}</h2>
+        {% endif %}
+        {% for block in faq_blocks %}
+          <div class="ship-faq-item" {{ block.shopify_attributes }}>
+            <button class="ship-faq-trigger" data-ship-faq aria-expanded="false">
+              <span>{{ block.settings.question }}</span>
+              <span class="ship-faq-icon" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path d="M5 1v8M1 5h8" stroke="#F9C61D" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </button>
+            <div class="ship-faq-body" role="region">
+              <div class="ship-faq-body-inner">{{ block.settings.answer }}</div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+{%- comment -%} CONTACT CTA {%- endcomment -%}
+{% if section.settings.cta_heading != blank %}
+  <div style="background: #fff;">
+    <div class="container py-14 md:py-16">
+      <div class="ship-cta-box">
+        <p class="font-walsheim-bold" style="font-size: clamp(22px,3vw,32px); color: #fff; margin-bottom: 8px;">{{ section.settings.cta_heading }}</p>
+        {% if section.settings.cta_text != blank %}
+          <p class="font-walsheim" style="font-size: 15px; color: rgba(255,255,255,0.65); max-width: 440px; margin: 0 auto; line-height: 1.6;">{{ section.settings.cta_text }}</p>
+        {% endif %}
+        {% if section.settings.cta_button_label != blank %}
+          <a href="{{ section.settings.cta_button_url }}" class="ship-cta-btn">{{ section.settings.cta_button_label }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<script>
+  document.querySelectorAll('[data-ship-faq]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var body = this.nextElementSibling;
+      var isOpen = this.getAttribute('aria-expanded') === 'true';
+      document.querySelectorAll('[data-ship-faq]').forEach(function(b) {
+        b.setAttribute('aria-expanded', 'false');
+        if (b.nextElementSibling) b.nextElementSibling.classList.remove('open');
+      });
+      if (!isOpen) {
+        this.setAttribute('aria-expanded', 'true');
+        body.classList.add('open');
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Shipping Page",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "color",
+      "id": "hero_bg",
+      "label": "Hero background",
+      "default": "#F9C61D"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text",
+      "default": "Delivery Information"
+    },
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline",
+      "default": "Shipping & Delivery"
+    },
+    {
+      "type": "textarea",
+      "id": "subheadline",
+      "label": "Subheadline",
+      "default": "Fresh, clean chocolate — delivered to your door in perfect condition."
+    },
+    {
+      "type": "header",
+      "content": "Highlights"
+    },
+    {
+      "type": "text",
+      "id": "highlights_heading",
+      "label": "Highlights heading",
+      "default": "What to expect"
+    },
+    {
+      "type": "header",
+      "content": "How It Works"
+    },
+    {
+      "type": "color",
+      "id": "steps_bg",
+      "label": "Steps section background",
+      "default": "#F5F3EE"
+    },
+    {
+      "type": "text",
+      "id": "steps_heading",
+      "label": "Steps heading",
+      "default": "How it works"
+    },
+    {
+      "type": "header",
+      "content": "Shipping Zones"
+    },
+    {
+      "type": "text",
+      "id": "zones_heading",
+      "label": "Zones heading",
+      "default": "Delivery Zones"
+    },
+    {
+      "type": "textarea",
+      "id": "zones_subheading",
+      "label": "Zones subheading",
+      "default": "We currently deliver across the UAE. Orders over AED 75 ship free."
+    },
+    {
+      "type": "header",
+      "content": "FAQs"
+    },
+    {
+      "type": "text",
+      "id": "faq_heading",
+      "label": "FAQ section heading",
+      "default": "Shipping FAQs"
+    },
+    {
+      "type": "header",
+      "content": "Contact CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "CTA heading",
+      "default": "Still have questions?"
+    },
+    {
+      "type": "textarea",
+      "id": "cta_text",
+      "label": "CTA body text",
+      "default": "Our team is here to help. Reach out and we'll get back to you quickly."
+    },
+    {
+      "type": "text",
+      "id": "cta_button_label",
+      "label": "CTA button label",
+      "default": "Contact Us"
+    },
+    {
+      "type": "url",
+      "id": "cta_button_url",
+      "label": "CTA button URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "highlight",
+      "name": "Highlight Card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "truck",
+          "options": [
+            { "value": "truck", "label": "Delivery Truck" },
+            { "value": "check", "label": "Checkmark" },
+            { "value": "thermometer", "label": "Thermometer" },
+            { "value": "clock", "label": "Clock" },
+            { "value": "globe", "label": "Globe" },
+            { "value": "star", "label": "Star" },
+            { "value": "tag", "label": "Tag / Price" }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description"
+        }
+      ]
+    },
+    {
+      "type": "step",
+      "name": "How It Works Step",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Step title"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Step description"
+        }
+      ]
+    },
+    {
+      "type": "zone",
+      "name": "Shipping Zone",
+      "settings": [
+        {
+          "type": "text",
+          "id": "region",
+          "label": "Region / Emirate"
+        },
+        {
+          "type": "text",
+          "id": "delivery_time",
+          "label": "Estimated delivery time"
+        },
+        {
+          "type": "text",
+          "id": "free_label",
+          "label": "Free shipping badge (e.g. Free over AED 75)"
+        },
+        {
+          "type": "text",
+          "id": "fee_note",
+          "label": "Fee note (e.g. AED 15 below AED 75)"
+        }
+      ]
+    },
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Answer here.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shipping Page"
+    }
+  ]
+}
+{% endschema %}

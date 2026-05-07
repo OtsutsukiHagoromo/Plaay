@@ -1,25 +1,291 @@
 {% assign background_color = section.settings.background_color %}
 {% assign title = section.settings.title %}
+{% assign subtitle = section.settings.subtitle %}
 
-<div style="background-color: {{ background_color }};">
-  <div class="container py-12 md:py-16">
-    {% if title != blank %}
-      <h2 class="text-dark-blue text-[54px] mb-9 font-walsheim-bold">
-        {{ title }}
-      </h2>
-    {% endif %}
+{% style %}
+  .pfaq-section { background-color: {{ background_color }}; }
+  .pfaq-header { max-width: 640px; }
+  .pfaq-search-wrap {
+    position: relative;
+    max-width: 540px;
+    margin: 24px 0 28px;
+  }
+  .pfaq-search {
+    width: 100%;
+    border: 2px solid rgba(2,29,73,0.25);
+    border-radius: 999px;
+    padding: 13px 20px 13px 48px;
+    font-family: walsheim, sans-serif;
+    font-size: 15px;
+    background: rgba(255,255,255,0.6);
+    color: #021D49;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  .pfaq-search:focus {
+    border-color: #021D49;
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(2,29,73,0.12);
+  }
+  .pfaq-search::-webkit-search-cancel-button { -webkit-appearance: none; }
+  .pfaq-search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    pointer-events: none;
+    opacity: 0.45;
+    color: #021D49;
+  }
+  .pfaq-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+  .pfaq-tab {
+    background: rgba(2,29,73,0.09);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-family: walsheim-bold, sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    color: #021D49;
+    transition: background 0.2s, color 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .pfaq-tab.active, .pfaq-tab:hover {
+    background: #021D49;
+    color: #F9C61D;
+  }
+  .pfaq-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 768px) {
+    .pfaq-grid { grid-template-columns: 1fr 1fr; column-gap: 56px; }
+  }
+  @media (min-width: 1024px) {
+    .pfaq-grid { column-gap: 80px; }
+  }
+  .pfaq-item {
+    border-bottom: 1.5px solid rgba(2,29,73,0.15);
+    transition: opacity 0.15s;
+  }
+  .pfaq-item.hidden { display: none; }
+  .pfaq-trigger {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    text-align: left;
+    font-family: walsheim-bold, sans-serif;
+    font-size: 15px;
+    color: #021D49;
+    gap: 16px;
+  }
+  .pfaq-trigger-text { flex: 1; line-height: 1.4; }
+  .pfaq-trigger-icon {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    background: #021D49;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.2s;
+  }
+  .pfaq-trigger[aria-expanded="true"] .pfaq-trigger-icon {
+    transform: rotate(45deg);
+    background: #021D49;
+  }
+  .pfaq-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.45s ease;
+    font-family: walsheim, sans-serif;
+    font-size: 14px;
+    line-height: 1.75;
+    color: rgba(2,29,73,0.78);
+  }
+  .pfaq-body.open { max-height: 800px; }
+  .pfaq-body-inner { padding-bottom: 20px; }
+  .pfaq-body-inner p { margin: 0 0 8px; }
+  .pfaq-body-inner p:last-child { margin-bottom: 0; }
+  .pfaq-no-results {
+    display: none;
+    text-align: center;
+    padding: 48px 0;
+    color: rgba(2,29,73,0.45);
+    font-family: walsheim, sans-serif;
+    font-size: 15px;
+    grid-column: 1 / -1;
+  }
+  @media (max-width: 767px) {
+    .pfaq-search-wrap { max-width: 100%; }
+    .pfaq-trigger { font-size: 14px; }
+  }
+{% endstyle %}
+
+<div class="pfaq-section">
+  <div class="container py-12 md:py-20">
+    <div class="pfaq-header">
+      {% if title != blank %}
+        <h2 class="font-walsheim-bold text-dark-blue" style="font-size: clamp(38px,5vw,60px); line-height: 1.1; margin-bottom: 8px;">{{ title }}</h2>
+      {% endif %}
+      {% if subtitle != blank %}
+        <p class="font-walsheim text-dark-blue" style="font-size: 16px; opacity: 0.65; margin: 0;">{{ subtitle }}</p>
+      {% endif %}
+    </div>
 
     {% if section.blocks.size > 0 %}
-      <div class="flex flex-col md:flex-row md:flex-wrap">
+      <div class="pfaq-search-wrap">
+        <svg class="pfaq-search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+          <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input
+          type="search"
+          class="pfaq-search"
+          id="pfaq-search"
+          placeholder="{{ section.settings.search_placeholder | default: 'Search questions...' }}"
+          autocomplete="off"
+          aria-label="Search FAQs"
+        >
+      </div>
+
+      <div class="pfaq-tabs" id="pfaq-tabs" style="display:none;" role="tablist" aria-label="FAQ categories"></div>
+
+      <div class="pfaq-grid" id="pfaq-grid">
         {% for block in section.blocks %}
-          <div class="w-full {% unless forloop.last %}pb-4 {% endunless %} {% cycle 'md:pr-10 lg:pr-14 xl:pr-20', 'md:pl-10 lg:pl-14 xl:pl-20' %} md:w-1/2">
-            {% render 'content-accordion', heading: block.settings.title, content: block.settings.answer, product_accordion: true, color: 'dark-blue' %}
+          {%- assign cat = block.settings.category | default: '' | strip -%}
+          <div
+            class="pfaq-item"
+            data-category="{{ cat | downcase | escape }}"
+            data-question="{{ block.settings.title | downcase | escape }}"
+            data-answer="{{ block.settings.answer | strip_html | downcase | escape }}"
+            {{ block.shopify_attributes }}
+          >
+            <button
+              class="pfaq-trigger"
+              data-pfaq-trigger
+              aria-expanded="false"
+            >
+              <span class="pfaq-trigger-text">{{ block.settings.title }}</span>
+              <span class="pfaq-trigger-icon" aria-hidden="true">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                  <path d="M5 1v8M1 5h8" stroke="#F9C61D" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </span>
+            </button>
+            <div class="pfaq-body" data-pfaq-body role="region">
+              <div class="pfaq-body-inner">{{ block.settings.answer }}</div>
+            </div>
           </div>
         {% endfor %}
+        <div class="pfaq-no-results" id="pfaq-no-results" aria-live="polite">No questions found. Try a different search.</div>
       </div>
     {% endif %}
   </div>
 </div>
+
+<script>
+(function() {
+  var items = Array.from(document.querySelectorAll('.pfaq-item'));
+  var tabsEl = document.getElementById('pfaq-tabs');
+  var searchEl = document.getElementById('pfaq-search');
+  var noResults = document.getElementById('pfaq-no-results');
+  var activeCategory = 'all';
+  var searchQuery = '';
+
+  // Build category tabs
+  var categories = [];
+  items.forEach(function(item) {
+    var cat = (item.getAttribute('data-category') || '').trim();
+    if (cat && categories.indexOf(cat) === -1) categories.push(cat);
+  });
+
+  if (categories.length > 1 && tabsEl) {
+    tabsEl.style.display = 'flex';
+    var allBtn = document.createElement('button');
+    allBtn.className = 'pfaq-tab active';
+    allBtn.textContent = 'All';
+    allBtn.setAttribute('data-cat', 'all');
+    tabsEl.appendChild(allBtn);
+    categories.forEach(function(cat) {
+      var btn = document.createElement('button');
+      btn.className = 'pfaq-tab';
+      btn.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+      btn.setAttribute('data-cat', cat);
+      tabsEl.appendChild(btn);
+    });
+    tabsEl.addEventListener('click', function(e) {
+      var tab = e.target.closest('.pfaq-tab');
+      if (!tab) return;
+      document.querySelectorAll('.pfaq-tab').forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      activeCategory = tab.getAttribute('data-cat');
+      filterItems();
+    });
+  }
+
+  // Accordion
+  document.querySelectorAll('[data-pfaq-trigger]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var body = this.nextElementSibling;
+      var isOpen = this.getAttribute('aria-expanded') === 'true';
+      document.querySelectorAll('[data-pfaq-trigger]').forEach(function(b) {
+        b.setAttribute('aria-expanded', 'false');
+        var bd = b.nextElementSibling;
+        if (bd) bd.classList.remove('open');
+      });
+      if (!isOpen) {
+        this.setAttribute('aria-expanded', 'true');
+        body.classList.add('open');
+      }
+    });
+  });
+
+  // Search
+  if (searchEl) {
+    searchEl.addEventListener('input', function() {
+      searchQuery = this.value.trim().toLowerCase();
+      filterItems();
+    });
+  }
+
+  function filterItems() {
+    var visibleCount = 0;
+    items.forEach(function(item) {
+      var cat = (item.getAttribute('data-category') || '').trim();
+      var question = item.getAttribute('data-question') || '';
+      var answer = item.getAttribute('data-answer') || '';
+      var catMatch = activeCategory === 'all' || cat === activeCategory;
+      var searchMatch = !searchQuery || question.indexOf(searchQuery) !== -1 || answer.indexOf(searchQuery) !== -1;
+      if (catMatch && searchMatch) {
+        item.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        item.classList.add('hidden');
+        var btn = item.querySelector('[data-pfaq-trigger]');
+        var body = item.querySelector('[data-pfaq-body]');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+        if (body) body.classList.remove('open');
+      }
+    });
+    if (noResults) noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+  }
+})();
+</script>
 
 {% schema %}
 {
@@ -30,6 +296,18 @@
       "id": "title",
       "label": "Title",
       "default": "FAQs"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Everything you need to know about Plaay."
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search questions..."
     },
     {
       "type": "color",
@@ -53,6 +331,11 @@
           "id": "answer",
           "label": "Answer",
           "default": "<p>Your answer here</p>"
+        },
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Category (optional — e.g. Shipping, Orders, About, Payments)"
         }
       ]
     }
