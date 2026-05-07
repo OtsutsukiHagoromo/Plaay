@@ -564,7 +564,7 @@
             var img = p.featured_image
               ? '<img src="' + p.featured_image.url + '&width=56" alt="" class="plaay-search-live__thumb">'
               : '<div class="plaay-search-live__thumb plaay-search-live__thumb--empty"></div>';
-            var price = p.price_min ? '<span class="plaay-search-live__row-price">AED ' + (p.price_min / 100).toFixed(2) + '</span>' : '';
+            var price = p.price_min ? '<span class="plaay-search-live__row-price">AED ' + parseFloat(p.price_min).toFixed(2) + '</span>' : '';
             html += '<a href="' + p.url + '" class="plaay-search-live__row">' + img + '<span class="plaay-search-live__row-info"><span class="plaay-search-live__row-title">' + p.title + '</span>' + price + '</span></a>';
           });
           html += '</div>';
