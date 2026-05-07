@@ -310,6 +310,12 @@
             "product": "pistachio-truffles-10x30g"
           }
         },
+        "product_8pDYKR": {
+          "type": "product",
+          "settings": {
+            "product": "truffle-mix"
+          }
+        },
         "product_ixCryb": {
           "type": "product",
           "settings": {
@@ -337,6 +343,7 @@
       },
       "block_order": [
         "product_3xzUwD",
+        "product_8pDYKR",
         "product_ixCryb",
         "product_hXNphV",
         "product_iewA3j",
