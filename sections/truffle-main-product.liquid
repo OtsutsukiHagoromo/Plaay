@@ -209,7 +209,8 @@
       "priceFmt": {{ variant.price | money | json }},
       "compareAtPrice": {{ variant.compare_at_price | default: 0 }},
       "available": {{ variant.available }},
-      "imageUrl": {{ variant.featured_image.src | image_url: width: 800 | json }}
+      "imageUrl": {{ variant.featured_image.src | image_url: width: 800 | json }},
+      "imagePosition": {{ variant.featured_image.position | default: 1 }}
     }{% unless forloop.last %},{% endunless %}
   {%- endfor -%}
 ]
@@ -807,12 +808,22 @@
     }));
   }
 
+  function goToVariantImage(variant) {
+    if (!variant || !variant.imagePosition) return;
+    var idx = variant.imagePosition - 1;
+    var slider = window['plaayTruffleSlider_' + SECTION_ID];
+    var thumbs  = window['plaayTruffleThumbs_' + SECTION_ID];
+    if (slider) try { slider.go('=' + idx); } catch(e) {}
+    if (thumbs)  try { thumbs.go('=' + idx); }  catch(e) {}
+  }
+
   function applySelection() {
     var variant = findVariant(state.selectedSize);
 
     if (variant) {
       syncNativeSelectors(variant);
       updatePriceDisplay(variant);
+      goToVariantImage(variant);
     }
 
     if (!sizesRow) return;
@@ -1174,6 +1185,8 @@
       });
       productGallerySlider.mount({ });
       productGalleryThumbnailsSlider.mount({ });
+      window['plaayTruffleSlider_{{ section.id }}'] = productGallerySlider;
+      window['plaayTruffleThumbs_{{ section.id }}']  = productGalleryThumbnailsSlider;
 
       productGallerySlider.on("run", (e) => {
         productGalleryThumbnailsSlider.go(e.direction);

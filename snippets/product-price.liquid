@@ -1,10 +1,11 @@
-<div class="{% if product.compare_at_price %} on-sale flex items-center flex-wrap {% else %} inline-block {% endif %}">
-  <span class="product_price font-walsheim-black text-center {% if text_white %}text-white{% else %}text-dark-blue{% endif %} {% if product.compare_at_price %}text-xs{% else %}text-sm md:text-base{% endif %}">
-    {{ shop.currency }} {{- product.price | money_without_currency -}}
+{% assign _first_variant = product.variants.first %}
+<div class="{% if _first_variant.compare_at_price > _first_variant.price %} on-sale flex items-center flex-wrap {% else %} inline-block {% endif %}">
+  <span class="product_price font-walsheim-black text-center {% if text_white %}text-white{% else %}text-dark-blue{% endif %} {% if _first_variant.compare_at_price > _first_variant.price %}text-xs{% else %}text-sm md:text-base{% endif %}">
+    {{ shop.currency }} {{- _first_variant.price | money_without_currency -}}
   </span>
-  {% if product.compare_at_price %}
+  {% if _first_variant.compare_at_price > _first_variant.price %}
     <span class="product_compare_at_price product_compare_at_price--sale line-through font-walsheim-black text-center ml-1 {% if text_white %}text-white{% endif %} {% if large_text %}text-xl{% else %}text-base{% endif %}">
-      {{ shop.currency }} {{ product.compare_at_price | money_without_currency }}
+      {{ shop.currency }} {{ _first_variant.compare_at_price | money_without_currency }}
     </span>
   {% endif %}
 </div>
