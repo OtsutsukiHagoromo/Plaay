@@ -324,7 +324,7 @@
               tabSub.classList.toggle('plaay-sub-tab--active', isSub);
               tabOnetime.setAttribute('aria-pressed', String(!isSub));
               tabSub.setAttribute('aria-pressed', String(isSub));
-              if (freqPanel) freqPanel.style.display = isSub ? 'block' : 'none';
+              if (freqPanel) { freqPanel.style.display = isSub ? 'block' : 'none'; freqPanel.classList.toggle('active', isSub); }
               var subInput = freqPanel ? freqPanel.querySelector('[data-subscription]') : null;
               var planInput = freqPanel ? freqPanel.querySelector('[data-selling-plan-id]') : null;
               if (subInput) subInput.value = isSub ? 'true' : 'false';
