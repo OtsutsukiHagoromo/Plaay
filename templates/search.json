@@ -9,12 +9,32 @@
  */
 {
   "sections": {
+    "blocks_ADt9JL": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_900bb11_6daRYP": {
+          "type": "ai_gen_block_900bb11",
+          "settings": {
+            "spacing_desktop": 120,
+            "spacing_mobile": 80,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_900bb11_6daRYP"
+      ],
+      "name": "Spacer",
+      "settings": {}
+    },
     "main": {
       "type": "main-search",
       "settings": {}
     }
   },
   "order": [
+    "blocks_ADt9JL",
     "main"
   ]
 }
