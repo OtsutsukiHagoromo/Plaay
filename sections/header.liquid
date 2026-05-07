@@ -405,17 +405,25 @@
       class="search navigation_search plaay-mobile-search-panel"
       data-search-root="mobile-panel"
       data-search-panel>
-      <div class="plaay-mobile-search-panel__inner">
-        <input
-          type="search"
-          name="q"
-          placeholder="Search Plaay…"
-          autocorrect="off"
-          spellcheck="false"
-          class="plaay-mobile-search-panel__input" />
-        <button type="submit" class="plaay-mobile-search-panel__submit" aria-label="Search">
-          {%- render 'icon-search-alternate' -%}
-        </button>
+      <div class="plaay-search-panel__shell">
+        <label class="plaay-search-panel__label" for="mobile-search-input-{{ section.id }}">Search Plaay</label>
+        <div class="plaay-search-panel__row">
+          <input
+            id="mobile-search-input-{{ section.id }}"
+            type="search"
+            name="q"
+            placeholder="Bars, truffles, bundles..."
+            autocorrect="off"
+            spellcheck="false"
+            class="plaay-search-panel__input" />
+          <button type="submit" class="plaay-search-panel__submit">Search</button>
+        </div>
+        <div class="plaay-search-panel__links">
+          <a href="/collections/chocolate-bars">Chocolate Bars</a>
+          <a href="/collections/chocolate-truffles">Chocolate Truffles</a>
+          <a href="/collections/variety-packs">Variety Packs</a>
+          <a href="/pages/subscribe-save">Subscribe &amp; Save</a>
+        </div>
       </div>
     </form>
   {% endunless %}
