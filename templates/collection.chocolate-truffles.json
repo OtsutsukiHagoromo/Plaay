@@ -382,18 +382,11 @@
           "settings": {
             "product": "pistachio-chocolate-truffles-150g"
           }
-        },
-        "product_FzDPpi": {
-          "type": "product",
-          "settings": {
-            "product": "truffle-mix"
-          }
         }
       },
       "block_order": [
         "product_3fR8Py",
-        "product_FFdXyh",
-        "product_FzDPpi"
+        "product_FFdXyh"
       ],
       "name": "Featured products",
       "settings": {
