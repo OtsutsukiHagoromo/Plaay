@@ -1,5 +1,12 @@
 {%- capture widths -%}_{width}x.{%- endcapture -%}
 
+{%- liquid
+  assign cart_level_discount_total = 0
+  for discount in cart.cart_level_discount_applications
+    assign cart_level_discount_total = cart_level_discount_total | plus: discount.total_allocated_amount
+  endfor
+-%}
+
 <cart-drawer-items class="h-full group loading:pointer-events-none" data-module="cart-drawer-items">
   <cart-remove-button data-module="cart-remove-button"></cart-remove-button>
   <div class="flex items-center justify-center absolute inset-0 bg-black bg-opacity-30 z-[100] opacity-0 invisible group-loading:opacity-100 group-loading:visible">
@@ -16,6 +23,34 @@
         assign show_variant = true
         if item.variant.title == 'Default Title'
           assign show_variant = false
+        endif
+
+        assign line_base_price = item.final_line_price
+        assign line_original_price = item.original_line_price
+        assign display_original_price = line_original_price
+        assign display_final_price = line_base_price
+        assign allocated_cart_discount = 0
+
+        if cart_level_discount_total > 0 and cart.items_subtotal_price > 0
+          assign allocated_cart_discount = cart_level_discount_total | times: line_base_price | divided_by: cart.items_subtotal_price
+          assign display_final_price = line_base_price | minus: allocated_cart_discount
+        endif
+
+        if item.selling_plan_allocation
+          assign selling_plan_compare_total = item.selling_plan_allocation.compare_at_price | times: item.quantity
+          if selling_plan_compare_total > display_original_price
+            assign display_original_price = selling_plan_compare_total
+          endif
+        endif
+
+        assign variant_compare_total = item.variant.compare_at_price | times: item.quantity
+        if variant_compare_total > display_original_price
+          assign display_original_price = variant_compare_total
+        endif
+
+        assign show_compare_price = false
+        if display_original_price > display_final_price
+          assign show_compare_price = true
         endif
       -%}
 
@@ -49,17 +84,10 @@
             </div>
             <div class="plaay-cart-item__price-remove">
               <div class="plaay-cart-item__price">
-                {% if item.selling_plan_allocation %}
-                  {% if item.selling_plan_allocation.compare_at_price > item.selling_plan_allocation.price %}
-                    <span class="line-through text-xs opacity-50">{{ item.selling_plan_allocation.compare_at_price | times: item.quantity | money }}</span>
-                  {% endif %}
-                  <span>{{ item.selling_plan_allocation.price | times: item.quantity | money }}</span>
-                {% else %}
-                  {% if on_sale %}
-                    <span class="line-through text-xs opacity-50">{{ item.variant.compare_at_price | money }}</span>
-                  {% endif %}
-                  <span>{{ item.final_price | times: item.quantity | money }}</span>
+                {% if show_compare_price %}
+                  <span class="line-through text-xs opacity-50">{{ display_original_price | money }}</span>
                 {% endif %}
+                <span>{{ display_final_price | money }}</span>
               </div>
               <cart-remove-button data-module="cart-remove-button">
                 <button type="button" class="plaay-cart-item__remove" aria-label="Remove {{ item.product.title }}">

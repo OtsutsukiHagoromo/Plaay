@@ -13,6 +13,10 @@
   assign cart_price_rounded = cart.total_price | divided_by: 100.0
   assign threshold_rounded = cart_promotion_threshold | divided_by: 100.0
   assign spend_percentage = cart_price_rounded | divided_by: threshold_rounded | times: 100
+  assign cart_level_discount_total = 0
+  for discount in cart.cart_level_discount_applications
+    assign cart_level_discount_total = cart_level_discount_total | plus: discount.total_allocated_amount
+  endfor
 %}
 
 <div class="overflow-hidden">
@@ -146,6 +150,34 @@
                   else
                     assign is_subscription = false
                   endif
+
+                  assign line_base_price = item.final_line_price
+                  assign line_original_price = item.original_line_price
+                  assign display_original_price = line_original_price
+                  assign display_final_price = line_base_price
+                  assign allocated_cart_discount = 0
+
+                  if cart_level_discount_total > 0 and cart.items_subtotal_price > 0
+                    assign allocated_cart_discount = cart_level_discount_total | times: line_base_price | divided_by: cart.items_subtotal_price
+                    assign display_final_price = line_base_price | minus: allocated_cart_discount
+                  endif
+
+                  if item.selling_plan_allocation
+                    assign selling_plan_compare_total = item.selling_plan_allocation.compare_at_price | times: item.quantity
+                    if selling_plan_compare_total > display_original_price
+                      assign display_original_price = selling_plan_compare_total
+                    endif
+                  endif
+
+                  assign variant_compare_total = item.variant.compare_at_price | times: item.quantity
+                  if variant_compare_total > display_original_price
+                    assign display_original_price = variant_compare_total
+                  endif
+
+                  assign show_compare_price = false
+                  if display_original_price > display_final_price
+                    assign show_compare_price = true
+                  endif
                 -%}
 
                   <div class="{% if forloop.last %} mb-7 {% endif %} border-b border-black border-opacity-50 py-5 | lg:flex lg:items-center lg:justify-between"data-key="{{- item.key -}}"data-cart-item>
@@ -177,18 +209,18 @@
                     </cart-remove-button>
                   </div>
                   {% comment %} item final price {% endcomment %}
-                  {% if item.line_price < item.final_line_price %}
+                  {% if show_compare_price %}
                     <div class="flex items-center | lg:w-1/5">
                       <span class="flex font-bold font-walsheim-bold my-5 line-through text-xs">
-                        {{ item.final_line_price | money }}
+                        {{ display_original_price | money }}
                       </span>
                       <span class="flex text-base font-bold font-walsheim-bold my-5 text-[#F70C1A] ml-2 | lg:text-sm">
-                        {{ item.line_price | money }}
+                        {{ display_final_price | money }}
                       </span>
                     </div>
                   {% else %}
                     <div class="flex text-base font-bold font-walsheim-bold my-5 text-dark-blue | lg:text-sm lg:w-1/5">
-                      {{ item.final_line_price | money }}
+                      {{ display_final_price | money }}
                     </div>
                   {% endif %}
                   {% comment %} item quantity ( desktop ) {% endcomment %}
