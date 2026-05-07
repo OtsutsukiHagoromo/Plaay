@@ -96,8 +96,33 @@
         .then(renderCartSections);
     }
 
+    function refreshCartPage() {
+      var cartPageRoot = document.querySelector('[data-cart-page-root]');
+      if (!cartPageRoot) return Promise.resolve();
+
+      return fetch('/cart?section_id=main-cart')
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
+          var parsed = new DOMParser().parseFromString(html, 'text/html');
+          var nextRoot = parsed.querySelector('[data-cart-page-root]');
+          if (nextRoot) {
+            cartPageRoot.innerHTML = nextRoot.innerHTML;
+          }
+        });
+    }
+
+    function refreshVisibleCart() {
+      var tasks = [];
+      if (window.plaayRefreshCartDrawer) {
+        tasks.push(window.plaayRefreshCartDrawer().catch(function() {}));
+      }
+      tasks.push(refreshCartPage().catch(function() {}));
+      return Promise.all(tasks);
+    }
+
     window.plaayRenderCartDrawerSections = renderCartSections;
     window.plaayRefreshCartDrawer = refreshCartDrawer;
+    window.plaayRefreshCartPage = refreshCartPage;
 
     /*
       Tier bar real-time update via fetch intercept.
@@ -138,25 +163,72 @@
       };
     })();
 
-    function applyDiscountCode() {
-      var input = document.getElementById('plaay-discount-input');
-      var msgEl  = document.getElementById('plaay-discount-msg');
+    function setDiscountMessage(scope, message, type) {
+      if (!scope) return;
+      var msgEl = scope.querySelector('[data-plaay-discount-msg]');
+      if (!msgEl) return;
+      msgEl.textContent = message || '';
+      msgEl.className = 'plaay-discount-msg' + (type ? ' plaay-discount-msg--' + type : '');
+    }
+
+    function updateCartDiscount(discountCode, scope) {
+      return fetch('/cart/update.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          discount: discountCode
+        })
+      })
+        .then(function(r) {
+          if (!r.ok) throw new Error('Unable to update discount.');
+          return r.json();
+        })
+        .then(function(cart) {
+          if (window.plaayTierBar) {
+            window.plaayTierBar.update(cart.total_price);
+          }
+          return refreshVisibleCart();
+        });
+    }
+
+    function applyDiscountCode(scope) {
+      if (!scope) return;
+      var input = scope.querySelector('[data-plaay-discount-input]');
       if (!input) return;
       var code = input.value.trim();
       if (!code) {
-        if (msgEl) {
-          msgEl.textContent = 'Please enter a discount code.';
-          msgEl.className = 'plaay-discount-msg plaay-discount-msg--error';
-        }
+        setDiscountMessage(scope, 'Please enter a discount code.', 'error');
         return;
       }
-      var returnTo = encodeURIComponent(window.location.pathname + window.location.search);
-      window.location.href = '/discount/' + encodeURIComponent(code) + '?return_to=' + returnTo;
+
+      setDiscountMessage(scope, 'Applying code...', '');
+      updateCartDiscount(code, scope)
+        .then(function() {
+          setDiscountMessage(scope, 'Promo applied.', 'success');
+        })
+        .catch(function() {
+          setDiscountMessage(scope, 'Unable to apply that code.', 'error');
+        });
+    }
+
+    function removeDiscountCode(scope) {
+      setDiscountMessage(scope, 'Removing promo...', '');
+      updateCartDiscount('', scope)
+        .then(function() {
+          setDiscountMessage(scope, 'Promo removed.', 'success');
+        })
+        .catch(function() {
+          setDiscountMessage(scope, 'Unable to remove promo.', 'error');
+        });
     }
 
     document.addEventListener('click', function(e) {
       var toggle = e.target.closest && e.target.closest('.plaay-discount-toggle');
       if (toggle) {
+        var scope = toggle.closest('[data-plaay-discount-scope]');
         var body = document.getElementById('plaay-discount-body');
         if (!body) return;
         var isOpen = body.getAttribute('aria-hidden') === 'false';
@@ -164,20 +236,27 @@
         body.classList.toggle('plaay-discount-body--open', !isOpen);
         toggle.setAttribute('aria-expanded', String(!isOpen));
         if (!isOpen) {
-          var inp = document.getElementById('plaay-discount-input');
+          var inp = scope ? scope.querySelector('[data-plaay-discount-input]') : null;
           if (inp) setTimeout(function() { inp.focus(); }, 150);
         }
         return;
       }
 
-      if (e.target.closest && e.target.closest('#plaay-discount-apply')) {
-        applyDiscountCode();
+      var applyBtn = e.target.closest && e.target.closest('[data-plaay-discount-apply]');
+      if (applyBtn) {
+        applyDiscountCode(applyBtn.closest('[data-plaay-discount-scope]'));
+        return;
+      }
+
+      var removeBtn = e.target.closest && e.target.closest('[data-plaay-discount-remove]');
+      if (removeBtn) {
+        removeDiscountCode(removeBtn.closest('[data-plaay-discount-scope]') || document.querySelector('[data-plaay-discount-scope]'));
       }
     });
 
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && e.target && e.target.id === 'plaay-discount-input') {
-        applyDiscountCode();
+      if (e.key === 'Enter' && e.target && e.target.matches('[data-plaay-discount-input]')) {
+        applyDiscountCode(e.target.closest('[data-plaay-discount-scope]'));
       }
     });
 

@@ -279,6 +279,21 @@
                       {%- endfor -%}
                     </ul>
                   </div>
+                  <div class="plaay-promo-summary mt-3">
+                    <div class="plaay-promo-summary__chips">
+                      {%- for discount in cart.cart_level_discount_applications -%}
+                        <span class="plaay-promo-summary__chip">
+                          {{ discount.title }}
+                        </span>
+                      {%- endfor -%}
+                      <button
+                        type="button"
+                        class="plaay-promo-summary__remove font-walsheim-bold"
+                        data-plaay-discount-remove>
+                        Remove promo
+                      </button>
+                    </div>
+                  </div>
                 {%- endif -%}
                 <div class="flex justify-between items-center border-b border-white border-opacity-25 pb-2 border-t pt-8 mt-3 | lg:pb-6 lg:mt-8">
                   <div>{{ 'cart.total' | t }}</div>

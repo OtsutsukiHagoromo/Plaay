@@ -57,7 +57,9 @@
 
 {% comment %} for some reason, the product recommendations don't work without this, no idea why {% endcomment %}
 <quick-add data-module="quick-add"></quick-add>
-{%- render 'cart-items' -%}
+<div data-cart-page-root>
+  {%- render 'cart-items' -%}
+</div>
 
 {% schema %}
   {
