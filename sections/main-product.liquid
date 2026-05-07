@@ -497,6 +497,12 @@
     var mobileBar  = document.getElementById('plaay-sticky-mobile');
     var mobileMenu = document.querySelector('.mobile_menu');
     if (!inlineAtc) return;
+    var _initCompare = [desktopBar, mobileBar].map(function(bar) {
+      if (!bar) return { text: '', visible: false };
+      var el = bar.querySelector('.plaay-sticky-compare');
+      if (!el) return { text: '', visible: false };
+      return { text: el.textContent.trim(), visible: el.style.display !== 'none' };
+    });
 
     var isMobile = function() { return window.innerWidth < 1024; };
 
@@ -572,20 +578,7 @@
       // Compare-at sync (mobile + desktop)
       // Only override when a Bundle discount element exists;
       // for native compare_at_price products Liquid already renders correctly on load.
-      var compareEl = document.querySelector('.discount_price_exists');
-      var compareTxt = compareEl ? compareEl.textContent.trim() : '';
-      var _cmpN = parseFloat(compareTxt.replace(/[^0-9.]/g, ''));
-      var _curN = parseFloat(txt.replace(/[^0-9.]/g, ''));
-      if (isNaN(_cmpN) || isNaN(_curN) || _cmpN <= _curN) compareTxt = '';
-      if (mcp) {
-        if (compareTxt) { mcp.textContent = compareTxt; mcp.style.display = 'inline'; }
-        else { mcp.style.display = 'none'; }
-      }
-      var sc = desktopBar && desktopBar.querySelector('.plaay-sticky-compare');
-      if (sc) {
-        if (compareTxt) { sc.textContent = compareTxt; sc.style.display = ''; }
-        else { sc.style.display = 'none'; }
-      }
+      // syncPrice only updates the price text; compare visibility is managed by syncPurchaseState
     };
     syncPrice();
     document.querySelectorAll('.product_discount_price,.product_price').forEach(function(el) {
@@ -609,11 +602,12 @@
         currentPrice = (desktopBar && desktopBar.querySelector('.plaay-sticky-price') ? desktopBar.querySelector('.plaay-sticky-price').textContent : '').trim();
       }
 
+      var _subCompareText = '';
       if (isSubscription && oneTimeText.trim() && oneTimeText.trim() !== currentPrice) {
-        compareText = oneTimeText.trim();
+        _subCompareText = oneTimeText.trim();
       }
 
-      [desktopBar, mobileBar].forEach(function(bar) {
+      [desktopBar, mobileBar].forEach(function(bar, _barIdx) {
         if (!bar) return;
         var modeEl = bar.querySelector('.plaay-sticky-mode');
         var planEl = bar.querySelector('.plaay-sticky-plan');
@@ -638,12 +632,16 @@
           }
         }
         if (priceEl && currentPrice) priceEl.textContent = currentPrice;
-        if (compareEl) {
-          if (compareText && compareText !== currentPrice) {
-            compareEl.textContent = compareText;
-            compareEl.style.display = '';
-          } else {
-            compareEl.style.display = 'none';
+        if (isSubscription) {
+          if (compareEl) {
+            if (_subCompareText) { compareEl.textContent = _subCompareText; compareEl.style.display = ''; }
+            else { compareEl.style.display = 'none'; }
+          }
+        } else {
+          var _ic = _initCompare[_barIdx] || {};
+          if (compareEl) {
+            if (_ic.visible && _ic.text) { compareEl.textContent = _ic.text; compareEl.style.display = ''; }
+            else { compareEl.style.display = 'none'; }
           }
         }
         if (submitEl) submitEl.textContent = submitLabel;
