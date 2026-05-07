@@ -1,293 +1,246 @@
+{% liquid
+  assign text_color = section.settings.h_color | default: '#021D49'
+  assign bg = section.settings.bg_color | default: '#fff'
+  assign has_blocks = false
+  for block in section.blocks
+    unless block.disabled
+      if block.settings.img != blank
+        assign has_blocks = true
+      endif
+    endunless
+  endfor
+%}
+
 {% style %}
-.retailer-logos {
-    display: block;
+  .rl-{{ section.id }} {
+    background: {{ bg }};
+    padding: 64px 0 72px;
+  }
+  @media (min-width: 768px) {
+    .rl-{{ section.id }} { padding: 80px 0 96px; }
+  }
+  .rl-head-{{ section.id }} {
+    margin-bottom: 48px;
+    max-width: 640px;
+  }
+  .rl-eyebrow-{{ section.id }} {
+    font-family: walsheim-bold, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: {{ text_color }};
+    opacity: 0.45;
+    margin-bottom: 10px;
+  }
+  .rl-title-{{ section.id }} {
+    font-family: walsheim-black, sans-serif;
+    font-size: clamp(36px, 6vw, 72px);
+    line-height: 0.95;
+    color: {{ text_color }};
+    margin-bottom: 14px;
+  }
+  .rl-sub-{{ section.id }} {
+    font-family: walsheim, sans-serif;
+    font-size: 15px;
+    color: {{ text_color }};
+    opacity: 0.6;
+    line-height: 1.65;
+    max-width: 480px;
+  }
+  .rl-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (min-width: 480px) {
+    .rl-grid-{{ section.id }} { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  }
+  @media (min-width: 768px) {
+    .rl-grid-{{ section.id }} { grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  }
+  @media (min-width: 1100px) {
+    .rl-grid-{{ section.id }} { grid-template-columns: repeat(6, 1fr); gap: 20px; }
+  }
+  .rl-card-{{ section.id }} {
     position: relative;
-    padding: 80px 0;
-}
-.logos-row {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1.5px solid rgba(2,29,73,0.08);
+    overflow: hidden;
+    transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-direction: column;
+  }
+  .rl-card-{{ section.id }}.has-link:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 32px rgba(2,29,73,0.13);
+    border-color: #F9C61D;
+  }
+  .rl-card-link-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+  .rl-logo-wrap-{{ section.id }} {
+    display: flex;
     align-items: center;
-    width: 100%;
-    margin-top: 30px;
-}
-  .top-head {
-    text-align: center;
-}
-.top-head h2 {
-    font-size: 90px;
-    line-height: 1;
-    font-family: 'walsheim-black';
-}
-  .top-head img {
+    justify-content: center;
+    flex: 1;
+    padding: 16px 14px;
+    min-height: 80px;
+  }
+  @media (min-width: 768px) {
+    .rl-logo-wrap-{{ section.id }} { min-height: 96px; padding: 20px 16px; }
+  }
+  .rl-logo-wrap-{{ section.id }} img {
     display: block;
-    margin: auto;
-    width: 100%;
-    max-width: 350px;
-}
-.logo-item {
-    width: 14.28%;
-    padding: 15px 8px;
-}
-.logo-item-inner {
-    padding-bottom: 100%;
-    display: block;
-    position: relative;
-    background: #fff;
-    border-radius: 100%;
-    height: 100%;
-    overflow:hidden;
-}
-  .logo-item-inner img {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
-    width: 100%;
+    max-width: 100%;
+    max-height: 56px;
+    width: auto;
     object-fit: contain;
-    padding: 25px;
-    transition: .3s linear;
-}
-.retailer-logo-bg-inner {
-    display: block;
-    position: relative;
-}
-  .retailer-logo-bg-inner img {
-    position: absolute;
-    transition: .3s linear;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
-  .retailer-logo-bg-inner .mob-bg {
-  display:none;
-}
-  .logo-item-inner button {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    border-radius: 5px;
-    right: 0;
-    margin: auto;
-    height: max-content;
-    width: fit-content;
-    opacity: 0;
-    visibility: hidden;
-    transition: .3s linear;
-    padding: 5px 10px;
-}
-  {% for block in section.blocks %}
-  {% if block.settings.btn_url != blank %}
-  .logo-item-inner-{{ block.id }}:hover img {
-    opacity: 0;
-    visibility: hidden;
-    transition: .3s linear;
-}
-  .logo-item-inner-{{ block.id }}:hover button {
-    opacity: 1;
-    visibility: visible;
-    transition: .3s linear;
-}
-    {% endif %}
-    {% endfor %}
-  .logo-item-inner a {
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-  .logo-item-inner a button:hover {
-    background: #021D49 !important;
-    color:#fff !important;
-}
-
-@media screen and (max-width:1400px){
-   .top-head h2 {
-    font-size: 70px;
-}
-
-}
-@media screen and (max-width:1280px){
-.logo-item {
-    width: 20%;
-}
-}  
-@media screen and (max-width:1024px){
-  .retailer-logo-bg-inner {
-    padding-bottom: 103%;
-}
-  .logo-item {
-    width: 20%;
-    padding: 8px;
-}
-  .top-head h2 {
-    font-size: 60px;
-}
-}
-
-@media screen and (max-width:821px){
-  .retailer-logos {
-    margin-top: 0;
-}
-  .logo-item-inner img {
-    padding: 18px;
-}
-  .logo-item {
-    width: 25%;
-}
-}
-@media screen and (max-width:600px){
-  .top-head h2 {
-    font-size: 40px;
-}
-}
-@media screen and (max-width:500px){
-.logo-item {
-    width: 33.333%;
-}
-  .top-head img {
-    max-width: 220px;
-}
-.retailer-logos .container {
-    bottom: 60px;
-}
-.retailer-logo-bg-inner {
-    padding-bottom: 325%;
-}
-.retailer-logo-bg-inner .mob-bg {
-  display:block;
+    transition: opacity 0.2s;
   }
-.retailer-logo-bg-inner .desktop-bg {
-  display:none;
+  @media (min-width: 768px) {
+    .rl-logo-wrap-{{ section.id }} img { max-height: 64px; }
   }
-   .top-head h2 {
-    font-size: 32px;
-}
-  .logo-item-inner img {
-    padding: 14px;
-}
-  .retailer-logos {
-    padding: 40px 0;
-}
-}
-@media screen and (max-width:400px){
-
-}
+  .rl-card-foot-{{ section.id }} {
+    background: #F9C61D;
+    padding: 7px 10px;
+    text-align: center;
+    font-family: walsheim-bold, sans-serif;
+    font-size: 11px;
+    color: #021D49;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .rl-card-foot-{{ section.id }} svg { flex-shrink: 0; }
 {% endstyle %}
-<div class="retailer-logos" style="{% if section.settings.bg_color != blank %} background:{{ section.settings.bg_color }}{% endif %}">
-  {% if section.settings.bg_img != blank %}
-    <div class="retailer-logo-bg">
-      <div class="retailer-logo-bg-inner">
-        <img class="desktop-bg" src="{{ section.settings.bg_img | img_url : 'master' }}"/>
-        {% if section.settings.bg_mob != blank %}
-          <img class="mob-bg" src="{{ section.settings.bg_mob | img_url : 'master' }}"/>
-        {% endif %}  
-      </div> 
-    </div>
-  {% endif %}  
+
+{% if has_blocks %}
+<div class="rl-{{ section.id }}">
   <div class="container">
     {% if section.settings.head != blank %}
-      <div class="top-head" style="{% if section.settings.h_color != blank %}color:{{ section.settings.h_color }}{% endif %}">
-        <h2>{{ section.settings.head }} </h2>
-        {% if section.settings.line != blank %}
-          <img src="{{ section.settings.line | img_url : 'master' }}"/>
+      <div class="rl-head-{{ section.id }}">
+        {% if section.settings.eyebrow != blank %}
+          <p class="rl-eyebrow-{{ section.id }}">{{ section.settings.eyebrow }}</p>
+        {% endif %}
+        <h2 class="rl-title-{{ section.id }}">{{ section.settings.head }}</h2>
+        {% if section.settings.subtitle != blank %}
+          <p class="rl-sub-{{ section.id }}">{{ section.settings.subtitle }}</p>
         {% endif %}
       </div>
     {% endif %}
-    <div class="logos-row">
+
+    <div class="rl-grid-{{ section.id }}">
       {% for block in section.blocks %}
-        <div class="logo-item">
-          <div class="logo-item-inner logo-item-inner-{{ block.id }}">
-            {% if block.settings.btn_url != blank %}
-              <a href="{{ block.settings.btn_url }}" target="_blank">
-            {% endif %}
-            {% if block.settings.img != blank %}
-              <img src="{{ block.settings.img | img_url : '180x' }}"/>
-            {% endif %}
-            {% if block.settings.btn_url != blank %}
-              <button class="blue border btn logo-btn">Shop Now </button>
-            {% endif %}
-            {% if block.settings.btn_url != blank %}
-              </a>
-            {% endif %}  
-          </div>
-        </div>
+        {% unless block.disabled %}
+          {% if block.settings.img != blank %}
+            {%- assign has_url = false -%}
+            {%- if block.settings.btn_url != blank -%}
+              {%- assign has_url = true -%}
+            {%- endif -%}
+            <div
+              class="rl-card-{{ section.id }}{% if has_url %} has-link{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              {% if has_url %}
+                <a
+                  href="{{ block.settings.btn_url }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="rl-card-link-{{ section.id }}"
+                  aria-label="Shop {{ block.settings.retailer_name | default: '' }} on external site"
+                ></a>
+              {% endif %}
+              <div class="rl-logo-wrap-{{ section.id }}">
+                <img
+                  src="{{ block.settings.img | img_url: '240x' }}"
+                  alt="{{ block.settings.retailer_name | default: 'Retailer' }}"
+                  loading="lazy"
+                  width="240"
+                >
+              </div>
+              {% if has_url %}
+                <div class="rl-card-foot-{{ section.id }}">
+                  <span>Shop</span>
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                    <path d="M2 8L8 2M8 2H4M8 2V6" stroke="#021D49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endunless %}
       {% endfor %}
     </div>
   </div>
 </div>
+{% endif %}
+
 {% schema %}
-  {
-    "name": "Retailer Logos",
-    "settings": [
-    {
-      "type": "image_picker",
-      "id": "bg_img",
-      "info": "Background Image",
-      "label": "BG Image Desktop"
-    },
-    {
-      "type": "image_picker",
-      "id": "bg_mob",
-      "info": "Background Image",
-      "label": "BG Image Mobile"
-    },
+{
+  "name": "Retailer Logos",
+  "settings": [
     {
       "type": "color",
       "id": "bg_color",
-      "label": "Section BG Color"
+      "label": "Section background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "h_color",
+      "label": "Heading color",
+      "default": "#021D49"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow text (above heading)"
     },
     {
       "type": "text",
       "id": "head",
-      "label": "Section Heading"
+      "label": "Section heading"
     },
     {
-       "type": "color",
-      "id": "h_color",
-      "label": "Heading Color"
-    },
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Subtitle (below heading)"
+    }
+  ],
+  "blocks": [
     {
-      "type": "image_picker",
-      "id": "line",
-      "label": "Heading Bottom Line"
-    },
-      
-    ],
-    "blocks":[
-  {
-    "type": "gallery",
-    "name": "Logo",
-    "settings":[
-      {
-        "type": "image_picker",
-        "id": "img",
-        "label": "Logo"
-      },
-      {
-        "type": "url",
-        "id": "btn_url",
-        "label": "Logo Url"
-      }
-    ]
-  }
-],
-      "presets": [
+      "type": "gallery",
+      "name": "Retailer Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "img",
+          "label": "Logo image"
+        },
+        {
+          "type": "text",
+          "id": "retailer_name",
+          "label": "Retailer name (for accessibility)"
+        },
+        {
+          "type": "url",
+          "id": "btn_url",
+          "label": "Shop link URL (shows Shop badge if set)"
+        }
+      ]
+    }
+  ],
+  "presets": [
     {
-      "name": "Retailer Logos",
+      "name": "Retailer Logos"
     }
   ]
-  }
+}
 {% endschema %}
