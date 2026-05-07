@@ -1092,7 +1092,7 @@
         }
         if (priceEl && currentPrice) priceEl.textContent = currentPrice;
         setCompare(compareEl, compareText);
-        if (submitEl && currentPrice) submitEl.textContent = currentPrice + ' | ' + submitLabel;
+        if (submitEl) submitEl.textContent = submitLabel;
       });
       buildStickyFrequencyOptions();
     }

@@ -639,7 +639,7 @@
           compareEl.textContent = compareText;
           compareEl.style.display = '';
         }
-        if (submitEl && currentPrice) submitEl.textContent = currentPrice + ' | ' + submitLabel;
+        if (submitEl) submitEl.textContent = submitLabel;
       });
     }
     syncPurchaseState();
