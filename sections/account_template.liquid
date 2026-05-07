@@ -19,14 +19,14 @@
         <div class="overflow-hidden all-accounts-container | lg:w-3/4 lg:ml-8">
           {% if customer.orders.size != 0 %}
             {% assign latest_order = customer.orders.first %}
-            {% capture latest_reorder_path %}
-              /cart/
-              {%- for item in latest_order.line_items -%}
-                {%- if item.variant_id != blank and item.quantity > 0 -%}
-                  {{ item.variant_id }}:{{ item.quantity }}{% unless forloop.last %},{% endunless %}
-                {%- endif -%}
-              {%- endfor -%}
-            {% endcapture %}
+            {%- assign _lri = '' -%}
+            {%- for item in latest_order.line_items -%}
+              {%- if item.variant_id != blank and item.quantity > 0 -%}
+                {%- if _lri != '' -%}{%- assign _lri = _lri | append: ',' -%}{%- endif -%}
+                {%- assign _lri = _lri | append: '{"id":' | append: item.variant_id | append: ',"quantity":' | append: item.quantity | append: '}' -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- assign latest_reorder_json = '[' | append: _lri | append: ']' -%}
             <div class="rounded-[28px] bg-dark-blue px-6 py-7 text-white mb-8 | lg:px-10 lg:py-9">
               <div class="flex flex-col gap-5 | lg:flex-row lg:items-end lg:justify-between">
                 <div class="max-w-xl">
@@ -35,7 +35,12 @@
                   <p class="text-sm opacity-80 mt-3 font-walsheim">Order #{{ latest_order.order_number }} from {{ latest_order.created_at | date: "%b %d, %Y" }} is ready to be added back to cart.</p>
                 </div>
                 <div class="flex flex-col gap-3 | lg:items-end">
-                  {% render 'btn', href: latest_reorder_path | strip, width: 'small', style: 'yellow', copy: 'Order Again', no_translation: true, additional_class: 'min-w-[210px] text-center' %}
+                  <button type="button" class="btn relative font-walsheim-medium flex items-center transition-all px-3 uppercase py-3 duration-200 text-sm justify-center border rounded-md yellow w-44 min-w-[210px] text-center" data-plaay-reorder='{{ latest_reorder_json }}'>
+                    <div class="flex items-center w-full justify-center">
+                      <span class="hidden">{{ 'action.seo' | t }}</span>
+                      Reorder
+                    </div>
+                  </button>
                   <a href="{{ latest_order.customer_url }}" class="text-white text-xs uppercase tracking-[0.18em] opacity-75 underline underline-offset-4">Review last order</a>
                 </div>
               </div>
@@ -119,17 +124,22 @@
                             </span>
                           </div>
                         </div>
-                        {% capture reorder_path %}
-                          /cart/
-                          {%- for item in customer_order.line_items -%}
-                            {%- if item.variant_id != blank and item.quantity > 0 -%}
-                              {{ item.variant_id }}:{{ item.quantity }}{% unless forloop.last %},{% endunless %}
-                            {%- endif -%}
-                          {%- endfor -%}
-                        {% endcapture %}
+                        {%- assign _ori = '' -%}
+                        {%- for item in customer_order.line_items -%}
+                          {%- if item.variant_id != blank and item.quantity > 0 -%}
+                            {%- if _ori != '' -%}{%- assign _ori = _ori | append: ',' -%}{%- endif -%}
+                            {%- assign _ori = _ori | append: '{"id":' | append: item.variant_id | append: ',"quantity":' | append: item.quantity | append: '}' -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                        {%- assign order_reorder_json = '[' | append: _ori | append: ']' -%}
                         <div class="flex flex-col gap-2 w-1/2 ml-2">
                           {% render 'btn', href: customer_order.customer_url, width: 'small', style: 'blue', copy: 'account.account-area.view-order', additional_class: 'flex w-full justify-center' %}
-                          {% render 'btn', href: reorder_path | strip, width: 'small', style: 'blue-border', copy: 'Order Again', no_translation: true, additional_class: 'flex w-full justify-center' %}
+                          <button type="button" class="btn relative font-walsheim-medium flex items-center transition-all px-3 uppercase py-3 duration-200 text-sm justify-center border rounded-md blue-border w-44 flex w-full justify-center" data-plaay-reorder='{{ order_reorder_json }}'>
+                            <div class="flex items-center w-full justify-center">
+                              <span class="hidden">{{ 'action.seo' | t }}</span>
+                              Reorder
+                            </div>
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -158,6 +168,56 @@
     </div>
   </div>
 </account-area>
+
+<script>
+  (function() {
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('[data-plaay-reorder]');
+      if (!btn || btn.disabled) return;
+
+      var items;
+      try { items = JSON.parse(btn.getAttribute('data-plaay-reorder')); }
+      catch(err) { return; }
+      if (!items || !items.length) return;
+
+      btn.disabled = true;
+      var labelDiv = btn.querySelector('div');
+      var originalLabel = labelDiv ? labelDiv.innerText.trim() : 'Reorder';
+      if (labelDiv) labelDiv.innerText = 'Adding…';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ items: items })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function() {
+        if (window.plaayRefreshCartDrawer) return window.plaayRefreshCartDrawer();
+      })
+      .then(function() {
+        btn.disabled = false;
+        if (labelDiv) labelDiv.innerText = originalLabel;
+        var sd = document.querySelector('site-drawers');
+        if (sd && sd.activeDrawer !== undefined) {
+          sd.activeDrawer = 'cart';
+        } else {
+          var cd = document.querySelector('cart-drawer');
+          if (cd) {
+            cd.classList.add('active');
+            document.body.classList.add('overflow-hidden');
+          }
+        }
+      })
+      .catch(function() {
+        btn.disabled = false;
+        if (labelDiv) {
+          labelDiv.innerText = 'Try again';
+          setTimeout(function() { labelDiv.innerText = originalLabel; }, 2000);
+        }
+      });
+    });
+  })();
+</script>
 
 
 {% schema %}
