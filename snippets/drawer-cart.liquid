@@ -171,7 +171,7 @@
       msgEl.className = 'plaay-discount-msg' + (type ? ' plaay-discount-msg--' + type : '');
     }
 
-    function updateCartDiscount(discountCode, scope) {
+    function updateCartDiscount(discountCode) {
       return fetch('/cart/update.js', {
         method: 'POST',
         headers: {
@@ -190,8 +190,12 @@
           if (window.plaayTierBar) {
             window.plaayTierBar.update(cart.total_price);
           }
-          return refreshVisibleCart();
+          return refreshVisibleCart().then(function() { return cart; });
         });
+    }
+
+    function liveScope() {
+      return document.querySelector('[data-plaay-discount-scope]');
     }
 
     function applyDiscountCode(scope) {
@@ -205,23 +209,32 @@
       }
 
       setDiscountMessage(scope, 'Applying code...', '');
-      updateCartDiscount(code, scope)
-        .then(function() {
-          setDiscountMessage(scope, 'Promo applied.', 'success');
+      updateCartDiscount(code)
+        .then(function(cart) {
+          var s = liveScope() || scope;
+          var applied = cart && (
+            (cart.cart_level_discount_applications && cart.cart_level_discount_applications.length > 0) ||
+            cart.total_discount > 0
+          );
+          if (applied) {
+            setDiscountMessage(s, 'Promo applied.', 'success');
+          } else {
+            setDiscountMessage(s, 'That code is not valid or not applicable to your cart.', 'error');
+          }
         })
         .catch(function() {
-          setDiscountMessage(scope, 'Unable to apply that code.', 'error');
+          setDiscountMessage(liveScope() || scope, 'Unable to apply that code.', 'error');
         });
     }
 
     function removeDiscountCode(scope) {
       setDiscountMessage(scope, 'Removing promo...', '');
-      updateCartDiscount('', scope)
+      updateCartDiscount('')
         .then(function() {
-          setDiscountMessage(scope, 'Promo removed.', 'success');
+          setDiscountMessage(liveScope() || scope, 'Promo removed.', 'success');
         })
         .catch(function() {
-          setDiscountMessage(scope, 'Unable to remove promo.', 'error');
+          setDiscountMessage(liveScope() || scope, 'Unable to remove promo.', 'error');
         });
     }
 
