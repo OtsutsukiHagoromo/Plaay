@@ -49,9 +49,16 @@
       transform: rotate(45deg);
     }
   }
+  .navigation_search {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
   .navigation_search.active {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
   }
   @media only screen and (max-width: 1023px) {
     .dropdown_parent.active .dropdown_menu {
@@ -177,7 +184,7 @@
               action="/search"
               method="get"
               role="search"
-              class="search navigation_search plaay-search-panel invisible transition-all duration-200 origin-top-right transform opacity-0 absolute top-[calc(100%+16px)] right-0 rounded-[22px]"
+              class="search navigation_search plaay-search-panel absolute top-[calc(100%+16px)] right-0 rounded-[22px]"
               data-search-panel>
               <div class="plaay-search-panel__shell">
                 <label class="plaay-search-panel__label" for="desktop-search-input-{{ section.id }}">Search Plaay</label>
@@ -399,7 +406,7 @@
         action="/search"
         method="get"
         role="search"
-        class="search navigation_search invisible transition-all duration-200 origin-top-left transform opacity-0 min-w-[300px] border-b border-black border-opacity-10 py-5 bg-white"
+        class="search navigation_search min-w-[300px] border-b border-black border-opacity-10 py-5 bg-white"
         data-search-root="mobile-panel"
         data-search-panel>
         <input
@@ -448,25 +455,16 @@
 </script>
 
 <script>
-  (function () {
-    var desktopRoot = document.querySelector('[data-search-root="desktop"]');
-    var mobileTriggerRoot = document.querySelector('[data-search-root="mobile-toggle"]');
-    var mobilePanel = document.querySelector('[data-search-root="mobile-panel"]');
+  document.addEventListener('DOMContentLoaded', function() {
     var bindings = [];
 
     function setPanelState(panel, trigger, open) {
       if (!panel || !trigger) return;
       panel.classList.toggle('active', open);
-      panel.classList.toggle('invisible', !open);
-      panel.classList.toggle('opacity-0', !open);
-      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      trigger.setAttribute('aria-expanded', String(open));
       if (open) {
         var input = panel.querySelector('input[type="search"]');
-        if (input) {
-          setTimeout(function () {
-            input.focus();
-          }, 20);
-        }
+        if (input) setTimeout(function() { input.focus(); }, 20);
       }
     }
 
@@ -482,39 +480,34 @@
         event.preventDefault();
         event.stopPropagation();
         var isOpen = panel.classList.contains('active');
-
-        bindings.forEach(function(binding) {
-          setPanelState(binding.panel, binding.trigger, false);
-        });
-
+        bindings.forEach(function(b) { setPanelState(b.panel, b.trigger, false); });
         setPanelState(panel, trigger, !isOpen);
       });
 
-      panel.addEventListener('click', function(event) {
-        event.stopPropagation();
-      });
+      panel.addEventListener('click', function(event) { event.stopPropagation(); });
     }
 
-    bindSearch(desktopRoot);
-    bindSearch(mobileTriggerRoot, mobilePanel);
+    bindSearch(document.querySelector('[data-search-root="desktop"]'));
+    bindSearch(
+      document.querySelector('[data-search-root="mobile-toggle"]'),
+      document.querySelector('[data-search-root="mobile-panel"]')
+    );
 
     if (!bindings.length) return;
 
     document.addEventListener('click', function(event) {
-      bindings.forEach(function(binding) {
-        if (!binding.root.contains(event.target) && !binding.panel.contains(event.target)) {
-          setPanelState(binding.panel, binding.trigger, false);
+      bindings.forEach(function(b) {
+        if (!b.root.contains(event.target) && !b.panel.contains(event.target)) {
+          setPanelState(b.panel, b.trigger, false);
         }
       });
     });
 
     document.addEventListener('keydown', function(event) {
       if (event.key !== 'Escape') return;
-      bindings.forEach(function(binding) {
-        setPanelState(binding.panel, binding.trigger, false);
-      });
+      bindings.forEach(function(b) { setPanelState(b.panel, b.trigger, false); });
     });
-  })();
+  });
 </script>
 
 {% schema %}
