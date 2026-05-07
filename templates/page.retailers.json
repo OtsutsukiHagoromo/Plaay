@@ -1,17 +1,26 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
       "type": "retailers-hero",
       "settings": {
-        "bg_color": "#F9C61D",
-        "text_color": "#021D49",
+        "bg_color": "#f9c61d",
+        "text_color": "#021d49",
         "eyebrow": "Find us near you",
         "headline": "Where we're Plaayin'",
         "subheadline": "Find Plaay at your favourite stores, delivery platforms, cafes, and hotels across the UAE.",
         "cta_label": "Become a Retailer",
         "cta_url": "/pages/contact",
-        "cta_bg": "#021D49",
-        "cta_color": "#F9C61D",
+        "cta_bg": "#021d49",
+        "cta_color": "#f9c61d",
         "stat_1_num": "25+",
         "stat_1_label": "Retail partners",
         "stat_2_num": "5",
@@ -99,8 +108,8 @@
         "gallery_U499Wy"
       ],
       "settings": {
-        "bg_color": "#021D49",
-        "h_color": "#F9C61D",
+        "bg_color": "#021d49",
+        "h_color": "#f9c61d",
         "eyebrow": "Order from your couch",
         "head": "Delivered to your doorstep",
         "subtitle": "Order Plaay through your favourite delivery apps and online grocery platforms."
@@ -122,7 +131,7 @@
           "settings": {
             "img": "shopify://shop_images/Spinneys-Logo-Vector_svg.png",
             "retailer_name": "Spinneys",
-            "btn_url": "https://www.spinneys.com/en-ae/search/?q=Plaay"
+            "btn_url": ""
           }
         },
         "gallery_JAHyLq": {
@@ -130,7 +139,7 @@
           "settings": {
             "img": "shopify://shop_images/Waitrose_Logo_svg.png",
             "retailer_name": "Waitrose",
-            "btn_url": "https://www.waitrose.ae/en/search/?q=plaay"
+            "btn_url": ""
           }
         },
         "gallery_UwqhBi": {
@@ -138,7 +147,7 @@
           "settings": {
             "img": "shopify://shop_images/choitrams.png",
             "retailer_name": "Choithrams",
-            "btn_url": "https://www.choithrams.com/"
+            "btn_url": ""
           }
         },
         "gallery_ERHMYi": {
@@ -146,7 +155,7 @@
           "settings": {
             "img": "shopify://shop_images/grandiose.png",
             "retailer_name": "Grandiose",
-            "btn_url": "https://www.grandiose.ae/search/?q=plaay"
+            "btn_url": ""
           }
         },
         "gallery_Kbxpa6": {
@@ -230,8 +239,8 @@
         "gallery_teGcTi"
       ],
       "settings": {
-        "bg_color": "#F9C61D",
-        "h_color": "#021D49",
+        "bg_color": "#f9c61d",
+        "h_color": "#021d49",
         "eyebrow": "Grab it on the go",
         "head": "Now in store",
         "subtitle": "Pick up Plaay at supermarkets and convenience stores near you across the UAE."
@@ -370,13 +379,18 @@
         "gallery_TEFBAR"
       ],
       "settings": {
-        "bg_color": "#021D49",
-        "h_color": "#F9C61D",
+        "bg_color": "#021d49",
+        "h_color": "#f9c61d",
         "eyebrow": "Cafes, hotels & wellness",
         "head": "Where life happens",
         "subtitle": "Enjoy Plaay at some of the UAE's best hotels, cafes, and fitness studios."
       }
     }
   },
-  "order": ["hero", "delivery", "instore", "lifestyle"]
+  "order": [
+    "hero",
+    "delivery",
+    "instore",
+    "lifestyle"
+  ]
 }

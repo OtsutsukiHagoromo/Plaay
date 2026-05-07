@@ -154,15 +154,14 @@
       ],
       "settings": {
         "hero_bg": "#F9C61D",
-        "steps_bg": "#F5F3EE",
         "eyebrow": "Delivery Information",
         "headline": "Shipping & Delivery",
         "subheadline": "Fresh, clean chocolate — delivered across the UAE to your door.",
         "highlights_heading": "What to expect",
+        "steps_bg": "#F5F3EE",
         "steps_heading": "How it works",
         "zones_heading": "Delivery Zones",
         "zones_subheading": "We currently deliver across the UAE. Orders over AED 75 ship free.",
-        "zones_note": "Deliveries operate Monday–Saturday, excluding public holidays.",
         "faq_heading": "Shipping FAQs",
         "cta_heading": "Still have questions?",
         "cta_text": "Our team is here to help. Reach out and we'll get back to you quickly.",
@@ -171,5 +170,7 @@
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

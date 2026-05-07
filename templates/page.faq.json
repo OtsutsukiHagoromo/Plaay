@@ -30,7 +30,9 @@
           "blocks": {}
         }
       },
-      "block_order": ["ai_gen_block_900bb11_Nf7aHR"],
+      "block_order": [
+        "ai_gen_block_900bb11_Nf7aHR"
+      ],
       "settings": {}
     },
     "product_faqs_KFEcRJ": {
@@ -223,10 +225,13 @@
       "settings": {
         "title": "FAQs",
         "subtitle": "Everything you need to know about Plaay.",
-        "show_search": true,
         "background_color": "#f9c61d"
       }
     }
   },
-  "order": ["main", "17704523438f69e569", "product_faqs_KFEcRJ"]
+  "order": [
+    "main",
+    "17704523438f69e569",
+    "product_faqs_KFEcRJ"
+  ]
 }
