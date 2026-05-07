@@ -4596,6 +4596,23 @@ footer content-accordion .footer-accordion__trigger > span:first-child {
   box-shadow: 0 8px 32px rgba(2, 29, 73, 0.18);
 }
 
+/* Search results grid — override broken Tailwind grid-cols-2 duplicate */
+.template-search .collection {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+}
+@media (min-width: 640px) {
+  .template-search .collection {
+    gap: 1.5rem !important;
+  }
+}
+@media (min-width: 1024px) {
+  .template-search .collection {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 2.5rem !important;
+  }
+}
+
 .header__icon--cart {
   flex-shrink: 0;
 }
