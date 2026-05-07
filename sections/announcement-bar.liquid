@@ -9,34 +9,68 @@
 %}
 
 {% style %}
-  .announcement_bar{
+  .announcement_bar {
     background-color: {{ background_color }};
-    min-height: 44px;
+    min-height: 40px;
   }
   .announcement_bar .container {
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
   }
   .announcement_bar__track {
     position: relative;
+    overflow: hidden;
   }
   .announcement_bar__slide {
     color: var(--announcement-text-color);
     display: none;
-    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.2;
+    line-height: 1;
+    height: 40px;
+    align-items: center;
   }
   .announcement_bar__slide.is-active {
-    display: block;
+    display: flex;
   }
-  @media only screen and (max-width: 768px){
-    .announcement_bar{
+  .announcement_bar__marquee {
+    display: inline-flex;
+    align-items: center;
+    animation: plaay-marquee var(--marquee-duration, 24s) linear infinite;
+    will-change: transform;
+  }
+  .announcement_bar__slide:hover .announcement_bar__marquee {
+    animation-play-state: paused;
+  }
+  .announcement_bar__marquee-text {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    padding-right: 56px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+  }
+  .announcement_bar__sep {
+    display: inline-block;
+    margin: 0 28px 0 0;
+    opacity: 0.5;
+    font-size: 10px;
+  }
+  @keyframes plaay-marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media only screen and (max-width: 768px) {
+    .announcement_bar {
       background-color: {{ background_color_mobile }};
     }
     .announcement_bar__slide {
       color: var(--announcement-text-color-mobile, var(--announcement-text-color));
+    }
+    .announcement_bar__marquee-text {
+      font-size: 11px;
     }
   }
 {% endstyle %}
@@ -54,12 +88,19 @@
                 assign text_style = block.settings.text_style
               %}
               {% if text != blank %}
+                {%- assign char_count = text | size -%}
+                {%- assign marquee_duration = char_count | times: 120 | divided_by: 10 -%}
+                {%- if marquee_duration < 12 -%}{%- assign marquee_duration = 12 -%}{%- endif -%}
+                {%- if marquee_duration > 40 -%}{%- assign marquee_duration = 40 -%}{%- endif -%}
                 <div
-                  class="announcement_bar__slide text-sm text-center font-bold transition-all duration-500 {{ text_style }}{% if forloop.first %} is-active{% endif %}"
-                  style="--announcement-text-color: {{ text_color }}; --announcement-text-color-mobile: {{ text_color_mobile }};"
+                  class="announcement_bar__slide font-bold {{ text_style }}{% if forloop.first %} is-active{% endif %}"
+                  style="--announcement-text-color: {{ text_color }}; --announcement-text-color-mobile: {{ text_color_mobile }}; --marquee-duration: {{ marquee_duration }}s;"
                   {{ block.shopify_attributes }}
                 >
-                  {{ text }}
+                  <div class="announcement_bar__marquee" aria-label="{{ text | escape }}">
+                    <span class="announcement_bar__marquee-text">{{ text }}<span class="announcement_bar__sep" aria-hidden="true">✦</span></span>
+                    <span class="announcement_bar__marquee-text" aria-hidden="true">{{ text }}<span class="announcement_bar__sep" aria-hidden="true">✦</span></span>
+                  </div>
                 </div>
               {% endif %}
             {% endfor %}
