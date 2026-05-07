@@ -1072,6 +1072,59 @@
         "hide_atc_on_tiles": false
       }
     },
+    "marquee_slider_H7hNaz": {
+      "type": "marquee-slider",
+      "blocks": {
+        "logo_cDma4D": {
+          "type": "logo",
+          "settings": {
+            "icon_text": "No Refined Sugars",
+            "com_logo": "shopify://shop_images/No_Refined_Sugar_a4ac9eb7-cf82-4ad5-8d9d-adb7da76d30a.png"
+          }
+        },
+        "logo_mkALDF": {
+          "type": "logo",
+          "settings": {
+            "icon_text": "100% Clean Ingredients",
+            "com_logo": "shopify://shop_images/100_Clean_Ingredient.png"
+          }
+        },
+        "logo_MmHFMD": {
+          "type": "logo",
+          "settings": {
+            "icon_text": "Nutritionist Founded",
+            "com_logo": "shopify://shop_images/Nutriotionist_Founded.png"
+          }
+        },
+        "logo_QXaPrM": {
+          "type": "logo",
+          "settings": {
+            "icon_text": "Everyday Indulgence",
+            "com_logo": "shopify://shop_images/Everyday_Indulgence.png"
+          }
+        },
+        "logo_FGKrxQ": {
+          "type": "logo",
+          "settings": {
+            "icon_text": "Made in UAE",
+            "com_logo": "shopify://shop_images/Made_in_UAE.png"
+          }
+        }
+      },
+      "block_order": [
+        "logo_cDma4D",
+        "logo_mkALDF",
+        "logo_MmHFMD",
+        "logo_QXaPrM",
+        "logo_FGKrxQ"
+      ],
+      "custom_css": [],
+      "settings": {
+        "gap": 30,
+        "duration": 20,
+        "background_color": "#021d49"
+      }
+    },
     "17718262497155cfae": {
       "type": "_blocks",
       "blocks": {
@@ -1185,59 +1238,6 @@
         "ai_gen_block_a27751e_8nfrLx"
       ],
       "settings": {}
-    },
-    "marquee_slider_H7hNaz": {
-      "type": "marquee-slider",
-      "blocks": {
-        "logo_cDma4D": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "No Refined Sugars",
-            "com_logo": "shopify://shop_images/No_Refined_Sugar_a4ac9eb7-cf82-4ad5-8d9d-adb7da76d30a.png"
-          }
-        },
-        "logo_mkALDF": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "100% Clean Ingredients",
-            "com_logo": "shopify://shop_images/100_Clean_Ingredient.png"
-          }
-        },
-        "logo_MmHFMD": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "Nutritionist Founded",
-            "com_logo": "shopify://shop_images/Nutriotionist_Founded.png"
-          }
-        },
-        "logo_QXaPrM": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "Everyday Indulgence",
-            "com_logo": "shopify://shop_images/Everyday_Indulgence.png"
-          }
-        },
-        "logo_FGKrxQ": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "Made in UAE",
-            "com_logo": "shopify://shop_images/Made_in_UAE.png"
-          }
-        }
-      },
-      "block_order": [
-        "logo_cDma4D",
-        "logo_mkALDF",
-        "logo_MmHFMD",
-        "logo_QXaPrM",
-        "logo_FGKrxQ"
-      ],
-      "custom_css": [],
-      "settings": {
-        "gap": 30,
-        "duration": 20,
-        "background_color": "#021d49"
-      }
     },
     "173589700867b1c6b5": {
       "type": "apps",
@@ -2610,6 +2610,7 @@
     },
     "e6d51720-1295-476b-9afe-9dcb07476eec": {
       "type": "instafeed-slider",
+      "disabled": true,
       "settings": {
         "title": "Straight From The Feed",
         "description": "The latest buzz from the Plaayground—see what everyoneʼs loving!",
