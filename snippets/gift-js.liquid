@@ -1,79 +1,209 @@
 <script>
-function updategift() {
-  setTimeout(() => {
-    fetch('/cart.js')
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to fetch cart');
-        return response.json();
-      })
-      .then(cart => {
-        var targetVariantIds = [
-            {% for product in settings.Sample_product %}
-                {{ product.selected_or_first_available_variant.id }},
-            {% endfor %}
-            ];
+(function() {
+  if (window.plaayMysteryGiftReady) return;
+  window.plaayMysteryGiftReady = true;
 
-        var total_items = cart.item_count;
+  var GIFT_VARIANT_ID = 48526560592089;
+  var GIFT_THRESHOLD = {{ settings.cart_tier_1_spend | default: 250 | times: 100 }};
+  var SYNC_DELAY = 350;
+  var syncTimer = null;
+  var syncing = false;
 
-        var variantsInCart = cart.items.filter(item => targetVariantIds.includes(item.variant_id));
-        var variantsNotInCart = targetVariantIds.filter(id => !variantsInCart.some(item => item.variant_id === id));
+  function isCartMutation(url) {
+    return /\/cart\/(add|change|update|clear)(\.js)?(\?|$)/.test(String(url || ''));
+  }
 
-        variantsInCart.forEach(item => {
-            total_items -= item.quantity;
-        });
-        if (variantsNotInCart.length > 0 && total_items > 0) {
-            var itemsToAdd = variantsNotInCart.map(id => ({ id: id, quantity: 1 }));
-            addMultipleToCart(itemsToAdd);
-        } else if (variantsInCart.length > 0 && total_items == 0) {
-            clearCart();
-        }
-      })
-      .catch(error => {
-        console.error('Error fetching cart:', error);
-      });
-
-  }, 700);
-}
-
-function addMultipleToCart(products) {
-  fetch('/cart/add.js', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    },
-    body: JSON.stringify({ items: products })
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Products added:', data);
-    {% comment %} alert('Products added to your cart!'); {% endcomment %}
-  })
-  .catch(error => {
-    console.error('Error adding products:', error);
-  });
-}
-
-function clearCart() {
-  fetch('/cart/clear.js', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
+  function refreshCartUi(totalPrice) {
+    if (window.plaayTierBar && typeof totalPrice === 'number') {
+      window.plaayTierBar.update(totalPrice);
     }
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Cart cleared:', data);
-    {% comment %} alert('All products removed from your cart!'); {% endcomment %}
-  })
-  .catch(error => {
-    console.error('Error clearing cart:', error);
+
+    if (window.plaayRefreshCartDrawer) {
+      window.plaayRefreshCartDrawer().catch(function() {});
+    }
+
+    if (window.plaayRefreshCartPage) {
+      window.plaayRefreshCartPage().catch(function() {});
+    }
+  }
+
+  function fetchCart() {
+    return fetch('/cart.js', {
+      headers: {
+        'Accept': 'application/json'
+      }
+    }).then(function(response) {
+      if (!response.ok) throw new Error('Failed to fetch cart');
+      return response.json();
+    });
+  }
+
+  function cartChange(payload) {
+    return fetch('/cart/change.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    }).then(function(response) {
+      if (!response.ok) throw new Error('Failed to change cart');
+      return response.json();
+    });
+  }
+
+  function addGift() {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        items: [
+          {
+            id: GIFT_VARIANT_ID,
+            quantity: 1,
+            properties: {
+              '_plaay_reward': 'Mystery Gift'
+            }
+          }
+        ]
+      })
+    }).then(function(response) {
+      if (!response.ok) throw new Error('Failed to add mystery gift');
+      return response.json();
+    });
+  }
+
+  function getGiftLines(cart) {
+    return (cart.items || []).filter(function(item) {
+      return Number(item.variant_id) === GIFT_VARIANT_ID;
+    });
+  }
+
+  function getQualifyingSubtotal(cart) {
+    return (cart.items || []).reduce(function(sum, item) {
+      if (Number(item.variant_id) === GIFT_VARIANT_ID) return sum;
+      return sum + Number(item.final_line_price || 0);
+    }, 0);
+  }
+
+  function normalizeGiftQuantity(giftLines) {
+    if (!giftLines.length) return Promise.resolve(null);
+
+    var actions = [];
+    giftLines.forEach(function(line, index) {
+      var targetQty = index === 0 ? 1 : 0;
+      if (Number(line.quantity) !== targetQty) {
+        actions.push(cartChange({
+          id: line.key,
+          quantity: targetQty
+        }));
+      }
+    });
+
+    return Promise.all(actions);
+  }
+
+  function removeGift(giftLines) {
+    if (!giftLines.length) return Promise.resolve(null);
+
+    return Promise.all(giftLines.map(function(line) {
+      return cartChange({
+        id: line.key,
+        quantity: 0
+      });
+    }));
+  }
+
+  function syncMysteryGift() {
+    if (syncing) return;
+    syncing = true;
+
+    fetchCart()
+      .then(function(cart) {
+        var qualifyingSubtotal = getQualifyingSubtotal(cart);
+        var giftLines = getGiftLines(cart);
+        var giftQty = giftLines.reduce(function(sum, line) {
+          return sum + Number(line.quantity || 0);
+        }, 0);
+        var qualifies = qualifyingSubtotal >= GIFT_THRESHOLD;
+
+        if (qualifies && giftQty === 0) {
+          return addGift()
+            .then(fetchCart)
+            .then(function(nextCart) {
+              refreshCartUi(nextCart.total_price);
+            });
+        }
+
+        if (qualifies && giftQty > 1) {
+          return normalizeGiftQuantity(giftLines)
+            .then(fetchCart)
+            .then(function(nextCart) {
+              refreshCartUi(nextCart.total_price);
+            });
+        }
+
+        if (!qualifies && giftQty > 0) {
+          return removeGift(giftLines)
+            .then(fetchCart)
+            .then(function(nextCart) {
+              refreshCartUi(nextCart.total_price);
+            });
+        }
+
+        refreshCartUi(cart.total_price);
+        return null;
+      })
+      .catch(function(error) {
+        console.error('Plaay mystery gift sync failed:', error);
+      })
+      .finally(function() {
+        syncing = false;
+      });
+  }
+
+  function scheduleSync(delay) {
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(syncMysteryGift, typeof delay === 'number' ? delay : SYNC_DELAY);
+  }
+
+  if (!window.plaayMysteryGiftFetchPatched) {
+    window.plaayMysteryGiftFetchPatched = true;
+    var originalFetch = window.fetch;
+
+    window.fetch = function(input, init) {
+      var url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
+      var request = originalFetch.apply(this, arguments);
+
+      if (isCartMutation(url)) {
+        request.then(function() {
+          scheduleSync();
+        }).catch(function() {});
+      }
+
+      return request;
+    };
+  }
+
+  window.plaaySyncMysteryGift = scheduleSync;
+
+  document.addEventListener('rebuy:cart.change', function() {
+    scheduleSync();
   });
-}
 
+  document.addEventListener('cart:refresh', function() {
+    scheduleSync();
+  });
 
-
-updategift();
-document.addEventListener("rebuy:cart.change", updategift);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      scheduleSync(600);
+    }, { once: true });
+  } else {
+    scheduleSync(600);
+  }
+})();
 </script>
