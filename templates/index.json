@@ -998,6 +998,80 @@
         "background_color": "#021d49"
       }
     },
+    "featured_products_F9JTBW": {
+      "type": "featured_products",
+      "blocks": {
+        "product_ExgAbw": {
+          "type": "product",
+          "settings": {
+            "product": "og-plaayer-pack"
+          }
+        },
+        "product_mEtgqD": {
+          "type": "product",
+          "settings": {
+            "product": "70-dark-chocolate-x-6"
+          }
+        },
+        "product_HnPfWD": {
+          "type": "product",
+          "settings": {
+            "product": "triple-chocolate-truffle"
+          }
+        },
+        "product_PY7gpT": {
+          "type": "product",
+          "settings": {
+            "product": "milk-chocolate-with-toffee-almond-x-6"
+          }
+        },
+        "product_VtYfBt": {
+          "type": "product",
+          "settings": {
+            "product": "cookies-and-cream-bar-x12"
+          }
+        },
+        "product_ct3qnA": {
+          "type": "product",
+          "settings": {
+            "product": "peanut-butter-truffle"
+          }
+        }
+      },
+      "block_order": [
+        "product_ExgAbw",
+        "product_mEtgqD",
+        "product_HnPfWD",
+        "product_PY7gpT",
+        "product_VtYfBt",
+        "product_ct3qnA"
+      ],
+      "name": "Featured products",
+      "settings": {
+        "title": "Our Best Selling Chocolate Snack-Hacks",
+        "description": "Plaayer-approved faves—why not make them yours too?",
+        "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "shop-all",
+        "collection_product_limit": 12,
+        "extra_top_padding": true,
+        "extra_bottom_padding": false,
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1,
+        "column_size_mobile_small": 1,
+        "autoplay": 600,
+        "see_all_link": "shopify://collections",
+        "see_all_link_text": "Shop Bestsellers",
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": true,
+        "compact_mobile_grid": true,
+        "hide_atc_on_tiles": false
+      }
+    },
     "17718262497155cfae": {
       "type": "_blocks",
       "blocks": {
@@ -1163,80 +1237,6 @@
         "gap": 30,
         "duration": 20,
         "background_color": "#021d49"
-      }
-    },
-    "featured_products_F9JTBW": {
-      "type": "featured_products",
-      "blocks": {
-        "product_ExgAbw": {
-          "type": "product",
-          "settings": {
-            "product": "og-plaayer-pack"
-          }
-        },
-        "product_mEtgqD": {
-          "type": "product",
-          "settings": {
-            "product": "70-dark-chocolate-x-6"
-          }
-        },
-        "product_HnPfWD": {
-          "type": "product",
-          "settings": {
-            "product": "triple-chocolate-truffle"
-          }
-        },
-        "product_PY7gpT": {
-          "type": "product",
-          "settings": {
-            "product": "milk-chocolate-with-toffee-almond-x-6"
-          }
-        },
-        "product_VtYfBt": {
-          "type": "product",
-          "settings": {
-            "product": "cookies-and-cream-bar-x12"
-          }
-        },
-        "product_ct3qnA": {
-          "type": "product",
-          "settings": {
-            "product": "peanut-butter-truffle"
-          }
-        }
-      },
-      "block_order": [
-        "product_ExgAbw",
-        "product_mEtgqD",
-        "product_HnPfWD",
-        "product_PY7gpT",
-        "product_VtYfBt",
-        "product_ct3qnA"
-      ],
-      "name": "Featured products",
-      "settings": {
-        "title": "Our Best Selling Chocolate Snack-Hacks",
-        "description": "Plaayer-approved faves—why not make them yours too?",
-        "background_color": "#ffffff",
-        "product_source": "manual",
-        "featured_collection": "shop-all",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1,
-        "column_size_mobile_small": 1,
-        "autoplay": 600,
-        "see_all_link": "shopify://collections",
-        "see_all_link_text": "Shop Bestsellers",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
       }
     },
     "173589700867b1c6b5": {
@@ -2643,9 +2643,9 @@
   "order": [
     "4ae9c22c-dd9d-4d0b-bb5c-7da4d20021b3",
     "marquee_slider_cM4zJb",
-    "17718262497155cfae",
-    "marquee_slider_H7hNaz",
     "featured_products_F9JTBW",
+    "marquee_slider_H7hNaz",
+    "17718262497155cfae",
     "173589700867b1c6b5",
     "richtext_hVDgQC",
     "1773387152feeb0121",
