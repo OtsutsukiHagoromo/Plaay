@@ -1042,7 +1042,9 @@
         compareText = oneTimeText.trim();
       } else {
         compareText = getVisibleText('.product_price, .discount_price_exists');
-        if (compareText === currentPrice) compareText = '';
+        var _cmpN = parseFloat(compareText.replace(/[^0-9.]/g, ''));
+        var _curN = parseFloat(currentPrice.replace(/[^0-9.]/g, ''));
+        if (isNaN(_cmpN) || isNaN(_curN) || _cmpN <= _curN) compareText = '';
       }
 
       [desktopBar, mobileBar].forEach(function(bar) {

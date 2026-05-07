@@ -574,7 +574,9 @@
       // for native compare_at_price products Liquid already renders correctly on load.
       var compareEl = document.querySelector('.discount_price_exists');
       var compareTxt = compareEl ? compareEl.textContent.trim() : '';
-      if (compareTxt === txt) compareTxt = '';
+      var _cmpN = parseFloat(compareTxt.replace(/[^0-9.]/g, ''));
+      var _curN = parseFloat(txt.replace(/[^0-9.]/g, ''));
+      if (isNaN(_cmpN) || isNaN(_curN) || _cmpN <= _curN) compareTxt = '';
       if (mcp) {
         if (compareTxt) { mcp.textContent = compareTxt; mcp.style.display = 'inline'; }
         else { mcp.style.display = 'none'; }
