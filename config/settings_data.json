@@ -62,28 +62,17 @@
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"
             }
-          },
-          "66a57e58-93cd-4f20-bb7d-f70605351368": {
-            "type": "announcement_text",
-            "settings": {
-              "text": "NEXT-DAY DELIVERY FOR ALL OTHER EMIRATES - T&C APPLY",
-              "text_color": "#021d49",
-              "text_color_mobile": "#021d49",
-              "text_style": "uppercase"
-            }
           }
         },
         "block_order": [
           "announcement_text_yP4HrN",
           "c2b8a7fe-ac53-4009-a024-a1af5cf2f579",
           "announcement_text_yXwBXG",
-          "announcement_text_4j8xfB",
-          "66a57e58-93cd-4f20-bb7d-f70605351368"
+          "announcement_text_4j8xfB"
         ],
         "settings": {
           "background_color": "#f9c61d",
-          "background_color_mobile": "#f9c61d",
-          "autoplay": 7000
+          "background_color_mobile": "#f9c61d"
         }
       },
       "header": {
