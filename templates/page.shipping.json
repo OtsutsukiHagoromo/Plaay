@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
@@ -28,12 +19,12 @@
             "description": "Free delivery on orders over AED 75. Flat AED 15 fee below that."
           }
         },
-        "hl_sameday": {
+        "hl_fast": {
           "type": "highlight",
           "settings": {
             "icon": "clock",
-            "title": "Same-Day Dubai",
-            "description": "Order before 12 PM and get same-day delivery in Dubai."
+            "title": "Fast Delivery",
+            "description": "Delivery within 24–48 hours across the UAE."
           }
         },
         "step_1": {
@@ -57,33 +48,6 @@
             "description": "Sit back and enjoy. Your Plaay order arrives fresh and on time."
           }
         },
-        "zone_dubai": {
-          "type": "zone",
-          "settings": {
-            "region": "Dubai",
-            "delivery_time": "Same day (before 12 PM) · Next day (after 12 PM)",
-            "free_label": "Free over AED 75",
-            "fee_note": "AED 15 below AED 75"
-          }
-        },
-        "zone_other": {
-          "type": "zone",
-          "settings": {
-            "region": "All other emirates",
-            "delivery_time": "Next day (before 12 PM) · 2 days (after 12 PM)",
-            "free_label": "Free over AED 75",
-            "fee_note": "AED 15 below AED 75"
-          }
-        },
-        "zone_ksa": {
-          "type": "zone",
-          "settings": {
-            "region": "Saudi Arabia (KSA)",
-            "delivery_time": "Via third-party platforms",
-            "free_label": "",
-            "fee_note": "Check platform for fees"
-          }
-        },
         "faq_cost": {
           "type": "faq",
           "settings": {
@@ -95,7 +59,7 @@
           "type": "faq",
           "settings": {
             "question": "How long does delivery take?",
-            "answer": "<p>For orders placed before 12 PM: same-day delivery in Dubai, next-day delivery to all other emirates.</p><p>For orders placed after 12 PM: next working day in Dubai, within 2 days for all other emirates.</p><p>Deliveries operate Monday–Saturday, excluding public holidays.</p>"
+            "answer": "<p>We deliver within 24–48 hours across the UAE. Deliveries operate Monday–Saturday, excluding public holidays.</p>"
           }
         },
         "faq_change": {
@@ -130,20 +94,17 @@
           "type": "faq",
           "settings": {
             "question": "Do you deliver outside the UAE?",
-            "answer": "<p>We currently deliver across the UAE. We're also available in KSA via third-party online platforms. International shipping is on its way — stay tuned!</p>"
+            "answer": "<p>We currently deliver across UAE. We are also available in KSA via third-party online platforms. As for the rest of the world? Not yet… but we're on our way!</p>"
           }
         }
       },
       "block_order": [
         "hl_truck",
         "hl_free",
-        "hl_sameday",
+        "hl_fast",
         "step_1",
         "step_2",
         "step_3",
-        "zone_dubai",
-        "zone_other",
-        "zone_ksa",
         "faq_cost",
         "faq_eta",
         "faq_change",
@@ -154,14 +115,15 @@
       ],
       "settings": {
         "hero_bg": "#F9C61D",
+        "steps_bg": "#F5F3EE",
         "eyebrow": "Delivery Information",
         "headline": "Shipping & Delivery",
         "subheadline": "Fresh, clean chocolate — delivered across the UAE to your door.",
         "highlights_heading": "What to expect",
-        "steps_bg": "#F5F3EE",
         "steps_heading": "How it works",
-        "zones_heading": "Delivery Zones",
-        "zones_subheading": "We currently deliver across the UAE. Orders over AED 75 ship free.",
+        "zones_heading": "",
+        "zones_subheading": "",
+        "zones_note": "",
         "faq_heading": "Shipping FAQs",
         "cta_heading": "Still have questions?",
         "cta_text": "Our team is here to help. Reach out and we'll get back to you quickly.",
@@ -170,7 +132,5 @@
       }
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main"]
 }
