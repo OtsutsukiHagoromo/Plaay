@@ -605,11 +605,14 @@
     var closeBtn  = document.getElementById('pbn-sheet-close');
     var sheetOpen = false;
 
+    var stickyAtc = document.getElementById('plaay-sticky-mobile');
+
     function openSheet() {
       sheet.classList.add('is-open');
       backdrop.classList.add('is-open');
       document.body.style.overflow = 'hidden';
       shopBtn.classList.add('is-active');
+      if (stickyAtc) stickyAtc.style.display = 'none';
       sheetOpen = true;
     }
     function closeSheet() {
@@ -617,6 +620,7 @@
       backdrop.classList.remove('is-open');
       document.body.style.overflow = '';
       shopBtn.classList.remove('is-active');
+      if (stickyAtc) stickyAtc.style.display = '';
       sheetOpen = false;
     }
 
