@@ -1,0 +1,216 @@
+{% liquid
+  assign cart_count = cart.item_count
+%}
+
+<nav class="pbn" id="plaay-bottom-nav" aria-label="Mobile navigation">
+  <a href="/" class="pbn__tab" data-pbn-path="/">
+    <span class="pbn__icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+        <path d="M9 21V12h6v9" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="pbn__label">Home</span>
+  </a>
+
+  <a href="/collections/all" class="pbn__tab" data-pbn-path="/collections">
+    <span class="pbn__icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
+        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
+        <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
+      </svg>
+    </span>
+    <span class="pbn__label">Shop</span>
+  </a>
+
+  <button type="button" class="pbn__tab pbn__tab--search" id="pbn-search-btn" aria-label="Open search">
+    <span class="pbn__icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <circle cx="11" cy="11" r="7.5" stroke="currentColor" stroke-width="1.75"/>
+        <path d="M17 17l3.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <span class="pbn__label">Search</span>
+  </button>
+
+  <button type="button" class="pbn__tab" id="pbn-cart-btn" aria-label="Open cart">
+    <span class="pbn__icon pbn__icon--cart" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+        <path d="M3 6h18" stroke="currentColor" stroke-width="1.75"/>
+        <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+      </svg>
+      {%- if cart_count > 0 -%}
+        <span class="pbn__badge" id="pbn-cart-badge">{{ cart_count }}</span>
+      {%- else -%}
+        <span class="pbn__badge pbn__badge--hidden" id="pbn-cart-badge">0</span>
+      {%- endif -%}
+    </span>
+    <span class="pbn__label">Cart</span>
+  </button>
+
+  <a href="{% if customer %}/account{% else %}/account/login{% endif %}" class="pbn__tab" data-pbn-path="/account">
+    <span class="pbn__icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.75"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+      </svg>
+    </span>
+    <span class="pbn__label">Account</span>
+  </a>
+</nav>
+
+<style>
+  .pbn {
+    display: none;
+  }
+
+  @media (max-width: 1023px) {
+    .pbn {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(56px + env(safe-area-inset-bottom));
+      padding-bottom: env(safe-area-inset-bottom);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(2, 29, 73, 0.1);
+      z-index: 9000;
+      align-items: stretch;
+    }
+
+    .pbn__tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      color: rgba(2, 29, 73, 0.45);
+      text-decoration: none;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .pbn__tab.is-active,
+    .pbn__tab:active {
+      color: #021d49;
+    }
+
+    .pbn__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 24px;
+      height: 24px;
+    }
+
+    .pbn__icon--cart {
+      position: relative;
+    }
+
+    .pbn__badge {
+      position: absolute;
+      top: -5px;
+      right: -7px;
+      background: #F9C61D;
+      color: #021d49;
+      font-family: walsheim-bold, sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      line-height: 1;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 3px;
+    }
+
+    .pbn__badge--hidden {
+      display: none;
+    }
+
+    .pbn__label {
+      font-family: walsheim, sans-serif;
+      font-size: 10px;
+      line-height: 1;
+    }
+
+    .pbn__tab.is-active .pbn__label {
+      font-family: walsheim-bold, sans-serif;
+    }
+
+    /* Push page content above the nav */
+    #main {
+      padding-bottom: calc(56px + env(safe-area-inset-bottom));
+    }
+
+    /* Lift sticky mobile ATC bar above bottom nav */
+    #plaay-sticky-mobile {
+      bottom: calc(56px + env(safe-area-inset-bottom)) !important;
+    }
+
+    /* Lift WhatsApp button above bottom nav */
+    .plaay-wa-float {
+      bottom: calc(56px + env(safe-area-inset-bottom) + 12px) !important;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    var nav = document.getElementById('plaay-bottom-nav');
+    if (!nav) return;
+
+    /* Active state */
+    var path = window.location.pathname;
+    nav.querySelectorAll('[data-pbn-path]').forEach(function(tab) {
+      var p = tab.getAttribute('data-pbn-path');
+      if (p === '/' ? path === '/' : path.startsWith(p)) {
+        tab.classList.add('is-active');
+      }
+    });
+
+    /* Search button */
+    document.getElementById('pbn-search-btn').addEventListener('click', function() {
+      var trigger = document.querySelector('[data-search-root="mobile-toggle"] [data-search-trigger]');
+      if (trigger) trigger.click();
+    });
+
+    /* Cart button */
+    document.getElementById('pbn-cart-btn').addEventListener('click', function() {
+      var sd = document.querySelector('site-drawers');
+      if (sd) sd.activeDrawer = 'cart';
+    });
+
+    /* Keep badge in sync with the header cart count */
+    var badge = document.getElementById('pbn-cart-badge');
+    var headerCount = document.querySelector('[data-cart-count]');
+
+    function syncBadge() {
+      if (!badge) return;
+      var countEl = headerCount ? headerCount.querySelector('span') : null;
+      var count = countEl ? parseInt(countEl.textContent, 10) || 0 : {{ cart.item_count }};
+      badge.textContent = count;
+      badge.classList.toggle('pbn__badge--hidden', count === 0);
+    }
+
+    if (headerCount) {
+      new MutationObserver(syncBadge).observe(headerCount, { childList: true, subtree: true });
+    }
+
+    document.addEventListener('cart:updated', syncBadge);
+  })();
+</script>
