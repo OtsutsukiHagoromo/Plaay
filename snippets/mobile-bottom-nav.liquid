@@ -636,16 +636,49 @@
     });
 
     /* ── Badge sync ── */
-    var badge       = document.getElementById('pbn-cart-badge');
-    var headerCount = document.querySelector('[data-cart-count]');
-    function syncBadge() {
+    var badge = document.getElementById('pbn-cart-badge');
+
+    function setBadge(count) {
       if (!badge) return;
-      var countEl = headerCount ? headerCount.querySelector('span') : null;
-      var count   = countEl ? (parseInt(countEl.textContent, 10) || 0) : {{ cart.item_count }};
       badge.textContent = count;
       badge.classList.toggle('pbn__badge--hidden', count === 0);
     }
-    if (headerCount) new MutationObserver(syncBadge).observe(headerCount, { childList: true, subtree: true });
-    document.addEventListener('cart:updated', syncBadge);
+
+    function fetchAndSetBadge() {
+      fetch('/cart.js', { credentials: 'same-origin' })
+        .then(function(r) { return r.json(); })
+        .then(function(c) { setBadge(c.item_count || 0); })
+        .catch(function() {});
+    }
+
+    /* Intercept fetch calls to any cart-mutating endpoint */
+    var _origFetch = window.fetch;
+    window.fetch = function(input, init) {
+      var url = typeof input === 'string' ? input : (input && input.url) || '';
+      var isCartWrite = /\/cart\/(add|change|update|clear)/.test(url);
+      var p = _origFetch.apply(this, arguments);
+      if (isCartWrite) {
+        p.then(function() { setTimeout(fetchAndSetBadge, 80); }).catch(function() {});
+      }
+      return p;
+    };
+
+    /* Also catch themes that use XMLHttpRequest for cart calls */
+    var _origOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url) {
+      if (/\/cart\/(add|change|update|clear)/.test(url)) {
+        this.addEventListener('load', function() { setTimeout(fetchAndSetBadge, 80); });
+      }
+      return _origOpen.apply(this, arguments);
+    };
+
+    /* Fallback: watch header count + theme events */
+    var headerCount = document.querySelector('[data-cart-count]');
+    if (headerCount) {
+      new MutationObserver(function() { fetchAndSetBadge(); })
+        .observe(headerCount, { childList: true, subtree: true });
+    }
+    document.addEventListener('cart:updated', fetchAndSetBadge);
+    document.addEventListener('cart:refresh', fetchAndSetBadge);
   })();
 </script>
