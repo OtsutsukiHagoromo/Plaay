@@ -46,7 +46,7 @@
 
 
 <div style="background-color: {{ background_color }};">
-  <div class="container flex flex-col pt-4 pb-6 | md:pb-16 md:pt-44 | lg:flex-row">
+  <div class="container flex flex-col pt-10 pb-6 | md:pb-16 md:pt-44 | lg:flex-row">
     {% comment %} main gallery {% endcomment %}
     <div class="w-full relative | lg:w-[55%]">
       <div {% if product_images_size > 1 %} class="glide" {% endif %} id="product-gallery-{{ section.id }}">
@@ -79,8 +79,8 @@
       </div>
       {% comment %} thumbnail slider {% endcomment %}
       {% if product_images_size > 1 %}
-        <div class="glide mt-3 mx-auto max-w-xs | md:max-w-md" id="product-gallery-thumbnails-{{ section.id }}">
-          <div class="glide__arrows z-10 flex items-center justify-center w-full | md:mb-0 md:mt-0 md:ml-10 md:w-auto" data-glide-el="controls">
+        <div class="glide relative mt-3 mx-auto max-w-xs | md:max-w-md" id="product-gallery-thumbnails-{{ section.id }}">
+          <div class="glide__arrows z-10 hidden md:flex items-center justify-center w-full | md:mb-0 md:mt-0 md:ml-10 md:w-auto" data-glide-el="controls">
             <button data-glide-dir="<" class="glide__arrow glide__arrow--left text-0 group absolute -left-6 top-1/2 transform -translate-y-1/2 | md:-left-16 lg:-left-8">
               slide left
               <span class="flex h-5 w-5 transform rotate-180 text-dark-blue opacity-40 transition-all duration-200 | group-hover:opacity-100 md:h-6 md:w-6">
