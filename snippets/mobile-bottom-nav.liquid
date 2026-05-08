@@ -41,11 +41,17 @@
               {%- for child in link.links -%}
                 {%- assign col_handle = child.url | remove: '/collections/' | split: '?' | first -%}
                 {%- assign col = collections[col_handle] -%}
+                {%- assign sub_img_url = nil -%}
+                {%- if col_handle == 'all' -%}
+                  {%- assign sub_img_url = 'https://cdn.shopify.com/s/files/1/0662/4722/9657/files/2._DSC00491.png?v=1775537600' -%}
+                {%- elsif col.featured_image -%}
+                  {%- assign sub_img_url = col.featured_image | img_url: '160x160', crop: 'center' -%}
+                {%- endif -%}
                 <a href="{{ child.url }}" class="pbn-sub__card">
                   <span class="pbn-sub__img">
-                    {%- if col.featured_image -%}
+                    {%- if sub_img_url -%}
                       <img
-                        src="{{ col.featured_image | img_url: '160x160', crop: 'center' }}"
+                        src="{{ sub_img_url }}"
                         alt="{{ child.title }}"
                         loading="lazy"
                         width="80"
