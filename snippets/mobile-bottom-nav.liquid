@@ -205,10 +205,33 @@
     .hamburger_icon { display: none !important; }
     /* ── Hide header cart (Cart now lives in bottom nav) ── */
     .header__icon--cart { display: none !important; }
-    /* ── Balance header: collapse the now-empty left column so logo centres ── */
-    header .inner_container > div:first-child { flex: 0 0 auto; padding-right: 0; min-width: 0; width: auto !important; }
-    header .inner_container > div:last-child  { flex: 0 0 auto; }
-    header .inner_container > div:nth-child(2){ flex: 1; }
+
+    /* ── True-centre header layout: 3-col grid, equal gutters ── */
+    header .inner_container {
+      display: grid !important;
+      grid-template-columns: 1fr auto 1fr !important;
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+    }
+    /* Left column (was w-2/5 with hamburger) — reset width, collapse padding */
+    header .inner_container > div:first-child {
+      width: auto !important;
+      padding: 0 !important;
+      display: flex;
+      align-items: center;
+    }
+    /* Center column — logo */
+    header .inner_container > div:nth-child(2) {
+      width: auto !important;
+    }
+    /* Right column — search icon, flush right */
+    header .inner_container > div:last-child {
+      width: auto !important;
+      padding: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+    }
 
     /* ── Backdrop ── */
     .pbn-sheet-backdrop {
