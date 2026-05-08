@@ -1,10 +1,7 @@
-{% liquid
-  assign cart_count = cart.item_count
-%}
-
 <nav class="pbn" id="plaay-bottom-nav" aria-label="Mobile navigation">
+
   <a href="/" class="pbn__tab" data-pbn-path="/">
-    <span class="pbn__icon" aria-hidden="true">
+    <span class="pbn__pill" aria-hidden="true">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
         <path d="M9 21V12h6v9" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
@@ -14,7 +11,7 @@
   </a>
 
   <a href="/collections/all" class="pbn__tab" data-pbn-path="/collections">
-    <span class="pbn__icon" aria-hidden="true">
+    <span class="pbn__pill" aria-hidden="true">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
         <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
@@ -25,109 +22,125 @@
     <span class="pbn__label">Shop</span>
   </a>
 
-  <button type="button" class="pbn__tab pbn__tab--search" id="pbn-search-btn" aria-label="Open search">
-    <span class="pbn__icon" aria-hidden="true">
+  <button type="button" class="pbn__tab" id="pbn-search-btn" aria-label="Open search">
+    <span class="pbn__pill" aria-hidden="true">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <circle cx="11" cy="11" r="7.5" stroke="currentColor" stroke-width="1.75"/>
-        <path d="M17 17l3.5 3.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        <circle cx="11" cy="11" r="7.25" stroke="currentColor" stroke-width="1.75"/>
+        <path d="M17.5 17.5l3 3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
       </svg>
     </span>
     <span class="pbn__label">Search</span>
   </button>
 
   <button type="button" class="pbn__tab" id="pbn-cart-btn" aria-label="Open cart">
-    <span class="pbn__icon pbn__icon--cart" aria-hidden="true">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
-        <path d="M3 6h18" stroke="currentColor" stroke-width="1.75"/>
-        <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-      </svg>
-      {%- if cart_count > 0 -%}
-        <span class="pbn__badge" id="pbn-cart-badge">{{ cart_count }}</span>
-      {%- else -%}
-        <span class="pbn__badge pbn__badge--hidden" id="pbn-cart-badge">0</span>
-      {%- endif -%}
+    <span class="pbn__pill" aria-hidden="true">
+      <span class="pbn__cart-wrap">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/>
+          <path d="M3 6h18" stroke="currentColor" stroke-width="1.75"/>
+          <path d="M16 10a4 4 0 01-8 0" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        </svg>
+        {%- if cart.item_count > 0 -%}
+          <span class="pbn__badge" id="pbn-cart-badge">{{ cart.item_count }}</span>
+        {%- else -%}
+          <span class="pbn__badge pbn__badge--hidden" id="pbn-cart-badge">0</span>
+        {%- endif -%}
+      </span>
     </span>
     <span class="pbn__label">Cart</span>
   </button>
 
   <a href="{% if customer %}/account{% else %}/account/login{% endif %}" class="pbn__tab" data-pbn-path="/account">
-    <span class="pbn__icon" aria-hidden="true">
+    <span class="pbn__pill" aria-hidden="true">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.75"/>
-        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        <circle cx="12" cy="8" r="3.75" stroke="currentColor" stroke-width="1.75"/>
+        <path d="M4 20c0-3.87 3.58-7 8-7s8 3.13 8 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
       </svg>
     </span>
     <span class="pbn__label">Account</span>
   </a>
+
 </nav>
 
 <style>
-  .pbn {
-    display: none;
-  }
+  .pbn { display: none; }
 
   @media (max-width: 1023px) {
+    /* ── Hide header search + cart icons since they live in bottom nav ── */
+    [data-search-root="mobile-toggle"] { display: none !important; }
+    .header__icon--cart { display: none !important; }
+
+    /* ── Bottom nav shell ── */
     .pbn {
       display: flex;
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      height: calc(56px + env(safe-area-inset-bottom));
+      height: calc(60px + env(safe-area-inset-bottom));
       padding-bottom: env(safe-area-inset-bottom);
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 1px solid rgba(2, 29, 73, 0.1);
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: saturate(180%) blur(24px);
+      -webkit-backdrop-filter: saturate(180%) blur(24px);
+      border-top: 1px solid rgba(2, 29, 73, 0.08);
       z-index: 9000;
       align-items: stretch;
     }
 
+    /* ── Tabs ── */
     .pbn__tab {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3px;
-      color: rgba(2, 29, 73, 0.45);
+      gap: 4px;
+      color: rgba(2, 29, 73, 0.38);
       text-decoration: none;
       background: transparent;
       border: none;
       padding: 0;
       cursor: pointer;
-      transition: color 0.15s;
       -webkit-tap-highlight-color: transparent;
+      transition: color 0.18s;
     }
 
-    .pbn__tab.is-active,
-    .pbn__tab:active {
+    .pbn__tab.is-active {
       color: #021d49;
     }
 
-    .pbn__icon {
+    /* ── Pill indicator behind icon ── */
+    .pbn__pill {
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      width: 24px;
-      height: 24px;
+      width: 44px;
+      height: 28px;
+      border-radius: 14px;
+      transition: background 0.18s;
     }
 
-    .pbn__icon--cart {
-      position: relative;
+    .pbn__tab.is-active .pbn__pill {
+      background: #F9C61D;
     }
 
+    /* ── Cart wrapper for badge positioning ── */
+    .pbn__cart-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Badge ── */
     .pbn__badge {
       position: absolute;
-      top: -5px;
-      right: -7px;
-      background: #F9C61D;
-      color: #021d49;
+      top: -6px;
+      right: -8px;
+      background: #021d49;
+      color: #F9C61D;
       font-family: walsheim-bold, sans-serif;
       font-size: 9px;
-      font-weight: 700;
       line-height: 1;
       min-width: 16px;
       height: 16px;
@@ -135,36 +148,37 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 0 3px;
+      padding: 0 4px;
+      border: 1.5px solid #fff;
     }
 
-    .pbn__badge--hidden {
-      display: none;
-    }
+    .pbn__badge--hidden { display: none; }
 
+    /* ── Label ── */
     .pbn__label {
       font-family: walsheim, sans-serif;
       font-size: 10px;
       line-height: 1;
+      letter-spacing: 0.01em;
     }
 
     .pbn__tab.is-active .pbn__label {
       font-family: walsheim-bold, sans-serif;
     }
 
-    /* Push page content above the nav */
+    /* ── Page clearance ── */
     #main {
-      padding-bottom: calc(56px + env(safe-area-inset-bottom));
+      padding-bottom: calc(60px + env(safe-area-inset-bottom));
     }
 
     /* Lift sticky mobile ATC bar above bottom nav */
     #plaay-sticky-mobile {
-      bottom: calc(56px + env(safe-area-inset-bottom)) !important;
+      bottom: calc(60px + env(safe-area-inset-bottom)) !important;
     }
 
     /* Lift WhatsApp button above bottom nav */
     .plaay-wa-float {
-      bottom: calc(56px + env(safe-area-inset-bottom) + 12px) !important;
+      bottom: calc(60px + env(safe-area-inset-bottom) + 12px) !important;
     }
   }
 </style>
@@ -174,7 +188,7 @@
     var nav = document.getElementById('plaay-bottom-nav');
     if (!nav) return;
 
-    /* Active state */
+    /* ── Active tab highlight ── */
     var path = window.location.pathname;
     nav.querySelectorAll('[data-pbn-path]').forEach(function(tab) {
       var p = tab.getAttribute('data-pbn-path');
@@ -183,26 +197,36 @@
       }
     });
 
-    /* Search button */
-    document.getElementById('pbn-search-btn').addEventListener('click', function() {
-      var trigger = document.querySelector('[data-search-root="mobile-toggle"] [data-search-trigger]');
-      if (trigger) trigger.click();
+    /* ── Search: directly open the mobile panel ── */
+    document.getElementById('pbn-search-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      var panel = document.querySelector('[data-search-root="mobile-panel"]');
+      var header = document.querySelector('header');
+      if (!panel) return;
+      if (panel.classList.contains('active')) {
+        panel.classList.remove('active');
+        return;
+      }
+      if (header) panel.style.top = header.getBoundingClientRect().bottom + 'px';
+      panel.classList.add('active');
+      var input = panel.querySelector('[data-search-input]');
+      if (input) setTimeout(function() { input.focus(); }, 30);
     });
 
-    /* Cart button */
+    /* ── Cart ── */
     document.getElementById('pbn-cart-btn').addEventListener('click', function() {
       var sd = document.querySelector('site-drawers');
       if (sd) sd.activeDrawer = 'cart';
     });
 
-    /* Keep badge in sync with the header cart count */
+    /* ── Keep badge in sync ── */
     var badge = document.getElementById('pbn-cart-badge');
     var headerCount = document.querySelector('[data-cart-count]');
 
     function syncBadge() {
       if (!badge) return;
       var countEl = headerCount ? headerCount.querySelector('span') : null;
-      var count = countEl ? parseInt(countEl.textContent, 10) || 0 : {{ cart.item_count }};
+      var count = countEl ? (parseInt(countEl.textContent, 10) || 0) : {{ cart.item_count }};
       badge.textContent = count;
       badge.classList.toggle('pbn__badge--hidden', count === 0);
     }
@@ -210,7 +234,6 @@
     if (headerCount) {
       new MutationObserver(syncBadge).observe(headerCount, { childList: true, subtree: true });
     }
-
     document.addEventListener('cart:updated', syncBadge);
   })();
 </script>
