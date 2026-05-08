@@ -98,7 +98,7 @@
     border: 1px solid rgba(255, 255, 255, 0.18);
   }
 
-  body.template-productbyob [data-module="cookie-banner"] {
+  body[class*="template-product"] [data-module="cookie-banner"] {
     bottom: calc(env(safe-area-inset-bottom) + 92px);
   }
 
@@ -109,8 +109,7 @@
     }
 
     /* On product pages the sticky ATC bar occupies the bottom — move banner to top */
-    body.template-product [data-module="cookie-banner"],
-    body.template-productbyob [data-module="cookie-banner"] {
+    body[class*="template-product"] [data-module="cookie-banner"] {
       top: 16px;
       bottom: auto;
     }
