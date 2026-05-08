@@ -128,6 +128,7 @@
         },
         "gallery_3nQFWr": {
           "type": "gallery",
+          "disabled": true,
           "settings": {
             "img": "shopify://shop_images/Spinneys-Logo-Vector_svg.png",
             "retailer_name": "Spinneys",
@@ -136,6 +137,7 @@
         },
         "gallery_JAHyLq": {
           "type": "gallery",
+          "disabled": true,
           "settings": {
             "img": "shopify://shop_images/Waitrose_Logo_svg.png",
             "retailer_name": "Waitrose",
