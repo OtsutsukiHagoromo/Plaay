@@ -523,17 +523,20 @@
     sheet.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeSheet); });
 
     /* ── Search ── */
-    document.getElementById('pbn-search-btn').addEventListener('click', function(e) {
-      e.stopPropagation();
+    document.getElementById('pbn-search-btn').addEventListener('click', function() {
       if (sheetOpen) closeSheet();
       var panel  = document.querySelector('[data-search-root="mobile-panel"]');
       var header = document.querySelector('header');
       if (!panel) return;
       if (panel.classList.contains('active')) { panel.classList.remove('active'); return; }
-      if (header) panel.style.top = header.getBoundingClientRect().bottom + 'px';
-      panel.classList.add('active');
-      var input = panel.querySelector('[data-search-input]');
-      if (input) setTimeout(function() { input.focus(); }, 30);
+      /* Use setTimeout so the header's document-click "close" listener fires first,
+         then we open the panel cleanly after the event has fully propagated. */
+      setTimeout(function() {
+        if (header) panel.style.top = header.getBoundingClientRect().bottom + 'px';
+        panel.classList.add('active');
+        var input = panel.querySelector('[data-search-input]');
+        if (input) input.focus();
+      }, 0);
     });
 
     /* ── Cart ── */
