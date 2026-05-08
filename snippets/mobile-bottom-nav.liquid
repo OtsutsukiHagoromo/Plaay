@@ -42,7 +42,8 @@
                 {%- assign col_handle = child.url | remove: '/collections/' | split: '?' | first -%}
                 {%- assign col = collections[col_handle] -%}
                 {%- assign sub_img_url = nil -%}
-                {%- if col_handle == 'all' -%}
+                {%- assign child_title_lc = child.title | downcase -%}
+                {%- if col_handle == 'all' or child_title_lc == 'shop all' or child_title_lc == 'all' or child.url == '/collections' -%}
                   {%- assign sub_img_url = 'https://cdn.shopify.com/s/files/1/0662/4722/9657/files/2._DSC00491.png?v=1775537600' -%}
                 {%- elsif col.featured_image -%}
                   {%- assign sub_img_url = col.featured_image | img_url: '160x160', crop: 'center' -%}
