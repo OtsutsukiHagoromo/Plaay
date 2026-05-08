@@ -571,6 +571,9 @@
     #main { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
     #plaay-sticky-mobile { bottom: calc(60px + env(safe-area-inset-bottom)) !important; }
     .plaay-wa-float { bottom: calc(60px + env(safe-area-inset-bottom) + 12px) !important; }
+
+    /* ── Hide sticky ATC while menu sheet is open (overrides scroll-based JS) ── */
+    body.pbn-menu-open #plaay-sticky-mobile { display: none !important; }
   }
 </style>
 
@@ -605,22 +608,18 @@
     var closeBtn  = document.getElementById('pbn-sheet-close');
     var sheetOpen = false;
 
-    var stickyAtc = document.getElementById('plaay-sticky-mobile');
-
     function openSheet() {
       sheet.classList.add('is-open');
       backdrop.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
+      document.body.classList.add('pbn-menu-open');
       shopBtn.classList.add('is-active');
-      if (stickyAtc) stickyAtc.style.display = 'none';
       sheetOpen = true;
     }
     function closeSheet() {
       sheet.classList.remove('is-open');
       backdrop.classList.remove('is-open');
-      document.body.style.overflow = '';
+      document.body.classList.remove('pbn-menu-open');
       shopBtn.classList.remove('is-active');
-      if (stickyAtc) stickyAtc.style.display = '';
       sheetOpen = false;
     }
 
