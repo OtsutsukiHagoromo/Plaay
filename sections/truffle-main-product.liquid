@@ -49,6 +49,10 @@
 {%- assign unique_size_arr = unique_sizes | split: '||' -%}
 
 {% style %}
+  @media (max-width: 767px) {
+    #shopify-section-{{ section.id }} .container { padding-top: 18px; }
+  }
+
   #product-gallery-thumbnails-{{ section.id }} .glide__slide--active img{
     border: 2px solid #FFF;
   }
@@ -222,7 +226,7 @@
 <quick-add data-module="quick-add"></quick-add>
 
 <div style="background-color: {{ background_color }};">
-  <div class="container flex flex-col pt-28 pb-6 | md:pb-16 md:pt-44 | lg:flex-row">
+  <div class="container flex flex-col pt-4 pb-6 | md:pb-16 md:pt-44 | lg:flex-row">
 
     {% comment %} main gallery {% endcomment %}
     <div class="w-full relative | lg:w-[55%]">
