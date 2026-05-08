@@ -51,7 +51,8 @@
 
     <a href="/collections/variety-packs" class="plaay-empty__card plaay-empty__card--variety">
       <div class="plaay-empty__card-left">
-        <span class="plaay-empty__card-emoji" aria-hidden="true">🎨</span>
+        {%- assign _col = collections['variety-packs'] -%}
+        {%- if _col.image -%}<img src="{{ _col.image | image_url: width: 80 }}" alt="" class="plaay-empty__card-img" width="40" height="40" aria-hidden="true">{%- else -%}<span class="plaay-empty__card-emoji" aria-hidden="true">🎨</span>{%- endif -%}
         <div>
           <p class="plaay-empty__card-name font-walsheim-black">Variety Packs</p>
           <p class="plaay-empty__card-tag font-walsheim-regular">Mix &amp; match flavours</p>
@@ -62,7 +63,8 @@
 
     <a href="/collections/chocolate-bar" class="plaay-empty__card plaay-empty__card--bars">
       <div class="plaay-empty__card-left">
-        <span class="plaay-empty__card-emoji" aria-hidden="true">🍫</span>
+        {%- assign _col = collections['chocolate-bar'] -%}
+        {%- if _col.image -%}<img src="{{ _col.image | image_url: width: 80 }}" alt="" class="plaay-empty__card-img" width="40" height="40" aria-hidden="true">{%- else -%}<span class="plaay-empty__card-emoji" aria-hidden="true">🍫</span>{%- endif -%}
         <div>
           <p class="plaay-empty__card-name font-walsheim-black">Chocolate Bars</p>
           <p class="plaay-empty__card-tag font-walsheim-regular">Bold &amp; creamy flavours</p>
@@ -73,7 +75,8 @@
 
     <a href="/collections/chocolate-truffles" class="plaay-empty__card plaay-empty__card--truffles">
       <div class="plaay-empty__card-left">
-        <span class="plaay-empty__card-emoji" aria-hidden="true">✨</span>
+        {%- assign _col = collections['chocolate-truffles'] -%}
+        {%- if _col.image -%}<img src="{{ _col.image | image_url: width: 80 }}" alt="" class="plaay-empty__card-img" width="40" height="40" aria-hidden="true">{%- else -%}<span class="plaay-empty__card-emoji" aria-hidden="true">✨</span>{%- endif -%}
         <div>
           <p class="plaay-empty__card-name font-walsheim-black">Chocolate Truffles</p>
           <p class="plaay-empty__card-tag font-walsheim-regular">Indulge in luxury</p>

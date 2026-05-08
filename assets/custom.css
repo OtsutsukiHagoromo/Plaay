@@ -4110,6 +4110,13 @@ cart-drawer [data-drawer] .border-b.border-dark-blue.border-opacity-10.flex-shri
   line-height: 1;
   flex-shrink: 0;
 }
+.plaay-empty__card-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
 .plaay-empty__card-name {
   font-size: 0.9rem;
   margin: 0 0 2px;
