@@ -45,24 +45,24 @@
           "type": "benefit",
           "settings": {
             "icon": "01",
-            "title": "Save on every order",
-            "text": "Lock in a lower price every time your stash renews, so your regular chocolate habit costs less without any extra effort."
+            "title": "Always 15% off",
+            "text": "Every recurring order is cheaper than buying one-off. The longer you keep it, the more you save — automatically."
           }
         },
         "benefit_BC5w6Q": {
           "type": "benefit",
           "settings": {
             "icon": "02",
-            "title": "Never run out",
-            "text": "Keep your bars, truffles and variety packs arriving on your schedule, whether that means weekly top-ups or monthly restocks."
+            "title": "Your stash runs itself",
+            "text": "Your favourites arrive before you run out. No reminders, no scrambling, no empty snack drawer mid-week."
           }
         },
         "benefit_A8mVfK": {
           "type": "benefit",
           "settings": {
             "icon": "03",
-            "title": "Stay fully in control",
-            "text": "Pause, skip, swap flavours or cancel whenever you need to. It is built for flexibility, not lock-in."
+            "title": "Change your mind anytime",
+            "text": "Skip a delivery, swap a flavour, push it back a week or cancel — all from your account in two taps. No awkward forms."
           }
         }
       },
@@ -81,12 +81,12 @@
         "badge_one": "15% off every recurring order",
         "badge_two": "Skip, pause or swap anytime",
         "badge_three": "Delivered on your schedule",
-        "step_one_title": "Choose your stash",
-        "step_one_text": "Pick the multipacks you actually reorder so the page works like a restock shortcut, not just another browse.",
-        "step_two_title": "Set your frequency",
-        "step_two_text": "Choose a cadence that matches how fast your household goes through bars, truffles or variety packs.",
-        "step_three_title": "Manage it your way",
-        "step_three_text": "Need a break, want a different flavour mix, or just need to push a shipment back? You stay in control.",
+        "step_one_title": "Pick your products",
+        "step_one_text": "Choose the bars, truffles or variety packs you actually reorder. No need to browse the whole shop every time.",
+        "step_two_title": "Choose your pace",
+        "step_two_text": "Weekly, fortnightly or monthly — pick what fits your household. You'll get a reminder before each order ships so you can make changes first.",
+        "step_three_title": "It ships automatically",
+        "step_three_text": "Orders go out on schedule without you lifting a finger. Your snack drawer stays full while you focus on more important things.",
         "reassurance": "No lock-in. No stress. Cancel anytime."
       }
     },
