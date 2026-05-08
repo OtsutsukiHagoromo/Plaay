@@ -1,43 +1,115 @@
 {% liquid
-  assign nav_links = linklists['navigation-menu-left'].links
+  assign left_links  = linklists['navigation-menu-left'].links
+  assign right_links = linklists['navigation-menu-right'].links
 %}
 
-{%- comment -%} ── Shop Bottom Sheet ── {%- endcomment -%}
+{%- comment -%} ── Full Menu Bottom Sheet ── {%- endcomment -%}
 <div class="pbn-sheet-backdrop" id="pbn-sheet-backdrop"></div>
-<div class="pbn-sheet" id="pbn-shop-sheet" role="dialog" aria-modal="true" aria-label="Shop menu">
+
+<div class="pbn-sheet" id="pbn-shop-sheet" role="dialog" aria-modal="true" aria-label="Site menu">
+
   <div class="pbn-sheet__handle-wrap">
     <span class="pbn-sheet__handle"></span>
   </div>
 
   <div class="pbn-sheet__head">
-    <p class="pbn-sheet__eyebrow">Explore</p>
-    <h2 class="pbn-sheet__title">Shop Plaay</h2>
-    <button class="pbn-sheet__close" id="pbn-sheet-close" aria-label="Close shop menu">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <path d="M2 2l14 14M16 2L2 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <h2 class="pbn-sheet__title">Menu</h2>
+    <button class="pbn-sheet__close" id="pbn-sheet-close" aria-label="Close menu">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </button>
   </div>
 
-  <div class="pbn-sheet__grid">
-    {%- for link in nav_links -%}
-      <a href="{{ link.url }}" class="pbn-sheet__card">
-        <span class="pbn-sheet__card-name">{{ link.title }}</span>
-        <span class="pbn-sheet__card-arrow" aria-hidden="true">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M2 12L12 2M12 2H6M12 2v6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </span>
-      </a>
+  <div class="pbn-sheet__body">
+
+    {%- comment -%} Left nav links {%- endcomment -%}
+    {%- for link in left_links -%}
+      {%- if link.links != blank -%}
+        <div class="pbn-nav__group" data-pbn-accordion>
+          <button type="button" class="pbn-nav__parent" aria-expanded="false">
+            <span>{{ link.title }}</span>
+            <span class="pbn-nav__chevron" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+          <ul class="pbn-nav__children">
+            {%- for child in link.links -%}
+              <li>
+                <a href="{{ child.url }}" class="pbn-nav__child">{{ child.title }}</a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- else -%}
+        <a href="{{ link.url }}" class="pbn-nav__item">
+          <span>{{ link.title }}</span>
+          <span class="pbn-nav__arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3 11L11 3M11 3H6M11 3v5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+      {%- endif -%}
     {%- endfor -%}
-    <a href="/collections/all" class="pbn-sheet__card pbn-sheet__card--all">
-      <span class="pbn-sheet__card-name">View All Products</span>
-      <span class="pbn-sheet__card-arrow" aria-hidden="true">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M2 12L12 2M12 2H6M12 2v6" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+
+    {%- comment -%} Divider between nav groups {%- endcomment -%}
+    {%- if left_links != blank and right_links != blank -%}
+      <div class="pbn-nav__divider"></div>
+    {%- endif -%}
+
+    {%- comment -%} Right nav links {%- endcomment -%}
+    {%- for link in right_links -%}
+      {%- if link.links != blank -%}
+        <div class="pbn-nav__group" data-pbn-accordion>
+          <button type="button" class="pbn-nav__parent" aria-expanded="false">
+            <span>{{ link.title }}</span>
+            <span class="pbn-nav__chevron" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+          <ul class="pbn-nav__children">
+            {%- for child in link.links -%}
+              <li>
+                <a href="{{ child.url }}" class="pbn-nav__child">{{ child.title }}</a>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- else -%}
+        <a href="{{ link.url }}" class="pbn-nav__item">
+          <span>{{ link.title }}</span>
+          <span class="pbn-nav__arrow" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3 11L11 3M11 3H6M11 3v5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- comment -%} Utility footer row {%- endcomment -%}
+    <div class="pbn-nav__divider"></div>
+    <div class="pbn-nav__utils">
+      <a href="{% if customer %}/account{% else %}/account/login{% endif %}" class="pbn-nav__util">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.75"/>
+          <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
         </svg>
-      </span>
-    </a>
+        <span>{% if customer %}{{ customer.first_name | default: 'Account' }}{% else %}Sign in{% endif %}</span>
+      </a>
+      <a href="/pages/wishlist" class="pbn-nav__util">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.75" fill="none"/>
+        </svg>
+        <span>Wishlist</span>
+      </a>
+    </div>
+
   </div>
 </div>
 
@@ -54,16 +126,13 @@
     <span class="pbn__label">Home</span>
   </a>
 
-  <button type="button" class="pbn__tab" id="pbn-shop-btn" aria-label="Open shop menu" aria-haspopup="dialog">
+  <button type="button" class="pbn__tab" id="pbn-shop-btn" aria-label="Open menu" aria-haspopup="dialog">
     <span class="pbn__pill" aria-hidden="true">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
-        <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
-        <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
-        <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.75"/>
+        <path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
       </svg>
     </span>
-    <span class="pbn__label">Shop</span>
+    <span class="pbn__label">Menu</span>
   </button>
 
   <button type="button" class="pbn__tab" id="pbn-search-btn" aria-label="Open search">
@@ -108,7 +177,7 @@
 
 <style>
   .pbn { display: none; }
-  .pbn-sheet { display: none; }
+  .pbn-sheet,
   .pbn-sheet-backdrop { display: none; }
 
   @media (max-width: 1023px) {
@@ -121,7 +190,7 @@
       display: block;
       position: fixed;
       inset: 0;
-      background: rgba(2, 29, 73, 0.5);
+      background: rgba(2, 29, 73, 0.55);
       z-index: 9010;
       opacity: 0;
       pointer-events: none;
@@ -139,63 +208,54 @@
       left: 0;
       right: 0;
       bottom: calc(60px + env(safe-area-inset-bottom));
-      max-height: 72vh;
+      max-height: 80vh;
       background: #ffffff;
-      border-radius: 20px 20px 0 0;
+      border-radius: 22px 22px 0 0;
       z-index: 9020;
       overflow-y: auto;
       overscroll-behavior: contain;
-      padding: 0 20px calc(24px + env(safe-area-inset-bottom));
       transform: translateY(110%);
-      transition: transform 0.36s cubic-bezier(0.32, 0.72, 0, 1);
-      box-shadow: 0 -8px 40px rgba(2, 29, 73, 0.18);
+      transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+      box-shadow: 0 -8px 48px rgba(2, 29, 73, 0.2);
     }
-
-    .pbn-sheet.is-open {
-      transform: translateY(0);
-    }
+    .pbn-sheet.is-open { transform: translateY(0); }
 
     /* ── Handle ── */
     .pbn-sheet__handle-wrap {
       display: flex;
       justify-content: center;
-      padding: 12px 0 8px;
+      padding: 12px 0 4px;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 1;
     }
-
     .pbn-sheet__handle {
       width: 36px;
       height: 4px;
       border-radius: 99px;
-      background: rgba(2, 29, 73, 0.15);
+      background: rgba(2, 29, 73, 0.13);
     }
 
     /* ── Sheet header ── */
     .pbn-sheet__head {
       display: flex;
       align-items: center;
-      padding: 4px 0 20px;
-      gap: 8px;
+      justify-content: space-between;
+      padding: 12px 20px 8px;
+      position: sticky;
+      top: 28px;
+      background: #fff;
+      z-index: 1;
+      border-bottom: 1px solid rgba(2, 29, 73, 0.07);
     }
-
-    .pbn-sheet__eyebrow {
-      font-family: walsheim-bold, sans-serif;
-      font-size: 10px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: #021d49;
-      opacity: 0.4;
-      flex: 1;
-    }
-
     .pbn-sheet__title {
       font-family: walsheim-black, sans-serif;
-      font-size: 22px;
+      font-size: 24px;
       color: #021d49;
       line-height: 1;
-      flex-shrink: 0;
       margin: 0;
     }
-
     .pbn-sheet__close {
       background: rgba(2, 29, 73, 0.07);
       border: none;
@@ -211,60 +271,120 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* ── Grid of cards ── */
-    .pbn-sheet__grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
+    /* ── Body ── */
+    .pbn-sheet__body {
+      padding: 8px 0 calc(16px + env(safe-area-inset-bottom));
     }
 
-    .pbn-sheet__card {
+    /* ── Top-level nav item (no children) ── */
+    .pbn-nav__item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 14px;
-      background: #F5F3EE;
-      border-radius: 14px;
-      text-decoration: none;
+      padding: 15px 20px;
+      font-family: walsheim-bold, sans-serif;
+      font-size: 16px;
       color: #021d49;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(2, 29, 73, 0.06);
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.12s;
+    }
+    .pbn-nav__item:active { background: #F5F3EE; }
+    .pbn-nav__arrow { opacity: 0.3; flex-shrink: 0; }
+
+    /* ── Accordion parent ── */
+    .pbn-nav__group {
+      border-bottom: 1px solid rgba(2, 29, 73, 0.06);
+    }
+    .pbn-nav__parent {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 15px 20px;
+      font-family: walsheim-bold, sans-serif;
+      font-size: 16px;
+      color: #021d49;
+      background: transparent;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pbn-nav__chevron {
+      flex-shrink: 0;
+      opacity: 0.4;
+      transition: transform 0.22s ease;
+    }
+    .pbn-nav__parent[aria-expanded="true"] .pbn-nav__chevron {
+      transform: rotate(180deg);
+      opacity: 0.8;
+    }
+    .pbn-nav__parent[aria-expanded="true"] {
+      color: #021d49;
+    }
+
+    /* ── Sub-links ── */
+    .pbn-nav__children {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: #F5F3EE;
+    }
+    .pbn-nav__children.is-open {
+      max-height: 600px;
+    }
+    .pbn-nav__child {
+      display: block;
+      padding: 12px 20px 12px 32px;
+      font-family: walsheim, sans-serif;
+      font-size: 14px;
+      color: rgba(2, 29, 73, 0.75);
+      text-decoration: none;
+      border-top: 1px solid rgba(2, 29, 73, 0.06);
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.12s, background 0.12s;
+    }
+    .pbn-nav__child:active {
+      color: #021d49;
+      background: #ede9df;
+    }
+
+    /* ── Section divider ── */
+    .pbn-nav__divider {
+      height: 6px;
+      background: #F5F3EE;
+      border-top: 1px solid rgba(2, 29, 73, 0.06);
+      border-bottom: 1px solid rgba(2, 29, 73, 0.06);
+      margin: 4px 0;
+    }
+
+    /* ── Utility row (Account + Wishlist) ── */
+    .pbn-nav__utils {
+      display: flex;
+      gap: 10px;
+      padding: 16px 20px 8px;
+    }
+    .pbn-nav__util {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      padding: 12px 14px;
+      background: #F5F3EE;
+      border-radius: 12px;
       font-family: walsheim-bold, sans-serif;
       font-size: 13px;
-      transition: background 0.15s, transform 0.15s;
+      color: #021d49;
+      text-decoration: none;
       -webkit-tap-highlight-color: transparent;
-      min-height: 56px;
+      transition: background 0.12s;
     }
-
-    .pbn-sheet__card:active {
-      background: #F9C61D;
-      transform: scale(0.97);
-    }
-
-    .pbn-sheet__card--all {
-      grid-column: 1 / -1;
-      background: #021d49;
-      color: #F9C61D;
-      font-size: 14px;
-      padding: 18px 16px;
-    }
-
-    .pbn-sheet__card--all:active {
-      background: #031e4a;
-      transform: scale(0.98);
-    }
-
-    .pbn-sheet__card-name {
-      line-height: 1.25;
-    }
-
-    .pbn-sheet__card-arrow {
-      opacity: 0.5;
-      flex-shrink: 0;
-      margin-left: 6px;
-    }
-
-    .pbn-sheet__card--all .pbn-sheet__card-arrow {
-      opacity: 0.7;
-    }
+    .pbn-nav__util:active { background: #ede9df; }
 
     /* ── Bottom nav shell ── */
     .pbn {
@@ -282,7 +402,6 @@
       z-index: 9030;
       align-items: stretch;
     }
-
     .pbn__tab {
       flex: 1;
       display: flex;
@@ -299,11 +418,7 @@
       -webkit-tap-highlight-color: transparent;
       transition: color 0.18s;
     }
-
-    .pbn__tab.is-active {
-      color: #021d49;
-    }
-
+    .pbn__tab.is-active { color: #021d49; }
     .pbn__pill {
       display: flex;
       align-items: center;
@@ -313,18 +428,13 @@
       border-radius: 14px;
       transition: background 0.18s;
     }
-
-    .pbn__tab.is-active .pbn__pill {
-      background: #F9C61D;
-    }
-
+    .pbn__tab.is-active .pbn__pill { background: #F9C61D; }
     .pbn__cart-wrap {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-
     .pbn__badge {
       position: absolute;
       top: -6px;
@@ -343,39 +453,26 @@
       padding: 0 4px;
       border: 1.5px solid #fff;
     }
-
     .pbn__badge--hidden { display: none; }
-
     .pbn__label {
       font-family: walsheim, sans-serif;
       font-size: 10px;
       line-height: 1;
       letter-spacing: 0.01em;
     }
-
-    .pbn__tab.is-active .pbn__label {
-      font-family: walsheim-bold, sans-serif;
-    }
+    .pbn__tab.is-active .pbn__label { font-family: walsheim-bold, sans-serif; }
 
     /* ── Page / element clearance ── */
-    #main {
-      padding-bottom: calc(60px + env(safe-area-inset-bottom));
-    }
-
-    #plaay-sticky-mobile {
-      bottom: calc(60px + env(safe-area-inset-bottom)) !important;
-    }
-
-    .plaay-wa-float {
-      bottom: calc(60px + env(safe-area-inset-bottom) + 12px) !important;
-    }
+    #main { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+    #plaay-sticky-mobile { bottom: calc(60px + env(safe-area-inset-bottom)) !important; }
+    .plaay-wa-float { bottom: calc(60px + env(safe-area-inset-bottom) + 12px) !important; }
   }
 </style>
 
 <script>
   (function() {
-    var nav    = document.getElementById('plaay-bottom-nav');
-    var sheet  = document.getElementById('pbn-shop-sheet');
+    var nav      = document.getElementById('plaay-bottom-nav');
+    var sheet    = document.getElementById('pbn-shop-sheet');
     var backdrop = document.getElementById('pbn-sheet-backdrop');
     if (!nav) return;
 
@@ -383,12 +480,22 @@
     var path = window.location.pathname;
     nav.querySelectorAll('[data-pbn-path]').forEach(function(tab) {
       var p = tab.getAttribute('data-pbn-path');
-      if (p === '/' ? path === '/' : path.startsWith(p)) {
-        tab.classList.add('is-active');
-      }
+      if (p === '/' ? path === '/' : path.startsWith(p)) tab.classList.add('is-active');
     });
 
-    /* ── Shop sheet open / close ── */
+    /* ── Accordion ── */
+    sheet.querySelectorAll('[data-pbn-accordion]').forEach(function(group) {
+      var btn      = group.querySelector('.pbn-nav__parent');
+      var children = group.querySelector('.pbn-nav__children');
+      if (!btn || !children) return;
+      btn.addEventListener('click', function() {
+        var open = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+        children.classList.toggle('is-open', !open);
+      });
+    });
+
+    /* ── Sheet open / close ── */
     var shopBtn   = document.getElementById('pbn-shop-btn');
     var closeBtn  = document.getElementById('pbn-sheet-close');
     var sheetOpen = false;
@@ -400,7 +507,6 @@
       shopBtn.classList.add('is-active');
       sheetOpen = true;
     }
-
     function closeSheet() {
       sheet.classList.remove('is-open');
       backdrop.classList.remove('is-open');
@@ -409,21 +515,12 @@
       sheetOpen = false;
     }
 
-    shopBtn.addEventListener('click', function() {
-      sheetOpen ? closeSheet() : openSheet();
-    });
-
+    shopBtn.addEventListener('click', function() { sheetOpen ? closeSheet() : openSheet(); });
     closeBtn.addEventListener('click', closeSheet);
     backdrop.addEventListener('click', closeSheet);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sheetOpen) closeSheet(); });
 
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape' && sheetOpen) closeSheet();
-    });
-
-    /* Close sheet on nav link click */
-    sheet.querySelectorAll('a').forEach(function(a) {
-      a.addEventListener('click', closeSheet);
-    });
+    sheet.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeSheet); });
 
     /* ── Search ── */
     document.getElementById('pbn-search-btn').addEventListener('click', function(e) {
@@ -432,10 +529,7 @@
       var panel  = document.querySelector('[data-search-root="mobile-panel"]');
       var header = document.querySelector('header');
       if (!panel) return;
-      if (panel.classList.contains('active')) {
-        panel.classList.remove('active');
-        return;
-      }
+      if (panel.classList.contains('active')) { panel.classList.remove('active'); return; }
       if (header) panel.style.top = header.getBoundingClientRect().bottom + 'px';
       panel.classList.add('active');
       var input = panel.querySelector('[data-search-input]');
@@ -449,20 +543,16 @@
     });
 
     /* ── Cart badge sync ── */
-    var badge = document.getElementById('pbn-cart-badge');
+    var badge       = document.getElementById('pbn-cart-badge');
     var headerCount = document.querySelector('[data-cart-count]');
-
     function syncBadge() {
       if (!badge) return;
       var countEl = headerCount ? headerCount.querySelector('span') : null;
-      var count = countEl ? (parseInt(countEl.textContent, 10) || 0) : {{ cart.item_count }};
+      var count   = countEl ? (parseInt(countEl.textContent, 10) || 0) : {{ cart.item_count }};
       badge.textContent = count;
       badge.classList.toggle('pbn__badge--hidden', count === 0);
     }
-
-    if (headerCount) {
-      new MutationObserver(syncBadge).observe(headerCount, { childList: true, subtree: true });
-    }
+    if (headerCount) new MutationObserver(syncBadge).observe(headerCount, { childList: true, subtree: true });
     document.addEventListener('cart:updated', syncBadge);
   })();
 </script>
