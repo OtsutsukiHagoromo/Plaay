@@ -159,16 +159,6 @@
     <span class="pbn__label">Menu</span>
   </button>
 
-  <button type="button" class="pbn__tab" id="pbn-search-btn" aria-label="Open search">
-    <span class="pbn__pill" aria-hidden="true">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-        <circle cx="11" cy="11" r="7.25" stroke="currentColor" stroke-width="1.75"/>
-        <path d="M17.5 17.5l3 3" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
-      </svg>
-    </span>
-    <span class="pbn__label">Search</span>
-  </button>
-
   <button type="button" class="pbn__tab" id="pbn-cart-btn" aria-label="Open cart">
     <span class="pbn__pill" aria-hidden="true">
       <span class="pbn__cart-wrap">
@@ -205,9 +195,14 @@
   .pbn-sheet-backdrop { display: none; }
 
   @media (max-width: 1023px) {
-    /* ── Hide header search + cart icons ── */
-    [data-search-root="mobile-toggle"] { display: none !important; }
+    /* ── Hide hamburger (Menu now lives in bottom nav) ── */
+    .hamburger_icon { display: none !important; }
+    /* ── Hide header cart (Cart now lives in bottom nav) ── */
     .header__icon--cart { display: none !important; }
+    /* ── Balance header: collapse the now-empty left column so logo centres ── */
+    header .inner_container > div:first-child { flex: 0 0 auto; padding-right: 0; min-width: 0; width: auto !important; }
+    header .inner_container > div:last-child  { flex: 0 0 auto; }
+    header .inner_container > div:nth-child(2){ flex: 1; }
 
     /* ── Backdrop ── */
     .pbn-sheet-backdrop {
@@ -600,21 +595,6 @@
     backdrop.addEventListener('click', closeSheet);
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sheetOpen) closeSheet(); });
     sheet.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeSheet); });
-
-    /* ── Search ── */
-    document.getElementById('pbn-search-btn').addEventListener('click', function() {
-      if (sheetOpen) closeSheet();
-      var panel  = document.querySelector('[data-search-root="mobile-panel"]');
-      var header = document.querySelector('header');
-      if (!panel) return;
-      if (panel.classList.contains('active')) { panel.classList.remove('active'); return; }
-      setTimeout(function() {
-        if (header) panel.style.top = header.getBoundingClientRect().bottom + 'px';
-        panel.classList.add('active');
-        var input = panel.querySelector('[data-search-input]');
-        if (input) input.focus();
-      }, 0);
-    });
 
     /* ── Cart ── */
     document.getElementById('pbn-cart-btn').addEventListener('click', function() {
