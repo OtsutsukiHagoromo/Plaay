@@ -25,9 +25,18 @@
 %}
 
 {% style %}
-  #product-gallery-thumbnails-{{ section.id }} .glide__slide--active img{
-    border: 2px solid #FFF;
-  } 
+  #product-gallery-thumbnails-{{ section.id }} .glide__slide--active div {
+    border-color: #021d49 !important;
+    border-width: 2px !important;
+    opacity: 1;
+  }
+  #product-gallery-thumbnails-{{ section.id }} .glide__slide div {
+    opacity: 0.6;
+    transition: opacity 0.2s, border-color 0.2s;
+  }
+  #product-gallery-thumbnails-{{ section.id }} .glide__slide--active div {
+    opacity: 1;
+  }
 {% endstyle %}
 
 <quantity-adjuster data-module="quantity-adjuster">
@@ -37,7 +46,7 @@
 
 
 <div style="background-color: {{ background_color }};">
-  <div class="container flex flex-col py-14 | md:pb-16 md:pt-44 | lg:flex-row">
+  <div class="container flex flex-col pt-4 pb-6 | md:pb-16 md:pt-44 | lg:flex-row">
     {% comment %} main gallery {% endcomment %}
     <div class="w-full relative | lg:w-[55%]">
       {%- render 'plaay-badge', product: product -%}
@@ -61,42 +70,36 @@
         <div {% if product_images_size > 1 %} class="glide__track w-full max-w-[800px] mx-auto" data-glide-el="track" {% endif %}>
           <ul {% if product_images_size > 1 %} class="glide__slides" {% endif %}>
             {% for image in product.images %}
-              <li {% if product_images_size > 1 %} class="glide__slide px-8 | md:px-0" {% endif %} data-index="{{ forloop.index0 }}">
-                {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain h-[420px] mx-auto lg:w-full lg:h-[600px] xl:object-cover', height: 420, width: 550, forloop_data: forloop.index %}
+              <li {% if product_images_size > 1 %} class="glide__slide px-2 | md:px-0" {% endif %} data-index="{{ forloop.index0 }}">
+                {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain h-[300px] sm:h-[360px] mx-auto lg:w-full lg:h-[600px] xl:object-cover', height: 300, width: 550, forloop_data: forloop.index %}
               </li>
             {% endfor %}
           </ul>
         </div>
-        {% if product_images_size > 1 %}
-          <div class="glide__bullets flex items-center justify-center my-5 | md:hidden" data-glide-el="controls[nav]">
-            {% for image in product.images %}
-              <button class="glide__bullet h-4 w-4 bg-dark-blue opacity-50 rounded-full transition-all duration-200 {% unless forloop.first %} ml-3 {% endunless %}" data-glide-dir="={{ forloop.index0 }}"></button>
-            {% endfor %}
-          </div>
-        {% endif %}
+        {% comment %} dots removed — thumbnails shown instead {% endcomment %}
       </div>
       {% comment %} thumbnail slider {% endcomment %}
       {% if product_images_size > 1 %}
-        <div class="glide mt-2 max-w-md mx-auto hidden | md:block" id="product-gallery-thumbnails-{{ section.id }}">
-          <div class="glide__arrows z-10 flex items-center justify-center w-full mt-8 mb-14 | md:mb-0 md:mt-0 md:ml-10 md:w-auto" data-glide-el="controls">
-            <button data-glide-dir="<" class="glide__arrow glide__arrow--left text-0 group absolute -left-16 top-1/2 transform -translate-y-1/2 mr-5 | lg:-left-8 ">
+        <div class="glide mt-3 mx-auto max-w-xs | md:max-w-md" id="product-gallery-thumbnails-{{ section.id }}">
+          <div class="glide__arrows z-10 flex items-center justify-center w-full | md:mb-0 md:mt-0 md:ml-10 md:w-auto" data-glide-el="controls">
+            <button data-glide-dir="<" class="glide__arrow glide__arrow--left text-0 group absolute -left-6 top-1/2 transform -translate-y-1/2 | md:-left-16 lg:-left-8">
               slide left
-              <span class="flex h-6 w-6 transform rotate-180 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+              <span class="flex h-5 w-5 transform rotate-180 text-dark-blue opacity-40 transition-all duration-200 | group-hover:opacity-100 md:h-6 md:w-6">
                 {% render 'icon-slider-arrow' %}
               </span>
             </button>
-            <button data-glide-dir=">" class="glide__arrow glide__arrow--right text-0 group absolute -right-16 top-1/2 transform -translate-y-1/2 ml-5 | lg:-right-8">
+            <button data-glide-dir=">" class="glide__arrow glide__arrow--right text-0 group absolute -right-6 top-1/2 transform -translate-y-1/2 | md:-right-16 lg:-right-8">
               slide right
-              <span class="flex h-6 w-6 text-dark-blue opacity-30 transition-all duration-200 | group-hover:opacity-100">
+              <span class="flex h-5 w-5 text-dark-blue opacity-40 transition-all duration-200 | group-hover:opacity-100 md:h-6 md:w-6">
                 {% render 'icon-slider-arrow' %}
               </span>
             </button>
-          </div> 
-          <div class="glide__track max-w-[380px] mx-auto" data-glide-el="track">
+          </div>
+          <div class="glide__track max-w-[300px] mx-auto | md:max-w-[380px]" data-glide-el="track">
             <ul class="glide__slides">
               {% for image in product.images %}
                 <li class="glide__slide thumbnail_slide">
-                  <div class="block h-20 w-20 border-0.5 border-opacity-20 border-black">
+                  <div class="block h-14 w-14 rounded-lg overflow-hidden border border-black border-opacity-15 | md:h-20 md:w-20 md:rounded-none">
                     {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain mx-auto h-full cursor-pointer w-full', forloop_data: forloop.index0 %}
                   </div>
                 </li>

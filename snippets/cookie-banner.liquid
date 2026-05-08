@@ -104,12 +104,15 @@
 
   @media (max-width: 767px) {
     [data-module="cookie-banner"] {
-      bottom: calc(env(safe-area-inset-bottom) + 12px);
+      bottom: calc(env(safe-area-inset-bottom) + 80px);
       padding: 0 10px;
     }
 
+    /* On product pages the sticky ATC bar occupies the bottom — move banner to top */
+    body.template-product [data-module="cookie-banner"],
     body.template-productbyob [data-module="cookie-banner"] {
-      bottom: calc(env(safe-area-inset-bottom) + 84px);
+      top: 16px;
+      bottom: auto;
     }
 
     .plaay-cookie-banner {
@@ -126,7 +129,7 @@
     }
 
     .plaay-cookie-banner__actions {
-      flex-direction: column;
+      flex-direction: row;
     }
 
     .plaay-cookie-banner__btn {

@@ -5093,3 +5093,41 @@ footer .footer-flex {
     bottom: 14px;
   }
 }
+
+/* ── Hero mobile ──────────────────────────────────── */
+@media (max-width: 767px) {
+  /* Clamp hero height so the CTA button is never pushed below viewport */
+  .two-sections-overlay {
+    max-height: calc(100svh - 110px) !important;
+  }
+
+  /* Push hero CTA above the fixed bottom nav */
+  .two-sections-overlay .textual_content {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 80px);
+  }
+
+  /* Wider, more prominent hero button on mobile */
+  .two-sections-overlay .textual_content .btn {
+    min-width: 200px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* ── Product gallery thumbnails mobile ────────────── */
+@media (max-width: 767px) {
+  /* Active thumbnail highlight */
+  #product-gallery-thumbnails .glide__slide--active div {
+    border-color: #021d49;
+    border-width: 2px;
+    border-opacity: 1;
+  }
+
+  /* Badge stays above slider elements */
+  .template-product .plaay-badge {
+    z-index: 20;
+    left: 8px;
+    top: 8px;
+  }
+}
