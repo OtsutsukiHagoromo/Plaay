@@ -5050,3 +5050,46 @@ footer .footer-flex {
     display: none !important;
   }
 }
+
+/* Product tile hover swap (disabled on Limited Editions) */
+.product-tile {
+  position: relative;
+}
+.product_tile:not(.product_tile--no-hover):hover .product_tile_secondary_image {
+  opacity: 1;
+}
+.product_tile:not(.product_tile--no-hover):hover .product_tile_featured_image {
+  opacity: 0;
+}
+
+/* WhatsApp float button */
+.plaay-wa-float {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  width: 56px;
+  height: 56px;
+  background: #25D366;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,.18);
+  z-index: 9999;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.plaay-wa-float:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0,0,0,.22);
+}
+.plaay-wa-icon {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+@media (max-width: 768px) {
+  .plaay-wa-float {
+    right: 14px;
+    bottom: 14px;
+  }
+}

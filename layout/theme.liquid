@@ -216,42 +216,6 @@
   </svg>
 </a>
 
-<style>
-  .plaay-wa-float {
-    position: fixed;
-    right: 18px;
-    bottom: 18px;
-    width: 56px;
-    height: 56px;
-    background: #25D366;
-    border-radius: 999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,.18);
-    z-index: 9999;
-    transition: transform .15s ease, box-shadow .15s ease;
-  }
-
-  .plaay-wa-float:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 14px 30px rgba(0,0,0,.22);
-  }
-
-  .plaay-wa-icon {
-    width: 28px;
-    height: 28px;
-    display: block;
-  }
-
-  @media (max-width: 768px) {
-    .plaay-wa-float {
-      right: 14px;
-      bottom: 14px;
-    }
-  }
-</style>
-
 {% endunless %}
 {% comment %} REBUY SMART CART DISABLED {% endcomment %}
 <script>
@@ -276,11 +240,9 @@
         var sd = document.querySelector('site-drawers');
         if (sd) {
           sd.activeDrawer = 'cart';
-          console.log('Cart opened via site-drawers');
         }
       }, true);
 
-      console.log('Cart button listener attached');
     }, 1000);
   });
 </script>

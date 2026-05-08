@@ -63,7 +63,7 @@
     }
   {% endif %}
 {% endstyle %}
-<div id="product_tile-{{ product.id }}" class="rounded-xl mx-auto z-1 product_tile relative h-full border border-black border-opacity-25 | sm:max-w-xs">
+<div id="product_tile-{{ product.id }}" class="rounded-xl mx-auto z-1 product_tile relative h-full border border-black border-opacity-25{% if collection.title == 'Limited Editions' %} product_tile--no-hover{% endif %} | sm:max-w-xs">
   {% comment %} flip button {% endcomment %}
   {% comment %}
   {% if ingredients_image != blank %}
@@ -154,6 +154,7 @@
           alt="{{ product.title }}"
           width="{{ featured_image.width }}"
           height="{{ featured_image.height }}"
+          loading="eager"
           fetchpriority="high"
           decoding="async"
           class="product_tile_featured_image transition-all duration-300 ease-in-out h-60 object-contain w-full"
@@ -187,20 +188,6 @@
       {% endif %}
     </a>
     
-    <style>
-      .product-tile {
-        position: relative;
-      }
-    {% if collection.title != 'Limited Editions' %}
-      .product_tile:hover .product_tile_secondary_image {
-        opacity: 1;
-      }
-    
-      .product_tile:hover .product_tile_featured_image {
-        opacity: 0;
-      }
-      {% endif %}
-    </style>
 
 
       {% comment %} title / price {% endcomment %}
