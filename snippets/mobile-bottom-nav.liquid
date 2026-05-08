@@ -23,11 +23,12 @@
 
   <div class="pbn-sheet__body">
 
-    {%- comment -%} Left nav links {%- endcomment -%}
+    {%- comment -%} ── Primary nav (left) — shop-style links ── {%- endcomment -%}
+    {%- assign is_first_accordion = true -%}
     {%- for link in left_links -%}
       {%- if link.links != blank -%}
-        <div class="pbn-nav__group" data-pbn-accordion>
-          <button type="button" class="pbn-nav__parent" aria-expanded="false">
+        <div class="pbn-nav__group{% if is_first_accordion %} pbn-nav__group--open{% endif %}" data-pbn-accordion>
+          <button type="button" class="pbn-nav__parent" aria-expanded="{% if is_first_accordion %}true{% else %}false{% endif %}">
             <span>{{ link.title }}</span>
             <span class="pbn-nav__chevron" aria-hidden="true">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -35,14 +36,38 @@
               </svg>
             </span>
           </button>
-          <ul class="pbn-nav__children">
-            {%- for child in link.links -%}
-              <li>
-                <a href="{{ child.url }}" class="pbn-nav__child">{{ child.title }}</a>
-              </li>
-            {%- endfor -%}
-          </ul>
+          <div class="pbn-nav__children{% if is_first_accordion %} is-open{% endif %}">
+            <div class="pbn-sub__scroll">
+              {%- for child in link.links -%}
+                {%- assign col_handle = child.url | remove: '/collections/' | split: '?' | first -%}
+                {%- assign col = collections[col_handle] -%}
+                <a href="{{ child.url }}" class="pbn-sub__card">
+                  <span class="pbn-sub__img">
+                    {%- if col.featured_image -%}
+                      <img
+                        src="{{ col.featured_image | img_url: '160x160', crop: 'center' }}"
+                        alt="{{ child.title }}"
+                        loading="lazy"
+                        width="80"
+                        height="80"
+                      >
+                    {%- else -%}
+                      <span class="pbn-sub__img-fallback">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <rect x="3" y="3" width="18" height="18" rx="4" stroke="currentColor" stroke-width="1.5"/>
+                          <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+                          <path d="M3 15l5-5 4 4 3-3 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </span>
+                    {%- endif -%}
+                  </span>
+                  <span class="pbn-sub__name">{{ child.title }}</span>
+                </a>
+              {%- endfor -%}
+            </div>
+          </div>
         </div>
+        {%- assign is_first_accordion = false -%}
       {%- else -%}
         <a href="{{ link.url }}" class="pbn-nav__item">
           <span>{{ link.title }}</span>
@@ -55,55 +80,54 @@
       {%- endif -%}
     {%- endfor -%}
 
-    {%- comment -%} Divider between nav groups {%- endcomment -%}
-    {%- if left_links != blank and right_links != blank -%}
-      <div class="pbn-nav__divider"></div>
+    {%- comment -%} ── Secondary nav (right) — info links at bottom ── {%- endcomment -%}
+    {%- if right_links != blank -%}
+      <div class="pbn-nav__section-label">More</div>
+      <div class="pbn-nav__secondary">
+        {%- for link in right_links -%}
+          {%- if link.links != blank -%}
+            <div class="pbn-nav__group" data-pbn-accordion>
+              <button type="button" class="pbn-nav__parent pbn-nav__parent--sm" aria-expanded="false">
+                <span>{{ link.title }}</span>
+                <span class="pbn-nav__chevron" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                    <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </button>
+              <div class="pbn-nav__children">
+                <div class="pbn-nav__children-list">
+                  {%- for child in link.links -%}
+                    <a href="{{ child.url }}" class="pbn-nav__child">{{ child.title }}</a>
+                  {%- endfor -%}
+                </div>
+              </div>
+            </div>
+          {%- else -%}
+            <a href="{{ link.url }}" class="pbn-nav__item pbn-nav__item--sm">
+              <span>{{ link.title }}</span>
+              <span class="pbn-nav__arrow" aria-hidden="true">
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                  <path d="M3 11L11 3M11 3H6M11 3v5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </a>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
     {%- endif -%}
 
-    {%- comment -%} Right nav links {%- endcomment -%}
-    {%- for link in right_links -%}
-      {%- if link.links != blank -%}
-        <div class="pbn-nav__group" data-pbn-accordion>
-          <button type="button" class="pbn-nav__parent" aria-expanded="false">
-            <span>{{ link.title }}</span>
-            <span class="pbn-nav__chevron" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </span>
-          </button>
-          <ul class="pbn-nav__children">
-            {%- for child in link.links -%}
-              <li>
-                <a href="{{ child.url }}" class="pbn-nav__child">{{ child.title }}</a>
-              </li>
-            {%- endfor -%}
-          </ul>
-        </div>
-      {%- else -%}
-        <a href="{{ link.url }}" class="pbn-nav__item">
-          <span>{{ link.title }}</span>
-          <span class="pbn-nav__arrow" aria-hidden="true">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M3 11L11 3M11 3H6M11 3v5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </a>
-      {%- endif -%}
-    {%- endfor -%}
-
-    {%- comment -%} Utility footer row {%- endcomment -%}
-    <div class="pbn-nav__divider"></div>
+    {%- comment -%} ── Utility row ── {%- endcomment -%}
     <div class="pbn-nav__utils">
       <a href="{% if customer %}/account{% else %}/account/login{% endif %}" class="pbn-nav__util">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
           <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.75"/>
           <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
         </svg>
         <span>{% if customer %}{{ customer.first_name | default: 'Account' }}{% else %}Sign in{% endif %}</span>
       </a>
       <a href="/pages/wishlist" class="pbn-nav__util">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
           <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="currentColor" stroke-width="1.75" fill="none"/>
         </svg>
         <span>Wishlist</span>
@@ -196,10 +220,7 @@
       pointer-events: none;
       transition: opacity 0.3s ease;
     }
-    .pbn-sheet-backdrop.is-open {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .pbn-sheet-backdrop.is-open { opacity: 1; pointer-events: auto; }
 
     /* ── Sheet ── */
     .pbn-sheet {
@@ -208,8 +229,8 @@
       left: 0;
       right: 0;
       bottom: calc(60px + env(safe-area-inset-bottom));
-      max-height: 80vh;
-      background: #ffffff;
+      max-height: 82vh;
+      background: #fff;
       border-radius: 22px 22px 0 0;
       z-index: 9020;
       overflow-y: auto;
@@ -228,7 +249,7 @@
       position: sticky;
       top: 0;
       background: #fff;
-      z-index: 1;
+      z-index: 2;
     }
     .pbn-sheet__handle {
       width: 36px;
@@ -242,11 +263,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 20px 8px;
+      padding: 10px 20px 12px;
       position: sticky;
       top: 28px;
       background: #fff;
-      z-index: 1;
+      z-index: 2;
       border-bottom: 1px solid rgba(2, 29, 73, 0.07);
     }
     .pbn-sheet__title {
@@ -267,16 +288,15 @@
       justify-content: center;
       color: #021d49;
       cursor: pointer;
-      flex-shrink: 0;
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* ── Body ── */
+    /* ── Sheet body ── */
     .pbn-sheet__body {
-      padding: 8px 0 calc(16px + env(safe-area-inset-bottom));
+      padding-bottom: calc(16px + env(safe-area-inset-bottom));
     }
 
-    /* ── Top-level nav item (no children) ── */
+    /* ── Primary nav item (no children) ── */
     .pbn-nav__item {
       display: flex;
       align-items: center;
@@ -288,15 +308,17 @@
       text-decoration: none;
       border-bottom: 1px solid rgba(2, 29, 73, 0.06);
       -webkit-tap-highlight-color: transparent;
-      transition: background 0.12s;
     }
     .pbn-nav__item:active { background: #F5F3EE; }
+    .pbn-nav__item--sm {
+      font-size: 14px;
+      padding: 13px 20px;
+      color: rgba(2, 29, 73, 0.7);
+    }
     .pbn-nav__arrow { opacity: 0.3; flex-shrink: 0; }
 
-    /* ── Accordion parent ── */
-    .pbn-nav__group {
-      border-bottom: 1px solid rgba(2, 29, 73, 0.06);
-    }
+    /* ── Accordion ── */
+    .pbn-nav__group { border-bottom: 1px solid rgba(2, 29, 73, 0.06); }
     .pbn-nav__parent {
       display: flex;
       align-items: center;
@@ -312,58 +334,125 @@
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
     }
+    .pbn-nav__parent--sm {
+      font-size: 14px;
+      padding: 13px 20px;
+      color: rgba(2, 29, 73, 0.7);
+      font-family: walsheim-bold, sans-serif;
+    }
     .pbn-nav__chevron {
       flex-shrink: 0;
-      opacity: 0.4;
+      opacity: 0.35;
       transition: transform 0.22s ease;
     }
     .pbn-nav__parent[aria-expanded="true"] .pbn-nav__chevron {
       transform: rotate(180deg);
-      opacity: 0.8;
-    }
-    .pbn-nav__parent[aria-expanded="true"] {
-      color: #021d49;
+      opacity: 0.7;
     }
 
-    /* ── Sub-links ── */
+    /* ── Sub-links container ── */
     .pbn-nav__children {
-      list-style: none;
-      margin: 0;
-      padding: 0;
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease;
-      background: #F5F3EE;
+      transition: max-height 0.32s ease;
     }
-    .pbn-nav__children.is-open {
-      max-height: 600px;
+    .pbn-nav__children.is-open { max-height: 800px; }
+
+    /* ── Image scroll carousel (primary nav sub-items) ── */
+    .pbn-sub__scroll {
+      display: flex;
+      gap: 10px;
+      padding: 14px 20px 18px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .pbn-sub__scroll::-webkit-scrollbar { display: none; }
+
+    .pbn-sub__card {
+      flex-shrink: 0;
+      width: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      scroll-snap-align: start;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .pbn-sub__img {
+      width: 80px;
+      height: 80px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #F5F3EE;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.15s;
+    }
+    .pbn-sub__card:active .pbn-sub__img { transform: scale(0.94); }
+
+    .pbn-sub__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .pbn-sub__img-fallback {
+      color: rgba(2, 29, 73, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .pbn-sub__name {
+      font-family: walsheim-bold, sans-serif;
+      font-size: 11px;
+      color: #021d49;
+      text-align: center;
+      line-height: 1.3;
+      max-width: 84px;
+    }
+
+    /* ── Plain children list (secondary nav sub-items) ── */
+    .pbn-nav__children-list {
+      background: #F5F3EE;
     }
     .pbn-nav__child {
       display: block;
-      padding: 12px 20px 12px 32px;
+      padding: 11px 20px 11px 32px;
       font-family: walsheim, sans-serif;
-      font-size: 14px;
-      color: rgba(2, 29, 73, 0.75);
+      font-size: 13px;
+      color: rgba(2, 29, 73, 0.7);
       text-decoration: none;
       border-top: 1px solid rgba(2, 29, 73, 0.06);
       -webkit-tap-highlight-color: transparent;
-      transition: color 0.12s, background 0.12s;
     }
-    .pbn-nav__child:active {
-      color: #021d49;
-      background: #ede9df;
+    .pbn-nav__child:active { background: #ede9df; }
+
+    /* ── Section label ── */
+    .pbn-nav__section-label {
+      font-family: walsheim-bold, sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(2, 29, 73, 0.35);
+      padding: 20px 20px 8px;
     }
 
-    /* ── Section divider ── */
-    .pbn-nav__divider {
-      height: 6px;
-      background: #F5F3EE;
+    /* ── Secondary nav container ── */
+    .pbn-nav__secondary {
       border-top: 1px solid rgba(2, 29, 73, 0.06);
-      border-bottom: 1px solid rgba(2, 29, 73, 0.06);
-      margin: 4px 0;
     }
 
-    /* ── Utility row (Account + Wishlist) ── */
+    /* ── Utility row ── */
     .pbn-nav__utils {
       display: flex;
       gap: 10px;
@@ -382,17 +471,14 @@
       color: #021d49;
       text-decoration: none;
       -webkit-tap-highlight-color: transparent;
-      transition: background 0.12s;
     }
     .pbn-nav__util:active { background: #ede9df; }
 
-    /* ── Bottom nav shell ── */
+    /* ── Bottom nav ── */
     .pbn {
       display: flex;
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       height: calc(60px + env(safe-area-inset-bottom));
       padding-bottom: env(safe-area-inset-bottom);
       background: rgba(255, 255, 255, 0.96);
@@ -429,16 +515,10 @@
       transition: background 0.18s;
     }
     .pbn__tab.is-active .pbn__pill { background: #F9C61D; }
-    .pbn__cart-wrap {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .pbn__cart-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
     .pbn__badge {
       position: absolute;
-      top: -6px;
-      right: -8px;
+      top: -6px; right: -8px;
       background: #021d49;
       color: #F9C61D;
       font-family: walsheim-bold, sans-serif;
@@ -462,7 +542,7 @@
     }
     .pbn__tab.is-active .pbn__label { font-family: walsheim-bold, sans-serif; }
 
-    /* ── Page / element clearance ── */
+    /* ── Clearance ── */
     #main { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
     #plaay-sticky-mobile { bottom: calc(60px + env(safe-area-inset-bottom)) !important; }
     .plaay-wa-float { bottom: calc(60px + env(safe-area-inset-bottom) + 12px) !important; }
@@ -519,7 +599,6 @@
     closeBtn.addEventListener('click', closeSheet);
     backdrop.addEventListener('click', closeSheet);
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && sheetOpen) closeSheet(); });
-
     sheet.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeSheet); });
 
     /* ── Search ── */
@@ -529,8 +608,6 @@
       var header = document.querySelector('header');
       if (!panel) return;
       if (panel.classList.contains('active')) { panel.classList.remove('active'); return; }
-      /* Use setTimeout so the header's document-click "close" listener fires first,
-         then we open the panel cleanly after the event has fully propagated. */
       setTimeout(function() {
         if (header) panel.style.top = header.getBoundingClientRect().bottom + 'px';
         panel.classList.add('active');
@@ -545,7 +622,7 @@
       if (sd) sd.activeDrawer = 'cart';
     });
 
-    /* ── Cart badge sync ── */
+    /* ── Badge sync ── */
     var badge       = document.getElementById('pbn-cart-badge');
     var headerCount = document.querySelector('[data-cart-count]');
     function syncBadge() {
