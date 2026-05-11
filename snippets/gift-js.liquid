@@ -8,6 +8,88 @@
   var SYNC_DELAY = 350;
   var syncTimer = null;
   var syncing = false;
+  var lastQualificationState = null;
+
+  function animateTierBar(state) {
+    var bar = document.getElementById('plaay-tier-bar');
+    if (!bar) return;
+
+    bar.classList.remove('plaay-tier-bar--gift-unlocked', 'plaay-tier-bar--gift-lost');
+    void bar.offsetWidth;
+    bar.classList.add(state === 'unlock' ? 'plaay-tier-bar--gift-unlocked' : 'plaay-tier-bar--gift-lost');
+
+    setTimeout(function() {
+      bar.classList.remove('plaay-tier-bar--gift-unlocked', 'plaay-tier-bar--gift-lost');
+    }, 1200);
+  }
+
+  function spawnConfettiFallback() {
+    var overlay = document.createElement('div');
+    overlay.className = 'plaay-cart-confetti';
+    var colors = ['#F9C61D', '#021D49', '#FFFFFF', '#FDBA24'];
+
+    for (var i = 0; i < 26; i += 1) {
+      var piece = document.createElement('span');
+      piece.className = 'plaay-cart-confetti__piece';
+      piece.style.left = (8 + Math.random() * 84) + '%';
+      piece.style.background = colors[i % colors.length];
+      piece.style.animationDelay = (Math.random() * 120) + 'ms';
+      piece.style.setProperty('--confetti-x', ((Math.random() * 180) - 90) + 'px');
+      piece.style.setProperty('--confetti-y', (150 + Math.random() * 170) + 'px');
+      piece.style.setProperty('--confetti-rotate', ((Math.random() * 540) - 270) + 'deg');
+      overlay.appendChild(piece);
+    }
+
+    document.body.appendChild(overlay);
+    setTimeout(function() {
+      overlay.remove();
+    }, 1400);
+  }
+
+  function celebrateMysteryGift() {
+    animateTierBar('unlock');
+
+    if (typeof window.confetti === 'function') {
+      window.confetti({
+        particleCount: 85,
+        spread: 72,
+        startVelocity: 34,
+        ticks: 180,
+        origin: { x: 0.28, y: 0.2 },
+        colors: ['#F9C61D', '#021D49', '#FFFFFF']
+      });
+      window.confetti({
+        particleCount: 85,
+        spread: 72,
+        startVelocity: 34,
+        ticks: 180,
+        origin: { x: 0.72, y: 0.2 },
+        colors: ['#F9C61D', '#021D49', '#FFFFFF']
+      });
+      return;
+    }
+
+    spawnConfettiFallback();
+  }
+
+  function showMysteryGiftRemoved() {
+    animateTierBar('lost');
+  }
+
+  function syncRewardFeedback(qualifies) {
+    if (lastQualificationState === null) {
+      lastQualificationState = qualifies;
+      return;
+    }
+
+    if (!lastQualificationState && qualifies) {
+      celebrateMysteryGift();
+    } else if (lastQualificationState && !qualifies) {
+      showMysteryGiftRemoved();
+    }
+
+    lastQualificationState = qualifies;
+  }
 
   function isCartMutation(url) {
     return /\/cart\/(add|change|update|clear)(\.js)?(\?|$)/.test(String(url || ''));
@@ -135,6 +217,7 @@
             .then(fetchCart)
             .then(function(nextCart) {
               refreshCartUi(nextCart.total_price);
+              syncRewardFeedback(true);
             });
         }
 
@@ -143,6 +226,7 @@
             .then(fetchCart)
             .then(function(nextCart) {
               refreshCartUi(nextCart.total_price);
+              syncRewardFeedback(true);
             });
         }
 
@@ -151,10 +235,12 @@
             .then(fetchCart)
             .then(function(nextCart) {
               refreshCartUi(nextCart.total_price);
+              syncRewardFeedback(false);
             });
         }
 
         refreshCartUi(cart.total_price);
+        syncRewardFeedback(qualifies);
         return null;
       })
       .catch(function(error) {
