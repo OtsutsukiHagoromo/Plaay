@@ -98,10 +98,16 @@
   }
 
   function getQualifyingSubtotal(cart) {
-    return (cart.items || []).reduce(function(sum, item) {
-      if (Number(item.variant_id) === GIFT_VARIANT_ID) return sum;
-      return sum + Number(item.final_line_price || 0);
+    // cart.total_price is the true post-all-discounts total — it includes discount
+    // codes, unlike item.final_line_price which only reflects line-level discounts.
+    // Subtract the gift's final_line_price so the gift itself doesn't count toward
+    // the qualifying threshold (gift is typically free / AED 0).
+    var giftTotal = (cart.items || []).reduce(function(sum, item) {
+      return Number(item.variant_id) === GIFT_VARIANT_ID
+        ? sum + Number(item.final_line_price || 0)
+        : sum;
     }, 0);
+    return Math.max(0, Number(cart.total_price || 0) - giftTotal);
   }
 
   function normalizeGiftQuantity(giftLines) {
