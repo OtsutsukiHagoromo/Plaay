@@ -1,172 +1,105 @@
-{% liquid
-  assign background_color = section.settings.background_color
-  assign background_color_mobile = section.settings.background_color_mobile
-  assign announcement_blocks = section.blocks | where: 'type', 'announcement_text'
-  assign announcement_text_size = announcement_blocks | size
-
-  assign total_chars = 0
-  for block in announcement_blocks
-    assign total_chars = total_chars | plus: block.settings.text.size
-  endfor
-  assign marquee_duration = total_chars | divided_by: 5
-  if marquee_duration < 14
-    assign marquee_duration = 14
-  endif
-  if marquee_duration > 40
-    assign marquee_duration = 40
-  endif
-%}
-
-{% style %}
-  .announcement_bar {
-    background-color: {{ background_color }};
-    height: 40px;
-    overflow: hidden;
-  }
-  .announcement_bar__track {
-    display: flex;
-    align-items: center;
-    height: 40px;
-    overflow: hidden;
-  }
-  .announcement_bar__marquee {
-    display: inline-flex;
-    align-items: center;
-    white-space: nowrap;
-    animation: plaay-marquee {{ marquee_duration }}s linear infinite;
-    will-change: transform;
-  }
-  .announcement_bar__marquee:hover {
-    animation-play-state: paused;
-  }
-  .announcement_bar__item {
-    display: inline-flex;
-    align-items: center;
-    font-size: 12px;
-    font-weight: bold;
-    letter-spacing: 0.07em;
-    padding-right: 0;
-  }
-  .announcement_bar__sep {
-    display: inline-block;
-    margin: 0 24px;
-    opacity: 0.45;
-    font-size: 9px;
-    line-height: 1;
-  }
-  @keyframes plaay-marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
-  @media only screen and (max-width: 768px) {
-    .announcement_bar {
-      background-color: {{ background_color_mobile }};
-    }
-    .announcement_bar__item {
-      font-size: 11px;
-    }
-  }
-{% endstyle %}
-
-{% if announcement_text_size > 0 %}
-  <announcement-bar data-module="announcement-bar">
-    <div class="announcement_bar fixed top-0 w-full z-10">
-      <div class="announcement_bar__track">
-        <div class="announcement_bar__marquee">
-          {%- comment -%} First copy {%- endcomment -%}
-          {%- for block in announcement_blocks -%}
-            {%- assign text = block.settings.text -%}
-            {%- assign text_color = block.settings.text_color -%}
-            {%- assign text_color_mobile = block.settings.text_color_mobile -%}
-            {%- assign text_style = block.settings.text_style -%}
-            {%- if text != blank -%}
-              <span
-                class="announcement_bar__item {{ text_style }}"
-                style="color: {{ text_color }};"
-                {{ block.shopify_attributes }}
-              >{{ text }}</span><span class="announcement_bar__sep" aria-hidden="true">✦</span>
-            {%- endif -%}
-          {%- endfor -%}
-          {%- comment -%} Duplicate for seamless loop {%- endcomment -%}
-          {%- for block in announcement_blocks -%}
-            {%- assign text = block.settings.text -%}
-            {%- assign text_color = block.settings.text_color -%}
-            {%- assign text_style = block.settings.text_style -%}
-            {%- if text != blank -%}
-              <span
-                class="announcement_bar__item {{ text_style }}"
-                style="color: {{ text_color }};"
-                aria-hidden="true"
-              >{{ text }}</span><span class="announcement_bar__sep" aria-hidden="true">✦</span>
-            {%- endif -%}
-          {%- endfor -%}
-        </div>
+{%- for block in section.blocks -%}
+  {%- case block.type -%}
+    {%- when 'announcement' -%}
+      <div class="announcement-bar color-{{ block.settings.color_scheme }} gradient" role="region" aria-label="{{ 'sections.header.announcement' | t }}" {{ block.shopify_attributes }}>
+        {%- if block.settings.text != blank -%}
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}" class="announcement-bar__link link link--text focus-inset animate-arrow">
+          {%- endif -%}
+              <div class="page-width">
+                <p class="announcement-bar__message {{ block.settings.text_alignment }} h5">
+                  <span>{{ block.settings.text | escape }}</span>
+                  {%- if block.settings.link != blank -%}
+                    {% render 'icon-arrow' %}
+                  {%- endif -%}
+                </p>
+              </div>
+          {%- if block.settings.link != blank -%}
+            </a>
+          {%- endif -%}
+        {%- endif -%}
       </div>
-    </div>
-  </announcement-bar>
-{% endif %}
-
+  {%- endcase -%}
+{%- endfor -%}
 
 {% schema %}
-  {
-    "name": "Announcement Bar",
+{
+  "name": "t:sections.announcement-bar.name",
+  "max_blocks": 12,
+  "class": "announcement-bar-section",
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "t:sections.announcement-bar.blocks.announcement.name",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Welcome to our store",
+          "label": "t:sections.announcement-bar.blocks.announcement.settings.text.label"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__1.label"
+            },
+            {
+              "value": "center",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__2.label"
+            },
+            {
+              "value": "right",
+              "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.options__3.label"
+            }
+          ],
+          "default": "center",
+          "label": "t:sections.announcement-bar.blocks.announcement.settings.text_alignment.label"
+        },
+        {
+          "type": "select",
+          "id": "color_scheme",
+          "options": [
+            {
+              "value": "accent-1",
+              "label": "t:sections.all.colors.accent_1.label"
+            },
+            {
+              "value": "accent-2",
+              "label": "t:sections.all.colors.accent_2.label"
+            },
+            {
+              "value": "background-1",
+              "label": "t:sections.all.colors.background_1.label"
+            },
+            {
+              "value": "background-2",
+              "label": "t:sections.all.colors.background_2.label"
+            },
+            {
+              "value": "inverse",
+              "label": "t:sections.all.colors.inverse.label"
+            }
+          ],
+          "default": "accent-1",
+          "label": "t:sections.all.colors.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "t:sections.announcement-bar.blocks.announcement.settings.link.label"
+        }
+      ]
+    }
+  ],
+  "default": {
     "blocks": [
       {
-        "type": "announcement_text",
-        "name": "Announcement text",
-        "settings": [
-          {
-            "type": "text",
-            "id": "text",
-            "label": "Text"
-          },
-          {
-            "type": "color",
-            "id": "text_color",
-            "label": "Text color",
-            "default": "#021D49"
-          },
-          {
-            "type": "color",
-            "id": "text_color_mobile",
-            "label": "Text color (mobile)",
-            "default": "#021D49"
-          },
-          {
-            "type": "select",
-            "id": "text_style",
-            "label": "Text style",
-            "options": [
-              {
-                "value": "uppercase",
-                "label": "Uppercase"
-              },
-              {
-                "value": "lowercase",
-                "label": "Lowercase"
-              },
-              {
-                "value": "capitalize",
-                "label": "Capitalize"
-              }
-            ]
-          }
-        ]
-      }
-    ],
-    "settings": [
-      {
-        "type": "color",
-        "id": "background_color",
-        "label": "Background color",
-        "default": "#FFF"
-      },
-      {
-        "type": "color",
-        "id": "background_color_mobile",
-        "label": "Background color (mobile)",
-        "default": "#F9C61D"
+        "type": "announcement"
       }
     ]
   }
+}
 {% endschema %}
