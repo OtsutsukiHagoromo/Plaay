@@ -251,6 +251,14 @@
     "lifestyle": {
       "type": "retailer-logos",
       "blocks": {
+        "gallery_En4gbq": {
+          "type": "gallery",
+          "settings": {
+            "img": "shopify://shop_images/Caribou1_svg.png",
+            "retailer_name": "Black Sheep Coffee",
+            "btn_url": ""
+          }
+        },
         "gallery_7wNjVk": {
           "type": "gallery",
           "settings": {
@@ -365,6 +373,7 @@
         }
       },
       "block_order": [
+        "gallery_En4gbq",
         "gallery_7wNjVk",
         "gallery_nbdbEK",
         "gallery_iMWe6M",
