@@ -6,23 +6,21 @@
   assign has_vegan       = false
   assign has_clean       = false
 
-  if preset != 'bars-truffles-icons'
-    for tag in product.tags
-      assign trust_tag = tag | downcase | strip
-      case trust_tag
-        when 'badge:halal', 'trust:halal', 'halal'
-          assign has_halal = true
-        when 'badge:gluten-free', 'badge:gluten_free', 'trust:gluten-free', 'trust:gluten_free', 'gluten-free', 'gluten free'
-          assign has_gluten_free = true
-        when 'badge:palm-free', 'badge:palm_free', 'trust:palm-free', 'trust:palm_free', 'palm-free', 'palm free'
-          assign has_palm_free = true
-        when 'badge:vegan', 'trust:vegan', 'vegan'
-          assign has_vegan = true
-        when 'badge:clean', 'badge:clean-ingredients', 'badge:clean_ingredients', 'trust:clean', 'trust:clean-ingredients', 'trust:clean_ingredients', 'clean ingredients'
-          assign has_clean = true
-      endcase
-    endfor
-  endif
+  for tag in product.tags
+    assign trust_tag = tag | downcase | strip
+    case trust_tag
+      when 'badge:halal', 'trust:halal', 'halal'
+        assign has_halal = true
+      when 'badge:gluten-free', 'badge:gluten_free', 'trust:gluten-free', 'trust:gluten_free', 'gluten-free', 'gluten free'
+        assign has_gluten_free = true
+      when 'badge:palm-free', 'badge:palm_free', 'trust:palm-free', 'trust:palm_free', 'palm-free', 'palm free'
+        assign has_palm_free = true
+      when 'badge:vegan', 'trust:vegan', 'vegan'
+        assign has_vegan = true
+      when 'badge:clean', 'badge:clean-ingredients', 'badge:clean_ingredients', 'trust:clean', 'trust:clean-ingredients', 'trust:clean_ingredients', 'clean ingredients'
+        assign has_clean = true
+    endcase
+  endfor
 
   assign show_trust_badges = false
   if preset == 'bars-truffles-icons' or has_halal or has_gluten_free or has_palm_free or has_vegan or has_clean
@@ -49,10 +47,12 @@
       <img src="https://cdn.shopify.com/s/files/1/0662/4722/9657/files/No_Palm_Oil_24629699-90ad-4220-a85e-4ef724704d9f.png?v=1778740942" alt="No palm oil" class="plaay-trust-img" loading="lazy" decoding="async">
       <span class="plaay-trust-label font-walsheim-bold">No Palm Oil</span>
     </div>
+    {%- if has_vegan -%}
     <div class="plaay-trust-item">
       <img src="https://cdn.shopify.com/s/files/1/0662/4722/9657/files/Vegan_2f4377d1-67cf-434d-a4c9-0ca32d98637a.png?v=1778740943" alt="Vegan" class="plaay-trust-img" loading="lazy" decoding="async">
       <span class="plaay-trust-label font-walsheim-bold">Vegan</span>
     </div>
+    {%- endif -%}
     <div class="plaay-trust-item">
       <img src="https://cdn.shopify.com/s/files/1/0662/4722/9657/files/Halal_1b346961-9291-44fc-a8b4-ddbc4c8f9660.png?v=1778740942" alt="Halal" class="plaay-trust-img" loading="lazy" decoding="async">
       <span class="plaay-trust-label font-walsheim-bold">Halal</span>
