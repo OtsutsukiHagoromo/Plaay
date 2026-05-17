@@ -251,7 +251,9 @@
           <ul {% if product_images_size > 1 %} class="glide__slides" {% endif %}>
             {% for image in product.images %}
               <li {% if product_images_size > 1 %} class="glide__slide px-2 | md:px-0" {% endif %} data-index="{{ forloop.index0 }}">
-                {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain h-[300px] sm:h-[360px] mx-auto lg:w-full lg:h-[600px] xl:object-cover', height: 300, width: 550, forloop_data: forloop.index %}
+                <div class="flex items-center justify-center h-[300px] sm:h-[360px] lg:aspect-square lg:h-auto lg:w-full overflow-hidden">
+                  {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain w-full h-full mx-auto', height: 300, width: 550, forloop_data: forloop.index %}
+                </div>
               </li>
             {% endfor %}
           </ul>
