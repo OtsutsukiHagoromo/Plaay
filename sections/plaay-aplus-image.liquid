@@ -1,0 +1,135 @@
+{%- comment -%}
+  Plaay — A+ Content Image Section
+  Renders a single full-width marketing image stored on the product as:
+    Metafield namespace : arena
+    Metafield key       : aplus_image
+    Metafield type      : file_reference
+  Upload the image per-product in Shopify Admin → Products → [product] → Metafields.
+{%- endcomment -%}
+
+{%- liquid
+  assign aplus_file = product.metafields.arena.aplus_image.value
+  assign show_section = false
+  if aplus_file != blank
+    assign show_section = true
+  endif
+  if show_section == false and section.settings.fallback_enabled
+    assign show_section = true
+  endif
+-%}
+
+{%- if show_section -%}
+<div
+  class="plaay-aplus-image"
+  style="background:{{ section.settings.background_color }};padding:{{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px;"
+>
+  <div class="plaay-aplus-image__inner" style="max-width:{{ section.settings.max_width }}px;margin:0 auto;">
+
+    {%- if aplus_file != blank -%}
+      {%- assign img_alt = product.title | append: ' — A+ Content' -%}
+      <img
+        src="{{ aplus_file | image_url: width: 1200 }}"
+        srcset="
+          {{ aplus_file | image_url: width: 480 }} 480w,
+          {{ aplus_file | image_url: width: 768 }} 768w,
+          {{ aplus_file | image_url: width: 1200 }} 1200w"
+        sizes="(max-width: 600px) 100vw, {{ section.settings.max_width }}px"
+        alt="{{ img_alt }}"
+        width="{{ aplus_file.width }}"
+        height="{{ aplus_file.height }}"
+        loading="lazy"
+        class="plaay-aplus-image__img"
+      >
+    {%- elsif section.settings.fallback_enabled -%}
+      <div class="plaay-aplus-image__placeholder">
+        <p>A+ content image not set.<br>
+           Go to <strong>Products → {{ product.title }} → Metafields</strong> and upload an image to the <em>A+ Content Image</em> field.</p>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+{%- endif -%}
+
+<style>
+  .plaay-aplus-image {
+    width: 100%;
+    overflow: hidden;
+  }
+  .plaay-aplus-image__inner {
+    width: 100%;
+  }
+  .plaay-aplus-image__img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .plaay-aplus-image__placeholder {
+    background: #f4f4f4;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 48px 24px;
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0 16px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "A+ Content Image",
+  "tag": "div",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Displays the A+ marketing image stored in the product metafield **arena.aplus_image**. Upload the image per product in Admin → Products → Metafields."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max image width (px)",
+      "min": 400,
+      "max": 1400,
+      "step": 50,
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding top (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bottom (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "fallback_enabled",
+      "label": "Show placeholder if no image set",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "A+ Content Image"
+    }
+  ]
+}
+{% endschema %}
