@@ -266,6 +266,15 @@
       '<div class="plaay-tier-bar__pills">' + pills + '</div>';
   }
 
+  function scrollPillsToActive(bar) {
+    var pillsEl = bar && bar.querySelector('.plaay-tier-bar__pills');
+    if (!pillsEl) return;
+    var donePills = pillsEl.querySelectorAll('.plaay-tier-bar__pill--done');
+    var target = donePills.length ? donePills[donePills.length - 1] : null;
+    if (!target) return;
+    pillsEl.scrollTo({ left: Math.max(0, target.offsetLeft - 6), behavior: 'smooth' });
+  }
+
   window.plaayTierBar = {
     update: function(totalFils) {
       var bar   = document.getElementById('plaay-tier-bar');
@@ -291,7 +300,18 @@
           giftLabel: d.giftLabel
         });
       }
+      scrollPillsToActive(bar);
     }
   };
+
+  // Auto-scroll on initial render (server-side HTML, no JS update fired yet)
+  (function initPillScroll() {
+    function run() { scrollPillsToActive(document.getElementById('plaay-tier-bar')); }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', run, { once: true });
+    } else {
+      run();
+    }
+  })();
 })();
 </script>
