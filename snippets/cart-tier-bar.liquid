@@ -16,7 +16,7 @@
   assign eid_t1_fils = eid_t1_aed | times: 100
   assign eid_t2_fils = eid_t2_aed | times: 100
   assign eid_t3_fils = eid_t3_aed | times: 100
-  assign total       = cart.total_price
+  assign total       = cart.original_total_price
 -%}
 
 {%- if eid_enabled -%}

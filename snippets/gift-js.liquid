@@ -102,16 +102,16 @@
   }
 
   function getQualifyingSubtotal(cart) {
-    // cart.total_price is the true post-all-discounts total — it includes discount
-    // codes, unlike item.final_line_price which only reflects line-level discounts.
-    // Subtract the gift's final_line_price so the gift itself doesn't count toward
-    // the qualifying threshold (gift is typically free / AED 0).
-    var giftTotal = (cart.items || []).reduce(function(sum, item) {
+    // Use original_total_price (pre-auto-discount) so tier thresholds compare against
+    // what the customer added to cart, not the post-discount total. This ensures
+    // a customer with AED 411 pre-discount keeps their 25% Off tier visible even
+    // after the discount drops their cart.total_price below AED 400.
+    var giftOriginal = (cart.items || []).reduce(function(sum, item) {
       return Number(item.variant_id) === GIFT_VARIANT_ID
-        ? sum + Number(item.final_line_price || 0)
+        ? sum + Number(item.original_line_price || 0)
         : sum;
     }, 0);
-    return Math.max(0, Number(cart.total_price || 0) - giftTotal);
+    return Math.max(0, Number(cart.original_total_price || cart.total_price || 0) - giftOriginal);
   }
 
   function normalizeGiftQuantity(giftLines) {
@@ -143,25 +143,25 @@
 
         if (qualifies && giftQty === 0) {
           return addGift().then(fetchCart).then(function(next) {
-            refreshCartUi(next.total_price);
+            refreshCartUi(next.original_total_price || next.total_price);
             syncRewardFeedback(true);
           });
         }
         if (qualifies && giftQty > 1) {
           return normalizeGiftQuantity(giftLines).then(fetchCart).then(function(next) {
-            refreshCartUi(next.total_price);
+            refreshCartUi(next.original_total_price || next.total_price);
             syncRewardFeedback(true);
           });
         }
         if (!qualifies && giftQty > 0) {
           return removeGift(giftLines).then(fetchCart).then(function(next) {
-            refreshCartUi(next.total_price);
+            refreshCartUi(next.original_total_price || next.total_price);
             syncRewardFeedback(false);
           });
         }
 
         syncRewardFeedback(qualifies);
-        refreshCartUi(cart.total_price);
+        refreshCartUi(cart.original_total_price || cart.total_price);
         return null;
       })
       .catch(function(err) { console.error('Plaay mystery gift sync failed:', err); })
