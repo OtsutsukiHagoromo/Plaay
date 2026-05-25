@@ -12,6 +12,7 @@
     "favicon": "shopify://shop_images/Blue_logo_on_Yellow_Choco_Snack_Hack_Zoomed.jpg",
     "global_recharge_point_two": "15% Off Regular Price",
     "ingredients_icons_link_list": "ingredients-icons",
+    "eid_sale_enabled": true,
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",
@@ -28,9 +29,8 @@
         "blocks": {
           "announcement_text_qzKxiQ": {
             "type": "announcement_text",
-            "disabled": true,
             "settings": {
-              "text": "Eid Sale Now Live - Up To Flat 30% Off",
+              "text": "Eid Sale Is Live - Up To 30% Off Sitewide",
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"

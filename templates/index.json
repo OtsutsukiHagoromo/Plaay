@@ -12,47 +12,8 @@
     "4ae9c22c-dd9d-4d0b-bb5c-7da4d20021b3": {
       "type": "two-sections-hero",
       "blocks": {
-        "slide_jYrFmK": {
-          "type": "slide",
-          "disabled": true,
-          "settings": {
-            "hide_section_one_mobile": true,
-            "hide_section_two_mobile": false,
-            "title_color_mobile": "#021d49",
-            "title_color_desktop": "#021d49",
-            "heading_color_mobile": "#021d49",
-            "heading_color_desktop": "#021d49",
-            "title_tag_type": "1",
-            "content_vertical_position_mobile": "top-0",
-            "content_horizontal_position_mobile": "text-center",
-            "content_vertical_position_desktop": "md:top-1/2 md:-translate-y-1/2",
-            "content_horizontal_position_desktop": "md:text-center",
-            "title_size_desktop": 50,
-            "title_size_mobile": 32,
-            "heading_size_desktop": 34,
-            "heading_size_mobile": 22,
-            "link_one_style": "blue",
-            "link_one_style_mobile": "blue",
-            "link_two_style": "white",
-            "link_two_style_mobile": "blue-border",
-            "section_one_video_loop": true,
-            "section_two_video_loop": true,
-            "title": "making the world a little more plaayful",
-            "title_mobile": "Spark moments of joy",
-            "heading": "one delicious bite at a time",
-            "heading_mobile": "",
-            "link_one": "",
-            "link_one_text": "Shop our snacks",
-            "link_two": "",
-            "link_two_text": "Why plaay",
-            "img": "shopify://shop_images/IMG_5695_JPG.jpg",
-            "section_one_video": "",
-            "section_two_video": ""
-          }
-        },
         "slide_earVyE": {
           "type": "slide",
-          "disabled": true,
           "settings": {
             "hide_section_one_mobile": true,
             "hide_section_two_mobile": false,
@@ -167,7 +128,6 @@
         }
       },
       "block_order": [
-        "slide_jYrFmK",
         "slide_earVyE",
         "slide_BwPeAp",
         "slide_YeGDTk"
