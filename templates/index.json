@@ -52,6 +52,45 @@
         },
         "slide_earVyE": {
           "type": "slide",
+          "disabled": true,
+          "settings": {
+            "hide_section_one_mobile": true,
+            "hide_section_two_mobile": false,
+            "title_color_mobile": "#021d49",
+            "title_color_desktop": "#021d49",
+            "heading_color_mobile": "#021d49",
+            "heading_color_desktop": "#021d49",
+            "title_tag_type": "1",
+            "content_vertical_position_mobile": "bottom-0 top-auto",
+            "content_horizontal_position_mobile": "text-center",
+            "content_vertical_position_desktop": "md:bottom-0 md:top-auto",
+            "content_horizontal_position_desktop": "md:text-center",
+            "title_size_desktop": 50,
+            "title_size_mobile": 32,
+            "heading_size_desktop": 34,
+            "heading_size_mobile": 22,
+            "link_one_style": "blue",
+            "link_one_style_mobile": "blue",
+            "link_two_style": "white",
+            "link_two_style_mobile": "blue-border",
+            "section_one_video_loop": true,
+            "section_two_video_loop": true,
+            "title": "",
+            "title_mobile": "",
+            "heading": "",
+            "heading_mobile": "",
+            "link_one": "shopify://collections",
+            "link_one_text": "Shop Now",
+            "link_two": "",
+            "link_two_text": "",
+            "img": "shopify://shop_images/Plaay_eid_banners_1.jpg",
+            "m-img": "shopify://shop_images/Plaay_eid_banners_2.jpg",
+            "section_one_video": "",
+            "section_two_video": ""
+          }
+        },
+        "slide_BwPeAp": {
+          "type": "slide",
           "settings": {
             "hide_section_one_mobile": true,
             "hide_section_two_mobile": false,
@@ -130,6 +169,7 @@
       "block_order": [
         "slide_jYrFmK",
         "slide_earVyE",
+        "slide_BwPeAp",
         "slide_YeGDTk"
       ],
       "custom_css": [
