@@ -26,6 +26,16 @@
       "announcement-bar": {
         "type": "announcement-bar",
         "blocks": {
+          "announcement_text_qzKxiQ": {
+            "type": "announcement_text",
+            "disabled": true,
+            "settings": {
+              "text": "Eid Sale Now Live - Up To Flat 30% Off",
+              "text_color": "#021d49",
+              "text_color_mobile": "#021d49",
+              "text_style": "uppercase"
+            }
+          },
           "announcement_text_yP4HrN": {
             "type": "announcement_text",
             "disabled": true,
@@ -65,6 +75,7 @@
           }
         },
         "block_order": [
+          "announcement_text_qzKxiQ",
           "announcement_text_yP4HrN",
           "c2b8a7fe-ac53-4009-a024-a1af5cf2f579",
           "announcement_text_yXwBXG",
