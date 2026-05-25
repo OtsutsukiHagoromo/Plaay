@@ -40,6 +40,10 @@
   {% elsif tag_lower == 'badge:gift' and badge_text == '' %}
     {% assign badge_text = 'Gift Ready' %}
     {% assign badge_class = 'plaay-badge--gift' %}
+
+  {% elsif tag_lower == 'badge:sale' and badge_text == '' %}
+    {% assign badge_text = 'Sale' %}
+    {% assign badge_class = 'plaay-badge--sale' %}
   {% endif %}
 {% endfor %}
 

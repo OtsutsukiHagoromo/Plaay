@@ -83,7 +83,11 @@
     class="content_container flex flex-col items-center justify-between pt-9 p-4 px-5 h-full w-full rounded-xl z-5 relative {% if grey_background %} bg-grey-f5 {% else %} bg-white {% endif %} | md:justify-between"
     id="add-to-cart-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
     data-title="{{ product.title }}">
-    {%- render 'plaay-badge', product: product -%}
+    {%- if settings.eid_sale_enabled -%}
+      <span class="plaay-badge plaay-badge--sale">Eid Sale</span>
+    {%- else -%}
+      {%- render 'plaay-badge', product: product -%}
+    {%- endif -%}
     {%- render 'plaay-wishlist-heart', product: product -%}
     <div class="relative flex flex-col justify-between w-full h-full product_flip_front z-5">
       {% comment %} hidden selects {% endcomment %}

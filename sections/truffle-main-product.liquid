@@ -419,6 +419,7 @@
       {% endif %}
 
       {% render 'product-price', product: product %}
+      {%- render 'plaay-eid-offer-strip' -%}
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when '@app' -%}

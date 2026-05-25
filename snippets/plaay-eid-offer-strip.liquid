@@ -1,0 +1,23 @@
+{%- if settings.eid_sale_enabled -%}
+<div class="plaay-eid-card">
+  <div class="plaay-eid-card__header">
+    <span class="plaay-eid-card__emoji">🎉</span>
+    <span class="plaay-eid-card__title">Eid Sale Offers</span>
+  </div>
+  <ul class="plaay-eid-card__tiers">
+    <li class="plaay-eid-card__tier">
+      <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      Spend <strong>AED {{ settings.eid_tier_1_spend }}+</strong> &rarr; Get <strong>{{ settings.eid_tier_1_label }}</strong>
+    </li>
+    <li class="plaay-eid-card__tier">
+      <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      Spend <strong>AED {{ settings.eid_tier_2_spend }}+</strong> &rarr; Get <strong>{{ settings.eid_tier_2_label }}</strong>
+    </li>
+    <li class="plaay-eid-card__tier">
+      <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      Spend <strong>AED {{ settings.eid_tier_3_spend }}+</strong> &rarr; Get <strong>{{ settings.eid_tier_3_label }}</strong>
+    </li>
+  </ul>
+  <p class="plaay-eid-card__note">Discounts auto-applied at checkout &middot; Free Mystery Gift added to cart automatically</p>
+</div>
+{%- endif -%}
