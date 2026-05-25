@@ -1,75 +1,182 @@
 {%- liquid
-  assign ship_aed = settings.cart_tier_ship | default: 75
-  assign gift_aed = settings.cart_tier_1_spend | default: 250
+  assign ship_aed   = settings.cart_tier_ship | default: 75
+  assign gift_aed   = settings.cart_tier_1_spend | default: 250
   assign gift_label = settings.cart_tier_1_label | default: 'Mystery Gift'
 
-  assign ship_fils = ship_aed | times: 100
-  assign gift_fils = gift_aed | times: 100
-  assign total = cart.total_price
+  assign eid_enabled  = settings.eid_sale_enabled
+  assign eid_t1_aed   = settings.eid_tier_1_spend | default: 250
+  assign eid_t1_label = settings.eid_tier_1_label | default: '20% Off + Mystery Gift'
+  assign eid_t2_aed   = settings.eid_tier_2_spend | default: 400
+  assign eid_t2_label = settings.eid_tier_2_label | default: '25% Off + Mystery Gift'
+  assign eid_t3_aed   = settings.eid_tier_3_spend | default: 600
+  assign eid_t3_label = settings.eid_tier_3_label | default: '30% Off + Mystery Gift'
 
-  assign tier_done_ship = false
-  assign tier_done_gift = false
-
-  if total >= ship_fils
-    assign tier_done_ship = true
-  endif
-  if total >= gift_fils
-    assign tier_done_gift = true
-  endif
+  assign ship_fils   = ship_aed | times: 100
+  assign gift_fils   = gift_aed | times: 100
+  assign eid_t1_fils = eid_t1_aed | times: 100
+  assign eid_t2_fils = eid_t2_aed | times: 100
+  assign eid_t3_fils = eid_t3_aed | times: 100
+  assign total       = cart.total_price
 -%}
 
-<div class="plaay-tier-bar"
-  id="plaay-tier-bar"
-  data-ship="{{ ship_fils }}"
-  data-gift="{{ gift_fils }}"
-  data-gift-label="{{ gift_label | escape }}">
+{%- if eid_enabled -%}
+  {%- liquid
+    assign tier_done_ship = false
+    assign tier_done_t1   = false
+    assign tier_done_t2   = false
+    assign tier_done_t3   = false
+    if total >= ship_fils
+      assign tier_done_ship = true
+    endif
+    if total >= eid_t1_fils
+      assign tier_done_t1 = true
+    endif
+    if total >= eid_t2_fils
+      assign tier_done_t2 = true
+    endif
+    if total >= eid_t3_fils
+      assign tier_done_t3 = true
+    endif
+  -%}
 
-  <div id="plaay-tier-bar-inner">
-    {%- if tier_done_gift -%}
-      <p class="plaay-tier-bar__msg plaay-tier-bar__msg--done">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-        All rewards unlocked! You're all set.
-      </p>
-    {%- elsif tier_done_ship -%}
-      {%- assign remaining_fils = gift_fils | minus: total -%}
-      <p class="plaay-tier-bar__msg">
-        🚚 Free shipping unlocked! Add <strong>{{ remaining_fils | money }}</strong> more for <strong>{{ gift_label }}</strong>
-      </p>
-    {%- else -%}
-      {%- assign remaining_fils = ship_fils | minus: total -%}
-      <p class="plaay-tier-bar__msg">
-        Add <strong>{{ remaining_fils | money }}</strong> more for free shipping
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline;vertical-align:-2px"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-      </p>
-    {%- endif -%}
+  <div class="plaay-tier-bar"
+    id="plaay-tier-bar"
+    data-mode="eid"
+    data-ship="{{ ship_fils }}"
+    data-eid-t1="{{ eid_t1_fils }}"
+    data-eid-t1-label="{{ eid_t1_label | escape }}"
+    data-eid-t2="{{ eid_t2_fils }}"
+    data-eid-t2-label="{{ eid_t2_label | escape }}"
+    data-eid-t3="{{ eid_t3_fils }}"
+    data-eid-t3-label="{{ eid_t3_label | escape }}">
 
-    {%- if tier_done_gift -%}
-      {%- assign bar_pct = 100 -%}
-    {%- elsif tier_done_ship -%}
-      {%- assign bar_num = total | minus: ship_fils -%}
-      {%- assign bar_den = gift_fils | minus: ship_fils -%}
-      {%- assign bar_pct = bar_num | times: 100 | divided_by: bar_den -%}
-    {%- else -%}
-      {%- assign bar_pct = total | times: 100 | divided_by: ship_fils -%}
-    {%- endif -%}
-    {%- if bar_pct > 100 -%}{%- assign bar_pct = 100 -%}{%- endif -%}
+    <div id="plaay-tier-bar-inner">
+      {%- if tier_done_t3 -%}
+        <p class="plaay-tier-bar__msg plaay-tier-bar__msg--done">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          All rewards unlocked! You're all set.
+        </p>
+      {%- elsif tier_done_t2 -%}
+        {%- assign remaining_fils = eid_t3_fils | minus: total -%}
+        <p class="plaay-tier-bar__msg">
+          🎁 {{ eid_t2_label }} unlocked! Add <strong>{{ remaining_fils | money }}</strong> more for <strong>{{ eid_t3_label }}</strong>
+        </p>
+      {%- elsif tier_done_t1 -%}
+        {%- assign remaining_fils = eid_t2_fils | minus: total -%}
+        <p class="plaay-tier-bar__msg">
+          🎁 {{ eid_t1_label }} unlocked! Add <strong>{{ remaining_fils | money }}</strong> more for <strong>{{ eid_t2_label }}</strong>
+        </p>
+      {%- elsif tier_done_ship -%}
+        {%- assign remaining_fils = eid_t1_fils | minus: total -%}
+        <p class="plaay-tier-bar__msg">
+          🚚 Free shipping unlocked! Add <strong>{{ remaining_fils | money }}</strong> more for <strong>{{ eid_t1_label }}</strong>
+        </p>
+      {%- else -%}
+        {%- assign remaining_fils = ship_fils | minus: total -%}
+        <p class="plaay-tier-bar__msg">
+          Add <strong>{{ remaining_fils | money }}</strong> more for free shipping
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline;vertical-align:-2px"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </p>
+      {%- endif -%}
 
-    <div class="plaay-tier-bar__track" role="progressbar" aria-valuenow="{{ bar_pct }}" aria-valuemin="0" aria-valuemax="100">
-      <div class="plaay-tier-bar__fill" style="width:{{ bar_pct }}%"></div>
-    </div>
+      {%- if tier_done_t3 -%}
+        {%- assign bar_pct = 100 -%}
+      {%- else -%}
+        {%- assign bar_pct = total | times: 100 | divided_by: eid_t3_fils -%}
+      {%- endif -%}
+      {%- if bar_pct > 100 -%}{%- assign bar_pct = 100 -%}{%- endif -%}
 
-    <div class="plaay-tier-bar__pills">
-      <span class="plaay-tier-bar__pill{% if tier_done_ship %} plaay-tier-bar__pill--done{% endif %}">
-        {%- if tier_done_ship -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
-        Free shipping
-      </span>
-      <span class="plaay-tier-bar__pill{% if tier_done_gift %} plaay-tier-bar__pill--done{% endif %}">
-        {%- if tier_done_gift -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
-        AED {{ gift_aed }} &#8594; {{ gift_label }}
-      </span>
+      <div class="plaay-tier-bar__track" role="progressbar" aria-valuenow="{{ bar_pct }}" aria-valuemin="0" aria-valuemax="100">
+        <div class="plaay-tier-bar__fill" style="width:{{ bar_pct }}%"></div>
+      </div>
+
+      <div class="plaay-tier-bar__pills">
+        <span class="plaay-tier-bar__pill{% if tier_done_ship %} plaay-tier-bar__pill--done{% endif %}">
+          {%- if tier_done_ship -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+          Free shipping
+        </span>
+        <span class="plaay-tier-bar__pill{% if tier_done_t1 %} plaay-tier-bar__pill--done{% endif %}">
+          {%- if tier_done_t1 -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+          AED {{ eid_t1_aed }} &#8594; {{ eid_t1_label }}
+        </span>
+        <span class="plaay-tier-bar__pill{% if tier_done_t2 %} plaay-tier-bar__pill--done{% endif %}">
+          {%- if tier_done_t2 -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+          AED {{ eid_t2_aed }} &#8594; {{ eid_t2_label }}
+        </span>
+        <span class="plaay-tier-bar__pill{% if tier_done_t3 %} plaay-tier-bar__pill--done{% endif %}">
+          {%- if tier_done_t3 -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+          AED {{ eid_t3_aed }} &#8594; {{ eid_t3_label }}
+        </span>
+      </div>
     </div>
   </div>
-</div>
+
+{%- else -%}
+  {%- liquid
+    assign tier_done_ship = false
+    assign tier_done_gift = false
+    if total >= ship_fils
+      assign tier_done_ship = true
+    endif
+    if total >= gift_fils
+      assign tier_done_gift = true
+    endif
+  -%}
+
+  <div class="plaay-tier-bar"
+    id="plaay-tier-bar"
+    data-mode="normal"
+    data-ship="{{ ship_fils }}"
+    data-gift="{{ gift_fils }}"
+    data-gift-label="{{ gift_label | escape }}">
+
+    <div id="plaay-tier-bar-inner">
+      {%- if tier_done_gift -%}
+        <p class="plaay-tier-bar__msg plaay-tier-bar__msg--done">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          All rewards unlocked! You're all set.
+        </p>
+      {%- elsif tier_done_ship -%}
+        {%- assign remaining_fils = gift_fils | minus: total -%}
+        <p class="plaay-tier-bar__msg">
+          🚚 Free shipping unlocked! Add <strong>{{ remaining_fils | money }}</strong> more for <strong>{{ gift_label }}</strong>
+        </p>
+      {%- else -%}
+        {%- assign remaining_fils = ship_fils | minus: total -%}
+        <p class="plaay-tier-bar__msg">
+          Add <strong>{{ remaining_fils | money }}</strong> more for free shipping
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline;vertical-align:-2px"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </p>
+      {%- endif -%}
+
+      {%- if tier_done_gift -%}
+        {%- assign bar_pct = 100 -%}
+      {%- elsif tier_done_ship -%}
+        {%- assign bar_num = total | minus: ship_fils -%}
+        {%- assign bar_den = gift_fils | minus: ship_fils -%}
+        {%- assign bar_pct = bar_num | times: 100 | divided_by: bar_den -%}
+      {%- else -%}
+        {%- assign bar_pct = total | times: 100 | divided_by: ship_fils -%}
+      {%- endif -%}
+      {%- if bar_pct > 100 -%}{%- assign bar_pct = 100 -%}{%- endif -%}
+
+      <div class="plaay-tier-bar__track" role="progressbar" aria-valuenow="{{ bar_pct }}" aria-valuemin="0" aria-valuemax="100">
+        <div class="plaay-tier-bar__fill" style="width:{{ bar_pct }}%"></div>
+      </div>
+
+      <div class="plaay-tier-bar__pills">
+        <span class="plaay-tier-bar__pill{% if tier_done_ship %} plaay-tier-bar__pill--done{% endif %}">
+          {%- if tier_done_ship -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+          Free shipping
+        </span>
+        <span class="plaay-tier-bar__pill{% if tier_done_gift %} plaay-tier-bar__pill--done{% endif %}">
+          {%- if tier_done_gift -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+          AED {{ gift_aed }} &#8594; {{ gift_label }}
+        </span>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
 
 <script>
 (function() {
@@ -89,14 +196,16 @@
       (done ? CHECK : '') + label + '</span>';
   }
 
-  function renderInner(total, cfg) {
+  function track(pct) {
+    return '<div class="plaay-tier-bar__track" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100">' +
+      '<div class="plaay-tier-bar__fill" style="width:' + pct + '%"></div></div>';
+  }
+
+  function renderNormal(total, cfg) {
     var ship = cfg.ship;
     var gift = cfg.gift;
     var giftLabel = cfg.giftLabel;
-
-    var msg;
-    var pct;
-    var msgDone = false;
+    var msg, pct, msgDone = false;
 
     if (total >= gift) {
       msgDone = true;
@@ -116,23 +225,72 @@
     ].join('');
 
     return '<p class="plaay-tier-bar__msg' + (msgDone ? ' plaay-tier-bar__msg--done' : '') + '">' + msg + '</p>' +
-      '<div class="plaay-tier-bar__track" role="progressbar" aria-valuenow="' + pct + '" aria-valuemin="0" aria-valuemax="100">' +
-        '<div class="plaay-tier-bar__fill" style="width:' + pct + '%"></div>' +
-      '</div>' +
+      track(pct) +
+      '<div class="plaay-tier-bar__pills">' + pills + '</div>';
+  }
+
+  function renderEid(total, cfg) {
+    var ship = cfg.ship;
+    var t1 = cfg.eidT1, t1Label = cfg.eidT1Label;
+    var t2 = cfg.eidT2, t2Label = cfg.eidT2Label;
+    var t3 = cfg.eidT3, t3Label = cfg.eidT3Label;
+    var msg, pct, msgDone = false;
+
+    if (total >= t3) {
+      msgDone = true;
+      msg = CHECK + ' All rewards unlocked! You\'re all set.';
+      pct = 100;
+    } else if (total >= t2) {
+      msg = '🎁 ' + t2Label + ' unlocked! Add <strong>' + fmtAED(t3 - total) + '</strong> more for <strong>' + t3Label + '</strong>';
+      pct = Math.min(100, Math.floor(total / t3 * 100));
+    } else if (total >= t1) {
+      msg = '🎁 ' + t1Label + ' unlocked! Add <strong>' + fmtAED(t2 - total) + '</strong> more for <strong>' + t2Label + '</strong>';
+      pct = Math.min(100, Math.floor(total / t3 * 100));
+    } else if (total >= ship) {
+      msg = '🚚 Free shipping unlocked! Add <strong>' + fmtAED(t1 - total) + '</strong> more for <strong>' + t1Label + '</strong>';
+      pct = Math.min(100, Math.floor(total / t3 * 100));
+    } else {
+      msg = 'Add <strong>' + fmtAED(ship - total) + '</strong> more for free shipping ' + TRUCK;
+      pct = Math.min(100, Math.floor(total / t3 * 100));
+    }
+
+    var pills = [
+      pill(total >= ship, 'Free shipping'),
+      pill(total >= t1,   'AED ' + (t1 / 100) + ' → ' + t1Label),
+      pill(total >= t2,   'AED ' + (t2 / 100) + ' → ' + t2Label),
+      pill(total >= t3,   'AED ' + (t3 / 100) + ' → ' + t3Label)
+    ].join('');
+
+    return '<p class="plaay-tier-bar__msg' + (msgDone ? ' plaay-tier-bar__msg--done' : '') + '">' + msg + '</p>' +
+      track(pct) +
       '<div class="plaay-tier-bar__pills">' + pills + '</div>';
   }
 
   window.plaayTierBar = {
     update: function(totalFils) {
-      var bar = document.getElementById('plaay-tier-bar');
+      var bar   = document.getElementById('plaay-tier-bar');
       var inner = document.getElementById('plaay-tier-bar-inner');
       if (!bar || !inner) return;
       var d = bar.dataset;
-      inner.innerHTML = renderInner(Number(totalFils) || 0, {
-        ship: parseInt(d.ship, 10),
-        gift: parseInt(d.gift, 10),
-        giftLabel: d.giftLabel
-      });
+      var total = Number(totalFils) || 0;
+
+      if (d.mode === 'eid') {
+        inner.innerHTML = renderEid(total, {
+          ship:       parseInt(d.ship, 10),
+          eidT1:      parseInt(d.eidT1, 10),
+          eidT1Label: d.eidT1Label,
+          eidT2:      parseInt(d.eidT2, 10),
+          eidT2Label: d.eidT2Label,
+          eidT3:      parseInt(d.eidT3, 10),
+          eidT3Label: d.eidT3Label
+        });
+      } else {
+        inner.innerHTML = renderNormal(total, {
+          ship:      parseInt(d.ship, 10),
+          gift:      parseInt(d.gift, 10),
+          giftLabel: d.giftLabel
+        });
+      }
     }
   };
 })();

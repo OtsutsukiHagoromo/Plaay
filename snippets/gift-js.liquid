@@ -4,7 +4,11 @@
   window.plaayMysteryGiftReady = true;
 
   var GIFT_VARIANT_ID = 48526560592089;
-  var GIFT_THRESHOLD = {{ settings.cart_tier_1_spend | default: 250 | times: 100 }};
+  var GIFT_THRESHOLD = {%- if settings.eid_sale_enabled -%}
+    {{ settings.eid_tier_1_spend | default: 250 | times: 100 }}
+  {%- else -%}
+    {{ settings.cart_tier_1_spend | default: 250 | times: 100 }}
+  {%- endif -%};
   var SYNC_DELAY = 350;
   var syncTimer = null;
   var syncing = false;

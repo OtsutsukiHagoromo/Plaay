@@ -124,6 +124,52 @@
         "default": "10% off + free gift"
       },
       {
+        "type": "header",
+        "content": "Eid Sale (26–31 May)"
+      },
+      {
+        "type": "checkbox",
+        "id": "eid_sale_enabled",
+        "label": "Enable Eid sale tiers",
+        "default": false
+      },
+      {
+        "type": "number",
+        "id": "eid_tier_1_spend",
+        "label": "Eid Tier 1 spend (AED)",
+        "default": 250
+      },
+      {
+        "type": "text",
+        "id": "eid_tier_1_label",
+        "label": "Eid Tier 1 reward",
+        "default": "20% Off + Mystery Gift"
+      },
+      {
+        "type": "number",
+        "id": "eid_tier_2_spend",
+        "label": "Eid Tier 2 spend (AED)",
+        "default": 400
+      },
+      {
+        "type": "text",
+        "id": "eid_tier_2_label",
+        "label": "Eid Tier 2 reward",
+        "default": "25% Off + Mystery Gift"
+      },
+      {
+        "type": "number",
+        "id": "eid_tier_3_spend",
+        "label": "Eid Tier 3 spend (AED)",
+        "default": 600
+      },
+      {
+        "type": "text",
+        "id": "eid_tier_3_label",
+        "label": "Eid Tier 3 reward",
+        "default": "30% Off + Mystery Gift"
+      },
+      {
         "type": "range",
         "id": "product_recommendations_limit",
         "label": "Product recommendations limit",
