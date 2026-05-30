@@ -1,6 +1,14 @@
 {%- if settings.eid_sale_enabled -%}
 <div id="plaay-eid-countdown" class="plaay-eid-countdown" aria-live="off">
-  <span class="plaay-eid-countdown__label">⏰ Sale ends in</span>
-  <span class="plaay-eid-countdown__timer" id="plaay-eid-timer">--:--:--</span>
+  <span class="plaay-eid-countdown__label">⏰ Eid Sale ends in</span>
+  <div class="plaay-eid-countdown__segments">
+    <span class="plaay-eid-countdown__seg"><b id="plaay-eid-d">--</b><small>d</small></span>
+    <span class="plaay-eid-countdown__sep">:</span>
+    <span class="plaay-eid-countdown__seg"><b id="plaay-eid-h">--</b><small>h</small></span>
+    <span class="plaay-eid-countdown__sep">:</span>
+    <span class="plaay-eid-countdown__seg"><b id="plaay-eid-m">--</b><small>m</small></span>
+    <span class="plaay-eid-countdown__sep">:</span>
+    <span class="plaay-eid-countdown__seg"><b id="plaay-eid-s">--</b><small>s</small></span>
+  </div>
 </div>
 {%- endif -%}

@@ -8,23 +8,35 @@
   var tickTimer = null;
 
   function startCountdown() {
-    var el = document.getElementById('plaay-eid-timer');
     var wrap = document.getElementById('plaay-eid-countdown');
-    if (!el || !wrap) return;
+    var dEl  = document.getElementById('plaay-eid-d');
+    var hEl  = document.getElementById('plaay-eid-h');
+    var mEl  = document.getElementById('plaay-eid-m');
+    var sEl  = document.getElementById('plaay-eid-s');
+    if (!wrap || !dEl || !hEl || !mEl || !sEl) return;
     if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
     function tick() {
       var diff = END - Date.now();
-      if (diff <= 0) { wrap.style.display = 'none'; clearInterval(tickTimer); return; }
-      var h = Math.floor(diff / 3600000);
+      if (diff <= 0) {
+        wrap.style.display = 'none';
+        clearInterval(tickTimer);
+        return;
+      }
+      var d = Math.floor(diff / 86400000);
+      var h = Math.floor((diff % 86400000) / 3600000);
       var m = Math.floor((diff % 3600000) / 60000);
       var s = Math.floor((diff % 60000) / 1000);
-      el.textContent = (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+      dEl.textContent = d;
+      hEl.textContent = pad(h);
+      mEl.textContent = pad(m);
+      sEl.textContent = pad(s);
     }
     tick();
     tickTimer = setInterval(tick, 1000);
   }
 
-  // Watch for the countdown element being injected into DOM (AJAX cart drawer)
+  // MutationObserver: fires when cart drawer injects the countdown HTML
   var observer = new MutationObserver(function(mutations) {
     for (var i = 0; i < mutations.length; i++) {
       var added = mutations[i].addedNodes;
@@ -41,9 +53,7 @@
   });
 
   function boot() {
-    // Start immediately if element already in DOM (e.g. cart page)
-    startCountdown();
-    // Watch for AJAX injection of the drawer
+    startCountdown(); // in case element already in DOM
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
