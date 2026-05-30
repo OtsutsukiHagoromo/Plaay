@@ -22,10 +22,10 @@
         clearInterval(tickTimer);
         return;
       }
-      var h = Math.floor(diff / 3600000);
+      var h = Math.floor((diff % 86400000) / 3600000);
       var m = Math.floor((diff % 3600000) / 60000);
       var s = Math.floor((diff % 60000) / 1000);
-      hEl.textContent = h;
+      hEl.textContent = pad(h);
       mEl.textContent = pad(m);
       sEl.textContent = pad(s);
     }
