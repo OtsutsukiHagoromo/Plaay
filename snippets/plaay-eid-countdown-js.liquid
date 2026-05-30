@@ -24,17 +24,34 @@
     tickTimer = setInterval(tick, 1000);
   }
 
-  // Initial start (elements may already be in DOM on page load)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startCountdown, { once: true });
-  } else {
+  // Watch for the countdown element being injected into DOM (AJAX cart drawer)
+  var observer = new MutationObserver(function(mutations) {
+    for (var i = 0; i < mutations.length; i++) {
+      var added = mutations[i].addedNodes;
+      for (var j = 0; j < added.length; j++) {
+        var node = added[j];
+        if (node.nodeType !== 1) continue;
+        if (node.id === 'plaay-eid-countdown' ||
+            (node.querySelector && node.querySelector('#plaay-eid-countdown'))) {
+          startCountdown();
+          return;
+        }
+      }
+    }
+  });
+
+  function boot() {
+    // Start immediately if element already in DOM (e.g. cart page)
     startCountdown();
+    // Watch for AJAX injection of the drawer
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
-  // Restart after cart drawer refreshes (AJAX re-injects the HTML)
-  function delayedStart() { setTimeout(startCountdown, 400); }
-  document.addEventListener('cart:refresh', delayedStart);
-  document.addEventListener('rebuy:cart.change', delayedStart);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
 })();
 </script>
 {%- endif -%}
