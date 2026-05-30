@@ -9,11 +9,10 @@
 
   function startCountdown() {
     var wrap = document.getElementById('plaay-eid-countdown');
-    var dEl  = document.getElementById('plaay-eid-d');
     var hEl  = document.getElementById('plaay-eid-h');
     var mEl  = document.getElementById('plaay-eid-m');
     var sEl  = document.getElementById('plaay-eid-s');
-    if (!wrap || !dEl || !hEl || !mEl || !sEl) return;
+    if (!wrap || !hEl || !mEl || !sEl) return;
     if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
     function tick() {
@@ -23,12 +22,10 @@
         clearInterval(tickTimer);
         return;
       }
-      var d = Math.floor(diff / 86400000);
-      var h = Math.floor((diff % 86400000) / 3600000);
+      var h = Math.floor(diff / 3600000);
       var m = Math.floor((diff % 3600000) / 60000);
       var s = Math.floor((diff % 60000) / 1000);
-      dEl.textContent = d;
-      hEl.textContent = pad(h);
+      hEl.textContent = h;
       mEl.textContent = pad(m);
       sEl.textContent = pad(s);
     }
