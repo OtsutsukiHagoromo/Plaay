@@ -1,6 +1,7 @@
 <div class="flex flex-1 min-h-0 flex-col overflow-hidden" data-cart-drawer-content data-cart-item-count="{{ cart.item_count }}">
   <div class="flex-shrink-0 px-5 pt-4 pb-2{% if cart.item_count == 0 %} hidden{% endif %}">
     {%- render 'cart-tier-bar' -%}
+    {%- render 'plaay-eid-countdown' -%}
   </div>
 
   <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain" data-cart-items>
