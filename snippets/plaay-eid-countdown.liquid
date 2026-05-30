@@ -3,22 +3,4 @@
   <span class="plaay-eid-countdown__label">⏰ Sale ends in</span>
   <span class="plaay-eid-countdown__timer" id="plaay-eid-timer">--:--:--</span>
 </div>
-<script>
-(function() {
-  var END = new Date('2026-07-01T00:00:00+04:00').getTime();
-  var el = document.getElementById('plaay-eid-timer');
-  var wrap = document.getElementById('plaay-eid-countdown');
-  if (!el || !wrap) return;
-  function tick() {
-    var diff = END - Date.now();
-    if (diff <= 0) { wrap.style.display = 'none'; return; }
-    var h = Math.floor(diff / 3600000);
-    var m = Math.floor((diff % 3600000) / 60000);
-    var s = Math.floor((diff % 60000) / 1000);
-    el.textContent = (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
-    setTimeout(tick, 1000);
-  }
-  tick();
-})();
-</script>
 {%- endif -%}

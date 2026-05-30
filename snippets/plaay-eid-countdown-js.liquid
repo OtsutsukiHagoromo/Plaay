@@ -1,0 +1,40 @@
+{%- if settings.eid_sale_enabled -%}
+<script>
+(function() {
+  if (window.plaayEidCountdownReady) return;
+  window.plaayEidCountdownReady = true;
+
+  var END = new Date('2026-07-01T00:00:00+04:00').getTime();
+  var tickTimer = null;
+
+  function startCountdown() {
+    var el = document.getElementById('plaay-eid-timer');
+    var wrap = document.getElementById('plaay-eid-countdown');
+    if (!el || !wrap) return;
+    if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
+    function tick() {
+      var diff = END - Date.now();
+      if (diff <= 0) { wrap.style.display = 'none'; clearInterval(tickTimer); return; }
+      var h = Math.floor(diff / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      var s = Math.floor((diff % 60000) / 1000);
+      el.textContent = (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    }
+    tick();
+    tickTimer = setInterval(tick, 1000);
+  }
+
+  // Initial start (elements may already be in DOM on page load)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startCountdown, { once: true });
+  } else {
+    startCountdown();
+  }
+
+  // Restart after cart drawer refreshes (AJAX re-injects the HTML)
+  function delayedStart() { setTimeout(startCountdown, 400); }
+  document.addEventListener('cart:refresh', delayedStart);
+  document.addEventListener('rebuy:cart.change', delayedStart);
+})();
+</script>
+{%- endif -%}
