@@ -5324,19 +5324,12 @@ footer .footer-flex {
   transform-origin: center bottom;
   backface-visibility: hidden;
 }
-@keyframes plaay-flip-out {
-  0%   { transform: perspective(80px) rotateX(0deg);   }
-  100% { transform: perspective(80px) rotateX(90deg);  }
-}
 @keyframes plaay-flip-in {
-  0%   { transform: perspective(80px) rotateX(-90deg); }
-  100% { transform: perspective(80px) rotateX(0deg);   }
-}
-.plaay-eid-countdown__seg b.plaay-flip-out {
-  animation: plaay-flip-out 0.14s ease-in forwards;
+  0%   { transform: perspective(80px) rotateX(-90deg); opacity: 0.4; }
+  100% { transform: perspective(80px) rotateX(0deg);   opacity: 1;   }
 }
 .plaay-eid-countdown__seg b.plaay-flip-in {
-  animation: plaay-flip-in 0.14s ease-out forwards;
+  animation: plaay-flip-in 0.22s ease-out forwards;
 }
 .plaay-eid-countdown__seg small {
   font-size: 8px;

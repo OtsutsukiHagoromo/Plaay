@@ -7,21 +7,16 @@
   var END = new Date('2026-07-01T00:00:00+04:00').getTime();
   var tickTimer = null;
 
-  // Flip animation: fold current number out, swap text, fold new number in
+  // Update text immediately, then play flip-in animation so it looks like
+  // the new number is flipping into view (paper clock style)
   function flipTo(segEl, newText) {
     if (!segEl) return;
     var b = segEl.querySelector('b');
     if (!b || b.textContent === newText) return;
-    b.classList.remove('plaay-flip-out', 'plaay-flip-in');
-    void b.offsetWidth; // force reflow
-    b.classList.add('plaay-flip-out');
-    setTimeout(function() {
-      b.textContent = newText;
-      b.classList.remove('plaay-flip-out');
-      void b.offsetWidth;
-      b.classList.add('plaay-flip-in');
-      setTimeout(function() { b.classList.remove('plaay-flip-in'); }, 150);
-    }, 140);
+    b.textContent = newText;
+    b.classList.remove('plaay-flip-in');
+    void b.offsetWidth; // force reflow to restart animation
+    b.classList.add('plaay-flip-in');
   }
 
   function startCountdown() {
