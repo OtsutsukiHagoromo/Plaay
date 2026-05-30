@@ -9,14 +9,12 @@
 
   // Update text immediately, then play flip-in animation so it looks like
   // the new number is flipping into view (paper clock style)
-  function flipTo(segEl, newText) {
-    if (!segEl) return;
-    var b = segEl.querySelector('b');
-    if (!b || b.textContent === newText) return;
-    b.textContent = newText;
-    b.classList.remove('plaay-flip-in');
-    void b.offsetWidth; // force reflow to restart animation
-    b.classList.add('plaay-flip-in');
+  function flipTo(el, newText) {
+    if (!el || el.textContent === newText) return;
+    el.textContent = newText;
+    el.classList.remove('plaay-flip-in');
+    void el.offsetWidth; // force reflow to restart animation
+    el.classList.add('plaay-flip-in');
   }
 
   function startCountdown() {
