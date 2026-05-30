@@ -5320,6 +5320,23 @@ footer .footer-flex {
   color: #021D49;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
+  display: block;
+  transform-origin: center bottom;
+  backface-visibility: hidden;
+}
+@keyframes plaay-flip-out {
+  0%   { transform: perspective(80px) rotateX(0deg);   }
+  100% { transform: perspective(80px) rotateX(90deg);  }
+}
+@keyframes plaay-flip-in {
+  0%   { transform: perspective(80px) rotateX(-90deg); }
+  100% { transform: perspective(80px) rotateX(0deg);   }
+}
+.plaay-eid-countdown__seg b.plaay-flip-out {
+  animation: plaay-flip-out 0.14s ease-in forwards;
+}
+.plaay-eid-countdown__seg b.plaay-flip-in {
+  animation: plaay-flip-in 0.14s ease-out forwards;
 }
 .plaay-eid-countdown__seg small {
   font-size: 8px;

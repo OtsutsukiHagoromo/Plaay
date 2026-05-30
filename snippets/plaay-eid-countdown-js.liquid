@@ -7,6 +7,23 @@
   var END = new Date('2026-07-01T00:00:00+04:00').getTime();
   var tickTimer = null;
 
+  // Flip animation: fold current number out, swap text, fold new number in
+  function flipTo(segEl, newText) {
+    if (!segEl) return;
+    var b = segEl.querySelector('b');
+    if (!b || b.textContent === newText) return;
+    b.classList.remove('plaay-flip-out', 'plaay-flip-in');
+    void b.offsetWidth; // force reflow
+    b.classList.add('plaay-flip-out');
+    setTimeout(function() {
+      b.textContent = newText;
+      b.classList.remove('plaay-flip-out');
+      void b.offsetWidth;
+      b.classList.add('plaay-flip-in');
+      setTimeout(function() { b.classList.remove('plaay-flip-in'); }, 150);
+    }, 140);
+  }
+
   function startCountdown() {
     var wrap = document.getElementById('plaay-eid-countdown');
     var hEl  = document.getElementById('plaay-eid-h');
@@ -25,9 +42,9 @@
       var h = Math.floor((diff % 86400000) / 3600000);
       var m = Math.floor((diff % 3600000) / 60000);
       var s = Math.floor((diff % 60000) / 1000);
-      hEl.textContent = pad(h);
-      mEl.textContent = pad(m);
-      sEl.textContent = pad(s);
+      flipTo(hEl, pad(h));
+      flipTo(mEl, pad(m));
+      flipTo(sEl, pad(s));
     }
     tick();
     tickTimer = setInterval(tick, 1000);
@@ -50,7 +67,7 @@
   });
 
   function boot() {
-    startCountdown(); // in case element already in DOM
+    startCountdown();
     observer.observe(document.body, { childList: true, subtree: true });
   }
 
