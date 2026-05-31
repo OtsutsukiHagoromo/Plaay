@@ -12,7 +12,7 @@
     "favicon": "shopify://shop_images/Blue_logo_on_Yellow_Choco_Snack_Hack_Zoomed.jpg",
     "global_recharge_point_two": "15% Off Regular Price",
     "ingredients_icons_link_list": "ingredients-icons",
-    "eid_sale_enabled": true,
+    "eid_sale_enabled": false,
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",
@@ -29,6 +29,7 @@
         "blocks": {
           "announcement_text_qzKxiQ": {
             "type": "announcement_text",
+            "disabled": true,
             "settings": {
               "text": "⏰ Last 24 Hours — Eid Sale Ends Tonight Midnight — Save Up To 30% Off",
               "text_color": "#021d49",
