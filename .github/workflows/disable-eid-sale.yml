@@ -1,0 +1,26 @@
+name: Disable Eid Sale at Midnight GST
+
+on:
+  schedule:
+    - cron: '0 20 30 6 *'   # June 30 20:00 UTC = July 1 00:00 GST (UTC+4)
+  workflow_dispatch:          # allow manual run from GitHub Actions UI
+
+permissions:
+  contents: write
+
+jobs:
+  disable-sale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Disable Eid sale in settings_data.json
+        run: python3 .github/scripts/disable_eid_sale.py
+
+      - name: Commit and push
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add config/settings_data.json
+          git diff --cached --quiet || git commit -m "Auto: disable Eid sale at midnight GST [skip ci]"
+          git push
