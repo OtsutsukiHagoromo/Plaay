@@ -69,6 +69,7 @@
         },
         "ai_gen_block_ad39199_MWwyKy": {
           "type": "ai_gen_block_ad39199",
+          "disabled": true,
           "settings": {
             "desktop_image": "shopify://shop_images/Website_Banner_Desktop_Version_.jpg_1.jpg",
             "mobile_image": "shopify://shop_images/Website_Banner_Mobile_Version.jpg_2.jpg",
