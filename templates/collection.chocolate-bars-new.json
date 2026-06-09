@@ -252,7 +252,7 @@
         "column_size_mobile_small": 1,
         "autoplay": 600,
         "see_all_link": "",
-        "see_all_link_text": "Shop all bars",
+        "see_all_link_text": "",
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
         "hide_bullets": true,
