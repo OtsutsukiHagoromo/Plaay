@@ -738,46 +738,38 @@
       }
     },
     "aplus_hero_NLB": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_9cfa683_hero_NLB": {
-          "type": "ai_gen_block_9cfa683",
-          "settings": {
-            "custom_html": "\n<style>\n.nlb-hero {\n  background: #021D49;\n  padding: 64px 24px;\n}\n.nlb-hero__inner {\n  max-width: 1200px;\n  margin: 0 auto;\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 48px;\n  align-items: center;\n}\n.nlb-hero__eyebrow {\n  display: inline-block;\n  background: rgba(255,255,255,0.12);\n  color: #fff;\n  font-size: 0.75rem;\n  font-weight: 700;\n  letter-spacing: 0.08em;\n  text-transform: uppercase;\n  padding: 6px 14px;\n  border-radius: 4px;\n  margin-bottom: 20px;\n}\n.nlb-hero__title {\n  font-size: clamp(2.6rem, 4.5vw, 4rem);\n  font-weight: 900;\n  line-height: 1.0;\n  text-transform: uppercase;\n  color: #fff;\n  margin: 0 0 20px;\n}\n.nlb-hero__title em {\n  font-style: normal;\n  color: #F9C61D;\n}\n.nlb-hero__sub {\n  font-size: 1rem;\n  color: rgba(255,255,255,0.75);\n  line-height: 1.6;\n  max-width: 380px;\n  margin-bottom: 28px;\n}\n.nlb-hero__badges {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 10px;\n  margin-bottom: 28px;\n}\n.nlb-hero__badge {\n  display: inline-flex;\n  align-items: center;\n  gap: 6px;\n  background: rgba(255,255,255,0.1);\n  border: 1px solid rgba(255,255,255,0.2);\n  color: #fff;\n  font-size: 0.7rem;\n  font-weight: 700;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  padding: 6px 12px;\n  border-radius: 100px;\n}\n.nlb-hero__badge-icon {\n  width: 14px;\n  height: 14px;\n  opacity: 0.8;\n}\n.nlb-hero__tagline {\n  font-size: 1rem;\n  font-style: italic;\n  color: rgba(255,255,255,0.55);\n  letter-spacing: 0.02em;\n}\n.nlb-hero__images {\n  position: relative;\n  display: flex;\n  align-items: flex-end;\n  justify-content: center;\n  gap: 16px;\n}\n.nlb-hero__img-pack {\n  width: 55%;\n  border-radius: 12px;\n  object-fit: contain;\n}\n.nlb-hero__img-bar {\n  width: 42%;\n  border-radius: 12px;\n  object-fit: contain;\n}\n.nlb-hero__badge-float {\n  position: absolute;\n  top: -10px;\n  right: 0;\n  background: #E85767;\n  color: #fff;\n  font-size: 0.65rem;\n  font-weight: 900;\n  letter-spacing: 0.08em;\n  text-transform: uppercase;\n  padding: 8px 14px;\n  border-radius: 100px;\n  box-shadow: 0 4px 12px rgba(0,0,0,0.3);\n}\n@media (max-width: 767px) {\n  .nlb-hero__inner { grid-template-columns: 1fr; gap: 32px; text-align: center; }\n  .nlb-hero__badges { justify-content: center; }\n  .nlb-hero__sub { margin: 0 auto 28px; }\n  .nlb-hero__images { justify-content: center; }\n}\n</style>\n<section class=\"nlb-hero\">\n  <div class=\"nlb-hero__inner\">\n    <div class=\"nlb-hero__copy\">\n      <span class=\"nlb-hero__eyebrow\">70% Dark Chocolate Caramel Crunch Mousse</span>\n      <h2 class=\"nlb-hero__title\">Dark Chocolate,<br><em>But Make It Plaay.</em></h2>\n      <p class=\"nlb-hero__sub\">70% dark chocolate meets caramel crunch mousse in a rich, clean snack-hack.</p>\n      <div class=\"nlb-hero__badges\">\n        <span class=\"nlb-hero__badge\">0% refined sugar</span>\n        <span class=\"nlb-hero__badge\">100% clean ingredients</span>\n        <span class=\"nlb-hero__badge\">6 individually packed bars</span>\n      </div>\n      <span class=\"nlb-hero__tagline\">All flavor. All Plaay.</span>\n    </div>\n    <div class=\"nlb-hero__images\">\n      <img class=\"nlb-hero__img-pack\" src=\"https://cdn.shopify.com/s/files/1/0662/4722/9657/files/DarkChoc_CaramelMousse_Cover_80G.png?v=1779052093\" alt=\"Plaay Dark Chocolate Caramel Crunch Mousse Pack\" loading=\"lazy\">\n      <img class=\"nlb-hero__img-bar\" src=\"https://cdn.shopify.com/s/files/1/0662/4722/9657/files/UAE_6298043908467_v2.png?v=1779052093\" alt=\"Plaay Dark Chocolate Bar\" loading=\"lazy\">\n      <span class=\"nlb-hero__badge-float\">6 Packs</span>\n    </div>\n  </div>\n</section>\n",
-            "desktop_width_percent": 100,
-            "padding": 0,
-            "background_color": "#021D49",
-            "border_radius": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_9cfa683_hero_NLB"
-      ],
+      "type": "nlb-aplus-hero",
       "name": "A+ Hero",
-      "settings": {}
+      "settings": {
+        "background_color": "#021D49",
+        "fallback_enabled": false
+      }
     },
     "aplus_why_NLB": {
-      "type": "_blocks",
+      "type": "nlb-aplus-why",
       "blocks": {
-        "ai_gen_block_9cfa683_why_NLB": {
-          "type": "ai_gen_block_9cfa683",
-          "settings": {
-            "custom_html": "\n<style>\n.nlb-why {\n  background: #FAF7F2;\n  padding: 72px 24px;\n}\n.nlb-why__inner {\n  max-width: 1100px;\n  margin: 0 auto;\n}\n.nlb-why__heading {\n  text-align: center;\n  font-size: clamp(1.6rem, 3vw, 2.4rem);\n  font-weight: 900;\n  text-transform: uppercase;\n  color: #021D49;\n  margin: 0 0 12px;\n  letter-spacing: 0.02em;\n}\n.nlb-why__divider {\n  display: block;\n  width: 56px;\n  height: 4px;\n  background: #E85767;\n  border-radius: 2px;\n  margin: 0 auto 52px;\n}\n.nlb-why__grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 28px;\n}\n.nlb-why__card {\n  background: #fff;\n  border-radius: 16px;\n  overflow: hidden;\n  box-shadow: 0 2px 16px rgba(2,29,73,0.07);\n  text-align: center;\n  transition: transform 0.2s, box-shadow 0.2s;\n}\n.nlb-why__card:hover {\n  transform: translateY(-4px);\n  box-shadow: 0 8px 32px rgba(2,29,73,0.13);\n}\n.nlb-why__card-img {\n  width: 100%;\n  aspect-ratio: 1/1;\n  object-fit: cover;\n  display: block;\n}\n.nlb-why__card-body {\n  padding: 24px 20px 28px;\n}\n.nlb-why__card-title {\n  font-size: 1.1rem;\n  font-weight: 800;\n  color: #021D49;\n  text-transform: uppercase;\n  margin: 0 0 8px;\n  letter-spacing: 0.02em;\n}\n.nlb-why__card-desc {\n  font-size: 0.875rem;\n  color: #444;\n  line-height: 1.55;\n  margin: 0;\n}\n@media (max-width: 767px) {\n  .nlb-why__grid { grid-template-columns: 1fr; gap: 20px; }\n}\n</style>\n<section class=\"nlb-why\">\n  <div class=\"nlb-why__inner\">\n    <h2 class=\"nlb-why__heading\">Why You'll Love It</h2>\n    <span class=\"nlb-why__divider\"></span>\n    <div class=\"nlb-why__grid\">\n      <div class=\"nlb-why__card\">\n        <img class=\"nlb-why__card-img\" src=\"https://cdn.shopify.com/s/files/1/0662/4722/9657/files/UAE_6298043908467_v3.jpg?v=1779052093\" alt=\"Deep cocoa hit\" loading=\"lazy\">\n        <div class=\"nlb-why__card-body\">\n          <p class=\"nlb-why__card-title\">Deep cocoa hit</p>\n          <p class=\"nlb-why__card-desc\">Bold 70% dark chocolate flavor.</p>\n        </div>\n      </div>\n      <div class=\"nlb-why__card\">\n        <img class=\"nlb-why__card-img\" src=\"https://cdn.shopify.com/s/files/1/0662/4722/9657/files/UAE_6298043908467_v4.jpg?v=1779052093\" alt=\"Crunch meets mousse\" loading=\"lazy\">\n        <div class=\"nlb-why__card-body\">\n          <p class=\"nlb-why__card-title\">Crunch meets mousse</p>\n          <p class=\"nlb-why__card-desc\">Crunchy caramel bits with a smooth, dessert-like bite.</p>\n        </div>\n      </div>\n      <div class=\"nlb-why__card\">\n        <img class=\"nlb-why__card-img\" src=\"https://cdn.shopify.com/s/files/1/0662/4722/9657/files/UAE_6298043908467_v5.jpg?v=1779052093\" alt=\"Clean indulgence\" loading=\"lazy\">\n        <div class=\"nlb-why__card-body\">\n          <p class=\"nlb-why__card-title\">Clean indulgence</p>\n          <p class=\"nlb-why__card-desc\">Big treat energy, with zero refined sugar.</p>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n",
-            "desktop_width_percent": 100,
-            "padding": 0,
-            "background_color": "#FAF7F2",
-            "border_radius": 0
-          },
-          "blocks": {}
+        "why_1": {
+          "type": "why_card",
+          "settings": {}
+        },
+        "why_2": {
+          "type": "why_card",
+          "settings": {}
+        },
+        "why_3": {
+          "type": "why_card",
+          "settings": {}
         }
       },
       "block_order": [
-        "ai_gen_block_9cfa683_why_NLB"
+        "why_1",
+        "why_2",
+        "why_3"
       ],
       "name": "A+ Why You'll Love It",
-      "settings": {}
+      "settings": {
+        "background_color": "#FAF7F2"
+      }
     },
     "aplus_stats_NLB": {
       "type": "pdp-stats-bar",
@@ -824,67 +816,37 @@
       }
     },
     "aplus_break_NLB": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_9cfa683_break_NLB": {
-          "type": "ai_gen_block_9cfa683",
-          "settings": {
-            "custom_html": "\n<style>\n.nlb-break {\n  background: #fff;\n  padding: 72px 24px;\n}\n.nlb-break__inner {\n  max-width: 1200px;\n  margin: 0 auto;\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 64px;\n  align-items: center;\n}\n.nlb-break__copy-title {\n  font-size: clamp(2.2rem, 4vw, 3.6rem);\n  font-weight: 900;\n  text-transform: uppercase;\n  color: #021D49;\n  line-height: 1.05;\n  margin: 0 0 24px;\n}\n.nlb-break__copy-title em {\n  font-style: normal;\n  color: #E85767;\n}\n.nlb-break__copy-desc {\n  font-size: 1rem;\n  color: #555;\n  line-height: 1.65;\n  max-width: 380px;\n}\n.nlb-break__img-wrap {\n  position: relative;\n}\n.nlb-break__img {\n  width: 100%;\n  border-radius: 16px;\n  display: block;\n  object-fit: cover;\n}\n.nlb-break__ann {\n  position: absolute;\n  background: #021D49;\n  color: #fff;\n  font-size: 0.65rem;\n  font-weight: 700;\n  letter-spacing: 0.06em;\n  text-transform: uppercase;\n  padding: 6px 12px;\n  border-radius: 100px;\n  white-space: nowrap;\n}\n.nlb-break__ann--tl { top: 14%; right: -10px; }\n.nlb-break__ann--bl { bottom: 28%; left: -10px; }\n.nlb-break__ann--br { bottom: 10%; right: 6%; }\n@media (max-width: 767px) {\n  .nlb-break__inner { grid-template-columns: 1fr; gap: 36px; }\n  .nlb-break__ann { display: none; }\n}\n</style>\n<section class=\"nlb-break\">\n  <div class=\"nlb-break__inner\">\n    <div class=\"nlb-break__copy\">\n      <h2 class=\"nlb-break__copy-title\">Break it.<br>Bite it.<br><em>Melt into it.</em></h2>\n      <p class=\"nlb-break__copy-desc\">A rich dark chocolate shell with a satisfying caramel crunch mousse bite.</p>\n    </div>\n    <div class=\"nlb-break__img-wrap\">\n      <img class=\"nlb-break__img\" src=\"https://cdn.shopify.com/s/files/1/0662/4722/9657/files/UAE_6298043908467_v2.png?v=1779052093\" alt=\"Plaay Dark Chocolate bar break\" loading=\"lazy\">\n      <span class=\"nlb-break__ann nlb-break__ann--tl\">Rich dark chocolate</span>\n      <span class=\"nlb-break__ann nlb-break__ann--bl\">Crunchy caramel bits</span>\n      <span class=\"nlb-break__ann nlb-break__ann--br\">Smooth center</span>\n    </div>\n  </div>\n</section>\n",
-            "desktop_width_percent": 100,
-            "padding": 0,
-            "background_color": "#ffffff",
-            "border_radius": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_9cfa683_break_NLB"
-      ],
+      "type": "nlb-aplus-story-row",
       "name": "A+ Break It",
-      "settings": {}
+      "settings": {
+        "metafield_set": "break",
+        "image_side": "right",
+        "background_color": "#ffffff",
+        "text_color": "#021D49",
+        "show_pills": true,
+        "fallback_enabled": false
+      }
     },
     "aplus_cravings_NLB": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_9cfa683_cravings_NLB": {
-          "type": "ai_gen_block_9cfa683",
-          "settings": {
-            "custom_html": "\n<style>\n.nlb-cravings {\n  background: #021D49;\n  padding: 72px 24px;\n}\n.nlb-cravings__inner {\n  max-width: 1200px;\n  margin: 0 auto;\n  display: grid;\n  grid-template-columns: 1fr 1fr;\n  gap: 64px;\n  align-items: center;\n}\n.nlb-cravings__title {\n  font-size: clamp(2rem, 3.8vw, 3.2rem);\n  font-weight: 900;\n  text-transform: uppercase;\n  color: #fff;\n  line-height: 1.05;\n  margin: 0 0 20px;\n}\n.nlb-cravings__title em {\n  font-style: normal;\n  color: #F9C61D;\n}\n.nlb-cravings__desc {\n  font-size: 1rem;\n  color: rgba(255,255,255,0.75);\n  line-height: 1.65;\n  margin-bottom: 24px;\n  max-width: 380px;\n}\n.nlb-cravings__accent {\n  font-size: 1rem;\n  font-style: italic;\n  color: rgba(255,255,255,0.5);\n  letter-spacing: 0.02em;\n}\n.nlb-cravings__img {\n  width: 100%;\n  border-radius: 16px;\n  display: block;\n  object-fit: cover;\n  aspect-ratio: 4/5;\n}\n@media (max-width: 767px) {\n  .nlb-cravings__inner { grid-template-columns: 1fr; gap: 36px; text-align: center; }\n  .nlb-cravings__desc { margin: 0 auto 24px; }\n}\n</style>\n<section class=\"nlb-cravings\">\n  <div class=\"nlb-cravings__inner\">\n    <div class=\"nlb-cravings__copy\">\n      <h2 class=\"nlb-cravings__title\">Made For<br><em>Clean Cravings</em></h2>\n      <p class=\"nlb-cravings__desc\">Coffee break. Desk drawer. Post-dinner treat. This one travels well.</p>\n      <span class=\"nlb-cravings__accent\">Snack-hack energy. &rarr;</span>\n    </div>\n    <img class=\"nlb-cravings__img\" src=\"https://cdn.shopify.com/s/files/1/0662/4722/9657/files/UAE_6298043908467_v6.jpg?v=1779052093\" alt=\"Plaay bars lifestyle\" loading=\"lazy\">\n  </div>\n</section>\n",
-            "desktop_width_percent": 100,
-            "padding": 0,
-            "background_color": "#021D49",
-            "border_radius": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_9cfa683_cravings_NLB"
-      ],
+      "type": "nlb-aplus-story-row",
       "name": "A+ Clean Cravings",
-      "settings": {}
+      "settings": {
+        "metafield_set": "cravings",
+        "image_side": "left",
+        "background_color": "#021D49",
+        "text_color": "#ffffff",
+        "show_pills": false,
+        "fallback_enabled": false
+      }
     },
     "aplus_cta_NLB": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_9cfa683_cta_NLB": {
-          "type": "ai_gen_block_9cfa683",
-          "settings": {
-            "custom_html": "\n<style>\n.nlb-cta {\n  background: #021D49;\n  background-image: radial-gradient(ellipse at 20% 50%, rgba(249,198,29,0.08) 0%, transparent 60%),\n                    radial-gradient(ellipse at 80% 50%, rgba(232,87,103,0.08) 0%, transparent 60%);\n  padding: 88px 24px;\n  text-align: center;\n  border-top: 1px solid rgba(255,255,255,0.08);\n}\n.nlb-cta__eyebrow {\n  display: inline-block;\n  font-size: 0.7rem;\n  font-weight: 700;\n  letter-spacing: 0.12em;\n  text-transform: uppercase;\n  color: rgba(255,255,255,0.45);\n  margin-bottom: 20px;\n}\n.nlb-cta__title {\n  font-size: clamp(2.4rem, 5vw, 4.2rem);\n  font-weight: 900;\n  text-transform: uppercase;\n  line-height: 1.0;\n  margin: 0 0 20px;\n}\n.nlb-cta__title .line1 { color: #fff; display: block; }\n.nlb-cta__title .line2 { color: #F9C61D; display: block; }\n.nlb-cta__sub {\n  font-size: 1rem;\n  color: rgba(255,255,255,0.65);\n  max-width: 400px;\n  margin: 0 auto 36px;\n  line-height: 1.6;\n}\n.nlb-cta__btn {\n  display: inline-block;\n  background: #E85767;\n  color: #fff;\n  font-size: 0.9rem;\n  font-weight: 800;\n  letter-spacing: 0.04em;\n  text-transform: uppercase;\n  text-decoration: none;\n  padding: 16px 36px;\n  border-radius: 100px;\n  transition: background 0.2s, transform 0.2s;\n}\n.nlb-cta__btn:hover {\n  background: #d04458;\n  transform: translateY(-2px);\n  color: #fff;\n  text-decoration: none;\n}\n</style>\n<section class=\"nlb-cta\">\n  <div>\n    <span class=\"nlb-cta__eyebrow\">New Launch &mdash; Available Now</span>\n    <h2 class=\"nlb-cta__title\">\n      <span class=\"line1\">All Flavor.</span>\n      <span class=\"line2\">All Plaay.</span>\n    </h2>\n    <p class=\"nlb-cta__sub\">Clean chocolate snack-hacks that know how to show up.</p>\n    <a href=\"/collections/chocolate-bars\" class=\"nlb-cta__btn\">Explore the launch &rarr;</a>\n  </div>\n</section>\n",
-            "desktop_width_percent": 100,
-            "padding": 0,
-            "background_color": "#021D49",
-            "border_radius": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_9cfa683_cta_NLB"
-      ],
+      "type": "nlb-aplus-cta",
       "name": "A+ All Flavor CTA",
-      "settings": {}
+      "settings": {
+        "background_color": "#021D49",
+        "eyebrow": "New Launch — Available Now",
+        "default_button_url": "/collections/chocolate-bars"
+      }
     },
     "plaay_aplus_image_NLB": {
       "type": "plaay-aplus-image",

@@ -5,6 +5,7 @@
   assign has_palm_free   = false
   assign has_vegan       = false
   assign has_clean       = false
+  assign has_no_added_sugar = false
 
   for tag in product.tags
     assign trust_tag = tag | downcase | strip
@@ -19,8 +20,16 @@
         assign has_vegan = true
       when 'badge:clean', 'badge:clean-ingredients', 'badge:clean_ingredients', 'trust:clean', 'trust:clean-ingredients', 'trust:clean_ingredients', 'clean ingredients'
         assign has_clean = true
+      when 'badge:no-added-sugar', 'badge:no_added_sugar', 'trust:no-added-sugar', 'trust:no_added_sugar', 'no-added-sugar', 'no added sugar'
+        assign has_no_added_sugar = true
     endcase
   endfor
+
+  if has_no_added_sugar
+    assign sugar_label = 'No Added Sugar'
+  else
+    assign sugar_label = 'No Refined Sugar'
+  endif
 
   assign show_trust_badges = false
   if preset == 'bars-truffles-icons' or has_halal or has_gluten_free or has_palm_free or has_vegan or has_clean
@@ -32,8 +41,8 @@
 <div class="plaay-trust-strip mt-5 mb-3{% if preset == 'bars-truffles-icons' %} plaay-trust-strip--compact-icons{% else %} plaay-trust-strip--tag-grid{% endif %}" aria-label="Product trust markers">
   {%- if preset == 'bars-truffles-icons' -%}
     <div class="plaay-trust-item">
-      <img src="https://cdn.shopify.com/s/files/1/0662/4722/9657/files/No_Refined_Sugar_20efff8b-6fef-472c-84a6-77fe988d31a9.png?v=1778740942" alt="No refined sugar" class="plaay-trust-img" loading="lazy" decoding="async">
-      <span class="plaay-trust-label font-walsheim-bold">No Refined Sugar</span>
+      <img src="https://cdn.shopify.com/s/files/1/0662/4722/9657/files/No_Refined_Sugar_20efff8b-6fef-472c-84a6-77fe988d31a9.png?v=1778740942" alt="{{ sugar_label }}" class="plaay-trust-img" loading="lazy" decoding="async">
+      <span class="plaay-trust-label font-walsheim-bold">{{ sugar_label }}</span>
     </div>
     <div class="plaay-trust-item">
       <img src="https://cdn.shopify.com/s/files/1/0662/4722/9657/files/No_Gluten_3a932bb1-9849-43e1-b9fe-da4f2981544d.png?v=1778740942" alt="No gluten" class="plaay-trust-img" loading="lazy" decoding="async">

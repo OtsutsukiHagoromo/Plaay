@@ -1,0 +1,126 @@
+{%- comment -%}
+  Plaay — New Launch Bars: A+ CTA band
+  Final call-to-action. All copy driven by `arena.*` metafields with sensible defaults.
+
+  Metafields (namespace: arena)
+    aplus_cta_title         single_line_text  (fallback: "All Flavor.")
+    aplus_cta_title_accent  single_line_text  (fallback: "All Plaay.")  — yellow line
+    aplus_cta_sub           multi_line_text   (fallback: default copy)
+    aplus_cta_button_label  single_line_text  (fallback: "Explore the launch")
+    aplus_cta_button_url    url               (fallback: /collections/chocolate-bars)
+{%- endcomment -%}
+
+{%- liquid
+  assign mf = product.metafields.arena
+  assign title = mf.aplus_cta_title | default: 'All Flavor.'
+  assign title_accent = mf.aplus_cta_title_accent | default: 'All Plaay.'
+  assign sub = mf.aplus_cta_sub | default: 'Clean chocolate snack-hacks that know how to show up.'
+  assign btn_label = mf.aplus_cta_button_label | default: 'Explore the launch'
+  assign btn_url = mf.aplus_cta_button_url | default: section.settings.default_button_url
+  assign eyebrow = section.settings.eyebrow
+-%}
+
+<section class="nlb-cta" style="--nlb-cta-bg: {{ section.settings.background_color }};">
+  <div class="nlb-cta__inner">
+    {%- if eyebrow != blank -%}
+      <span class="nlb-cta__eyebrow font-walsheim-bold">{{ eyebrow }}</span>
+    {%- endif -%}
+    {%- if title != blank or title_accent != blank -%}
+      <h2 class="nlb-cta__title font-walsheim-black">
+        {%- if title != blank -%}<span class="line1">{{ title }}</span>{%- endif -%}
+        {%- if title_accent != blank -%}<span class="line2">{{ title_accent }}</span>{%- endif -%}
+      </h2>
+    {%- endif -%}
+    {%- if sub != blank -%}
+      <p class="nlb-cta__sub font-walsheim">{{ sub }}</p>
+    {%- endif -%}
+    {%- if btn_label != blank and btn_url != blank -%}
+      <a href="{{ btn_url }}" class="nlb-cta__btn font-walsheim-bold">{{ btn_label }} &rarr;</a>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .nlb-cta {
+    background: var(--nlb-cta-bg, #021D49);
+    background-image: radial-gradient(ellipse at 20% 50%, rgba(249,198,29,0.08) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 50%, rgba(232,87,103,0.08) 0%, transparent 60%);
+    padding: 88px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .nlb-cta__eyebrow {
+    display: inline-block;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 20px;
+  }
+  .nlb-cta__title {
+    font-size: clamp(2.4rem, 5vw, 4.2rem);
+    text-transform: uppercase;
+    line-height: 1.0;
+    margin: 0 0 20px;
+  }
+  .nlb-cta__title .line1 { color: #fff; display: block; }
+  .nlb-cta__title .line2 { color: #F9C61D; display: block; }
+  .nlb-cta__sub {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.65);
+    max-width: 400px;
+    margin: 0 auto 36px;
+    line-height: 1.6;
+  }
+  .nlb-cta__btn {
+    display: inline-block;
+    background: #E85767;
+    color: #fff;
+    font-size: 0.9rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 16px 36px;
+    border-radius: 100px;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .nlb-cta__btn:hover {
+    background: #d04458;
+    transform: translateY(-2px);
+    color: #fff;
+    text-decoration: none;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "NLB — A+ CTA",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Final CTA band. Title, subtext and button come from the product's **arena** metafields (aplus_cta_title, aplus_cta_title_accent, aplus_cta_sub, aplus_cta_button_label, aplus_cta_button_url), with defaults shown if unset."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#021D49"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "New Launch — Available Now"
+    },
+    {
+      "type": "url",
+      "id": "default_button_url",
+      "label": "Default button link (used if metafield unset)"
+    }
+  ],
+  "presets": [
+    { "name": "NLB — A+ CTA" }
+  ]
+}
+{% endschema %}

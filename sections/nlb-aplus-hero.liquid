@@ -1,0 +1,305 @@
+{%- comment -%}
+  Plaay — New Launch Bars: A+ Hero
+  Per-product hero driven by `arena.*` product metafields, with graceful fallbacks
+  (section setting -> metafield -> product field -> hidden/placeholder).
+
+  Metafields (namespace: arena)
+    aplus_eyebrow          single_line_text  — eyebrow line          (fallback: product.title)
+    aplus_hero_title       single_line_text  — headline              (fallback: product.title)
+    aplus_hero_title_accent single_line_text — yellow accent line    (optional)
+    aplus_hero_sub         multi_line_text   — supporting paragraph  (fallback: arena.subtitle_text)
+    aplus_badge_1/2/3      single_line_text  — up to 3 pill badges   (hidden when blank)
+    aplus_hero_tagline     single_line_text  — italic tagline        (hidden when blank)
+    aplus_hero_float_badge single_line_text  — small floating badge  (hidden when blank)
+    aplus_hero_pack        file_reference    — main pack shot        (fallback: product.featured_image)
+    aplus_hero_bar         file_reference    — optional overlap bar  (optional)
+{%- endcomment -%}
+
+{%- liquid
+  assign mf = product.metafields.arena
+
+  # --- copy ---
+  assign eyebrow = section.settings.eyebrow | default: mf.aplus_eyebrow
+  if eyebrow == blank
+    assign eyebrow = product.title
+  endif
+
+  assign title = section.settings.title | default: mf.aplus_hero_title
+  if title == blank
+    assign title = product.title
+  endif
+
+  assign title_accent = mf.aplus_hero_title_accent
+
+  assign sub = mf.aplus_hero_sub
+  if sub == blank
+    assign sub = mf.subtitle_text
+  endif
+
+  assign tagline = mf.aplus_hero_tagline
+  assign float_badge = mf.aplus_hero_float_badge
+
+  # --- images ---
+  assign pack_img = mf.aplus_hero_pack.value
+  if pack_img == blank
+    assign pack_img = product.featured_image
+  endif
+  assign bar_img = mf.aplus_hero_bar.value
+-%}
+
+<section class="nlb-hero" style="--nlb-hero-bg: {{ section.settings.background_color }};">
+  <div class="nlb-hero__inner">
+    <div class="nlb-hero__copy">
+      {%- if eyebrow != blank -%}
+        <span class="nlb-hero__eyebrow font-walsheim-bold">{{ eyebrow }}</span>
+      {%- endif -%}
+
+      {%- if title != blank -%}
+        <h2 class="nlb-hero__title font-walsheim-black">
+          {{ title }}{% if title_accent != blank %}<br><em>{{ title_accent }}</em>{% endif %}
+        </h2>
+      {%- endif -%}
+
+      {%- if sub != blank -%}
+        <p class="nlb-hero__sub font-walsheim">{{ sub }}</p>
+      {%- endif -%}
+
+      {%- assign has_badges = false -%}
+      {%- if mf.aplus_badge_1 != blank or mf.aplus_badge_2 != blank or mf.aplus_badge_3 != blank -%}
+        {%- assign has_badges = true -%}
+      {%- endif -%}
+      {%- if has_badges -%}
+        <div class="nlb-hero__badges">
+          {%- if mf.aplus_badge_1 != blank -%}<span class="nlb-hero__badge font-walsheim-bold">{{ mf.aplus_badge_1 }}</span>{%- endif -%}
+          {%- if mf.aplus_badge_2 != blank -%}<span class="nlb-hero__badge font-walsheim-bold">{{ mf.aplus_badge_2 }}</span>{%- endif -%}
+          {%- if mf.aplus_badge_3 != blank -%}<span class="nlb-hero__badge font-walsheim-bold">{{ mf.aplus_badge_3 }}</span>{%- endif -%}
+        </div>
+      {%- endif -%}
+
+      {%- if tagline != blank -%}
+        <span class="nlb-hero__tagline font-walsheim">{{ tagline }}</span>
+      {%- endif -%}
+    </div>
+
+    <div class="nlb-hero__media{% if bar_img != blank %} nlb-hero__media--duo{% endif %}">
+      {%- if pack_img != blank -%}
+        <div class="nlb-hero__pack-wrap">
+          <img
+            class="nlb-hero__pack"
+            src="{{ pack_img | image_url: width: 900 }}"
+            srcset="{{ pack_img | image_url: width: 480 }} 480w, {{ pack_img | image_url: width: 768 }} 768w, {{ pack_img | image_url: width: 1100 }} 1100w"
+            sizes="(max-width: 767px) 70vw, 480px"
+            alt="{{ title | escape }}"
+            loading="lazy"
+            decoding="async">
+          {%- if float_badge != blank -%}
+            <span class="nlb-hero__float-badge font-walsheim-bold">{{ float_badge }}</span>
+          {%- endif -%}
+        </div>
+        {%- if bar_img != blank -%}
+          <img
+            class="nlb-hero__bar"
+            src="{{ bar_img | image_url: width: 600 }}"
+            srcset="{{ bar_img | image_url: width: 320 }} 320w, {{ bar_img | image_url: width: 600 }} 600w"
+            sizes="(max-width: 767px) 40vw, 200px"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async">
+        {%- endif -%}
+      {%- elsif section.settings.fallback_enabled -%}
+        <div class="nlb-hero__placeholder">
+          <p>Hero pack shot not set.<br>
+          Upload to <strong>Products → {{ product.title }} → Metafields → arena.aplus_hero_pack</strong></p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .nlb-hero {
+    background: var(--nlb-hero-bg, #021D49);
+    padding: 64px 24px;
+  }
+  .nlb-hero__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .nlb-hero__eyebrow {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+  .nlb-hero__title {
+    font-size: clamp(2.6rem, 4.5vw, 4rem);
+    line-height: 1.0;
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0 0 20px;
+  }
+  .nlb-hero__title em {
+    font-style: normal;
+    color: #F9C61D;
+  }
+  .nlb-hero__sub {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.6;
+    max-width: 380px;
+    margin-bottom: 28px;
+  }
+  .nlb-hero__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .nlb-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 100px;
+  }
+  .nlb-hero__tagline {
+    display: block;
+    font-size: 1rem;
+    font-style: italic;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.02em;
+  }
+
+  /* --- Media: single premium pack shot --- */
+  .nlb-hero__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+  }
+  /* soft radial glow behind the pack */
+  .nlb-hero__media::before {
+    content: "";
+    position: absolute;
+    width: 78%;
+    height: 78%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(249,198,29,0.18) 0%, rgba(249,198,29,0) 68%);
+    z-index: 0;
+  }
+  .nlb-hero__pack-wrap {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+  }
+  .nlb-hero__pack {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 24px 48px rgba(0,0,0,0.45));
+  }
+  /* optional secondary bar overlapping lower-left */
+  .nlb-hero__media--duo .nlb-hero__pack { max-width: 400px; }
+  .nlb-hero__bar {
+    position: absolute;
+    z-index: 2;
+    width: 38%;
+    max-width: 190px;
+    height: auto;
+    left: 2%;
+    bottom: 4%;
+    object-fit: contain;
+    transform: rotate(-6deg);
+    filter: drop-shadow(0 12px 28px rgba(0,0,0,0.4));
+  }
+  .nlb-hero__float-badge {
+    position: absolute;
+    z-index: 3;
+    top: -8px;
+    right: -8px;
+    background: #E85767;
+    color: #fff;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 100px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  .nlb-hero__placeholder {
+    background: rgba(255,255,255,0.06);
+    border: 2px dashed rgba(255,255,255,0.25);
+    border-radius: 12px;
+    padding: 40px 24px;
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 767px) {
+    .nlb-hero__inner { grid-template-columns: 1fr; gap: 32px; text-align: center; }
+    .nlb-hero__badges { justify-content: center; }
+    .nlb-hero__sub { margin-left: auto; margin-right: auto; }
+    .nlb-hero__media { min-height: 0; }
+    .nlb-hero__pack, .nlb-hero__media--duo .nlb-hero__pack { max-width: 280px; }
+    .nlb-hero__bar { display: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "NLB — A+ Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Per-product hero. Content comes from the product's **arena** metafields (aplus_eyebrow, aplus_hero_title, aplus_hero_sub, aplus_badge_1/2/3, aplus_hero_tagline, aplus_hero_pack, aplus_hero_bar, aplus_hero_float_badge). The settings below are optional overrides."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#021D49"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow override (optional)"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title override (optional)"
+    },
+    {
+      "type": "checkbox",
+      "id": "fallback_enabled",
+      "label": "Show placeholder if no hero image set",
+      "default": false
+    }
+  ],
+  "presets": [
+    { "name": "NLB — A+ Hero" }
+  ]
+}
+{% endschema %}

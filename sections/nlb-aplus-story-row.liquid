@@ -1,0 +1,231 @@
+{%- comment -%}
+  Plaay — New Launch Bars: A+ Story Row (reusable)
+  A split copy/image row used for both the "Break it" and "Clean Cravings" sections.
+  Choose which metafield set to read via the `metafield_set` setting.
+
+  metafield_set = "break"
+    aplus_break_title      single_line_text  (fallback: "Break it. Bite it. Melt into it.")
+    aplus_break_desc       multi_line_text   (fallback: arena.subtitle_text)
+    aplus_break_img        file_reference    (fallback: product.featured_image)
+    aplus_break_pill_1/2/3 single_line_text  (floating annotation pills, hidden when blank)
+
+  metafield_set = "cravings"
+    aplus_cravings_title   single_line_text  (fallback: "Made For Clean Cravings")
+    aplus_cravings_desc    multi_line_text
+    aplus_cravings_accent  single_line_text  (italic accent line under copy)
+    aplus_lifestyle_img    file_reference    (fallback: product.featured_image)
+{%- endcomment -%}
+
+{%- liquid
+  assign mf = product.metafields.arena
+  assign set = section.settings.metafield_set
+
+  if set == 'cravings'
+    assign title = mf.aplus_cravings_title | default: 'Made For Clean Cravings'
+    assign desc = mf.aplus_cravings_desc
+    assign accent = mf.aplus_cravings_accent
+    assign img = mf.aplus_lifestyle_img.value
+    assign accent_color = '#F9C61D'
+  else
+    assign title = mf.aplus_break_title | default: 'Break it. Bite it. Melt into it.'
+    assign desc = mf.aplus_break_desc
+    if desc == blank
+      assign desc = mf.subtitle_text
+    endif
+    assign accent = blank
+    assign img = mf.aplus_break_img.value
+    assign accent_color = '#E85767'
+  endif
+
+  if img == blank
+    assign img = product.featured_image
+  endif
+
+  assign show_pills = false
+  if section.settings.show_pills and set == 'break'
+    if mf.aplus_break_pill_1 != blank or mf.aplus_break_pill_2 != blank or mf.aplus_break_pill_3 != blank
+      assign show_pills = true
+    endif
+  endif
+-%}
+
+<section class="nlb-row nlb-row--{{ set }}{% if section.settings.image_side == 'left' %} nlb-row--img-left{% endif %}"
+  style="--nlb-row-bg: {{ section.settings.background_color }}; --nlb-row-text: {{ section.settings.text_color }}; --nlb-row-accent: {{ accent_color }};">
+  <div class="nlb-row__inner">
+    <div class="nlb-row__copy">
+      {%- if title != blank -%}
+        <h2 class="nlb-row__title font-walsheim-black">{{ title | newline_to_br }}</h2>
+      {%- endif -%}
+      {%- if desc != blank -%}
+        <p class="nlb-row__desc font-walsheim">{{ desc | newline_to_br }}</p>
+      {%- endif -%}
+      {%- if accent != blank -%}
+        <span class="nlb-row__accent font-walsheim">{{ accent }}</span>
+      {%- endif -%}
+    </div>
+
+    <div class="nlb-row__media">
+      {%- if img != blank -%}
+        <div class="nlb-row__img-wrap">
+          <img
+            class="nlb-row__img"
+            src="{{ img | image_url: width: 900 }}"
+            srcset="{{ img | image_url: width: 480 }} 480w, {{ img | image_url: width: 768 }} 768w, {{ img | image_url: width: 1000 }} 1000w"
+            sizes="(max-width: 767px) 100vw, 540px"
+            alt="{{ title | strip_newlines | escape }}"
+            loading="lazy"
+            decoding="async">
+          {%- if show_pills -%}
+            {%- if mf.aplus_break_pill_1 != blank -%}<span class="nlb-row__pill nlb-row__pill--tl font-walsheim-bold">{{ mf.aplus_break_pill_1 }}</span>{%- endif -%}
+            {%- if mf.aplus_break_pill_2 != blank -%}<span class="nlb-row__pill nlb-row__pill--bl font-walsheim-bold">{{ mf.aplus_break_pill_2 }}</span>{%- endif -%}
+            {%- if mf.aplus_break_pill_3 != blank -%}<span class="nlb-row__pill nlb-row__pill--br font-walsheim-bold">{{ mf.aplus_break_pill_3 }}</span>{%- endif -%}
+          {%- endif -%}
+        </div>
+      {%- elsif section.settings.fallback_enabled -%}
+        <div class="nlb-row__placeholder">
+          <p>Image not set.<br>Upload to the product's <strong>arena</strong> metafield for this row.</p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .nlb-row {
+    background: var(--nlb-row-bg, #ffffff);
+    padding: 72px 24px;
+  }
+  .nlb-row__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  /* image on the left: flip the visual order, copy stays after */
+  .nlb-row--img-left .nlb-row__copy { order: 2; }
+  .nlb-row--img-left .nlb-row__media { order: 1; }
+  .nlb-row__title {
+    font-size: clamp(2rem, 3.8vw, 3.4rem);
+    text-transform: uppercase;
+    color: var(--nlb-row-text, #021D49);
+    line-height: 1.05;
+    margin: 0 0 20px;
+  }
+  .nlb-row__desc {
+    font-size: 1rem;
+    color: var(--nlb-row-text, #021D49);
+    opacity: 0.82;
+    line-height: 1.65;
+    max-width: 380px;
+    margin: 0 0 20px;
+  }
+  .nlb-row__accent {
+    display: block;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--nlb-row-accent, #F9C61D);
+    letter-spacing: 0.02em;
+  }
+  .nlb-row__media { position: relative; }
+  .nlb-row__img-wrap { position: relative; }
+  .nlb-row__img {
+    width: 100%;
+    border-radius: 16px;
+    display: block;
+    object-fit: cover;
+  }
+  .nlb-row__pill {
+    position: absolute;
+    background: #021D49;
+    color: #fff;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 100px;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  }
+  .nlb-row__pill--tl { top: 14%; right: -10px; }
+  .nlb-row__pill--bl { bottom: 28%; left: -10px; }
+  .nlb-row__pill--br { bottom: 10%; right: 6%; }
+  .nlb-row__placeholder {
+    background: rgba(127,127,127,0.08);
+    border: 2px dashed rgba(127,127,127,0.4);
+    border-radius: 12px;
+    padding: 48px 24px;
+    text-align: center;
+    color: #888;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
+  @media (max-width: 767px) {
+    .nlb-row__inner { grid-template-columns: 1fr; gap: 36px; text-align: center; }
+    .nlb-row--img-left .nlb-row__copy,
+    .nlb-row--img-left .nlb-row__media { order: initial; }
+    .nlb-row__desc { margin-left: auto; margin-right: auto; }
+    .nlb-row__pill { display: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "NLB — A+ Story Row",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Reusable copy + image row. Pick which product **arena** metafield set to display, then place the copy/image on the left or right."
+    },
+    {
+      "type": "select",
+      "id": "metafield_set",
+      "label": "Content set",
+      "options": [
+        { "value": "break", "label": "Break it (texture/macro shot + pills)" },
+        { "value": "cravings", "label": "Clean Cravings (lifestyle shot + accent)" }
+      ],
+      "default": "break"
+    },
+    {
+      "type": "select",
+      "id": "image_side",
+      "label": "Image side",
+      "options": [
+        { "value": "right", "label": "Right" },
+        { "value": "left", "label": "Left" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background colour",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#021D49"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pills",
+      "label": "Show floating pills (Break it set only)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "fallback_enabled",
+      "label": "Show placeholder if no image set",
+      "default": false
+    }
+  ],
+  "presets": [
+    { "name": "NLB — A+ Story Row" }
+  ]
+}
+{% endschema %}

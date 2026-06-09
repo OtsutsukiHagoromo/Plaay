@@ -2222,6 +2222,12 @@ input#email_01K3QYXE95MP3N5RAFP8B1PPVS {
   color: #021D49;
 }
 
+/* New Launch — yellow on dark blue (same prominent look as Bestseller) */
+.plaay-badge--new-launch {
+  background: #F9C61D;
+  color: #021D49;
+}
+
 /* Just Launched — dark blue on yellow (inverted, eye-catching) */
 .plaay-badge--new {
   background: #021D49;
