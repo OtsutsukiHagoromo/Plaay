@@ -167,6 +167,13 @@
               "image": "shopify://shop_images/Pistachio_Toffee_Can.png",
               "dropdown_item": "limited edition"
             }
+          },
+          "dropdown_menu_badge_newbars": {
+            "type": "dropdown_menu_badge",
+            "settings": {
+              "dropdown_item": "new chocolate bars",
+              "label": "Just Launched"
+            }
           }
         },
         "block_order": [
@@ -180,7 +187,8 @@
           "dropdown_menu_image_TNL4Fk",
           "dropdown_menu_image_chzV8g",
           "dropdown_menu_image_dUXJrR",
-          "dropdown_menu_image_EqNc9r"
+          "dropdown_menu_image_EqNc9r",
+          "dropdown_menu_badge_newbars"
         ],
         "settings": {
           "logo": "shopify://shop_images/Group_3755_1.png",

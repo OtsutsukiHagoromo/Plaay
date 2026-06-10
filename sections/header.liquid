@@ -113,7 +113,7 @@
                       {% assign lowercase_title = link.title | downcase %}
                       <li class="py-3 font-walsheim-bold text-xs tracking-wide flex items-center">
                         {% for block in dropdown_menu_images %}
-                          {% assign dropdown_item = block.settings.dropdown_item %}
+                          {% assign dropdown_item = block.settings.dropdown_item | downcase | strip %}
                           {% assign image = block.settings.image %}
 
                           {% if dropdown_item == lowercase_title %}
@@ -123,7 +123,8 @@
 
                         <a href="{{ link.url }}" class="">{{ link.title }}</a>
                         {% for badge in dropdown_menu_badges %}
-                          {% if badge.settings.dropdown_item == lowercase_title and badge.settings.label != blank %}
+                          {% assign badge_item = badge.settings.dropdown_item | downcase | strip %}
+                          {% if badge_item == lowercase_title and badge.settings.label != blank %}
                             <span class="plaay-menu-badge">{{ badge.settings.label }}</span>
                           {% endif %}
                         {% endfor %}
@@ -168,7 +169,7 @@
                       {% assign lowercase_title = link.title | downcase %}
                       <li class="py-3 font-walsheim-bold text-xs tracking-wide flex items-center">
                         {% for block in dropdown_menu_images %}
-                          {% assign dropdown_item = block.settings.dropdown_item %}
+                          {% assign dropdown_item = block.settings.dropdown_item | downcase | strip %}
                           {% assign image = block.settings.image %}
 
                           {% if dropdown_item == lowercase_title %}
@@ -303,7 +304,7 @@
                       {% assign lowercase_title = link.title | downcase %}
                       <li class="py-3 font-walsheim-bold text-sm tracking-wide flex items-center mr-3">
                         {% for block in dropdown_menu_images %}
-                          {% assign dropdown_item = block.settings.dropdown_item %}
+                          {% assign dropdown_item = block.settings.dropdown_item | downcase | strip %}
                           {% assign image = block.settings.image %}
 
                           {% if dropdown_item == lowercase_title %}
@@ -315,7 +316,8 @@
 
                         <a href="{{ link.url }}">{{ link.title }}</a>
                         {% for badge in dropdown_menu_badges %}
-                          {% if badge.settings.dropdown_item == lowercase_title and badge.settings.label != blank %}
+                          {% assign badge_item = badge.settings.dropdown_item | downcase | strip %}
+                          {% if badge_item == lowercase_title and badge.settings.label != blank %}
                             <span class="plaay-menu-badge">{{ badge.settings.label }}</span>
                           {% endif %}
                         {% endfor %}
@@ -347,7 +349,7 @@
                       {% assign lowercase_title = link.title | downcase %}
                       <li class="py-3 font-walsheim-bold text-sm tracking-wide flex items-center mr-3">
                         {% for block in dropdown_menu_images %}
-                          {% assign dropdown_item = block.settings.dropdown_item %}
+                          {% assign dropdown_item = block.settings.dropdown_item | downcase | strip %}
                           {% assign image = block.settings.image %}
 
                           {% if dropdown_item == lowercase_title %}
@@ -359,7 +361,8 @@
 
                         <a href="{{ link.url }}">{{ link.title }}</a>
                         {% for badge in dropdown_menu_badges %}
-                          {% if badge.settings.dropdown_item == lowercase_title and badge.settings.label != blank %}
+                          {% assign badge_item = badge.settings.dropdown_item | downcase | strip %}
+                          {% if badge_item == lowercase_title and badge.settings.label != blank %}
                             <span class="plaay-menu-badge">{{ badge.settings.label }}</span>
                           {% endif %}
                         {% endfor %}
