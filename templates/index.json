@@ -200,6 +200,80 @@
         "background_color": "#021d49"
       }
     },
+    "featured_products_wAKHQm": {
+      "type": "featured_products",
+      "blocks": {
+        "product_ypVKmj": {
+          "type": "product",
+          "settings": {
+            "product": "og-plaayer-pack"
+          }
+        },
+        "product_HmwjPK": {
+          "type": "product",
+          "settings": {
+            "product": "70-dark-chocolate-x-6"
+          }
+        },
+        "product_DtTtXE": {
+          "type": "product",
+          "settings": {
+            "product": "triple-chocolate-truffle"
+          }
+        },
+        "product_Kk63rA": {
+          "type": "product",
+          "settings": {
+            "product": "milk-chocolate-with-toffee-almond-x-6"
+          }
+        },
+        "product_RDp3ep": {
+          "type": "product",
+          "settings": {
+            "product": "cookies-and-cream-bar-x12"
+          }
+        },
+        "product_Jf9Jj8": {
+          "type": "product",
+          "settings": {
+            "product": "peanut-butter-truffle"
+          }
+        }
+      },
+      "block_order": [
+        "product_ypVKmj",
+        "product_HmwjPK",
+        "product_DtTtXE",
+        "product_Kk63rA",
+        "product_RDp3ep",
+        "product_Jf9Jj8"
+      ],
+      "name": "Featured products",
+      "settings": {
+        "title": "Our Newest Chocolate Snack-Hacks",
+        "description": "",
+        "background_color": "#ffffff",
+        "product_source": "manual",
+        "featured_collection": "shop-all",
+        "collection_product_limit": 12,
+        "extra_top_padding": true,
+        "extra_bottom_padding": false,
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1,
+        "column_size_mobile_small": 1,
+        "autoplay": 600,
+        "see_all_link": "shopify://collections/new-chocolate-bars",
+        "see_all_link_text": "Shop New Bars",
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": true,
+        "compact_mobile_grid": true,
+        "hide_atc_on_tiles": false
+      }
+    },
     "featured_products_F9JTBW": {
       "type": "featured_products",
       "blocks": {
@@ -688,36 +762,6 @@
         "hide_atc_on_tiles": false
       }
     },
-    "featured_products_newbars": {
-      "type": "featured_products",
-      "blocks": {},
-      "block_order": [],
-      "name": "Featured products",
-      "settings": {
-        "title": "Just Launched — New Bars",
-        "description": "Be the first to try our newest clean-chocolate bars.",
-        "background_color": "#ffffff",
-        "product_source": "collection",
-        "featured_collection": "new-chocolate-bars",
-        "collection_product_limit": 12,
-        "extra_top_padding": false,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 600,
-        "see_all_link": "shopify://collections/new-chocolate-bars",
-        "see_all_link_text": "Shop New Bars",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
-      }
-    },
     "featured_products_RV9q3Y": {
       "type": "featured_products",
       "blocks": {
@@ -814,217 +858,6 @@
         "hide_arrows_mobile": false,
         "hide_bullets": true,
         "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
-      }
-    },
-    "a3dc1094-1a6c-4148-a557-3239f077e330": {
-      "type": "review_gif_video",
-      "blocks": {
-        "7f34928a-f7d0-4495-a8cf-7d110fd63df6": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/first-bite-1.gif",
-            "height": 280,
-            "review_text": "<p>This is literally the best! Has single-handedly eliminated my chocolate and doughnut cravings!!</p>",
-            "review_heading": "Yoga Instructor, Dubai",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        },
-        "043beecf-efa1-4796-bc8f-fedf5cec4f83": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/firstbite5.gif",
-            "height": 280,
-            "review_text": "<p>Honestly, this is my no-brainer snack for crazy days. Tastes amazing, & keeps me going! </p>",
-            "review_heading": "Always-on CEO",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        },
-        "image_WCjPhb": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/first-bite-6.gif",
-            "height": 280,
-            "review_text": "<p>Favorite flavour hands down will be the peanut butter truffle! It just melts in your mouth!</p>",
-            "review_heading": "Creative Designer, Abu Dhabi",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        },
-        "c3486d2a-e167-4806-9207-08da14b44b3b": {
-          "type": "image",
-          "settings": {
-            "image": "shopify://shop_images/ezgif-3-8df9b851d4_a81fae6c-c3c9-4bfa-a352-c82a89a3a291.gif",
-            "height": 280,
-            "review_text": "<p>100% Hooked! Perfect snack after my runs—always hits the spot!</p>",
-            "review_heading": "Recreational Runner",
-            "slider_bg_color": "rgba(0,0,0,0)",
-            "star_rating": 5
-          }
-        }
-      },
-      "block_order": [
-        "7f34928a-f7d0-4495-a8cf-7d110fd63df6",
-        "043beecf-efa1-4796-bc8f-fedf5cec4f83",
-        "image_WCjPhb",
-        "c3486d2a-e167-4806-9207-08da14b44b3b"
-      ],
-      "disabled": true,
-      "settings": {
-        "heading": "",
-        "text": "",
-        "per_view_desktop_large": 4,
-        "per_view_desktop": 4,
-        "per_view_tablet": 3,
-        "per_view_mobile": 2,
-        "autoplay_speed": 0,
-        "desktop_vertical_padding": 13,
-        "mobile_vertical_padding": 5,
-        "enable_style": false,
-        "spacing_top_desktop": 0,
-        "spacing_bottom_desktop": 0,
-        "spacing_top_mobile": 0,
-        "spacing_bottom_mobile": 0
-      }
-    },
-    "featured_products_P8YfXx": {
-      "type": "featured_products",
-      "blocks": {
-        "product_8qyxqy": {
-          "type": "product",
-          "settings": {
-            "product": "truffle-mix"
-          }
-        },
-        "product_ez3abg": {
-          "type": "product",
-          "settings": {
-            "product": "triple-chocolate-truffles-150g"
-          }
-        },
-        "product_W4idWw": {
-          "type": "product",
-          "settings": {
-            "product": "pistachio-chocolate-truffles-150g"
-          }
-        },
-        "product_QxJX6r": {
-          "type": "product",
-          "settings": {
-            "product": "pistachio-truffle"
-          }
-        },
-        "product_DULqiz": {
-          "type": "product",
-          "settings": {
-            "product": "almond-brownie-truffle"
-          }
-        },
-        "product_acAidm": {
-          "type": "product",
-          "settings": {
-            "product": "cashew-caramel-truffle"
-          }
-        },
-        "product_4iHwJp": {
-          "type": "product",
-          "settings": {
-            "product": "peanut-butter-truffle"
-          }
-        },
-        "product_gfHVXM": {
-          "type": "product",
-          "settings": {
-            "product": "triple-chocolate-truffle"
-          }
-        },
-        "product_ezaMPt": {
-          "type": "product",
-          "settings": {
-            "product": "almond-brownie-chocolate-truffles-2-x-60g"
-          }
-        },
-        "product_F4iLgL": {
-          "type": "product",
-          "settings": {
-            "product": "cashew-caramel-chocolate-truffles-2-x-60g"
-          }
-        },
-        "product_7iQ6zf": {
-          "type": "product",
-          "settings": {
-            "product": "peanut-butter-chocolate-truffles-60g-copy"
-          }
-        },
-        "product_xbM8L7": {
-          "type": "product",
-          "settings": {
-            "product": "pistachio-chocolate-truffles-2-x-60g"
-          }
-        },
-        "product_LcKxhQ": {
-          "type": "product",
-          "settings": {
-            "product": "triple-chocolate-truffles-2-x-60g"
-          }
-        },
-        "product_HYCRPe": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "peanut-butter-truffles-60g-1"
-          }
-        },
-        "product_VXqVkq": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "cashew-caramel-truffles-60g-1"
-          }
-        }
-      },
-      "block_order": [
-        "product_8qyxqy",
-        "product_ez3abg",
-        "product_W4idWw",
-        "product_QxJX6r",
-        "product_DULqiz",
-        "product_acAidm",
-        "product_4iHwJp",
-        "product_gfHVXM",
-        "product_ezaMPt",
-        "product_F4iLgL",
-        "product_7iQ6zf",
-        "product_xbM8L7",
-        "product_LcKxhQ",
-        "product_HYCRPe",
-        "product_VXqVkq"
-      ],
-      "disabled": true,
-      "settings": {
-        "title": "Truffles",
-        "description": "",
-        "background_color": "#ffffff",
-        "product_source": "collection",
-        "featured_collection": "chocolate-truffles",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 3.6,
-        "column_size_tablet": 1.8,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 600,
-        "see_all_link": "shopify://collections/chocolate-truffles",
-        "see_all_link_text": "Shop All Truffles",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": false,
         "hide_atc_on_tiles": false
       }
     },
@@ -1846,15 +1679,6 @@
         "include_margins": true
       }
     },
-    "e6d51720-1295-476b-9afe-9dcb07476eec": {
-      "type": "instafeed-slider",
-      "disabled": true,
-      "settings": {
-        "title": "Straight From The Feed",
-        "description": "The latest buzz from the Plaayground—see what everyoneʼs loving!",
-        "instagram_post_limit": 12
-      }
-    },
     "instafeed_y9eagG": {
       "type": "instafeed",
       "settings": {
@@ -1884,7 +1708,7 @@
   "order": [
     "4ae9c22c-dd9d-4d0b-bb5c-7da4d20021b3",
     "marquee_slider_cM4zJb",
-    "featured_products_newbars",
+    "featured_products_wAKHQm",
     "featured_products_F9JTBW",
     "marquee_slider_H7hNaz",
     "17718262497155cfae",
@@ -1895,8 +1719,6 @@
     "scrolling_content_U784BN",
     "featured_products_wLygrm",
     "featured_products_RV9q3Y",
-    "a3dc1094-1a6c-4148-a557-3239f077e330",
-    "featured_products_P8YfXx",
     "featured_products_83MdCp",
     "icon_with_text_d6NfRr",
     "cfd29eca-49e3-4778-ad49-c635383324c8",
@@ -1904,7 +1726,6 @@
     "3ee422c3-fa09-46a2-a29c-13a01c96c18e",
     "pdp_social_proof_rB7dqT",
     "1726656192da5e6d75",
-    "e6d51720-1295-476b-9afe-9dcb07476eec",
     "instafeed_y9eagG",
     "1671195971148aab85",
     "related_articles_JgEJHR"
