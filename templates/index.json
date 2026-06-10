@@ -14,7 +14,6 @@
       "blocks": {
         "slide_earVyE": {
           "type": "slide",
-          "disabled": true,
           "settings": {
             "hide_section_one_mobile": true,
             "hide_section_two_mobile": false,
@@ -41,12 +40,12 @@
             "title_mobile": "",
             "heading": "",
             "heading_mobile": "",
-            "link_one": "shopify://collections",
+            "link_one": "shopify://collections/new-chocolate-bars",
             "link_one_text": "Shop Now",
             "link_two": "",
             "link_two_text": "",
-            "img": "shopify://shop_images/Plaay_eid_banners_1.jpg",
-            "m-img": "shopify://shop_images/Plaay_eid_banners_2.jpg",
+            "img": "shopify://shop_images/Plaay_new_bars_banners_2.jpg",
+            "m-img": "shopify://shop_images/Plaay_new_bars_banners_3.jpg",
             "section_one_video": "",
             "section_two_video": ""
           }
