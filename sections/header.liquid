@@ -5,6 +5,7 @@
  assign hide_search_desktop = section.settings.hide_search_desktop
  assign hide_search_mobile = section.settings.hide_search_mobile
  assign dropdown_menu_images = section.blocks | where: 'type', 'dropdown_menu_image'
+ assign dropdown_menu_badges = section.blocks | where: 'type', 'dropdown_menu_badge'
  assign scroll_sticky = section.settings.scroll_sticky
  assign account_href = '/account/login'
  assign account_label = 'action.account' | t
@@ -36,6 +37,21 @@
     left: 0;
     top: -36px;
     opacity: 0;
+  }
+  .plaay-menu-badge {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: #021D49;
+    color: #F9C61D;
+    font-family: walsheim-bold, 'GT Walsheim', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.7;
+    vertical-align: middle;
+    white-space: nowrap;
   }
   @media only screen and (min-width: 1023px) {
     .navigation_search::before {
@@ -106,6 +122,11 @@
                         {% endfor %}
 
                         <a href="{{ link.url }}" class="">{{ link.title }}</a>
+                        {% for badge in dropdown_menu_badges %}
+                          {% if badge.settings.dropdown_item == lowercase_title and badge.settings.label != blank %}
+                            <span class="plaay-menu-badge">{{ badge.settings.label }}</span>
+                          {% endif %}
+                        {% endfor %}
                       </li>
                     {% endfor %}
                   </ul>
@@ -293,6 +314,11 @@
                         {% endfor %}
 
                         <a href="{{ link.url }}">{{ link.title }}</a>
+                        {% for badge in dropdown_menu_badges %}
+                          {% if badge.settings.dropdown_item == lowercase_title and badge.settings.label != blank %}
+                            <span class="plaay-menu-badge">{{ badge.settings.label }}</span>
+                          {% endif %}
+                        {% endfor %}
                       </li>
                     {% endfor %}
                   </ul>
@@ -332,6 +358,11 @@
                         {% endfor %}
 
                         <a href="{{ link.url }}">{{ link.title }}</a>
+                        {% for badge in dropdown_menu_badges %}
+                          {% if badge.settings.dropdown_item == lowercase_title and badge.settings.label != blank %}
+                            <span class="plaay-menu-badge">{{ badge.settings.label }}</span>
+                          {% endif %}
+                        {% endfor %}
                       </li>
                     {% endfor %}
                   </ul>
@@ -649,6 +680,23 @@
             "id": "dropdown_item",
             "label": "Dropdown item to link to",
             "info": "please type out the name of the dropdown item you would like this image to appear next to. Please keep the wording all lowercase."
+          }
+        ]
+      },
+      {
+        "type": "dropdown_menu_badge",
+        "name": "Dropdown menu badge",
+        "settings": [
+          {
+            "type": "text",
+            "id": "dropdown_item",
+            "label": "Dropdown item to badge",
+            "info": "Type the dropdown item name in lowercase, e.g. 'new chocolate bars'."
+          }, {
+            "type": "text",
+            "id": "label",
+            "label": "Badge text",
+            "default": "Just Launched"
           }
         ]
       }

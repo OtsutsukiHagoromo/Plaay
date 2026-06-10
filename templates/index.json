@@ -688,6 +688,36 @@
         "hide_atc_on_tiles": false
       }
     },
+    "featured_products_newbars": {
+      "type": "featured_products",
+      "blocks": {},
+      "block_order": [],
+      "name": "Featured products",
+      "settings": {
+        "title": "Just Launched — New Bars",
+        "description": "Be the first to try our newest clean-chocolate bars.",
+        "background_color": "#ffffff",
+        "product_source": "collection",
+        "featured_collection": "new-chocolate-bars",
+        "collection_product_limit": 12,
+        "extra_top_padding": false,
+        "extra_bottom_padding": false,
+        "column_size_desktop_extra_large": 4,
+        "column_size_desktop_large": 4,
+        "column_size_desktop": 4,
+        "column_size_tablet": 3,
+        "column_size_mobile": 1.2,
+        "column_size_mobile_small": 1.2,
+        "autoplay": 600,
+        "see_all_link": "shopify://collections/new-chocolate-bars",
+        "see_all_link_text": "Shop New Bars",
+        "hide_arrows_desktop": false,
+        "hide_arrows_mobile": false,
+        "hide_bullets": true,
+        "compact_mobile_grid": true,
+        "hide_atc_on_tiles": false
+      }
+    },
     "featured_products_RV9q3Y": {
       "type": "featured_products",
       "blocks": {
@@ -1854,6 +1884,7 @@
   "order": [
     "4ae9c22c-dd9d-4d0b-bb5c-7da4d20021b3",
     "marquee_slider_cM4zJb",
+    "featured_products_newbars",
     "featured_products_F9JTBW",
     "marquee_slider_H7hNaz",
     "17718262497155cfae",
