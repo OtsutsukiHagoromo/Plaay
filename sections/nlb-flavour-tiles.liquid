@@ -1,0 +1,116 @@
+{%- comment -%}
+  Plaay — New Bars flavour tiles
+  Color-coded quick-nav tiles for each bar in the collection. Each tile uses the
+  product's pack shot (arena.aplus_hero_pack -> featured_image) on its packaging
+  accent colour (arena.aplus_theme_color).
+{%- endcomment -%}
+
+{%- liquid
+  assign heading = section.settings.heading
+  assign limit = section.settings.product_limit | default: 8
+-%}
+
+<section class="nlb-tiles" style="--nlb-tiles-bg: {{ section.settings.background_color }};">
+  <div class="nlb-tiles__inner">
+    {%- if heading != blank -%}
+      <h2 class="nlb-tiles__heading font-walsheim-black">{{ heading }}</h2>
+    {%- endif -%}
+    <div class="nlb-tiles__grid">
+      {%- for product in collection.products limit: limit -%}
+        {%- liquid
+          assign tile_color = product.metafields.arena.aplus_theme_color | default: '#021D49'
+          assign tile_img = product.metafields.arena.aplus_hero_pack.value | default: product.featured_image
+        -%}
+        <a href="{{ product.url }}" class="nlb-tile" style="--tile-color: {{ tile_color }};">
+          <div class="nlb-tile__media">
+            {%- if tile_img != blank -%}
+              <img class="nlb-tile__img"
+                src="{{ tile_img | image_url: width: 500 }}"
+                srcset="{{ tile_img | image_url: width: 300 }} 300w, {{ tile_img | image_url: width: 500 }} 500w"
+                sizes="(max-width: 767px) 45vw, 260px"
+                alt="{{ product.title | escape }}"
+                loading="lazy" decoding="async">
+            {%- endif -%}
+          </div>
+          <div class="nlb-tile__body">
+            <span class="nlb-tile__title font-walsheim-bold">{{ product.title | replace: 'Bar 6 x', '·' | replace: '6 x', '' }}</span>
+            <span class="nlb-tile__tag font-walsheim-bold">0g Added Sugar</span>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .nlb-tiles { background: var(--nlb-tiles-bg, #FAF7F2); padding: 64px 24px; }
+  .nlb-tiles__inner { max-width: 1200px; margin: 0 auto; }
+  .nlb-tiles__heading {
+    text-align: center;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    text-transform: uppercase;
+    color: #021D49;
+    margin: 0 0 36px;
+    letter-spacing: 0.02em;
+  }
+  .nlb-tiles__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .nlb-tile {
+    display: flex;
+    flex-direction: column;
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    background: #fff;
+    box-shadow: 0 4px 18px rgba(2,29,73,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .nlb-tile:hover { transform: translateY(-5px); box-shadow: 0 14px 34px rgba(2,29,73,0.16); }
+  .nlb-tile__media {
+    background: var(--tile-color, #021D49);
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+  }
+  .nlb-tile__img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 10px 18px rgba(0,0,0,0.28)); }
+  .nlb-tile__body { padding: 16px 16px 20px; text-align: center; }
+  .nlb-tile__title {
+    display: block;
+    color: #021D49;
+    font-size: 0.95rem;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin-bottom: 8px;
+  }
+  .nlb-tile__tag {
+    display: inline-block;
+    background: #021D49;
+    color: #F9C61D;
+    font-size: 0.62rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 100px;
+  }
+  @media (max-width: 1023px) { .nlb-tiles__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 767px) { .nlb-tiles__grid { grid-template-columns: repeat(2, 1fr); gap: 14px; } }
+</style>
+
+{% schema %}
+{
+  "name": "NLB — Flavour Tiles",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Pick Your Flavour" },
+    { "type": "range", "id": "product_limit", "label": "Max tiles", "min": 2, "max": 12, "step": 1, "default": 8 },
+    { "type": "color", "id": "background_color", "label": "Background colour", "default": "#FAF7F2" }
+  ],
+  "presets": [ { "name": "NLB — Flavour Tiles" } ]
+}
+{% endschema %}

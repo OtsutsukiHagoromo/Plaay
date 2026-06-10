@@ -1,0 +1,69 @@
+/*
+ * New Chocolate Bars — launch collection template.
+ * Stopmotion hero + colour-coded flavour tiles + product grid.
+ */
+{
+  "sections": {
+    "nlb_hero": {
+      "type": "nlb-collection-hero",
+      "settings": {
+        "eyebrow": "New Launch — Available Now",
+        "heading": "Clean Chocolate Bars. Just Dropped.",
+        "subheading": "Seven new bars. 70% dark & creamy milk, sweetened with allulose — 0g added sugar, 100% clean.",
+        "button_label": "Shop the launch",
+        "button_link": "#shopify-section-main",
+        "fps": 10,
+        "media_left": false,
+        "background_color": "#021D49"
+      }
+    },
+    "nlb_tiles": {
+      "type": "nlb-flavour-tiles",
+      "settings": {
+        "heading": "Pick Your Flavour",
+        "product_limit": 8,
+        "background_color": "#FAF7F2"
+      }
+    },
+    "main": {
+      "type": "main-collection",
+      "settings": {
+        "usp_show": false,
+        "usp_bg": "#021d49",
+        "usp_1_icon": "🚀",
+        "usp_1_text": "Free shipping AED 75+",
+        "usp_2_icon": "🌿",
+        "usp_2_text": "0g added sugar",
+        "usp_3_icon": "🇦🇪",
+        "usp_3_text": "Made in UAE",
+        "usp_4_icon": "✅",
+        "usp_4_text": "Halal certified",
+        "usp_5_icon": "🌾",
+        "usp_5_text": "Gluten free",
+        "usp_6_icon": "🌱",
+        "usp_6_text": "Soy free",
+        "compact_mobile_grid": false,
+        "default_background_color": "#FFFFFF",
+        "backup_featured_product_one": "",
+        "backup_featured_product_two": "",
+        "empty_collection_heading": "Looks like there are no products in this collection...",
+        "empty_collection_copy": "Why not try looking in another one of our collections.",
+        "empty_collection_link": "/",
+        "empty_collection_link_text": "Return home"
+      }
+    },
+    "plaay_recently_viewed": {
+      "type": "plaay-recently-viewed",
+      "settings": {
+        "heading": "Previously viewed",
+        "max_products": 6
+      }
+    }
+  },
+  "order": [
+    "nlb_hero",
+    "nlb_tiles",
+    "main",
+    "plaay_recently_viewed"
+  ]
+}

@@ -1,0 +1,91 @@
+{%- comment -%}
+  Plaay — Stopmotion loop
+  Cycles 12 web-sized theme-asset frames (assets/nlb-stopmotion_01..12.jpg) as a
+  smooth loop. All frames are stacked + preloaded, so swapping is flicker-free.
+  Honours prefers-reduced-motion (shows the first frame only).
+
+  Optional params when rendering:
+    fps   — frames per second (default 10)
+    alt   — alt text for the first frame (default product/brand)
+{%- endcomment -%}
+
+{%- liquid
+  assign sm_fps = fps | default: 10
+  assign sm_alt = alt | default: 'Plaay new chocolate bars'
+  assign sm_id = 'nlb-sm-' | append: id | default: 'nlb-sm'
+-%}
+
+<div class="nlb-sm" id="{{ sm_id }}" data-fps="{{ sm_fps }}" role="img" aria-label="{{ sm_alt | escape }}">
+  {%- for i in (1..12) -%}
+    {%- assign num = i | prepend: '0' | slice: -2, 2 -%}
+    {%- assign fname = 'nlb-stopmotion_' | append: num | append: '.jpg' -%}
+    <img
+      class="nlb-sm__frame{% if forloop.first %} is-active{% endif %}"
+      src="{{ fname | asset_url }}"
+      alt="{% if forloop.first %}{{ sm_alt | escape }}{% endif %}"
+      loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+      fetchpriority="{% if forloop.first %}high{% else %}low{% endif %}"
+      decoding="async"
+      aria-hidden="{% unless forloop.first %}true{% endunless %}">
+  {%- endfor -%}
+</div>
+
+<style>
+  .nlb-sm {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #021D49;
+  }
+  .nlb-sm__frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 90ms linear;
+  }
+  .nlb-sm__frame.is-active { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    /* show only the first frame, no animation */
+    .nlb-sm__frame { transition: none; }
+  }
+</style>
+
+<script>
+  (function () {
+    var el = document.getElementById({{ sm_id | json }});
+    if (!el) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var frames = el.querySelectorAll('.nlb-sm__frame');
+    if (frames.length < 2) return;
+    var fps = parseFloat(el.getAttribute('data-fps')) || 10;
+    var interval = 1000 / fps;
+    var idx = 0, last = 0, running = true;
+
+    function step(ts) {
+      if (!running) return;
+      if (ts - last >= interval) {
+        frames[idx].classList.remove('is-active');
+        idx = (idx + 1) % frames.length;
+        frames[idx].classList.add('is-active');
+        last = ts;
+      }
+      requestAnimationFrame(step);
+    }
+
+    // Pause when offscreen to save CPU/battery
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting && !running) { running = true; last = 0; requestAnimationFrame(step); }
+          else if (!e.isIntersecting) { running = false; }
+        });
+      }, { threshold: 0.05 });
+      io.observe(el);
+    }
+    requestAnimationFrame(step);
+  })();
+</script>
