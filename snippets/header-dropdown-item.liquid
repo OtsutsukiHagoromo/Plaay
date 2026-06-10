@@ -28,8 +28,13 @@
     endif
   endfor
 
-  if link.type == 'collection_link' and link.object.image != blank
-    assign item_image = link.object.image
+  assign col_handle = link.url | remove: '/collections/' | split: '?' | first
+  assign linked_col = collections[col_handle]
+  if linked_col != blank and linked_col.image != blank
+    assign item_image = linked_col.image
+  endif
+  if linked_col != blank and linked_col.metafields.custom.menu_badge != blank
+    assign item_badge = linked_col.metafields.custom.menu_badge
   endif
 -%}
 {%- if item_image != blank -%}
