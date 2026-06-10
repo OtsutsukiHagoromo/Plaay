@@ -27,6 +27,7 @@
     },
     "plaay_aplus_image_NLB": {
       "type": "plaay-aplus-image",
+      "disabled": true,
       "settings": {
         "background_color": "#ffffff",
         "max_width": 800,
@@ -155,6 +156,7 @@
     },
     "aplus_cta_NLB": {
       "type": "nlb-aplus-cta",
+      "disabled": true,
       "name": "A+ All Flavor CTA",
       "settings": {
         "background_color": "#021d49",
@@ -217,7 +219,9 @@
       "block_order": [
         "reelfy_videos_reelfy_section_bQp6qF"
       ],
-      "settings": {}
+      "settings": {
+        "include_margins": true
+      }
     },
     "pdp_nutrition_gxcPA8": {
       "type": "pdp-nutrition",
@@ -461,7 +465,9 @@
       "block_order": [
         "rebuy_personalization_engine_rebuy_widget_pKgDcm"
       ],
-      "settings": {}
+      "settings": {
+        "include_margins": true
+      }
     },
     "1736138805fe25981f": {
       "type": "apps",
@@ -479,7 +485,9 @@
       "block_order": [
         "rebuy_personalization_engine_rebuy_widget_BKBT3m"
       ],
-      "settings": {}
+      "settings": {
+        "include_margins": true
+      }
     },
     "product_faqs_a34mfY": {
       "type": "product_faqs",
@@ -795,7 +803,9 @@
     },
     "174471010040db00af": {
       "type": "apps",
-      "settings": {}
+      "settings": {
+        "include_margins": true
+      }
     },
     "scrolling_content_PjwFEy": {
       "type": "scrolling-content",
