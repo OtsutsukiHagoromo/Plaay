@@ -325,7 +325,7 @@
       "name": "Featured products",
       "settings": {
         "title": "Our Best Selling Chocolate Snack-Hacks",
-        "description": "Plaayer-approved faves—why not make them yours too?",
+        "description": "Plaayer-approved faves, why not make them yours too?",
         "background_color": "#ffffff",
         "product_source": "manual",
         "featured_collection": "shop-all",
@@ -1064,7 +1064,7 @@
         "background_color": "#ffffff",
         "heading": "STILL CONFUSED? START HERE",
         "underline": false,
-        "description": "<p>Can’t pick just one? The Plaayer Pack is your all-access pass to Plaay — packed with all our bestsellers so you can try it all before committing to a full box.<br/><br/>Delivered fast. Loved instantly.</p>",
+        "description": "<p>Can’t pick just one? The Plaayer Pack is your all-access pass to Plaay, packed with all our bestsellers so you can try it all before committing to a full box.<br/><br/>Delivered fast. Loved instantly.</p>",
         "badge": "shopify://shop_images/Sticker3.png",
         "badge_mobile": "shopify://shop_images/Sticker3.png",
         "badge_copy": "shopify://shop_images/Vector_3_1.png",

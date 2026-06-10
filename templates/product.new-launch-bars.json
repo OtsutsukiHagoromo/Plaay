@@ -190,7 +190,7 @@
         "row_QrW7nH"
       ],
       "disabled": true,
-      "name": "PDP — Nutrition Facts",
+      "name": "PDP - Nutrition Facts",
       "settings": {
         "background_color": "#ffffff",
         "heading": "Nutrition Facts",
@@ -813,6 +813,7 @@
       "name": "The Good Stuff",
       "settings": {
         "background_color": "#021D49",
+        "heading_color": "#FFFFFF",
         "heading": "The Good Stuff"
       }
     },
@@ -845,7 +846,7 @@
       "name": "A+ All Flavor CTA",
       "settings": {
         "background_color": "#021D49",
-        "eyebrow": "New Launch — Available Now",
+        "eyebrow": "New Launch · Available Now",
         "default_button_url": "/collections/chocolate-bars"
       }
     },

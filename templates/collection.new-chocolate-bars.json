@@ -1,5 +1,5 @@
 /*
- * New Chocolate Bars — launch collection template.
+ * New Chocolate Bars launch collection template.
  * Stopmotion hero + colour-coded flavour tiles + product grid.
  */
 {
@@ -7,9 +7,9 @@
     "nlb_hero": {
       "type": "nlb-collection-hero",
       "settings": {
-        "eyebrow": "New Launch — Available Now",
+        "eyebrow": "New Launch · Available Now",
         "heading": "Clean Chocolate Bars. Just Dropped.",
-        "subheading": "Seven new bars. 70% dark & creamy milk, sweetened with allulose — 0g added sugar, 100% clean.",
+        "subheading": "Seven new bars. 70% dark and creamy milk chocolate. 100% clean ingredients, zero refined sugar.",
         "button_label": "Shop the launch",
         "button_link": "#shopify-section-main",
         "fps": 10,
@@ -52,6 +52,21 @@
         "empty_collection_link_text": "Return home"
       }
     },
+    "nlb_cred": {
+      "type": "nlb-credentials",
+      "blocks": {
+        "c1": { "type": "cred", "settings": { "value": "0g", "label": "Refined Sugar" } },
+        "c2": { "type": "cred", "settings": { "value": "100%", "label": "Clean Ingredients" } },
+        "c3": { "type": "cred", "settings": { "value": "Halal", "label": "Certified" } },
+        "c4": { "type": "cred", "settings": { "value": "UAE", "label": "Made Local" } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4"],
+      "settings": {
+        "heading": "Why Plaay Bars",
+        "background_color": "#021D49",
+        "text_color": "#ffffff"
+      }
+    },
     "plaay_recently_viewed": {
       "type": "plaay-recently-viewed",
       "settings": {
@@ -64,6 +79,7 @@
     "nlb_hero",
     "nlb_tiles",
     "main",
+    "nlb_cred",
     "plaay_recently_viewed"
   ]
 }
