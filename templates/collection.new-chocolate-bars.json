@@ -7,12 +7,27 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-/*
- * New Chocolate Bars launch collection template.
- * Stopmotion hero + colour-coded flavour tiles + product grid.
- */
 {
   "sections": {
+    "blocks_XKnFLm": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_900bb11_8AQNhV": {
+          "type": "ai_gen_block_900bb11",
+          "settings": {
+            "spacing_desktop": 80,
+            "spacing_mobile": 80,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_900bb11_8AQNhV"
+      ],
+      "name": "Spacer",
+      "settings": {}
+    },
     "nlb_hero": {
       "type": "nlb-collection-hero",
       "settings": {
@@ -23,15 +38,16 @@
         "button_link": "#shopify-section-main",
         "fps": 10,
         "media_left": false,
-        "background_color": "#021D49"
+        "background_color": "#021d49"
       }
     },
     "nlb_tiles": {
       "type": "nlb-flavour-tiles",
+      "disabled": true,
       "settings": {
         "heading": "Pick Your Flavour",
         "product_limit": 8,
-        "background_color": "#FAF7F2"
+        "background_color": "#faf7f2"
       }
     },
     "main": {
@@ -39,7 +55,7 @@
       "name": "Featured products",
       "settings": {
         "title": "Shop The New Bars",
-        "description": "",
+        "description": "Fresh bars. Big flavour. Zero refined sugar.",
         "background_color": "#ffffff",
         "product_source": "collection",
         "featured_collection": "new-chocolate-bars",
@@ -65,15 +81,44 @@
     "nlb_cred": {
       "type": "nlb-credentials",
       "blocks": {
-        "c1": { "type": "cred", "settings": { "value": "0g", "label": "Refined Sugar" } },
-        "c2": { "type": "cred", "settings": { "value": "100%", "label": "Clean Ingredients" } },
-        "c3": { "type": "cred", "settings": { "value": "Halal", "label": "Certified" } },
-        "c4": { "type": "cred", "settings": { "value": "UAE", "label": "Made Local" } }
+        "c1": {
+          "type": "cred",
+          "settings": {
+            "value": "0g",
+            "label": "Refined Sugar"
+          }
+        },
+        "c2": {
+          "type": "cred",
+          "settings": {
+            "value": "100%",
+            "label": "Clean Ingredients"
+          }
+        },
+        "c3": {
+          "type": "cred",
+          "settings": {
+            "value": "Halal",
+            "label": "Certified"
+          }
+        },
+        "c4": {
+          "type": "cred",
+          "settings": {
+            "value": "UAE",
+            "label": "Made Local"
+          }
+        }
       },
-      "block_order": ["c1", "c2", "c3", "c4"],
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
       "settings": {
         "heading": "Why Plaay Bars",
-        "background_color": "#021D49",
+        "background_color": "#021d49",
         "text_color": "#ffffff"
       }
     },
@@ -83,13 +128,34 @@
         "heading": "Previously viewed",
         "max_products": 6
       }
+    },
+    "blocks_eyEeyQ": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_900bb11_kXNFat": {
+          "type": "ai_gen_block_900bb11",
+          "settings": {
+            "spacing_desktop": 50,
+            "spacing_mobile": 30,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_900bb11_kXNFat"
+      ],
+      "name": "Spacer",
+      "settings": {}
     }
   },
   "order": [
+    "blocks_XKnFLm",
     "nlb_hero",
     "nlb_tiles",
     "main",
     "nlb_cred",
-    "plaay_recently_viewed"
+    "plaay_recently_viewed",
+    "blocks_eyEeyQ"
   ]
 }
