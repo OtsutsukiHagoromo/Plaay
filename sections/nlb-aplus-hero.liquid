@@ -121,7 +121,7 @@
 <style>
   .nlb-hero {
     background: var(--nlb-hero-bg, #021D49);
-    padding: 64px 24px;
+    padding: 72px 24px;
   }
   .nlb-hero__inner {
     max-width: 1200px;
@@ -259,11 +259,12 @@
   }
 
   @media (max-width: 767px) {
-    .nlb-hero__inner { grid-template-columns: 1fr; gap: 32px; text-align: center; }
+    .nlb-hero { padding: 48px 22px 52px; }
+    .nlb-hero__inner { grid-template-columns: 1fr; gap: 26px; text-align: center; }
     .nlb-hero__badges { justify-content: center; }
     .nlb-hero__sub { margin-left: auto; margin-right: auto; }
     .nlb-hero__media { min-height: 0; }
-    .nlb-hero__pack, .nlb-hero__media--duo .nlb-hero__pack { max-width: 280px; }
+    .nlb-hero__pack, .nlb-hero__media--duo .nlb-hero__pack { max-width: 300px; }
     .nlb-hero__bar { display: none; }
   }
 </style>
