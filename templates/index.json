@@ -14,6 +14,7 @@
       "blocks": {
         "slide_earVyE": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "hide_section_one_mobile": true,
             "hide_section_two_mobile": false,
@@ -40,12 +41,12 @@
             "title_mobile": "",
             "heading": "",
             "heading_mobile": "",
-            "link_one": "shopify://collections/new-chocolate-bars",
+            "link_one": "shopify://collections",
             "link_one_text": "Shop Now",
             "link_two": "",
             "link_two_text": "",
-            "img": "shopify://shop_images/Plaay_new_bars_banners_2.jpg",
-            "m-img": "shopify://shop_images/Plaay_new_bars_banners_3.jpg",
+            "img": "shopify://shop_images/Plaay_eid_banners_1.jpg",
+            "m-img": "shopify://shop_images/Plaay_eid_banners_2.jpg",
             "section_one_video": "",
             "section_two_video": ""
           }
@@ -324,7 +325,7 @@
       "name": "Featured products",
       "settings": {
         "title": "Our Best Selling Chocolate Snack-Hacks",
-        "description": "Plaayer-approved faves—why not make them yours too?",
+        "description": "Plaayer-approved faves, why not make them yours too?",
         "background_color": "#ffffff",
         "product_source": "manual",
         "featured_collection": "shop-all",
@@ -531,9 +532,7 @@
       "block_order": [
         "rebuy_personalization_engine_rebuy_widget_kdGwtJ"
       ],
-      "settings": {
-        "include_margins": true
-      }
+      "settings": {}
     },
     "richtext_hVDgQC": {
       "type": "richtext",
@@ -590,9 +589,7 @@
       "block_order": [
         "reelfy_videos_reelfy_section_JWQGGD"
       ],
-      "settings": {
-        "include_margins": true
-      }
+      "settings": {}
     },
     "cu_countdown_timer_jJqyWW": {
       "type": "cu-countdown-timer",
@@ -1063,7 +1060,7 @@
         "background_color": "#ffffff",
         "heading": "STILL CONFUSED? START HERE",
         "underline": false,
-        "description": "<p>Can’t pick just one? The Plaayer Pack is your all-access pass to Plaay — packed with all our bestsellers so you can try it all before committing to a full box.<br/><br/>Delivered fast. Loved instantly.</p>",
+        "description": "<p>Can’t pick just one? The Plaayer Pack is your all-access pass to Plaay, packed with all our bestsellers so you can try it all before committing to a full box.<br/><br/>Delivered fast. Loved instantly.</p>",
         "badge": "shopify://shop_images/Sticker3.png",
         "badge_mobile": "shopify://shop_images/Sticker3.png",
         "badge_copy": "shopify://shop_images/Vector_3_1.png",
@@ -1674,9 +1671,7 @@
       "block_order": [
         "rebuy_personalization_engine_rebuy_widget_DF3nWm"
       ],
-      "settings": {
-        "include_margins": true
-      }
+      "settings": {}
     },
     "instafeed_y9eagG": {
       "type": "instafeed",
@@ -1688,9 +1683,7 @@
     },
     "1671195971148aab85": {
       "type": "apps",
-      "settings": {
-        "include_margins": true
-      }
+      "settings": {}
     },
     "related_articles_JgEJHR": {
       "type": "related_articles",

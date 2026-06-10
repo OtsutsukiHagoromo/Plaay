@@ -1,10 +1,10 @@
 {%- comment -%}
-  Plaay — New Launch Bars: A+ CTA band
+  Plaay - New Launch Bars: A+ CTA band
   Final call-to-action. All copy driven by `arena.*` metafields with sensible defaults.
 
   Metafields (namespace: arena)
     aplus_cta_title         single_line_text  (fallback: "All Flavor.")
-    aplus_cta_title_accent  single_line_text  (fallback: "All Plaay.")  — yellow line
+    aplus_cta_title_accent  single_line_text  (fallback: "All Plaay.")  - yellow line
     aplus_cta_sub           multi_line_text   (fallback: default copy)
     aplus_cta_button_label  single_line_text  (fallback: "Explore the launch")
     aplus_cta_button_url    url               (fallback: /collections/chocolate-bars)
@@ -45,7 +45,7 @@
     background: var(--nlb-cta-bg, #021D49);
     background-image: radial-gradient(ellipse at 20% 50%, rgba(249,198,29,0.08) 0%, transparent 60%),
                       radial-gradient(ellipse at 80% 50%, rgba(232,87,103,0.08) 0%, transparent 60%);
-    padding: 88px 24px;
+    padding: clamp(56px, 9vw, 88px) 24px;
     text-align: center;
     border-top: 1px solid rgba(255,255,255,0.08);
   }
@@ -94,7 +94,7 @@
 
 {% schema %}
 {
-  "name": "NLB — A+ CTA",
+  "name": "NLB - A+ CTA",
   "tag": "section",
   "settings": [
     {
@@ -111,7 +111,7 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow",
-      "default": "New Launch — Available Now"
+      "default": "New Launch - Available Now"
     },
     {
       "type": "url",
@@ -120,7 +120,7 @@
     }
   ],
   "presets": [
-    { "name": "NLB — A+ CTA" }
+    { "name": "NLB - A+ CTA" }
   ]
 }
 {% endschema %}

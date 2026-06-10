@@ -6,7 +6,6 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- * NLB A+ sections converted to data-driven theme sections.
  */
 {
   "sections": {
@@ -24,6 +23,16 @@
         "tab_ingredients_label": "Ingredients",
         "tab_shipping_label": "Shipping & Returns",
         "shipping_returns_content": "<p><strong>Free delivery</strong> on all orders over AED 75. <br/>1-2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
+      }
+    },
+    "plaay_aplus_image_NLB": {
+      "type": "plaay-aplus-image",
+      "settings": {
+        "background_color": "#ffffff",
+        "max_width": 800,
+        "padding_top": 0,
+        "padding_bottom": 0,
+        "fallback_enabled": false
       }
     },
     "blocks_dKL7zR": {
@@ -44,6 +53,114 @@
       ],
       "name": "Spacer",
       "settings": {}
+    },
+    "aplus_hero_NLB": {
+      "type": "nlb-aplus-hero",
+      "name": "A+ Hero",
+      "settings": {
+        "background_color": "#021d49",
+        "eyebrow": "",
+        "title": "",
+        "fallback_enabled": false
+      }
+    },
+    "aplus_why_NLB": {
+      "type": "nlb-aplus-why",
+      "blocks": {
+        "why_1": {
+          "type": "why_card",
+          "settings": {}
+        },
+        "why_2": {
+          "type": "why_card",
+          "settings": {}
+        },
+        "why_3": {
+          "type": "why_card",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "why_1",
+        "why_2",
+        "why_3"
+      ],
+      "name": "A+ Why You'll Love It",
+      "settings": {
+        "background_color": "#faf7f2",
+        "heading": ""
+      }
+    },
+    "aplus_stats_NLB": {
+      "type": "pdp-stats-bar",
+      "blocks": {
+        "stat_dc_NLB": {
+          "type": "stat",
+          "settings": {
+            "value": "70%",
+            "label": "Dark Chocolate"
+          }
+        },
+        "stat_ci_NLB": {
+          "type": "stat",
+          "settings": {
+            "value": "100%",
+            "label": "Clean Ingredients"
+          }
+        },
+        "stat_rs_NLB": {
+          "type": "stat",
+          "settings": {
+            "value": "0%",
+            "label": "Refined Sugar"
+          }
+        }
+      },
+      "block_order": [
+        "stat_dc_NLB",
+        "stat_ci_NLB",
+        "stat_rs_NLB"
+      ],
+      "disabled": true,
+      "name": "The Good Stuff",
+      "settings": {
+        "background_color": "#021d49",
+        "heading_color": "#021d49",
+        "heading": "The Good Stuff"
+      }
+    },
+    "aplus_break_NLB": {
+      "type": "nlb-aplus-story-row",
+      "name": "A+ Break It",
+      "settings": {
+        "metafield_set": "break",
+        "image_side": "right",
+        "background_color": "#ffffff",
+        "text_color": "#021d49",
+        "show_pills": true,
+        "fallback_enabled": false
+      }
+    },
+    "aplus_cravings_NLB": {
+      "type": "nlb-aplus-story-row",
+      "name": "A+ Clean Cravings",
+      "settings": {
+        "metafield_set": "cravings",
+        "image_side": "left",
+        "background_color": "#021d49",
+        "text_color": "#ffffff",
+        "show_pills": false,
+        "fallback_enabled": false
+      }
+    },
+    "aplus_cta_NLB": {
+      "type": "nlb-aplus-cta",
+      "name": "A+ All Flavor CTA",
+      "settings": {
+        "background_color": "#021d49",
+        "eyebrow": "New Launch · Available Now",
+        "default_button_url": "/collections/chocolate-bars"
+      }
     },
     "richtext_XzziaT": {
       "type": "richtext",
@@ -190,7 +307,7 @@
         "row_QrW7nH"
       ],
       "disabled": true,
-      "name": "PDP — Nutrition Facts",
+      "name": "PDP - Nutrition Facts",
       "settings": {
         "background_color": "#ffffff",
         "heading": "Nutrition Facts",
@@ -371,7 +488,8 @@
           "type": "faq",
           "settings": {
             "title": "Why Plaay?",
-            "answer": "<p>Because chocolate shouldn't be a trade-off. Most chocolates are loaded with refined sugar, cheap fillers, and ingredients that leave you bloated, sluggish, or guilty afterwards. We built Plaay to change that. Every product we make is 100% clean Ã¢â‚¬â€ that means:Ã‚Â· No refined sugar (we use coconut sugar that's gentler on your body).Ã‚Â· No preservatives, artificial emulsifiers, or shady additives.Ã‚Â· No soy, no gluten, no artificial sweeteners.Ã‚Â· Only real, good-for-you ingredients your body actually knows how to process. The result? Chocolate that tastes as indulgent as your classics, but without the crash, the guilt, or the compromise.</p>"
+            "answer": "<p>Because chocolate shouldn't be a trade-off. Most chocolates are loaded with refined sugar, cheap fillers, and ingredients that leave you bloated, sluggish, or guilty afterwards. We built Plaay to change that. Every product we make is 100% clean Ã¢â‚¬â€ that means:Ã‚Â· No refined sugar (we use coconut sugar that's gentler on your body).Ã‚Â· No preservatives, artificial emulsifiers, or shady additives.Ã‚Â· No soy, no gluten, no artificial sweeteners.Ã‚Â· Only real, good-for-you ingredients your body actually knows how to process. The result? Chocolate that tastes as indulgent as your classics, but without the crash, the guilt, or the compromise.</p>",
+            "category": ""
           }
         },
         "faq_aWg6GA": {
@@ -379,7 +497,8 @@
           "disabled": true,
           "settings": {
             "title": "",
-            "answer": "<p>Your answer here</p>"
+            "answer": "<p>Your answer here</p>",
+            "category": ""
           }
         },
         "faq_hLYHy4": {
@@ -387,7 +506,8 @@
           "disabled": true,
           "settings": {
             "title": "Do you offer discounts?",
-            "answer": "<p>New here? Snack smarter. Get 25% off on your first order with code LETSPLAAY25.</p>"
+            "answer": "<p>New here? Snack smarter. Get 25% off on your first order with code LETSPLAAY25.</p>",
+            "category": ""
           }
         },
         "faq_kfXhMH": {
@@ -395,42 +515,48 @@
           "disabled": true,
           "settings": {
             "title": "Do I need to set up an account?",
-            "answer": "<p>You do not need to set up an account at Plaay. However, you will enjoy a lot of additional benefits if you register with us such as:  reviewing your purchase history, previewing our new products and receiving emails about our latest updates/offers, saving your details such as your delivery address and payment details for a more convenient experience when you place your next order, tracking the status of your order and other requests.</p>"
+            "answer": "<p>You do not need to set up an account at Plaay. However, you will enjoy a lot of additional benefits if you register with us such as:  reviewing your purchase history, previewing our new products and receiving emails about our latest updates/offers, saving your details such as your delivery address and payment details for a more convenient experience when you place your next order, tracking the status of your order and other requests.</p>",
+            "category": ""
           }
         },
         "faq_P9fJJn": {
           "type": "faq",
           "settings": {
             "title": "Where are Plaay products made?",
-            "answer": "<p>All our products are made in our own newly-established facilities in the UAE. </p>"
+            "answer": "<p>All our products are made in our own newly-established facilities in the UAE. </p>",
+            "category": ""
           }
         },
         "faq_iC64DM": {
           "type": "faq",
           "settings": {
             "title": "What dark chocolate does Plaay use?",
-            "answer": "<p>We make our in-house blend of 70% dark chocolate made with coconut nectar, cacao butter and sunflower lecithin.</p>"
+            "answer": "<p>We make our in-house blend of 70% dark chocolate made with coconut nectar, cacao butter and sunflower lecithin.</p>",
+            "category": ""
           }
         },
         "faq_cpMCTh": {
           "type": "faq",
           "settings": {
             "title": "What is the shelf-life of Plaay products?",
-            "answer": "<p>The shelf-life of all Plaay products is 12 months. <br/>The shelf life for limited edition products may vary.</p>"
+            "answer": "<p>The shelf-life of all Plaay products is 12 months. <br/>The shelf life for limited edition products may vary.</p>",
+            "category": ""
           }
         },
         "faq_BCrDKn": {
           "type": "faq",
           "settings": {
             "title": "Do Plaay products contain refined sugar?",
-            "answer": "<p>Not an ounce. We only use coconut nectar and dates. No refined sugar what so ever.</p>"
+            "answer": "<p>Not an ounce. We only use coconut nectar and dates. No refined sugar what so ever.</p>",
+            "category": ""
           }
         },
         "faq_3PFpK9": {
           "type": "faq",
           "settings": {
             "title": "How should I store the chocolate truffles and bars?",
-            "answer": "<p>Plaay products should be kept refrigerated to avoid melting and temperature fluctuations. Note: They are best consumed at Room Temperature.</p>"
+            "answer": "<p>Plaay products should be kept refrigerated to avoid melting and temperature fluctuations. Note: They are best consumed at Room Temperature.</p>",
+            "category": ""
           }
         },
         "faq_nMemka": {
@@ -438,7 +564,8 @@
           "disabled": true,
           "settings": {
             "title": "How can I track my order?",
-            "answer": "<p>You will receive an order confirmation email containing your order reference number and other important details. You may call or email our customer support team and provide these details, so we can give you an update regarding your order. </p>"
+            "answer": "<p>You will receive an order confirmation email containing your order reference number and other important details. You may call or email our customer support team and provide these details, so we can give you an update regarding your order. </p>",
+            "category": ""
           }
         },
         "faq_UQppVL": {
@@ -446,7 +573,8 @@
           "disabled": true,
           "settings": {
             "title": "How do you ship your products?",
-            "answer": "<p>We have our local logistics partners with temperature-controlled vehicles to make sure that your order arrives in perfect condition.</p>"
+            "answer": "<p>We have our local logistics partners with temperature-controlled vehicles to make sure that your order arrives in perfect condition.</p>",
+            "category": ""
           }
         },
         "faq_ULp3dH": {
@@ -454,7 +582,8 @@
           "disabled": true,
           "settings": {
             "title": "Where are the packages shipped from?",
-            "answer": "<p>All our products are shipped from our distribution center which is located in Business Bay & DIP Dubai, United Arab Emirates.</p>"
+            "answer": "<p>All our products are shipped from our distribution center which is located in Business Bay & DIP Dubai, United Arab Emirates.</p>",
+            "category": ""
           }
         },
         "faq_YaNxjU": {
@@ -462,7 +591,8 @@
           "disabled": true,
           "settings": {
             "title": "Can I place an order through a phone call?",
-            "answer": "<p>All orders must be placed on our website. If you encounter technical issues while placing an order online, you may reach out to our customer support team for an assistance.</p>"
+            "answer": "<p>All orders must be placed on our website. If you encounter technical issues while placing an order online, you may reach out to our customer support team for an assistance.</p>",
+            "category": ""
           }
         },
         "faq_LYcBpX": {
@@ -470,7 +600,8 @@
           "disabled": true,
           "settings": {
             "title": "Which payment methods does Plaay accept?",
-            "answer": "<p>We accept online payments using MasterCard, Visa, and Apple Pay.</p>"
+            "answer": "<p>We accept online payments using MasterCard, Visa, and Apple Pay.</p>",
+            "category": ""
           }
         },
         "faq_3rtwEK": {
@@ -478,7 +609,8 @@
           "disabled": true,
           "settings": {
             "title": "How much does Plaay charge for the shipping?",
-            "answer": "<p>Shipping is free for all orders over AED 75. For smaller orders, we charge a delivery fee of AED 15.</p>"
+            "answer": "<p>Shipping is free for all orders over AED 75. For smaller orders, we charge a delivery fee of AED 15.</p>",
+            "category": ""
           }
         },
         "faq_dt7WKU": {
@@ -486,7 +618,8 @@
           "disabled": true,
           "settings": {
             "title": "Which countries does Plaay delivery service cover?",
-            "answer": "<p>We currently deliver across UAE. We are also available in KSA via third-party online platforms. As for the rest of the world? Not yetÃ¢â‚¬Â¦ but we're on our way!</p>"
+            "answer": "<p>We currently deliver across UAE. We are also available in KSA via third-party online platforms. As for the rest of the world? Not yetÃ¢â‚¬Â¦ but we're on our way!</p>",
+            "category": ""
           }
         },
         "faq_xJtqkq": {
@@ -494,7 +627,8 @@
           "disabled": true,
           "settings": {
             "title": "Can I add a message to my order and send it as a gift?",
-            "answer": "<p>Yes, you may inform us regarding this before placing your order or immediately after placing it. You may also write the message on the \"Delivery Instructions\" option upon checkout. Please note that the order will be sent with our regular packaging as we do not have gift wrappers at the moment. </p>"
+            "answer": "<p>Yes, you may inform us regarding this before placing your order or immediately after placing it. You may also write the message on the \"Delivery Instructions\" option upon checkout. Please note that the order will be sent with our regular packaging as we do not have gift wrappers at the moment. </p>",
+            "category": ""
           }
         },
         "faq_zyDQaB": {
@@ -502,7 +636,8 @@
           "disabled": true,
           "settings": {
             "title": "Can I put multiple delivery addresses for a single order?",
-            "answer": "<p>You will need to place your order individually for each delivery address.</p>"
+            "answer": "<p>You will need to place your order individually for each delivery address.</p>",
+            "category": ""
           }
         },
         "faq_wdtBRr": {
@@ -510,7 +645,8 @@
           "disabled": true,
           "settings": {
             "title": "Is there a possibility that my order will not be fulfilled or will not be delivered on time?",
-            "answer": "<p>We always make sure that all orders are processed and delivered on time. Delays happen very rarely, and if it does, we will certainly notify you at once and assist you should you require any modifications. </p>"
+            "answer": "<p>We always make sure that all orders are processed and delivered on time. Delays happen very rarely, and if it does, we will certainly notify you at once and assist you should you require any modifications. </p>",
+            "category": ""
           }
         },
         "faq_hfRVHD": {
@@ -518,7 +654,8 @@
           "disabled": true,
           "settings": {
             "title": "Who can I contact if I encounter a technical issue while placing an order or if I have a query?",
-            "answer": "<p>Should you require any assistance or you have any queries, please feel free to reach out to our customer support team at +971-56-996-9522 or send an email to hello@shopplaay.com (Monday - Saturday 9:00 AM till 5:00 PM, excluding holidays). </p>"
+            "answer": "<p>Should you require any assistance or you have any queries, please feel free to reach out to our customer support team at +971-56-996-9522 or send an email to hello@shopplaay.com (Monday - Saturday 9:00 AM till 5:00 PM, excluding holidays). </p>",
+            "category": ""
           }
         },
         "faq_xXmXWm": {
@@ -526,7 +663,8 @@
           "disabled": true,
           "settings": {
             "title": "What should I do if the payment has been deducted from my card but there is no confirmation email?",
-            "answer": "<p>Please share your name and registered email address with us to confirm your order and payment.</p>"
+            "answer": "<p>Please share your name and registered email address with us to confirm your order and payment.</p>",
+            "category": ""
           }
         }
       },
@@ -556,6 +694,9 @@
       "name": "Product FAQs",
       "settings": {
         "title": "FAQs",
+        "subtitle": "Everything you need to know about Plaay.",
+        "show_search": false,
+        "search_placeholder": "Search questions...",
         "background_color": "#f9c61d"
       }
     },
@@ -736,127 +877,6 @@
         "background_color_left": "#fad1d2",
         "background_color_right": "#f6f6f6",
         "sv_vs_image": "shopify://shop_images/us-vs-them.png"
-      }
-    },
-    "aplus_hero_NLB": {
-      "type": "nlb-aplus-hero",
-      "name": "A+ Hero",
-      "settings": {
-        "background_color": "#021D49",
-        "fallback_enabled": false
-      }
-    },
-    "aplus_why_NLB": {
-      "type": "nlb-aplus-why",
-      "blocks": {
-        "why_1": {
-          "type": "why_card",
-          "settings": {}
-        },
-        "why_2": {
-          "type": "why_card",
-          "settings": {}
-        },
-        "why_3": {
-          "type": "why_card",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "why_1",
-        "why_2",
-        "why_3"
-      ],
-      "name": "A+ Why You'll Love It",
-      "settings": {
-        "background_color": "#FAF7F2"
-      }
-    },
-    "aplus_stats_NLB": {
-      "type": "pdp-stats-bar",
-      "blocks": {
-        "stat_dc_NLB": {
-          "type": "stat",
-          "settings": {
-            "value": "70%",
-            "label": "Dark Chocolate"
-          }
-        },
-        "stat_cr_NLB": {
-          "type": "stat",
-          "settings": {
-            "value": "Crunnel",
-            "label": "Crunch"
-          }
-        },
-        "stat_ci_NLB": {
-          "type": "stat",
-          "settings": {
-            "value": "100%",
-            "label": "Clean Ingredients"
-          }
-        },
-        "stat_rs_NLB": {
-          "type": "stat",
-          "settings": {
-            "value": "0%",
-            "label": "Refined Sugar"
-          }
-        }
-      },
-      "block_order": [
-        "stat_dc_NLB",
-        "stat_cr_NLB",
-        "stat_ci_NLB",
-        "stat_rs_NLB"
-      ],
-      "name": "The Good Stuff",
-      "settings": {
-        "background_color": "#021D49",
-        "heading": "The Good Stuff"
-      }
-    },
-    "aplus_break_NLB": {
-      "type": "nlb-aplus-story-row",
-      "name": "A+ Break It",
-      "settings": {
-        "metafield_set": "break",
-        "image_side": "right",
-        "background_color": "#ffffff",
-        "text_color": "#021D49",
-        "show_pills": true,
-        "fallback_enabled": false
-      }
-    },
-    "aplus_cravings_NLB": {
-      "type": "nlb-aplus-story-row",
-      "name": "A+ Clean Cravings",
-      "settings": {
-        "metafield_set": "cravings",
-        "image_side": "left",
-        "background_color": "#021D49",
-        "text_color": "#ffffff",
-        "show_pills": false,
-        "fallback_enabled": false
-      }
-    },
-    "aplus_cta_NLB": {
-      "type": "nlb-aplus-cta",
-      "name": "A+ All Flavor CTA",
-      "settings": {
-        "background_color": "#021D49",
-        "eyebrow": "New Launch — Available Now",
-        "default_button_url": "/collections/chocolate-bars"
-      }
-    },
-    "plaay_aplus_image_NLB": {
-      "type": "plaay-aplus-image",
-      "settings": {
-        "background_color": "#ffffff",
-        "max_width": 800,
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "fallback_enabled": false
       }
     }
   },

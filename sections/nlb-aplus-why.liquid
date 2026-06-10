@@ -1,7 +1,7 @@
 {%- comment -%}
-  Plaay — New Launch Bars: A+ "Clean Breakdown" panel gallery
+  Plaay - New Launch Bars: A+ "Clean Breakdown" panel gallery
   The v3/v4/v5 images are fully-designed square panels (Clean Flavour story /
-  Nutrition Facts / Ingredients), so they're shown large and self-contained —
+  Nutrition Facts / Ingredients), so they're shown large and self-contained -
   no extra title/description overlay.
 
   Each panel resolves: block image setting -> arena metafield (by position) -> hidden.
@@ -40,7 +40,7 @@
               src="{{ panel_img | image_url: width: 800 }}"
               srcset="{{ panel_img | image_url: width: 480 }} 480w, {{ panel_img | image_url: width: 800 }} 800w, {{ panel_img | image_url: width: 1000 }} 1000w"
               sizes="(max-width: 767px) 82vw, 360px"
-              alt="{{ product.title | escape }} — {{ heading | escape }}"
+              alt="{{ product.title | escape }} - {{ heading | escape }}"
               loading="lazy"
               decoding="async">
           </div>
@@ -76,11 +76,13 @@
     margin: 0 auto 52px;
   }
   .nlb-cb__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 24px;
   }
   .nlb-cb__panel {
+    flex: 0 1 340px;
     border-radius: 18px;
     overflow: hidden;
     box-shadow: 0 6px 24px rgba(2,29,73,0.10);
@@ -103,9 +105,8 @@
     .nlb-cb__divider { margin-bottom: 32px; }
     /* horizontal swipe gallery on mobile */
     .nlb-cb__grid {
-      grid-template-columns: none;
-      grid-auto-flow: column;
-      grid-auto-columns: 80%;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
       gap: 16px;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
@@ -113,13 +114,13 @@
       padding: 4px 24px 12px;
     }
     .nlb-cb__grid::-webkit-scrollbar { display: none; }
-    .nlb-cb__panel { scroll-snap-align: center; }
+    .nlb-cb__panel { flex: 0 0 80%; scroll-snap-align: center; }
   }
 </style>
 
 {% schema %}
 {
-  "name": "NLB — A+ Clean Breakdown",
+  "name": "NLB - A+ Clean Breakdown",
   "tag": "section",
   "max_blocks": 3,
   "settings": [
@@ -150,7 +151,7 @@
   ],
   "presets": [
     {
-      "name": "NLB — A+ Clean Breakdown",
+      "name": "NLB - A+ Clean Breakdown",
       "blocks": [ { "type": "why_card" }, { "type": "why_card" }, { "type": "why_card" } ]
     }
   ]

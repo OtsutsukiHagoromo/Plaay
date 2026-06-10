@@ -1,18 +1,18 @@
 {%- comment -%}
-  Plaay — New Launch Bars: A+ Hero
+  Plaay - New Launch Bars: A+ Hero
   Per-product hero driven by `arena.*` product metafields, with graceful fallbacks
   (section setting -> metafield -> product field -> hidden/placeholder).
 
   Metafields (namespace: arena)
-    aplus_eyebrow          single_line_text  — eyebrow line          (fallback: product.title)
-    aplus_hero_title       single_line_text  — headline              (fallback: product.title)
-    aplus_hero_title_accent single_line_text — yellow accent line    (optional)
-    aplus_hero_sub         multi_line_text   — supporting paragraph  (fallback: arena.subtitle_text)
-    aplus_badge_1/2/3      single_line_text  — up to 3 pill badges   (hidden when blank)
-    aplus_hero_tagline     single_line_text  — italic tagline        (hidden when blank)
-    aplus_hero_float_badge single_line_text  — small floating badge  (hidden when blank)
-    aplus_hero_pack        file_reference    — main pack shot        (fallback: product.featured_image)
-    aplus_hero_bar         file_reference    — optional overlap bar  (optional)
+    aplus_eyebrow          single_line_text  - eyebrow line          (fallback: product.title)
+    aplus_hero_title       single_line_text  - headline              (fallback: product.title)
+    aplus_hero_title_accent single_line_text - yellow accent line    (optional)
+    aplus_hero_sub         multi_line_text   - supporting paragraph  (fallback: arena.subtitle_text)
+    aplus_badge_1/2/3      single_line_text  - up to 3 pill badges   (hidden when blank)
+    aplus_hero_tagline     single_line_text  - italic tagline        (hidden when blank)
+    aplus_hero_float_badge single_line_text  - small floating badge  (hidden when blank)
+    aplus_hero_pack        file_reference    - main pack shot        (fallback: product.featured_image)
+    aplus_hero_bar         file_reference    - optional overlap bar  (optional)
 {%- endcomment -%}
 
 {%- liquid
@@ -121,7 +121,7 @@
 <style>
   .nlb-hero {
     background: var(--nlb-hero-bg, #021D49);
-    padding: 64px 24px;
+    padding: 72px 24px;
   }
   .nlb-hero__inner {
     max-width: 1200px;
@@ -259,18 +259,19 @@
   }
 
   @media (max-width: 767px) {
-    .nlb-hero__inner { grid-template-columns: 1fr; gap: 32px; text-align: center; }
+    .nlb-hero { padding: 48px 22px 52px; }
+    .nlb-hero__inner { grid-template-columns: 1fr; gap: 26px; text-align: center; }
     .nlb-hero__badges { justify-content: center; }
     .nlb-hero__sub { margin-left: auto; margin-right: auto; }
     .nlb-hero__media { min-height: 0; }
-    .nlb-hero__pack, .nlb-hero__media--duo .nlb-hero__pack { max-width: 280px; }
+    .nlb-hero__pack, .nlb-hero__media--duo .nlb-hero__pack { max-width: 300px; }
     .nlb-hero__bar { display: none; }
   }
 </style>
 
 {% schema %}
 {
-  "name": "NLB — A+ Hero",
+  "name": "NLB - A+ Hero",
   "tag": "section",
   "settings": [
     {
@@ -301,7 +302,7 @@
     }
   ],
   "presets": [
-    { "name": "NLB — A+ Hero" }
+    { "name": "NLB - A+ Hero" }
   ]
 }
 {% endschema %}

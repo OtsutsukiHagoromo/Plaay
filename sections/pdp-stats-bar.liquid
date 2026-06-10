@@ -1,5 +1,5 @@
 {% comment %}
-  PDP Stats Bar — quick-glance key stats row (protein, sugar, calories, etc.)
+  PDP Stats Bar - quick-glance key stats row (protein, sugar, calories, etc.)
   Inspired by Chomps "Snacking Made Simple" section.
   Add to the product page template via the theme customiser.
 {% endcomment %}
@@ -7,13 +7,14 @@
 {% liquid
   assign bg      = section.settings.background_color
   assign heading = section.settings.heading
+  assign heading_color = section.settings.heading_color | default: '#021D49'
   assign stats   = section.blocks | where: 'type', 'stat'
 %}
 
 <div class="pdp-stats-bar" style="background:{{ bg }}">
   <div class="container">
     {% if heading != blank %}
-      <h2 class="pdp-stats-bar__heading font-walsheim-bold">{{ heading }}</h2>
+      <h2 class="pdp-stats-bar__heading font-walsheim-bold" style="color:{{ heading_color }}">{{ heading }}</h2>
     {% endif %}
     <div class="pdp-stats-bar__grid">
       {% for block in stats %}
@@ -42,35 +43,26 @@
 .pdp-stats-bar__heading {
   text-align: center;
   text-transform: uppercase;
-  color: #021D49;
   font-size: clamp(1.5rem, 3.5vw, 2.4rem);
   letter-spacing: 0.02em;
-  margin-bottom: 36px;
+  margin: 0 0 28px;
 }
 .pdp-stats-bar__grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 16px;
 }
-@media (min-width: 640px) {
-  .pdp-stats-bar__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-@media (min-width: 1024px) {
-  .pdp-stats-bar__grid {
-    grid-template-columns: repeat(6, 1fr);
-    gap: 12px;
-  }
-}
 .pdp-stats-bar__item {
+  flex: 1 1 160px;
+  max-width: 230px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   background: #fff;
   border-radius: 16px;
-  padding: 20px 12px 18px;
+  padding: 22px 14px 20px;
   box-shadow: 0 2px 12px rgba(2,29,73,0.07);
   gap: 6px;
   transition: transform 0.2s, box-shadow 0.2s;
@@ -116,7 +108,7 @@
 
 {% schema %}
 {
-  "name": "PDP — Stats Bar",
+  "name": "PDP - Stats Bar",
   "class": "pdp-stats-bar-section",
   "settings": [
     {
@@ -124,6 +116,12 @@
       "id": "background_color",
       "label": "Background colour",
       "default": "#F4F4F4"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading colour",
+      "default": "#021D49"
     },
     {
       "type": "text",
@@ -161,7 +159,7 @@
   ],
   "presets": [
     {
-      "name": "PDP — Stats Bar",
+      "name": "PDP - Stats Bar",
       "blocks": [
         { "type": "stat", "settings": { "value": "10g", "label": "Protein" } },
         { "type": "stat", "settings": { "value": "0g", "label": "Sugar" } },

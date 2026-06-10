@@ -1,5 +1,5 @@
 {%- comment -%}
-  Plaay — New Launch Bars: A+ Story Row (reusable)
+  Plaay - New Launch Bars: A+ Story Row (reusable)
   A split copy/image row used for both the "Break it" and "Clean Cravings" sections.
   Choose which metafield set to read via the `metafield_set` setting.
 
@@ -76,9 +76,11 @@
             loading="lazy"
             decoding="async">
           {%- if show_pills -%}
-            {%- if mf.aplus_break_pill_1 != blank -%}<span class="nlb-row__pill nlb-row__pill--tl font-walsheim-bold">{{ mf.aplus_break_pill_1 }}</span>{%- endif -%}
-            {%- if mf.aplus_break_pill_2 != blank -%}<span class="nlb-row__pill nlb-row__pill--bl font-walsheim-bold">{{ mf.aplus_break_pill_2 }}</span>{%- endif -%}
-            {%- if mf.aplus_break_pill_3 != blank -%}<span class="nlb-row__pill nlb-row__pill--br font-walsheim-bold">{{ mf.aplus_break_pill_3 }}</span>{%- endif -%}
+            <div class="nlb-row__pills">
+              {%- if mf.aplus_break_pill_1 != blank -%}<span class="nlb-row__pill nlb-row__pill--tl font-walsheim-bold">{{ mf.aplus_break_pill_1 }}</span>{%- endif -%}
+              {%- if mf.aplus_break_pill_2 != blank -%}<span class="nlb-row__pill nlb-row__pill--bl font-walsheim-bold">{{ mf.aplus_break_pill_2 }}</span>{%- endif -%}
+              {%- if mf.aplus_break_pill_3 != blank -%}<span class="nlb-row__pill nlb-row__pill--br font-walsheim-bold">{{ mf.aplus_break_pill_3 }}</span>{%- endif -%}
+            </div>
           {%- endif -%}
         </div>
       {%- elsif section.settings.fallback_enabled -%}
@@ -162,17 +164,33 @@
     line-height: 1.6;
   }
   @media (max-width: 767px) {
-    .nlb-row__inner { grid-template-columns: 1fr; gap: 36px; text-align: center; }
+    .nlb-row { padding: 52px 22px; }
+    .nlb-row__inner { grid-template-columns: 1fr; gap: 26px; text-align: center; }
     .nlb-row--img-left .nlb-row__copy,
     .nlb-row--img-left .nlb-row__media { order: initial; }
+    .nlb-row__media { order: -1; }
     .nlb-row__desc { margin-left: auto; margin-right: auto; }
-    .nlb-row__pill { display: none; }
+    /* pills become a clean centered chip row under the image */
+    .nlb-row__pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .nlb-row__pill {
+      position: static;
+      top: auto; right: auto; bottom: auto; left: auto;
+      box-shadow: none;
+      background: color-mix(in srgb, var(--nlb-row-text, #021D49) 12%, transparent);
+      color: var(--nlb-row-text, #021D49);
+    }
   }
 </style>
 
 {% schema %}
 {
-  "name": "NLB — A+ Story Row",
+  "name": "NLB - A+ Story Row",
   "tag": "section",
   "settings": [
     {
@@ -225,7 +243,7 @@
     }
   ],
   "presets": [
-    { "name": "NLB — A+ Story Row" }
+    { "name": "NLB - A+ Story Row" }
   ]
 }
 {% endschema %}
