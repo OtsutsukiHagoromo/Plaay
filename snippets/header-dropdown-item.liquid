@@ -1,0 +1,43 @@
+{%- comment -%}
+  Renders one Shop-dropdown menu item: thumbnail image + title link + optional badge.
+
+  Params:
+    link        - the (child) menu link object
+    images      - the dropdown_menu_image blocks (section.blocks | where: 'type','dropdown_menu_image')
+    wrap_image  - if true, the thumbnail is wrapped in a link to the item
+
+  Image precedence (collection image wins — restored on purpose):
+    1. If the menu item links to a collection that has an image, use the collection image.
+    2. Otherwise use the manually-set image on the matching dropdown_menu_image block.
+  Badge text lives on the matching image block's `badge_label` setting.
+{%- endcomment -%}
+{%- liquid
+  assign menu_title = link.title | downcase | strip
+  assign item_image = ''
+  assign item_badge = ''
+
+  for block in images
+    assign di = block.settings.dropdown_item | downcase | strip
+    if di == menu_title
+      if block.settings.image != blank
+        assign item_image = block.settings.image
+      endif
+      if block.settings.badge_label != blank
+        assign item_badge = block.settings.badge_label
+      endif
+    endif
+  endfor
+
+  if link.type == 'collection_link' and link.object.image != blank
+    assign item_image = link.object.image
+  endif
+-%}
+{%- if item_image != blank -%}
+  {%- if wrap_image -%}
+    <a href="{{ link.url }}">{% render 'img', type: 'img', img: item_image, lazy: true, class: 'object-cover h-12 w-12 rounded mr-3' %}</a>
+  {%- else -%}
+    {% render 'img', type: 'img', img: item_image, lazy: true, class: 'object-cover h-12 w-12 rounded mr-3' %}
+  {%- endif -%}
+{%- endif -%}
+<a href="{{ link.url }}">{{ link.title }}</a>
+{%- if item_badge != blank -%}<span class="plaay-menu-badge">{{ item_badge }}</span>{%- endif -%}

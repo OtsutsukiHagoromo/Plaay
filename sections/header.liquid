@@ -5,7 +5,6 @@
  assign hide_search_desktop = section.settings.hide_search_desktop
  assign hide_search_mobile = section.settings.hide_search_mobile
  assign dropdown_menu_images = section.blocks | where: 'type', 'dropdown_menu_image'
- assign dropdown_menu_badges = section.blocks | where: 'type', 'dropdown_menu_badge'
  assign scroll_sticky = section.settings.scroll_sticky
  assign account_href = '/account/login'
  assign account_label = 'action.account' | t
@@ -112,22 +111,7 @@
                     {% for link in link.links %}
                       {% assign lowercase_title = link.title | downcase %}
                       <li class="py-3 font-walsheim-bold text-xs tracking-wide flex items-center">
-                        {% for block in dropdown_menu_images %}
-                          {% assign dropdown_item = block.settings.dropdown_item | downcase | strip %}
-                          {% assign image = block.settings.image %}
-
-                          {% if dropdown_item == lowercase_title %}
-                            {% render 'img', type: 'img', img: image, lazy: true, class: 'object-cover h-12 w-12 rounded mr-3' %}
-                          {% endif %}
-                        {% endfor %}
-
-                        <a href="{{ link.url }}" class="">{{ link.title }}</a>
-                        {% for badge in dropdown_menu_badges %}
-                          {% assign badge_item = badge.settings.dropdown_item | downcase | strip %}
-                          {% if badge_item == lowercase_title and badge.settings.label != blank %}
-                            <span class="plaay-menu-badge">{{ badge.settings.label }}</span>
-                          {% endif %}
-                        {% endfor %}
+                        {% render 'header-dropdown-item', link: link, images: dropdown_menu_images, wrap_image: false %}
                       </li>
                     {% endfor %}
                   </ul>
@@ -168,16 +152,7 @@
                     {% for link in link.links %}
                       {% assign lowercase_title = link.title | downcase %}
                       <li class="py-3 font-walsheim-bold text-xs tracking-wide flex items-center">
-                        {% for block in dropdown_menu_images %}
-                          {% assign dropdown_item = block.settings.dropdown_item | downcase | strip %}
-                          {% assign image = block.settings.image %}
-
-                          {% if dropdown_item == lowercase_title %}
-                            {% render 'img', type: 'img', img: image, lazy: true, class: 'object-cover h-12 w-12 rounded mr-3' %}
-                          {% endif %}
-                        {% endfor %}
-
-                        <a href="{{ link.url }}">{{ link.title }}</a>
+                        {% render 'header-dropdown-item', link: link, images: dropdown_menu_images, wrap_image: false %}
                       </li>
                     {% endfor %}
                   </ul>
@@ -303,24 +278,7 @@
                     {% for link in link.links %}
                       {% assign lowercase_title = link.title | downcase %}
                       <li class="py-3 font-walsheim-bold text-sm tracking-wide flex items-center mr-3">
-                        {% for block in dropdown_menu_images %}
-                          {% assign dropdown_item = block.settings.dropdown_item | downcase | strip %}
-                          {% assign image = block.settings.image %}
-
-                          {% if dropdown_item == lowercase_title %}
-                            <a href="{{ link.url }}">
-                              {% render 'img', type: 'img', img: image, lazy: true, class: 'object-cover h-12 w-12 rounded mr-3' %}
-                            </a>
-                          {% endif %}
-                        {% endfor %}
-
-                        <a href="{{ link.url }}">{{ link.title }}</a>
-                        {% for badge in dropdown_menu_badges %}
-                          {% assign badge_item = badge.settings.dropdown_item | downcase | strip %}
-                          {% if badge_item == lowercase_title and badge.settings.label != blank %}
-                            <span class="plaay-menu-badge">{{ badge.settings.label }}</span>
-                          {% endif %}
-                        {% endfor %}
+                        {% render 'header-dropdown-item', link: link, images: dropdown_menu_images, wrap_image: true %}
                       </li>
                     {% endfor %}
                   </ul>
@@ -348,24 +306,7 @@
                     {% for link in link.links %}
                       {% assign lowercase_title = link.title | downcase %}
                       <li class="py-3 font-walsheim-bold text-sm tracking-wide flex items-center mr-3">
-                        {% for block in dropdown_menu_images %}
-                          {% assign dropdown_item = block.settings.dropdown_item | downcase | strip %}
-                          {% assign image = block.settings.image %}
-
-                          {% if dropdown_item == lowercase_title %}
-                            <a href="{{ link.url }}">
-                              {% render 'img', type: 'img', img: image, lazy: true, class: 'object-cover h-12 w-12 rounded mr-3' %}
-                            </a>
-                          {% endif %}
-                        {% endfor %}
-
-                        <a href="{{ link.url }}">{{ link.title }}</a>
-                        {% for badge in dropdown_menu_badges %}
-                          {% assign badge_item = badge.settings.dropdown_item | downcase | strip %}
-                          {% if badge_item == lowercase_title and badge.settings.label != blank %}
-                            <span class="plaay-menu-badge">{{ badge.settings.label }}</span>
-                          {% endif %}
-                        {% endfor %}
+                        {% render 'header-dropdown-item', link: link, images: dropdown_menu_images, wrap_image: true %}
                       </li>
                     {% endfor %}
                   </ul>
@@ -683,23 +624,11 @@
             "id": "dropdown_item",
             "label": "Dropdown item to link to",
             "info": "please type out the name of the dropdown item you would like this image to appear next to. Please keep the wording all lowercase."
-          }
-        ]
-      },
-      {
-        "type": "dropdown_menu_badge",
-        "name": "Dropdown menu badge",
-        "settings": [
-          {
-            "type": "text",
-            "id": "dropdown_item",
-            "label": "Dropdown item to badge",
-            "info": "Type the dropdown item name in lowercase, e.g. 'new chocolate bars'."
           }, {
             "type": "text",
-            "id": "label",
-            "label": "Badge text",
-            "default": "Just Launched"
+            "id": "badge_label",
+            "label": "Badge text (optional)",
+            "info": "Leave blank for no badge. If set, a pill (e.g. 'Just Launched') shows next to this menu item."
           }
         ]
       }
