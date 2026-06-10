@@ -325,7 +325,7 @@
       "name": "Featured products",
       "settings": {
         "title": "Our Best Selling Chocolate Snack-Hacks",
-        "description": "Plaayer-approved faves, why not make them yours too?",
+        "description": "Plaayer-approved faves, made for clean cravings on repeat.",
         "background_color": "#ffffff",
         "product_source": "manual",
         "featured_collection": "shop-all",
@@ -532,7 +532,9 @@
       "block_order": [
         "rebuy_personalization_engine_rebuy_widget_kdGwtJ"
       ],
-      "settings": {}
+      "settings": {
+        "include_margins": true
+      }
     },
     "richtext_hVDgQC": {
       "type": "richtext",
@@ -589,7 +591,9 @@
       "block_order": [
         "reelfy_videos_reelfy_section_JWQGGD"
       ],
-      "settings": {}
+      "settings": {
+        "include_margins": true
+      }
     },
     "cu_countdown_timer_jJqyWW": {
       "type": "cu-countdown-timer",
@@ -1671,7 +1675,9 @@
       "block_order": [
         "rebuy_personalization_engine_rebuy_widget_DF3nWm"
       ],
-      "settings": {}
+      "settings": {
+        "include_margins": true
+      }
     },
     "instafeed_y9eagG": {
       "type": "instafeed",
@@ -1683,7 +1689,9 @@
     },
     "1671195971148aab85": {
       "type": "apps",
-      "settings": {}
+      "settings": {
+        "include_margins": true
+      }
     },
     "related_articles_JgEJHR": {
       "type": "related_articles",
