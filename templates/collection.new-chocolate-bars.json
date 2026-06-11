@@ -74,7 +74,7 @@
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
         "hide_bullets": true,
-        "compact_mobile_grid": false,
+        "compact_mobile_grid": true,
         "hide_atc_on_tiles": false
       }
     },
