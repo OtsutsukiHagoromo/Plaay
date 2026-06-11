@@ -94,7 +94,7 @@
             "type": "dropdown_menu_image",
             "settings": {
               "image": "shopify://shop_images/WhatsApp_Image_2026-06-09_at_3.45.07_PM.jpg",
-              "dropdown_item": "New Chocolate Bars",
+              "dropdown_item": "New Chocolate Slabs",
               "badge_label": "Just Launched"
             }
           },
