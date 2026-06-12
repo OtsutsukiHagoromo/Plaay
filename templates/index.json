@@ -283,22 +283,10 @@
             "product": "og-plaayer-pack"
           }
         },
-        "product_mEtgqD": {
-          "type": "product",
-          "settings": {
-            "product": "70-dark-chocolate-x-6"
-          }
-        },
         "product_HnPfWD": {
           "type": "product",
           "settings": {
             "product": "triple-chocolate-truffle"
-          }
-        },
-        "product_PY7gpT": {
-          "type": "product",
-          "settings": {
-            "product": "milk-chocolate-with-toffee-almond-x-6"
           }
         },
         "product_VtYfBt": {
@@ -316,9 +304,7 @@
       },
       "block_order": [
         "product_ExgAbw",
-        "product_mEtgqD",
         "product_HnPfWD",
-        "product_PY7gpT",
         "product_VtYfBt",
         "product_ct3qnA"
       ],
