@@ -277,6 +277,12 @@
     "featured_products_F9JTBW": {
       "type": "featured_products",
       "blocks": {
+        "product_pwwYqY": {
+          "type": "product",
+          "settings": {
+            "product": "new-chocolate-bars-mix-pack-of-5"
+          }
+        },
         "product_ExgAbw": {
           "type": "product",
           "settings": {
@@ -303,6 +309,7 @@
         }
       },
       "block_order": [
+        "product_pwwYqY",
         "product_ExgAbw",
         "product_HnPfWD",
         "product_VtYfBt",
