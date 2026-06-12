@@ -9,31 +9,23 @@
  */
 {
   "sections": {
-    "bars_main_product_tgjzzE": {
-      "type": "bars-main-product",
-      "name": "Bars Product Page",
+    "truffle_main_product_AQpTrG": {
+      "type": "truffle-main-product",
+      "name": "Truffle Product",
       "settings": {
-        "background_color": "#f4f4f4",
-        "price_color": "#000000",
-        "variant_selector_style": "dropdown",
-        "enable_subscribe_push": true,
-        "show_description": true,
+        "background_color": "#F4F4F4",
         "show_exact_ingredients": true,
+        "price_color": "#000000",
+        "variant_selector_style": "swatches",
+        "size_option_name": "Pack Size",
+        "show_size_per_truffle": true,
+        "show_size_badge": true,
+        "popular_size_value": "10*60gm",
+        "popular_size_badge_text": "Most Popular",
         "tab_info_label": "Product Info",
         "tab_ingredients_label": "Ingredients",
         "tab_shipping_label": "Shipping & Returns",
-        "shipping_returns_content": "<p><strong>Free delivery</strong> on all orders over AED 75. <br/>1-2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
-      }
-    },
-    "plaay_aplus_image_NLB": {
-      "type": "plaay-aplus-image",
-      "disabled": true,
-      "settings": {
-        "background_color": "#ffffff",
-        "max_width": 800,
-        "padding_top": 0,
-        "padding_bottom": 0,
-        "fallback_enabled": false
+        "shipping_returns_content": "<p><strong>Free delivery</strong> on all orders over AED 75. Delivery takes 1-2 business days across the UAE.</p><p><strong>Returns:</strong> We accept returns within 7 days for unopened, undamaged items. Email hello@shopplaay.com to initiate a return.</p>"
       }
     },
     "blocks_dKL7zR": {
@@ -891,8 +883,7 @@
     }
   },
   "order": [
-    "bars_main_product_tgjzzE",
-    "plaay_aplus_image_NLB",
+    "truffle_main_product_AQpTrG",
     "blocks_dKL7zR",
     "aplus_hero_NLB",
     "aplus_why_NLB",
