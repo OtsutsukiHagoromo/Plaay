@@ -1,0 +1,52 @@
+{%- comment -%}
+  Plaay - Father's Day countdown ticker. Loaded once globally. Ticks every
+  [data-fd-countdown] on the page each second (multi-instance: PDP + cart drawer).
+  Hides them all when the sale ends (22 June 00:00 Dubai / +04:00).
+{%- endcomment -%}
+{%- if settings.fathers_day_sale_enabled -%}
+<script>
+(function () {
+  if (window.plaayFdCountdownReady) return;
+  window.plaayFdCountdownReady = true;
+
+  var END = new Date('2026-06-22T00:00:00+04:00').getTime();
+
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  function flipTo(el, txt) {
+    if (!el || el.textContent === txt) return;
+    el.textContent = txt;
+    el.classList.remove('plaay-flip-in');
+    void el.offsetWidth;
+    el.classList.add('plaay-flip-in');
+  }
+
+  function tick() {
+    var diff = END - Date.now();
+    var wraps = document.querySelectorAll('[data-fd-countdown]');
+    if (diff <= 0) {
+      for (var i = 0; i < wraps.length; i++) { wraps[i].style.display = 'none'; }
+      clearInterval(timer);
+      return;
+    }
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    for (var j = 0; j < wraps.length; j++) {
+      flipTo(wraps[j].querySelector('.plaay-fd-h'), pad(h));
+      flipTo(wraps[j].querySelector('.plaay-fd-m'), pad(m));
+      flipTo(wraps[j].querySelector('.plaay-fd-s'), pad(s));
+    }
+  }
+
+  var timer = null;
+  function boot() { tick(); timer = setInterval(tick, 1000); }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
+})();
+</script>
+{%- endif -%}

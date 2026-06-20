@@ -1,0 +1,31 @@
+{%- comment -%}
+  Plaay - Father's Day offer card for the product page. Flat 30% off, 21 June only.
+  Reuses the Eid offer-card CSS. Auto-hides outside the 21 June (Dubai) window.
+{%- endcomment -%}
+{%- liquid
+  assign fd_active = false
+  if settings.fathers_day_sale_enabled
+    assign fd_now = 'now' | date: '%s' | times: 1
+    assign fd_start = '2026-06-21T00:00:00+04:00' | date: '%s' | times: 1
+    assign fd_end = '2026-06-22T00:00:00+04:00' | date: '%s' | times: 1
+    if fd_now >= fd_start and fd_now < fd_end
+      assign fd_active = true
+    endif
+  endif
+-%}
+{%- if fd_active -%}
+<div class="plaay-eid-card">
+  <div class="plaay-eid-card__header">
+    <span class="plaay-eid-card__emoji">🎁</span>
+    <span class="plaay-eid-card__title">Father's Day Sale &middot; Flat 30% Off</span>
+  </div>
+  <ul class="plaay-eid-card__tiers">
+    <li class="plaay-eid-card__tier">
+      <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      <strong>30% off</strong> your entire order, today only
+    </li>
+  </ul>
+  {%- render 'plaay-fd-countdown' -%}
+  <p class="plaay-eid-card__note">Discount applied automatically at checkout &middot; Ends 11:59 PM, 21 June</p>
+</div>
+{%- endif -%}

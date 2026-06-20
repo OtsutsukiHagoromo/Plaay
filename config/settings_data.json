@@ -13,6 +13,7 @@
     "global_recharge_point_two": "15% Off Regular Price",
     "ingredients_icons_link_list": "ingredients-icons",
     "eid_sale_enabled": false,
+    "fathers_day_sale_enabled": true,
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",
@@ -29,9 +30,8 @@
         "blocks": {
           "announcement_text_qzKxiQ": {
             "type": "announcement_text",
-            "disabled": true,
             "settings": {
-              "text": "⏰ Last 24 Hours — Eid Sale Ends Tonight Midnight — Save Up To 30% Off",
+              "text": "🎁 Father's Day Sale · Flat 30% Off Everything · 21 June Only",
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"
