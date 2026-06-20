@@ -83,7 +83,20 @@
     class="content_container flex flex-col items-center justify-between pt-9 p-4 px-5 h-full w-full rounded-xl z-5 relative {% if grey_background %} bg-grey-f5 {% else %} bg-white {% endif %} | md:justify-between"
     id="add-to-cart-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
     data-title="{{ product.title }}">
-    {%- if settings.eid_sale_enabled -%}
+    {%- liquid
+      assign fd_active = false
+      if settings.fathers_day_sale_enabled
+        assign fd_now = 'now' | date: '%s' | times: 1
+        assign fd_start = '2026-06-21T00:00:00+04:00' | date: '%s' | times: 1
+        assign fd_end = '2026-06-22T00:00:00+04:00' | date: '%s' | times: 1
+        if fd_now >= fd_start and fd_now < fd_end
+          assign fd_active = true
+        endif
+      endif
+    -%}
+    {%- if fd_active -%}
+      <span class="plaay-badge plaay-badge--sale">30% Off</span>
+    {%- elsif settings.eid_sale_enabled -%}
       <span class="plaay-badge plaay-badge--sale">Eid Sale</span>
     {%- else -%}
       {%- render 'plaay-badge', product: product -%}

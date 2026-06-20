@@ -1,0 +1,29 @@
+{%- comment -%}
+  Plaay - Father's Day Sale countdown (flash sale, 21 June only).
+  Reuses the Eid countdown CSS classes for styling. Multi-instance safe
+  (class-based, ticked by plaay-fd-countdown-js). Auto-hides outside the
+  21 June (Dubai / +04:00) window.
+{%- endcomment -%}
+{%- liquid
+  assign fd_active = false
+  if settings.fathers_day_sale_enabled
+    assign fd_now = 'now' | date: '%s' | times: 1
+    assign fd_start = '2026-06-21T00:00:00+04:00' | date: '%s' | times: 1
+    assign fd_end = '2026-06-22T00:00:00+04:00' | date: '%s' | times: 1
+    if fd_now >= fd_start and fd_now < fd_end
+      assign fd_active = true
+    endif
+  endif
+-%}
+{%- if fd_active -%}
+<div class="plaay-eid-countdown plaay-fd-countdown" data-fd-countdown aria-live="off">
+  <span class="plaay-eid-countdown__label">30% off ends in</span>
+  <div class="plaay-eid-countdown__segments">
+    <span class="plaay-eid-countdown__seg"><b class="plaay-fd-h">--</b><small>h</small></span>
+    <span class="plaay-eid-countdown__sep">:</span>
+    <span class="plaay-eid-countdown__seg"><b class="plaay-fd-m">--</b><small>m</small></span>
+    <span class="plaay-eid-countdown__sep">:</span>
+    <span class="plaay-eid-countdown__seg"><b class="plaay-fd-s">--</b><small>s</small></span>
+  </div>
+</div>
+{%- endif -%}

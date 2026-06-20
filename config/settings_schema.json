@@ -170,6 +170,16 @@
         "default": "30% Off + Mystery Gift"
       },
       {
+        "type": "header",
+        "content": "Father's Day Sale (21 June)"
+      },
+      {
+        "type": "checkbox",
+        "id": "fathers_day_sale_enabled",
+        "label": "Enable Father's Day flash sale (auto-shows 21 June only)",
+        "default": false
+      },
+      {
         "type": "range",
         "id": "product_recommendations_limit",
         "label": "Product recommendations limit",
