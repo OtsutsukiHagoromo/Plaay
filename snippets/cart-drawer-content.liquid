@@ -1,8 +1,24 @@
 <div class="flex flex-1 min-h-0 flex-col overflow-hidden" data-cart-drawer-content data-cart-item-count="{{ cart.item_count }}">
   <div class="flex-shrink-0 px-5 pt-4 pb-2{% if cart.item_count == 0 %} hidden{% endif %}">
-    {%- render 'cart-tier-bar' -%}
+    {%- liquid
+      assign fd_active = false
+      if settings.fathers_day_sale_enabled
+        assign fd_now = 'now' | date: '%s' | times: 1
+        assign fd_start = '2026-06-21T00:00:00+04:00' | date: '%s' | times: 1
+        assign fd_end = '2026-06-22T00:00:00+04:00' | date: '%s' | times: 1
+        if fd_now >= fd_start and fd_now < fd_end
+          assign fd_active = true
+        endif
+      endif
+    -%}
+    {%- unless fd_active -%}{%- render 'cart-tier-bar' -%}{%- endunless -%}
     {%- render 'plaay-eid-countdown' -%}
-    {%- render 'plaay-fd-offer-strip' -%}
+    {%- if fd_active -%}
+      <div style="margin-top:6px;">
+        <span class="font-walsheim-bold" style="display:block;font-size:11.5px;line-height:1.3;color:#021D49;margin-bottom:3px;">🎁 Father's Day &middot; 30% off applied at checkout</span>
+        {%- render 'plaay-fd-countdown' -%}
+      </div>
+    {%- endif -%}
   </div>
 
   <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain" data-cart-items>
