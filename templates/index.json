@@ -14,6 +14,7 @@
       "blocks": {
         "slide_earVyE": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "hide_section_one_mobile": true,
             "hide_section_two_mobile": false,
