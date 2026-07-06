@@ -14,7 +14,6 @@
       "blocks": {
         "slide_earVyE": {
           "type": "slide",
-          "disabled": true,
           "settings": {
             "hide_section_one_mobile": true,
             "hide_section_two_mobile": false,
@@ -45,8 +44,8 @@
             "link_one_text": "Shop Now",
             "link_two": "",
             "link_two_text": "",
-            "img": "shopify://shop_images/Plaay_Fatherday_Banner.jpg",
-            "m-img": "shopify://shop_images/Plaay_Fatherday_mobile_Banner.jpg",
+            "img": "shopify://shop_images/World_Chocolate_day_banner_2.jpg",
+            "m-img": "shopify://shop_images/World_Chocolate_day_banner_1.jpg",
             "section_one_video": "",
             "section_two_video": ""
           }
