@@ -180,6 +180,16 @@
         "default": false
       },
       {
+        "type": "header",
+        "content": "Summer Sale (29–31 July)"
+      },
+      {
+        "type": "checkbox",
+        "id": "summer_sale_enabled",
+        "label": "Enable Summer Sale (30% off, min AED 250; auto-hides after 31 July)",
+        "default": false
+      },
+      {
         "type": "range",
         "id": "product_recommendations_limit",
         "label": "Product recommendations limit",

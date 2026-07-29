@@ -14,6 +14,7 @@
     "ingredients_icons_link_list": "ingredients-icons",
     "eid_sale_enabled": false,
     "fathers_day_sale_enabled": true,
+    "summer_sale_enabled": true,
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",

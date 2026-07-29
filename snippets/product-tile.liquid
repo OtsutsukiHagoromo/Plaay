@@ -84,6 +84,14 @@
     id="add-to-cart-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
     data-title="{{ product.title }}">
     {%- liquid
+      assign summer_active = false
+      if settings.summer_sale_enabled
+        assign s_now = 'now' | date: '%s' | times: 1
+        assign s_end = '2026-08-01T00:00:00+04:00' | date: '%s' | times: 1
+        if s_now < s_end
+          assign summer_active = true
+        endif
+      endif
       assign fd_active = false
       if settings.fathers_day_sale_enabled
         assign fd_now = 'now' | date: '%s' | times: 1
@@ -94,7 +102,9 @@
         endif
       endif
     -%}
-    {%- if fd_active -%}
+    {%- if summer_active -%}
+      <span class="plaay-badge plaay-badge--sale">30% Off</span>
+    {%- elsif fd_active -%}
       <span class="plaay-badge plaay-badge--sale">30% Off</span>
     {%- elsif settings.eid_sale_enabled -%}
       <span class="plaay-badge plaay-badge--sale">Eid Sale</span>
