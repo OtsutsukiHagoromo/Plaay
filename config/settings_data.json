@@ -42,7 +42,7 @@
             "type": "announcement_text",
             "disabled": true,
             "settings": {
-              "text": "3rd Birthday Sale. Flat 30% Off on Everything Only For Today.",
+              "text": "Summer Sale. Flat 30% Off on Everything.",
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"
