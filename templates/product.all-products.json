@@ -14,10 +14,9 @@
       "blocks": {
         "discount_cYAxir": {
           "type": "discount",
-          "disabled": true,
           "settings": {
             "show_discount_text": true,
-            "discount_prefix": "<p><strong>Spend AED 250+<br/></strong>Get Flat 20% Off + Free Mystery Gift</p><p></p><p></p><p><strong>Spend AED 400+</strong><br/>Get Flat 25% Off + Free Mystery Gift</p><p></p><p></p><p><strong>Spend AED 600+<br/></strong>Get Flat 30% Off + Free Mystery Gift</p><p></p>",
+            "discount_prefix": "<p>Flat 30% Off On All Order Above AED 250. Valid Till 31 July</p>",
             "discount_highlight": "",
             "highlight_color": "#ff0000"
           }
