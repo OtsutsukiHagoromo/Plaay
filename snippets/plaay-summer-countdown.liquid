@@ -1,0 +1,30 @@
+{%- comment -%}
+  Plaay - Summer Sale countdown (30% off, min AED 250, 29-31 July).
+  Reuses the Eid countdown CSS classes for styling. Multi-instance safe
+  (class-based, ticked by plaay-summer-countdown-js). Auto-hides after
+  31 July 23:59 (Dubai / +04:00).
+{%- endcomment -%}
+{%- liquid
+  assign summer_active = false
+  if settings.summer_sale_enabled
+    assign s_now = 'now' | date: '%s' | times: 1
+    assign s_end = '2026-08-01T00:00:00+04:00' | date: '%s' | times: 1
+    if s_now < s_end
+      assign summer_active = true
+    endif
+  endif
+-%}
+{%- if summer_active -%}
+<div class="plaay-eid-countdown plaay-summer-countdown" data-summer-countdown aria-live="off">
+  <span class="plaay-eid-countdown__label">Sale ends in</span>
+  <div class="plaay-eid-countdown__segments">
+    <span class="plaay-eid-countdown__seg"><b class="plaay-summer-d">--</b><small>d</small></span>
+    <span class="plaay-eid-countdown__sep">:</span>
+    <span class="plaay-eid-countdown__seg"><b class="plaay-summer-h">--</b><small>h</small></span>
+    <span class="plaay-eid-countdown__sep">:</span>
+    <span class="plaay-eid-countdown__seg"><b class="plaay-summer-m">--</b><small>m</small></span>
+    <span class="plaay-eid-countdown__sep">:</span>
+    <span class="plaay-eid-countdown__seg"><b class="plaay-summer-s">--</b><small>s</small></span>
+  </div>
+</div>
+{%- endif -%}
