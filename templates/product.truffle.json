@@ -18,6 +18,7 @@
         },
         "discount_truffle": {
           "type": "discount",
+          "disabled": true,
           "settings": {
             "show_discount_text": true,
             "discount_prefix": "<p>Flat 30% Off On All Order Above AED 250. Valid Till 31 July</p>",
