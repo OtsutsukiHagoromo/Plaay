@@ -151,7 +151,7 @@
       {% if hover_state_image %}
         <a href="{{ product.url }}" class="text-0">
           {{ product.title }}
-          {% render 'img', img: hover_state_image, lazy: true, class: 'product_tile_hover_state_image absolute left-0 opacity-0 transition-all duration-300 ease-in-out h-60 object-contain w-full', type: 'img' %}
+          {% render 'img', img: hover_state_image, lazy: true, sizes: '(min-width: 1536px) 280px, (min-width: 1280px) 22vw, (min-width: 1024px) 28vw, (min-width: 640px) 30vw, 46vw', class: 'product_tile_hover_state_image absolute left-0 opacity-0 transition-all duration-300 ease-in-out h-60 object-contain w-full', type: 'img' %}
         </a>
       {% endif %}
       {% comment %}
@@ -201,17 +201,29 @@
       {% endif %}
     
       {% if second_image != blank %}
-        <img
-          src="{{ second_image_preview | image_url: width: 533 }}"
-          srcset="{{ second_image_preview | image_url: width: 320 }} 320w, {{ second_image_preview | image_url: width: 480 }} 480w, {{ second_image_preview | image_url: width: 640 }} 640w, {{ second_image_preview | image_url: width: 800 }} 800w"
-          sizes="{{ product_tile_sizes }}"
-          alt="{{ product.title }}"
-          width="{{ second_image_preview.width }}"
-          height="{{ second_image_preview.height }}"
-          class="product_tile_secondary_image absolute inset-0 transition-opacity duration-300 ease-in-out opacity-0 h-60 object-contain w-full"
-          loading="lazy"
-          decoding="async"
-        >
+        {% comment %}
+          Hover-swap image: desktop-only. The <source> is media-gated so touch devices
+          never download it - they get the 43-byte transparent GIF instead. Previously
+          this was a plain <img> which, being absolute inset-0, intersected the viewport
+          at the same moment as the primary image and so downloaded on mobile despite
+          loading="lazy".
+        {% endcomment %}
+        <picture>
+          <source
+            media="(min-width: 1024px)"
+            srcset="{{ second_image_preview | image_url: width: 320 }} 320w, {{ second_image_preview | image_url: width: 480 }} 480w, {{ second_image_preview | image_url: width: 640 }} 640w, {{ second_image_preview | image_url: width: 800 }} 800w"
+            sizes="{{ product_tile_sizes }}"
+          >
+          <img
+            src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+            alt="{{ product.title }}"
+            width="{{ second_image_preview.width }}"
+            height="{{ second_image_preview.height }}"
+            class="product_tile_secondary_image absolute inset-0 transition-opacity duration-300 ease-in-out opacity-0 h-60 object-contain w-full"
+            loading="lazy"
+            decoding="async"
+          >
+        </picture>
       {% endif %}
     </a>
     
@@ -271,7 +283,7 @@
     {% if ingredients_image != blank %}
       <div class="product_flip_back mt-[6px] w-full absolute h-[calc(100%_-_70px)] {% if grey_background %} bg-grey-f5 {% else %} bg-white {% endif %} left-0 -top-[6px] z-3 rounded-xl px-5 pt-14 pb-4 transform opacity-0">
         <a href="{{ product.url }}">
-          {% render 'img', type: 'img', img: ingredients_image, lazy: true, class: 'object-contain h-full w-full' %}
+          {% render 'img', type: 'img', img: ingredients_image, lazy: true, sizes: '(min-width: 1536px) 280px, (min-width: 1280px) 22vw, (min-width: 1024px) 28vw, (min-width: 640px) 30vw, 46vw', class: 'object-contain h-full w-full' %}
         </a>
       </div>
     {% endif %}

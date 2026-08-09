@@ -8,8 +8,13 @@
 
     <title>{{ page_title }}</title>
 
-    <link rel= "preload"href="{{ 'bundle.checkou t.css' | asset_url }}"as="style">
-    <link rel= "preload"href="{{ 'bundle.checko  ut.js' | asset_url }}"as="script">
+    {%- comment -%}
+      Asset names previously contained literal spaces ('bundle.checkou t.css',
+      'bundle.checko  ut.js') so both preloads resolved to non-existent assets and 404'd.
+      bundle.checkout.js is never script-tagged anywhere, so only the stylesheet is
+      preloaded here - it is the one actually loaded further down this file.
+    {%- endcomment -%}
+    <link rel="preload" href="{{ 'bundle.checkout.css' | asset_url }}" as="style">
 
     {{ content_for_header }}
 

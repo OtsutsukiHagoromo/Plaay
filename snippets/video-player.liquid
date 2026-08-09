@@ -9,22 +9,20 @@
       controls
       loop
     {% endif %}
-    {% if autoplay == true %}autoplaymuteddefaultMutedloop{% endif %}
-    preload="auto"
+    preload="{% if autoplay == true %}metadata{% else %}none{% endif %}"
     {% if poster != blank %}
       {% if no_src %}
         poster="{{ poster }}"
       {% else %}
-        poster="{{ poster | img_url: '2400x1600' }}"
+        poster="{{ poster | image_url: width: 1200 }}"
       {% endif %}
     {% endif %}>
     {% if sources %}
       {% for source in sources %}
-        <source src="{{ source.url }}"playsinlinetype="{{ source.mime_type }}">
+        <source src="{{ source.url }}" type="{{ source.mime_type }}">
       {% endfor %}
     {% else %}
-      <source src="{{ src }}"playsinlinetype="video/mp4">
-      <source src="{{ src }}"playsinlinetype="video/ogg">
+      <source src="{{ src }}" type="video/mp4">
     {% endif %}
   </video>
   {% if controls %}

@@ -30,6 +30,10 @@
       if (diff <= 0) {
         wrap.style.display = 'none';
         clearInterval(tickTimer);
+        tickTimer = null;
+        // The whole-body subtree observer was never torn down, leaving a permanent
+        // MutationObserver on every page once the sale had ended.
+        if (observer) { observer.disconnect(); }
         return;
       }
       var h = Math.floor((diff % 86400000) / 3600000);
