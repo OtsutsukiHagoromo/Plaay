@@ -530,12 +530,21 @@
       bottom: 0; left: 0; right: 0;
       height: calc(60px + env(safe-area-inset-bottom));
       padding-bottom: env(safe-area-inset-bottom);
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: saturate(180%) blur(24px);
-      -webkit-backdrop-filter: saturate(180%) blur(24px);
+      /* Was a 24px backdrop-filter blur on an always-visible full-width fixed bar - one
+         of the most expensive things to composite on every scroll frame on mid-range
+         Android. The background is 96% opaque, so the blur was barely visible anyway.
+         Dropped to a much cheaper radius; see the @supports rule below. */
+      background: rgba(255, 255, 255, 0.98);
       border-top: 1px solid rgba(2, 29, 73, 0.08);
       z-index: 9030;
       align-items: stretch;
+    }
+    @supports ((backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px))) {
+      .pbn {
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: saturate(140%) blur(8px);
+        -webkit-backdrop-filter: saturate(140%) blur(8px);
+      }
     }
     .pbn__tab {
       flex: 1;
@@ -592,7 +601,11 @@
     .pbn__tab.is-active .pbn__label { font-family: walsheim-bold, sans-serif; }
 
     /* ── Clearance ── */
-    #main { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+    /* The footer is a sibling AFTER </main> in theme.liquid, so padding on #main never
+       cleared it and the fixed bar covered the last 60px of the footer on every page.
+       Pad the body instead, which contains both. */
+    body { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+    #main { padding-bottom: 0; }
     #plaay-sticky-mobile { bottom: calc(60px + env(safe-area-inset-bottom)) !important; }
     .plaay-wa-float { bottom: calc(60px + env(safe-area-inset-bottom) + 12px) !important; }
 

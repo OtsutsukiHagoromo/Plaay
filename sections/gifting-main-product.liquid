@@ -195,7 +195,7 @@
           <ul {% if product_images_size > 1 %} class="glide__slides" {% endif %}>
             {% for image in product.images %}
               <li {% if product_images_size > 1 %} class="glide__slide px-2 | md:px-0" {% endif %} data-index="{{ forloop.index0 }}">
-                {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain h-[300px] sm:h-[360px] mx-auto lg:w-full lg:h-[600px] xl:object-cover', height: 300, width: 550, forloop_data: forloop.index %}
+                {% render 'img', type: 'img', img: image, eager: forloop.first, sizes: '(min-width:1024px) 800px, 92vw', class: 'object-contain h-[300px] sm:h-[360px] mx-auto lg:w-full lg:h-[600px] xl:object-cover', height: 300, width: 550, forloop_data: forloop.index %}
               </li>
             {% endfor %}
           </ul>
@@ -224,7 +224,7 @@
               {% for image in product.images %}
                 <li class="glide__slide thumbnail_slide">
                   <div class="block h-14 w-14 rounded-lg overflow-hidden border border-black border-opacity-15 | md:h-20 md:w-20 md:rounded-none">
-                    {% render 'img', type: 'img', img: image, eager: true, class: 'object-contain mx-auto h-full cursor-pointer w-full', forloop_data: forloop.index0 %}
+                    {% render 'img', type: 'img', img: image, lazy: true, sizes: '80px', img_sizes: '80,160,240', class: 'object-contain mx-auto h-full cursor-pointer w-full', forloop_data: forloop.index0 %}
                   </div>
                 </li>
               {% endfor %}

@@ -37,9 +37,9 @@
   {% comment %} collection hero image {% endcomment %}
   <div class="hidden absolute -left-14 -bottom-14 h-auto max-h-[30rem] max-w-[30rem] | md:block | 2xl:max-w-none">
     {% if hero_image != blank %}
-      {% render 'img', img: hero_image, type: 'img', eager: true, class: 'object-cover h-full w-full' %}
+      {% render 'img', img: hero_image, type: 'img', lazy: true, sizes: '(min-width: 768px) 480px, 1px', class: 'object-cover h-full w-full' %}
     {% else %}
-      {% render 'img', img: backup_hero_image, type: 'img', eager: true, class: 'object-cover h-full w-full' %}
+      {% render 'img', img: backup_hero_image, type: 'img', lazy: true, sizes: '(min-width: 768px) 480px, 1px', class: 'object-cover h-full w-full' %}
     {% endif %}
   </div>
   <div class="container pt-28 pb-10 relative z-1 | md:pb-12 md:pt-52 md:max-w-md | lg:max-w-xl | xl:max-w-2xl">

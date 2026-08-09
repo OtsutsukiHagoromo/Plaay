@@ -493,7 +493,9 @@
                 <div class="ai-collection-cards__image-wrapper-{{ ai_gen_id }}">
                   {% if card_image %}
                     <img
-                      src="{{ card_image | image_url: width: 900 }}"
+                      src="{{ card_image | image_url: width: 560 }}"
+                      srcset="{{ card_image | image_url: width: 250 }} 250w, {{ card_image | image_url: width: 400 }} 400w, {{ card_image | image_url: width: 560 }} 560w"
+                      sizes="(min-width: 990px) 280px, 45vw"
                       alt="{{ card_image.alt | escape }}"
                       class="ai-collection-cards__image-{{ ai_gen_id }}"
                       loading="lazy"
@@ -502,7 +504,9 @@
                     >
                   {% elsif card_collection and card_collection.featured_image %}
                     <img
-                      src="{{ card_collection.featured_image | image_url: width: 900 }}"
+                      src="{{ card_collection.featured_image | image_url: width: 560 }}"
+                      srcset="{{ card_collection.featured_image | image_url: width: 250 }} 250w, {{ card_collection.featured_image | image_url: width: 400 }} 400w, {{ card_collection.featured_image | image_url: width: 560 }} 560w"
+                      sizes="(min-width: 990px) 280px, 45vw"
                       alt="{{ card_collection.featured_image.alt | escape }}"
                       class="ai-collection-cards__image-{{ ai_gen_id }}"
                       loading="lazy"

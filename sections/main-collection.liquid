@@ -88,9 +88,7 @@
                     {% cycle 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight' %}{% endcapture %}
                     {% unless product.tags contains 'Hide' %}
                     <div data-product-tile class="w-full">
-                    {% if forloop.first %}
-                      {% assign eager_load = true %}
-                    {% endif %}
+                    {% assign eager_load = forloop.first %}
                     {% render 'product-tile', product: product, eager_load: eager_load %}
                     
                     {% render 'product-quick-add-popup', product: product %}
