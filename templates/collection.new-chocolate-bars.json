@@ -55,7 +55,7 @@
       "name": "Featured products",
       "settings": {
         "title": "Shop The New Slabs",
-        "description": "Fresh bars. Big flavour. Zero refined sugar.",
+        "description": "",
         "background_color": "#ffffff",
         "product_source": "collection",
         "featured_collection": "new-chocolate-slabs",
@@ -118,7 +118,7 @@
       ],
       "settings": {
         "heading": "Why Plaay Slabs",
-        "background_color": "#021d49",
+        "background_color": "#021D49",
         "text_color": "#ffffff"
       }
     },
