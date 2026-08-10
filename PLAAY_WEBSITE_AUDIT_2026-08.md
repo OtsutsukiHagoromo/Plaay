@@ -72,29 +72,71 @@ Every one of these is still true on the live site:
 9. **Consent gating still absent** — Clarity, Meta Pixel, GA4, Klaviyo and Recharge all fire before any cookie choice. Removing Hotjar reduced the exposure; it did not fix it.
 10. **Cookie banner is still top-anchored on non-product templates** (including the homepage), so the first-load overlay over the hero persists there.
 
-### Two new findings from this pass
+### Where the HTML weight actually is
 
-- **`id="[object HTMLSelectElement]"` appears 54 times on `/collections/all`.** Something is assigning a DOM element where a string id is expected. Alongside it, `id="productSelect"` is also duplicated **54 times**. Both are invalid HTML and will break any `getElementById` lookup. Worth tracing before the next JS change.
-- **Klaviyo (12 requests across `static.klaviyo.com` + `static-tracking.klaviyo.com`) and Recharge (`static.rechargecdn.com`)** are now visible in the third-party mix, plus the still-unidentified `api.config-security.com`. Third-party budget needs an owner.
+Fetching and measuring the served documents (rather than guessing from the DOM) gives the real composition:
+
+| Component | `/collections/all` | Homepage |
+|---|---|---|
+| **Total HTML** | **1,042 KB** | **835 KB** |
+| Inline `<script>` (102 tags on PLP) | 227 KB | — |
+| **Inline `<svg>` (312 tags, only 34 unique)** | **187 KB** | — |
+| Inline `<style>` (44 tags) | 77 KB | — |
+| HTML comments (188) | 12 KB | — |
+| Remaining markup | ~539 KB | — |
+
+Two things dominate, and neither was where I first assumed:
+
+1. **Hidden quick-add modals.** `.product_popup` markup totals **370 KB on the PLP** — 36 % of the document. Only 12 of the 27 are reachable: both triggers gate the button on `product.selling_plan_groups.size > 0`, so **15 popups (163 KB) are unopenable dead markup**. Homepage: 11 orphans, 106 KB.
+2. **One repeated icon.** `snippets/icon-tick.liquid` is 1,260 bytes of path data and the modal renders three per product — **81 copies (100 KB) on the PLP, 51 (63 KB) on the homepage**.
+
+The per-tile `{% style %}` block, which I had flagged as the biggest item, is **646 bytes × 27 = 17 KB on the PLP and 21 KB on the homepage** — worth fixing, but an order of magnitude smaller than the two above. The largest single inline `<style>` on the page is 29.5 KB from `snippets/delivery_coder.liquid`, followed by EasyStock at 12.6 KB and the theme's own bottom-nav CSS at 11.7 KB.
+
+### One new finding, one correction
+
+- **`id="productSelect"` is duplicated 54 times on `/collections/all`** (and `add-to-cart-{variant}-{section}` twice each). PDP scripts resolve the variant select with `document.querySelector('select#productSelect, select[name="id"]')`, which returns the first match in the *document* — a product tile's hidden select, not the product's.
+- **Correction to my earlier note:** the `id="[object HTMLSelectElement]"` I reported was an artifact of my own measurement, not a site bug. Reading `form.id` on a `<form>` that contains `<select name="id">` returns the *named element*, not the id string — the DOM's named-property access shadows the property. There are zero such ids in the markup. (The quirk is still worth knowing: any theme JS that reads `form.id` on these forms gets a `<select>` back.)
+- **Klaviyo (12 requests) and Recharge (`static.rechargecdn.com`)** are now visible in the third-party mix, plus the still-unidentified `api.config-security.com`. Third-party budget needs an owner.
 
 ### How the plan changes
 
-- **P0 shrinks from 10 items to 6.** Items 1, 3, 8 are done or mostly done; item 6 is half done.
-- **The remaining P0 is now dominated by one job:** moving the per-tile `{% style %}` block out of `product-tile.liquid` into `custom.css`. That single change should take the homepage from 836 KB → roughly 200 KB of HTML and the PLP from 1,042 KB → roughly 250 KB, which is a larger win than everything in the release combined.
-- **Effort saved:** roughly 1.75 days of the original 5-day P0.
+- **P0 shrinks from 10 items to 6**; items 1, 3, 8 are done or mostly done, item 6 half done. Roughly 1.75 days saved.
 - **P1 and P2 are unaffected** — the release was pure performance and mobile ergonomics. Nothing in the design system, brand-compliance, IA or storytelling sections has moved.
 
 Revised P0, in priority order:
 
 | # | Action | Effort | Status |
 |---|---|---|---|
-| 1 | Move `{% style %}` out of `product-tile.liquid`; drop the duplicate `productSelect` id and the `[object HTMLSelectElement]` id bug; remove the dead `product.collections` loop and the Yotpo remnants | 1 d | **open — do first** |
-| 2 | Add a real `<h1>` to homepage + collection; fix the `"Products"` title | 0.5 d | open |
-| 3 | Collection grid → 2 columns on mobile | 0.25 d | open |
+| 1 | Guard the quick-add modal on `selling_plan_groups`; sprite `icon-tick`; move per-tile and bottom-nav CSS to the stylesheet; fix the duplicate `productSelect` id, the dead `product.collections` loop and the Yotpo remnants | 1 d | **done — see §0.1** |
+| 2 | `<h1>` on homepage + collection; fix the `"Products"` title | 0.5 d | **done — see §0.1** |
+| 3 | Collection grid → 2 columns on mobile | 0.25 d | **done — see §0.1** |
 | 4 | Font pass: preload 2 not 5, one family with weights, add the missing `GTWalsheimPro-Bold` face, kill the duplicate `walsheim-regular` fetch | 0.5 d | open |
 | 5 | Uninstall Rebuy properly; gate Clarity/Pixel/GA4/Klaviyo behind consent; identify `config-security.com` | 0.5 d | open |
 | 6 | Slim the sticky ATC 146 px → 64 px; bottom-anchor the cookie banner on all templates; fix the double cart-button handler race in `theme.liquid` | 0.75 d | open |
+| 7 | Extract the ~30 KB of theme JS still inlined per page (`plaay-gift` 10.3 KB, `cart-gift-prompt` 8.3 KB, `tier-bar` 6.9 KB, `bottom-nav` 4 KB) into cached asset files | 0.5 d | open (new) |
 | — | **Merge `claude/website-theme-speed-mobile-ed7f06` into `main`** | 5 min | **do before anything else** |
+
+---
+
+## 0.1 Shipped in this branch (`claude/plaay-website-audit-d8b68c`)
+
+Commit `d67c8e0` — *"perf(html): drop orphan quick-add modals, sprite the tick icon, move inline CSS out"*, 17 theme files.
+
+| Change | File(s) | Measured saving |
+|---|---|---|
+| Quick-add modal only renders when the product has selling plans | `snippets/product-quick-add-popup.liquid` | **−163 KB** PLP, **−106 KB** home |
+| `icon-tick` served from an inline SVG sprite rendered once per layout | `snippets/icon-sprite.liquid` (new), `snippets/icon-tick.liquid`, both layouts | **−42 KB** PLP, **−21 KB** home (after the modal guard removes the rest) |
+| Per-tile `<style>` block → stylesheet, as `.product_tile--grey` / `--has-hover` modifiers | `snippets/product-tile.liquid`, `assets/custom.css` | **−17 KB** PLP, **−21 KB** home |
+| Bottom-nav inline CSS → stylesheet (no Liquid in it) | `snippets/mobile-bottom-nav.liquid`, `assets/custom.css` | **−11 KB on every page** |
+| Duplicate `id="productSelect"` removed from tiles; empty `product.collections` loop removed; Yotpo divs removed; `flex justify` typo fixed | `snippets/product-tile.liquid` | correctness |
+| Visually-hidden `<h1>` on the homepage, from a new "Page heading (H1)" section setting | `sections/two-sections-hero.liquid`, `assets/custom.css` | SEO / a11y |
+| `<h1>`, product count and description on collection pages | `sections/main-collection.liquid`, `assets/custom.css` | SEO / a11y |
+| `<title>` appends the shop name unless already present, plus tag and page context | `layout/theme.liquid` | `"Products"` → `"Products – Plaay"` |
+| 2-column mobile grid switched on (the `compact_mobile_grid` setting already existed, set to `false`) | 6 collection templates + `templates/index.json` | PLP ~14,000 px → roughly half |
+
+**Projected:** homepage 835 KB → **~676 KB** (−19 %), `/collections/all` 1,042 KB → **~809 KB** (−22 %).
+
+**Verification status:** Liquid tag balance across all 230 theme files, both edited section schemas, and every template JSON were validated programmatically. Nothing was rendered in a browser — there is no Shopify CLI in this environment. **Before publishing, preview the theme and check:** a subscription product's quick-add modal still opens from a grid tile (Plaayer Pack / OG Plaayer Pack), tick icons still render inside it, product-tile hover swap and the grey-background variant still look right on desktop, and the 2-column mobile grid on `/collections/all`.
 
 ---
 
