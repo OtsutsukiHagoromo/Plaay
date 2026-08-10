@@ -1,21 +1,41 @@
-{%- assign img_sizes = img_sizes | default: '150,320,425,640,768,1024,1280,1536' | split: ',' -%}
+{%- comment -%}
+  Responsive image helper.
+
+  Params:
+    img        image object (type:'img') or asset filename (type:'asset')
+    type       'img' | 'asset'
+    lazy       true  -> loading="lazy"
+    eager      true  -> loading="eager" fetchpriority="high"
+    sizes      CSS length list, e.g. '(min-width:768px) 25vw, 50vw'. Default '100vw'.
+               Pass a real value wherever the rendered box is small - without it the
+               browser assumes full viewport width and picks an oversized candidate.
+    class, alt, width, height, clip_path, forloop_data, img_sizes
+
+  ponytail: kept the custom srcset build instead of moving to Shopify's `image_tag`
+  filter. `image_tag` cannot take the `asset_img_url` path this snippet needs for
+  type:'asset', and 104 call sites depend on the current param names. Revisit if the
+  asset-type callers ever go away.
+{%- endcomment -%}
+
+{%- assign img_sizes = img_sizes | default: '200,400,600,900,1200' | split: ',' -%}
+{%- assign sizes = sizes | default: '100vw' -%}
 {%- assign class_list = '' -%}
+{%- assign srcset = '' -%}
+{%- assign src = '' -%}
 
 {%- for img_size in img_sizes -%}
   {%- assign img_url_size = img_size | append: 'x' -%}
   {%- case type -%}
     {%- when 'asset' -%}
-    {%- assign img_url = img | asset_img_url: img_url_size -%}
+      {%- assign img_url = img | asset_img_url: img_url_size -%}
     {%- when 'img' -%}
-    {%- assign img_url = img | img_url: img_url_size -%}
+      {%- assign img_url = img | img_url: img_url_size -%}
   {%- endcase -%}
   {%- unless forloop.last -%}
-    {%- assign sizes = sizes | append: '(max-width:' | append: img_size | append: 'px) ' | append: img_size | append: 'w, ' -%}
     {%- assign srcset = srcset | append: img_url | append: ' ' | append: img_size | append: 'w, ' -%}
   {%- else -%}
-    {%- assign sizes = sizes | append: img_size | append: 'px' -%}
     {%- assign srcset = srcset | append: img_url | append: ' ' | append: img_size | append: 'w' -%}
-    {%- assign src = img_url_size -%}
+    {%- assign src = img_url -%}
   {%- endunless -%}
 {%- endfor -%}
 
@@ -23,10 +43,10 @@
   {%- assign class_list = class_list | append: ' ' | append: clip_path -%}
 {%- endif -%}
 
-{%- if lazy -%}
-  <img {% if forloop_data %}data-index="{{ forloop_data }}" {% endif %}loading="lazy" decoding="async" class="{{ class_list }} {{ class }}" srcset="{{ srcset }}" sizes="{{sizes}}" src="{{ src }}" alt="{{ alt }}"{% if height %} height="{{height}}"{% endif %}{% if width %} width="{{width}}"{% endif %} />
-{% elsif eager %}
-  <img {% if forloop_data %}data-index="{{ forloop_data }}" {% endif %}loading="eager" fetchpriority="high" decoding="async" class="{{ class_list }} {{ class }}" srcset="{{ srcset }}" sizes="{{sizes}}" src="{{ src }}" alt="{{ alt }}"{% if height %} height="{{height}}"{% endif %}{% if width %} width="{{width}}"{% endif %} />
+{%- if eager -%}
+  {%- assign loading_attr = 'eager' -%}
 {%- else -%}
-  <img {% if forloop_data %}data-index="{{ forloop_data }}" {% endif %}loading="lazy" decoding="async" class="{{ class_list }} {{ class }}" srcset="{{ srcset }}" sizes="{{sizes}}" src="{{ src }}" alt="{{ alt }}"{% if height %} height="{{height}}"{% endif %}{% if width %} width="{{width}}"{% endif %} />
+  {%- assign loading_attr = 'lazy' -%}
 {%- endif -%}
+
+<img {% if forloop_data %}data-index="{{ forloop_data }}" {% endif %}loading="{{ loading_attr }}"{% if eager %} fetchpriority="high"{% endif %} decoding="async" class="{{ class_list }} {{ class }}" srcset="{{ srcset }}" sizes="{{ sizes }}" src="{{ src }}" alt="{{ alt }}"{% if height %} height="{{ height }}"{% endif %}{% if width %} width="{{ width }}"{% endif %} />

@@ -168,16 +168,30 @@
         <li id="slide-{{ block.id }}" class="relative flex {% if block.settings.img == blank %}h-full{% endif %} {% if slides_size > 1 %} glide__slide {% endif %}">
           {% if block.settings.img != blank %}
             <div style="width: 100%" class="main-hero-full-img">
+              {%- comment -%}
+                LCP element on the homepage. Previously served `img_url: 'master'` (the
+                original upload, unresized) with no sizes, no dimensions and no priority
+                hint. First slide is eager + high priority; the rest lazy.
+              {%- endcomment -%}
               <picture>
                 {% if full_image_mobile != blank %}
                   <source
                     media="(max-width: 767px)"
-                    srcset="{{ full_image_mobile | img_url : 'master' }}"
+                    srcset="{{ full_image_mobile | image_url: width: 480 }} 480w, {{ full_image_mobile | image_url: width: 750 }} 750w, {{ full_image_mobile | image_url: width: 1000 }} 1000w"
+                    sizes="100vw"
+                    width="{{ full_image_mobile.width }}"
+                    height="{{ full_image_mobile.height }}"
                   >
                 {% endif %}
                 <img
                   style="width: 100%; height: 100%;"
-                  src="{{ block.settings.img | img_url : 'master' }}"
+                  src="{{ block.settings.img | image_url: width: 1500 }}"
+                  srcset="{{ block.settings.img | image_url: width: 750 }} 750w, {{ block.settings.img | image_url: width: 1100 }} 1100w, {{ block.settings.img | image_url: width: 1500 }} 1500w, {{ block.settings.img | image_url: width: 2000 }} 2000w"
+                  sizes="100vw"
+                  width="{{ block.settings.img.width }}"
+                  height="{{ block.settings.img.height }}"
+                  {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                  decoding="async"
                   alt="{{ block.settings.title_mobile | default: block.settings.title | escape }}"
                 >
               </picture>

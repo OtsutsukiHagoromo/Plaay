@@ -35,11 +35,11 @@
   {% if banner_image or backup_banner_image != blank %}
     <div class="blog_banner_container relative">
       {% if banner_image != blank %}
-        {% render 'img', type: 'img', img: banner_image, eager: true, class: 'object-cover h-full w-full hidden md:block' %}
-        {% render 'img', type: 'img', img: banner_image_mobile, eager: true, class: 'object-cover h-full w-full md:hidden' %}
+        {% render 'img', type: 'img', img: banner_image, eager: true, sizes: '(min-width: 768px) 100vw, 1px', class: 'object-cover h-full w-full hidden md:block' %}
+        {% render 'img', type: 'img', img: banner_image_mobile, eager: true, sizes: '(max-width: 767px) 100vw, 1px', class: 'object-cover h-full w-full md:hidden' %}
       {% else %}
-        {% render 'img', type: 'img', img: backup_banner_image, eager: true, class: 'object-cover h-full w-full hidden md:block' %}
-        {% render 'img', type: 'img', img: backup_banner_image_mobile, eager: true, class: 'object-cover h-full w-full md:hidden' %}
+        {% render 'img', type: 'img', img: backup_banner_image, eager: true, sizes: '(min-width: 768px) 100vw, 1px', class: 'object-cover h-full w-full hidden md:block' %}
+        {% render 'img', type: 'img', img: backup_banner_image_mobile, eager: true, sizes: '(max-width: 767px) 100vw, 1px', class: 'object-cover h-full w-full md:hidden' %}
       {% endif %}
       <h1 class="{% if hide_title_on_mobile %} hidden | md:block {% endif %} text-5xl absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 px-4 | md:max-w-3xl md:text-[56px]" style="color: {{ title_color }};">{{ blog.title }}</h1>
     </div>

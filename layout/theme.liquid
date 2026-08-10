@@ -10,9 +10,13 @@
       rel="preconnect"
       href="https://cdn.shopify.com"
       crossorigin>
-    <link rel="dns-prefetch" href="https://static.hotjar.com">
-    <link rel="dns-prefetch" href="https://gravity-apps.com">
-    <link rel="dns-prefetch" href="https://www.bugherd.com">
+    {%- comment -%}
+      Shopify caps resource hints at two per template, so only the origins that actually
+      serve render-path assets get one. Hotjar and BugHerd hints removed with their scripts.
+    {%- endcomment -%}
+    {% if template contains 'collection' or template contains 'search' %}
+      <link rel="dns-prefetch" href="https://gravity-apps.com">
+    {% endif %}
     <link
       rel="preload"
       href="{{ 'bundle.theme.css' | asset_url }}"
@@ -143,38 +147,16 @@
     {% if template contains 'product' %}
       <script>var check_edd_data_from_liquid = '1';</script>{% render 'edd_read_data_from_liquid' %}
     {% endif %}
-    {% unless request.design_mode %}
-      <script>
-        window.hj = window.hj || function() {
-          (window.hj.q = window.hj.q || []).push(arguments);
-        };
-        window._hjSettings = { hjid: 5268120, hjsv: 6 };
+    {%- comment -%}
+      Removed: Hotjar + BugHerd idle-loader. Hotjar was redundant with Microsoft Clarity
+      (kept, via app embed) and BugHerd is a QA sidebar that was shipping to real customers
+      on every page - it was excluded only in request.design_mode, which is the theme
+      editor, not production.
 
-        (function() {
-          function loadScript(src) {
-            var script = document.createElement('script');
-            script.src = src;
-            script.async = true;
-            document.head.appendChild(script);
-          }
-
-          function loadWhenIdle(callback) {
-            if ('requestIdleCallback' in window) {
-              window.requestIdleCallback(callback, { timeout: 2000 });
-            } else {
-              setTimeout(callback, 1500);
-            }
-          }
-
-          window.addEventListener('load', function() {
-            loadWhenIdle(function() {
-              loadScript('https://static.hotjar.com/c/hotjar-' + window._hjSettings.hjid + '.js?sv=' + window._hjSettings.hjsv);
-              loadScript('https://www.bugherd.com/sidebarv2.js?apikey=vunxekqg5ov0xe3ajrxzrw');
-            });
-          }, { once: true });
-        })();
-      </script>
-    {% endunless %}
+      If a third-party script ever needs adding back, reuse the pattern that was here:
+      window 'load' -> requestIdleCallback(fn, {timeout: 2000}) with a setTimeout fallback,
+      wrapped in {% unless request.design_mode %}.
+    {%- endcomment -%}
 
       <script>
         var headerCartButton = document.querySelector('.header__icon--cart');

@@ -4340,11 +4340,16 @@ body textarea,
 
 main p,
 main li,
-main label,
+main label {
+  font-size: var(--plaay-copy);
+}
+
+/* Form controls stay at 16px: anything smaller makes iOS Safari zoom the viewport on
+   focus. Body copy can still use --plaay-copy. */
 main input,
 main select,
 main textarea {
-  font-size: var(--plaay-copy);
+  font-size: 16px;
 }
 
 :where(main, .shopify-section, footer) h1,
@@ -4543,11 +4548,15 @@ footer content-accordion .footer-accordion__trigger > span:first-child {
 @media (max-width: 749px) {
   main p,
   main li,
-  main label,
+  main label {
+    font-size: 14px;
+  }
+
+  /* 16px floor on mobile form controls - see note above. */
   main input,
   main select,
   main textarea {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .card-product-title {
@@ -5355,6 +5364,88 @@ footer .footer-flex {
 }
 /* ─────────────────────────────────────────────────────────────────────────── */
 
+/* ==========================================================================
+   Mobile UX pass (Phase 5)
+   Tap targets, iOS focus zoom, fixed-element collisions, motion.
+   ========================================================================== */
+
+@media (max-width: 1023px) {
+  /* ---- iOS auto-zoom: any focusable control under 16px zooms the viewport ---- */
+  .plaay-search-panel__input,
+  .footer-newsletter .field input,
+  .plaay-discount-input,
+  .plaay-cart-gift-prompt__input,
+  .plaay-cart-gift-prompt__textarea,
+  .plaay-sticky-mobile__qty {
+    font-size: 16px !important;
+  }
+
+  /* ---- Tap targets: 44x44 minimum without changing the visible icon size ---- */
+  .plaay-search-icon-wrap {
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    margin: -12px;
+    padding: 12px;
+  }
+
+  .pbn-sheet__close,
+  [data-module="cookie-banner"] .plaay-cookie-banner__close,
+  cart-drawer [data-close] {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .plaay-sticky-mobile__qty-wrap {
+    height: 44px;
+  }
+
+  .plaay-sticky-mobile__qty-wrap button {
+    min-width: 44px;
+  }
+}
+
+/* ---- Cookie banner vs WhatsApp float ----
+   .plaay-wa-float sits at z-9999 and overlapped roughly 46px of the banner's Dismiss
+   button on a 375px viewport, making part of a consent control untappable. While the
+   banner is on screen it now wins the stack. */
+[data-module="cookie-banner"]:not(.hidden) {
+  z-index: 10000;
+}
+
+@media (max-width: 767px) {
+  /* Keep the banner clear of the WhatsApp bubble entirely rather than relying on stacking. */
+  [data-module="cookie-banner"]:not(.hidden) ~ .plaay-wa-float,
+  body:has([data-module="cookie-banner"]:not(.hidden)) .plaay-wa-float {
+    display: none;
+  }
+
+  /* On product pages the banner was pinned to top:16px at z-9400, sitting on top of the
+     announcement bar (z-10) and header (z-9) - a consent card over the logo and search.
+     Keep it bottom-anchored on small screens like every other template. */
+  body[class*="template-product"] [data-module="cookie-banner"] {
+    top: auto;
+    bottom: calc(60px + env(safe-area-inset-bottom) + 12px);
+  }
+}
+
+/* ---- Motion ----
+   The theme has 22+ @keyframes, several infinite, behind only 3 reduced-motion guards. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .announcement_bar__marquee,
+  .nlb-sm__frame {
+    animation: none !important;
+    will-change: auto !important;
 
 /* ==========================================================================
    Product tile
@@ -5759,12 +5850,21 @@ footer .footer-flex {
       bottom: 0; left: 0; right: 0;
       height: calc(60px + env(safe-area-inset-bottom));
       padding-bottom: env(safe-area-inset-bottom);
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: saturate(180%) blur(24px);
-      -webkit-backdrop-filter: saturate(180%) blur(24px);
+      /* Was a 24px backdrop-filter blur on an always-visible full-width fixed bar - one
+         of the most expensive things to composite on every scroll frame on mid-range
+         Android. The background is 96% opaque, so the blur was barely visible anyway.
+         Dropped to a much cheaper radius; see the @supports rule below. */
+      background: rgba(255, 255, 255, 0.98);
       border-top: 1px solid rgba(2, 29, 73, 0.08);
       z-index: 9030;
       align-items: stretch;
+    }
+    @supports ((backdrop-filter: blur(8px)) or (-webkit-backdrop-filter: blur(8px))) {
+      .pbn {
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: saturate(140%) blur(8px);
+        -webkit-backdrop-filter: saturate(140%) blur(8px);
+      }
     }
     .pbn__tab {
       flex: 1;
@@ -5821,7 +5921,11 @@ footer .footer-flex {
     .pbn__tab.is-active .pbn__label { font-family: walsheim-bold, sans-serif; }
 
     /* ── Clearance ── */
-    #main { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+    /* The footer is a sibling AFTER </main> in theme.liquid, so padding on #main never
+       cleared it and the fixed bar covered the last 60px of the footer on every page.
+       Pad the body instead, which contains both. */
+    body { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
+    #main { padding-bottom: 0; }
     #plaay-sticky-mobile { bottom: calc(60px + env(safe-area-inset-bottom)) !important; }
     .plaay-wa-float { bottom: calc(60px + env(safe-area-inset-bottom) + 12px) !important; }
 

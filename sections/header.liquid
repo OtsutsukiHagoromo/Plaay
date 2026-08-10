@@ -128,7 +128,7 @@
       <div class="w-1/3 | lg:w-1/5">
         {% if logo != blank %}
           <a href="{{ routes.root_url }}" class="text-0 flex">
-            {% render 'img', type: 'img', img: logo, lazy: true, class: 'mx-auto object-contain w-20 lg:w-24', height: 36, width: 96 %}
+            {% render 'img', type: 'img', img: logo, eager: true, sizes: '96px', img_sizes: '96,192,288', class: 'mx-auto object-contain w-20 lg:w-24', height: 36, width: 96 %}
             {{ 'action.logo' | t }}
           </a>
         {% endif %}

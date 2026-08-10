@@ -1,8 +1,14 @@
 {%- comment -%}
   Plaay - Stopmotion loop
-  Cycles 12 web-sized theme-asset frames (assets/nlb-stopmotion_01..12.jpg) as a
-  smooth loop. All frames are stacked + preloaded, so swapping is flicker-free.
-  Honours prefers-reduced-motion (shows the first frame only).
+  Cycles 12 theme-asset frames (assets/nlb-stopmotion_01..12.jpg) as a smooth loop.
+
+  Frame 1 loads with the page. Frames 2-12 carry only data-srcset and are fetched the
+  first time the block scrolls into view, then the loop starts. Previously all 12 were
+  plain <img> tags stacked at inset:0, so loading="lazy" deferred nothing and every
+  visitor downloaded 3.73 MiB of full-resolution (1400x2104) JPEG up front.
+
+  Frames are now served through asset_img_url at display size rather than raw asset_url.
+  prefers-reduced-motion shows frame 1 only and never fetches the other 11.
 
   Optional params when rendering:
     fps   - frames per second (default 10)
@@ -13,18 +19,34 @@
   assign sm_fps = fps | default: 10
   assign sm_alt = alt | default: 'Plaay new chocolate bars'
   assign sm_id = 'nlb-sm-' | append: id | default: 'nlb-sm'
+  assign sm_sizes = '(min-width: 768px) 50vw, 100vw'
 -%}
 
 <div class="nlb-sm" id="{{ sm_id }}" data-fps="{{ sm_fps }}" role="img" aria-label="{{ sm_alt | escape }}">
   {%- for i in (1..12) -%}
     {%- assign num = i | prepend: '0' | slice: -2, 2 -%}
     {%- assign fname = 'nlb-stopmotion_' | append: num | append: '.jpg' -%}
+    {%- capture frame_srcset -%}
+      {{ fname | asset_img_url: '400x' }} 400w, {{ fname | asset_img_url: '700x' }} 700w, {{ fname | asset_img_url: '1000x' }} 1000w
+    {%- endcapture -%}
     <img
       class="nlb-sm__frame{% if forloop.first %} is-active{% endif %}"
-      src="{{ fname | asset_url }}"
+      {% if forloop.first %}
+        src="{{ fname | asset_img_url: '700x' }}"
+        srcset="{{ frame_srcset }}"
+        sizes="{{ sm_sizes }}"
+        loading="eager"
+        fetchpriority="high"
+      {% else %}
+        data-srcset="{{ frame_srcset }}"
+        data-src="{{ fname | asset_img_url: '700x' }}"
+        sizes="{{ sm_sizes }}"
+        loading="lazy"
+        fetchpriority="low"
+      {% endif %}
+      width="1400"
+      height="2104"
       alt="{% if forloop.first %}{{ sm_alt | escape }}{% endif %}"
-      loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-      fetchpriority="{% if forloop.first %}high{% else %}low{% endif %}"
       decoding="async"
       aria-hidden="{% unless forloop.first %}true{% endunless %}">
   {%- endfor -%}
@@ -63,7 +85,7 @@
     if (frames.length < 2) return;
     var fps = parseFloat(el.getAttribute('data-fps')) || 10;
     var interval = 1000 / fps;
-    var idx = 0, last = 0, running = true;
+    var idx = 0, last = 0, running = false, requested = false, ready = false, pending = 0;
 
     function step(ts) {
       if (!running) return;
@@ -76,16 +98,47 @@
       requestAnimationFrame(step);
     }
 
-    // Pause when offscreen to save CPU/battery
+    function start() {
+      if (!ready || running) return;
+      running = true;
+      last = 0;
+      requestAnimationFrame(step);
+    }
+
+    // Promote data-srcset -> srcset on frames 2..n, then start once they have all
+    // settled. Starting earlier would cycle to a frame that has not decoded yet.
+    function loadFrames() {
+      if (requested) return;
+      requested = true;
+      Array.prototype.forEach.call(frames, function (img) {
+        var ss = img.getAttribute('data-srcset');
+        if (!ss) return;
+        pending++;
+        function settle() {
+          img.removeEventListener('load', settle);
+          img.removeEventListener('error', settle);
+          if (--pending === 0) { ready = true; start(); }
+        }
+        img.addEventListener('load', settle);
+        img.addEventListener('error', settle);
+        img.srcset = ss;
+        img.src = img.getAttribute('data-src') || '';
+        img.removeAttribute('data-srcset');
+        img.removeAttribute('data-src');
+      });
+      if (pending === 0) { ready = true; start(); }
+    }
+
     if ('IntersectionObserver' in window) {
       var io = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
-          if (e.isIntersecting && !running) { running = true; last = 0; requestAnimationFrame(step); }
-          else if (!e.isIntersecting) { running = false; }
+          if (e.isIntersecting) { loadFrames(); start(); }
+          else { running = false; }
         });
       }, { threshold: 0.05 });
       io.observe(el);
+    } else {
+      loadFrames();
     }
-    requestAnimationFrame(step);
   })();
 </script>

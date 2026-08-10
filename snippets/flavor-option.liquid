@@ -23,12 +23,12 @@
           {%- for pro in flavour_products -%}
             {%- if product.id == pro.id -%}
               {%- assign flavour_matched = true -%}
-              <img src="{{ pro.featured_image | image_url: width: 80 }}" alt="{{ pro.title }}" class="plaay-imgdrop__thumb">
+              <img src="{{ pro.featured_image | image_url: width: 80 }}" alt="{{ pro.title }}" class="plaay-imgdrop__thumb" loading="lazy" decoding="async" width="80" height="80">
               <span class="plaay-imgdrop__label">{{ pro.title }}</span>
             {%- endif -%}
           {%- endfor -%}
           {%- unless flavour_matched -%}
-            <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title }}" class="plaay-imgdrop__thumb">
+            <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title }}" class="plaay-imgdrop__thumb" loading="lazy" decoding="async" width="80" height="80">
             <span class="plaay-imgdrop__label">{{ product.title }}</span>
           {%- endunless -%}
           <svg class="plaay-imgdrop__chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -36,7 +36,7 @@
         <div class="plaay-imgdrop__panel" role="listbox">
           {%- for pro in flavour_products -%}
             <a href="{{ pro.url }}" class="plaay-imgdrop__item {% if product.id == pro.id %}plaay-imgdrop__item--active{% endif %}" role="option" {% if product.id == pro.id %}aria-selected="true"{% else %}aria-selected="false"{% endif %}>
-              <img src="{{ pro.featured_image | image_url: width: 80 }}" alt="{{ pro.title }}" class="plaay-imgdrop__item-img">
+              <img src="{{ pro.featured_image | image_url: width: 80 }}" alt="{{ pro.title }}" class="plaay-imgdrop__item-img" loading="lazy" decoding="async" width="80" height="80">
               <span class="plaay-imgdrop__item-name">{{ pro.title }}</span>
               {% if product.id == pro.id %}
                 <svg class="plaay-imgdrop__check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -50,7 +50,7 @@
         {% for pro in product.metafields.dev.choose_your_flavour.value %}
           <div class="product-atc-bar__other-content {% if product.id == pro.id %}active{% endif %}">
             <a href="{{ pro.url }}">
-              <img class="js" src="{{ pro.featured_image | img_url: '' }}" data-aspectratio="" data-sizes="auto" alt="{{ pro.title }}">
+              <img src="{{ pro.featured_image | image_url: width: 600 }}" srcset="{{ pro.featured_image | image_url: width: 300 }} 300w, {{ pro.featured_image | image_url: width: 600 }} 600w" sizes="(min-width: 768px) 400px, 70vw" loading="lazy" decoding="async" alt="{{ pro.title }}">
               <p class="product-bar-title">{{ pro.title }}</p>
             </a>
           </div>
@@ -75,12 +75,12 @@
           {%- for prox in size_products -%}
             {%- if product.id == prox.id -%}
               {%- assign size_matched = true -%}
-              <img src="{{ prox.featured_image | image_url: width: 80 }}" alt="{{ prox.title }}" class="plaay-imgdrop__thumb">
+              <img src="{{ prox.featured_image | image_url: width: 80 }}" alt="{{ prox.title }}" class="plaay-imgdrop__thumb" loading="lazy" decoding="async" width="80" height="80">
               <span class="plaay-imgdrop__label">{{ prox.title }}</span>
             {%- endif -%}
           {%- endfor -%}
           {%- unless size_matched -%}
-            <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title }}" class="plaay-imgdrop__thumb">
+            <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title }}" class="plaay-imgdrop__thumb" loading="lazy" decoding="async" width="80" height="80">
             <span class="plaay-imgdrop__label">{{ product.title }}</span>
           {%- endunless -%}
           <svg class="plaay-imgdrop__chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -88,7 +88,7 @@
         <div class="plaay-imgdrop__panel" role="listbox">
           {%- for prox in size_products -%}
             <a href="{{ prox.url }}" class="plaay-imgdrop__item {% if product.id == prox.id %}plaay-imgdrop__item--active{% endif %}" role="option" {% if product.id == prox.id %}aria-selected="true"{% else %}aria-selected="false"{% endif %}>
-              <img src="{{ prox.featured_image | image_url: width: 80 }}" alt="{{ prox.title }}" class="plaay-imgdrop__item-img">
+              <img src="{{ prox.featured_image | image_url: width: 80 }}" alt="{{ prox.title }}" class="plaay-imgdrop__item-img" loading="lazy" decoding="async" width="80" height="80">
               <span class="plaay-imgdrop__item-name">{{ prox.title }}</span>
               {% if product.id == prox.id %}
                 <svg class="plaay-imgdrop__check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -102,7 +102,7 @@
         {% for prox in product.metafields.custom.choose_your_size.value %}
           <div class="product-atc-bar__other-content {% if product.id == prox.id %}active{% endif %}">
             <a href="{{ prox.url }}">
-              <img class="js" src="{{ prox.featured_image | img_url: '' }}" data-aspectratio="" data-sizes="auto" alt="{{ prox.title }}">
+              <img src="{{ prox.featured_image | image_url: width: 600 }}" srcset="{{ prox.featured_image | image_url: width: 300 }} 300w, {{ prox.featured_image | image_url: width: 600 }} 600w" sizes="(min-width: 768px) 400px, 70vw" loading="lazy" decoding="async" alt="{{ prox.title }}">
               <p class="product-bar-title">{{ prox.title }}</p>
             </a>
           </div>
@@ -127,12 +127,12 @@
           {%- for proy in variety_products -%}
             {%- if product.id == proy.id -%}
               {%- assign variety_matched = true -%}
-              <img src="{{ proy.featured_image | image_url: width: 80 }}" alt="{{ proy.title }}" class="plaay-imgdrop__thumb">
+              <img src="{{ proy.featured_image | image_url: width: 80 }}" alt="{{ proy.title }}" class="plaay-imgdrop__thumb" loading="lazy" decoding="async" width="80" height="80">
               <span class="plaay-imgdrop__label">{{ proy.title }}</span>
             {%- endif -%}
           {%- endfor -%}
           {%- unless variety_matched -%}
-            <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title }}" class="plaay-imgdrop__thumb">
+            <img src="{{ product.featured_image | image_url: width: 80 }}" alt="{{ product.title }}" class="plaay-imgdrop__thumb" loading="lazy" decoding="async" width="80" height="80">
             <span class="plaay-imgdrop__label">{{ product.title }}</span>
           {%- endunless -%}
           <svg class="plaay-imgdrop__chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -140,7 +140,7 @@
         <div class="plaay-imgdrop__panel" role="listbox">
           {%- for proy in variety_products -%}
             <a href="{{ proy.url }}" class="plaay-imgdrop__item {% if product.id == proy.id %}plaay-imgdrop__item--active{% endif %}" role="option" {% if product.id == proy.id %}aria-selected="true"{% else %}aria-selected="false"{% endif %}>
-              <img src="{{ proy.featured_image | image_url: width: 80 }}" alt="{{ proy.title }}" class="plaay-imgdrop__item-img">
+              <img src="{{ proy.featured_image | image_url: width: 80 }}" alt="{{ proy.title }}" class="plaay-imgdrop__item-img" loading="lazy" decoding="async" width="80" height="80">
               <span class="plaay-imgdrop__item-name">{{ proy.title }}</span>
               {% if product.id == proy.id %}
                 <svg class="plaay-imgdrop__check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -154,7 +154,7 @@
         {% for proy in product.metafields.custom.choose_your_variety.value %}
           <div class="product-atc-bar__other-content {% if product.id == proy.id %}active{% endif %}">
             <a href="{{ proy.url }}">
-              <img class="js" src="{{ proy.featured_image | img_url: '' }}" data-aspectratio="" data-sizes="auto" alt="{{ proy.title }}">
+              <img src="{{ proy.featured_image | image_url: width: 600 }}" srcset="{{ proy.featured_image | image_url: width: 300 }} 300w, {{ proy.featured_image | image_url: width: 600 }} 600w" sizes="(min-width: 768px) 400px, 70vw" loading="lazy" decoding="async" alt="{{ proy.title }}">
               <p class="product-bar-title">{{ proy.title }}</p>
             </a>
           </div>

@@ -1,39 +1,29 @@
-<style>
-  @font-face {
-      font-family: "walsheim-black";
-      src: url({{ 'walsheim-black.static.woff2' | asset_url }});
-      font-display: swap;
-  }
-  @font-face {
-    font-family: "walsheim-bold";
-    src: url({{ 'walsheim-bold.static.woff2' | asset_url }});
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "walsheim-regular";
-    src: url({{ 'walsheim-regular.static.woff2' | asset_url }});
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "walsheim-medium";
-    src: url({{ 'walsheim-medium.static.woff2' | asset_url }});
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "walsheim-regular-new";
-    src: url({{ 'GTWalsheimPro-Regular.static.woff2' | asset_url }});
-    font-display: swap;
-  }
-</style>
-<link rel="preload" href="{{ 'walsheim-black.static.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="{{ 'walsheim-bold.static.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="{{ 'walsheim-medium.static.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="{{ 'walsheim-regular.static.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin="anonymous">
-<link rel="preload" href="{{ 'GTWalsheimPro-Regular.static.woff2' | asset_url }}" as="font" type="font/woff2" crossorigin="anonymous">
+{%- comment -%}
+  Font preloads.
 
-{% comment %}
-<link rel="preload" href="{{ 'walsheim-black.woff' | asset_url }}" as="font" crossorigin="anonymous">
-<link rel="preload" href="{{ 'walsheim-bold.woff' | asset_url }}" as="font" crossorigin="anonymous">
-<link rel="preload" href="{{ 'walsheim-medium.woff' | asset_url }}" as="font" crossorigin="anonymous">
-<link rel="preload" href="{{ 'walsheim-regular.woff' | asset_url }}" as="font" crossorigin="anonymous">
-{% endcomment %}
+  The @font-face rules that used to live here were an exact duplicate of the ones at the
+  top of assets/bundle.theme.css - same five families, same five files, same
+  font-display: swap. The only difference was the URL: this file used `asset_url`, which
+  appends ?v=<hash>, while the bundle uses a relative url(). Two URLs for one file meant
+  the browser fetched walsheim-regular.static.woff2 twice on every page load. The bundle
+  now owns the declarations.
+
+  Preloads are stripped of the ?v= query for the same reason: a preload only satisfies a
+  later request when the URL matches exactly, and the bundle asks for the unversioned
+  path. `asset_url | split: '?' | first` produces the identical URL.
+
+  Only the two families used for body copy and headings are preloaded. walsheim-medium,
+  walsheim-black and GTWalsheimPro-Regular are used by a few dozen elements each, load
+  fine on demand with font-display: swap, and were previously competing with the LCP
+  image for bandwidth - five preloads is roughly 205 KB on the critical path.
+
+  ponytail: the right end state is one family with four font-weight descriptors instead
+  of five family names, but `font-walsheim-bold` and friends are Tailwind classes used
+  across ~1,300 elements in the theme. That rename is a P1 job, not a font-loading fix.
+{%- endcomment -%}
+
+{%- assign font_regular = 'walsheim-regular.static.woff2' | asset_url | split: '?' | first -%}
+{%- assign font_bold = 'walsheim-bold.static.woff2' | asset_url | split: '?' | first -%}
+
+<link rel="preload" href="{{ font_regular }}" as="font" type="font/woff2" crossorigin="anonymous">
+<link rel="preload" href="{{ font_bold }}" as="font" type="font/woff2" crossorigin="anonymous">
