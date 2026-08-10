@@ -174,6 +174,41 @@ The audit branch was sitting on `main`, which does not have the speed release, s
 6. The mobile sticky ATC on a PDP: one row, quantity stepper and Add to bag both tappable, price legible.
 7. Cookie banner appears at the bottom on a product page, not over the header.
 
+## 0.15 P1 — commit `dcc457a`
+
+79 files, +1,129 / −5,668.
+
+**The brand palette is now real.** A `:root` token block in `custom.css` carries the guidelines values, and 315 hex literals plus 285 `rgba()` values across `custom.css` and 60 Liquid files were migrated onto it:
+
+| | Was | Now |
+|---|---|---|
+| Yellow | `#F9C61D` (+ `#F5C320`, `#F7C744`) | **`#FFB600`** (+ `#FFB81C` for the secondary) |
+| Navy | `#021D49` | **`#081D48`** |
+| Purple | `#813D87` (+ `#9F2BB8`) | **`#A028B4`** |
+| Muted text | `rgba(2,29,73,.66)` / `#9E9E9E` | `rgba(8,29,72,.72)` — clears 4.5:1 |
+| Flavour/SKU palette | unused | 10 tokens defined, ready for PDP + category theming |
+| Radii | 9 values in use | 3 tokens (`--plaay-r-sm/md/pill`) + the existing card radius |
+| Motion | none | 4 durations + 2 curves |
+
+`bundle.theme.css` is a webpack artifact from a source repo that isn't here, so its Tailwind colour definitions can't be regenerated. `custom.css` loads after it at equal specificity, so the six brand utilities (`bg-yellow`, `text-dark-blue`, …) are redefined there — no `!important`, no edits to the artifact. The overrides keep feeding `--tw-bg-opacity` / `--tw-text-opacity`, because `text-dark-blue` is combined with `text-opacity-50` in the account and contact templates. The 74 hexes inside SVG `fill`/`stroke` attributes got the new literal rather than a `var()` — valid CSS either way, but not worth betting a page render on.
+
+**Collection sort and filters** are in, without the theme's `facet-filters-form` module. Shopify already gives every filter value a `url_to_add` / `url_to_remove`, so plain links do the whole job, work with JS off and are crawlable; the only script is six lines that rewrite `sort_by` on the current URL so active filters survive a sort. Filters render only when Search & Discovery is configured — otherwise nothing is output, so there is no empty-bar regression.
+
+**Accessibility:** skip link, a visible focus ring on every interactive element (the theme relied on the UA default, which resets in `bundle.theme.css` remove), 44 px minimum hit areas on carousel arrows / wishlist heart / header + footer link lists, and a minimum type size — production had 8 px, 9.5 px, 10 px and 11 px text.
+
+**19 dead sections deleted** (~250 KB of Liquid). Two were kept deliberately: `main-product.liquid`, because there is no `templates/product.json` and a missing default product section is not something to find out about in production; and `shogun-*`, which the Shogun app may inject without a template reference.
+
+### Still open in P1
+
+| Item | Status |
+|---|---|
+| Merge the near-duplicate PDP sections | Deferred. Two of the four were deleted as dead; `bars-main-product` (1,201 lines) and `truffle-main-product` (1,385) have drifted 1,102 lines apart. Merging them is a rewrite that needs a preview environment, not a blind edit. |
+| Remove the legacy `.mobile_menu` | **Blocked.** `bundle.main-navigation.js` calls `addEventListener` on `.hamburger_icon` and `.mobile_menu_cross` with no null check, so deleting the markup throws and takes the scroll-hiding header and the search toggle with it. Needs the webpack source, which is not in this repo. |
+| Conditional library loading | **Correction to §6.1:** the 510 KB GSAP + ScrollMagic bundle is *code-split and does not load on the homepage* — it only loads on the About page. anime.js (44 KB) and canvas-confetti (19 KB) do load everywhere, and `glide.static.min.js` is still unconditional in `theme.liquid`. All three are webpack artifacts; changing what they chunk into needs the source repo. |
+| Type scale (16 sizes → 8), breakpoints (21 → 4) | Tokens are defined; the migration of ~1,300 Tailwind class usages is a separate mechanical pass. |
+
+---
+
 ## 0.2 Not a theme change
 
 Two P0 items cannot be closed in code, and should not be faked:
@@ -458,7 +493,7 @@ The site is running the exact "product conversation" the brand book instructs th
 |---|---|
 | **22 unused sections** | `test`, `test-animation-scroll`, `fudge-example`, `shogun-above/below/helper`, `play_vs_them`, `media_text`, `why-plaay`, `choose-flavour-sec`, `cu-faq`, `pdp-ingredients`, `plaay-frequently-bought`, `featured_products_v2`, `custom-featured-product-v2`, `product_upsell_media`, `review_gif_video_product`, `byob-custom-messages`, `gifting-main-product`, `main-index`, `main-page-contact`, `main-product` |
 | **4 near-duplicate PDP templates** | `bars-main-product` (1,201 lines), `truffle-main-product` (1,385), `main-product` (849), `gifting-main-product` (943) — 4,378 lines where one parameterised section would do. A diff of bars vs truffle shows 1,102 differing lines, i.e. they have already drifted apart. |
-| **Animation libraries loaded but barely used** | GSAP + ScrollTrigger + ScrollMagic bundle **510 KB** (used only by the About page's `for-the-geeks-vertical`), anime.js 44 KB, Waypoints 10 KB, canvas-confetti 19 KB, Glide 28 KB (loaded on **every** page via `theme.liquid:128` whether or not a slider exists) |
+| **Animation libraries loaded but barely used** | GSAP + ScrollTrigger + ScrollMagic bundle **510 KB** — *correction: this one is code-split and only loads on the About page, not sitewide.* anime.js 44 KB and canvas-confetti 19 KB **do** load everywhere, and Glide 28 KB is loaded on **every** page via `theme.liquid` whether or not a slider exists. Waypoints (10 KB) has since been deleted. |
 | **Rebuy** | Smart Cart destroyed at runtime (`theme.liquid:224–229`) but the app still ships 19 requests and 6 stylesheets |
 | **Yotpo remnants** | `snippets/product-tile.liquid:223–230` still emits Yotpo review divs; the store now uses Judge.me |
 | **Hotjar + BugHerd** | `theme.liquid:135–166` — **BugHerd is a QA annotation tool and should never run on production** |
