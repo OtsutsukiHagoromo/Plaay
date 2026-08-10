@@ -37,7 +37,7 @@
     left: calc(16.66% + 12px);
     right: calc(16.66% + 12px);
     height: 2px;
-    background-color: rgba(249, 198, 29, 0.3);
+    background-color: rgb(var(--plaay-yellow-rgb) / 0.3);
     z-index: 0;
   }
 
@@ -55,8 +55,8 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background-color: #F9C61D;
-    color: #021D49;
+    background-color: var(--plaay-yellow);
+    color: var(--plaay-navy);
     font-family: var(--font-walsheim-black, 'GT Walsheim', sans-serif);
     font-size: 22px;
     display: flex;
@@ -72,7 +72,7 @@
     width: 60px;
     height: 60px;
     margin-bottom: 20px;
-    color: #F9C61D;
+    color: var(--plaay-yellow);
   }
 
   .byob-tiers__step-heading {
@@ -133,48 +133,48 @@
 {%- capture svg_gift_box -%}
 <svg class="byob-tiers__step-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <!-- Box body -->
-  <rect x="8" y="26" width="44" height="26" rx="3" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <rect x="8" y="26" width="44" height="26" rx="3" stroke="#FFB600" stroke-width="2.5" fill="none"/>
   <!-- Lid -->
-  <rect x="6" y="18" width="48" height="10" rx="2" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <rect x="6" y="18" width="48" height="10" rx="2" stroke="#FFB600" stroke-width="2.5" fill="none"/>
   <!-- Ribbon vertical -->
-  <line x1="30" y1="18" x2="30" y2="52" stroke="#F9C61D" stroke-width="2.5"/>
+  <line x1="30" y1="18" x2="30" y2="52" stroke="#FFB600" stroke-width="2.5"/>
   <!-- Ribbon horizontal (on lid only) -->
-  <line x1="6" y1="23" x2="54" y2="23" stroke="#F9C61D" stroke-width="2.5"/>
+  <line x1="6" y1="23" x2="54" y2="23" stroke="#FFB600" stroke-width="2.5"/>
   <!-- Bow left -->
-  <path d="M30 18 C22 8 12 10 18 18" stroke="#F9C61D" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M30 18 C22 8 12 10 18 18" stroke="#FFB600" stroke-width="2.5" stroke-linecap="round" fill="none"/>
   <!-- Bow right -->
-  <path d="M30 18 C38 8 48 10 42 18" stroke="#F9C61D" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M30 18 C38 8 48 10 42 18" stroke="#FFB600" stroke-width="2.5" stroke-linecap="round" fill="none"/>
 </svg>
 {%- endcapture -%}
 
 {%- capture svg_chocolate_bar -%}
 <svg class="byob-tiers__step-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <!-- Outer wrapper / wrapper top -->
-  <rect x="10" y="14" width="40" height="32" rx="4" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <rect x="10" y="14" width="40" height="32" rx="4" stroke="#FFB600" stroke-width="2.5" fill="none"/>
   <!-- Grid lines horizontal -->
-  <line x1="10" y1="25" x2="50" y2="25" stroke="#F9C61D" stroke-width="2"/>
-  <line x1="10" y1="35" x2="50" y2="35" stroke="#F9C61D" stroke-width="2"/>
+  <line x1="10" y1="25" x2="50" y2="25" stroke="#FFB600" stroke-width="2"/>
+  <line x1="10" y1="35" x2="50" y2="35" stroke="#FFB600" stroke-width="2"/>
   <!-- Grid lines vertical -->
-  <line x1="23" y1="14" x2="23" y2="46" stroke="#F9C61D" stroke-width="2"/>
-  <line x1="37" y1="14" x2="37" y2="46" stroke="#F9C61D" stroke-width="2"/>
+  <line x1="23" y1="14" x2="23" y2="46" stroke="#FFB600" stroke-width="2"/>
+  <line x1="37" y1="14" x2="37" y2="46" stroke="#FFB600" stroke-width="2"/>
   <!-- Wrapper fold hint -->
-  <path d="M10 18 Q30 12 50 18" stroke="#F9C61D" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.5"/>
+  <path d="M10 18 Q30 12 50 18" stroke="#FFB600" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.5"/>
 </svg>
 {%- endcapture -%}
 
 {%- capture svg_truck -%}
 <svg class="byob-tiers__step-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <!-- Cargo box -->
-  <rect x="4" y="18" width="32" height="22" rx="2" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <rect x="4" y="18" width="32" height="22" rx="2" stroke="#FFB600" stroke-width="2.5" fill="none"/>
   <!-- Cab -->
-  <path d="M36 28h10l6 8v4H36V28z" stroke="#F9C61D" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+  <path d="M36 28h10l6 8v4H36V28z" stroke="#FFB600" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
   <!-- Wheels -->
-  <circle cx="14" cy="42" r="5" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
-  <circle cx="46" cy="42" r="5" stroke="#F9C61D" stroke-width="2.5" fill="none"/>
+  <circle cx="14" cy="42" r="5" stroke="#FFB600" stroke-width="2.5" fill="none"/>
+  <circle cx="46" cy="42" r="5" stroke="#FFB600" stroke-width="2.5" fill="none"/>
   <!-- Ground line -->
-  <line x1="2" y1="47" x2="58" y2="47" stroke="#F9C61D" stroke-width="1.5" opacity="0.35"/>
+  <line x1="2" y1="47" x2="58" y2="47" stroke="#FFB600" stroke-width="1.5" opacity="0.35"/>
   <!-- Cab window -->
-  <path d="M38 29h6l4 6H38V29z" stroke="#F9C61D" stroke-width="1.5" stroke-linejoin="round" fill="none" opacity="0.6"/>
+  <path d="M38 29h6l4 6H38V29z" stroke="#FFB600" stroke-width="1.5" stroke-linejoin="round" fill="none" opacity="0.6"/>
 </svg>
 {%- endcapture -%}
 
@@ -224,7 +224,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background colour",
-      "default": "#021D49"
+      "default": "var(--plaay-navy)"
     },
     {
       "type": "color",

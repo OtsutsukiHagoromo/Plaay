@@ -90,6 +90,59 @@
             <div class="plaay-coll-head__desc text-dark-blue">{{ collection.description }}</div>
           {% endif %}
         </div>
+
+        {%- comment -%}
+          Sort and filters. The collection page shipped with neither, so 27 products could
+          only be read in the order the collection happened to be in.
+
+          This deliberately does not use the theme's facet-filters-form module. Shopify
+          already gives every filter value a url_to_add and url_to_remove, so plain links
+          do the whole job, work without JavaScript, and are crawlable. The only script is
+          six lines to make the sort select navigate on change; without JS the noscript
+          button submits the same form.
+
+          Filters only render when the store has them configured in Search & Discovery -
+          collection.filters is empty otherwise, and nothing is output.
+        {%- endcomment -%}
+        {%- if collection.filters.size > 0 or collection.sort_options.size > 0 -%}
+          <div class="plaay-coll-bar">
+            {%- if collection.filters.size > 0 -%}
+              <div class="plaay-coll-bar__filters">
+                {%- assign active_count = 0 -%}
+                {%- for filter in collection.filters -%}
+                  {%- assign active_count = active_count | plus: filter.active_values.size -%}
+                  {%- for value in filter.values -%}
+                    {%- if value.count > 0 or value.active -%}
+                      <a
+                        href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}"
+                        class="plaay-chip{% if value.active %} plaay-chip--active{% endif %}"
+                        {% if value.active %}aria-current="true"{% endif %}>
+                        {{ value.label | escape }}
+                        <span class="plaay-chip__count">{{ value.count }}</span>
+                      </a>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endfor -%}
+                {%- if active_count > 0 -%}
+                  <a href="{{ collection.url }}" class="plaay-chip plaay-chip--clear">Clear all</a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+
+            {%- if collection.sort_options.size > 0 -%}
+              <form class="plaay-coll-bar__sort" method="get" action="{{ collection.url }}" data-plaay-sort>
+                <label class="plaay-coll-bar__sort-label" for="plaay-sort-by">Sort</label>
+                <select id="plaay-sort-by" name="sort_by" class="plaay-coll-bar__sort-select">
+                  {%- assign current_sort = collection.sort_by | default: collection.default_sort_by -%}
+                  {%- for option in collection.sort_options -%}
+                    <option value="{{ option.value | escape }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name | escape }}</option>
+                  {%- endfor -%}
+                </select>
+                <noscript><button type="submit" class="plaay-chip">Apply</button></noscript>
+              </form>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
         {% comment %} collection products {% endcomment %}
         <div class="" id="ProductGridContainer">
           {% paginate collection.products by 50 %}
@@ -179,7 +232,7 @@
         "type": "color",
         "id": "usp_bg",
         "label": "USP bar background",
-        "default": "#021D49"
+        "default": "var(--plaay-navy)"
       },
       {
         "type": "text",

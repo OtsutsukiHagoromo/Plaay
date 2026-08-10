@@ -6,7 +6,7 @@
 {% style %}
   .ship-hero {
     background-color: {{ section.settings.hero_bg }};
-    color: #021D49;
+    color: var(--plaay-navy);
   }
   .ship-steps-bg { background-color: {{ section.settings.steps_bg }}; }
   .ship-highlight-grid {
@@ -24,7 +24,7 @@
   }
   .ship-highlight-card {
     background: #fff;
-    border: 2px solid #F9C61D;
+    border: 2px solid var(--plaay-yellow);
     border-radius: 16px;
     padding: 20px 14px 18px;
     text-align: center;
@@ -40,13 +40,13 @@
   }
   .ship-highlight-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(2,29,73,0.10);
+    box-shadow: 0 12px 32px rgb(var(--plaay-navy-rgb) / 0.10);
   }
   .ship-highlight-icon {
     width: 48px;
     height: 48px;
     border-radius: 50%;
-    background: #F9C61D;
+    background: var(--plaay-yellow);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,8 +73,8 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: #021D49;
-    color: #F9C61D;
+    background: var(--plaay-navy);
+    color: var(--plaay-yellow);
     font-family: walsheim-bold, sans-serif;
     font-size: 26px;
     display: flex;
@@ -84,7 +84,7 @@
   }
   .ship-step-arrow {
     display: none;
-    color: #021D49;
+    color: var(--plaay-navy);
     font-size: 28px;
     font-family: walsheim-bold, sans-serif;
     align-self: flex-start;
@@ -96,7 +96,7 @@
     .ship-step-arrow { display: block; }
   }
   .ship-zones-card {
-    border: 2px solid #F9C61D;
+    border: 2px solid var(--plaay-yellow);
     border-radius: 20px;
     overflow: hidden;
     max-width: 800px;
@@ -104,7 +104,7 @@
   }
   .ship-zones-header {
     display: flex;
-    background: #021D49;
+    background: var(--plaay-navy);
     padding: 14px 28px;
   }
   .ship-zones-header span {
@@ -118,21 +118,21 @@
     display: flex;
     align-items: center;
     padding: 18px 28px;
-    border-bottom: 1px solid rgba(2,29,73,0.08);
+    border-bottom: 1px solid rgb(var(--plaay-navy-rgb) / 0.08);
     transition: background 0.15s;
   }
   .ship-zone-row:last-child { border-bottom: none; }
   .ship-zone-row:hover { background: #fffbee; }
   .ship-zone-badge {
     display: inline-block;
-    background: #F9C61D;
-    color: #021D49;
+    background: var(--plaay-yellow);
+    color: var(--plaay-navy);
     border-radius: 999px;
     padding: 3px 12px;
     font-family: walsheim-bold, sans-serif;
     font-size: 12px;
   }
-  .ship-faq-item { border-bottom: 1.5px solid rgba(2,29,73,0.15); }
+  .ship-faq-item { border-bottom: 1.5px solid rgb(var(--plaay-navy-rgb) / 0.15); }
   .ship-faq-trigger {
     width: 100%;
     background: none;
@@ -145,7 +145,7 @@
     text-align: left;
     font-family: walsheim-bold, sans-serif;
     font-size: 15px;
-    color: #021D49;
+    color: var(--plaay-navy);
     gap: 16px;
   }
   .ship-faq-icon {
@@ -153,7 +153,7 @@
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    background: #021D49;
+    background: var(--plaay-navy);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -167,14 +167,14 @@
     font-family: walsheim, sans-serif;
     font-size: 14px;
     line-height: 1.75;
-    color: rgba(2,29,73,0.78);
+    color: rgb(var(--plaay-navy-rgb) / 0.78);
   }
   .ship-faq-body.open { max-height: 600px; }
   .ship-faq-body-inner { padding-bottom: 20px; }
   .ship-faq-body-inner p { margin: 0 0 8px; }
   .ship-faq-body-inner p:last-child { margin-bottom: 0; }
   .ship-cta-box {
-    background: #021D49;
+    background: var(--plaay-navy);
     border-radius: 24px;
     padding: 52px 40px;
     text-align: center;
@@ -183,8 +183,8 @@
   }
   .ship-cta-btn {
     display: inline-block;
-    background: #F9C61D;
-    color: #021D49;
+    background: var(--plaay-yellow);
+    color: var(--plaay-navy);
     border-radius: 999px;
     padding: 14px 40px;
     font-family: walsheim-bold, sans-serif;
@@ -217,7 +217,7 @@
     margin-top: 16px;
     font-family: walsheim, sans-serif;
     font-size: 13px;
-    color: rgba(2,29,73,0.55);
+    color: rgb(var(--plaay-navy-rgb) / 0.55);
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
@@ -250,21 +250,21 @@
             <div class="ship-highlight-icon">
               {% case block.settings.icon %}
                 {% when 'truck' %}
-                  <div style="width:28px;height:28px;color:#021D49;">{% render 'icon-delivery-van' %}</div>
+                  <div style="width:28px;height:28px;color:var(--plaay-navy);">{% render 'icon-delivery-van' %}</div>
                 {% when 'check' %}
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="#021D49" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 6L9 17L4 12" stroke="#081D48" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 {% when 'thermometer' %}
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" stroke="#021D49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z" stroke="#081D48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 {% when 'clock' %}
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#021D49" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#021D49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#081D48" stroke-width="2"/><path d="M12 6v6l4 2" stroke="#081D48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 {% when 'globe' %}
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#021D49" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="#021D49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#081D48" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="#081D48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 {% when 'star' %}
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="#021D49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="#081D48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
                 {% when 'tag' %}
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="#021D49" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="7" y1="7" x2="7.01" y2="7" stroke="#021D49" stroke-width="2.5" stroke-linecap="round"/></svg>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="#081D48" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="7" y1="7" x2="7.01" y2="7" stroke="#081D48" stroke-width="2.5" stroke-linecap="round"/></svg>
                 {% else %}
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#021D49" stroke-width="2"/><path d="M12 8v4l3 3" stroke="#021D49" stroke-width="2" stroke-linecap="round"/></svg>
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" stroke="#081D48" stroke-width="2"/><path d="M12 8v4l3 3" stroke="#081D48" stroke-width="2" stroke-linecap="round"/></svg>
               {% endcase %}
             </div>
             <h3 class="font-walsheim-bold text-dark-blue" style="font-size: 17px; margin-bottom: 8px;">{{ block.settings.title }}</h3>
@@ -322,14 +322,14 @@
           </div>
           {% for block in zone_blocks %}
             <div class="ship-zone-row" {{ block.shopify_attributes }}>
-              <span style="flex: 2; font-family: walsheim-bold, sans-serif; font-size: 15px; color: #021D49;">{{ block.settings.region }}</span>
-              <span style="flex: 1.5; font-family: walsheim, sans-serif; font-size: 14px; color: rgba(2,29,73,0.7);">{{ block.settings.delivery_time }}</span>
+              <span style="flex: 2; font-family: walsheim-bold, sans-serif; font-size: 15px; color: var(--plaay-navy);">{{ block.settings.region }}</span>
+              <span style="flex: 1.5; font-family: walsheim, sans-serif; font-size: 14px; color: rgb(var(--plaay-navy-rgb) / 0.7);">{{ block.settings.delivery_time }}</span>
               <span style="flex: 2; display: flex; flex-direction: column; gap: 4px;">
                 {% if block.settings.free_label != blank %}
                   <span class="ship-zone-badge">{{ block.settings.free_label }}</span>
                 {% endif %}
                 {% if block.settings.fee_note != blank %}
-                  <span style="font-family: walsheim, sans-serif; font-size: 13px; color: rgba(2,29,73,0.55);">{{ block.settings.fee_note }}</span>
+                  <span style="font-family: walsheim, sans-serif; font-size: 13px; color: rgb(var(--plaay-navy-rgb) / 0.55);">{{ block.settings.fee_note }}</span>
                 {% endif %}
               </span>
             </div>
@@ -345,7 +345,7 @@
 
 {%- comment -%} SHIPPING FAQs {%- endcomment -%}
 {% if faq_blocks.size > 0 %}
-  <div style="background-color: #F9C61D;">
+  <div style="background-color: var(--plaay-yellow);">
     <div class="container py-14 md:py-16">
       <div style="max-width: 760px; margin: 0 auto;">
         {% if section.settings.faq_heading != blank %}
@@ -357,7 +357,7 @@
               <span>{{ block.settings.question }}</span>
               <span class="ship-faq-icon" aria-hidden="true">
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                  <path d="M5 1v8M1 5h8" stroke="#F9C61D" stroke-width="1.8" stroke-linecap="round"/>
+                  <path d="M5 1v8M1 5h8" stroke="#FFB600" stroke-width="1.8" stroke-linecap="round"/>
                 </svg>
               </span>
             </button>
@@ -417,7 +417,7 @@
       "type": "color",
       "id": "hero_bg",
       "label": "Hero background",
-      "default": "#F9C61D"
+      "default": "var(--plaay-yellow)"
     },
     {
       "type": "text",

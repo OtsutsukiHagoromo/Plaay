@@ -38,7 +38,7 @@
 
   assign tagline = mf.aplus_hero_tagline
   assign float_badge = mf.aplus_hero_float_badge
-  assign accent = mf.aplus_theme_color | default: '#F9C61D'
+  assign accent = mf.aplus_theme_color | default: 'var(--plaay-yellow)'
 
   # --- images ---
   assign pack_img = mf.aplus_hero_pack.value
@@ -120,7 +120,7 @@
 
 <style>
   .nlb-hero {
-    background: var(--nlb-hero-bg, #021D49);
+    background: var(--nlb-hero-bg, var(--plaay-navy));
     padding: 72px 24px;
   }
   .nlb-hero__inner {
@@ -133,8 +133,8 @@
   }
   .nlb-hero__eyebrow {
     display: inline-block;
-    background: color-mix(in srgb, var(--nlb-accent, #F9C61D) 30%, transparent);
-    border: 1px solid color-mix(in srgb, var(--nlb-accent, #F9C61D) 55%, transparent);
+    background: color-mix(in srgb, var(--nlb-accent, var(--plaay-yellow)) 30%, transparent);
+    border: 1px solid color-mix(in srgb, var(--nlb-accent, var(--plaay-yellow)) 55%, transparent);
     color: #fff;
     font-size: 0.75rem;
     letter-spacing: 0.08em;
@@ -152,7 +152,7 @@
   }
   .nlb-hero__title em {
     font-style: normal;
-    color: #F9C61D;
+    color: var(--plaay-yellow);
   }
   .nlb-hero__sub {
     font-size: 1rem;
@@ -203,7 +203,7 @@
     width: 78%;
     height: 78%;
     border-radius: 50%;
-    background: radial-gradient(circle, color-mix(in srgb, var(--nlb-accent, #F9C61D) 32%, transparent) 0%, transparent 68%);
+    background: radial-gradient(circle, color-mix(in srgb, var(--nlb-accent, var(--plaay-yellow)) 32%, transparent) 0%, transparent 68%);
     z-index: 0;
   }
   .nlb-hero__pack-wrap {
@@ -282,7 +282,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background colour",
-      "default": "#021D49"
+      "default": "var(--plaay-navy)"
     },
     {
       "type": "text",

@@ -25,7 +25,7 @@
     assign desc = mf.aplus_cravings_desc
     assign accent = mf.aplus_cravings_accent
     assign img = mf.aplus_lifestyle_img.value
-    assign accent_color = '#F9C61D'
+    assign accent_color = 'var(--plaay-yellow)'
   else
     assign title = mf.aplus_break_title | default: 'Break it. Bite it. Melt into it.'
     assign desc = mf.aplus_break_desc
@@ -111,13 +111,13 @@
   .nlb-row__title {
     font-size: clamp(2rem, 3.8vw, 3.4rem);
     text-transform: uppercase;
-    color: var(--nlb-row-text, #021D49);
+    color: var(--nlb-row-text, var(--plaay-navy));
     line-height: 1.05;
     margin: 0 0 20px;
   }
   .nlb-row__desc {
     font-size: 1rem;
-    color: var(--nlb-row-text, #021D49);
+    color: var(--nlb-row-text, var(--plaay-navy));
     opacity: 0.82;
     line-height: 1.65;
     max-width: 380px;
@@ -127,7 +127,7 @@
     display: block;
     font-size: 1rem;
     font-style: italic;
-    color: var(--nlb-row-accent, #F9C61D);
+    color: var(--nlb-row-accent, var(--plaay-yellow));
     letter-spacing: 0.02em;
   }
   .nlb-row__media { position: relative; }
@@ -140,7 +140,7 @@
   }
   .nlb-row__pill {
     position: absolute;
-    background: #021D49;
+    background: var(--plaay-navy);
     color: #fff;
     font-size: 0.65rem;
     letter-spacing: 0.06em;
@@ -182,8 +182,8 @@
       position: static;
       top: auto; right: auto; bottom: auto; left: auto;
       box-shadow: none;
-      background: color-mix(in srgb, var(--nlb-row-text, #021D49) 12%, transparent);
-      color: var(--nlb-row-text, #021D49);
+      background: color-mix(in srgb, var(--nlb-row-text, var(--plaay-navy)) 12%, transparent);
+      color: var(--nlb-row-text, var(--plaay-navy));
     }
   }
 </style>
@@ -227,7 +227,7 @@
       "type": "color",
       "id": "text_color",
       "label": "Text colour",
-      "default": "#021D49"
+      "default": "var(--plaay-navy)"
     },
     {
       "type": "checkbox",

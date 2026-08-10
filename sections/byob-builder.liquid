@@ -349,7 +349,7 @@
 ══════════════════════════════════{%- endcomment -%}
 <style>
 /* ─── Layout helpers ─────────────────────────────────────── */
-.byob-wrap { --byob-blue: #021D49; --byob-yellow: #F9C61D; }
+.byob-wrap { --byob-blue: var(--plaay-navy); --byob-yellow: var(--plaay-yellow); }
 .byob-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
 /* ─── Hero ───────────────────────────────────────────────── */
@@ -399,7 +399,7 @@
   background: #fff;
   border-color: var(--byob-yellow);
   color: var(--byob-blue);
-  box-shadow: 0 8px 28px rgba(249,198,29,0.2);
+  box-shadow: 0 8px 28px rgb(var(--plaay-yellow-rgb) / 0.2);
 }
 /* "Most Popular" pill */
 .byob-tier__popular {
@@ -444,9 +444,9 @@
 .byob-progress-wrap {
   position: sticky; top: 0; z-index: 50;
   background: #fff;
-  border-bottom: 1px solid rgba(2,29,73,0.1);
+  border-bottom: 1px solid rgb(var(--plaay-navy-rgb) / 0.1);
   padding: 12px 0;
-  box-shadow: 0 2px 8px rgba(2,29,73,0.06);
+  box-shadow: 0 2px 8px rgb(var(--plaay-navy-rgb) / 0.06);
 }
 .byob-progress-inner {
   display: flex;
@@ -464,7 +464,7 @@
   flex: 1;
   min-width: 80px;
   height: 7px;
-  background: rgba(2,29,73,0.1);
+  background: rgb(var(--plaay-navy-rgb) / 0.1);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -546,14 +546,14 @@
   border: 2px solid transparent;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 8px rgba(2,29,73,0.07);
+  box-shadow: 0 2px 8px rgb(var(--plaay-navy-rgb) / 0.07);
   transition: border-color .2s, box-shadow .2s, transform .2s;
   overflow: hidden;
 }
-.byob-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2,29,73,0.1); }
+.byob-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgb(var(--plaay-navy-rgb) / 0.1); }
 .byob-card.byob-card--selected {
   border-color: var(--byob-yellow);
-  box-shadow: 0 4px 18px rgba(249,198,29,0.28);
+  box-shadow: 0 4px 18px rgb(var(--plaay-yellow-rgb) / 0.28);
 }
 .byob-card.byob-card--maxed { opacity: 0.45; pointer-events: none; }
 .byob-card--hidden { display: none !important; }
@@ -624,7 +624,7 @@
   bottom: 0; left: 0; right: 0;
   z-index: 9000;
   background: var(--byob-blue);
-  box-shadow: 0 -4px 28px rgba(2,29,73,0.3);
+  box-shadow: 0 -4px 28px rgb(var(--plaay-navy-rgb) / 0.3);
   transform: translateY(110%);
   transition: transform .3s ease;
   padding: 12px 0;
@@ -945,7 +945,7 @@
       "type": "color",
       "id": "bg_color",
       "label": "Hero background colour",
-      "default": "#021D49"
+      "default": "var(--plaay-navy)"
     },
     {
       "type": "text",

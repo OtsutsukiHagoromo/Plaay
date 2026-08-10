@@ -16,7 +16,7 @@
     {%- render 'plaay-summer-cart' -%}
     {%- if fd_active -%}
       <div style="margin-top:6px;">
-        <span class="font-walsheim-bold" style="display:block;font-size:11.5px;line-height:1.3;color:#021D49;margin-bottom:3px;">🎁 Father's Day &middot; 30% off applied at checkout</span>
+        <span class="font-walsheim-bold" style="display:block;font-size:11.5px;line-height:1.3;color:var(--plaay-navy);margin-bottom:3px;">🎁 Father's Day &middot; 30% off applied at checkout</span>
         {%- render 'plaay-fd-countdown' -%}
       </div>
     {%- endif -%}
@@ -36,7 +36,7 @@
     {% endif %}
   </div>
 
-  <div class="sticky bottom-0 z-20 flex-shrink-0 border-t border-dark-blue border-opacity-10 bg-white px-5 pt-4 pb-5 shadow-[0_-8px_24px_rgba(2,29,73,0.08)]">
+  <div class="sticky bottom-0 z-20 flex-shrink-0 border-t border-dark-blue border-opacity-10 bg-white px-5 pt-4 pb-5 shadow-[0_-8px_24px_rgb(var(--plaay-navy-rgb) / 0.08)]">
     {% if cart.item_count > 0 %}
       <div data-cart-drawer-footer>
         {%- render 'cart-drawer-footer' -%}

@@ -35,9 +35,9 @@
   }
   .plaay-rv__empty {
     padding: 18px 20px;
-    border: 1px dashed rgba(2,29,73,0.18);
+    border: 1px dashed rgb(var(--plaay-navy-rgb) / 0.18);
     border-radius: 14px;
-    background: rgba(2,29,73,0.03);
+    background: rgb(var(--plaay-navy-rgb) / 0.03);
     margin-bottom: 16px;
   }
   @media (min-width: 640px)  { .plaay-rv__grid { grid-template-columns: repeat(3, 1fr); } }
@@ -49,11 +49,11 @@
     border-radius: 14px;
     overflow: hidden;
     background: #fff;
-    border: 1px solid rgba(2,29,73,0.08);
+    border: 1px solid rgb(var(--plaay-navy-rgb) / 0.08);
     transition: box-shadow 0.2s, transform 0.2s;
   }
   .plaay-rv-card:hover {
-    box-shadow: 0 6px 20px rgba(2,29,73,0.12);
+    box-shadow: 0 6px 20px rgb(var(--plaay-navy-rgb) / 0.12);
     transform: translateY(-2px);
   }
   .plaay-rv-card__img {
@@ -73,7 +73,7 @@
   .plaay-rv-card__title {
     font-size: 0.8rem;
     line-height: 1.3;
-    color: #021D49;
+    color: var(--plaay-navy);
     margin: 0 0 4px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -82,7 +82,7 @@
   }
   .plaay-rv-card__price {
     font-size: 0.95rem;
-    color: #021D49;
+    color: var(--plaay-navy);
     margin: 0;
   }
 {% endstyle %}

@@ -27,10 +27,10 @@
     overflow: hidden;
     border-radius: 32px;
     background:
-      radial-gradient(circle at top right, rgba(249, 198, 29, 0.2), transparent 30%),
+      radial-gradient(circle at top right, rgb(var(--plaay-yellow-rgb) / 0.2), transparent 30%),
       linear-gradient(145deg, {{ panel_bg }}, #ffffff 72%);
-    border: 1px solid rgba(2, 29, 73, 0.08);
-    box-shadow: 0 24px 70px rgba(2, 29, 73, 0.08);
+    border: 1px solid rgb(var(--plaay-navy-rgb) / 0.08);
+    box-shadow: 0 24px 70px rgb(var(--plaay-navy-rgb) / 0.08);
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-shell::before,
@@ -46,7 +46,7 @@
     height: 220px;
     right: -70px;
     top: -90px;
-    background: rgba(249, 198, 29, 0.22);
+    background: rgb(var(--plaay-yellow-rgb) / 0.22);
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-shell::after {
@@ -54,7 +54,7 @@
     height: 180px;
     left: -60px;
     bottom: -90px;
-    background: rgba(2, 29, 73, 0.06);
+    background: rgb(var(--plaay-navy-rgb) / 0.06);
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-inner {
@@ -72,8 +72,8 @@
     gap: 8px;
     padding: 8px 14px;
     border-radius: 999px;
-    background: rgba(2, 29, 73, 0.08);
-    color: #021d49;
+    background: rgb(var(--plaay-navy-rgb) / 0.08);
+    color: var(--plaay-navy);
     font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -83,7 +83,7 @@
     font-size: clamp(34px, 5vw, 72px);
     line-height: 0.95;
     text-transform: uppercase;
-    color: #021d49;
+    color: var(--plaay-navy);
     margin-top: 16px;
   }
 
@@ -92,7 +92,7 @@
     margin: 16px auto 0;
     font-size: 18px;
     line-height: 1.55;
-    color: rgba(2, 29, 73, 0.72);
+    color: rgb(var(--plaay-navy-rgb) / 0.72);
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-badges {
@@ -110,8 +110,8 @@
     min-height: 42px;
     padding: 10px 16px;
     border-radius: 999px;
-    background: #021d49;
-    color: #f9c61d;
+    background: var(--plaay-navy);
+    color: var(--plaay-yellow);
     font-size: 12px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -128,8 +128,8 @@
     border-radius: 24px;
     padding: 22px 18px 18px;
     background: #ffffff;
-    border: 1px solid rgba(2, 29, 73, 0.08);
-    box-shadow: 0 14px 34px rgba(2, 29, 73, 0.05);
+    border: 1px solid rgb(var(--plaay-navy-rgb) / 0.08);
+    box-shadow: 0 14px 34px rgb(var(--plaay-navy-rgb) / 0.05);
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-card__icon {
@@ -140,13 +140,13 @@
     align-items: center;
     justify-content: center;
     background: {{ accent_bg }};
-    color: #021d49;
+    color: var(--plaay-navy);
     font-size: 24px;
     margin-bottom: 16px;
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-card__title {
-    color: #021d49;
+    color: var(--plaay-navy);
     font-size: 26px;
     line-height: 0.98;
     text-transform: uppercase;
@@ -154,7 +154,7 @@
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-card__text {
-    color: rgba(2, 29, 73, 0.72);
+    color: rgb(var(--plaay-navy-rgb) / 0.72);
     font-size: 15px;
     line-height: 1.55;
   }
@@ -162,12 +162,12 @@
   #shopify-section-{{ section.id }} .subscribe-save-steps {
     border-radius: 24px;
     padding: 22px 18px;
-    background: rgba(2, 29, 73, 0.04);
-    border: 1px solid rgba(2, 29, 73, 0.08);
+    background: rgb(var(--plaay-navy-rgb) / 0.04);
+    border: 1px solid rgb(var(--plaay-navy-rgb) / 0.08);
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-steps__title {
-    color: #021d49;
+    color: var(--plaay-navy);
     font-size: 28px;
     line-height: 1;
     text-transform: uppercase;
@@ -185,7 +185,7 @@
     gap: 12px;
     align-items: start;
     padding: 14px 0;
-    border-top: 1px solid rgba(2, 29, 73, 0.09);
+    border-top: 1px solid rgb(var(--plaay-navy-rgb) / 0.09);
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-step:first-child {
@@ -200,13 +200,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #021d49;
-    color: #f9c61d;
+    background: var(--plaay-navy);
+    color: var(--plaay-yellow);
     font-size: 16px;
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-step__title {
-    color: #021d49;
+    color: var(--plaay-navy);
     font-size: 19px;
     line-height: 1.05;
     text-transform: uppercase;
@@ -214,7 +214,7 @@
   }
 
   #shopify-section-{{ section.id }} .subscribe-save-step__text {
-    color: rgba(2, 29, 73, 0.72);
+    color: rgb(var(--plaay-navy-rgb) / 0.72);
     font-size: 14px;
     line-height: 1.55;
   }
@@ -226,8 +226,8 @@
     padding: 14px 18px;
     border-radius: 18px;
     background: #ffffff;
-    border: 1px dashed rgba(2, 29, 73, 0.18);
-    color: #021d49;
+    border: 1px dashed rgb(var(--plaay-navy-rgb) / 0.18);
+    color: var(--plaay-navy);
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -427,7 +427,7 @@
       "type": "color",
       "id": "accent_bg",
       "label": "Accent color",
-      "default": "#f9c61d"
+      "default": "var(--plaay-yellow)"
     },
     {
       "type": "text",

@@ -42,8 +42,8 @@
 
 <style>
   .nlb-cta {
-    background: var(--nlb-cta-bg, #021D49);
-    background-image: radial-gradient(ellipse at 20% 50%, rgba(249,198,29,0.08) 0%, transparent 60%),
+    background: var(--nlb-cta-bg, var(--plaay-navy));
+    background-image: radial-gradient(ellipse at 20% 50%, rgb(var(--plaay-yellow-rgb) / 0.08) 0%, transparent 60%),
                       radial-gradient(ellipse at 80% 50%, rgba(232,87,103,0.08) 0%, transparent 60%);
     padding: clamp(56px, 9vw, 88px) 24px;
     text-align: center;
@@ -64,7 +64,7 @@
     margin: 0 0 20px;
   }
   .nlb-cta__title .line1 { color: #fff; display: block; }
-  .nlb-cta__title .line2 { color: #F9C61D; display: block; }
+  .nlb-cta__title .line2 { color: var(--plaay-yellow); display: block; }
   .nlb-cta__sub {
     font-size: 1rem;
     color: rgba(255,255,255,0.65);
@@ -105,7 +105,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background colour",
-      "default": "#021D49"
+      "default": "var(--plaay-navy)"
     },
     {
       "type": "text",

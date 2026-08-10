@@ -117,7 +117,7 @@
 <style>
   .plaay-404 {
     background:
-      radial-gradient(circle at top left, rgba(249, 198, 29, 0.24), transparent 26%),
+      radial-gradient(circle at top left, rgb(var(--plaay-yellow-rgb) / 0.24), transparent 26%),
       radial-gradient(circle at bottom right, rgba(240, 139, 52, 0.14), transparent 24%),
       var(--plaay-404-bg);
   }
@@ -144,9 +144,9 @@
     position: relative;
     overflow: hidden;
     padding: 2rem;
-    background: #f9c61d;
-    color: #021d49;
-    box-shadow: 0 24px 50px rgba(2, 29, 73, 0.12);
+    background: var(--plaay-yellow);
+    color: var(--plaay-navy);
+    box-shadow: 0 24px 50px rgb(var(--plaay-navy-rgb) / 0.12);
   }
 
   .plaay-404__copy::after {
@@ -157,7 +157,7 @@
     font-family: var(--font-walsheim-bold, "walsheim-bold", sans-serif);
     font-size: clamp(4.5rem, 12vw, 8rem);
     line-height: 1;
-    color: rgba(2, 29, 73, 0.09);
+    color: rgb(var(--plaay-navy-rgb) / 0.09);
     pointer-events: none;
   }
 
@@ -195,7 +195,7 @@
     padding: 0.85rem;
     border-radius: 24px;
     background: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 12px 30px rgba(2, 29, 73, 0.08);
+    box-shadow: 0 12px 30px rgb(var(--plaay-navy-rgb) / 0.08);
   }
 
   .plaay-404__search input {
@@ -203,16 +203,16 @@
     min-width: 0;
     height: 52px;
     padding: 0 18px;
-    border: 1px solid rgba(2, 29, 73, 0.12);
+    border: 1px solid rgb(var(--plaay-navy-rgb) / 0.12);
     border-radius: 18px;
     background: #fff;
-    color: #021d49;
+    color: var(--plaay-navy);
     font-size: 15px;
   }
 
   .plaay-404__search input:focus {
     outline: none;
-    border-color: #021d49;
+    border-color: var(--plaay-navy);
   }
 
   .plaay-404__search button {
@@ -222,8 +222,8 @@
     padding: 0 20px;
     border: none;
     border-radius: 18px;
-    background: #021d49;
-    color: #f9c61d;
+    background: var(--plaay-navy);
+    color: var(--plaay-yellow);
     font-size: 12px;
     letter-spacing: 0.14em;
     line-height: 1;
@@ -256,14 +256,14 @@
   }
 
   .plaay-404__button--primary {
-    background: #021d49;
+    background: var(--plaay-navy);
     color: #fff;
   }
 
   .plaay-404__button--secondary {
-    border: 1px solid rgba(2, 29, 73, 0.12);
+    border: 1px solid rgb(var(--plaay-navy-rgb) / 0.12);
     background: rgba(255, 255, 255, 0.94);
-    color: #021d49;
+    color: var(--plaay-navy);
   }
 
   .plaay-404__chips {
@@ -279,7 +279,7 @@
     min-height: 40px;
     padding: 0 16px;
     border-radius: 999px;
-    background: rgba(2, 29, 73, 0.08);
+    background: rgb(var(--plaay-navy-rgb) / 0.08);
     font-size: 11px;
     letter-spacing: 0.12em;
     line-height: 1;
@@ -292,7 +292,7 @@
     min-height: 100%;
     padding: 1.25rem;
     border-radius: 32px;
-    box-shadow: 0 24px 50px rgba(2, 29, 73, 0.08);
+    box-shadow: 0 24px 50px rgb(var(--plaay-navy-rgb) / 0.08);
   }
 
   .plaay-404__visual-card {
@@ -301,7 +301,7 @@
     width: 100%;
     padding: 1.25rem;
     background: linear-gradient(180deg, rgba(255,255,255,0.86) 0%, #ffffff 100%);
-    box-shadow: inset 0 0 0 1px rgba(2, 29, 73, 0.06);
+    box-shadow: inset 0 0 0 1px rgb(var(--plaay-navy-rgb) / 0.06);
   }
 
   .plaay-404__image-frame {
@@ -312,7 +312,7 @@
     padding: 1rem;
     border-radius: 26px;
     background:
-      radial-gradient(circle at 50% 12%, rgba(249, 198, 29, 0.3), transparent 48%),
+      radial-gradient(circle at 50% 12%, rgb(var(--plaay-yellow-rgb) / 0.3), transparent 48%),
       #f7f5ef;
   }
 
@@ -328,7 +328,7 @@
     margin-top: 1rem;
     padding: 1.1rem 1.2rem;
     border-radius: 22px;
-    background: #021d49;
+    background: var(--plaay-navy);
     color: #fff;
   }
 
@@ -354,7 +354,7 @@
 
   .plaay-404__panel {
     padding: 1.5rem;
-    box-shadow: 0 18px 42px rgba(2, 29, 73, 0.08);
+    box-shadow: 0 18px 42px rgb(var(--plaay-navy-rgb) / 0.08);
   }
 
   .plaay-404__panel--help {
@@ -370,7 +370,7 @@
 
   .plaay-404__panel-title {
     margin: 0;
-    color: #021d49;
+    color: var(--plaay-navy);
     font-size: 1.25rem;
     line-height: 1.05;
     text-transform: uppercase;
@@ -379,7 +379,7 @@
 
   .plaay-404__panel-copy {
     margin: 0;
-    color: rgba(2, 29, 73, 0.7);
+    color: rgb(var(--plaay-navy-rgb) / 0.7);
     font-size: 0.95rem;
     line-height: 1.6;
   }
@@ -403,20 +403,20 @@
     padding: 1rem 1.1rem;
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(2, 29, 73, 0.08);
+    border: 1px solid rgb(var(--plaay-navy-rgb) / 0.08);
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
   .plaay-404__link-card:hover,
   .plaay-404__help-card:hover {
     transform: translateY(-2px);
-    border-color: rgba(2, 29, 73, 0.18);
-    box-shadow: 0 14px 26px rgba(2, 29, 73, 0.08);
+    border-color: rgb(var(--plaay-navy-rgb) / 0.18);
+    box-shadow: 0 14px 26px rgb(var(--plaay-navy-rgb) / 0.08);
   }
 
   .plaay-404__link-label,
   .plaay-404__help-label {
-    color: #021d49;
+    color: var(--plaay-navy);
     font-size: 0.92rem;
     line-height: 1.25;
     text-transform: uppercase;
@@ -424,7 +424,7 @@
   }
 
   .plaay-404__link-arrow {
-    color: #021d49;
+    color: var(--plaay-navy);
     font-size: 1rem;
     line-height: 1;
     opacity: 0.55;
@@ -436,7 +436,7 @@
   }
 
   .plaay-404__help-text {
-    color: rgba(2, 29, 73, 0.68);
+    color: rgb(var(--plaay-navy-rgb) / 0.68);
     font-size: 0.92rem;
     line-height: 1.6;
   }

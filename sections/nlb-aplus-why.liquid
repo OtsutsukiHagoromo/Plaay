@@ -63,7 +63,7 @@
     text-align: center;
     font-size: clamp(1.6rem, 3vw, 2.4rem);
     text-transform: uppercase;
-    color: #021D49;
+    color: var(--plaay-navy);
     margin: 0 0 12px;
     letter-spacing: 0.02em;
   }
@@ -85,13 +85,13 @@
     flex: 0 1 340px;
     border-radius: 18px;
     overflow: hidden;
-    box-shadow: 0 6px 24px rgba(2,29,73,0.10);
+    box-shadow: 0 6px 24px rgb(var(--plaay-navy-rgb) / 0.10);
     background: #fff;
     transition: transform 0.2s, box-shadow 0.2s;
   }
   .nlb-cb__panel:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 36px rgba(2,29,73,0.16);
+    box-shadow: 0 12px 36px rgb(var(--plaay-navy-rgb) / 0.16);
   }
   .nlb-cb__img {
     display: block;

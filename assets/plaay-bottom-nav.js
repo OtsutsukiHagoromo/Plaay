@@ -109,3 +109,21 @@
     document.addEventListener('cart:updated', fetchAndSetBadge);
     document.addEventListener('cart:refresh', fetchAndSetBadge);
   })();
+
+/* Collection sort. Kept here rather than inline in the section so it stays cached with
+   the rest of the small theme scripts. Rewrites sort_by on the current URL so any active
+   filter parameters survive the change; the <noscript> button in the markup submits the
+   same form when this never runs. */
+(function () {
+  if (window.plaayCollectionSortReady) return;
+  window.plaayCollectionSortReady = true;
+
+  document.addEventListener('change', function (e) {
+    var select = e.target;
+    if (!select.matches || !select.matches('[data-plaay-sort] select[name="sort_by"]')) return;
+    var url = new URL(window.location.href);
+    url.searchParams.set('sort_by', select.value);
+    url.searchParams.delete('page');
+    window.location.href = url.toString();
+  });
+})();

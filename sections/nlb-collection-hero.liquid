@@ -29,7 +29,7 @@
 
 <style>
   .nlb-chero {
-    background: var(--nlb-chero-bg, #021D49);
+    background: var(--nlb-chero-bg, var(--plaay-navy));
     padding: 56px 24px;
   }
   .nlb-chero__inner {
@@ -69,8 +69,8 @@
   }
   .nlb-chero__btn {
     display: inline-block;
-    background: #F9C61D;
-    color: #021D49;
+    background: var(--plaay-yellow);
+    color: var(--plaay-navy);
     font-size: 0.9rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -79,7 +79,7 @@
     border-radius: 100px;
     transition: transform 0.2s, background 0.2s;
   }
-  .nlb-chero__btn:hover { transform: translateY(-2px); background: #ffd84a; color: #021D49; text-decoration: none; }
+  .nlb-chero__btn:hover { transform: translateY(-2px); background: #ffd84a; color: var(--plaay-navy); text-decoration: none; }
   .nlb-chero__media {
     position: relative;
     aspect-ratio: 4 / 3;
@@ -109,7 +109,7 @@
     { "type": "url", "id": "button_link", "label": "Button link (defaults to product grid)" },
     { "type": "range", "id": "fps", "label": "Stopmotion speed (fps)", "min": 4, "max": 16, "step": 1, "default": 10 },
     { "type": "checkbox", "id": "media_left", "label": "Put animation on the left", "default": false },
-    { "type": "color", "id": "background_color", "label": "Background colour", "default": "#021D49" }
+    { "type": "color", "id": "background_color", "label": "Background colour", "default": "var(--plaay-navy)" }
   ],
   "presets": [ { "name": "NLB - Collection Hero" } ]
 }

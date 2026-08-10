@@ -26,7 +26,7 @@
 
 {% style %}
   #product-gallery-thumbnails-{{ section.id }} .glide__slide--active div {
-    border-color: #021d49 !important;
+    border-color: var(--plaay-navy) !important;
     border-width: 2px !important;
     opacity: 1;
   }
@@ -453,9 +453,9 @@
         {%- endif -%}
         <span class="plaay-sticky-mobile-price font-walsheim-bold text-dark-blue" style="font-size:22px;line-height:1">{{ sticky_variant.price | money }}</span>
       </div>
-      <div class="plaay-sticky-mobile__qty-wrap" style="display:flex;align-items:center;border:1.5px solid #021D49;border-radius:10px;overflow:hidden;height:40px">
+      <div class="plaay-sticky-mobile__qty-wrap" style="display:flex;align-items:center;border:1.5px solid var(--plaay-navy);border-radius:10px;overflow:hidden;height:40px">
         <button type="button" class="plaay-mobile-minus font-walsheim-bold text-dark-blue" style="padding:0 14px;height:100%;font-size:20px;line-height:1;background:transparent;border:none;cursor:pointer">−</button>
-        <span class="plaay-mobile-qty plaay-sticky-mobile__qty font-walsheim-bold text-dark-blue" style="padding:0 12px;font-size:15px;border-left:1px solid rgba(2,29,73,0.2);border-right:1px solid rgba(2,29,73,0.2);height:100%;display:flex;align-items:center;min-width:40px;justify-content:center">1</span>
+        <span class="plaay-mobile-qty plaay-sticky-mobile__qty font-walsheim-bold text-dark-blue" style="padding:0 12px;font-size:15px;border-left:1px solid rgb(var(--plaay-navy-rgb) / 0.2);border-right:1px solid rgb(var(--plaay-navy-rgb) / 0.2);height:100%;display:flex;align-items:center;min-width:40px;justify-content:center">1</span>
         <button type="button" class="plaay-mobile-plus font-walsheim-bold text-dark-blue" style="padding:0 14px;height:100%;font-size:20px;line-height:1;background:transparent;border:none;cursor:pointer">+</button>
       </div>
     </div>
@@ -479,9 +479,9 @@
         <span class="plaay-sticky-price font-walsheim-bold text-dark-blue" style="font-size:20px;line-height:1">{{ sticky_variant.price | money }}</span>
       </div>
       {% comment %} Quantity selector {% endcomment %}
-      <div class="plaay-sticky-qty-wrap" style="display:flex;align-items:center;border:1.5px solid #021D49;border-radius:10px;overflow:hidden;height:44px">
+      <div class="plaay-sticky-qty-wrap" style="display:flex;align-items:center;border:1.5px solid var(--plaay-navy);border-radius:10px;overflow:hidden;height:44px">
         <button type="button" class="plaay-sticky-minus font-walsheim-bold text-dark-blue" style="padding:0 16px;height:100%;font-size:22px;line-height:1;background:transparent;border:none;cursor:pointer">−</button>
-        <span class="plaay-sticky-qty font-walsheim-bold text-dark-blue" style="padding:0 14px;font-size:15px;border-left:1px solid rgba(2,29,73,0.2);border-right:1px solid rgba(2,29,73,0.2);height:100%;display:flex;align-items:center;min-width:44px;justify-content:center">1</span>
+        <span class="plaay-sticky-qty font-walsheim-bold text-dark-blue" style="padding:0 14px;font-size:15px;border-left:1px solid rgb(var(--plaay-navy-rgb) / 0.2);border-right:1px solid rgb(var(--plaay-navy-rgb) / 0.2);height:100%;display:flex;align-items:center;min-width:44px;justify-content:center">1</span>
         <button type="button" class="plaay-sticky-plus font-walsheim-bold text-dark-blue" style="padding:0 16px;height:100%;font-size:22px;line-height:1;background:transparent;border:none;cursor:pointer">+</button>
       </div>
       {% comment %} ATC button {% endcomment %}
@@ -511,8 +511,8 @@
 
     // Force both bars into position:fixed regardless of stylesheet
     var baseStyle = 'position:fixed;bottom:0;left:0;right:0;z-index:9998;' +
-                    'background:#fff;border-top:1px solid rgba(2,29,73,0.12);' +
-                    'box-shadow:0 -4px 24px rgba(2,29,73,0.1);' +
+                    'background:#fff;border-top:1px solid rgb(var(--plaay-navy-rgb) / 0.12);' +
+                    'box-shadow:0 -4px 24px rgb(var(--plaay-navy-rgb) / 0.1);' +
                     'transition:transform 0.3s ease;transform:translateY(0);pointer-events:auto;';
 
     if (desktopBar) {

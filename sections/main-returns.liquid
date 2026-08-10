@@ -1,7 +1,7 @@
 {% style %}
-  .ret-hero { background-color: #021D49; color: #fff; }
+  .ret-hero { background-color: var(--plaay-navy); color: #fff; }
   .ret-policy-card {
-    background: #F9C61D;
+    background: var(--plaay-yellow);
     border-radius: 20px;
     padding: 32px 28px;
     max-width: 720px;
@@ -19,7 +19,7 @@
   }
   .ret-exception-card {
     background: #fff;
-    border: 2px solid #F9C61D;
+    border: 2px solid var(--plaay-yellow);
     border-radius: 16px;
     padding: 24px 20px;
     display: flex;
@@ -31,7 +31,7 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: #F9C61D;
+    background: var(--plaay-yellow);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -59,8 +59,8 @@
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: #021D49;
-    color: #F9C61D;
+    background: var(--plaay-navy);
+    color: var(--plaay-yellow);
     font-family: walsheim-bold, sans-serif;
     font-size: 24px;
     display: flex;
@@ -70,7 +70,7 @@
   }
   .ret-step-arrow {
     display: none;
-    color: rgba(2,29,73,0.25);
+    color: rgb(var(--plaay-navy-rgb) / 0.25);
     font-size: 28px;
     font-family: walsheim-bold, sans-serif;
     align-self: flex-start;
@@ -90,10 +90,10 @@
     background: #fff;
     border-radius: 16px;
     padding: 24px 20px;
-    border-left: 4px solid #F9C61D;
+    border-left: 4px solid var(--plaay-yellow);
   }
   .ret-contact-box {
-    background: #021D49;
+    background: var(--plaay-navy);
     border-radius: 20px;
     padding: 44px 32px;
     text-align: center;
@@ -102,8 +102,8 @@
   }
   .ret-contact-link {
     display: inline-block;
-    background: #F9C61D;
-    color: #021D49;
+    background: var(--plaay-yellow);
+    color: var(--plaay-navy);
     border-radius: 999px;
     padding: 12px 32px;
     font-family: walsheim-bold, sans-serif;
@@ -113,13 +113,13 @@
     transition: opacity 0.2s, transform 0.2s;
   }
   .ret-contact-link:hover { opacity: 0.85; transform: translateY(-2px); }
-  .ret-divider { height: 1px; background: rgba(2,29,73,0.08); max-width: 720px; margin: 0 auto; }
+  .ret-divider { height: 1px; background: rgb(var(--plaay-navy-rgb) / 0.08); max-width: 720px; margin: 0 auto; }
 {% endstyle %}
 
 {%- comment -%} HERO {%- endcomment -%}
 <div class="ret-hero">
   <div class="container pt-32 pb-16 md:pt-44 md:pb-20">
-    <p class="font-walsheim-bold uppercase" style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.45; margin-bottom: 16px; color: #F9C61D;">Policy</p>
+    <p class="font-walsheim-bold uppercase" style="font-size: 12px; letter-spacing: 0.1em; opacity: 0.45; margin-bottom: 16px; color: var(--plaay-yellow);">Policy</p>
     <h1 class="font-walsheim-bold" style="font-size: clamp(40px, 7vw, 84px); line-height: 1.0; margin-bottom: 0; color: #fff;">{{ section.settings.headline }}</h1>
     {% if section.settings.subheadline != blank %}
       <p class="font-walsheim" style="font-size: 17px; max-width: 480px; margin-top: 18px; opacity: 0.6; line-height: 1.6; color: #fff;">{{ section.settings.subheadline }}</p>
@@ -147,8 +147,8 @@
       <div class="ret-exception-card">
         <div class="ret-exception-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" stroke="#021D49" stroke-width="1.8"/>
-            <path d="M12 8v4M12 16h.01" stroke="#021D49" stroke-width="2" stroke-linecap="round"/>
+            <path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" stroke="#081D48" stroke-width="1.8"/>
+            <path d="M12 8v4M12 16h.01" stroke="#081D48" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </div>
         <div>
@@ -159,7 +159,7 @@
       <div class="ret-exception-card">
         <div class="ret-exception-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#021D49" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#081D48" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <div>

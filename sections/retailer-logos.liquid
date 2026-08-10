@@ -1,5 +1,5 @@
 {% liquid
-  assign text_color = section.settings.h_color | default: '#021D49'
+  assign text_color = section.settings.h_color | default: 'var(--plaay-navy)'
   assign bg = section.settings.bg_color | default: '#fff'
   assign has_blocks = false
   for block in section.blocks
@@ -65,7 +65,7 @@
     position: relative;
     background: #ffffff;
     border-radius: 14px;
-    border: 1.5px solid rgba(2,29,73,0.08);
+    border: 1.5px solid rgb(var(--plaay-navy-rgb) / 0.08);
     overflow: hidden;
     transition: transform 0.22s, box-shadow 0.22s, border-color 0.22s;
     display: flex;
@@ -73,8 +73,8 @@
   }
   .rl-card-{{ section.id }}.has-link:hover {
     transform: translateY(-4px);
-    box-shadow: 0 14px 32px rgba(2,29,73,0.13);
-    border-color: #F9C61D;
+    box-shadow: 0 14px 32px rgb(var(--plaay-navy-rgb) / 0.13);
+    border-color: var(--plaay-yellow);
   }
   .rl-card-link-{{ section.id }} {
     position: absolute;
@@ -104,12 +104,12 @@
     .rl-logo-wrap-{{ section.id }} img { max-height: 64px; }
   }
   .rl-card-foot-{{ section.id }} {
-    background: #F9C61D;
+    background: var(--plaay-yellow);
     padding: 7px 10px;
     text-align: center;
     font-family: walsheim-bold, sans-serif;
     font-size: 11px;
-    color: #021D49;
+    color: var(--plaay-navy);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     display: flex;
@@ -169,7 +169,7 @@
                 <div class="rl-card-foot-{{ section.id }}">
                   <span>Shop</span>
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
-                    <path d="M2 8L8 2M8 2H4M8 2V6" stroke="#021D49" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M2 8L8 2M8 2H4M8 2V6" stroke="#081D48" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </div>
               {% endif %}
@@ -196,7 +196,7 @@
       "type": "color",
       "id": "h_color",
       "label": "Heading color",
-      "default": "#021D49"
+      "default": "var(--plaay-navy)"
     },
     {
       "type": "text",

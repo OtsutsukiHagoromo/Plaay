@@ -22,7 +22,7 @@
         <span>{{ heading | default: 'Nutrition Facts' }}</span>
         <span class="pdp-nutr__chevron" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 7.5L10 12.5L15 7.5" stroke="#021D49" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5 7.5L10 12.5L15 7.5" stroke="#081D48" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </span>
       </summary>
@@ -73,8 +73,8 @@
   max-width: 740px;
 }
 .pdp-nutr__details {
-  border-top: 1px solid rgba(2,29,73,0.12);
-  border-bottom: 1px solid rgba(2,29,73,0.12);
+  border-top: 1px solid rgb(var(--plaay-navy-rgb) / 0.12);
+  border-bottom: 1px solid rgb(var(--plaay-navy-rgb) / 0.12);
 }
 .pdp-nutr__summary {
   display: flex;
@@ -83,7 +83,7 @@
   padding: 20px 0;
   cursor: pointer;
   list-style: none;
-  color: #021D49;
+  color: var(--plaay-navy);
   font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -108,7 +108,7 @@
 }
 
 .pdp-nutr__panel-header {
-  background: #021D49;
+  background: var(--plaay-navy);
   border-radius: 12px 12px 0 0;
   padding: 16px 20px 12px;
   display: flex;
@@ -129,20 +129,20 @@
 }
 
 .pdp-nutr__calories-row {
-  background: #F9C61D;
+  background: var(--plaay-yellow);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px;
 }
 .pdp-nutr__calories-label {
-  color: #021D49;
+  color: var(--plaay-navy);
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 .pdp-nutr__calories-val {
-  color: #021D49;
+  color: var(--plaay-navy);
   font-size: 2rem;
   line-height: 1;
 }
@@ -151,7 +151,7 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  border: 1px solid rgba(2,29,73,0.1);
+  border: 1px solid rgb(var(--plaay-navy-rgb) / 0.1);
   border-top: none;
   border-radius: 0 0 12px 12px;
   overflow: hidden;
@@ -161,16 +161,16 @@
   align-items: center;
   justify-content: space-between;
   padding: 11px 20px;
-  border-bottom: 1px solid rgba(2,29,73,0.07);
+  border-bottom: 1px solid rgb(var(--plaay-navy-rgb) / 0.07);
   background: #fff;
 }
 .pdp-nutr__row:last-child { border-bottom: none; }
 .pdp-nutr__row--sub {
   padding-left: 36px;
-  background: rgba(249,198,29,0.04);
+  background: rgb(var(--plaay-yellow-rgb) / 0.04);
 }
 .pdp-nutr__row-name {
-  color: #021D49;
+  color: var(--plaay-navy);
   font-size: 0.87rem;
 }
 .pdp-nutr__row--sub .pdp-nutr__row-name {
@@ -178,12 +178,12 @@
   opacity: 0.8;
 }
 .pdp-nutr__row-value {
-  color: #021D49;
+  color: var(--plaay-navy);
   font-size: 0.87rem;
 }
 
 .pdp-nutr__disclaimer {
-  color: #021D49;
+  color: var(--plaay-navy);
   opacity: 0.45;
   font-size: 0.7rem;
   line-height: 1.5;

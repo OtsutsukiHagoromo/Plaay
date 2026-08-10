@@ -25,14 +25,14 @@
     padding: 0.55rem 1rem;
     border-radius: 999px;
     background: rgba(255,255,255,0.55);
-    color: #021D49;
+    color: var(--plaay-navy);
     font-size: 0.72rem;
     letter-spacing: 0.16em;
     text-transform: uppercase;
     font-family: var(--font-walsheim-bold, inherit);
   }
   .plaay-contact-heading {
-    color: #021D49;
+    color: var(--plaay-navy);
     font-family: var(--font-walsheim-black, inherit);
     font-size: clamp(2.6rem, 7vw, 5.8rem);
     line-height: 0.92;
@@ -44,7 +44,7 @@
   .plaay-contact-copy {
     max-width: 660px;
     margin: 1.2rem auto 0;
-    color: rgba(2,29,73,0.8);
+    color: rgb(var(--plaay-navy-rgb) / 0.8);
     font-size: 1rem;
     line-height: 1.65;
   }
@@ -56,14 +56,14 @@
   }
   .plaay-contact-point {
     background: rgba(255,255,255,0.88);
-    border: 1px solid rgba(2,29,73,0.08);
+    border: 1px solid rgb(var(--plaay-navy-rgb) / 0.08);
     border-radius: 22px;
     padding: 1.1rem 1rem;
-    box-shadow: 0 14px 32px rgba(2,29,73,0.06);
+    box-shadow: 0 14px 32px rgb(var(--plaay-navy-rgb) / 0.06);
   }
   .plaay-contact-point strong {
     display: block;
-    color: #021D49;
+    color: var(--plaay-navy);
     font-size: 0.78rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -71,7 +71,7 @@
     font-family: var(--font-walsheim-bold, inherit);
   }
   .plaay-contact-point span {
-    color: #021D49;
+    color: var(--plaay-navy);
     font-size: 0.95rem;
     line-height: 1.45;
   }
@@ -85,10 +85,10 @@
   .plaay-contact-form-shell {
     border-radius: 28px;
     overflow: hidden;
-    box-shadow: 0 22px 48px rgba(2,29,73,0.12);
+    box-shadow: 0 22px 48px rgb(var(--plaay-navy-rgb) / 0.12);
   }
   .plaay-contact-aside {
-    background: rgba(2,29,73,0.92);
+    background: rgb(var(--plaay-navy-rgb) / 0.92);
     color: #fff;
     padding: 2rem 1.75rem;
   }
@@ -137,7 +137,7 @@
     padding: 1.75rem;
   }
   .plaay-contact-form-shell h2 {
-    color: #021D49;
+    color: var(--plaay-navy);
     font-family: var(--font-walsheim-black, inherit);
     font-size: clamp(1.8rem, 3vw, 2.8rem);
     line-height: 0.98;
@@ -242,7 +242,7 @@
 
                 {% if category_title == faq_category %}
                   <div class="md:mx-4 mt-4">
-                    {% render 'content-accordion', heading: question, content: answer, color: '#021D49', contact_accordion: true %}
+                    {% render 'content-accordion', heading: question, content: answer, color: 'var(--plaay-navy)', contact_accordion: true %}
                   </div>
                 {% endif %}
               {% endfor %}
@@ -417,7 +417,7 @@
         "type": "color",
         "id": "text_color",
         "label": "Text color",
-        "default": "#021D49",
+        "default": "var(--plaay-navy)",
         "info": "This will define the text for the title, copy, labels and messages"
       }
     ],

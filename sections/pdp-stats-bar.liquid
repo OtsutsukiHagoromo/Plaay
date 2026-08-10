@@ -7,7 +7,7 @@
 {% liquid
   assign bg      = section.settings.background_color
   assign heading = section.settings.heading
-  assign heading_color = section.settings.heading_color | default: '#021D49'
+  assign heading_color = section.settings.heading_color | default: 'var(--plaay-navy)'
   assign stats   = section.blocks | where: 'type', 'stat'
 %}
 
@@ -63,19 +63,19 @@
   background: #fff;
   border-radius: 16px;
   padding: 22px 14px 20px;
-  box-shadow: 0 2px 12px rgba(2,29,73,0.07);
+  box-shadow: 0 2px 12px rgb(var(--plaay-navy-rgb) / 0.07);
   gap: 6px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .pdp-stats-bar__item:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(2,29,73,0.13);
+  box-shadow: 0 8px 24px rgb(var(--plaay-navy-rgb) / 0.13);
 }
 .pdp-stats-bar__icon-wrap {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #F9C61D;
+  background: var(--plaay-yellow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,14 +89,14 @@
 .pdp-stats-bar__value {
   font-size: 1.5rem;
   line-height: 1;
-  color: #021D49;
+  color: var(--plaay-navy);
   text-transform: uppercase;
 }
 .pdp-stats-bar__label {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: #021D49;
+  color: var(--plaay-navy);
   opacity: 0.7;
   line-height: 1.3;
 }
@@ -121,7 +121,7 @@
       "type": "color",
       "id": "heading_color",
       "label": "Heading colour",
-      "default": "#021D49"
+      "default": "var(--plaay-navy)"
     },
     {
       "type": "text",
