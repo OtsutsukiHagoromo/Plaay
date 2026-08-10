@@ -109,8 +109,8 @@ This file can be re-written at any time.
 
   
 <body class="template-{{ template }}">
-  
-  
+  {%- render 'icon-sprite' -%}
+
   {{ content_for_layout }}
   
   <script defer src="{{ 'bundle.theme.js' | asset_url }}"></script>

@@ -182,7 +182,7 @@
         "usp_5_text": "Gluten free",
         "usp_6_icon": "Ã°Å¸Å’Â±",
         "usp_6_text": "Soy free",
-        "compact_mobile_grid": false,
+        "compact_mobile_grid": true,
         "default_background_color": "#fad1d2",
         "backup_featured_product_one": "",
         "backup_featured_product_two": "",

@@ -41,7 +41,17 @@
         type="image/png">
     {% endif %}
 
-    <title>{{ page_title | escape }}</title>
+    {%- comment -%}
+      /collections/all rendered as just "Products" - Shopify's default title for a
+      collection with no SEO title set. Anything that already contains the shop name is
+      left exactly as it is, so the hand-written product and page titles are untouched.
+    {%- endcomment -%}
+    <title>
+      {{- page_title | escape -}}
+      {%- if current_tags %} &ndash; tagged &ldquo;{{ current_tags | join: ', ' | escape }}&rdquo;{% endif -%}
+      {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name | escape }}{% endunless -%}
+    </title>
 
     {% if page_description %}
       <meta name="description" content="{{ page_description | escape }}">
@@ -106,6 +116,7 @@
 </head>
 
     <body class="template-{{ template  | remove :"."}}">
+    {%- render 'icon-sprite' -%}
     {% section 'announcement-bar' %}
     {% section 'header' %}
     <main id="main" role="main">

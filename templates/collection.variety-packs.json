@@ -129,7 +129,7 @@
         "usp_5_text": "Gluten free",
         "usp_6_icon": "🌱",
         "usp_6_text": "Soy free",
-        "compact_mobile_grid": false,
+        "compact_mobile_grid": true,
         "default_background_color": "#fad1d2",
         "backup_featured_product_one": "",
         "backup_featured_product_two": "",
@@ -273,7 +273,7 @@
         "hide_arrows_desktop": true,
         "hide_arrows_mobile": false,
         "hide_bullets": true,
-        "compact_mobile_grid": false,
+        "compact_mobile_grid": true,
         "hide_atc_on_tiles": false
       }
     },
@@ -334,7 +334,7 @@
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
         "hide_bullets": false,
-        "compact_mobile_grid": false,
+        "compact_mobile_grid": true,
         "hide_atc_on_tiles": false
       }
     },
@@ -489,7 +489,7 @@
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
         "hide_bullets": true,
-        "compact_mobile_grid": false,
+        "compact_mobile_grid": true,
         "hide_atc_on_tiles": false
       }
     },
@@ -564,7 +564,7 @@
         "hide_arrows_desktop": false,
         "hide_arrows_mobile": false,
         "hide_bullets": true,
-        "compact_mobile_grid": false,
+        "compact_mobile_grid": true,
         "hide_atc_on_tiles": false
       }
     },

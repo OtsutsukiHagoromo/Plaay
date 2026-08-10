@@ -104,6 +104,19 @@
       }
 {% endstyle %}
 
+{%- comment -%}
+  The homepage had no <h1> at all: every hero slide is a full-bleed banner with the
+  headline baked into the JPG, so there was no heading text for search or screen readers
+  to read. This renders one, visually hidden, from the section setting below.
+
+  ponytail: a hidden heading is the stopgap, not the fix. The real fix is a hero with
+  live text over the image - see the audit doc, section 9.3. Delete this the day that
+  ships.
+{%- endcomment -%}
+{%- if section.settings.seo_heading != blank -%}
+  <h1 class="plaay-visually-hidden">{{ section.settings.seo_heading }}</h1>
+{%- endif -%}
+
 <div
   id="two-sections-overlay-{{ section.id }}"
   class="{% if slides_size > 1 %} glide {% endif %} two-sections-overlay relative flex flex-col | md:flex-row"
@@ -755,6 +768,13 @@
     {
       "type": "header",
       "content": "General settings"
+    },
+    {
+      "type": "text",
+      "id": "seo_heading",
+      "label": "Page heading (H1)",
+      "default": "Plaay - clean chocolate snack-hacks, made in the UAE",
+      "info": "Read by search engines and screen readers. Not shown on the page - the banner artwork carries the visible headline. Leave blank to output no H1."
     },
     {
       "type": "range",

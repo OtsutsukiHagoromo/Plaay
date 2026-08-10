@@ -74,6 +74,22 @@
   <div style="background: {{ background_color }};">
     <div class="container py-20 | md:py-36">
       {% if collection_size > 0 %}
+        {%- comment -%}
+          Collection pages shipped with no H1 and no product count - the grid started
+          cold. The collection_hero sections that used to carry a heading are disabled on
+          every collection template, so the heading lives here.
+        {%- endcomment -%}
+        <div class="plaay-coll-head">
+          <h1 class="plaay-coll-head__title text-dark-blue uppercase font-walsheim-black">
+            {{ collection.title }}
+          </h1>
+          <p class="plaay-coll-head__count text-dark-blue">
+            {{ collection_size }} {% if collection_size == 1 %}product{% else %}products{% endif %}
+          </p>
+          {% if collection.description != blank %}
+            <div class="plaay-coll-head__desc text-dark-blue">{{ collection.description }}</div>
+          {% endif %}
+        </div>
         {% comment %} collection products {% endcomment %}
         <div class="" id="ProductGridContainer">
           {% paginate collection.products by 50 %}

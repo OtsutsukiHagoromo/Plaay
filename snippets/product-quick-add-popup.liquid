@@ -1,4 +1,16 @@
-{% liquid 
+{% comment %}
+  Subscription quick-add modal.
+
+  Only products with selling plans can ever open this: both triggers
+  (snippets/product-tile.liquid and snippets/featured-product.liquid) render the
+  .activate_popup button inside `if product.selling_plan_groups.size > 0`, and every
+  other product gets the inline <quick-add> element instead. Rendering it
+  unconditionally put one hidden, unopenable modal in the DOM per product - 15 of the
+  27 popups on /collections/all were orphans, 163 KB of markup that nothing could
+  reach. Guarding here rather than at the 20 call sites keeps the rule in one place.
+{% endcomment %}
+{%- if product.selling_plan_groups.size > 0 -%}
+{% liquid
   assign usp_images = product.metafields.custom.usp_image.value
   assign usp_text = product.metafields.arena.usp_text.value
   assign global_recharge_point_one = settings.global_recharge_point_one
@@ -142,3 +154,4 @@
     </quick-add>
   </form>
 </div>
+{%- endif -%}
