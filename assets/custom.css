@@ -5446,6 +5446,8 @@ footer .footer-flex {
   .nlb-sm__frame {
     animation: none !important;
     will-change: auto !important;
+  }
+}
 
 /* ==========================================================================
    Product tile
