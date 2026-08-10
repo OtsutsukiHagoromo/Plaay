@@ -102,16 +102,27 @@
     bottom: calc(env(safe-area-inset-bottom) + 92px);
   }
 
+  /* While a consent choice is still pending, the sticky ATC stands down so the two
+     bottom-anchored bars cannot stack on top of each other. Same pattern the bottom-nav
+     sheet already uses (body.pbn-menu-open). */
+  body:has([data-module="cookie-banner"]:not(.hidden)) #plaay-sticky-mobile {
+    display: none !important;
+  }
+
   @media (max-width: 767px) {
     [data-module="cookie-banner"] {
       bottom: calc(env(safe-area-inset-bottom) + 80px);
       padding: 0 10px;
     }
 
-    /* On product pages the sticky ATC bar occupies the bottom — move banner to top */
+    /* Product pages used to move the banner to top: 16px because the sticky ATC bar owns
+       the bottom of the screen. That put a consent card over the announcement bar, the
+       logo and the search icon - the first thing a new visitor saw, covering the hero.
+       Keep it bottom-anchored like every other template, clear of the bottom nav, and
+       hold the sticky ATC back until a choice has been made. */
     body[class*="template-product"] [data-module="cookie-banner"] {
-      top: 16px;
-      bottom: auto;
+      top: auto;
+      bottom: calc(env(safe-area-inset-bottom) + 72px);
     }
 
     .plaay-cookie-banner {

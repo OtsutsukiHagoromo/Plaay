@@ -5421,13 +5421,10 @@ footer .footer-flex {
     display: none;
   }
 
-  /* On product pages the banner was pinned to top:16px at z-9400, sitting on top of the
-     announcement bar (z-10) and header (z-9) - a consent card over the logo and search.
-     Keep it bottom-anchored on small screens like every other template. */
-  body[class*="template-product"] [data-module="cookie-banner"] {
-    top: auto;
-    bottom: calc(60px + env(safe-area-inset-bottom) + 12px);
-  }
+  /* The top:auto override that was here never applied. snippets/cookie-banner.liquid
+     carries its own inline <style> in the body, which comes after this file in document
+     order, and the two selectors have identical specificity - so the snippet's
+     `top: 16px` won every time. Fixed at the source instead. */
 }
 
 /* ---- Motion ----
@@ -5985,5 +5982,86 @@ footer .footer-flex {
 
   .plaay-coll-head__title {
     font-size: 44px;
+  }
+}
+
+/* ==========================================================================
+   Mobile sticky ATC - compact single row
+
+   The bar measured 146px tall on a 375x812 device: a purchase-mode line, a
+   thumbnail/price/quantity row and a full-width button, stacked. With the announcement
+   bar (40), header (54) and bottom nav (60) that left 496px of a 812px screen - 39% of
+   the viewport was permanently chrome.
+
+   This lays the same three children out as [meta] over [price+qty | button], which lands
+   at roughly 72px without removing anything. Every element the section JS updates
+   (.plaay-sticky-mode, .plaay-sticky-plan, .plaay-sticky-benefits, .plaay-sticky-compare,
+   .plaay-sticky-mobile-price, .plaay-mobile-qty) stays in the DOM.
+
+   ponytail: !important is load-bearing here. sections/bars-main-product.liquid and
+   sections/truffle-main-product.liquid both write these values as inline style
+   attributes, and the two files have already drifted apart from each other, so one CSS
+   block that overrides both is a smaller and safer change than rewriting two blocks of
+   markup that no one can preview locally. Move the values into these rules and delete
+   the style attributes when either section is next touched properly.
+   ========================================================================== */
+
+@media (max-width: 1023px) {
+  .plaay-sticky-mobile__inner {
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "meta meta"
+      "row  btn";
+    align-items: center;
+    column-gap: 12px;
+    row-gap: 2px;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .plaay-sticky-mobile__meta {
+    grid-area: meta;
+    margin-bottom: 0 !important;
+  }
+
+  .plaay-sticky-mode {
+    font-size: 10px !important;
+  }
+
+  .plaay-sticky-mobile__row {
+    grid-area: row;
+    margin-bottom: 0 !important;
+    gap: 10px !important;
+  }
+
+  /* The product image is 40px from the page it is fixed over - it costs a row of height
+     to repeat it here. */
+  .plaay-sticky-mobile .plaay-sticky-thumb {
+    display: none !important;
+  }
+
+  .plaay-sticky-mobile__price {
+    flex: 0 0 auto !important;
+  }
+
+  .plaay-sticky-mobile-price {
+    font-size: 18px !important;
+  }
+
+  .plaay-sticky-mobile__qty-wrap {
+    height: 44px !important;
+  }
+
+  .plaay-sticky-mobile__qty-wrap button {
+    min-width: 44px;
+  }
+
+  .plaay-sticky-mobile__submit {
+    grid-area: btn;
+    width: auto !important;
+    min-height: 44px;
+    padding: 12px 14px !important;
+    margin: 0 !important;
+    white-space: nowrap;
   }
 }

@@ -158,9 +158,26 @@
       wrapped in {% unless request.design_mode %}.
     {%- endcomment -%}
 
+      {%- comment -%}
+        Cart button. There used to be two handlers for this: one attached here at parse
+        time, and a second further down that waited for `load`, then 1000 ms more, then
+        cloned the button and replaced it - which silently destroyed the first. Between
+        parse and load+1s the button behaved one way, after it another, and on a slow
+        connection the gap was seconds long.
+
+        The clone existed to strip listeners that Rebuy Smart Cart attached to the button.
+        Smart Cart is disabled (see the destroy call below), and a capture-phase listener
+        attached now runs before anything a later script binds, so stopImmediatePropagation
+        does the same job without the clone or the timer.
+      {%- endcomment -%}
       <script>
-        var headerCartButton = document.querySelector('.header__icon--cart');
-        if (headerCartButton) headerCartButton.addEventListener('click', function() {
+        document.addEventListener('click', function(e) {
+          var trigger = e.target.closest && e.target.closest('.header__icon--cart');
+          if (!trigger) return;
+
+          e.preventDefault();
+          e.stopImmediatePropagation();
+
           var sd = document.querySelector('site-drawers');
           /* If the Drawers custom-element has been upgraded, use its API */
           if (sd && sd.activeDrawer !== undefined) {
@@ -183,7 +200,7 @@
               }, { once: true });
             }
           }
-        });
+        }, true);
       </script>
 
       <!-- Widget : Custom Popup -->
@@ -221,27 +238,8 @@
     document.body.classList.remove('smart-cart--enabled');
   });
 
-  // Wait for bundle.theme.js to finish, then re-attach cart button
-  window.addEventListener('load', function() {
-    setTimeout(function() {
-      var cartBtn = document.querySelector('.header__icon--cart');
-      if (!cartBtn) return;
-
-      // Clone to strip any Rebuy listeners
-      var newBtn = cartBtn.cloneNode(true);
-      cartBtn.parentNode.replaceChild(newBtn, cartBtn);
-
-      newBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        var sd = document.querySelector('site-drawers');
-        if (sd) {
-          sd.activeDrawer = 'cart';
-        }
-      }, true);
-
-    }, 1000);
-  });
+  /* The clone-and-rebind that used to live here has moved up to the single capture-phase
+     cart handler - see the comment above it. */
 </script>
 
       {% render 'mobile-bottom-nav' %}
