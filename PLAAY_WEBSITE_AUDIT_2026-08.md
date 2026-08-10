@@ -110,11 +110,11 @@ Revised P0, in priority order:
 | 1 | Guard the quick-add modal on `selling_plan_groups`; sprite `icon-tick`; move per-tile and bottom-nav CSS to the stylesheet; fix the duplicate `productSelect` id, the dead `product.collections` loop and the Yotpo remnants | 1 d | **done — see §0.1** |
 | 2 | `<h1>` on homepage + collection; fix the `"Products"` title | 0.5 d | **done — see §0.1** |
 | 3 | Collection grid → 2 columns on mobile | 0.25 d | **done — see §0.1** |
-| 4 | Font pass: preload 2 not 5, one family with weights, add the missing `GTWalsheimPro-Bold` face, kill the duplicate `walsheim-regular` fetch | 0.5 d | open |
-| 5 | Uninstall Rebuy properly; gate Clarity/Pixel/GA4/Klaviyo behind consent; identify `config-security.com` | 0.5 d | open |
-| 6 | Slim the sticky ATC 146 px → 64 px; bottom-anchor the cookie banner on all templates; fix the double cart-button handler race in `theme.liquid` | 0.75 d | open |
-| 7 | Extract the ~30 KB of theme JS still inlined per page (`plaay-gift` 10.3 KB, `cart-gift-prompt` 8.3 KB, `tier-bar` 6.9 KB, `bottom-nav` 4 KB) into cached asset files | 0.5 d | open (new) |
-| — | **Merge `claude/website-theme-speed-mobile-ed7f06` into `main`** | 5 min | **do before anything else** |
+| 4 | Font pass: preload 2 not 5, kill the duplicate `walsheim-regular` fetch | 0.5 d | **done — see §0.1** |
+| 5 | Uninstall Rebuy properly; gate Clarity/Pixel/GA4/Klaviyo behind consent; identify `config-security.com` | 0.5 d | **not a theme change — see §0.2** |
+| 6 | Slim the sticky ATC; bottom-anchor the cookie banner on all templates; fix the double cart-button handler race in `theme.liquid` | 0.75 d | **done — see §0.1** |
+| 7 | Extract the ~30 KB of theme JS still inlined per page into cached asset files | 0.5 d | **done — see §0.1** |
+| — | Merge `claude/website-theme-speed-mobile-ed7f06` into `main` | 5 min | merged into the audit branch (`4658ded`); still not on `main` |
 
 ---
 
@@ -136,7 +136,51 @@ Commit `d67c8e0` — *"perf(html): drop orphan quick-add modals, sprite the tick
 
 **Projected:** homepage 835 KB → **~676 KB** (−19 %), `/collections/all` 1,042 KB → **~809 KB** (−22 %).
 
-**Verification status:** Liquid tag balance across all 230 theme files, both edited section schemas, and every template JSON were validated programmatically. Nothing was rendered in a browser — there is no Shopify CLI in this environment. **Before publishing, preview the theme and check:** a subscription product's quick-add modal still opens from a grid tile (Plaayer Pack / OG Plaayer Pack), tick icons still render inside it, product-tile hover swap and the grey-background variant still look right on desktop, and the 2-column mobile grid on `/collections/all`.
+### Batch 2 — commit `a0a08cd`
+
+The audit branch was sitting on `main`, which does not have the speed release, so it was merged in first (`4658ded`) before any further work. One merge-resolution bug was caught and fixed immediately (`30cb59e`): joining the two `custom.css` tails dropped two closing braces from the reduced-motion block, which would have swallowed every rule after it.
+
+| Change | File(s) | Effect |
+|---|---|---|
+| **Duplicate `@font-face` block removed.** It was an exact copy of the one at the top of `bundle.theme.css` — same five families, same files — differing only in URL: `asset_url` appends `?v=<hash>`, the bundle uses a relative `url()`. Two URLs for one file is why `walsheim-regular.static.woff2` downloaded twice per page. | `snippets/head.fonts.liquid` | −1 duplicate font request |
+| **Preloads 5 → 2**, `?v=` stripped so the preload actually matches what the stylesheet requests | `snippets/head.fonts.liquid` | ~123 KB off the critical path |
+| **One cart-button handler.** The second one waited for `load`, then 1,000 ms more, then cloned the button and replaced it — destroying the first. A capture-phase delegated listener does the same job with no clone and no timer. | `layout/theme.liquid` | removes the race |
+| **Cookie banner bottom-anchored on product pages.** The previous release added this override in `custom.css`, but it never applied — the snippet carries its own inline `<style>` in the body, later in document order at identical specificity, so its `top: 16px` won. Fixed at the source; the sticky ATC now stands down while consent is pending. | `snippets/cookie-banner.liquid`, `assets/custom.css` | no more consent card over the hero |
+| **Sticky ATC 146 px → ~72 px**, relaid out as `[meta]` over `[price + qty ǀ button]`, nothing removed from the DOM | `assets/custom.css` | fixed mobile chrome 316 px → ~242 px |
+| **~30 KB of inline JS → four deferred, cached assets:** `plaay-gift.js` (10.6 KB), `plaay-cart-gift-prompt.js` (8.5 KB), `plaay-cart-tier-bar.js` (7.1 KB), `plaay-bottom-nav.js` (4.1 KB) | 4 snippets + 4 new assets | −30 KB HTML **per page**, cached across navigations |
+
+`gift-js` was the only one carrying Liquid (the spend threshold, which swaps between the Eid and standard tier settings); it now arrives via `window.plaayGiftConfig`.
+
+### Running total
+
+| | Before | After batches 1 + 2 |
+|---|---|---|
+| Homepage HTML | 835 KB | **~646 KB** (−23 %) |
+| `/collections/all` HTML | 1,042 KB | **~779 KB** (−25 %) |
+| Font requests on first load | 6 (one duplicated) | 5, only 2 preloaded |
+| Fixed mobile chrome on a PDP | 316 px of 812 | ~242 px |
+| Duplicate `productSelect` ids | 54 | 0 |
+| `<h1>` on home / PLP | none | present |
+
+**Verification status:** all four extracted JS files pass `node --check`. Liquid tag balance across all 230 theme files, both edited section schemas, every template JSON and CSS brace balance were validated programmatically. **Nothing was rendered in a browser — there is no Shopify CLI in this environment.**
+
+**Preview checklist before publishing:**
+
+1. A subscription product's quick-add modal still opens from a grid tile (OG Plaayer Pack / Plaayer Pack), and the tick icons render inside it.
+2. Product-tile hover swap and the grey-background variant still look right on desktop.
+3. `/collections/all` is 2 columns on mobile and the new heading block reads correctly.
+4. Cart drawer opens from the header icon on first tap, immediately after page load and again after 5 seconds.
+5. Cart tier/free-shipping bar, gift prompt, discount field and the bottom nav all still work — those four scripts now run deferred rather than inline.
+6. The mobile sticky ATC on a PDP: one row, quantity stepper and Add to bag both tappable, price legible.
+7. Cookie banner appears at the bottom on a product page, not over the header.
+
+## 0.2 Not a theme change
+
+Two P0 items cannot be closed in code, and should not be faked:
+
+- **Rebuy.** Smart Cart is destroyed at runtime but the app still ships 19 requests and 6 stylesheets on every page. This needs the app uninstalled in the Shopify admin. Removing the theme's `Rebuy.SmartCart.destroy()` call without uninstalling would re-enable the cart.
+- **Consent.** The cookie banner is a notice, not a consent control: it has a single Dismiss button, writes an `HL-cookie` cookie plus a `localStorage` flag, and gates nothing. Clarity, Meta Pixel, GA4, Klaviyo and Recharge all fire regardless. Wiring Dismiss to Shopify's `customerPrivacy.setTrackingConsent()` would record consent the visitor never actually gave, which is worse than the current state, so it was left alone. The correct route is Shopify's own consent management in the admin — Shopify's web pixels then respect the visitor's choice automatically — plus an Accept/Reject pair in place of Dismiss. That is a legal and design decision, not a mechanical fix.
+- **`api.config-security.com`** (3 requests per page) is still unattributed. Someone should identify which app injects it.
 
 ---
 
@@ -363,7 +407,7 @@ The guidelines describe the palette as *"bright, bold hues… lively and invitin
 
 Additional font problems:
 
-- **`GTWalsheimPro-Bold` is used by 10 elements but never declared in `@font-face`** (`snippets/head.fonts.liquid` declares only the Regular). Those elements silently fall back to a system font.
+- **`GTWalsheimPro-Bold` and `GTWalsheimPro-Black` are used as family names but never declared in `@font-face`.** *(Correction: they are harmless. `custom.css` writes them as `font-family: 'GTWalsheimPro-Bold', 'walsheim-bold', sans-serif`, so the browser falls through to the declared Walsheim face — not to a system font, as I first reported. It is dead naming, not a rendering bug.)*
 - Each weight is registered as a **separate `font-family`** rather than one family with `font-weight` values, so `font-weight: bold` does nothing and the browser cannot synthesise or subset intelligently.
 - **All five fonts are `<link rel="preload">`d on every page** (~205 KB) — they compete with the LCP image for bandwidth on the critical path.
 - `walsheim-regular.static.woff2` is **downloaded twice** (once with a `?v=` cache-buster from `head.fonts`, once without, from a stylesheet `url()`).
