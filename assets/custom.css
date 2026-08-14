@@ -5448,3 +5448,99 @@ footer .footer-flex {
     will-change: auto !important;
   }
 }
+
+/* ==========================================================================
+   Quick-add popup - mobile rework
+   Was a fixed centre-anchored card with no scroll, a 20px close target, a
+   4-across USP row that wrapped mid-word, and subscription options that stayed
+   on screen while "Just once" was selected.
+   ========================================================================== */
+
+.plaay-quick-add {
+  max-height: 88vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+@supports (height: 100dvh) {
+  .plaay-quick-add { max-height: 88dvh; }
+}
+
+/* Subscription block belongs to the Subscribe state only. bundle.quick-add.js reads
+   .popup_toggle.active for the same decision, so this keeps the UI honest with what
+   actually gets added to the cart. */
+.product_popup:not(:has(.popup_toggle.active)) [data-quick-add-selling-plan-container] {
+  display: none !important;
+}
+
+@media (max-width: 640px) {
+  /* Bottom sheet: reachable with a thumb, and free to grow without leaving the
+     viewport. The card previously sat centred and could overflow off-screen on
+     short devices with no way to scroll to the add-to-cart button. */
+  .plaay-quick-add {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: none;
+    transform: none;
+    border-radius: 20px 20px 0 0;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+    box-shadow: 0 -8px 32px rgba(2, 29, 73, 0.18);
+  }
+
+  /* Drag affordance so it reads as a sheet. */
+  .plaay-quick-add::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    border-radius: 999px;
+    background: rgba(2, 29, 73, 0.18);
+    margin: 0 auto 4px;
+  }
+
+  /* USP row: even columns instead of flex-wrap + max-width:80px, which broke
+     "NATURALLY GLUTEN FREE" across ragged lines. */
+  .plaay-quick-add .usp-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    justify-items: center;
+  }
+
+  .plaay-quick-add .usp-grid > * {
+    margin-left: 0;
+    max-width: none;
+    text-align: center;
+  }
+
+  /* Toggle row needs breathing space and a real tap target. */
+  .plaay-quick-add .popup_toggle {
+    min-height: 44px;
+  }
+
+  .plaay-quick-add .just_once,
+  .plaay-quick-add .subscribe {
+    font-size: 1rem;
+  }
+}
+
+/* ---- Add to bag: consistent 44px targets on the tile and in the popup ---- */
+@media (max-width: 1023px) {
+  .popup_atc,
+  button[data-add-to-cart],
+  .product_tile_atc,
+  [data-quick-add] {
+    min-height: 44px;
+  }
+
+  /* Quantity stepper: 32px buttons were below the tap-target floor. */
+  quantity-adjuster button,
+  [data-module="quantity-adjuster"] button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
