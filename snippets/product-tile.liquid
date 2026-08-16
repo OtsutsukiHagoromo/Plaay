@@ -119,8 +119,15 @@
       <a href="{{ product.url }}" class="text-0 product-tile">
       {{ product.title }}
       
-      {%- assign second_image = product.media[1] -%} 
-      {%- assign featured_image = product.featured_image -%}
+      {%- assign second_image = product.media[1] -%}
+      {%- comment -%}
+        Show the image belonging to the variant whose price the tile prints, falling back
+        to the product's featured image when a variant has none. product.featured_image is
+        whatever sits first in product media, which is not necessarily the first variant:
+        Pistachio Chocolate Truffles led with the 60G shot while the tile priced the
+        10x30G, so a 60G photo sat above a 128.00 price.
+      {%- endcomment -%}
+      {%- assign featured_image = product.selected_or_first_available_variant.image | default: product.featured_image -%}
       {%- assign second_image_preview = second_image.preview_image | default: second_image -%}
       {%- capture product_tile_sizes -%}(min-width: 1536px) 280px, (min-width: 1280px) 22vw, (min-width: 1024px) 28vw, (min-width: 640px) 30vw, 46vw{%- endcapture -%}
     

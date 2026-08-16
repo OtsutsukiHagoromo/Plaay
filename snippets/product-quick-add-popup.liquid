@@ -17,28 +17,52 @@
   assign global_recharge_point_two = settings.global_recharge_point_two
   assign global_recharge_point_three = settings.global_recharge_point_three
 %}
-<div class="invisible opacity-0 transition-all duration-200 product_popup bg-white fixed left-1/2 top-1/2 transform -translate-y-1/2 -translate-x-1/2 rounded-xl pb-6 pt-4 px-6 z-20 w-full h-auto | sm:max-w-sm"
+<div class="invisible opacity-0 transition-all duration-200 product_popup plaay-quick-add bg-white fixed left-1/2 top-1/2 transform -translate-y-1/2 -translate-x-1/2 rounded-xl pb-6 pt-3 px-5 z-20 w-full h-auto | sm:max-w-sm sm:px-6 sm:pt-4"
  data-popup-title="{{product.title}}">
   {% comment %} cross {% endcomment %}
-  <div class="cross text-dark-blue h-5 w-5 mb-1 ml-auto mr-0 cursor-pointer">
-    {% render 'icon-cross' %}
-  </div>
+  <button type="button" aria-label="Close" class="cross text-dark-blue flex items-center justify-center h-11 w-11 -mr-2 ml-auto mb-1 cursor-pointer bg-transparent border-0 rounded-full">
+    <span class="h-5 w-5 flex pointer-events-none">{% render 'icon-cross' %}</span>
+  </button>
   {% comment %} product info {% endcomment %}
   <form data-add-to-cart id="add-to-cart-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}" action="/cart/add" method="post" data-productid="{{product.id}}" class="flex flex-col">
     <quick-add data-module="quick-add" data-id="{{- product.first_available_variant.id -}}">
-    <select name="id" id="productSelect" class="hidden">
-      {% for variant in product.variants %}
-        {% if variant.available %}
-          <option value="{{variant.id}}">
-            {{variant.title}} - {{variant.price | money}}
+    {%- comment -%}
+      Variant picker. Previously this select was always .hidden and carried a duplicate
+      id="productSelect" on every copy on the page (37 on the homepage). A second, visible
+      picker below looped option *values* into name="id", which submitted a value string
+      rather than a variant id - and bundle.quick-add.js ignores both, adding
+      dataset.id (first available variant) regardless.
+
+      Now: one select, real variant ids, visible whenever a product has more than one
+      variant. The inline script at the bottom keeps <quick-add data-id> and the button
+      price in sync with it.
+    {%- endcomment -%}
+    {%- assign qa_uid = product.id | append: '-' | append: section.id -%}
+    <div class="{% if product.variants.size > 1 %}relative mb-3{% else %}hidden{% endif %}">
+      {% if product.variants.size > 1 %}
+        <label class="sr-only" for="quick-add-variant-{{ qa_uid }}">
+          {{ product.options_with_values.first.name | default: 'Size' }}
+        </label>
+        <span class="h-3 w-3 text-purple-dark flex absolute right-3 top-1/2 transform -translate-y-1/2 z-10 pointer-events-none">
+          {% render 'icon-down-arrow' %}
+        </span>
+      {% endif %}
+      <select
+        name="id"
+        id="quick-add-variant-{{ qa_uid }}"
+        data-quick-add-variant
+        class="w-full appearance-none border rounded-lg border-dark-blue pl-4 pr-9 py-2 min-h-[44px] text-base font-walsheim-bold text-dark-blue bg-white">
+        {% for variant in product.variants %}
+          <option
+            value="{{ variant.id }}"
+            data-price="{{ variant.price | money }}"
+            {% unless variant.available %}disabled{% endunless %}
+            {% if variant.id == product.selected_or_first_available_variant.id %}selected{% endif %}>
+            {{ variant.title }} - {% if variant.available %}{{ variant.price | money }}{% else %}{{ 'product.add_to_cart.sold_out' | t }}{% endif %}
           </option>
-        {% else %}
-          <option disabled="disabled">
-            {{variant.title}} - Sold out
-          </option>
-        {% endif %}
-      {% endfor %}
-    </select>
+        {% endfor %}
+      </select>
+    </div>
     {% comment %} product title {% endcomment %}
     <div class="flex items-center flex-col order-first | sm:flex-row">
       <div class="flex flex-col items-center w-full">
@@ -47,7 +71,7 @@
     </div>
     {% comment %} USPs {% endcomment %}
     {% if usp_images != blank or usp_text != blank %}
-      <div class="flex items-center flex-wrap justify-between w-full mt-5 order-first">
+      <div class="usp-grid flex items-center flex-wrap justify-between w-full mt-5 order-first">
         {% for image in usp_images %}
           {% assign text = usp_text[forloop.index0] %}
           <div class="flex items-center flex-col ml-2 max-w-[80px]">
@@ -70,27 +94,11 @@
       {% comment %} subscribe {% endcomment %}
       <p class="subscribe text-lg font-walsheim-bold text-dark-blue opacity-50 transition-all duration-200"> {{ 'product.recharge.subscribe' | t }}</p>
     </div>
-    {% assign variant_size = product.options_with_values | size %}
-    {% comment %} variants {% endcomment %}
-    {% if variant_size > 1 %}
-      <div class="flex flex-col mb-3 | sm:flex-row">
-        {% for option in product.options_with_values %}
-          <div class="product_variant relative flex-1 {% unless forloop.first %} mt-4 {% endunless %}">
-            <span class="h-3 w-3 text-purple-dark flex absolute right-2 top-1/2 transform -translate-y-1/2 z-10">
-              {% render 'icon-down-arrow' %}
-            </span>
-            <select data-variant name="id" class="font-roc text-sm h-11">
-              <option value="{{option.name}}" selected="selected">{{ option.name }}</option>
-              {% for value in option.values %}
-                <option value="{{ value | escape }}">
-                  {{value}}
-                </option>
-              {% endfor %}
-            </select>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
+    {% comment %}
+      The old option-value picker lived here. Removed - it emitted a second element named
+      "id" holding an option value ("10 x 30G") instead of a variant id, and nothing read
+      it. The single variant select above replaces it.
+    {% endcomment %}
     {% comment %} recharge {% endcomment %}
     <div data-quick-add-selling-plan-container class="justify-between items-center flex-row mt-1 flex-wrap hidden">
       {%- for selling_plan_group in  product.selling_plan_groups -%}
@@ -150,8 +158,48 @@
       {% endif %}
 
       {% render 'btn', width: 'full', style: 'blue-border', is_add_to_cart: true, has_price: true, type: 'button', copy: copy, has_price: true, additional_class: class, product: product %}
-      
+
     </quick-add>
   </form>
 </div>
+
+{%- comment -%}
+  One delegated listener for every quick-add popup on the page (the homepage renders 37),
+  rather than an inline script per popup. bundle.quick-add.js adds whatever sits in
+  <quick-add data-id>, so changing the select has to write back to that attribute.
+{%- endcomment -%}
+<script>
+  if (!window.plaayQuickAddVariantSync) {
+    window.plaayQuickAddVariantSync = true;
+    document.addEventListener('change', function (e) {
+      var select = e.target.closest('[data-quick-add-variant]');
+      if (!select) return;
+
+      var option = select.options[select.selectedIndex];
+      if (!option || option.disabled) return;
+
+      var popup = select.closest('.product_popup');
+      if (!popup) return;
+
+      // What actually gets added to the cart.
+      var quickAdd = popup.querySelector('quick-add');
+      if (quickAdd) quickAdd.dataset.id = option.value;
+
+      // Recharge reads this when the subscribe toggle is on.
+      var variantIdInput = popup.querySelector('[data-variant-id]');
+      if (variantIdInput) variantIdInput.value = option.value;
+
+      // Button price. Pre-formatted by Liquid so there is no money formatting in JS.
+      var priceEl = popup.querySelector('.product_price');
+      var price = option.getAttribute('data-price');
+      if (priceEl && price) priceEl.textContent = price;
+
+      var addButton = popup.querySelector('button[data-add]');
+      if (addButton) {
+        addButton.disabled = false;
+        addButton.classList.remove('disabled');
+      }
+    });
+  }
+</script>
 {%- endif -%}

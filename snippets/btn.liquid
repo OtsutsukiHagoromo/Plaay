@@ -51,7 +51,13 @@
     {% endif %}>
     {% if has_price %}
       <div class="text-sm product_price relative">
-        {{ product.price | money }}
+        {%- comment -%}
+          product.price is the MINIMUM variant price. The cart always receives
+          selected_or_first_available_variant, so on any product whose variants differ in
+          price this printed one number and charged another (Pistachio Truffles showed
+          49.00 for the 2x60G while adding the 128.00 10x30G).
+        {%- endcomment -%}
+        {{ product.selected_or_first_available_variant.price | default: product.price | money }}
       </div>
       <span class="px-1"> | </span>
     {% endif %}
