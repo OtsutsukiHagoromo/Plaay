@@ -54,7 +54,14 @@
       {{- page_title | escape -}}
       {%- if current_tags %} &ndash; tagged &ldquo;{{ current_tags | join: ', ' | escape }}&rdquo;{% endif -%}
       {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
-      {%- unless page_title contains shop.name %} &ndash; {{ shop.name | escape }}{% endunless -%}
+      {%- comment -%}
+        Match on the first word of the shop name, not the whole thing. shop.name is
+        "Plaay Store", and the hand-written product titles end in "- Plaay", so a
+        `contains shop.name` test failed on every one of them and produced
+        "... - Plaay - Plaay Store".
+      {%- endcomment -%}
+      {%- assign brand_token = shop.name | split: ' ' | first -%}
+      {%- unless page_title contains brand_token %} &ndash; {{ shop.name | escape }}{% endunless -%}
     </title>
 
     {% if page_description %}

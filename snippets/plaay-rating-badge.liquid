@@ -1,0 +1,57 @@
+{%- comment -%}
+  Brand-level rating badge for the product page.
+
+  This replaces the Judge.me per-product preview badge, which showed whatever that one
+  product had collected - "2 reviews" at three stars on Pistachio Truffles, five stars on
+  Peanut Butter. A near-empty rating in the most prominent position on the page is a
+  weaker signal than no rating at all.
+
+  IMPORTANT - the number here must be the real store-wide average, and the label has to
+  say so. A figure that reads as *this product's* rating when it is actually the store
+  average is a misleading review claim under UAE consumer protection rules and the
+  equivalent EU/UK ones. Hence:
+
+    - the value comes from shop.metafields.judgeme.all_reviews_rating, which Judge.me
+      maintains, not from a number typed into a theme setting;
+    - the copy says "across all Plaay products", not "this product";
+    - if the metafield is missing, nothing renders. There is no hardcoded fallback,
+      deliberately.
+
+  If the badge is not appearing, the store-wide metafields are not published. In the
+  Judge.me admin, install the "All Reviews" widget / page - that is what creates
+  shop.metafields.judgeme.all_reviews_rating and all_reviews_count.
+
+  The badge links to #plaay-reviews, which is the pdp-social-proof section. That section
+  currently holds hand-written testimonials; the honest destination is the Judge.me
+  "Reviews" app block. Drop it into the product template at that anchor in the theme
+  editor and the link points at real reviews.
+{%- endcomment -%}
+
+{%- liquid
+  assign rating = shop.metafields.judgeme.all_reviews_rating
+  assign rating_count = shop.metafields.judgeme.all_reviews_count
+-%}
+
+{%- if rating != blank and rating_count != blank and rating_count > 0 -%}
+  {%- assign rating_value = rating | times: 1.0 -%}
+  {%- assign rating_rounded = rating_value | round: 1 -%}
+  {%- assign full_stars = rating_value | floor -%}
+
+  <a
+    href="#plaay-reviews"
+    class="plaay-rating-badge"
+    data-plaay-scroll-to="#plaay-reviews"
+    aria-label="{{ rating_rounded }} out of 5 from {{ rating_count }} reviews across all Plaay products. Jump to reviews.">
+    <span class="plaay-rating-badge__stars" aria-hidden="true">
+      {%- for i in (1..5) -%}
+        <span class="plaay-rating-badge__star{% if forloop.index <= full_stars %} is-on{% endif %}">
+          {%- render 'icon-star' -%}
+        </span>
+      {%- endfor -%}
+    </span>
+    <span class="plaay-rating-badge__value font-walsheim-black">{{ rating_rounded }}</span>
+    <span class="plaay-rating-badge__meta">
+      {{ rating_count }} reviews across all Plaay products
+    </span>
+  </a>
+{%- endif -%}

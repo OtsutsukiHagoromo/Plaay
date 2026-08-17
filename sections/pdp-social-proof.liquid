@@ -12,7 +12,12 @@
   assign trust_badges = section.blocks | where: 'type', 'trust_badge'
 %}
 
-<div class="pdp-sp" style="background:{{ bg }}">
+{%- comment -%}
+  #plaay-reviews is the anchor the rating badge on the product page links to. Once the
+  Judge.me "Reviews" app block is added to the product templates, move this id onto that
+  block instead - it is the honest destination for a rating link.
+{%- endcomment -%}
+<div id="plaay-reviews" class="pdp-sp" style="background:{{ bg }}">
   <div class="container">
 
     {%- comment -%} Rating headline {%- endcomment -%}

@@ -6221,13 +6221,31 @@ footer .footer-flex {
     padding: 8px 12px calc(8px + env(safe-area-inset-bottom)) !important;
   }
 
+  /* Meta line: mode, and the plan name when a subscription is selected. It was rendering
+     11px tall with two spans inside, so "Change" and the frequency were clipped. One
+     line, ellipsised, with room to actually sit in. */
   .plaay-sticky-mobile__meta {
     grid-area: meta;
     margin-bottom: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: baseline;
+    gap: 6px !important;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
   }
 
   .plaay-sticky-mode {
-    font-size: 10px !important;
+    font-size: 10.5px !important;
+    line-height: 1.35 !important;
+    flex: 0 0 auto;
+  }
+
+  .plaay-sticky-mobile__meta .plaay-sticky-plan-row {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .plaay-sticky-mobile__row {
@@ -6247,24 +6265,56 @@ footer .footer-flex {
   }
 
   .plaay-sticky-mobile-price {
-    font-size: 18px !important;
+    font-size: 17px !important;
   }
 
+  /* Measured at 375px, the first pass gave the stepper 121px against a 125px Add to bag -
+     the secondary control was as wide as the primary one, which is what made the bar read
+     as crammed. 106px here leaves the button ~147px, so the CTA is clearly dominant.
+
+     ponytail: 38px wide is under the 44px I set elsewhere in the tap-target pass. It is
+     still 44px tall and well past the 24x24 WCAG 2.5.8 minimum, and the alternative is a
+     cramped CTA - the control people actually came to press. */
   .plaay-sticky-mobile__qty-wrap {
     height: 44px !important;
+    flex: 0 0 auto;
   }
 
   .plaay-sticky-mobile__qty-wrap button {
-    min-width: 44px;
+    min-width: 38px;
+    padding: 0 !important;
+  }
+
+  .plaay-sticky-mobile__qty-wrap .plaay-mobile-qty {
+    min-width: 30px !important;
+    padding: 0 !important;
   }
 
   .plaay-sticky-mobile__submit {
     grid-area: btn;
     width: auto !important;
+    min-width: 0;
     min-height: 44px;
-    padding: 12px 14px !important;
+    padding: 12px 10px !important;
     margin: 0 !important;
+    font-size: 15px !important;
+    letter-spacing: 0.03em !important;
     white-space: nowrap;
+  }
+
+  /* The bar sat flush against the page with no separation. */
+  .plaay-sticky-mobile {
+    border-top: 1px solid var(--plaay-border);
+    box-shadow: 0 -6px 20px rgb(var(--plaay-navy-rgb) / 0.08);
+  }
+}
+
+/* Very narrow phones (iPhone SE and similar): drop the price from the bar rather than
+   squeeze all three. The price is still on screen in the product form above, and the
+   stepper plus a full-width CTA is the more useful pair at 320px. */
+@media (max-width: 359px) {
+  .plaay-sticky-mobile__price {
+    display: none !important;
   }
 }
 
@@ -6454,5 +6504,72 @@ summary:focus-visible,
 
   footer .footer-flex a {
     padding: 4px 0;
+  }
+}
+
+/* ==========================================================================
+   Brand rating badge (product page)
+
+   Replaces the Judge.me per-product preview badge. See
+   snippets/plaay-rating-badge.liquid for why the wording is store-wide and why there is
+   no hardcoded fallback number.
+   ========================================================================== */
+
+.plaay-rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 6px 12px 6px 10px;
+  border: 1px solid var(--plaay-border);
+  border-radius: var(--plaay-r-pill);
+  background: #fff;
+  color: var(--plaay-navy);
+  text-decoration: none;
+  transition: border-color var(--plaay-d-2) var(--plaay-ease-out),
+              transform var(--plaay-d-2) var(--plaay-ease-out);
+}
+
+.plaay-rating-badge:hover {
+  border-color: var(--plaay-navy);
+  transform: translateY(-1px);
+}
+
+.plaay-rating-badge__stars {
+  display: inline-flex;
+  gap: 1px;
+}
+
+.plaay-rating-badge__star {
+  display: inline-flex;
+  width: 14px;
+  height: 14px;
+  color: rgb(var(--plaay-navy-rgb) / 0.18);
+}
+
+.plaay-rating-badge__star.is-on {
+  color: var(--plaay-yellow);
+}
+
+.plaay-rating-badge__value {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.plaay-rating-badge__meta {
+  font-family: var(--font-walsheim-regular, "walsheim-regular", sans-serif);
+  font-size: 12px;
+  line-height: 1.2;
+  color: var(--plaay-muted);
+}
+
+@media (max-width: 480px) {
+  .plaay-rating-badge {
+    gap: 6px;
+    padding: 6px 10px;
+  }
+
+  .plaay-rating-badge__meta {
+    font-size: 11.5px;
   }
 }

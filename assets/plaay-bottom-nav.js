@@ -127,3 +127,30 @@
     window.location.href = url.toString();
   });
 })();
+
+/* Smooth scroll for in-page anchors that opt in with data-plaay-scroll-to, offset by the
+   fixed announcement bar + header so the target does not land underneath them. */
+(function () {
+  if (window.plaayAnchorScrollReady) return;
+  window.plaayAnchorScrollReady = true;
+
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest && e.target.closest('[data-plaay-scroll-to]');
+    if (!link) return;
+
+    var target = document.querySelector(link.getAttribute('data-plaay-scroll-to'));
+    if (!target) return;
+
+    e.preventDefault();
+
+    var header = document.querySelector('header');
+    var bar = document.querySelector('.announcement_bar');
+    var offset = (header ? header.getBoundingClientRect().height : 0) +
+                 (bar ? bar.getBoundingClientRect().height : 0) + 16;
+
+    window.scrollTo({
+      top: target.getBoundingClientRect().top + window.pageYOffset - offset,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+    });
+  });
+})();
