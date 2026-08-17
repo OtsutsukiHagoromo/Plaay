@@ -28,12 +28,25 @@
 {%- endcomment -%}
 
 {%- liquid
+  comment
+    Judge.me's store-wide metafields first. They are the live figure and cannot go stale.
+    If they are not published, fall back to the two theme settings under Reviews - a
+    stand-in the merchant keeps in step with the Judge.me dashboard. Both blank means no
+    badge; there is no number baked into this file.
+  endcomment
   assign rating = shop.metafields.judgeme.all_reviews_rating
   assign rating_count = shop.metafields.judgeme.all_reviews_count
+
+  if rating == blank or rating_count == blank
+    assign rating = settings.store_rating_value
+    assign rating_count = settings.store_rating_count
+  endif
 -%}
 
-{%- if rating != blank and rating_count != blank and rating_count > 0 -%}
-  {%- assign rating_value = rating | times: 1.0 -%}
+{%- assign rating_value = rating | times: 1.0 -%}
+{%- assign count_value = rating_count | times: 1 -%}
+
+{%- if rating_value > 0 and count_value > 0 -%}
   {%- assign rating_rounded = rating_value | round: 1 -%}
   {%- assign full_stars = rating_value | floor -%}
 

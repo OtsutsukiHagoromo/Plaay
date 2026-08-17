@@ -4,8 +4,8 @@
     "theme_name": "Shopify Theme Lab",
     "theme_version": "1.0.0",
     "theme_author": "THEME_AUTHOR",
-    "theme_documentation_url": "https:\/\/THEME_DOCUMENTATION_URL.com",
-    "theme_support_url": "https:\/\/THEME_SUPPORT_URL.com"
+    "theme_documentation_url": "https://THEME_DOCUMENTATION_URL.com",
+    "theme_support_url": "https://THEME_SUPPORT_URL.com"
   },
   {
     "name": "t:settings_schema.custom_settings.name",
@@ -294,7 +294,27 @@
         "id": "hide_tap_me_functionality",
         "label": "Hide tap me functionality?",
         "default": false,
-        "info": "When this is clicked, tap me buttons will be removed from review \/ video sections"
+        "info": "When this is clicked, tap me buttons will be removed from review / video sections"
+      },
+      {
+        "type": "header",
+        "content": "Store-wide rating badge (product pages)"
+      },
+      {
+        "type": "paragraph",
+        "content": "Shown under the price on product pages, linked to the reviews section. If Judge.me publishes the store-wide metafields, those are used automatically and these two fields are ignored. Fill them in only as a stand-in, and keep them matching the figure on your Judge.me dashboard - the badge says the rating covers all Plaay products, so it must not be a single product's score."
+      },
+      {
+        "type": "text",
+        "id": "store_rating_value",
+        "label": "Average rating",
+        "info": "e.g. 4.9. Leave blank to hide the badge entirely."
+      },
+      {
+        "type": "text",
+        "id": "store_rating_count",
+        "label": "Number of reviews",
+        "info": "e.g. 137. Leave blank to hide the badge entirely."
       }
     ]
   }
