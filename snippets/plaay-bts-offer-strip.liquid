@@ -1,0 +1,31 @@
+{%- comment -%}
+  Plaay - Back to School offer card for the product page. Flat 15% off, 21 August only.
+  Reuses the Eid offer-card CSS. Auto-hides outside the 21 August (Dubai) window.
+{%- endcomment -%}
+{%- liquid
+  assign bts_active = false
+  if settings.bts_sale_enabled
+    assign bts_now = 'now' | date: '%s' | times: 1
+    assign bts_start = '2026-08-21T00:00:00+04:00' | date: '%s' | times: 1
+    assign bts_end = '2026-08-22T00:00:00+04:00' | date: '%s' | times: 1
+    if bts_now >= bts_start and bts_now < bts_end
+      assign bts_active = true
+    endif
+  endif
+-%}
+{%- if bts_active -%}
+<div class="plaay-eid-card">
+  <div class="plaay-eid-card__header">
+    <span class="plaay-eid-card__emoji">🎒</span>
+    <span class="plaay-eid-card__title">Back to School Sale &middot; Flat 15% Off</span>
+  </div>
+  <ul class="plaay-eid-card__tiers">
+    <li class="plaay-eid-card__tier">
+      <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      <strong>15% off</strong> your entire order, today only
+    </li>
+  </ul>
+  {%- render 'plaay-bts-countdown' -%}
+  <p class="plaay-eid-card__note">Discount applied automatically at checkout &middot; Ends 11:59 PM, 21 August</p>
+</div>
+{%- endif -%}

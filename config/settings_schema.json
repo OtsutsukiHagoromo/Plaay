@@ -190,6 +190,16 @@
         "default": false
       },
       {
+        "type": "header",
+        "content": "Back to School Sale (21 Aug)"
+      },
+      {
+        "type": "checkbox",
+        "id": "bts_sale_enabled",
+        "label": "Enable Back to School flash sale (flat 15% off, auto-shows 21 Aug only)",
+        "default": false
+      },
+      {
         "type": "range",
         "id": "product_recommendations_limit",
         "label": "Product recommendations limit",

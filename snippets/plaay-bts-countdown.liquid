@@ -1,0 +1,29 @@
+{%- comment -%}
+  Plaay - Back to School Sale countdown (flash sale, 21 August only).
+  Reuses the Eid countdown CSS classes for styling. Multi-instance safe
+  (class-based, ticked by plaay-bts-countdown-js). Auto-hides outside the
+  21 August (Dubai / +04:00) window.
+{%- endcomment -%}
+{%- liquid
+  assign bts_active = false
+  if settings.bts_sale_enabled
+    assign bts_now = 'now' | date: '%s' | times: 1
+    assign bts_start = '2026-08-21T00:00:00+04:00' | date: '%s' | times: 1
+    assign bts_end = '2026-08-22T00:00:00+04:00' | date: '%s' | times: 1
+    if bts_now >= bts_start and bts_now < bts_end
+      assign bts_active = true
+    endif
+  endif
+-%}
+{%- if bts_active -%}
+<div class="plaay-eid-countdown plaay-bts-countdown" data-bts-countdown aria-live="off">
+  <span class="plaay-eid-countdown__label">15% off ends in</span>
+  <div class="plaay-eid-countdown__segments">
+    <span class="plaay-eid-countdown__seg"><b class="plaay-bts-h">--</b><small>h</small></span>
+    <span class="plaay-eid-countdown__sep">:</span>
+    <span class="plaay-eid-countdown__seg"><b class="plaay-bts-m">--</b><small>m</small></span>
+    <span class="plaay-eid-countdown__sep">:</span>
+    <span class="plaay-eid-countdown__seg"><b class="plaay-bts-s">--</b><small>s</small></span>
+  </div>
+</div>
+{%- endif -%}

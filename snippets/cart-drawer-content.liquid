@@ -10,14 +10,29 @@
           assign fd_active = true
         endif
       endif
+      assign bts_active = false
+      if settings.bts_sale_enabled
+        assign bts_now = 'now' | date: '%s' | times: 1
+        assign bts_start = '2026-08-21T00:00:00+04:00' | date: '%s' | times: 1
+        assign bts_end = '2026-08-22T00:00:00+04:00' | date: '%s' | times: 1
+        if bts_now >= bts_start and bts_now < bts_end
+          assign bts_active = true
+        endif
+      endif
     -%}
-    {%- unless fd_active -%}{%- render 'cart-tier-bar' -%}{%- endunless -%}
+    {%- unless fd_active or bts_active -%}{%- render 'cart-tier-bar' -%}{%- endunless -%}
     {%- render 'plaay-eid-countdown' -%}
     {%- render 'plaay-summer-cart' -%}
     {%- if fd_active -%}
       <div style="margin-top:6px;">
         <span class="font-walsheim-bold" style="display:block;font-size:11.5px;line-height:1.3;color:var(--plaay-navy);margin-bottom:3px;">🎁 Father's Day &middot; 30% off applied at checkout</span>
         {%- render 'plaay-fd-countdown' -%}
+      </div>
+    {%- endif -%}
+    {%- if bts_active -%}
+      <div style="margin-top:6px;">
+        <span class="font-walsheim-bold" style="display:block;font-size:11.5px;line-height:1.3;color:var(--plaay-navy);margin-bottom:3px;">🎒 Back to School &middot; 15% off everything, auto-applied at checkout</span>
+        {%- render 'plaay-bts-countdown' -%}
       </div>
     {%- endif -%}
   </div>

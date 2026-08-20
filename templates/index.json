@@ -14,7 +14,6 @@
       "blocks": {
         "slide_earVyE": {
           "type": "slide",
-          "disabled": true,
           "settings": {
             "hide_section_one_mobile": true,
             "hide_section_two_mobile": false,
@@ -45,8 +44,8 @@
             "link_one_text": "Shop Now",
             "link_two": "",
             "link_two_text": "",
-            "img": "shopify://shop_images/Plaay_Mid_summer_sale_Desktop_banner.jpg",
-            "m-img": "shopify://shop_images/Plaay_Mid_summer_sale_Mobile_banner.jpg",
+            "img": "shopify://shop_images/Plaay_BTS_Desktop_banner.jpg",
+            "m-img": "shopify://shop_images/Plaay_BTS_Mobile_banner.jpg",
             "section_one_video": "",
             "section_two_video": ""
           }
@@ -590,11 +589,10 @@
     },
     "cu_countdown_timer_jJqyWW": {
       "type": "cu-countdown-timer",
-      "disabled": true,
       "name": "Countdown Timer",
       "settings": {
         "title": "SALE ENDS IN:",
-        "end_time": "2025-12-05T23:59:59"
+        "end_time": "2026-08-21T23:59:59"
       }
     },
     "scrolling_content_U784BN": {
