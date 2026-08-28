@@ -14,6 +14,12 @@
       "label": "End Time (YYYY-MM-DDTHH:MM:SS)",
       "default": "2025-12-31T23:59:59",
       "info": "Enter end time in ISO format, e.g. 2025-09-15T23:59:59"
+    },
+    {
+      "type": "text",
+      "id": "start_time",
+      "label": "Start Time (YYYY-MM-DDTHH:MM:SS, optional)",
+      "info": "Section renders nothing before this time (Dubai / +04:00). Leave blank to show immediately. It always hides itself after End Time."
     }
   ],
   "presets": [
@@ -24,6 +30,26 @@
 }
 {% endschema %}
 
+{%- liquid
+  # Render only inside the [start_time, end_time] window (Dubai / +04:00),
+  # so the timer appears and disappears on its own instead of showing early
+  # or sitting on "SALE ENDED" after the sale.
+  assign cu_show = true
+  assign cu_now = 'now' | date: '%s' | times: 1
+  if section.settings.start_time != blank
+    assign cu_start = section.settings.start_time | append: '+04:00' | date: '%s' | times: 1
+    if cu_now < cu_start
+      assign cu_show = false
+    endif
+  endif
+  if section.settings.end_time != blank
+    assign cu_end = section.settings.end_time | append: '+04:00' | date: '%s' | times: 1
+    if cu_now >= cu_end
+      assign cu_show = false
+    endif
+  endif
+-%}
+{%- if cu_show -%}
 <div class="main">
   <div class="title-main">
     <div class="timer-title">{{ section.settings.title }}</div>
@@ -230,3 +256,4 @@ document.addEventListener("DOMContentLoaded", function () {
   var interval = setInterval(updateTimer, 1000);
 });
 </script>
+{%- endif -%}

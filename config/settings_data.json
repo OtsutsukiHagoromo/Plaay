@@ -15,7 +15,7 @@
     "eid_sale_enabled": false,
     "fathers_day_sale_enabled": false,
     "summer_sale_enabled": false,
-    "bts_sale_enabled": false,
+    "bts_sale_enabled": true,
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",
@@ -34,7 +34,7 @@
             "type": "announcement_text",
             "disabled": true,
             "settings": {
-              "text": "🎒 Back to School Sale · Flat 15% Off Everything · Today Only",
+              "text": "🎒 Back to School Sale · Flat 20% Off Sitewide · 29–31 Aug Only",
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"

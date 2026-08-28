@@ -1,0 +1,49 @@
+name: BTS sale auto enable/disable (29-31 Aug 2026)
+
+on:
+  schedule:
+    - cron: '0 20 28 8 *'   # Aug 28 20:00 UTC = Aug 29 00:00 GST (UTC+4) -> enable
+    - cron: '5 20 31 8 *'   # Aug 31 20:05 UTC = Sep  1 00:05 GST (UTC+4) -> disable
+  workflow_dispatch:        # manual run from GitHub Actions UI
+    inputs:
+      mode:
+        description: 'enable or disable the sale'
+        required: true
+        type: choice
+        options:
+          - enable
+          - disable
+
+permissions:
+  contents: write
+
+jobs:
+  toggle-sale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ inputs.mode }}" >> "$GITHUB_OUTPUT"
+            echo "force=--force" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "0 20 28 8 *" ]; then
+            echo "mode=enable" >> "$GITHUB_OUTPUT"
+            echo "force=" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=disable" >> "$GITHUB_OUTPUT"
+            echo "force=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Toggle BTS sale in theme JSON
+        run: python3 .github/scripts/toggle_bts2_sale.py ${{ steps.mode.outputs.mode }} ${{ steps.mode.outputs.force }}
+
+      - name: Commit and push
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add config/settings_data.json templates/index.json
+          git diff --cached --quiet || git commit -m "Auto: ${{ steps.mode.outputs.mode }} Back to School sale (29-31 Aug) [skip ci]"
+          git push
