@@ -48,7 +48,8 @@
             "m-img": "shopify://shop_images/Plaay_BTS2_Mobile_banner.jpg",
             "section_one_video": "",
             "section_two_video": ""
-          }
+          },
+          "disabled": true
         },
         "slide_BwPeAp": {
           "type": "slide",
@@ -594,7 +595,8 @@
         "title": "SALE ENDS IN:",
         "end_time": "2026-08-31T23:59:59",
         "start_time": "2026-08-29T00:00:00"
-      }
+      },
+      "disabled": true
     },
     "scrolling_content_U784BN": {
       "type": "scrolling-content",

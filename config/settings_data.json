@@ -15,7 +15,7 @@
     "eid_sale_enabled": false,
     "fathers_day_sale_enabled": false,
     "summer_sale_enabled": false,
-    "bts_sale_enabled": true,
+    "bts_sale_enabled": false,
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",
@@ -37,7 +37,8 @@
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"
-            }
+            },
+            "disabled": true
           },
           "announcement_text_yP4HrN": {
             "type": "announcement_text",
