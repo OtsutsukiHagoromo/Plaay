@@ -3,6 +3,17 @@
   assign gift_aed   = settings.cart_tier_1_spend | default: 250
   assign gift_label = settings.cart_tier_1_label | default: 'Mystery Gift'
 
+  # During the Back to School sale (20% off sitewide, 29-31 Aug) the gift tier
+  # moves to AED 315 in cart (~AED 252 paid) - must match gift-js.liquid.
+  if settings.bts_sale_enabled
+    assign bts_now = 'now' | date: '%s' | times: 1
+    assign bts_start = '2026-08-29T00:00:00+04:00' | date: '%s' | times: 1
+    assign bts_end = '2026-09-01T00:00:00+04:00' | date: '%s' | times: 1
+    if bts_now >= bts_start and bts_now < bts_end
+      assign gift_aed = 315
+    endif
+  endif
+
   assign eid_enabled  = settings.eid_sale_enabled
   assign eid_t1_aed   = settings.eid_tier_1_spend | default: 250
   assign eid_t1_label = settings.eid_tier_1_label | default: '20% Off + Mystery Gift'

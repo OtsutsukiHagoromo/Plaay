@@ -20,7 +20,7 @@
         endif
       endif
     -%}
-    {%- unless fd_active or bts_active -%}{%- render 'cart-tier-bar' -%}{%- endunless -%}
+    {%- unless fd_active -%}{%- render 'cart-tier-bar' -%}{%- endunless -%}
     {%- render 'plaay-eid-countdown' -%}
     {%- render 'plaay-summer-cart' -%}
     {%- if fd_active -%}

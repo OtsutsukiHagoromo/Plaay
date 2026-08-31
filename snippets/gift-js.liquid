@@ -4,6 +4,17 @@
   else
     assign gift_threshold = settings.cart_tier_1_spend | default: 250 | times: 100
   endif
+  # During the Back to School sale (20% off sitewide, 29-31 Aug) the gift needs
+  # AED 315 in cart (~AED 252 paid after discount) so it keeps its normal
+  # "AED 250 actually spent" economics. Auto-reverts after the window.
+  if settings.bts_sale_enabled
+    assign bts_now = 'now' | date: '%s' | times: 1
+    assign bts_start = '2026-08-29T00:00:00+04:00' | date: '%s' | times: 1
+    assign bts_end = '2026-09-01T00:00:00+04:00' | date: '%s' | times: 1
+    if bts_now >= bts_start and bts_now < bts_end
+      assign gift_threshold = 31500
+    endif
+  endif
 -%}
 {% comment %} Mystery-gift cart logic - moved to assets/plaay-gift.js {% endcomment %}
 <script>window.plaayGiftConfig = { threshold: {{ gift_threshold }} };</script>
