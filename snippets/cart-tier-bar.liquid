@@ -87,14 +87,14 @@
     {%- elsif reached < 0 -%}
       {%- assign remaining_fils = stop_amounts[0] | times: 100 | minus: total -%}
       <p class="plaay-tier-bar__msg">
-        Add <strong>{{ remaining_fils | money }}</strong> more for free delivery
+        Add <strong>{%- render 'plaay-aed', fils: remaining_fils -%}</strong> more for free delivery
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline;vertical-align:-2px"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 4v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
       </p>
     {%- else -%}
       {%- assign next_index = reached | plus: 1 -%}
       {%- assign remaining_fils = stop_amounts[next_index] | times: 100 | minus: total -%}
       <p class="plaay-tier-bar__msg">
-        {% if reached == 0 %}🚚{% else %}🎁{% endif %} {{ stop_labels[reached] }} unlocked! Add <strong>{{ remaining_fils | money }}</strong> more for <strong>{{ stop_labels[next_index] }}</strong>
+        {% if reached == 0 %}🚚{% else %}🎁{% endif %} {{ stop_labels[reached] }} unlocked! Add <strong>{%- render 'plaay-aed', fils: remaining_fils -%}</strong> more for <strong>{{ stop_labels[next_index] }}</strong>
       </p>
     {%- endif -%}
 

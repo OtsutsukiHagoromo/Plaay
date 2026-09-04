@@ -68,7 +68,7 @@
     <p class="plaay-eid-card__note">All rewards unlocked &middot; discounts apply automatically at checkout</p>
   {%- else -%}
     {%- assign remaining_fils = amounts[next_index] | times: 100 | minus: total -%}
-    <p class="plaay-eid-card__note">Add <strong>{{ remaining_fils | money }}</strong> more to unlock {{ labels[next_index] }} &middot; applied automatically at checkout</p>
+    <p class="plaay-eid-card__note">Add <strong>{%- render 'plaay-aed', fils: remaining_fils -%}</strong> more to unlock {{ labels[next_index] }} &middot; applied automatically at checkout</p>
   {%- endif -%}
 </div>
 {%- endif -%}

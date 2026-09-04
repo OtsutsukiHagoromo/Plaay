@@ -145,8 +145,12 @@
       var all = bars();
       for (var i = 0; i < all.length; i += 1) {
         var bar = all[i];
-        // Seed with the server-rendered state so the first real update detects change correctly.
-        bar.setAttribute('data-tier-index', reachedIndex(0, readStops(bar)));
+        // Seed from the tier the SERVER actually rendered, counted off the ticked pills.
+        // reachedIndex(0, ...) was always -1, so a page loaded with an already-qualifying
+        // cart treated its first update as a tier gain and fired the unlock celebration
+        // scroll when nothing had been crossed.
+        var doneCount = bar.querySelectorAll('.plaay-tier-bar__pill--done').length;
+        bar.setAttribute('data-tier-index', doneCount - 1);
         scrollPillsToActive(bar, false);
       }
     }

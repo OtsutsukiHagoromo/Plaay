@@ -1,0 +1,19 @@
+{%- comment -%}
+  Plaay - renders a fils amount exactly the way fmtAED() in assets/plaay-cart-tier-bar.js
+  does: "AED 175", or "AED 0.01" when there are stray fils.
+
+  The shop's money format is "{{amount}} AED", so the `money` filter renders "175.00 AED" -
+  different word order AND different decimals from the client renderer. Server-rendered
+  copy would visibly reformat the instant the JS took over after a cart change. This keeps
+  the two twins byte-identical.
+
+  Usage: {%- render 'plaay-aed', fils: remaining_fils -%}
+{%- endcomment -%}
+{%- liquid
+  assign aed_whole = fils | divided_by: 100
+  assign aed_frac = fils | modulo: 100
+-%}
+{%- if aed_frac == 0 -%}AED {{ aed_whole }}
+{%- elsif aed_frac < 10 -%}AED {{ aed_whole }}.0{{ aed_frac }}
+{%- else -%}AED {{ aed_whole }}.{{ aed_frac }}
+{%- endif -%}
