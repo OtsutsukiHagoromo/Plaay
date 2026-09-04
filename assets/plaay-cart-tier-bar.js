@@ -80,7 +80,10 @@
     }
 
     // Fill is proportional to the whole ladder so it only ever moves forwards.
-    var pct = Math.min(100, Math.floor(total / last * 100));
+    // Multiply before dividing. `total / last * 100` routes through a binary fraction:
+    // 14500/25000*100 is 57.99999999999999, which floors to 57 while Liquid's integer
+    // maths gives 58, so the bar twitched back a percent on the first client update.
+    var pct = Math.min(100, Math.floor(total * 100 / last));
 
     var pills = '';
     for (var i = 0; i < stops.length; i += 1) {
