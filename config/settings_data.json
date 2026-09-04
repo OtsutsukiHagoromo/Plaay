@@ -44,8 +44,7 @@
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"
-            },
-            "disabled": true
+            }
           },
           "announcement_text_yP4HrN": {
             "type": "announcement_text",
