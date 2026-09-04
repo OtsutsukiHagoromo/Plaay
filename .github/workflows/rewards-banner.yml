@@ -2,7 +2,12 @@ name: Enable rewards banner at go-live (5 Sep 2026 00:00 GST)
 
 on:
   schedule:
-    - cron: '0 20 4 9 *'   # Sep 4 20:00 UTC = Sep 5 00:00 GST (UTC+4)
+    # Sep 4 20:00 UTC = Sep 5 00:00 GST (UTC+4). GitHub silently skipped the first
+    # scheduled firing of a freshly-pushed workflow during the Aug 2026 Back to School
+    # sale, so retry every 15 min for two hours. The script only ever removes a
+    # "disabled" key, and the commit step is a no-op when nothing changed, so every
+    # firing after the first that succeeds does nothing.
+    - cron: '0,15,30,45 20,21 4 9 *'
   workflow_dispatch:        # manual fallback from the Actions UI
 
 permissions:
