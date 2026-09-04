@@ -38,13 +38,17 @@
   }
 
   // Ordered stops straight off the element, so markup stays the single source of truth.
-  function readStops(d) {
-    var n = parseInt(d.stopCount, 10) || 0;
+  // Read with getAttribute, NOT dataset: `data-stop-1` lands in the dataset under the key
+  // 'stop-1', not 'stop1', because the camel-casing rule only fires on a hyphen followed by
+  // a letter. Reading dataset.stop1 returns undefined, every stop is dropped, and the bar
+  // silently stops updating while still looking correct server-rendered.
+  function readStops(bar) {
+    var n = parseInt(bar.getAttribute('data-stop-count'), 10) || 0;
     var stops = [];
     for (var i = 1; i <= n; i += 1) {
-      var fils = parseInt(d['stop' + i], 10);
+      var fils = parseInt(bar.getAttribute('data-stop-' + i), 10);
       if (isNaN(fils)) continue;
-      stops.push({ fils: fils, label: d['stop' + i + 'Label'] || '' });
+      stops.push({ fils: fils, label: bar.getAttribute('data-stop-' + i + '-label') || '' });
     }
     return stops;
   }
@@ -120,7 +124,7 @@
         var bar = all[i];
         var inner = bar.querySelector('[data-plaay-tier-bar-inner]');
         if (!inner) continue;
-        var stops = readStops(bar.dataset);
+        var stops = readStops(bar);
         if (!stops.length) continue;
 
         var tierIndex = reachedIndex(total, stops);
@@ -142,7 +146,7 @@
       for (var i = 0; i < all.length; i += 1) {
         var bar = all[i];
         // Seed with the server-rendered state so the first real update detects change correctly.
-        bar.setAttribute('data-tier-index', reachedIndex(0, readStops(bar.dataset)));
+        bar.setAttribute('data-tier-index', reachedIndex(0, readStops(bar)));
         scrollPillsToActive(bar, false);
       }
     }
