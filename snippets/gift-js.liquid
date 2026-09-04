@@ -1,19 +1,27 @@
+{%- comment -%}
+  Plaay - mystery gift threshold. Must stay in step with snippets/cart-tier-bar.liquid:
+  the gift is the reward attached to tier 2 of the permanent rewards ladder (AED 350),
+  so the number emitted here is the same one the ladder shows as the gift stop.
+
+  assets/plaay-gift.js compares this against the cart's ORIGINAL (pre-discount) total,
+  so the percentage tier discounts can never remove a gift the shopper already earned.
+{%- endcomment -%}
 {%- liquid
+  # The permanent rewards ladder goes live 5 Sep 2026 00:00 (Dubai / +04:00) - same
+  # instant as the ladder in cart-tier-bar.liquid and the Shopify tier discounts.
+  assign rewards_live = false
+  assign rw_now = 'now' | date: '%s' | times: 1
+  assign rw_start = '2026-09-05T00:00:00+04:00' | date: '%s' | times: 1
+  if rw_now >= rw_start
+    assign rewards_live = true
+  endif
+
   if settings.eid_sale_enabled
     assign gift_threshold = settings.eid_tier_1_spend | default: 250 | times: 100
+  elsif rewards_live
+    assign gift_threshold = settings.cart_tier_2_spend | default: 350 | times: 100
   else
-    assign gift_threshold = settings.cart_tier_1_spend | default: 250 | times: 100
-  endif
-  # During the Back to School sale (20% off sitewide, 29-31 Aug) the gift needs
-  # AED 315 in cart (~AED 252 paid after discount) so it keeps its normal
-  # "AED 250 actually spent" economics. Auto-reverts after the window.
-  if settings.bts_sale_enabled
-    assign bts_now = 'now' | date: '%s' | times: 1
-    assign bts_start = '2026-08-29T00:00:00+04:00' | date: '%s' | times: 1
-    assign bts_end = '2026-09-01T00:00:00+04:00' | date: '%s' | times: 1
-    if bts_now >= bts_start and bts_now < bts_end
-      assign gift_threshold = 31500
-    endif
+    assign gift_threshold = 25000
   endif
 -%}
 {% comment %} Mystery-gift cart logic - moved to assets/plaay-gift.js {% endcomment %}

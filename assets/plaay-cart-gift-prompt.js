@@ -119,7 +119,9 @@
               .then(function(r) { return r.json(); })
               .then(function(cart) {
                 if (window.plaayTierBar) {
-                  window.plaayTierBar.update(cart.total_price);
+                  // Pre-discount total: the reward tiers are earned on what was added to
+                  // cart, so a percentage tier discount must not drop the shopper a tier.
+                  window.plaayTierBar.update(cart.original_total_price || cart.total_price);
                 }
               })
               .catch(function() {});
@@ -155,7 +157,7 @@
         })
         .then(function(cart) {
           if (window.plaayTierBar) {
-            window.plaayTierBar.update(cart.total_price);
+            window.plaayTierBar.update(cart.original_total_price || cart.total_price);
           }
           return refreshVisibleCart().then(function() { return cart; });
         });

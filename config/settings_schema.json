@@ -79,12 +79,16 @@
       },
       {
         "type": "header",
-        "content": "Upsell tiers"
+        "content": "Rewards ladder"
+      },
+      {
+        "type": "paragraph",
+        "content": "Shown in the cart drawer, the cart page and the product-page rewards card. Each spend threshold must have a matching automatic discount in Shopify > Discounts — changing a number here only changes what shoppers are told."
       },
       {
         "type": "number",
         "id": "cart_tier_ship",
-        "label": "Free shipping threshold (AED)",
+        "label": "Free delivery threshold (AED)",
         "default": 75
       },
       {
@@ -97,31 +101,32 @@
         "type": "text",
         "id": "cart_tier_1_label",
         "label": "Tier 1 reward label",
-        "default": "Mystery Gift"
+        "default": "7% off"
       },
       {
         "type": "number",
         "id": "cart_tier_2_spend",
         "label": "Tier 2 spend threshold (AED)",
-        "default": 200
+        "info": "Also the Mystery Gift threshold — the gift is auto-added at this amount.",
+        "default": 350
       },
       {
         "type": "text",
         "id": "cart_tier_2_label",
         "label": "Tier 2 reward label",
-        "default": "10% off"
+        "default": "10% off + Mystery Gift"
       },
       {
         "type": "number",
         "id": "cart_tier_3_spend",
         "label": "Tier 3 spend threshold (AED)",
-        "default": 350
+        "default": 500
       },
       {
         "type": "text",
         "id": "cart_tier_3_label",
         "label": "Tier 3 reward label",
-        "default": "10% off + free gift"
+        "default": "15% off + Mystery Gift"
       },
       {
         "type": "header",

@@ -16,6 +16,13 @@
     "fathers_day_sale_enabled": false,
     "summer_sale_enabled": false,
     "bts_sale_enabled": false,
+    "cart_tier_ship": 75,
+    "cart_tier_1_spend": 250,
+    "cart_tier_1_label": "7% off",
+    "cart_tier_2_spend": 350,
+    "cart_tier_2_label": "10% off + Mystery Gift",
+    "cart_tier_3_spend": 500,
+    "cart_tier_3_label": "15% off + Mystery Gift",
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",
@@ -33,7 +40,7 @@
           "announcement_text_qzKxiQ": {
             "type": "announcement_text",
             "settings": {
-              "text": "🎒 Back to School Sale · Flat 20% Off Sitewide · 29–31 Aug Only",
+              "text": "Free delivery AED 75+ · 7% off AED 250+ · 10% off + Mystery Gift AED 350+ · 15% off AED 500+",
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"

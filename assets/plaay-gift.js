@@ -21,14 +21,19 @@
 
   // ── Celebration / feedback animations ─────────────────────────────────────
   function animateTierBar(state) {
-    var bar = document.getElementById('plaay-tier-bar');
-    if (!bar) return;
-    bar.classList.remove('plaay-tier-bar--gift-unlocked', 'plaay-tier-bar--gift-lost');
-    void bar.offsetWidth;
-    bar.classList.add(state === 'unlock' ? 'plaay-tier-bar--gift-unlocked' : 'plaay-tier-bar--gift-lost');
-    setTimeout(function() {
-      bar.classList.remove('plaay-tier-bar--gift-unlocked', 'plaay-tier-bar--gift-lost');
-    }, 1200);
+    // The drawer bar and the /cart page bar can both be present, so animate every instance.
+    var bars = document.querySelectorAll('[data-plaay-tier-bar]');
+    if (!bars.length) return;
+    for (var i = 0; i < bars.length; i += 1) {
+      (function(bar) {
+        bar.classList.remove('plaay-tier-bar--gift-unlocked', 'plaay-tier-bar--gift-lost');
+        void bar.offsetWidth;
+        bar.classList.add(state === 'unlock' ? 'plaay-tier-bar--gift-unlocked' : 'plaay-tier-bar--gift-lost');
+        setTimeout(function() {
+          bar.classList.remove('plaay-tier-bar--gift-unlocked', 'plaay-tier-bar--gift-lost');
+        }, 1200);
+      }(bars[i]));
+    }
   }
 
   function spawnConfettiFallback() {

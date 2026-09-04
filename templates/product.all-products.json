@@ -17,7 +17,7 @@
           "disabled": true,
           "settings": {
             "show_discount_text": true,
-            "discount_prefix": "<p>Flat 30% Off On All Order Above AED 250. Valid Till 31 July</p>",
+            "discount_prefix": "<p>Spend more, save more — 7% off AED 250+, 10% off + Mystery Gift AED 350+, 15% off + Mystery Gift AED 500+</p>",
             "discount_highlight": "",
             "highlight_color": "#ff0000"
           }

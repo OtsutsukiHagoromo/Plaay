@@ -58,6 +58,9 @@
 {% comment %} for some reason, the product recommendations don't work without this, no idea why {% endcomment %}
 <quick-add data-module="quick-add"></quick-add>
 <div data-cart-page-root>
+  {%- if cart.item_count > 0 -%}
+    <div class="px-4 pt-2 pb-1">{%- render 'cart-tier-bar' -%}</div>
+  {%- endif -%}
   {%- render 'cart-items' -%}
 </div>
 

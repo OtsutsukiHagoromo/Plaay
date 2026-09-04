@@ -1,0 +1,26 @@
+name: Enable rewards banner at go-live (5 Sep 2026 00:00 GST)
+
+on:
+  schedule:
+    - cron: '0 20 4 9 *'   # Sep 4 20:00 UTC = Sep 5 00:00 GST (UTC+4)
+  workflow_dispatch:        # manual fallback from the Actions UI
+
+permissions:
+  contents: write
+
+jobs:
+  enable-banner:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show rewards hero slide + announcement line
+        run: python3 .github/scripts/enable_rewards_banner.py ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
+
+      - name: Commit and push
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add config/settings_data.json templates/index.json
+          git diff --cached --quiet || git commit -m "Auto: show rewards ladder banner at go-live [skip ci]"
+          git push

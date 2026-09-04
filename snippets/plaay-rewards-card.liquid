@@ -1,0 +1,74 @@
+{%- comment -%}
+  Plaay - permanent rewards ladder card for the product page.
+
+  Cart-aware: ticks the tiers already unlocked by what is in the cart, marks the next one,
+  and tells the shopper exactly how much more unlocks it. Thresholds compare against
+  cart.original_total_price (pre-discount) so an earned tier never appears to be lost.
+
+  Reuses the .plaay-eid-card CSS (assets/custom.css) - no new styles. Values come from the
+  same settings the cart ladder reads (snippets/cart-tier-bar.liquid); keep the two in step.
+{%- endcomment -%}
+{%- liquid
+  assign rewards_live = false
+  assign rw_now = 'now' | date: '%s' | times: 1
+  assign rw_start = '2026-09-05T00:00:00+04:00' | date: '%s' | times: 1
+  if rw_now >= rw_start
+    assign rewards_live = true
+  endif
+  # The Eid sale swaps in its own ladder and its own PDP card, so stand down for it.
+  if settings.eid_sale_enabled
+    assign rewards_live = false
+  endif
+-%}
+{%- if rewards_live -%}
+  {%- liquid
+    assign ship_aed = settings.cart_tier_ship | default: 75
+    assign a1 = settings.cart_tier_1_spend | default: 250
+    assign l1 = settings.cart_tier_1_label | default: '7% off'
+    assign a2 = settings.cart_tier_2_spend | default: 350
+    assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift'
+    assign a3 = settings.cart_tier_3_spend | default: 500
+    assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift'
+
+    assign amounts = ship_aed | append: ',' | append: a1 | append: ',' | append: a2 | append: ',' | append: a3 | split: ','
+    assign labels = 'Free delivery|' | append: l1 | append: '|' | append: l2 | append: '|' | append: l3 | split: '|'
+
+    assign total = cart.original_total_price
+    assign reached = -1
+    for amt in amounts
+      assign amt_fils = amt | times: 100
+      if total >= amt_fils
+        assign reached = forloop.index0
+      endif
+    endfor
+    assign next_index = reached | plus: 1
+    assign last_index = amounts | size | minus: 1
+  -%}
+<div class="plaay-eid-card">
+  <div class="plaay-eid-card__header">
+    <span class="plaay-eid-card__emoji">🎁</span>
+    <span class="plaay-eid-card__title">Your cart, thoughtfully rewarded</span>
+  </div>
+  <ul class="plaay-eid-card__tiers">
+    {%- for amt in amounts -%}
+      {%- assign i = forloop.index0 -%}
+      <li class="plaay-eid-card__tier">
+        {%- if i <= reached -%}
+          <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+        {%- elsif i == next_index -%}
+          <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        {%- else -%}
+          <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/></svg>
+        {%- endif -%}
+        <span><strong>AED {{ amt }}+</strong> &nbsp;{{ labels[i] }}</span>
+      </li>
+    {%- endfor -%}
+  </ul>
+  {%- if reached == last_index -%}
+    <p class="plaay-eid-card__note">All rewards unlocked &middot; discounts apply automatically at checkout</p>
+  {%- else -%}
+    {%- assign remaining_fils = amounts[next_index] | times: 100 | minus: total -%}
+    <p class="plaay-eid-card__note">Add <strong>{{ remaining_fils | money }}</strong> more to unlock {{ labels[next_index] }} &middot; applied automatically at checkout</p>
+  {%- endif -%}
+</div>
+{%- endif -%}
