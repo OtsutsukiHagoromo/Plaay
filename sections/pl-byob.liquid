@@ -128,10 +128,15 @@
       {%- endif -%}
 
       <div class="pl-byob__grid" data-pl-grid>
+        {%- comment -%} A flavour can sit in more than one tab's collection; show it once, under the first tab that claims it. {%- endcomment -%}
+        {%- assign seen = '' -%}
         {%- for i in (1..3) -%}
           {%- assign ck = 'cat_' | append: i | append: '_collection' -%}
           {%- if s[ck] == blank -%}{%- continue -%}{%- endif -%}
           {%- for p in collections[s[ck]].products limit: 40 -%}
+            {%- assign pid = '|' | append: p.id | append: '|' -%}
+            {%- if seen contains pid -%}{%- continue -%}{%- endif -%}
+            {%- assign seen = seen | append: pid -%}
             {%- liquid
               assign nm = p.title | replace: 'PLAAY ', '' | replace: 'Plaay ', ''
               assign nm = nm | split: ' Slab' | first | split: ' Bar' | first | split: ' Truffle' | first
