@@ -1,0 +1,64 @@
+{%- comment -%}
+  Plaay 2026 — rewards ladder card (navy). Four stops read from the theme settings the cart
+  ladder uses: cart_tier_ship, cart_tier_1..3_spend / _label. "Short labels" turns
+  "10% off + Mystery Gift" into "10% + gift" so the stops fit on one row.
+{%- endcomment -%}
+{{ 'pl-home.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  assign ship = settings.cart_tier_ship | default: 75
+  assign a1 = settings.cart_tier_1_spend | default: 250
+  assign a2 = settings.cart_tier_2_spend | default: 350
+  assign a3 = settings.cart_tier_3_spend | default: 500
+  assign l0 = s.ship_label | default: 'Free delivery'
+  assign l1 = settings.cart_tier_1_label | default: '7% off'
+  assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift'
+  assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift'
+  if s.short_labels
+    assign l1 = l1 | replace: 'Mystery Gift', 'gift' | replace: ' off +', ' +'
+    assign l2 = l2 | replace: 'Mystery Gift', 'gift' | replace: ' off +', ' +'
+    assign l3 = l3 | replace: 'Mystery Gift', 'gift' | replace: ' off +', ' +'
+  endif
+  assign amounts = ship | append: '|' | append: a1 | append: '|' | append: a2 | append: '|' | append: a3 | split: '|'
+  assign labels = l0 | append: '|' | append: l1 | append: '|' | append: l2 | append: '|' | append: l3 | split: '|'
+  assign cur = s.currency_label | default: 'AED'
+-%}
+<div class="pl pl-section pl-section--tight pl-rewards" id="pl-{{ section.id }}">
+  <div class="pl-wrap">
+    <div class="pl-card pl-card--navy pl-rewards__card">
+      <div class="pl-rewards__head">
+        {%- if s.eyebrow != blank -%}<span class="pl-eyebrow">{{ s.eyebrow | escape }}</span>{%- endif -%}
+        {%- if s.heading != blank -%}<h3 class="pl-h pl-h--3 pl-rewards__h">{{ s.heading | escape }}</h3>{%- endif -%}
+        {%- if s.note != blank -%}<p class="pl-rewards__note pl-hide-m">{{ s.note | escape }}</p>{%- endif -%}
+      </div>
+      <ol class="pl-rewards__track" aria-label="{{ s.heading | default: 'Rewards ladder' | escape }}">
+        {%- for amt in amounts -%}
+          <li class="pl-rewards__stop">
+            <span class="pl-rewards__dot" aria-hidden="true"></span>
+            <span class="pl-rewards__amt">{{ cur | escape }} {{ amt | strip }}</span>
+            <span class="pl-rewards__lbl">{{ labels[forloop.index0] | strip | escape }}</span>
+          </li>
+        {%- endfor -%}
+      </ol>
+      {%- if s.note != blank -%}<p class="pl-rewards__note pl-hide-d">{{ s.note | escape }}</p>{%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Plaay rewards ladder",
+  "settings": [
+    { "type": "paragraph", "content": "Thresholds and reward labels come from Theme settings > Cart rewards ladder." },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Plaay rewards" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Every order climbs the ladder." },
+    { "type": "text", "id": "ship_label", "label": "Free delivery stop label", "default": "Free delivery" },
+    { "type": "checkbox", "id": "short_labels", "label": "Shorten reward labels (\"10% off + Mystery Gift\" becomes \"10% + gift\")", "default": true },
+    { "type": "text", "id": "currency_label", "label": "Currency label", "default": "AED" },
+    { "type": "text", "id": "note", "label": "Note", "default": "Applied automatically at checkout." }
+  ],
+  "presets": [
+    { "name": "Plaay rewards ladder", "category": "Plaay 2026" }
+  ]
+}
+{% endschema %}

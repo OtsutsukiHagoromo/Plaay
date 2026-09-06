@@ -1,0 +1,71 @@
+{%- comment -%}
+  Plaay 2026 — four short claims in one row (scrolls on mobile, hairlines on desktop).
+  Blocks: icon (a pl-icon name) + label.
+{%- endcomment -%}
+{{ 'pl-home.css' | asset_url | stylesheet_tag }}
+{%- if section.blocks.size > 0 -%}
+<div class="pl pl-section pl-section--tight pl-claims" id="pl-{{ section.id }}">
+  <div class="pl-wrap">
+    <ul class="pl-claims__row" aria-label="{{ section.settings.aria_label | default: 'Why Plaay' | escape }}">
+      {%- for block in section.blocks -%}
+        {%- if block.settings.label == blank -%}{%- continue -%}{%- endif -%}
+        <li class="pl-claims__item" {{ block.shopify_attributes }}>
+          <span class="pl-claims__ic">{%- render 'pl-icon', name: block.settings.icon, size: 20, stroke: 1.8 -%}</span>
+          <span class="pl-claims__lbl">{{ block.settings.label | escape }}</span>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Plaay claims row",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "Accessible list name", "default": "Why Plaay" }
+  ],
+  "blocks": [
+    {
+      "type": "claim",
+      "name": "Claim",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "sparkle",
+          "options": [
+            { "value": "sparkle", "label": "Sparkle" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "pin", "label": "Pin" },
+            { "value": "check", "label": "Check" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "refresh", "label": "Refresh" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "star", "label": "Star" },
+            { "value": "clock", "label": "Clock" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "home", "label": "Home" }
+          ]
+        },
+        { "type": "text", "id": "label", "label": "Label", "default": "No refined sugar" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Plaay claims row",
+      "category": "Plaay 2026",
+      "blocks": [
+        { "type": "claim", "settings": { "icon": "sparkle", "label": "No refined sugar" } },
+        { "type": "claim", "settings": { "icon": "leaf", "label": "100% clean" } },
+        { "type": "claim", "settings": { "icon": "heart", "label": "Nutritionist founded" } },
+        { "type": "claim", "settings": { "icon": "pin", "label": "Made in the UAE" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

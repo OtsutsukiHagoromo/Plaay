@@ -1,0 +1,122 @@
+{%- comment -%}
+  Plaay 2026 search results page (templates/search.json). The live-suggest sheet lives in the
+  header (agent 1); this is the full-page fallback and the "See all results" destination.
+  Results are restricted to products and collections via the hidden type input. Products render
+  as pl-tile, collections as simple link cards, anything else is skipped.
+{%- endcomment -%}
+{{ 'pl-collection.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign n = search.results_count
+  assign has_terms = false
+  if search.performed and search.terms != blank
+    assign has_terms = true
+  endif
+  assign chip_labels = 'Salted caramel|Truffles|New slabs|Gift packs|Subscribe & Save' | split: '|'
+  assign chip_urls = '/search?q=salted+caramel|/collections/chocolate-truffles|/collections/new-chocolate-slabs|/collections/variety-packs|/pages/subscribe-save' | split: '|'
+-%}
+<div class="pl pl-search" data-pl-search data-section-id="{{ section.id }}">
+  <div class="pl-wrap">
+
+    <form class="pl-search__form" action="{{ routes.search_url }}" method="get" role="search">
+      <input type="hidden" name="type" value="product,collection">
+      <input type="hidden" name="options[prefix]" value="last">
+      <label class="pl-vh" for="pl-search-q">Search</label>
+      <div class="pl-field pl-search__field">
+        {%- render 'pl-icon', name: 'search', size: 20, stroke: 2 -%}
+        <input id="pl-search-q" type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search flavours, packs, gifts" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+      <button type="submit" class="pl-btn pl-search__submit">Search</button>
+    </form>
+
+    {%- if has_terms == false -%}
+      <div class="pl-search__popular">
+        <p class="pl-label">Popular right now</p>
+        <div class="pl-pills pl-search__chips">
+          {%- for label in chip_labels -%}
+            {%- assign i = forloop.index0 -%}
+            <a class="pl-pill" href="{{ chip_urls[i] }}">{{ label }}</a>
+          {%- endfor -%}
+        </div>
+      </div>
+
+    {%- elsif n > 0 -%}
+      <h1 class="pl-label pl-search__heading">{{ n }} {% if n == 1 %}result{% else %}results{% endif %} for &ldquo;{{ search.terms | escape }}&rdquo;</h1>
+
+      {%- paginate search.results by 24 -%}
+        <div class="pl-coll__grid" data-pl-grid>
+          {%- for item in search.results -%}
+            {%- case item.object_type -%}
+              {%- when 'product' -%}
+                {%- liquid
+                  assign eager = false
+                  if forloop.index <= 4
+                    assign eager = true
+                  endif
+                -%}
+                {%- render 'pl-tile', product: item, eager: eager -%}
+              {%- when 'collection' -%}
+                <a class="pl-search__coll pl-card" href="{{ item.url }}">
+                  <div class="pl-search__collimg">
+                    {%- if item.featured_image -%}
+                      {{ item.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', sizes: '(min-width: 1024px) 300px, 46vw', widths: '240, 360, 480, 600', alt: item.title }}
+                    {%- else -%}
+                      {{ 'collection-1' | placeholder_svg_tag: 'pl-search__collph' }}
+                    {%- endif -%}
+                  </div>
+                  <span class="pl-eyebrow">Collection</span>
+                  <span class="pl-tile__title">{{ item.title }}</span>
+                  <span class="pl-small pl-mute">{{ item.products_count }} {% if item.products_count == 1 %}product{% else %}products{% endif %}</span>
+                </a>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          {%- assign cur_page = paginate.current_page | append: '' -%}
+          <div class="pl-coll__foot">
+            <nav class="pl-coll__pages" aria-label="Pages">
+              {%- if paginate.previous -%}
+                <a class="pl-coll__page" href="{{ paginate.previous.url }}" rel="prev" aria-label="Previous page">{% render 'pl-icon', name: 'chev-left', size: 16, stroke: 2.2 %}</a>
+              {%- endif -%}
+              {%- for part in paginate.parts -%}
+                {%- if part.is_link -%}
+                  <a class="pl-coll__page" href="{{ part.url }}">{{ part.title }}</a>
+                {%- elsif part.title == cur_page -%}
+                  <span class="pl-coll__page is-on" aria-current="page">{{ part.title }}</span>
+                {%- else -%}
+                  <span class="pl-coll__page pl-coll__page--gap">{{ part.title }}</span>
+                {%- endif -%}
+              {%- endfor -%}
+              {%- if paginate.next -%}
+                <a class="pl-coll__page" href="{{ paginate.next.url }}" rel="next" aria-label="Next page">{% render 'pl-icon', name: 'chev-right', size: 16, stroke: 2.2 %}</a>
+              {%- endif -%}
+            </nav>
+          </div>
+        {%- endif -%}
+      {%- endpaginate -%}
+
+    {%- else -%}
+      <div class="pl-search__empty">
+        <h1 class="pl-h pl-h--3">No results for &ldquo;{{ search.terms | escape }}&rdquo;.</h1>
+        <p class="pl-body pl-mute pl-mt2">Try &ldquo;<a class="pl-search__link" href="{{ routes.search_url }}?q=salted+caramel">salted caramel</a>&rdquo; or <a class="pl-search__link" href="{{ routes.collections_url }}/shop-all">browse all flavours</a>.</p>
+        <div class="pl-search__popular">
+          <p class="pl-label">Popular right now</p>
+          <div class="pl-pills pl-search__chips">
+            {%- for label in chip_labels -%}
+              {%- assign i = forloop.index0 -%}
+              <a class="pl-pill" href="{{ chip_urls[i] }}">{{ label }}</a>
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Plaay search results",
+  "settings": []
+}
+{% endschema %}

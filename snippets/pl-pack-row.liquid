@@ -1,0 +1,221 @@
+{%- comment -%}
+  Plaay 2026 pack row (pl-packs tiles).
+  Usage: {% render 'pl-pack-row', product: product, kind: kind, has_pack_size: has_pack_size, selected: variant %}
+  - truffles with option "Pack Size": variant tiles in the order 2 x 60g -> 10 x 30g -> 10 x 60g
+    (buttons, JS selects the variant), "Best value" on 10 x 60g, plus a link tile for the
+    150 g tub from custom.choose_your_size.
+  - 150 g tubs / single-variant truffles: own tile .is-on + link tiles for the tube product's variants.
+  - slabs: own tile (6 x 80g / 6 x 35g) + the other size from custom.choose_your_size, else the
+    handle with 6-x-80g / 6-x-35g swapped when that product exists.
+  - bars / packs: nothing.
+{%- endcomment -%}
+{%- liquid
+  assign tiles = ''
+  assign tile_count = 0
+  assign best_key = '10X60G'
+  assign norm_title = product.title | downcase | replace: '×', 'x' | remove: ' '
+  assign norm_handle = product.handle | remove: '-'
+-%}
+{%- capture self_size -%}
+  {%- if norm_title contains '150g' or norm_handle contains '150g' -%}150g
+  {%- elsif norm_title contains '2x60g' or norm_handle contains '2x60g' -%}2 x 60g
+  {%- elsif norm_title contains '10x30g' or norm_handle contains '10x30g' -%}10 x 30g
+  {%- elsif norm_title contains '10x60g' or norm_handle contains '10x60g' -%}10 x 60g
+  {%- elsif norm_title contains '6x80g' or norm_handle contains '6x80g' -%}6 x 80g
+  {%- elsif norm_title contains '6x35g' or norm_handle contains '6x35g' -%}6 x 35g
+  {%- elsif norm_title contains '12x35g' or norm_handle contains '12x35g' -%}12 x 35g
+  {%- endif -%}
+{%- endcapture -%}
+{%- assign self_size = self_size | strip -%}
+
+{%- if kind == 'truffles' and has_pack_size -%}
+  {%- capture tiles -%}
+    {%- assign order = '2X60G,10X30G,10X60G' | split: ',' -%}
+    {%- for key in order -%}
+      {%- for v in product.variants -%}
+        {%- assign vkey = v.option1 | upcase | remove: ' ' -%}
+        {%- if vkey != key -%}{%- continue -%}{%- endif -%}
+        {%- liquid
+          assign label = v.option1
+          case key
+            when '2X60G'
+              assign label = '2 x 60g'
+            when '10X30G'
+              assign label = '10 x 30g'
+            when '10X60G'
+              assign label = '10 x 60g'
+          endcase
+          assign tile_count = tile_count | plus: 1
+        -%}
+        <button type="button" class="pl-pack{% if v.id == selected.id %} is-on{% endif %}{% unless v.available %} is-off{% endunless %}" data-pl-pack="{{ v.id }}" aria-pressed="{% if v.id == selected.id %}true{% else %}false{% endif %}">
+          {%- if key == best_key -%}<span class="pl-tag pl-tag--green pl-pack__tag">Best value</span>{%- endif -%}
+          <span class="pl-check">{%- render 'pl-icon', name: 'check', size: 10, stroke: 3 -%}</span>
+          <span class="pl-pack__l">{{ label }}</span>
+          <span class="pl-pack__p" data-pl-pack-price>{%- render 'plaay-aed', fils: v.price -%}</span>
+        </button>
+      {%- endfor -%}
+    {%- endfor -%}
+    {%- comment -%} any Pack Size value outside the known three, appended in catalogue order {%- endcomment -%}
+    {%- for v in product.variants -%}
+      {%- assign vkey = v.option1 | upcase | remove: ' ' -%}
+      {%- if vkey == '2X60G' or vkey == '10X30G' or vkey == '10X60G' -%}{%- continue -%}{%- endif -%}
+      {%- assign tile_count = tile_count | plus: 1 -%}
+      <button type="button" class="pl-pack{% if v.id == selected.id %} is-on{% endif %}{% unless v.available %} is-off{% endunless %}" data-pl-pack="{{ v.id }}" aria-pressed="{% if v.id == selected.id %}true{% else %}false{% endif %}">
+        <span class="pl-check">{%- render 'pl-icon', name: 'check', size: 10, stroke: 3 -%}</span>
+        <span class="pl-pack__l">{{ v.option1 }}</span>
+        <span class="pl-pack__p" data-pl-pack-price>{%- render 'plaay-aed', fils: v.price -%}</span>
+      </button>
+    {%- endfor -%}
+    {%- for sib in product.metafields.custom.choose_your_size.value -%}
+      {%- if sib.handle == blank or sib.handle == product.handle -%}{%- continue -%}{%- endif -%}
+      {%- unless sib.title contains '150' -%}{%- continue -%}{%- endunless -%}
+      {%- assign tile_count = tile_count | plus: 1 -%}
+      <a class="pl-pack" href="{{ sib.url }}">
+        <span class="pl-pack__l">150g</span>
+        <span class="pl-pack__p">{%- render 'plaay-aed', fils: sib.price -%}</span>
+      </a>
+    {%- endfor -%}
+  {%- endcapture -%}
+
+{%- elsif kind == 'truffles' -%}
+  {%- capture tiles -%}
+    {%- for sib in product.metafields.custom.choose_your_size.value -%}
+      {%- if sib.handle == blank or sib.handle == product.handle -%}{%- continue -%}{%- endif -%}
+      {%- liquid
+        assign sib_has_size = false
+        for opt in sib.options
+          if opt == 'Pack Size'
+            assign sib_has_size = true
+          endif
+        endfor
+      -%}
+      {%- if sib_has_size -%}
+        {%- assign order = '2X60G,10X30G,10X60G' | split: ',' -%}
+        {%- for key in order -%}
+          {%- for v in sib.variants -%}
+            {%- assign vkey = v.option1 | upcase | remove: ' ' -%}
+            {%- if vkey != key -%}{%- continue -%}{%- endif -%}
+            {%- liquid
+              assign label = v.option1
+              case key
+                when '2X60G'
+                  assign label = '2 x 60g'
+                when '10X30G'
+                  assign label = '10 x 30g'
+                when '10X60G'
+                  assign label = '10 x 60g'
+              endcase
+              assign tile_count = tile_count | plus: 1
+            -%}
+            <a class="pl-pack" href="{{ sib.url }}?variant={{ v.id }}">
+              {%- if key == best_key -%}<span class="pl-tag pl-tag--green pl-pack__tag">Best value</span>{%- endif -%}
+              <span class="pl-pack__l">{{ label }}</span>
+              <span class="pl-pack__p">{%- render 'plaay-aed', fils: v.price -%}</span>
+            </a>
+          {%- endfor -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- liquid
+          assign st = sib.title | downcase | replace: '×', 'x' | remove: ' '
+          assign sh = sib.handle | remove: '-'
+          assign slabel = sib.title
+          if st contains '150g' or sh contains '150g'
+            assign slabel = '150g'
+          elsif st contains '2x60g' or sh contains '2x60g'
+            assign slabel = '2 x 60g'
+          elsif st contains '10x30g' or sh contains '10x30g'
+            assign slabel = '10 x 30g'
+          elsif st contains '10x60g' or sh contains '10x60g'
+            assign slabel = '10 x 60g'
+          endif
+          assign tile_count = tile_count | plus: 1
+        -%}
+        <a class="pl-pack" href="{{ sib.url }}">
+          <span class="pl-pack__l">{{ slabel }}</span>
+          <span class="pl-pack__p">{%- render 'plaay-aed', fils: sib.price -%}</span>
+        </a>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+{%- elsif kind == 'slabs' -%}
+  {%- capture tiles -%}
+    {%- assign sibs = product.metafields.custom.choose_your_size.value -%}
+    {%- assign found_sib = false -%}
+    {%- for sib in sibs -%}
+      {%- if sib.handle == blank or sib.handle == product.handle -%}{%- continue -%}{%- endif -%}
+      {%- liquid
+        assign st = sib.title | downcase | replace: '×', 'x' | remove: ' '
+        assign sh = sib.handle | remove: '-'
+        assign slabel = sib.title
+        if st contains '6x80g' or sh contains '6x80g'
+          assign slabel = '6 x 80g'
+        elsif st contains '6x35g' or sh contains '6x35g'
+          assign slabel = '6 x 35g'
+        endif
+        assign found_sib = true
+        assign tile_count = tile_count | plus: 1
+      -%}
+      <a class="pl-pack" href="{{ sib.url }}">
+        <span class="pl-pack__l">{{ slabel }}</span>
+        <span class="pl-pack__p">{%- render 'plaay-aed', fils: sib.price -%}</span>
+      </a>
+    {%- endfor -%}
+    {%- unless found_sib -%}
+      {%- liquid
+        assign other_handle = ''
+        if product.handle contains '6-x-80g'
+          assign other_handle = product.handle | replace: '6-x-80g', '6-x-35g'
+        elsif product.handle contains '6-x-35g'
+          assign other_handle = product.handle | replace: '6-x-35g', '6-x-80g'
+        endif
+      -%}
+      {%- if other_handle != blank -%}
+        {%- assign other = all_products[other_handle] -%}
+        {%- if other.handle != blank -%}
+          {%- liquid
+            assign slabel = '6 x 35g'
+            if other_handle contains '6-x-80g'
+              assign slabel = '6 x 80g'
+            endif
+            assign tile_count = tile_count | plus: 1
+          -%}
+          <a class="pl-pack" href="{{ other.url }}">
+            <span class="pl-pack__l">{{ slabel }}</span>
+            <span class="pl-pack__p">{%- render 'plaay-aed', fils: other.price -%}</span>
+          </a>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endunless -%}
+  {%- endcapture -%}
+{%- endif -%}
+
+{%- if tiles != blank -%}
+  {%- liquid
+    assign show_self = false
+    if kind == 'slabs'
+      assign show_self = true
+    elsif kind == 'truffles' and has_pack_size == false
+      assign show_self = true
+    endif
+    if self_size == blank
+      assign self_size = selected.title
+      if self_size == 'Default Title'
+        assign self_size = product.title
+      endif
+    endif
+  -%}
+  <div class="pl-opt" data-pl-packrow>
+    <div class="pl-opt__head"><span class="pl-label">Pack</span></div>
+    <div class="pl-packs">
+      {%- if show_self -%}
+        <button type="button" class="pl-pack is-on" data-pl-pack="{{ selected.id }}" aria-pressed="true">
+          <span class="pl-check">{%- render 'pl-icon', name: 'check', size: 10, stroke: 3 -%}</span>
+          <span class="pl-pack__l">{{ self_size }}</span>
+          <span class="pl-pack__p" data-pl-pack-price>{%- render 'plaay-aed', fils: selected.price -%}</span>
+        </button>
+      {%- endif -%}
+      {{ tiles }}
+    </div>
+  </div>
+{%- endif -%}

@@ -1,0 +1,66 @@
+{%- comment -%}
+  Plaay 2026 mobile tab bar (< 1024px). Home / Shop (menu sheet) / Search (search sheet) /
+  Bag (cart drawer, shows [data-cart-count]) / Account. Rendered last in layout/theme.liquid.
+  Behaviour comes from assets/pl-shell.js (data-pl-tab, data-pl-tab-path); it does not use
+  assets/plaay-bottom-nav.js. Styles: assets/pl-shell.css.
+{%- endcomment -%}
+{%- liquid
+  assign path = request.path
+  assign on_home = false
+  assign on_shop = false
+  assign on_search = false
+  assign on_bag = false
+  assign on_account = false
+  if path == '/' or path == routes.root_url
+    assign on_home = true
+  elsif path contains '/collections' or path contains '/products'
+    assign on_shop = true
+  elsif path contains '/search'
+    assign on_search = true
+  elsif path contains '/cart'
+    assign on_bag = true
+  elsif path contains '/account'
+    assign on_account = true
+  endif
+  if customer
+    assign account_url = routes.account_url
+  else
+    assign account_url = routes.account_login_url
+  endif
+-%}
+<nav class="pl pl-tabbar pl-hide-d" aria-label="Quick navigation" data-pl-tabbar>
+  <a class="pl-tabbar__tab{% if on_home %} is-on{% endif %}" href="{{ routes.root_url }}" data-pl-tab-path="/"{% if on_home %} aria-current="page"{% endif %}>
+    <span class="pl-tabbar__ic">{% render 'pl-icon', name: 'home', size: 22, stroke: 2 %}</span>
+    <span>Home</span>
+  </a>
+  <button type="button" class="pl-tabbar__tab{% if on_shop %} is-on{% endif %}" data-pl-tab="menu" aria-haspopup="dialog" aria-expanded="false">
+    <span class="pl-tabbar__ic">{% render 'pl-icon', name: 'grid', size: 22, stroke: 2 %}</span>
+    <span>Shop</span>
+  </button>
+  <button type="button" class="pl-tabbar__tab{% if on_search %} is-on{% endif %}" data-pl-tab="search" aria-haspopup="dialog">
+    <span class="pl-tabbar__ic">{% render 'pl-icon', name: 'search', size: 22, stroke: 2 %}</span>
+    <span>Search</span>
+  </button>
+  {%- if template == 'cart' -%}
+    <a class="pl-tabbar__tab is-on" href="{{ routes.cart_url }}" aria-current="page">
+      <span class="pl-tabbar__ic">
+        {%- render 'pl-icon', name: 'bag', size: 22, stroke: 2 -%}
+        <span class="pl-count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+      </span>
+      <span>Bag</span>
+    </a>
+  {%- else -%}
+    <button type="button" class="pl-tabbar__tab{% if on_bag %} is-on{% endif %}" data-pl-tab="bag" aria-label="Bag">
+      <span class="pl-tabbar__ic">
+        {%- render 'pl-icon', name: 'bag', size: 22, stroke: 2 -%}
+        <span class="pl-count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+      </span>
+      <span aria-hidden="true">Bag</span>
+    </button>
+  {%- endif -%}
+  <a class="pl-tabbar__tab{% if on_account %} is-on{% endif %}" href="{{ account_url }}" data-pl-tab-path="/account"{% if on_account %} aria-current="page"{% endif %}>
+    <span class="pl-tabbar__ic">{% render 'pl-icon', name: 'user', size: 22, stroke: 2 %}</span>
+    <span>Account</span>
+  </a>
+</nav>
+<script src="{{ 'pl-shell.js' | asset_url }}" defer></script>

@@ -1,0 +1,328 @@
+{%- comment -%}
+  Plaay 2026 header. Sticky; mobile = menu / centred logo / search + bag; desktop = logo,
+  nav links (blocks of type "link", "Shop" opens the mega panel), search pill, account, bag.
+  The search sheet and the mobile menu sheet live here too (aria-modal dialogs).
+  Exposes: [data-cart-count], .header__icon--cart[data-drawer-trigger="cart"],
+  window.plOpenSearch(), window.plOpenMenu(), window.plCloseSheets() (assets/pl-shell.js).
+  Styles: assets/pl-shell.css (loaded from layout/theme.liquid).
+{%- endcomment -%}
+{%- liquid
+  assign logo = section.settings.logo
+  if logo == blank
+    assign logo = images['Group_3755_1.png']
+  endif
+  assign logo_w = 88
+  if logo != blank and logo.aspect_ratio
+    assign logo_w = logo.aspect_ratio | times: 22 | round
+  endif
+
+  assign link_blocks = section.blocks | where: 'type', 'link'
+  if link_blocks.size > 0
+    assign labels_s = ''
+    assign urls_s = ''
+    assign megas_s = ''
+    for b in link_blocks
+      assign lbl = b.settings.label | default: 'Link'
+      assign labels_s = labels_s | append: lbl | append: '|'
+      assign u = b.settings.url | default: '#'
+      assign urls_s = urls_s | append: u | append: '|'
+      if b.settings.mega
+        assign megas_s = megas_s | append: '1|'
+      else
+        assign megas_s = megas_s | append: '0|'
+      endif
+    endfor
+    assign nav_labels = labels_s | split: '|'
+    assign nav_urls = urls_s | split: '|'
+    assign nav_megas = megas_s | split: '|'
+  else
+    assign nav_labels = 'Shop|Bars|Truffles|Slabs|Variety packs|Subscribe & Save|Our story' | split: '|'
+    assign nav_urls = '/collections/shop-all|/collections/chocolate-bars|/collections/chocolate-truffles|/collections/new-chocolate-slabs|/collections/variety-packs|/pages/subscribe-save|/pages/for-the-geeks-1' | split: '|'
+    assign nav_megas = '1|0|0|0|0|0|0' | split: '|'
+  endif
+
+  assign type_labels = 'Bars|Truffles|Slabs|Variety packs|Limited editions|Shop all' | split: '|'
+  assign type_urls = '/collections/chocolate-bars|/collections/chocolate-truffles|/collections/new-chocolate-slabs|/collections/variety-packs|/collections/limited-editions|/collections/shop-all' | split: '|'
+  assign crave_labels = "The 3:30 pm reset|Post-workout|Netflix o'clock|The PMS kit" | split: '|'
+  assign crave_urls = '/products/salted-caramel-bar-x12|/products/bar-bunch|/products/truffle-mix|/products/triple-chocolate-truffle' | split: '|'
+  assign crave_colors = 'caramel|pistachio|mocha|limited' | split: '|'
+
+  assign promo_img = section.settings.mega_image
+  if promo_img == blank
+    assign promo_img = images['plaay26-green-tubes.jpg']
+  endif
+  assign promo_title = section.settings.mega_title | default: 'Build your box'
+  assign promo_text = section.settings.mega_text | default: 'Every 4 weeks. Free shipping. Skip or cancel anytime.'
+  assign promo_btn = section.settings.mega_btn_label | default: 'Subscribe & Save'
+  assign promo_url = section.settings.mega_btn_url | default: '/pages/subscribe-save'
+
+  if customer
+    assign account_url = routes.account_url
+  else
+    assign account_url = routes.account_login_url
+  endif
+-%}
+<div class="pl pl-shell">
+  <header class="pl-header" data-pl-header>
+    <div class="pl-wrap pl-header__row">
+      <div class="pl-header__left">
+        <button type="button" class="pl-iconbtn pl-iconbtn--ghost pl-header__menu" aria-label="Menu" aria-haspopup="dialog" aria-expanded="false" data-pl-open-menu>
+          {%- render 'pl-icon', name: 'menu', size: 24, stroke: 2 -%}
+        </button>
+      </div>
+
+      <a class="pl-header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
+        {%- if logo != blank -%}
+          {{ logo | image_url: width: 300 | image_tag: width: logo_w, height: 22, loading: 'eager', alt: shop.name, class: 'pl-header__logo-img' }}
+        {%- else -%}
+          <span class="pl-h pl-h--3">plaay</span>
+        {%- endif -%}
+      </a>
+
+      <nav class="pl-header__nav" aria-label="Main">
+        <ul class="pl-header__list">
+          {%- for label in nav_labels -%}
+            {%- assign i = forloop.index0 -%}
+            {%- assign url = nav_urls[i] | default: '#' -%}
+            {%- assign is_mega = false -%}
+            {%- if nav_megas[i] == '1' -%}{%- assign is_mega = true -%}{%- endif -%}
+            <li class="pl-header__item{% if is_mega %} has-mega{% endif %}"{% if is_mega %} data-pl-mega-parent{% endif %}{% if link_blocks.size > 0 %} {{ link_blocks[i].shopify_attributes }}{% endif %}>
+              <a class="pl-header__link" href="{{ url }}"{% if is_mega %} aria-haspopup="true" aria-expanded="false"{% endif %}>
+                {{- label | escape -}}
+                {%- if is_mega %} {% render 'pl-icon', name: 'chev-down', size: 16, stroke: 2.2 %}{% endif -%}
+              </a>
+              {%- if is_mega -%}
+                <div class="pl-mega" data-pl-mega>
+                  <div class="pl-wrap pl-mega__grid">
+                    <div class="pl-mega__col">
+                      <p class="pl-label">Shop by type</p>
+                      <ul class="pl-mega__list">
+                        {%- for t in type_labels -%}
+                          <li><a href="{{ type_urls[forloop.index0] }}">{{ t }}</a></li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                    <div class="pl-mega__col">
+                      <p class="pl-label">Shop by craving</p>
+                      <ul class="pl-mega__list">
+                        {%- for c in crave_labels -%}
+                          <li><a href="{{ crave_urls[forloop.index0] }}"><span class="pl-dot" style="--pl-dot: var(--pl-f-{{ crave_colors[forloop.index0] }})" aria-hidden="true"></span>{{ c }}</a></li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                    <div class="pl-card pl-card--cream pl-mega__promo">
+                      {%- if promo_img != blank -%}
+                        <div class="pl-mega__promo-img">
+                          {{ promo_img | image_url: width: 840 | image_tag: loading: 'lazy', sizes: '420px', widths: '420, 840', alt: promo_img.alt | default: promo_title }}
+                        </div>
+                      {%- endif -%}
+                      <div class="pl-mega__promo-body">
+                        <p class="pl-h pl-h--3">{{ promo_title }}</p>
+                        <p class="pl-small pl-mute">{{ promo_text }}</p>
+                        <a class="pl-btn pl-btn--navy-y pl-btn--md" href="{{ promo_url }}">{{ promo_btn }}</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      <div class="pl-header__right">
+        <form class="pl-field pl-header__search" action="{{ routes.search_url }}" method="get" role="search">
+          {%- render 'pl-icon', name: 'search', size: 18, stroke: 2 -%}
+          <label class="pl-vh" for="pl-header-search-{{ section.id }}">Search</label>
+          <input id="pl-header-search-{{ section.id }}" type="search" name="q" placeholder="Search flavours, packs, gifts" autocomplete="off" data-pl-search-trigger>
+        </form>
+        <button type="button" class="pl-iconbtn pl-iconbtn--ghost pl-header__search-btn" aria-label="Search" data-pl-open-search>
+          {%- render 'pl-icon', name: 'search', size: 22, stroke: 2 -%}
+        </button>
+        <a class="pl-iconbtn pl-iconbtn--ghost pl-header__account" href="{{ account_url }}" aria-label="Account">
+          {%- render 'pl-icon', name: 'user', size: 22, stroke: 2 -%}
+        </a>
+        <button type="button" class="pl-iconbtn pl-iconbtn--ghost header__icon--cart" data-drawer-trigger="cart" aria-label="Bag">
+          {%- render 'pl-icon', name: 'bag', size: 22, stroke: 2 -%}
+          <span class="pl-count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="pl-sheet-overlay" data-pl-overlay aria-hidden="true"></div>
+
+  {%- comment -%} Search sheet {%- endcomment -%}
+  <div class="pl-sheet pl-sheet--search" role="dialog" aria-modal="true" aria-label="Search" aria-hidden="true" data-pl-sheet="search">
+    <form class="pl-search__head" action="{{ routes.search_url }}" method="get" role="search" data-pl-search-form data-currency="{{ cart.currency.iso_code | default: shop.currency }}">
+      <div class="pl-field pl-search__field">
+        {%- render 'pl-icon', name: 'search', size: 20, stroke: 2 -%}
+        <label class="pl-vh" for="pl-search-input-{{ section.id }}">Search</label>
+        <input id="pl-search-input-{{ section.id }}" type="search" name="q" placeholder="Search flavours, packs, gifts" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-pl-search-input>
+        <button type="button" class="pl-search__clear" aria-label="Clear" data-pl-search-clear hidden>
+          {%- render 'pl-icon', name: 'close', size: 16, stroke: 2.2 -%}
+        </button>
+      </div>
+      <button type="button" class="pl-search__cancel" data-pl-close>Cancel</button>
+    </form>
+    <div class="pl-search__body">
+      <div class="pl-search__results" data-pl-search-results aria-live="polite" hidden></div>
+      <section class="pl-search__group" data-pl-search-popular>
+        <p class="pl-label">Popular right now</p>
+        <div class="pl-pills pl-search__chips">
+          <a class="pl-pill" href="{{ routes.search_url }}?q=salted+caramel">Salted caramel</a>
+          <a class="pl-pill" href="{{ routes.collections_url }}/chocolate-truffles">Truffles</a>
+          <a class="pl-pill" href="{{ routes.collections_url }}/new-chocolate-slabs">New slabs</a>
+          <a class="pl-pill" href="{{ routes.collections_url }}/variety-packs">Gift packs</a>
+          <a class="pl-pill" href="/pages/subscribe-save">Subscribe &amp; Save</a>
+        </div>
+      </section>
+      <section class="pl-search__group" data-pl-search-recent hidden>
+        <div class="pl-search__recent-head">
+          <p class="pl-label">Recent</p>
+          <button type="button" class="pl-search__recent-clear" data-pl-search-clear-recent>Clear</button>
+        </div>
+        <ul data-pl-search-recent-list></ul>
+      </section>
+    </div>
+  </div>
+
+  {%- comment -%} Mobile menu sheet {%- endcomment -%}
+  <div class="pl-sheet pl-sheet--menu" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true" data-pl-sheet="menu">
+    <div class="pl-menu__head">
+      <a href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
+        {%- if logo != blank -%}
+          {{ logo | image_url: width: 300 | image_tag: width: logo_w, height: 22, loading: 'lazy', alt: shop.name }}
+        {%- else -%}
+          <span class="pl-h pl-h--3">plaay</span>
+        {%- endif -%}
+      </a>
+      <button type="button" class="pl-iconbtn pl-iconbtn--ghost" aria-label="Close menu" data-pl-close>
+        {%- render 'pl-icon', name: 'close', size: 22, stroke: 2 -%}
+      </button>
+    </div>
+    <nav class="pl-menu__body" aria-label="Menu">
+      <ul class="pl-menu__list">
+        {%- for label in nav_labels -%}
+          <li><a href="{{ nav_urls[forloop.index0] | default: '#' }}">{{ label | escape }}{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
+        {%- endfor -%}
+      </ul>
+      <div class="pl-menu__group">
+        <p class="pl-label">Shop by craving</p>
+        <ul class="pl-menu__cravings">
+          {%- for c in crave_labels -%}
+            <li><a href="{{ crave_urls[forloop.index0] }}"><span class="pl-dot" style="--pl-dot: var(--pl-f-{{ crave_colors[forloop.index0] }})" aria-hidden="true"></span>{{ c }}</a></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      <ul class="pl-menu__small">
+        <li><a href="{{ account_url }}">Account</a></li>
+        <li><a href="/pages/retailers">Retailers</a></li>
+        <li><a href="/pages/faqs">FAQ</a></li>
+        <li><a href="/pages/contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+<script src="{{ 'pl-shell.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Header (2026)",
+  "class": "pl-header-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Shown 22px tall. Falls back to Group_3755_1.png from Files."
+    },
+    {
+      "type": "header",
+      "content": "Shop mega menu card"
+    },
+    {
+      "type": "image_picker",
+      "id": "mega_image",
+      "label": "Card image",
+      "info": "Falls back to plaay26-green-tubes.jpg from Files."
+    },
+    {
+      "type": "text",
+      "id": "mega_title",
+      "label": "Card title",
+      "default": "Build your box"
+    },
+    {
+      "type": "text",
+      "id": "mega_text",
+      "label": "Card text",
+      "default": "Every 4 weeks. Free shipping. Skip or cancel anytime."
+    },
+    {
+      "type": "text",
+      "id": "mega_btn_label",
+      "label": "Card button label",
+      "default": "Subscribe & Save"
+    },
+    {
+      "type": "url",
+      "id": "mega_btn_url",
+      "label": "Card button link",
+      "default": "/pages/subscribe-save"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Shop"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link",
+          "default": "/collections/shop-all"
+        },
+        {
+          "type": "checkbox",
+          "id": "mega",
+          "label": "Opens the Shop mega menu",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "max_blocks": 8,
+  "default": {
+    "blocks": [
+      { "type": "link", "settings": { "label": "Shop", "url": "/collections/shop-all", "mega": true } },
+      { "type": "link", "settings": { "label": "Bars", "url": "/collections/chocolate-bars" } },
+      { "type": "link", "settings": { "label": "Truffles", "url": "/collections/chocolate-truffles" } },
+      { "type": "link", "settings": { "label": "Slabs", "url": "/collections/new-chocolate-slabs" } },
+      { "type": "link", "settings": { "label": "Variety packs", "url": "/collections/variety-packs" } },
+      { "type": "link", "settings": { "label": "Subscribe & Save", "url": "/pages/subscribe-save" } },
+      { "type": "link", "settings": { "label": "Our story", "url": "/pages/for-the-geeks-1" } }
+    ]
+  },
+  "presets": [
+    {
+      "name": "Header (2026)",
+      "blocks": [
+        { "type": "link", "settings": { "label": "Shop", "url": "/collections/shop-all", "mega": true } },
+        { "type": "link", "settings": { "label": "Bars", "url": "/collections/chocolate-bars" } },
+        { "type": "link", "settings": { "label": "Truffles", "url": "/collections/chocolate-truffles" } },
+        { "type": "link", "settings": { "label": "Slabs", "url": "/collections/new-chocolate-slabs" } },
+        { "type": "link", "settings": { "label": "Variety packs", "url": "/collections/variety-packs" } },
+        { "type": "link", "settings": { "label": "Subscribe & Save", "url": "/pages/subscribe-save" } },
+        { "type": "link", "settings": { "label": "Our story", "url": "/pages/for-the-geeks-1" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

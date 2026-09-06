@@ -1,0 +1,56 @@
+{%- comment -%}
+  Plaay 2026 "You might also like". Standard Shopify recommendations pattern: the section
+  renders only its container on the product page; pl-product.js fetches
+  {{ routes.product_recommendations_url }}?section_id=...&product_id=...&limit=4&intent=related
+  and swaps in the rendered tiles (recommendations.performed is true on that request).
+{%- endcomment -%}
+{{ 'pl-product.css' | asset_url | stylesheet_tag }}
+<div class="pl" data-pl-recommendations data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&amp;product_id={{ product.id }}&amp;limit=4&amp;intent=related">
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    <section class="pl-section pl-recs">
+      <div class="pl-wrap">
+        <div class="pl-recs__head">
+          <h2 class="pl-h pl-h--2">{{ section.settings.heading | default: 'You might also like' }}</h2>
+          <a class="pl-recs__link" href="{{ section.settings.link_url | default: '/collections/shop-all' }}">
+            {{ section.settings.link_label | default: 'Shop all' }}
+            {%- render 'pl-icon', name: 'chev-right', size: 14, stroke: 2.2 -%}
+          </a>
+        </div>
+        <div class="pl-grid pl-grid--2 pl-grid--d4">
+          {%- for rec in recommendations.products -%}
+            {%- render 'pl-tile', product: rec, sizes: '(min-width: 1024px) 300px, 46vw' -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+</div>
+<script src="{{ 'pl-product.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Plaay recommendations",
+  "tag": "section",
+  "class": "pl-section-recommendations",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "You might also like"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "Shop all"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL",
+      "default": "/collections/shop-all"
+    }
+  ]
+}
+{% endschema %}

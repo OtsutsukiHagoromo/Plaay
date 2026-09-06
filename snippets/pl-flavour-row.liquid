@@ -1,0 +1,81 @@
+{%- comment -%}
+  Plaay 2026 flavour row (pl-choice tiles).
+  Usage: {% render 'pl-flavour-row', product: product, kind: kind %}
+  Items = product.metafields.dev.choose_your_flavour.value (packs fall back to
+  custom.choose_your_variety.value). Keeps metafield order, prepends the current product
+  when it is missing, marks the current one .is-on. Each tile links to the sibling.
+  Renders nothing when the product has no siblings.
+{%- endcomment -%}
+{%- liquid
+  assign list = product.metafields.dev.choose_your_flavour.value
+  if list == blank and kind == 'packs'
+    assign list = product.metafields.custom.choose_your_variety.value
+  endif
+  assign sibling_count = 0
+  assign has_self = false
+  for sib in list
+    if sib.handle == blank
+      continue
+    endif
+    if sib.handle == product.handle
+      assign has_self = true
+    else
+      assign sibling_count = sibling_count | plus: 1
+    endif
+  endfor
+-%}
+{%- if sibling_count > 0 -%}
+  {%- liquid
+    assign self_name = product.title | replace: 'PLAAY ', '' | replace: 'Plaay ', '' | split: ' Bar' | first | split: ' Truffle' | first | split: ' Slab' | first | split: ' 12' | first | strip
+    if self_name == blank
+      assign self_name = product.title
+    endif
+  -%}
+  <div class="pl-opt" data-pl-flavour>
+    <div class="pl-opt__head">
+      <span class="pl-label">Flavour</span>
+      <span class="pl-opt__val">{{ self_name }}</span>
+    </div>
+    <div class="pl-choice">
+      {%- unless has_self -%}
+        <a class="pl-choice__item is-on" href="{{ product.url }}" aria-current="page">
+          <span class="pl-choice__box">
+            {%- if product.featured_image -%}
+              {{ product.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 160', sizes: '80px', alt: '' }}
+            {%- endif -%}
+            <span class="pl-check">{%- render 'pl-icon', name: 'check', size: 10, stroke: 3 -%}</span>
+          </span>
+          <span class="pl-choice__name">{{ self_name }}</span>
+        </a>
+      {%- endunless -%}
+      {%- for sib in list -%}
+        {%- if sib.handle == blank -%}{%- continue -%}{%- endif -%}
+        {%- liquid
+          assign is_self = false
+          if sib.handle == product.handle
+            assign is_self = true
+          endif
+          assign name = sib.title | replace: 'PLAAY ', '' | replace: 'Plaay ', '' | split: ' Bar' | first | split: ' Truffle' | first | split: ' Slab' | first | split: ' 12' | first | strip
+          if name == blank
+            assign name = sib.title
+          endif
+          assign tags_dc = sib.tags | join: '|' | downcase
+          assign is_limited = false
+          if tags_dc contains 'badge:limited' or tags_dc contains 'limited edition'
+            assign is_limited = true
+          endif
+        -%}
+        <a class="pl-choice__item{% if is_self %} is-on{% endif %}" href="{{ sib.url }}"{% if is_self %} aria-current="page"{% endif %} data-handle="{{ sib.handle }}">
+          <span class="pl-choice__box">
+            {%- if sib.featured_image -%}
+              {{ sib.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 160', sizes: '80px', alt: '' }}
+            {%- endif -%}
+            <span class="pl-check">{%- render 'pl-icon', name: 'check', size: 10, stroke: 3 -%}</span>
+          </span>
+          <span class="pl-choice__name">{{ name }}</span>
+          {%- if is_limited -%}<span class="pl-choice__tag">Limited</span>{%- endif -%}
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}

@@ -1,0 +1,76 @@
+{%- comment -%}
+  Plaay 2026 product gallery.
+  Usage: {% render 'pl-gallery', product: product, badge_text: badge_text, show_video: true %}
+  Mobile: scroll-snap track with dots. Desktop: vertical thumbnail rail + main slide.
+  Slides carry data-media-id so pl-product.js can jump to a variant's featured media.
+  The heart toggles the "plaay_wishlist" localStorage array of handles (same format as
+  snippets/plaay-wishlist-heart.liquid) and dispatches "plaay:wishlist:change".
+{%- endcomment -%}
+{%- liquid
+  assign media_list = product.media
+  assign slide_count = 0
+  for media in media_list
+    if show_video == false and media.media_type != 'image'
+      continue
+    endif
+    assign slide_count = slide_count | plus: 1
+  endfor
+-%}
+<div class="pl-gal" data-pl-gallery>
+  <div class="pl-gal__frame">
+    {%- if badge_text != blank -%}<span class="pl-tag pl-tag--yellow pl-badge">{{ badge_text }}</span>{%- endif -%}
+    <button type="button" class="pl-iconbtn pl-gal__heart" data-pl-wish data-handle="{{ product.handle }}" aria-pressed="false" aria-label="Save {{ product.title | escape }} to your flavours">
+      {%- render 'pl-icon', name: 'heart', size: 20, stroke: 1.8 -%}
+    </button>
+    <div class="pl-gal__track" data-pl-track aria-roledescription="carousel" aria-label="{{ product.title | escape }} photos">
+      {%- if slide_count == 0 -%}
+        <div class="pl-gal__slide" data-media-id="0" data-index="0">
+          {{ 'product-1' | placeholder_svg_tag: 'pl-gal__placeholder' }}
+        </div>
+      {%- endif -%}
+      {%- assign i = 0 -%}
+      {%- for media in media_list -%}
+        {%- if show_video == false and media.media_type != 'image' -%}{%- continue -%}{%- endif -%}
+        {%- liquid
+          assign load = 'lazy'
+          if i == 0
+            assign load = 'eager'
+          endif
+        -%}
+        <div class="pl-gal__slide" data-media-id="{{ media.id }}" data-index="{{ i }}" role="group" aria-roledescription="slide" aria-label="{{ i | plus: 1 }} of {{ slide_count }}">
+          {%- case media.media_type -%}
+            {%- when 'image' -%}
+              {{ media.preview_image | image_url: width: 1400 | image_tag: loading: load, sizes: '(min-width: 1024px) 640px, 100vw', widths: '480, 720, 960, 1200, 1400', alt: media.alt | default: product.title }}
+            {%- when 'video' -%}
+              {{ media | media_tag: image_size: '1200x', class: 'pl-gal__video', controls: true, muted: true }}
+            {%- when 'external_video' -%}
+              {{ media | media_tag: image_size: '1200x', class: 'pl-gal__video' }}
+            {%- else -%}
+              {{ media.preview_image | image_url: width: 1400 | image_tag: loading: load, sizes: '(min-width: 1024px) 640px, 100vw', widths: '480, 720, 960, 1200, 1400', alt: media.alt | default: product.title }}
+          {%- endcase -%}
+        </div>
+        {%- assign i = i | plus: 1 -%}
+      {%- endfor -%}
+    </div>
+  </div>
+  {%- if slide_count > 1 -%}
+    <div class="pl-gal__dots" data-pl-dots role="tablist" aria-label="Choose photo">
+      {%- for n in (1..slide_count) -%}
+        <button type="button" class="pl-gal__dot{% if forloop.first %} is-on{% endif %}" data-pl-dot="{{ forloop.index0 }}" aria-label="Photo {{ forloop.index }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
+      {%- endfor -%}
+    </div>
+    <div class="pl-gal__thumbs" data-pl-thumbs>
+      {%- assign t = 0 -%}
+      {%- for media in media_list -%}
+        {%- if show_video == false and media.media_type != 'image' -%}{%- continue -%}{%- endif -%}
+        <button type="button" class="pl-gal__thumb{% if t == 0 %} is-on{% endif %}" data-pl-thumb="{{ t }}" aria-label="Photo {{ t | plus: 1 }}">
+          {{ media.preview_image | image_url: width: 144 | image_tag: loading: 'lazy', widths: '72, 144', sizes: '72px', alt: '' }}
+          {%- if media.media_type != 'image' -%}
+            <span class="pl-gal__thumb-play">{%- render 'pl-icon', name: 'play', size: 22 -%}</span>
+          {%- endif -%}
+        </button>
+        {%- assign t = t | plus: 1 -%}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>

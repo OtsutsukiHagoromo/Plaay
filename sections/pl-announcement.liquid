@@ -1,0 +1,125 @@
+{%- comment -%}
+  Plaay 2026 announcement bar. Slim navy strip, cream 12px text. One message shows at a
+  time; with more than one block they rotate every 4 s with a fade (inline JS, no library).
+  Styles live in assets/pl-shell.css (loaded from layout/theme.liquid).
+{%- endcomment -%}
+{%- liquid
+  assign messages = section.blocks | where: 'type', 'message'
+  assign fallback = 'Free delivery AED 75+ · 7% off AED 250+ · 10% off + Mystery Gift AED 350+ · 15% off AED 500+'
+  assign shown = 0
+  for block in messages
+    if block.settings.text != blank
+      assign shown = shown | plus: 1
+    endif
+  endfor
+-%}
+<div class="pl pl-ann{% if section.settings.hide_mobile %} pl-hide-m{% endif %}" id="pl-ann-{{ section.id }}" data-pl-announcement role="region" aria-label="Announcement">
+  <div class="pl-wrap pl-ann__wrap">
+    {%- if shown > 0 -%}
+      {%- assign first = true -%}
+      {%- for block in messages -%}
+        {%- if block.settings.text == blank -%}{%- continue -%}{%- endif -%}
+        <p class="pl-ann__msg{% if first %} is-on{% endif %}"{% unless first %} aria-hidden="true"{% endunless %} {{ block.shopify_attributes }}>
+          {%- if block.settings.url != blank -%}
+            <a href="{{ block.settings.url }}">{{ block.settings.text }}</a>
+          {%- else -%}
+            {{ block.settings.text }}
+          {%- endif -%}
+        </p>
+        {%- assign first = false -%}
+      {%- endfor -%}
+    {%- else -%}
+      <p class="pl-ann__msg is-on">{{ fallback }}</p>
+    {%- endif -%}
+  </div>
+</div>
+{%- if shown > 1 -%}
+<script>
+  (function () {
+    var root = document.getElementById('pl-ann-{{ section.id }}');
+    if (!root) return;
+    var msgs = root.querySelectorAll('.pl-ann__msg');
+    if (msgs.length < 2) return;
+    var i = 0;
+    function show(n) {
+      msgs[i].classList.remove('is-on');
+      msgs[i].setAttribute('aria-hidden', 'true');
+      i = n;
+      msgs[i].classList.add('is-on');
+      msgs[i].removeAttribute('aria-hidden');
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var timer = setInterval(function () { show((i + 1) % msgs.length); }, 4000);
+    root.addEventListener('mouseenter', function () { clearInterval(timer); });
+    root.addEventListener('mouseleave', function () { timer = setInterval(function () { show((i + 1) % msgs.length); }, 4000); });
+    {%- if request.design_mode %}
+    document.addEventListener('shopify:block:select', function (e) {
+      var idx = Array.prototype.indexOf.call(msgs, e.target);
+      if (idx > -1) { clearInterval(timer); show(idx); }
+    });
+    {%- endif %}
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcement (2026)",
+  "class": "pl-announcement-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "hide_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "paragraph",
+      "content": "Add one message per block. With more than one, they rotate every 4 seconds."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Message",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Free delivery AED 75+ · 7% off AED 250+ · 10% off + Mystery Gift AED 350+ · 15% off AED 500+"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "default": {
+    "blocks": [
+      {
+        "type": "message",
+        "settings": {
+          "text": "Free delivery AED 75+ · 7% off AED 250+ · 10% off + Mystery Gift AED 350+ · 15% off AED 500+"
+        }
+      }
+    ]
+  },
+  "presets": [
+    {
+      "name": "Announcement (2026)",
+      "blocks": [
+        {
+          "type": "message",
+          "settings": {
+            "text": "Free delivery AED 75+ · 7% off AED 250+ · 10% off + Mystery Gift AED 350+ · 15% off AED 500+"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

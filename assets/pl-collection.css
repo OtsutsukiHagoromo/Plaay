@@ -1,0 +1,148 @@
+/* ==========================================================================
+   Plaay 2026 catalogue: collection grid, shop all, search results.
+   Tokens and shared classes come from plaay-ui.css; only page-specific rules live here.
+   Mobile first; 1024px is desktop.
+   ========================================================================== */
+
+/* ---------- section frame ---------- */
+.pl.pl-coll,
+.pl.pl-search { padding: var(--pl-s6) 0 var(--pl-s8); background: var(--pl-ground); }
+
+/* ---------- head ---------- */
+.pl .pl-coll__head { display: flex; flex-direction: column; gap: var(--pl-s2); padding-bottom: var(--pl-s4); }
+.pl .pl-coll__intro { max-width: 60ch; }
+
+/* ---------- type chips ---------- */
+.pl .pl-coll__types { padding: 0 0 var(--pl-s4); }
+.pl .pl-coll__types .pl-pills { flex-wrap: nowrap; }
+.pl .pl-coll__types .pl-pill:hover,
+.pl .pl-coll__active .pl-pill:hover,
+.pl .pl-search__chips .pl-pill:hover { color: var(--pl-navy); border-color: var(--pl-navy); }
+.pl .pl-coll__types .pl-pill[aria-pressed="true"]:hover { color: var(--pl-white); }
+
+/* ---------- filter / sort bar ---------- */
+.pl .pl-coll__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--pl-s2); padding: var(--pl-s3) 0; border-top: 1px solid var(--pl-line); border-bottom: 1px solid var(--pl-line); }
+.pl .pl-coll__filterbtn { display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 16px; border-radius: var(--pl-r-pill); border: 1px solid var(--pl-line); background: var(--pl-white); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.pl .pl-coll__filterbtn:hover { border-color: var(--pl-navy); }
+.pl .pl-coll__n { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: var(--pl-r-pill); background: var(--pl-navy); color: var(--pl-white); font-size: 11px; font-weight: 700; line-height: 1; }
+.pl .pl-coll__sort { display: flex; align-items: center; gap: var(--pl-s2); margin-left: auto; min-width: 0; }
+.pl .pl-coll__sortlabel { font-size: var(--pl-t3); font-weight: 700; color: var(--pl-mute); white-space: nowrap; }
+.pl .pl-coll__sort .pl-select { max-width: 200px; }
+
+/* ---------- active filter chips ---------- */
+.pl .pl-coll__active { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: var(--pl-s3) 0 0; }
+.pl .pl-coll__active .pl-pill { height: 32px; padding: 0 10px 0 12px; font-size: 12px; }
+.pl .pl-coll__active .pl-pill svg { width: 14px; height: 14px; }
+.pl .pl-coll__active .pl-btn--link { font-size: var(--pl-t3); margin-left: 4px; }
+
+/* ---------- layout: grid alone on mobile, rail + grid on desktop ---------- */
+.pl .pl-coll__layout { display: block; padding-top: var(--pl-s4); }
+.pl .pl-coll__main { min-width: 0; }
+
+/* ---------- product grid ---------- */
+.pl .pl-coll__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.pl .pl-coll__grid > .pl-tile { height: 100%; }
+
+/* subscription card, full grid width */
+.pl .pl-coll__sub { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: flex-start; gap: var(--pl-s3); padding: var(--pl-s5); }
+.pl .pl-coll__subtext { display: flex; flex-direction: column; gap: var(--pl-s1); }
+.pl .pl-coll__sub .pl-btn { align-self: stretch; }
+
+/* ---------- grid footer: count, load more, pages ---------- */
+.pl .pl-coll__foot { display: flex; flex-direction: column; align-items: center; gap: var(--pl-s3); padding-top: var(--pl-s6); text-align: center; }
+.pl .pl-coll__more { width: 100%; }
+.pl .pl-coll__more[aria-busy="true"] { opacity: .6; pointer-events: none; }
+.pl .pl-coll__pages { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.pl .pl-coll__page { display: inline-flex; align-items: center; justify-content: center; min-width: 36px; height: 36px; padding: 0 10px; border-radius: var(--pl-r-pill); border: 1px solid var(--pl-line); background: var(--pl-white); font-size: 13px; font-weight: 700; color: var(--pl-navy); }
+.pl a.pl-coll__page:hover { border-color: var(--pl-navy); color: var(--pl-navy); }
+.pl .pl-coll__page.is-on { background: var(--pl-navy); border-color: var(--pl-navy); color: var(--pl-white); }
+.pl .pl-coll__page--gap { border-color: transparent; background: transparent; color: var(--pl-mute); }
+
+/* ---------- empty state ---------- */
+.pl .pl-coll__empty { text-align: center; padding: var(--pl-s8) 0; }
+.pl .pl-coll__empty .pl-row { flex-wrap: wrap; }
+
+/* ---------- filter rail: bottom sheet on mobile ---------- */
+.pl .pl-coll__overlay { position: fixed; inset: 0; z-index: var(--pl-z-overlay); background: rgba(8, 29, 72, .45); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+.pl .pl-coll__overlay.is-on { opacity: 1; pointer-events: auto; }
+.pl .pl-coll__rail { position: fixed; left: 0; right: 0; bottom: 0; z-index: calc(var(--pl-z-overlay) + 1); max-height: 86vh; max-height: 86dvh; background: var(--pl-ground); border-radius: 20px 20px 0 0; box-shadow: var(--pl-shadow-up); transform: translateY(105%); transition: transform .25s ease, visibility 0s linear .25s; visibility: hidden; }
+.pl .pl-coll__rail.is-open { transform: none; visibility: visible; transition: transform .25s ease, visibility 0s; }
+.pl .pl-coll__rail form { display: flex; flex-direction: column; max-height: inherit; }
+.pl .pl-coll__railhead { display: flex; align-items: center; justify-content: space-between; gap: var(--pl-s2); padding: 14px var(--pl-gutter); border-bottom: 1px solid var(--pl-line); flex: 0 0 auto; }
+.pl .pl-coll__railbody { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 var(--pl-gutter); }
+.pl .pl-coll__railfoot { display: flex; align-items: center; gap: 10px; padding: 12px var(--pl-gutter) calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--pl-line); flex: 0 0 auto; }
+.pl .pl-coll__railfoot .pl-btn { white-space: nowrap; }
+body.pl-coll-lock { overflow: hidden; }
+
+/* filter groups (details/summary from plaay-ui's pl-acc) */
+.pl .pl-coll__group .pl-acc__t { display: inline-flex; align-items: center; gap: 8px; }
+.pl .pl-coll__opts { display: flex; flex-direction: column; }
+.pl .pl-coll__opt { display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: var(--pl-t4); color: var(--pl-navy); cursor: pointer; }
+.pl .pl-coll__opt input { width: 18px; height: 18px; margin: 0; flex: 0 0 auto; accent-color: var(--pl-navy); }
+.pl .pl-coll__opt.is-off { opacity: .45; cursor: default; }
+.pl .pl-coll__optlabel { flex: 1; min-width: 0; }
+.pl .pl-coll__optcount { font-size: var(--pl-t2); color: var(--pl-mute); }
+.pl .pl-coll__price { display: flex; align-items: center; gap: var(--pl-s2); }
+.pl .pl-coll__price .pl-input { height: 44px; padding: 0 12px; flex: 1; min-width: 0; }
+
+/* ---------- search page ---------- */
+.pl .pl-search__form { display: flex; align-items: center; gap: var(--pl-s2); max-width: 720px; }
+.pl .pl-search__field { flex: 1; min-width: 0; }
+.pl .pl-search__field svg { flex: 0 0 auto; color: var(--pl-mute); }
+.pl .pl-search__submit { display: none; }
+.pl .pl-search__heading { padding: var(--pl-s6) 0 var(--pl-s4); }
+.pl .pl-search__popular { display: flex; flex-direction: column; gap: var(--pl-s3); padding-top: var(--pl-s6); }
+.pl .pl-search__chips { flex-wrap: wrap; }
+.pl .pl-search__empty { padding-top: var(--pl-s6); }
+.pl .pl-search__link { color: var(--pl-purple); text-decoration: underline; text-underline-offset: 2px; }
+.pl .pl-search__coll { display: flex; flex-direction: column; gap: 4px; padding: 12px 12px 14px; min-width: 0; }
+.pl .pl-search__coll:hover { color: var(--pl-navy); }
+.pl .pl-search__collimg { aspect-ratio: 1; border-radius: 12px; overflow: hidden; background: var(--pl-cream); margin-bottom: 6px; }
+.pl .pl-search__collimg img, .pl .pl-search__collph { width: 100%; height: 100%; object-fit: cover; }
+
+/* ==========================================================================
+   Desktop
+   ========================================================================== */
+@media (min-width: 1024px) {
+  .pl.pl-coll,
+  .pl.pl-search { padding: var(--pl-s7) 0 64px; }
+
+  .pl .pl-coll__head { padding-bottom: var(--pl-s5); }
+  .pl .pl-coll__types { padding-bottom: var(--pl-s5); }
+  .pl .pl-coll__types .pl-pills { overflow: visible; margin: 0; padding: 0; flex-wrap: wrap; }
+  .pl .pl-coll__filterbtn { display: none; }
+  .pl .pl-coll__layout { padding-top: var(--pl-s6); }
+  .pl .pl-coll__layout.has-rail { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: var(--pl-s7); align-items: start; }
+
+  .pl .pl-coll__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--pl-s6); }
+  .pl .has-rail .pl-coll__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  .pl .pl-coll__sub { flex-direction: row; align-items: center; justify-content: space-between; gap: var(--pl-s6); padding: var(--pl-s6) var(--pl-s7); }
+  .pl .pl-coll__sub .pl-btn { align-self: auto; }
+
+  .pl .pl-coll__foot { padding-top: var(--pl-s7); }
+  .pl .pl-coll__more { width: auto; min-width: 200px; }
+
+  /* rail becomes a static left column */
+  .pl .pl-coll__overlay { display: none; }
+  .pl .pl-coll__rail { position: sticky; top: calc(var(--pl-header-h) + var(--pl-s4)); left: auto; right: auto; bottom: auto; z-index: auto; max-height: none; background: transparent; border-radius: 0; box-shadow: none; transform: none; transition: none; visibility: visible; }
+  .pl .pl-coll__rail form { max-height: none; }
+  .pl .pl-coll__railhead { padding: 0 0 var(--pl-s3); }
+  .pl .pl-coll__close { display: none; }
+  .pl .pl-coll__railbody { overflow: visible; padding: 0; }
+  .pl .pl-coll__railfoot { padding: var(--pl-s4) 0 0; border-top: 0; }
+  .pl .pl-coll__railfoot .pl-btn { height: 40px; font-size: 13px; }
+  .pl .pl-coll__opt { padding: 6px 0; font-size: var(--pl-t3); }
+  body.pl-coll-lock { overflow: auto; }
+
+  .pl .pl-search__submit { display: inline-flex; height: 48px; }
+  .pl .pl-search__heading { padding-top: var(--pl-s7); }
+}
+
+@media (min-width: 1280px) {
+  .pl .has-rail .pl-coll__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl .pl-coll__rail, .pl .pl-coll__overlay { transition: none; }
+}

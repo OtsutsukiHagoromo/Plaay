@@ -1,0 +1,223 @@
+{%- comment -%}
+  Plaay 2026 footer. Navy, cream text, yellow accents. Newsletter form (customer form,
+  tag "newsletter"), three link columns (blocks of type "link_column" with a menu picker;
+  when there are no blocks the approved Shop / Plaay / Help columns render), bottom row
+  with delivery line, Halal, payment line, socials, policy links and copyright.
+  Styles: assets/pl-shell.css (loaded from layout/theme.liquid).
+{%- endcomment -%}
+{%- liquid
+  assign logo = section.settings.logo
+  if logo == blank
+    assign logo = images['Group_3755_1.png']
+  endif
+  assign logo_w = 96
+  if logo != blank and logo.aspect_ratio
+    assign logo_w = logo.aspect_ratio | times: 24 | round
+  endif
+  assign columns = section.blocks | where: 'type', 'link_column'
+  assign year = 'now' | date: '%Y'
+  assign instagram_url = section.settings.instagram_url | default: 'https://www.instagram.com/shopplaay'
+  assign tiktok_url = section.settings.tiktok_url
+-%}
+<footer class="pl pl-footer" data-pl-footer>
+  <div class="pl-wrap">
+    <div class="pl-footer__top">
+      <div class="pl-footer__mail">
+        <a class="pl-footer__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
+          {%- if logo != blank -%}
+            {{ logo | image_url: width: 300 | image_tag: width: logo_w, height: 24, loading: 'lazy', alt: shop.name }}
+          {%- else -%}
+            <span class="pl-h pl-h--3">plaay</span>
+          {%- endif -%}
+        </a>
+        <p class="pl-label pl-footer__label">{{ section.settings.mail_heading | default: 'Plaay mail' }}</p>
+        <p class="pl-body">{{ section.settings.mail_text | default: 'Fresh drops, flavour votes and a code for your first order.' }}</p>
+        {%- form 'customer', id: 'ContactFooter', class: 'pl-row pl-footer__form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          <label class="pl-vh" for="ContactFooter-email">Email</label>
+          <input
+            class="pl-input"
+            type="email"
+            name="contact[email]"
+            id="ContactFooter-email"
+            value="{{ form.email }}"
+            placeholder="you@email.com"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            required
+            {% if form.errors %}aria-invalid="true" aria-describedby="ContactFooter-error"{% elsif form.posted_successfully? %}aria-describedby="ContactFooter-success"{% endif %}>
+          <button type="submit" class="pl-btn">Sign up</button>
+          {%- if form.errors -%}
+            <p class="pl-footer__msg pl-footer__msg--error" id="ContactFooter-error" role="alert">
+              {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
+            </p>
+          {%- elsif form.posted_successfully? -%}
+            <p class="pl-footer__msg" id="ContactFooter-success" role="status">Thanks, you are on the list.</p>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+
+      <nav class="pl-footer__cols" aria-label="Footer">
+        {%- if columns.size > 0 -%}
+          {%- for block in columns -%}
+            {%- assign menu = block.settings.menu -%}
+            <div class="pl-footer__col" {{ block.shopify_attributes }}>
+              <p class="pl-label">{{ block.settings.title | default: menu.title }}</p>
+              {%- if menu != blank and menu.links.size > 0 -%}
+                <ul>
+                  {%- for link in menu.links -%}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="pl-footer__col">
+            <p class="pl-label">Shop</p>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/chocolate-bars">Bars</a></li>
+              <li><a href="{{ routes.collections_url }}/chocolate-truffles">Truffles</a></li>
+              <li><a href="{{ routes.collections_url }}/new-chocolate-slabs">Slabs</a></li>
+              <li><a href="{{ routes.collections_url }}/variety-packs">Variety packs</a></li>
+              <li><a href="{{ routes.collections_url }}/limited-editions">Limited editions</a></li>
+              <li><a href="{{ routes.collections_url }}/shop-all">Shop all</a></li>
+            </ul>
+          </div>
+          <div class="pl-footer__col">
+            <p class="pl-label">Plaay</p>
+            <ul>
+              <li><a href="/pages/for-the-geeks-1">Our story</a></li>
+              <li><a href="/pages/subscribe-save">Subscribe &amp; Save</a></li>
+              <li><a href="/pages/subscribe-save">Rewards</a></li>
+              <li><a href="/pages/retailers">Retailers</a></li>
+            </ul>
+          </div>
+          <div class="pl-footer__col">
+            <p class="pl-label">Help</p>
+            <ul>
+              <li><a href="/pages/shipping-policy">Delivery</a></li>
+              <li><a href="/pages/returns-refunds">Returns</a></li>
+              <li><a href="/pages/faqs">FAQ</a></li>
+              <li><a href="/pages/contact">Contact</a></li>
+            </ul>
+          </div>
+        {%- endif -%}
+      </nav>
+    </div>
+
+    <div class="pl-footer__bottom">
+      <div class="pl-footer__facts">
+        <span class="pl-footer__fact">{% render 'pl-icon', name: 'truck', size: 18 %}{{ section.settings.delivery_line | default: 'Free delivery AED 75+ · 1–2 day UAE-wide · GCC 3–5 days' }}</span>
+        <span class="pl-footer__fact">{% render 'pl-icon', name: 'check', size: 18, stroke: 2.2 %}{{ section.settings.halal_line | default: 'Halal certified' }}</span>
+        <span class="pl-footer__fact">{% render 'pl-icon', name: 'lock', size: 18 %}{{ section.settings.payment_line | default: 'Visa · Mastercard · Apple Pay' }}</span>
+      </div>
+      <div class="pl-footer__meta">
+        <div class="pl-footer__social">
+          {%- if instagram_url != blank -%}
+            <a href="{{ instagram_url }}" target="_blank" rel="noopener" aria-label="Plaay on Instagram">{% render 'pl-icon', name: 'instagram', size: 18 %}</a>
+          {%- endif -%}
+          {%- if tiktok_url != blank -%}
+            <a href="{{ tiktok_url }}" target="_blank" rel="noopener" aria-label="Plaay on TikTok">{% render 'pl-icon', name: 'tiktok', size: 18 %}</a>
+          {%- endif -%}
+        </div>
+        <div class="pl-footer__legal">
+          <a href="/policies/privacy-policy">Privacy</a>
+          <a href="/policies/terms-of-service">Terms</a>
+          <span>© {{ year }} Plaay</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer (2026)",
+  "class": "pl-footer-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Rendered in cream over navy. Falls back to Group_3755_1.png from Files."
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "mail_heading",
+      "label": "Heading",
+      "default": "Plaay mail"
+    },
+    {
+      "type": "text",
+      "id": "mail_text",
+      "label": "Text",
+      "default": "Fresh drops, flavour votes and a code for your first order."
+    },
+    {
+      "type": "header",
+      "content": "Bottom row"
+    },
+    {
+      "type": "text",
+      "id": "delivery_line",
+      "label": "Delivery line",
+      "default": "Free delivery AED 75+ · 1–2 day UAE-wide · GCC 3–5 days"
+    },
+    {
+      "type": "text",
+      "id": "halal_line",
+      "label": "Certification line",
+      "default": "Halal certified"
+    },
+    {
+      "type": "text",
+      "id": "payment_line",
+      "label": "Payment line",
+      "default": "Visa · Mastercard · Apple Pay"
+    },
+    {
+      "type": "text",
+      "id": "instagram_url",
+      "label": "Instagram URL",
+      "default": "https://www.instagram.com/shopplaay"
+    },
+    {
+      "type": "text",
+      "id": "tiktok_url",
+      "label": "TikTok URL",
+      "info": "Leave blank to hide the TikTok icon."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_column",
+      "name": "Link column",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Defaults to the menu title."
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 3,
+  "presets": [
+    {
+      "name": "Footer (2026)"
+    }
+  ]
+}
+{% endschema %}

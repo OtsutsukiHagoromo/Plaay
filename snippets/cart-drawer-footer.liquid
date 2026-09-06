@@ -1,87 +1,148 @@
-{% liquid
-  assign original_total_price = cart.original_total_price | default: cart.total_price
-  assign total_savings = original_total_price | minus: cart.total_price
-  assign has_discounted_total = false
+{%- comment -%}
+  Cart summary rows + discount code field. Rendered inside [data-cart-drawer-footer] in the drawer
+  and in the cart page summary card.
 
-  if original_total_price > cart.total_price
-    assign has_discounted_total = true
+  Maths (all fils):
+    subtotal   = sum of one-time line prices (subscribed lines use selling_plan_allocation.compare_at_price)
+    sub rows   = per subscribed line, one-time price minus the subscription price
+    discounts  = cart-level applications + line-level allocations, grouped by title
+    delivery   = Free once cart.original_total_price reaches settings.cart_tier_ship
+    total      = cart.total_price
+  so subtotal - sub savings - discounts = total, which is what the design shows.
+
+  Hooks kept for assets/plaay-cart-gift-prompt.js: [data-plaay-discount-scope], .plaay-discount-toggle,
+  #plaay-discount-body (.plaay-discount-body / --open), [data-plaay-discount-input], [data-plaay-discount-apply],
+  [data-plaay-discount-msg], [data-plaay-discount-remove]. [data-subtotal][data-cart-total] carries the
+  raw fils total for the tier bar scripts.
+{%- endcomment -%}
+{%- liquid
+  assign ship_threshold = ship_fils
+  if ship_threshold == blank
+    assign ship_threshold = settings.cart_tier_ship | default: 75 | times: 100
   endif
-%}
 
-{% comment %} Subtotal row - data-cart-total carries the raw fils value for JS tier bar updates {% endcomment %}
-<div class="flex items-center justify-between py-3 border-t border-dark-blue border-opacity-10">
-  <span class="text-dark-blue text-base font-walsheim-bold uppercase tracking-wide">{{ 'cart-drawer.total' | t }}</span>
-  <div class="flex flex-col items-end" data-subtotal data-cart-total="{{ cart.total_price }}">
-    <span class="text-dark-blue text-xl font-walsheim-black">{{ cart.total_price | money }}</span>
-    {% if has_discounted_total %}
-      <span class="text-xs font-walsheim-bold text-dark-blue opacity-45 line-through">{{ original_total_price | money }}</span>
-    {% endif %}
+  assign subtotal = 0
+  for item in cart.items
+    if item.selling_plan_allocation
+      assign one_time = item.selling_plan_allocation.compare_at_price | times: item.quantity
+      assign subtotal = subtotal | plus: one_time
+    else
+      assign subtotal = subtotal | plus: item.original_line_price
+    endif
+  endfor
+
+  assign d_titles_str = ''
+  for item in cart.items
+    for da in item.line_level_discount_allocations
+      assign d_title = da.discount_application.title
+      assign d_titles = d_titles_str | split: '|'
+      unless d_titles contains d_title
+        assign d_titles_str = d_titles_str | append: '|' | append: d_title
+      endunless
+    endfor
+  endfor
+  for app in cart.cart_level_discount_applications
+    assign d_title = app.title
+    assign d_titles = d_titles_str | split: '|'
+    unless d_titles contains d_title
+      assign d_titles_str = d_titles_str | append: '|' | append: d_title
+    endunless
+  endfor
+  assign d_titles = d_titles_str | split: '|'
+
+  assign delivery_free = false
+  if cart.original_total_price >= ship_threshold
+    assign delivery_free = true
+  endif
+-%}
+
+<div class="pl-summary">
+  <div class="pl-summary__row">
+    <span class="pl-summary__k">Subtotal</span>
+    <span class="pl-summary__v">{% render 'plaay-aed', fils: subtotal %}</span>
+  </div>
+
+  {%- for item in cart.items -%}
+    {%- if item.selling_plan_allocation -%}
+      {%- liquid
+        assign one_time = item.selling_plan_allocation.compare_at_price | times: item.quantity
+        assign saving = one_time | minus: item.original_line_price
+        assign pct = 15
+        for adj in item.selling_plan_allocation.selling_plan.price_adjustments
+          if adj.value_type == 'percentage'
+            assign pct = adj.value
+          endif
+        endfor
+      -%}
+      {%- if saving > 0 -%}
+        <div class="pl-summary__row pl-summary__row--save">
+          <span class="pl-summary__k">Subscription, {{ pct }}% off {{ item.product.title }}</span>
+          <span class="pl-summary__v">&minus; {% render 'plaay-aed', fils: saving %}</span>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- for d_title in d_titles -%}
+    {%- if d_title == blank -%}{%- continue -%}{%- endif -%}
+    {%- liquid
+      assign d_amount = 0
+      assign d_type = ''
+      for item in cart.items
+        for da in item.line_level_discount_allocations
+          if da.discount_application.title == d_title
+            assign d_amount = d_amount | plus: da.amount
+            assign d_type = da.discount_application.type
+          endif
+        endfor
+      endfor
+      for app in cart.cart_level_discount_applications
+        if app.title == d_title
+          assign d_amount = d_amount | plus: app.total_allocated_amount
+          assign d_type = app.type
+        endif
+      endfor
+    -%}
+    {%- if d_amount > 0 -%}
+      <div class="pl-summary__row pl-summary__row--save">
+        <span class="pl-summary__k">
+          {%- if d_type == 'discount_code' -%}
+            <span class="pl-summary__code">{{ d_title }}<button type="button" class="pl-summary__code-x" aria-label="Remove promo code {{ d_title | escape }}" data-plaay-discount-remove>&times;</button></span>
+          {%- elsif d_type == 'automatic' -%}
+            {{ d_title }}, applied automatically
+          {%- else -%}
+            {{ d_title }}
+          {%- endif -%}
+        </span>
+        <span class="pl-summary__v">&minus; {% render 'plaay-aed', fils: d_amount %}</span>
+      </div>
+    {%- endif -%}
+  {%- endfor -%}
+
+  <div class="pl-summary__row">
+    <span class="pl-summary__k">Delivery</span>
+    <span class="pl-summary__v">{% if delivery_free %}Free{% else %}Calculated at checkout{% endif %}</span>
+  </div>
+
+  <div class="pl-summary__row pl-summary__row--total" data-subtotal data-cart-total="{{ cart.total_price }}">
+    <b class="pl-summary__k">Total</b>
+    <b class="pl-summary__v">{% render 'plaay-aed', fils: cart.total_price %}</b>
   </div>
 </div>
-{% if cart.cart_level_discount_applications.size > 0 or has_discounted_total %}
-  <div class="plaay-promo-summary -mt-1 mb-3">
-    <div class="plaay-promo-summary__chips">
-      {% if cart.cart_level_discount_applications.size > 0 %}
-        {% for discount in cart.cart_level_discount_applications %}
-          <span class="plaay-promo-summary__chip plaay-promo-summary__chip--dismissable">
-            {{ discount.title }}
-            <button
-              type="button"
-              class="plaay-promo-summary__remove"
-              aria-label="Remove promo code"
-              data-plaay-discount-remove>
-              ×
-            </button>
-          </span>
-        {% endfor %}
-      {% else %}
-        <span class="plaay-promo-summary__chip">
-          Promo applied
-        </span>
-      {% endif %}
-      {% if has_discounted_total %}
-        <span class="plaay-promo-summary__save">
-          You saved {{ total_savings | money }}
-        </span>
-      {% endif %}
-    </div>
-  </div>
-{% endif %}
-<p class="text-xs text-dark-blue opacity-40 font-walsheim text-right -mt-1 mb-3">
-  Taxes &amp; shipping calculated at checkout
-</p>
 
-{% comment %} Discount code accordion {% endcomment %}
 <div class="plaay-discount-wrap" data-plaay-discount-scope>
-  <button
-    type="button"
-    class="plaay-discount-toggle font-walsheim-regular"
-    aria-expanded="false"
-    aria-controls="plaay-discount-body">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+  <button type="button" class="plaay-discount-toggle" aria-expanded="false" aria-controls="plaay-discount-body">
+    {%- render 'pl-icon', name: 'gift', size: 14, stroke: 2 -%}
     Have a promo code?
     <svg class="plaay-discount-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
   </button>
-
   <div class="plaay-discount-body" id="plaay-discount-body" aria-hidden="true">
-    <div class="plaay-discount-row">
-      <input
-        type="text"
-        data-plaay-discount-input
-        class="plaay-discount-input font-walsheim-regular"
-        placeholder="Enter promo code"
-        autocomplete="off"
-        autocorrect="off"
-        spellcheck="false">
-      <button
-        type="button"
-        data-plaay-discount-apply
-        class="plaay-discount-apply-btn font-walsheim-bold">
-        Apply
-      </button>
+    <div>
+      <div class="plaay-discount-row">
+        <input type="text" class="plaay-discount-input" data-plaay-discount-input placeholder="Promo code" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Promo code">
+        <button type="button" class="plaay-discount-apply-btn" data-plaay-discount-apply>Apply</button>
+      </div>
+      <p class="plaay-discount-msg" data-plaay-discount-msg aria-live="polite"></p>
     </div>
-    <p class="plaay-discount-msg" data-plaay-discount-msg aria-live="polite"></p>
   </div>
 </div>
-
-{% comment %} Discount accordion JS lives in drawer-cart.liquid (event-delegation) so it survives footer re-renders {% endcomment %}

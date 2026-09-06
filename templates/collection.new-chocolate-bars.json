@@ -1,161 +1,16 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "blocks_XKnFLm": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_900bb11_8AQNhV": {
-          "type": "ai_gen_block_900bb11",
-          "settings": {
-            "spacing_desktop": 80,
-            "spacing_mobile": 80,
-            "background_color": "#ffffff"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_900bb11_8AQNhV"
-      ],
-      "name": "Spacer",
-      "settings": {}
-    },
-    "nlb_hero": {
-      "type": "nlb-collection-hero",
-      "settings": {
-        "eyebrow": "New Launch · Available Now",
-        "heading": "Clean Chocolate Slabs. Just Dropped.",
-        "subheading": "Seven new slabs. 70% dark and creamy milk chocolate. 100% clean ingredients, zero refined sugar.",
-        "button_label": "Shop the launch",
-        "button_link": "#shopify-section-main",
-        "fps": 10,
-        "media_left": false,
-        "background_color": "#021d49"
-      }
-    },
-    "nlb_tiles": {
-      "type": "nlb-flavour-tiles",
-      "disabled": true,
-      "settings": {
-        "heading": "Pick Your Flavour",
-        "product_limit": 8,
-        "background_color": "#faf7f2"
-      }
-    },
     "main": {
-      "type": "featured_products",
-      "name": "Featured products",
+      "type": "pl-collection",
       "settings": {
-        "title": "Shop The New Slabs",
-        "description": "",
-        "background_color": "#ffffff",
-        "product_source": "collection",
-        "featured_collection": "new-chocolate-slabs",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": true,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 0,
-        "see_all_link": "shopify://collections/new-chocolate-slabs",
-        "see_all_link_text": "Shop all new slabs",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
+        "intro": "Thick slabs, 6 to a box. Zero added sugar, 100% clean.",
+        "show_type_chips": true,
+        "show_sub_card": true,
+        "per_page": 24
       }
-    },
-    "nlb_cred": {
-      "type": "nlb-credentials",
-      "blocks": {
-        "c1": {
-          "type": "cred",
-          "settings": {
-            "value": "0g",
-            "label": "Refined Sugar"
-          }
-        },
-        "c2": {
-          "type": "cred",
-          "settings": {
-            "value": "100%",
-            "label": "Clean Ingredients"
-          }
-        },
-        "c3": {
-          "type": "cred",
-          "settings": {
-            "value": "Halal",
-            "label": "Certified"
-          }
-        },
-        "c4": {
-          "type": "cred",
-          "settings": {
-            "value": "UAE",
-            "label": "Made Local"
-          }
-        }
-      },
-      "block_order": [
-        "c1",
-        "c2",
-        "c3",
-        "c4"
-      ],
-      "settings": {
-        "heading": "Why Plaay Slabs",
-        "background_color": "#021D49",
-        "text_color": "#ffffff"
-      }
-    },
-    "plaay_recently_viewed": {
-      "type": "plaay-recently-viewed",
-      "settings": {
-        "heading": "Previously viewed",
-        "max_products": 6
-      }
-    },
-    "blocks_eyEeyQ": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_900bb11_kXNFat": {
-          "type": "ai_gen_block_900bb11",
-          "settings": {
-            "spacing_desktop": 50,
-            "spacing_mobile": 30,
-            "background_color": "#ffffff"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_900bb11_kXNFat"
-      ],
-      "name": "Spacer",
-      "settings": {}
     }
   },
   "order": [
-    "blocks_XKnFLm",
-    "nlb_hero",
-    "nlb_tiles",
-    "main",
-    "nlb_cred",
-    "plaay_recently_viewed",
-    "blocks_eyEeyQ"
+    "main"
   ]
 }

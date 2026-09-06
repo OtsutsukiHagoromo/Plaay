@@ -1,103 +1,187 @@
-{%- capture widths -%}_{width}x.{%- endcapture -%}
+{%- comment -%}
+  Cart line items.
 
+  Default: wraps the list in <cart-drawer-items data-module="cart-drawer-items"> (bundle.cart-drawer-items.js).
+  bare: true renders the list without the wrapper, for the cart page where <cart-items> is the host.
+
+  Hooks the theme JS relies on (keep):
+    - a child with class `loading_dots` on the host element (CartItems.loading dereferences it)
+    - [data-cart-item][data-key] per line; any `change` event inside bubbles to the host and calls
+      updateQuantity(key, e.target.value), so the quantity input is the only form control that may
+      bubble a change event (pl-cart.js stops the subscription switch's change in the capture phase)
+    - <quantity-adjuster> with button[name=minus] / input[name=quantity] / button[name=plus]
+    - <cart-remove-button data-module="cart-remove-button"> closest to [data-cart-item]
+  Subscription switch data (read by assets/pl-cart.js): data-plan-id, data-plan-name, data-sub-saving,
+  data-quantity, data-variant-id, data-properties.
+{%- endcomment -%}
 {%- liquid
-  assign cart_level_discount_total = 0
-  for discount in cart.cart_level_discount_applications
-    assign cart_level_discount_total = cart_level_discount_total | plus: discount.total_allocated_amount
-  endfor
+  assign is_bare = false
+  if bare == true
+    assign is_bare = true
+  endif
 -%}
-
-<cart-drawer-items class="h-full group loading:pointer-events-none" data-module="cart-drawer-items">
-  <cart-remove-button data-module="cart-remove-button"></cart-remove-button>
-  <div class="flex items-center justify-center absolute inset-0 bg-black bg-opacity-30 z-[100] opacity-0 invisible group-loading:opacity-100 group-loading:visible">
-    {%- render 'loader' type: 'light' -%}
-  </div>
-
-  <form action="{{ routes.cart_url }}" method="post">
+{%- unless is_bare -%}
+<cart-drawer-items class="pl-lines" data-module="cart-drawer-items">
+  <div class="pl-cart__loading loading_dots" aria-hidden="true"><span class="pl-cart__spin"></span></div>
+{%- endunless -%}
+  <cart-remove-button data-module="cart-remove-button" hidden></cart-remove-button>
+  <quantity-adjuster data-module="quantity-adjuster" hidden></quantity-adjuster>
+  <div class="pl-items">
     {%- for item in cart.items -%}
       {%- liquid
-        assign on_sale = false
-        if item.variant.compare_at_price > item.variant.price
-          assign on_sale = true
+        assign is_gift = false
+        if item.properties._plaay_reward != blank
+          assign is_gift = true
         endif
+
+        assign is_sub = false
+        if item.selling_plan_allocation
+          assign is_sub = true
+        endif
+
+        assign has_plans = false
+        if item.product.selling_plan_groups.size > 0 and is_gift == false
+          assign has_plans = true
+        endif
+
         assign show_variant = true
-        if item.variant.title == 'Default Title'
+        if item.variant.title == 'Default Title' or item.variant.title == blank
           assign show_variant = false
         endif
 
-        assign line_base_price = item.final_line_price
-        assign line_original_price = item.original_line_price
-        assign display_original_price = line_original_price
-        assign display_final_price = line_base_price
-        assign allocated_cart_discount = 0
+        assign line_price = item.original_line_price
+        assign line_one_time = line_price
+        if is_sub
+          assign line_one_time = item.selling_plan_allocation.compare_at_price | times: item.quantity
+        endif
+        assign sub_saving = line_one_time | minus: line_price
 
-        if cart_level_discount_total > 0 and cart.items_subtotal_price > 0
-          assign allocated_cart_discount = cart_level_discount_total | times: line_base_price | divided_by: cart.items_subtotal_price
-          assign display_final_price = line_base_price | minus: allocated_cart_discount
+        assign line_compare = 0
+        if item.variant.compare_at_price > item.variant.price
+          assign line_compare = item.variant.compare_at_price | times: item.quantity
+        endif
+        assign show_was = false
+        if line_compare > line_price and is_sub == false
+          assign show_was = true
         endif
 
-        if item.selling_plan_allocation
-          assign selling_plan_compare_total = item.selling_plan_allocation.compare_at_price | times: item.quantity
-          if selling_plan_compare_total > display_original_price
-            assign display_original_price = selling_plan_compare_total
+        assign plan_id = ''
+        assign plan_name = ''
+        assign plan_pct = 15
+        if has_plans
+          for plan in item.product.selling_plan_groups.first.selling_plans
+            if plan_id == '' or plan.name contains '4'
+              assign plan_id = plan.id
+              assign plan_name = plan.name
+              for adj in plan.price_adjustments
+                if adj.value_type == 'percentage'
+                  assign plan_pct = adj.value
+                endif
+              endfor
+              if plan.name contains '4'
+                break
+              endif
+            endif
+          endfor
+        endif
+        assign offer_saving = line_price | times: plan_pct | divided_by: 100
+
+        assign sub_pct = 15
+        assign sub_freq = 'Every 4 weeks'
+        if is_sub
+          assign sub_name = item.selling_plan_allocation.selling_plan.name
+          for adj in item.selling_plan_allocation.selling_plan.price_adjustments
+            if adj.value_type == 'percentage'
+              assign sub_pct = adj.value
+            endif
+          endfor
+          if sub_name contains '4'
+            assign sub_freq = 'Every 4 weeks'
+          elsif sub_name contains '2'
+            assign sub_freq = 'Every 2 weeks'
+          else
+            assign sub_freq = sub_name
           endif
         endif
-
-        assign variant_compare_total = item.variant.compare_at_price | times: item.quantity
-        if variant_compare_total > display_original_price
-          assign display_original_price = variant_compare_total
-        endif
-
-        assign show_compare_price = false
-        if display_original_price > display_final_price
-          assign show_compare_price = true
-        endif
       -%}
-
       <div
-        class="plaay-cart-item"
+        class="pl-card pl-item{% if is_sub %} is-sub{% endif %}{% if is_gift %} pl-item--gift{% endif %}"
+        data-cart-item
+        data-key="{{ item.key }}"
         data-variant-id="{{ item.variant_id }}"
         data-product-id="{{ item.product_id }}"
-        data-key="{{- item.key -}}"
-        data-cart-item>
-
-        {% comment %} Product image {% endcomment %}
-        <a href="{{- item.product.url -}}" class="plaay-cart-item__img-wrap">
-          {% render 'img', type: 'img', img: item.image, lazy: true, class: 'absolute inset-0 w-full h-full object-cover rounded-lg' %}
-        </a>
-
-        {% comment %} Info + controls {% endcomment %}
-        <div class="plaay-cart-item__info">
-          <div class="plaay-cart-item__meta">
-            <a href="{{- item.product.url -}}" class="plaay-cart-item__title">{{- item.product.title -}}</a>
-            {% if show_variant %}
-              <span class="plaay-cart-item__variant">{{ item.variant.title }}</span>
-            {% endif %}
-            {% if item.selling_plan_allocation.selling_plan.name != blank %}
-              <span class="plaay-cart-item__sub-label">{{ item.selling_plan_allocation.selling_plan.name }}</span>
-            {% endif %}
-          </div>
-
-          <div class="plaay-cart-item__actions">
-            <div class="plaay-cart-item__qty">
-              {%- render 'quantity-adjuster' item: item -%}
+        data-quantity="{{ item.quantity }}"
+        {%- if has_plans %} data-plan-id="{{ plan_id }}" data-plan-name="{{ plan_name | escape }}" data-sub-saving="{{ offer_saving }}"{% endif %}
+        data-properties="{{ item.properties | json | escape }}">
+        <div class="pl-item__top">
+          <a href="{{ item.url }}" class="pl-item__img" tabindex="-1" aria-hidden="true">
+            {%- if item.image -%}
+              {{ item.image | image_url: width: 176 | image_tag: loading: 'lazy', widths: '88, 176', sizes: '72px', alt: item.product.title }}
+            {%- endif -%}
+          </a>
+          <div class="pl-item__body">
+            <div class="pl-item__head">
+              <a href="{{ item.url }}" class="pl-item__title">{{ item.product.title }}</a>
+              {%- unless is_gift -%}
+                <cart-remove-button data-module="cart-remove-button">
+                  <button type="button" class="pl-item__remove" aria-label="Remove {{ item.product.title | escape }}">
+                    {%- render 'pl-icon', name: 'close', size: 16, stroke: 2 -%}
+                  </button>
+                </cart-remove-button>
+              {%- endunless -%}
             </div>
-            <div class="plaay-cart-item__price-remove">
-              <div class="plaay-cart-item__price">
-                {% if show_compare_price %}
-                  <span class="line-through text-xs opacity-50">{{ display_original_price | money }}</span>
-                {% endif %}
-                <span>{{ display_final_price | money }}</span>
+            {%- if show_variant -%}
+              <span class="pl-item__variant">{{ item.variant.title }}</span>
+            {%- endif -%}
+            <div class="pl-item__row">
+              {%- if is_gift -%}
+                <span class="pl-tag pl-tag--yellow">Mystery Gift</span>
+              {%- else -%}
+                <quantity-adjuster data-module="quantity-adjuster">
+                  <div class="pl-stepper pl-stepper--sm">
+                    <button type="button" name="minus" data-minus aria-label="Decrease quantity">&minus;</button>
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="0" inputmode="numeric" aria-label="Quantity">
+                    <button type="button" name="plus" data-plus aria-label="Increase quantity">+</button>
+                  </div>
+                </quantity-adjuster>
+              {%- endif -%}
+              <div class="pl-item__price">
+                {%- if show_was -%}
+                  <s class="pl-item__was">{% render 'plaay-aed', fils: line_compare %}</s>
+                {%- endif -%}
+                {%- if is_gift and line_price == 0 -%}
+                  <b class="pl-item__now">Free</b>
+                {%- else -%}
+                  <b class="pl-item__now">{% render 'plaay-aed', fils: line_price %}</b>
+                {%- endif -%}
               </div>
-              <cart-remove-button data-module="cart-remove-button">
-                <button type="button" class="plaay-cart-item__remove" aria-label="Remove {{ item.product.title }}">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-                </button>
-              </cart-remove-button>
             </div>
           </div>
         </div>
+
+        {%- if is_sub -%}
+          <div class="pl-item__sub">
+            <span class="pl-tag pl-tag--navy pl-item__subtag">{% render 'pl-icon', name: 'refresh', size: 12, stroke: 2.4 %}{{ sub_freq }} &middot; {{ sub_pct }}% off</span>
+            {%- if sub_saving > 0 -%}
+              <span class="pl-item__saving">Saving {% render 'plaay-aed', fils: sub_saving %}</span>
+            {%- endif -%}
+            <button type="button" class="pl-item__switch" data-pl-sub-off>Switch to one-time</button>
+          </div>
+        {%- elsif has_plans and plan_id != '' -%}
+          <label class="pl-item__offer">
+            <span class="pl-col pl-gap1">
+              <span class="pl-item__offer-t">Subscribe &amp; save {% render 'plaay-aed', fils: offer_saving %}</span>
+              <span class="pl-item__offer-s">Every 4 weeks &middot; free delivery &middot; cancel anytime</span>
+            </span>
+            <span class="pl-switch">
+              <input type="checkbox" data-pl-sub-toggle aria-label="Subscribe and save on {{ item.product.title | escape }}">
+              <span></span>
+            </span>
+          </label>
+        {%- endif -%}
       </div>
     {%- endfor -%}
-  </form>
+  </div>
+{%- unless is_bare -%}
 </cart-drawer-items>
+{%- endunless -%}

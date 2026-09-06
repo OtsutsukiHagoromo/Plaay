@@ -1,1 +1,6 @@
-{% render 'cart-items' %}
+{%- comment -%}
+  Section rendered by bundle.cart-items.js (sections: ['cart-items']) after a quantity change or
+  removal on the cart page. It must contain a <cart-items> element whose innerHTML replaces the live
+  one, so it renders the same page-mode content as sections/main-cart.liquid.
+{%- endcomment -%}
+{%- render 'cart-drawer-content', page: true -%}

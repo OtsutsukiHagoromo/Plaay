@@ -1,0 +1,49 @@
+{%- comment -%}
+  Plaay 2026 — founder quote. Portrait in a rounded card + eyebrow, quote (h2), sub, byline, link.
+  Image left / text right on both breakpoints (128px portrait on mobile, two columns on desktop).
+{%- endcomment -%}
+{{ 'pl-home.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  assign link_url = s.link_url | default: '/pages/for-the-geeks-1'
+-%}
+{%- if s.quote != blank or s.image != blank -%}
+<div class="pl pl-section pl-founder" id="pl-{{ section.id }}">
+  <div class="pl-wrap">
+    <div class="pl-founder__card">
+      <div class="pl-founder__media">
+        {%- if s.image != blank -%}
+          {{ s.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '256, 384, 512, 768, 1000', sizes: '(min-width: 1024px) 500px, 128px' }}
+        {%- endif -%}
+      </div>
+      <div class="pl-founder__body">
+        {%- if s.eyebrow != blank -%}<span class="pl-eyebrow">{{ s.eyebrow | escape }}</span>{%- endif -%}
+        {%- if s.quote != blank -%}<h2 class="pl-founder__q">{{ s.quote | escape }}</h2>{%- endif -%}
+        {%- if s.sub != blank -%}<p class="pl-founder__sub">{{ s.sub | escape }}</p>{%- endif -%}
+        {%- if s.byline != blank -%}<p class="pl-founder__by">{{ s.byline | escape }}</p>{%- endif -%}
+        {%- if s.link_label != blank -%}
+          <a class="pl-founder__link" href="{{ link_url }}">{{ s.link_label | escape }}{%- render 'pl-icon', name: 'chev-right', size: 16, stroke: 2.2 -%}</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Plaay founder quote",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Portrait" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "From our nutritionist, Rashi" },
+    { "type": "text", "id": "quote", "label": "Quote", "default": "“You don’t need to earn chocolate.”" },
+    { "type": "text", "id": "sub", "label": "Sub line", "default": "Women don’t have a sugar problem. They have a guilt problem." },
+    { "type": "text", "id": "byline", "label": "Byline", "default": "Rashi Chowdhary, founder and nutritionist" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Read why I made this" },
+    { "type": "url", "id": "link_url", "label": "Link URL", "default": "/pages/for-the-geeks-1" }
+  ],
+  "presets": [
+    { "name": "Plaay founder quote", "category": "Plaay 2026" }
+  ]
+}
+{% endschema %}

@@ -1,250 +1,400 @@
-{% liquid 
-  assign title = section.settings.title
-  assign background_color = section.settings.background_color 
-  assign show_users_name = section.settings.show_users_name
-  assign background_color_main = section.settings.background_color_main
-%}
+{{ 'pl-account.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'pl-account.js' | asset_url }}" defer></script>
 
-<account-area data-module="account-area">
-  <div class="relative">
-    {% comment %} account banner {% endcomment %}
-    {% render 'account-banner' %}
-    <div style="background-color: {{ background_color_main }};">
-      <div class="container account_template_container z-2 relative pb-10 | lg:pb-20 lg:pt-12 lg:flex lg:flex-row lg:justify-between | xl:pb-32">
-        {% comment %} account sidebar {% endcomment %}
-        <div class="lg:mr-8 lg:w-1/4">
-          {% render 'account-sidebar' %}
-        </div>
+{%- liquid
+  assign first_name = customer.first_name | strip
+  if first_name != blank
+    assign greet_name = first_name
+  else
+    assign greet_name = 'Plaayer'
+  endif
 
-        <div class="overflow-hidden all-accounts-container | lg:w-3/4 lg:ml-8">
-          {% if customer.orders.size != 0 %}
-            {% assign latest_order = customer.orders.first %}
-            {%- assign _lri = '' -%}
-            {%- for item in latest_order.line_items -%}
-              {%- if item.variant_id != blank and item.quantity > 0 -%}
-                {%- if _lri != '' -%}{%- assign _lri = _lri | append: ',' -%}{%- endif -%}
-                {%- assign _lri = _lri | append: '{"id":' | append: item.variant_id | append: ',"quantity":' | append: item.quantity | append: '}' -%}
-              {%- endif -%}
-            {%- endfor -%}
-            {%- assign latest_reorder_json = '[' | append: _lri | append: ']' -%}
-            <div class="rounded-[28px] bg-dark-blue px-6 py-7 text-white mb-8 | lg:px-10 lg:py-9">
-              <div class="flex flex-col gap-5 | lg:flex-row lg:items-end lg:justify-between">
-                <div class="max-w-xl">
-                  <p class="text-xs uppercase tracking-[0.22em] opacity-70 font-walsheim-bold">Quick reorder</p>
-                  <h2 class="text-3xl leading-none font-walsheim-black uppercase mt-3 | lg:text-5xl">Restock your last order in one tap</h2>
-                  <p class="text-sm opacity-80 mt-3 font-walsheim">Order #{{ latest_order.order_number }} from {{ latest_order.created_at | date: "%b %d, %Y" }} is ready to be added back to cart.</p>
+  assign customer_tags_string = customer.tags | join: ' '
+  assign is_subscriber = false
+  if customer_tags_string contains 'Active Subscriber'
+    assign is_subscriber = true
+  endif
+
+  # rewards ladder (same settings the cart ladder reads)
+  assign ship_aed = settings.cart_tier_ship | default: 75
+  assign a1 = settings.cart_tier_1_spend | default: 250
+  assign l1 = settings.cart_tier_1_label | default: '7% off'
+  assign a2 = settings.cart_tier_2_spend | default: 350
+  assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift'
+  assign a3 = settings.cart_tier_3_spend | default: 500
+  assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift'
+  assign ladder_amounts = ship_aed | append: ',' | append: a1 | append: ',' | append: a2 | append: ',' | append: a3 | split: ','
+  assign ladder_labels = 'Free delivery|' | append: l1 | append: '|' | append: l2 | append: '|' | append: l3 | split: '|'
+  assign cart_total = cart.original_total_price
+  assign reached = -1
+  for amt in ladder_amounts
+    assign amt_fils = amt | times: 100
+    if cart_total >= amt_fils
+      assign reached = forloop.index0
+    endif
+  endfor
+  assign next_index = reached | plus: 1
+  assign last_index = ladder_amounts | size | minus: 1
+  assign top_fils = ladder_amounts[last_index] | times: 100
+  assign ladder_pct = 0
+  if top_fils > 0
+    assign ladder_pct = cart_total | times: 100 | divided_by: top_fils
+  endif
+  if ladder_pct > 100
+    assign ladder_pct = 100
+  endif
+-%}
+
+<div class="pl pl-account">
+  <account-area data-module="account-area">
+    <div class="pl-wrap pl-acct">
+
+      <aside class="pl-acct__rail pl-hide-m">
+        <nav class="pl-card pl-acct-nav" aria-label="Account">
+          <a href="{{ routes.account_url }}" class="pl-acct-nav__a is-on" aria-current="page">Overview {% render 'pl-icon', name: 'chev-right', size: 16, stroke: 2.2 %}</a>
+          <a href="{{ routes.account_url }}#orders" class="pl-acct-nav__a">Orders</a>
+          <a href="{{ routes.account_url }}#subscription" class="pl-acct-nav__a">Subscription</a>
+          <a href="{{ routes.account_url }}#rewards" class="pl-acct-nav__a">Rewards</a>
+          <a href="/pages/wishlist" class="pl-acct-nav__a">Saved flavours</a>
+          <a href="{{ routes.account_addresses_url }}" class="pl-acct-nav__a">Addresses</a>
+          <a href="{{ routes.account_url }}#details" class="pl-acct-nav__a">Your details</a>
+          <a href="{{ routes.account_url }}#alerts" class="pl-acct-nav__a">Alerts</a>
+          <a href="{{ routes.account_logout_url }}" class="pl-acct-nav__a pl-acct-nav__a--out">Sign out</a>
+        </nav>
+      </aside>
+
+      <div class="pl-acct__main">
+        <header class="pl-acct__head">
+          <h1 class="pl-h pl-acct__title">Hey, {{ greet_name }}.</h1>
+          <p class="pl-body pl-mute">Orders, your subscription, rewards and alerts, in one place.</p>
+        </header>
+
+        <div class="pl-acct__grid">
+          {%- comment -%} ---------- Your last order ---------- {%- endcomment -%}
+          {%- if customer.orders.size > 0 -%}
+            {%- liquid
+              assign lo = customer.orders.first
+              assign lo_count = lo.line_items.size
+              assign lo_names = ''
+              for li in lo.line_items limit: 2
+                assign li_name = li.product.title | default: li.title
+                if forloop.first
+                  assign lo_names = li_name
+                else
+                  assign lo_names = lo_names | append: ' + ' | append: li_name
+                endif
+              endfor
+              if lo_count > 2
+                assign lo_extra = lo_count | minus: 2
+                assign lo_names = lo_names | append: ' + ' | append: lo_extra | append: ' more'
+              endif
+              if lo.cancelled
+                assign lo_status = 'Cancelled'
+                assign lo_status_cls = 'pl-tag--red'
+              elsif lo.fulfillment_status == 'fulfilled'
+                assign lo_status = 'Delivered'
+                assign lo_status_cls = 'pl-tag--green'
+              elsif lo.fulfillment_status == 'partial'
+                assign lo_status = 'Partly delivered'
+                assign lo_status_cls = 'pl-tag--yellow'
+              else
+                assign lo_status = 'Processing'
+                assign lo_status_cls = 'pl-tag--navy'
+              endif
+              assign reorder_items = ''
+              for item in lo.line_items
+                if item.variant_id != blank and item.quantity > 0
+                  if reorder_items != ''
+                    assign reorder_items = reorder_items | append: ','
+                  endif
+                  assign reorder_items = reorder_items | append: '{"id":' | append: item.variant_id | append: ',"quantity":' | append: item.quantity | append: '}'
+                endif
+              endfor
+              assign latest_reorder_json = '[' | append: reorder_items | append: ']'
+            -%}
+            <article class="pl-card pl-acct-card" id="last-order">
+              <div class="pl-acct-card__head">
+                <span class="pl-acct-card__ic">{% render 'pl-icon', name: 'bag', size: 20 %}</span>
+                <div class="pl-flex1">
+                  <h2 class="pl-h--4">Your last order</h2>
+                  <p class="pl-small pl-mute">{{ lo.name }} · {{ lo.created_at | date: '%d %b %Y' }}</p>
                 </div>
-                <div class="flex flex-col gap-3 | lg:items-end">
-                  <button type="button" class="btn relative font-walsheim-medium flex items-center transition-all px-3 uppercase py-3 duration-200 text-sm justify-center border rounded-md yellow w-44 min-w-[210px] text-center" data-plaay-reorder='{{ latest_reorder_json | strip }}'>
-                    <div class="flex items-center w-full justify-center">
-                      <span class="hidden">{{ 'action.seo' | t }}</span>
-                      Reorder
-                    </div>
-                  </button>
-                  <a href="{{ latest_order.customer_url }}" class="text-white text-xs uppercase tracking-[0.18em] opacity-75 underline underline-offset-4">Review last order</a>
-                </div>
+                <span class="pl-tag {{ lo_status_cls }}">{{ lo_status }}</span>
               </div>
-            </div>
-          {% endif %}
-          {% comment %} account overview {% endcomment %}
-          <div class="bg-white py-9 px-7 w-full | lg:max-w-2xl lg:rounded-xl">
-            <div class="border-t border-b border-black border-opacity-25 pt-8 pb-12 flex flex-col | lg:flex-row lg:pb-16">
-              {% comment %} my details {% endcomment %}
-              <div class="lg:mr-16">
-                <h2 class="text-base text-dark-blue font-walsheim-bold capitalize mb-3">{{ 'account.account-area.my-details-title' | t }}</h2>
-                <div class="text-dark-blue text-xs font-walsheim">
-                  {{ customer.first_name }} {{ customer.last_name }}
-                </div>
-                <div class="text-dark-blue text-xs font-walsheim">
-                  {{ 'account.email' | t }}: {{ customer.email }}
-                </div>
-                <div class="text-dark-blue text-xs font-walsheim">
-                  {{ 'account.phone' | t }}: {{ customer.phone }}
-                </div>
-              </div>
-              {% comment %} default address {% endcomment %}
-              <div class="lg:ml-16">
-                <div class="flex flex-row items-center mb-3 border-t border-black border-opacity-25 pt-8 mt-8 | lg:mt-0 lg:pt-0 lg:border-none">
-                  <h2 class="text-base text-dark-blue font-walsheim-bold capitalize mr-8">{{ 'account.account-area.default-address-title' | t }}</h2>
-                  <a href="/account/addresses" class="underline text-xs text-dark-blue underline-offset-2 flex items-center">
-                    {{ 'account.addresses.edit' | t }}
-                    <span class="flex text-dark-blue h-3 w-3 ml-2">
-                      {% render 'icon-pencil' %}
+              <div class="pl-acct-order">
+                <div class="pl-acct-thumbs" aria-hidden="true">
+                  {%- for li in lo.line_items limit: 2 -%}
+                    <span class="pl-acct-thumb">
+                      {%- if li.image -%}
+                        {{ li.image | image_url: width: 112 | image_tag: loading: 'lazy', widths: '56, 112', sizes: '56px', alt: '' }}
+                      {%- endif -%}
                     </span>
-                  </a>
+                  {%- endfor -%}
+                  {%- if lo_count > 2 -%}<span class="pl-acct-thumb">+{{ lo_count | minus: 2 }}</span>{%- endif -%}
                 </div>
-                <div class="flex flex-col text-xs font-walsheim text-dark-blue">
-                  <span>{{ customer.default_address.first_name }} {{ customer.default_address.last_name }}</span>
-                  {% if customer.default_address.address1 %}
-                    <span>{{ customer.default_address.address1 }}</span>
-                  {% endif %}
-                  {% if customer.default_address.address2 %}
-                    <span>{{ customer.default_address.address2 }}</span>
-                  {% endif %}
-                  {% if customer.default_address.city %}
-                    <span>{{ customer.default_address.city }}</span>
-                  {% endif %}
-                  <span>{{ customer.default_address.country }}</span>
+                <div class="pl-flex1">
+                  <p class="pl-b">{{ lo_names }}</p>
+                  <p class="pl-small pl-mute">{{ lo.item_count }} {% if lo.item_count == 1 %}item{% else %}items{% endif %} · {{ lo.total_price | money_without_trailing_zeros }}</p>
                 </div>
+              </div>
+              <div class="pl-acct-card__actions">
+                {%- if reorder_items != '' -%}
+                  <button type="button" class="pl-btn pl-btn--md" data-plaay-reorder='{{ latest_reorder_json | strip }}'><span data-label>Reorder</span></button>
+                {%- endif -%}
+                <a href="{{ lo.customer_url }}" class="pl-btn pl-btn--md pl-btn--ghost">View order</a>
+              </div>
+            </article>
+          {%- else -%}
+            <article class="pl-card pl-acct-card" id="last-order">
+              <div class="pl-acct-card__head">
+                <span class="pl-acct-card__ic">{% render 'pl-icon', name: 'bag', size: 20 %}</span>
+                <div class="pl-flex1">
+                  <h2 class="pl-h--4">Your last order</h2>
+                  <p class="pl-small pl-mute">No orders yet</p>
+                </div>
+              </div>
+              <p class="pl-body pl-mute">Your first box is one tap away.</p>
+              <div class="pl-acct-card__actions">
+                <a href="{{ routes.collections_url }}/shop-all" class="pl-btn pl-btn--md">Shop bestsellers</a>
+              </div>
+            </article>
+          {%- endif -%}
+
+          {%- comment -%} ---------- Your subscription ---------- {%- endcomment -%}
+          <article class="pl-card pl-acct-card" id="subscription">
+            <div class="pl-acct-card__head">
+              <span class="pl-acct-card__ic">{% render 'pl-icon', name: 'refresh', size: 20 %}</span>
+              <div class="pl-flex1">
+                <h2 class="pl-h--4">Your subscription</h2>
+                <p class="pl-small pl-mute">{% if is_subscriber %}15% off every delivery{% else %}No subscription yet{% endif %}</p>
+              </div>
+              {%- if is_subscriber -%}<span class="pl-tag pl-tag--green">Active</span>{%- endif -%}
+            </div>
+            {%- if is_subscriber -%}
+              <div>
+                <p class="pl-b">Next delivery</p>
+                <p class="pl-small pl-mute">Dates, skips and swaps live in your subscription portal. Skip, swap or cancel anytime.</p>
+              </div>
+              <div class="pl-acct-card__actions">
+                <a href="/tools/recurring/login" class="pl-btn pl-btn--md">Manage subscription</a>
+              </div>
+            {%- else -%}
+              <p class="pl-body pl-mute">Your favourites, every 4 weeks. 15% off every delivery, free delivery, always. Skip, swap or cancel anytime.</p>
+              <div class="pl-acct-card__actions">
+                <a href="/pages/subscribe-save" class="pl-btn pl-btn--md">Build your box</a>
+              </div>
+            {%- endif -%}
+          </article>
+
+          {%- comment -%} ---------- Rewards ladder ---------- {%- endcomment -%}
+          <article class="pl-card pl-card--navy pl-acct-card" id="rewards">
+            <div class="pl-acct-card__head">
+              <span class="pl-acct-card__ic">{% render 'pl-icon', name: 'gift', size: 20 %}</span>
+              <div class="pl-flex1">
+                <span class="pl-eyebrow">Plaay rewards</span>
+                <h2 class="pl-h--4">Rewards</h2>
               </div>
             </div>
-          </div>
-          {% comment %} Your orders {% endcomment %}
-          <div class="account-container w-full mb-7 py-4 overflow-hidden mt-10" data-container="4">
-            <h2 class="text-2xl mb-2 text-dark-blue | lg:block lg:mb-0">
-              {{ 'account.account-area.my-orders' | t }}
-            </h2>
-            {% if customer.orders.size != 0 %}
-              <div class="">
-                {% comment %} orders {% endcomment %}
-                {% for customer_order in customer.orders %}
-                  {% liquid
-                    assign dateCreated = customer_order.created_at | date: "%s"
-                    assign dateNow = 'now' | date: '%s'
-                    assign diffSeconds = dateNow | minus: dateCreated 
-                    assign diffDays = diffSeconds | divided_by: 3600 | divided_by: 24 
-                  %}
-                  <div class="flex order-container relative | lg:mx-0 lg:w-auto">
-                    <div class="flex py-5 flex-col bg-white px-5 w-full | lg:mt-10 lg:rounded-xl lg:px-10 lg:max-w-2xl">
-                      <div class="text-sm text-dark-blue font-walsheim-bold mb-5 | lg:text-base">You ordered this {{ diffDays }} days ago</div>
-                      <div class="flex flex-row flex-wrap items-start">
-                        {% for item in customer_order.line_items %}
-                          <div class="order_items bg-[#F4F4F4] rounded-lg w-24 h-24 {% if forloop.first %} mr-6 my-6 {% else %} m-[6px] {% endif %} | md:w-36 md:h-36 | lg:h-48 lg:w-48" style="box-shadow: 6px 2px 6px -2px rgb(2 29 73 / 30%);">
-                            {% render 'img', type: 'img', img: item.image, class: 'object-contain mx-auto h-24 w-12 md:h-32 md:w-20 lg:w-20 lg:h-44 ' %}
-                          </div>
-                        {% endfor %}
-                      </div>
-                      <div class="flex items-end mt-2 justify-between max-w-[404px]">
-                        <div class="w-auto mr-2">
-                          <div class="text-xs font-walsheim text-dark-blue">{{ 'account.account-area.order-id' | t }}: {{ customer_order.order_number }}</div>
-                          <div class="text-xs text-dark-blue font-walsheim">
-                            {{ 'account.account-area.order-total' | t }}:
-                            <span class="font-walsheim-bold pl-2">
-                              {{ customer_order.total_price | money }}
-                            </span>
-                          </div>
-                        </div>
-                        {%- assign _ori = '' -%}
-                        {%- for item in customer_order.line_items -%}
-                          {%- if item.variant_id != blank and item.quantity > 0 -%}
-                            {%- if _ori != '' -%}{%- assign _ori = _ori | append: ',' -%}{%- endif -%}
-                            {%- assign _ori = _ori | append: '{"id":' | append: item.variant_id | append: ',"quantity":' | append: item.quantity | append: '}' -%}
-                          {%- endif -%}
-                        {%- endfor -%}
-                        {%- assign order_reorder_json = '[' | append: _ori | append: ']' -%}
-                        <div class="flex flex-col gap-2 w-1/2 ml-2">
-                          {% render 'btn', href: customer_order.customer_url, width: 'small', style: 'blue', copy: 'account.account-area.view-order', additional_class: 'flex w-full justify-center' %}
-                          <button type="button" class="btn relative font-walsheim-medium flex items-center transition-all px-3 uppercase py-3 duration-200 text-sm justify-center border rounded-md blue-border w-44 flex w-full justify-center" data-plaay-reorder='{{ order_reorder_json | strip }}'>
-                            <div class="flex items-center w-full justify-center">
-                              <span class="hidden">{{ 'action.seo' | t }}</span>
-                              Reorder
-                            </div>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
+            <div class="pl-ladder__track" aria-hidden="true"><div class="pl-ladder__fill" style="width: {{ ladder_pct }}%"></div></div>
+            <ol class="pl-ladder">
+              {%- for amt in ladder_amounts -%}
+                {%- assign i = forloop.index0 -%}
+                <li class="pl-ladder__row{% if i <= reached %} is-done{% elsif i == next_index %} is-next{% endif %}">
+                  <span class="pl-ladder__dot" aria-hidden="true">
+                    {%- if i <= reached -%}{% render 'pl-icon', name: 'check', size: 12, stroke: 3 %}{%- elsif i == next_index -%}{% render 'pl-icon', name: 'arrow-right', size: 12, stroke: 2.6 %}{%- endif -%}
+                  </span>
+                  <span class="pl-ladder__amt">AED {{ amt }}</span>
+                  <span class="pl-ladder__lbl">{{ ladder_labels[i] }}</span>
+                </li>
+              {%- endfor -%}
+            </ol>
+            {%- if cart.item_count > 0 and reached < last_index -%}
+              {%- assign remaining_fils = ladder_amounts[next_index] | times: 100 | minus: cart_total -%}
+              <p class="pl-small pl-mute">{% render 'plaay-aed', fils: remaining_fils %} more in your bag unlocks {{ ladder_labels[next_index] }}. Applied automatically at checkout.</p>
+            {%- else -%}
+              <p class="pl-small pl-mute">Applied automatically at checkout.</p>
+            {%- endif -%}
+          </article>
+
+          {%- comment -%} ---------- Saved flavours ---------- {%- endcomment -%}
+          <article class="pl-card pl-acct-card pl-acct-card--link" id="saved">
+            <a href="/pages/wishlist" class="pl-acct-card__head">
+              <span class="pl-acct-card__ic pl-acct-card__ic--cream">{% render 'pl-icon', name: 'heart', size: 20 %}</span>
+              <div class="pl-flex1">
+                <h2 class="pl-h--4">Saved flavours</h2>
+                <p class="pl-small pl-mute" data-pl-wishlist-count>Your wishlist</p>
               </div>
-            {% else %}
-              <span class="block mt-8 text-base | lg:text-22.5px">
-                {{ 'account.account-area.no-orders' | t }}</span>
-            {% endif %}
-          </div>
-          {% comment %} subscriptions {% endcomment %}
-          <div class="account-container w-full mb-7 py-4 overflow-hidden" data-container="3">
-            {% assign customer_tags_string = customer.tags | join: ' ' %}
-
-            {% unless customer_tags_string contains "Active Subscriber" %}
-
-              <p class="text-base mb-4 | lg:block lg:mb-4">You don’t currently have any active subscriptions. You can add a subscription by selecting the Subscribe & Save option on your favourite products.</p>
-
-            {% endunless %}
-
-            {% render 'btn', type: 'href', href: '/tools/recurring/login', copy: 'account.account-area.manage-subscriptions', style: 'blue', width: 'extra-large', additional_class: 'flex' %}
-          </div>
+              <span class="pl-acct-row__r">{% render 'pl-icon', name: 'chev-right', size: 18 %}</span>
+            </a>
+            <p class="pl-body pl-mute">Tap the heart on any flavour and it lands here, ready to add to your next box.</p>
+          </article>
         </div>
+
+        {%- comment -%} ---------- Alerts ---------- {%- endcomment -%}
+        <section class="pl-card pl-acct-card" id="alerts" aria-labelledby="pl-alerts-h">
+          <div class="pl-acct-card__head pl-acct-card__head--between">
+            <h2 class="pl-h--4" id="pl-alerts-h">Alerts</h2>
+            <span class="pl-small pl-mute">Only if you want them</span>
+          </div>
+          <div class="pl-acct-rows">
+            <a href="/pages/contact" class="pl-acct-row">
+              <span class="pl-flex1">
+                <span class="pl-acct-row__t">New drops</span>
+                <span class="pl-acct-row__s">Limited editions and new slabs</span>
+              </span>
+              <span class="pl-acct-row__r">
+                {%- if customer.accepts_marketing -%}<span class="pl-tag pl-tag--green">On</span>{%- endif -%}
+                {% render 'pl-icon', name: 'chev-right', size: 18 %}
+              </span>
+            </a>
+            <a href="/pages/contact" class="pl-acct-row">
+              <span class="pl-flex1">
+                <span class="pl-acct-row__t">Back in stock</span>
+                <span class="pl-acct-row__s">Your saved flavours</span>
+              </span>
+              <span class="pl-acct-row__r">{% render 'pl-icon', name: 'chev-right', size: 18 %}</span>
+            </a>
+            <a href="/pages/contact" class="pl-acct-row">
+              <span class="pl-flex1">
+                <span class="pl-acct-row__t">The 3:30 pm reset</span>
+                <span class="pl-acct-row__s">One nudge a day, on weekdays</span>
+              </span>
+              <span class="pl-acct-row__r">{% render 'pl-icon', name: 'chev-right', size: 18 %}</span>
+            </a>
+          </div>
+          <details class="pl-acc pl-acct-pwa">
+            <summary>
+              <span class="pl-acct-pwa__ic" aria-hidden="true">{% render 'pl-icon', name: 'share', size: 18 %}</span>
+              <span class="pl-flex1">
+                <span class="pl-acc__t">Add Plaay to your Home Screen</span>
+                <span class="pl-acc__s">Opens like an app, no App Store</span>
+              </span>
+              <span class="pl-btn pl-btn--navy pl-btn--sm pl-acct-pwa__cta">Show me how</span>
+            </summary>
+            <div class="pl-acc__body">
+              <ol>
+                <li><b>iPhone</b><span>In Safari, tap Share, then Add to Home Screen.</span></li>
+                <li><b>Android</b><span>In Chrome, tap the menu, then Add to Home screen.</span></li>
+              </ol>
+            </div>
+          </details>
+        </section>
+
+        {%- comment -%} ---------- Orders ---------- {%- endcomment -%}
+        <section class="pl-card pl-acct-card" id="orders" aria-labelledby="pl-orders-h">
+          <div class="pl-acct-card__head pl-acct-card__head--between">
+            <h2 class="pl-h--4" id="pl-orders-h">Orders</h2>
+            <span class="pl-small pl-mute">{{ customer.orders_count }} {% if customer.orders_count == 1 %}order{% else %}orders{% endif %}</span>
+          </div>
+          {%- if customer.orders.size > 0 -%}
+            {%- paginate customer.orders by 20 -%}
+              <div class="pl-orders">
+                <div class="pl-orders__hd" aria-hidden="true">
+                  <span class="pl-label">Items</span>
+                  <span class="pl-label">Status</span>
+                  <span class="pl-label">Total</span>
+                  <span></span>
+                </div>
+                {%- for o in customer.orders -%}
+                  {%- liquid
+                    assign o_count = o.line_items.size
+                    assign o_names = ''
+                    for li in o.line_items limit: 2
+                      assign li_name = li.product.title | default: li.title
+                      if forloop.first
+                        assign o_names = li_name
+                      else
+                        assign o_names = o_names | append: ' + ' | append: li_name
+                      endif
+                    endfor
+                    if o_count > 2
+                      assign o_extra = o_count | minus: 2
+                      assign o_names = o_names | append: ' + ' | append: o_extra | append: ' more'
+                    endif
+                    if o.cancelled
+                      assign o_status = 'Cancelled'
+                      assign o_status_cls = 'pl-tag--red'
+                    elsif o.fulfillment_status == 'fulfilled'
+                      assign o_status = 'Delivered'
+                      assign o_status_cls = 'pl-tag--green'
+                    elsif o.fulfillment_status == 'partial'
+                      assign o_status = 'Partly delivered'
+                      assign o_status_cls = 'pl-tag--yellow'
+                    else
+                      assign o_status = 'Processing'
+                      assign o_status_cls = 'pl-tag--navy'
+                    endif
+                  -%}
+                  <a href="{{ o.customer_url }}" class="pl-orders__row" aria-label="Order {{ o.name }}, {{ o_status }}, {{ o.total_price | money_without_trailing_zeros }}">
+                    <span class="pl-orders__items">
+                      <span class="pl-b">{{ o_names }}</span>
+                      <span class="pl-small pl-mute">{{ o.item_count }} {% if o.item_count == 1 %}item{% else %}items{% endif %} · {{ o.name }} · {{ o.created_at | date: '%d %b %Y' }}<span class="pl-orders__sub-total"> · {{ o.total_price | money_without_trailing_zeros }}</span></span>
+                    </span>
+                    <span class="pl-orders__status"><span class="pl-tag {{ o_status_cls }}">{{ o_status }}</span></span>
+                    <span class="pl-orders__total">{{ o.total_price | money_without_trailing_zeros }}</span>
+                    <span class="pl-orders__chev">{% render 'pl-icon', name: 'chev-right', size: 18 %}</span>
+                  </a>
+                {%- endfor -%}
+              </div>
+              {%- if paginate.pages > 1 -%}
+                <nav class="pl-pager" aria-label="Orders pages">
+                  {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}#orders" class="pl-btn pl-btn--sm pl-btn--ghost">Newer</a>{%- endif -%}
+                  <span class="pl-small pl-mute">Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+                  {%- if paginate.next -%}<a href="{{ paginate.next.url }}#orders" class="pl-btn pl-btn--sm pl-btn--ghost">Older</a>{%- endif -%}
+                </nav>
+              {%- endif -%}
+            {%- endpaginate -%}
+          {%- else -%}
+            <p class="pl-body pl-mute">No orders yet. Your first box will show up here.</p>
+            <div class="pl-acct-card__actions">
+              <a href="{{ routes.collections_url }}/shop-all" class="pl-btn pl-btn--md pl-btn--ghost">Shop all</a>
+            </div>
+          {%- endif -%}
+        </section>
+
+        {%- comment -%} ---------- Your details ---------- {%- endcomment -%}
+        <section class="pl-card pl-acct-card" id="details" aria-labelledby="pl-details-h">
+          <div class="pl-acct-card__head pl-acct-card__head--between">
+            <h2 class="pl-h--4" id="pl-details-h">Your details</h2>
+            <a href="{{ routes.account_addresses_url }}" class="pl-small pl-b">Manage addresses</a>
+          </div>
+          <dl class="pl-acct-dl">
+            <div>
+              <dt>Name</dt>
+              <dd>{{ customer.name | default: 'Not added' }}</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd>{{ customer.email }}</dd>
+            </div>
+            <div>
+              <dt>Phone</dt>
+              <dd>{{ customer.phone | default: 'Not added' }}</dd>
+            </div>
+            <div>
+              <dt>Default address</dt>
+              <dd>{% if customer.default_address %}{{ customer.default_address | format_address }}{% else %}No address yet{% endif %}</dd>
+            </div>
+          </dl>
+        </section>
+
+        {%- comment -%} ---------- Mobile nav list ---------- {%- endcomment -%}
+        <nav class="pl-card pl-acct-card pl-hide-d" aria-label="Account pages">
+          <div class="pl-acct-rows pl-acct-rows--nav">
+            <a href="#orders" class="pl-acct-row"><span class="pl-acct-row__t">Orders</span><span class="pl-acct-row__r">{% render 'pl-icon', name: 'chev-right', size: 18 %}</span></a>
+            <a href="{{ routes.account_addresses_url }}" class="pl-acct-row"><span class="pl-acct-row__t">Addresses</span><span class="pl-acct-row__r">{% render 'pl-icon', name: 'chev-right', size: 18 %}</span></a>
+            <a href="#details" class="pl-acct-row"><span class="pl-acct-row__t">Your details</span><span class="pl-acct-row__r">{% render 'pl-icon', name: 'chev-right', size: 18 %}</span></a>
+            <a href="{{ routes.account_logout_url }}" class="pl-acct-row"><span class="pl-acct-row__t">Sign out</span><span class="pl-acct-row__r">{% render 'pl-icon', name: 'chev-right', size: 18 %}</span></a>
+          </div>
+        </nav>
       </div>
     </div>
-  </div>
-</account-area>
-
-<script>
-  (function() {
-    document.addEventListener('click', function(e) {
-      var btn = e.target.closest('[data-plaay-reorder]');
-      if (!btn || btn.disabled) return;
-
-      var items;
-      try { items = JSON.parse(btn.getAttribute('data-plaay-reorder')); }
-      catch(err) { return; }
-      if (!items || !items.length) return;
-
-      btn.disabled = true;
-      var labelDiv = btn.querySelector('div');
-      var originalLabel = labelDiv ? labelDiv.innerText.trim() : 'Reorder';
-      if (labelDiv) labelDiv.innerText = 'Adding…';
-
-      fetch('/cart/add.js', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify({ items: items })
-      })
-      .then(function(r) { return r.json(); })
-      .then(function() {
-        if (window.plaayRefreshCartDrawer) return window.plaayRefreshCartDrawer();
-      })
-      .then(function() {
-        btn.disabled = false;
-        if (labelDiv) labelDiv.innerText = originalLabel;
-        var sd = document.querySelector('site-drawers');
-        if (sd && sd.activeDrawer !== undefined) {
-          sd.activeDrawer = 'cart';
-        } else {
-          var cd = document.querySelector('cart-drawer');
-          if (cd) {
-            cd.classList.add('active');
-            document.body.classList.add('overflow-hidden');
-          }
-        }
-      })
-      .catch(function() {
-        btn.disabled = false;
-        if (labelDiv) {
-          labelDiv.innerText = 'Try again';
-          setTimeout(function() { labelDiv.innerText = originalLabel; }, 2000);
-        }
-      });
-    });
-  })();
-</script>
-
+  </account-area>
+</div>
 
 {% schema %}
-  {
-    "name": "Account",
-    "settings": [
-      {
-        "type": "text",
-        "id": "title",
-        "label": "Title",
-        "default": "My Account"
-      }, {
-        "type": "color",
-        "id": "background_color",
-        "label": "Background color (banner)",
-        "default": "#F5C08D"
-      }, {
-        "type": "checkbox",
-        "id": "show_users_name",
-        "label": "Show users name",
-        "default": true
-      }, {
-        "type": "color",
-        "id": "background_color_main",
-        "label": "Background color (main)",
-        "default": "#F4F4F4"
-      }
-    ]
-  }
+{
+  "name": "Account",
+  "settings": []
+}
 {% endschema %}

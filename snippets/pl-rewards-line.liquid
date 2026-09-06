@@ -1,0 +1,76 @@
+{%- comment -%}
+  Plaay 2026 rewards line for the product page.
+  Usage: {% render 'pl-rewards-line' %}
+  Cart-aware: compares cart.original_total_price (fils) with the ladder settings, the same
+  maths as snippets/plaay-rewards-card.liquid. Copy:
+    "Add AED 105 more to unlock 7% off"                                  (next tier)
+    "7% off unlocked · AED 49 more for 10% off + a Mystery Gift"         (a tier already reached)
+    "15% off + Mystery Gift unlocked · applied automatically at checkout" (top tier)
+  Data attributes let pl-product.js re-render the line after an add-to-bag from /cart.js.
+{%- endcomment -%}
+{%- liquid
+  assign ship_aed = settings.cart_tier_ship | default: 75
+  assign a1 = settings.cart_tier_1_spend | default: 250
+  assign l1 = settings.cart_tier_1_label | default: '7% off'
+  assign a2 = settings.cart_tier_2_spend | default: 350
+  assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift'
+  assign a3 = settings.cart_tier_3_spend | default: 500
+  assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift'
+
+  assign amounts = ship_aed | append: ',' | append: a1 | append: ',' | append: a2 | append: ',' | append: a3 | split: ','
+  assign labels = 'Free delivery|' | append: l1 | append: '|' | append: l2 | append: '|' | append: l3 | split: '|'
+
+  assign total = cart.original_total_price
+  assign reached = -1
+  for amt in amounts
+    assign amt_fils = amt | times: 100
+    if total >= amt_fils
+      assign reached = forloop.index0
+    endif
+  endfor
+  assign next_index = reached | plus: 1
+  assign last_index = amounts | size | minus: 1
+  assign last_fils = amounts[last_index] | times: 100
+  assign pct = total | times: 100 | divided_by: last_fils
+  if pct > 100
+    assign pct = 100
+  endif
+-%}
+{%- capture message -%}
+  {%- if reached == last_index -%}
+    {{ labels[last_index] }} unlocked · applied automatically at checkout
+  {%- else -%}
+    {%- liquid
+      assign remaining_fils = amounts[next_index] | times: 100 | minus: total
+      assign next_label = labels[next_index] | replace: '+ Mystery Gift', '+ a Mystery Gift'
+      if next_index == 0
+        assign next_label = 'free delivery'
+      endif
+    -%}
+    {%- if reached <= 0 -%}
+      Add {% render 'plaay-aed', fils: remaining_fils %} more to unlock {{ next_label }}
+    {%- else -%}
+      {{ labels[reached] }} unlocked · {% render 'plaay-aed', fils: remaining_fils %} more for {{ next_label }}
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+<div class="pl-card pl-card--flat pl-rw" data-pl-rewards data-amounts="{{ amounts | join: ',' }}" data-labels="{{ labels | join: '|' | escape }}" data-total="{{ total }}">
+  <p class="pl-rw__msg">
+    {%- render 'pl-icon', name: 'gift', size: 18, stroke: 1.8 -%}
+    <span data-pl-rw-msg>{{ message | strip }}</span>
+  </p>
+  <div class="pl-rw__track" aria-hidden="true">
+    <span class="pl-rw__fill" data-pl-rw-fill style="width: {{ pct }}%"></span>
+    {%- for amt in amounts -%}
+      {%- liquid
+        assign i = forloop.index0
+        assign left = amt | times: 10000 | divided_by: last_fils
+        assign short = labels[i] | replace: ' off + Mystery Gift', ' + gift'
+      -%}
+      <span class="pl-rw__stop{% if i <= reached %} is-done{% endif %}{% if forloop.first %} is-first{% endif %}{% if forloop.last %} is-last{% endif %}" data-pl-rw-stop style="left: {{ left }}%">
+        <span class="pl-rw__dot"></span>
+        <span class="pl-rw__lab"><b>AED {{ amt }}</b>{{ short }}</span>
+      </span>
+    {%- endfor -%}
+  </div>
+</div>

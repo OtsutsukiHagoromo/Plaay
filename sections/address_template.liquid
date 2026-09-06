@@ -1,138 +1,184 @@
-{% liquid
-  assign background_color = section.settings.background_color
-  assign background_color_main = section.settings.background_color_main
-%}
+{{ 'pl-account.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'pl-account.js' | asset_url }}" defer></script>
 
-{% style %}
-  .default_address input {
-    height: 16px;
-    width: 16px;
-    border: 1px solid var(--plaay-navy);
-  }
-  #AddAddress.show {
-    display: block;
-  }
-  .edit_address_button[aria-expanded="true"] ~ .edit_address {
-    display: block;
-  }
-{% endstyle %}
+{%- comment -%}
+  Hooks kept from the legacy customer.static.js flow, now driven by assets/pl-account.js (scoped to this
+  container): [data-customer-addresses], [data-address], button[aria-expanded][aria-controls],
+  button[type="reset"], button[data-confirm-message][data-target], .AddAddressButton, #AddAddress,
+  .CloseAddressButton, [data-address-country-select][data-form-id], AddressCountry_/AddressProvince_/
+  AddressProvinceContainer_ ids. Every input name is the Shopify customer_address contract.
+{%- endcomment -%}
+<div class="pl pl-account">
+  <div class="pl-wrap pl-acct">
 
-<script src="{{ 'customer.static.js' | asset_url }}" defer></script>
+    <aside class="pl-acct__rail pl-hide-m">
+      <nav class="pl-card pl-acct-nav" aria-label="Account">
+        <a href="{{ routes.account_url }}" class="pl-acct-nav__a">Overview</a>
+        <a href="{{ routes.account_url }}#orders" class="pl-acct-nav__a">Orders</a>
+        <a href="{{ routes.account_url }}#subscription" class="pl-acct-nav__a">Subscription</a>
+        <a href="{{ routes.account_url }}#rewards" class="pl-acct-nav__a">Rewards</a>
+        <a href="/pages/wishlist" class="pl-acct-nav__a">Saved flavours</a>
+        <a href="{{ routes.account_addresses_url }}" class="pl-acct-nav__a is-on" aria-current="page">Addresses {% render 'pl-icon', name: 'chev-right', size: 16, stroke: 2.2 %}</a>
+        <a href="{{ routes.account_url }}#details" class="pl-acct-nav__a">Your details</a>
+        <a href="{{ routes.account_url }}#alerts" class="pl-acct-nav__a">Alerts</a>
+        <a href="{{ routes.account_logout_url }}" class="pl-acct-nav__a pl-acct-nav__a--out">Sign out</a>
+      </nav>
+    </aside>
 
-<div class="relative">
-  {% render 'account-banner' %}
-  <div style="background-color: {{ background_color_main }};">
-    <div class="container relative pb-10 | lg:pb-20 lg:pt-12 lg:flex lg:flex-row lg:justify-between | xl:pb-32">
-      {% comment %} account sidebar {% endcomment %}
-      <div class="lg:w-1/4 lg:mr-8">
-        {% render 'account-sidebar' %}
-      </div>
+    <div class="pl-acct__main" data-customer-addresses>
+      <a href="{{ routes.account_url }}" class="pl-acct__back">{% render 'pl-icon', name: 'chev-left', size: 16, stroke: 2.2 %} Back to account</a>
 
-      {% comment %} addresses {% endcomment %}
-      <div class="w-full | lg:w-4/5 lg:ml-8" data-customer-addresses>
-        {% paginate customer.addresses by 10 %}
-          {% comment %} list of customer addresses {% endcomment %}
-          {% render 'btn', href: '/account', style: 'blue', copy: 'account.account-area.back-to-account', width: 'large', additional_class: 'flex mb-10 text-sm' %}
+      <header class="pl-acct__head">
+        <h1 class="pl-h pl-acct__title">Addresses</h1>
+        <p class="pl-body pl-mute">{% if customer.addresses_count > 0 %}{{ customer.addresses_count }} saved. Your default is where every box goes unless you change it at checkout.{% else %}Save an address once and checkout fills itself in.{% endif %}</p>
+      </header>
 
-          {% if customer.addresses.size > 0 %}
-            <ul role="list" class="justify-center flex flex-col">
-              {%- for address in customer.addresses -%}
-                <li data-address class="bg-white justify-center px-10 py-8 {% unless forloop.first %} mt-5 {% endunless %}">
-                  <div class="flex flex-col items-start | lg:flex-row lg:justify-between">
-                    <div>
-                      <div class="text-sm text-dark-blue font-walsheim flex flex-col gap-2">
-                        {{ address | format_address }}
-                      </div>
-                      {%- if address == customer.default_address -%}
-                        <p class="text-sm mt-3 text-[#767676] font-walsheim flex items-center">
-                          <span class="h-3 w-3 flex text-[#767676] mr-2">
-                            {% render 'icon-tick' %}
-                          </span>
-                          {{ 'account.addresses.default-delivery' | t }}
-                        </p>
-                      {%- endif -%}
-                      {% if adddress == customer.billing_address %}
-                        <p class="text-sm mt-3 text-[#767676] font-walsheim flex items-center">
-                          <span class="h-3 w-3 flex text-[#767676] mr-2">
-                            {% render 'icon-tick' %}
-                          </span>
-                          {{ 'account.addresses.default-billing' | t }}
-                        </p>
-                      {% endif %}
+      {%- paginate customer.addresses by 10 -%}
+        {%- if customer.addresses.size > 0 -%}
+          <ul class="pl-addr-list" role="list">
+            {%- for address in customer.addresses -%}
+              <li class="pl-card pl-addr" data-address>
+                <div class="pl-addr__body">
+                  <div class="pl-addr__text">{{ address | format_address }}</div>
+                  {%- if address == customer.default_address -%}<span class="pl-tag pl-tag--green">Default</span>{%- endif -%}
+                </div>
+                <div class="pl-addr__actions">
+                  <button type="button" id="EditFormButton_{{ address.id }}" class="pl-btn pl-btn--sm pl-btn--ghost edit_address_button" aria-label="Edit address {{ forloop.index }}" aria-controls="EditAddress_{{ address.id }}" aria-expanded="false" data-address-id="{{ address.id }}">Edit</button>
+                  <form method="post" action="{{ address.url }}" class="pl-addr__del">
+                    <input type="hidden" name="_method" value="delete">
+                    <button type="submit" class="pl-btn pl-btn--sm pl-btn--white" aria-label="Delete address {{ forloop.index }}" data-target="{{ address.url }}" data-confirm-message="Delete this address?">Delete</button>
+                  </form>
+                </div>
+
+                <div id="EditAddress_{{ address.id }}" class="pl-addr-form edit_address" hidden>
+                  <h2 class="pl-h--4">Edit address</h2>
+                  {%- form 'customer_address', address, class: 'pl-addr-form__form' -%}
+                    {%- if form.errors -%}
+                      <div class="pl-form-errors pl-addr-field--full" role="alert">{{ form.errors | default_errors }}</div>
+                    {%- endif -%}
+                    <label class="pl-addr-field" for="Address_first_name_{{ form.id }}">
+                      <span class="pl-label">First name</span>
+                      <input class="pl-input" type="text" id="Address_first_name_{{ form.id }}" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name">
+                    </label>
+                    <label class="pl-addr-field" for="Address_last_name_{{ form.id }}">
+                      <span class="pl-label">Last name</span>
+                      <input class="pl-input" type="text" id="Address_last_name_{{ form.id }}" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name">
+                    </label>
+                    <label class="pl-addr-field pl-addr-field--full" for="Address_company_{{ form.id }}">
+                      <span class="pl-label">Company (optional)</span>
+                      <input class="pl-input" type="text" id="Address_company_{{ form.id }}" name="address[company]" value="{{ form.company }}" autocomplete="organization">
+                    </label>
+                    <label class="pl-addr-field pl-addr-field--full" for="Address_address1_{{ form.id }}">
+                      <span class="pl-label">Address</span>
+                      <input class="pl-input" type="text" id="Address_address1_{{ form.id }}" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1">
+                    </label>
+                    <label class="pl-addr-field pl-addr-field--full" for="Address_address2_{{ form.id }}">
+                      <span class="pl-label">Apartment, villa or floor (optional)</span>
+                      <input class="pl-input" type="text" id="Address_address2_{{ form.id }}" name="address[address2]" value="{{ form.address2 }}" autocomplete="address-line2">
+                    </label>
+                    <label class="pl-addr-field" for="Address_city_{{ form.id }}">
+                      <span class="pl-label">City</span>
+                      <input class="pl-input" type="text" id="Address_city_{{ form.id }}" name="address[city]" value="{{ form.city }}" autocomplete="address-level2">
+                    </label>
+                    <label class="pl-addr-field" for="AddressCountry_{{ form.id }}">
+                      <span class="pl-label">Country</span>
+                      <select class="pl-select" id="AddressCountry_{{ form.id }}" name="address[country]" data-address-country-select data-default="{{ form.country }}" data-form-id="{{ form.id }}" autocomplete="country">{{ all_country_option_tags }}</select>
+                    </label>
+                    <div id="AddressProvinceContainer_{{ form.id }}" class="pl-addr-field" hidden>
+                      <label class="pl-label" for="AddressProvince_{{ form.id }}">Province</label>
+                      <select class="pl-select" id="AddressProvince_{{ form.id }}" name="address[province]" data-default="{{ form.province }}" autocomplete="address-level1"></select>
                     </div>
-                    <div class="flex flex-col mt-14 | lg:mt-0">
-                      <button
-                        type="button"
-                        id="EditFormButton_{{ address.id }}"
-                        aria-label="{{ 'account.addresses.edit_address' | t }} {{ forloop.index }}"
-                        aria-controls="EditAddress_{{ address.id }}"
-                        aria-expanded="false"
-                        data-address-id="{{ address.id }}"
-                        class="edit_address_button mt-2 bg-dark-blue text-white py-2 text-sm font-walsheim uppercase h-10 w-[170px] rounded relative border border-dark-blue transition-all duration-200 group | hover:bg-white hover:text-dark-blue">
-                        {{ 'account.addresses.edit' | t }}
-                        <span class="w-3 h-3 text-white flex absolute right-11 top-1/2 transform -translate-y-1/2 transition-all duration-200 | group-hover:text-dark-blue">
-                          {% render 'icon-pencil' %}
-                        </span>
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="{{ 'account.addresses.delete' | t }} {{ forloop.index }}"
-                        data-target="{{ address.url }}"
-                        data-confirm-message="{{ 'account.addresses.delete_confirm' | t }}"
-                        class="bg-[#E9E9E9] mt-2 border-[#E9E9E9] text-[#808080] py-2 text-sm font-walsheim uppercase h-10 w-[170px] leading-[0px] rounded relative border transition-all duration-200 group | hover:bg-dark-blue hover:text-white hover:border-dark-blue">
-                        {{ 'account.addresses.delete' | t }}
-                        <span class="w-3 h-3 text-[#808080] flex absolute right-11 top-1/2 transform -translate-y-1/2 transition-all duration-200 | group-hover:text-white">
-                          {% render 'icon-bin' %}
-                        </span>
-                      </button>
-                      {% render 'edit-address', address: address %}
+                    <label class="pl-addr-field" for="AddressZip_{{ form.id }}">
+                      <span class="pl-label">Post code (optional)</span>
+                      <input class="pl-input" type="text" id="AddressZip_{{ form.id }}" name="address[zip]" value="{{ form.zip }}" autocapitalize="characters" autocomplete="postal-code">
+                    </label>
+                    <label class="pl-addr-field" for="AddressPhone_{{ form.id }}">
+                      <span class="pl-label">Phone</span>
+                      <input class="pl-input" type="tel" id="AddressPhone_{{ form.id }}" name="address[phone]" value="{{ form.phone }}" autocomplete="tel">
+                    </label>
+                    <label class="pl-addr-default">{{ form.set_as_default_checkbox }}<span>Set as default address</span></label>
+                    <div class="pl-addr-form__actions">
+                      <button type="submit" class="pl-btn pl-btn--md">Save address</button>
+                      <button type="reset" class="pl-btn pl-btn--md pl-btn--ghost">Cancel</button>
                     </div>
-                  </div>
-                </li>
-              {%- endfor -%}
-            </ul>
-          {% endif %}
-          {% comment %} add new address {% endcomment %}
-          <div data-address>
-            <button
-              type="button"
-              aria-expanded="false"
-              aria-controls="AddAddress"
-              class="AddAddressButton mt-5 bg-[#E0E0E0] text-dark-blue w-[252px] font-walsheim-medium text-sm rounded uppercase py-3 transition-all duration-200 | hover:bg-dark-blue hover:text-white">{{ 'account.addresses.add-new' | t }}</button>
-            {% render 'new-address', address: address %}
+                  {%- endform -%}
+                </div>
+              </li>
+            {%- endfor -%}
+          </ul>
+          {%- if paginate.pages > 1 -%}
+            <nav class="pl-pager" aria-label="Address pages">
+              {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" class="pl-btn pl-btn--sm pl-btn--ghost">Previous</a>{%- endif -%}
+              <span class="pl-small pl-mute">Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+              {%- if paginate.next -%}<a href="{{ paginate.next.url }}" class="pl-btn pl-btn--sm pl-btn--ghost">Next</a>{%- endif -%}
+            </nav>
+          {%- endif -%}
+        {%- endif -%}
+
+        <div class="pl-addr-new" data-address>
+          <button type="button" class="pl-btn pl-btn--md AddAddressButton" aria-expanded="false" aria-controls="AddAddress">{% render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 %} Add new address</button>
+          <div id="AddAddress" class="pl-card pl-addr-form pl-addr-form--new" hidden>
+            <h2 class="pl-h--4" id="AddressNewHeading">Add address</h2>
+            {%- form 'customer_address', customer.new_address, aria-labelledby: 'AddressNewHeading', class: 'pl-addr-form__form' -%}
+              {%- if form.errors -%}
+                <div class="pl-form-errors pl-addr-field--full" role="alert">{{ form.errors | default_errors }}</div>
+              {%- endif -%}
+              <label class="pl-addr-field" for="Address_first_name_{{ form.id }}">
+                <span class="pl-label">First name</span>
+                <input class="pl-input" type="text" id="Address_first_name_{{ form.id }}" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name">
+              </label>
+              <label class="pl-addr-field" for="Address_last_name_{{ form.id }}">
+                <span class="pl-label">Last name</span>
+                <input class="pl-input" type="text" id="Address_last_name_{{ form.id }}" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name">
+              </label>
+              <label class="pl-addr-field pl-addr-field--full" for="Address_company_{{ form.id }}">
+                <span class="pl-label">Company (optional)</span>
+                <input class="pl-input" type="text" id="Address_company_{{ form.id }}" name="address[company]" value="{{ form.company }}" autocomplete="organization">
+              </label>
+              <label class="pl-addr-field pl-addr-field--full" for="Address_address1_{{ form.id }}">
+                <span class="pl-label">Address</span>
+                <input class="pl-input" type="text" id="Address_address1_{{ form.id }}" name="address[address1]" value="{{ form.address1 }}" autocomplete="address-line1">
+              </label>
+              <label class="pl-addr-field pl-addr-field--full" for="Address_address2_{{ form.id }}">
+                <span class="pl-label">Apartment, villa or floor (optional)</span>
+                <input class="pl-input" type="text" id="Address_address2_{{ form.id }}" name="address[address2]" value="{{ form.address2 }}" autocomplete="address-line2">
+              </label>
+              <label class="pl-addr-field" for="Address_city_{{ form.id }}">
+                <span class="pl-label">City</span>
+                <input class="pl-input" type="text" id="Address_city_{{ form.id }}" name="address[city]" value="{{ form.city }}" autocomplete="address-level2">
+              </label>
+              <label class="pl-addr-field" for="AddressCountry_{{ form.id }}">
+                <span class="pl-label">Country</span>
+                <select class="pl-select" id="AddressCountry_{{ form.id }}" name="address[country]" data-address-country-select data-default="{{ form.country | default: 'United Arab Emirates' }}" data-form-id="{{ form.id }}" autocomplete="country">{{ all_country_option_tags }}</select>
+              </label>
+              <div id="AddressProvinceContainer_{{ form.id }}" class="pl-addr-field" hidden>
+                <label class="pl-label" for="AddressProvince_{{ form.id }}">Province</label>
+                <select class="pl-select" id="AddressProvince_{{ form.id }}" name="address[province]" data-default="{{ form.province }}" autocomplete="address-level1"></select>
+              </div>
+              <label class="pl-addr-field" for="AddressZip_{{ form.id }}">
+                <span class="pl-label">Post code (optional)</span>
+                <input class="pl-input" type="text" id="AddressZip_{{ form.id }}" name="address[zip]" value="{{ form.zip }}" autocapitalize="characters" autocomplete="postal-code">
+              </label>
+              <label class="pl-addr-field" for="AddressPhone_{{ form.id }}">
+                <span class="pl-label">Phone</span>
+                <input class="pl-input" type="tel" id="AddressPhone_{{ form.id }}" name="address[phone]" value="{{ form.phone }}" autocomplete="tel">
+              </label>
+              <label class="pl-addr-default">{{ form.set_as_default_checkbox }}<span>Set as default address</span></label>
+              <div class="pl-addr-form__actions">
+                <button type="submit" class="pl-btn pl-btn--md">Add address</button>
+                <button type="reset" class="pl-btn pl-btn--md pl-btn--ghost CloseAddressButton">Cancel</button>
+              </div>
+            {%- endform -%}
           </div>
-        {% endpaginate %}
-      </div>
+        </div>
+      {%- endpaginate -%}
     </div>
   </div>
 </div>
 
-<script>
-  window.onload = () => {
-    typeof CustomerAddresses !== 'undefined' && new CustomerAddresses();
-  };
-</script>
-
 {% schema %}
-  {
-    "name": "Addresses",
-    "settings": [
-      {
-        "type": "color",
-        "id": "background_color",
-        "label": "Background color (header)",
-        "default": "#F5C08D"
-      }, {
-        "type": "color",
-        "id": "background_color_main",
-        "label": "Background color (main)",
-        "default": "#F4F4F4"
-      }, {
-        "id": "show_users_name",
-        "type": "checkbox",
-        "label": "Show users name?",
-        "default": true
-      }
-    ]
-  }
+{
+  "name": "Addresses",
+  "settings": []
+}
 {% endschema %}

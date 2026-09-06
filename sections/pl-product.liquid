@@ -1,0 +1,449 @@
+{%- comment -%}
+  Plaay 2026 product page. One section, thin templates (product.json, product.all-products.json,
+  product.truffle.json, product.new-launch-bars.json) that only differ in settings.
+  Snippets: pl-gallery, pl-flavour-row, pl-pack-row, pl-buy-box, pl-rewards-line.
+  JS: assets/pl-product.js (dependency-free; variant selection, buy mode, frequency, stepper,
+  add-to-bag via cart-drawer-items.add(), sticky bar, gallery, tabs, wishlist).
+{%- endcomment -%}
+{{ 'pl-product.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign kind = section.settings.kind | default: 'auto'
+  assign has_pack_size = false
+  for opt in product.options
+    if opt == 'Pack Size'
+      assign has_pack_size = true
+    endif
+  endfor
+  if kind == 'auto'
+    if has_pack_size or product.title contains 'Truffle'
+      assign kind = 'truffles'
+    elsif product.type == 'Chocolate Bars' or product.title contains 'Slab'
+      assign kind = 'slabs'
+    elsif product.title contains 'Bar ' and product.title contains '12'
+      assign kind = 'bars'
+    else
+      assign kind = 'packs'
+    endif
+  endif
+
+  assign kind_name = 'Variety packs'
+  assign kind_url = '/collections/variety-packs'
+  assign unit = ''
+  assign storage_copy = 'Keep refrigerated. Best at room temperature.'
+  assign default_upsell_line = ''
+  case kind
+    when 'bars'
+      assign kind_name = 'Bars'
+      assign kind_url = '/collections/chocolate-bars'
+      assign unit = 'bar'
+      assign default_upsell_line = 'All five flavours in one box'
+    when 'truffles'
+      assign kind_name = 'Truffles'
+      assign kind_url = '/collections/chocolate-truffles'
+      assign unit = 'truffle'
+      assign storage_copy = 'Keep refrigerated. Best cold.'
+      assign default_upsell_line = 'Try all five flavours'
+    when 'slabs'
+      assign kind_name = 'Slabs'
+      assign kind_url = '/collections/new-chocolate-slabs'
+      assign unit = 'slab'
+      assign default_upsell_line = 'All five slabs, 80 g each'
+  endcase
+
+  assign variant = product.selected_or_first_available_variant
+  if variant == blank
+    assign variant = product.variants.first
+  endif
+
+  comment
+    Selling plans: highest percentage adjustment = the saving; default = the plan whose name contains "4".
+  endcomment
+  assign sub_pct = 0
+  assign default_plan_id = 0
+  assign first_plan_id = 0
+  for group in product.selling_plan_groups
+    for plan in group.selling_plans
+      if first_plan_id == 0
+        assign first_plan_id = plan.id
+      endif
+      if default_plan_id == 0 and plan.name contains '4'
+        assign default_plan_id = plan.id
+      endif
+      for adj in plan.price_adjustments
+        if adj.value_type == 'percentage' and adj.value > sub_pct
+          assign sub_pct = adj.value
+        endif
+      endfor
+    endfor
+  endfor
+  if default_plan_id == 0
+    assign default_plan_id = first_plan_id
+  endif
+  assign has_sub = false
+  if sub_pct > 0
+    assign has_sub = true
+  endif
+
+  assign badge_text = ''
+  for tag in product.tags
+    assign tl = tag | downcase | strip
+    if badge_text == ''
+      case tl
+        when 'badge:bestseller'
+          assign badge_text = 'Bestseller'
+        when 'badge:new-launch'
+          assign badge_text = 'New launch'
+        when 'badge:new'
+          assign badge_text = 'New'
+        when 'badge:limited', 'limited edition'
+          assign badge_text = 'Limited'
+        when 'badge:favourite'
+          assign badge_text = 'Fan favourite'
+        when 'badge:staff'
+          assign badge_text = 'Staff pick'
+        when 'badge:gift'
+          assign badge_text = 'Gift ready'
+      endcase
+    endif
+  endfor
+
+  comment
+    Rating: per-product Judge.me metafield when it has reviews, else store-wide, else the theme settings stand-in.
+  endcomment
+  assign rating_raw = product.metafields.reviews.rating.value
+  assign rating = rating_raw.value | default: rating_raw
+  assign rating_count = product.metafields.reviews.rating_count | default: 0
+  if rating == blank or rating_count == 0
+    assign rating = shop.metafields.judgeme.all_reviews_rating
+    assign rating_count = shop.metafields.judgeme.all_reviews_count
+  endif
+  if rating == blank
+    assign rating = settings.store_rating_value
+    assign rating_count = settings.store_rating_count
+  endif
+  assign rating_num = 0
+  if rating != blank
+    assign rating_num = rating | times: 1.0 | round: 1
+  endif
+  assign stars_full = rating_num | round
+  assign rating_count_num = rating_count | default: 0 | times: 1
+
+  assign sub_line = product.metafields.arena.subtitle_text
+  if sub_line == blank
+    assign sub_line = product.description | strip_html | truncatewords: 22
+  endif
+
+  assign usp = product.metafields.arena.usp_text.value
+  if usp == blank
+    assign usp = 'No refined sugar|No gluten|No soy|No palm oil|Halal' | split: '|'
+  endif
+
+  assign upsell = section.settings.upsell_product
+  assign upsell_line = section.settings.upsell_line
+  if upsell_line == blank
+    assign upsell_line = default_upsell_line
+  endif
+
+  assign show_video = true
+  if section.settings.show_video == false
+    assign show_video = false
+  endif
+  assign inside_alt = 'What is inside one pack of ' | append: product.title
+
+  assign pieces = 0
+  if kind == 'truffles' and has_pack_size
+    assign pieces = variant.option1 | upcase | split: 'X' | first | strip | plus: 0
+  elsif kind == 'bars'
+    assign pieces = 12
+  elsif kind == 'slabs'
+    assign pieces = 6
+  endif
+  assign per_piece = 0
+  if pieces > 0
+    assign per_piece = variant.price | times: 1.0 | divided_by: pieces | round
+  endif
+
+  assign keep = 100 | minus: sub_pct
+  assign sub_price = variant.price | times: keep | divided_by: 100
+  assign sticky_price = variant.price
+  if has_sub
+    assign sticky_price = sub_price
+  endif
+-%}
+<div class="pl pl-pdp" data-pl-product data-product-id="{{ product.id }}" data-handle="{{ product.handle }}" data-url="{{ product.url }}" data-kind="{{ kind }}" data-unit="{{ unit }}" data-sub-pct="{{ sub_pct }}" data-default-plan="{{ default_plan_id }}" data-variant="{{ variant.id }}">
+  <script type="application/json" data-pl-variants>[
+    {%- for v in product.variants -%}
+      {%- liquid
+        assign v_pieces = 0
+        if kind == 'truffles' and has_pack_size
+          assign v_pieces = v.option1 | upcase | split: 'X' | first | strip | plus: 0
+        elsif kind == 'bars'
+          assign v_pieces = 12
+        elsif kind == 'slabs'
+          assign v_pieces = 6
+        endif
+        assign v_media = 'null'
+        if v.featured_media
+          assign v_media = v.featured_media.id
+        endif
+        assign v_cap = 'null'
+        if v.compare_at_price
+          assign v_cap = v.compare_at_price
+        endif
+      -%}
+      {"id":{{ v.id }},"title":{{ v.title | json }},"price":{{ v.price }},"compare_at_price":{{ v_cap }},"available":{{ v.available }},"option1":{{ v.option1 | json }},"media_id":{{ v_media }},"pieces":{{ v_pieces }}}{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]</script>
+  <script type="application/json" data-pl-plans>[
+    {%- assign plan_i = 0 -%}
+    {%- for group in product.selling_plan_groups -%}
+      {%- for plan in group.selling_plans -%}
+        {%- liquid
+          assign pct = 0
+          for adj in plan.price_adjustments
+            if adj.value_type == 'percentage' and adj.value > pct
+              assign pct = adj.value
+            endif
+          endfor
+        -%}
+        {%- if plan_i > 0 -%},{%- endif -%}
+        {"id":{{ plan.id }},"name":{{ plan.name | json }},"percentage":{{ pct }}}
+        {%- assign plan_i = plan_i | plus: 1 -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  ]</script>
+
+  <div class="pl-wrap">
+    <nav class="pl-crumbs" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+      {%- render 'pl-icon', name: 'chev-right', size: 14, stroke: 2 -%}
+      <a href="{{ kind_url }}">{{ kind_name }}</a>
+      {%- render 'pl-icon', name: 'chev-right', size: 14, stroke: 2 -%}
+      <span class="pl-crumbs__cur" aria-current="page">{{ product.title }}</span>
+    </nav>
+
+    <div class="pl-pdp__grid">
+      <div class="pl-pdp__media">
+        {%- render 'pl-gallery', product: product, badge_text: badge_text, show_video: show_video -%}
+      </div>
+
+      <div class="pl-pdp__info">
+        <div class="pl-pdp__head">
+          {%- if badge_text != blank and badge_text != 'Limited' -%}
+            <span class="pl-eyebrow">{{ badge_text }}</span>
+          {%- endif -%}
+          <h1 class="pl-h pl-h--2 pl-pdp__title">{{ product.title }}</h1>
+          {%- if rating_num > 0 -%}
+            <a class="pl-pdp__rating" href="#pl-reviews" data-pl-goto="pl-reviews">
+              <span class="pl-stars pl-stars--lg" aria-hidden="true">
+                {%- for n in (1..5) -%}
+                  {%- if n <= stars_full -%}
+                    {%- render 'pl-icon', name: 'star', size: 16 -%}
+                  {%- else -%}
+                    {%- render 'pl-icon', name: 'star-empty', size: 16, stroke: 1.6 -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </span>
+              <span>{{ rating_num }} · {{ rating_count_num }} reviews</span>
+            </a>
+          {%- endif -%}
+          {%- if sub_line != blank -%}
+            <p class="pl-pdp__sub">{{ sub_line }}</p>
+          {%- endif -%}
+        </div>
+
+        {%- render 'pl-flavour-row', product: product, kind: kind -%}
+        {%- render 'pl-pack-row', product: product, kind: kind, has_pack_size: has_pack_size, selected: variant -%}
+        {%- render 'pl-buy-box', product: product, variant: variant, sub_pct: sub_pct, default_plan_id: default_plan_id, section_id: section.id -%}
+
+        <ul class="pl-trust">
+          <li>{%- render 'pl-icon', name: 'truck', size: 16, stroke: 1.8 -%}<span>Free delivery AED 75+ · 1–2 day UAE-wide</span></li>
+          <li>{%- render 'pl-icon', name: 'refresh', size: 16, stroke: 1.8 -%}<span>Skip, swap or cancel anytime</span></li>
+          <li>{%- render 'pl-icon', name: 'leaf', size: 16, stroke: 1.8 -%}<span>Halal · no refined sugar</span></li>
+        </ul>
+
+        <div class="pl-chips">
+          {%- for chip in usp -%}
+            {%- if chip != blank -%}<span class="pl-chip">{{ chip }}</span>{%- endif -%}
+          {%- endfor -%}
+        </div>
+
+        {%- render 'pl-rewards-line' -%}
+
+        {%- if upsell != blank -%}
+          {%- assign upsell_variant = upsell.selected_or_first_available_variant -%}
+          <div class="pl-card pl-card--cream pl-card--flat pl-upsell">
+            <a class="pl-upsell__img" href="{{ upsell.url }}" tabindex="-1" aria-hidden="true">
+              {%- if upsell.featured_image -%}
+                {{ upsell.featured_image | image_url: width: 112 | image_tag: loading: 'lazy', widths: '56, 112', sizes: '56px', alt: '' }}
+              {%- endif -%}
+            </a>
+            <div class="pl-upsell__body">
+              <span class="pl-upsell__eyebrow">Pairs well with</span>
+              <a class="pl-upsell__title" href="{{ upsell.url }}">{{ upsell.title }} · {% render 'plaay-aed', fils: upsell_variant.price %}</a>
+              {%- if upsell_line != blank -%}<span class="pl-upsell__line">{{ upsell_line }}</span>{%- endif -%}
+            </div>
+            {%- if upsell_variant.available -%}
+              <quick-add data-module="quick-add" data-id="{{ upsell_variant.id }}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="button" class="pl-plus" data-add aria-label="Add {{ upsell.title | escape }} to bag">
+                  {%- render 'pl-icon', name: 'plus', size: 18, stroke: 2.4 -%}
+                </button>
+              </quick-add>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="pl-pdp__tabs" data-pl-tabs>
+        <div class="pl-pdp__tabbar">
+          <div class="pl-tabs" role="tablist" aria-label="Product details">
+            <a class="pl-tab is-on" href="#pl-what" role="tab" id="pl-tab-what" aria-selected="true" aria-controls="pl-what" data-pl-tab="pl-what">What you get</a>
+            <a class="pl-tab" href="#pl-reviews" role="tab" id="pl-tab-reviews" aria-selected="false" aria-controls="pl-reviews" data-pl-tab="pl-reviews">Reviews ({{ rating_count_num }})</a>
+            <a class="pl-tab" href="#pl-faq" role="tab" id="pl-tab-faq" aria-selected="false" aria-controls="pl-faq" data-pl-tab="pl-faq">FAQ</a>
+            <a class="pl-tab" href="#pl-shipping" role="tab" id="pl-tab-shipping" aria-selected="false" aria-controls="pl-shipping" data-pl-tab="pl-shipping">Shipping</a>
+          </div>
+        </div>
+
+        <section class="pl-pdp__panel is-on" id="pl-what" role="tabpanel" aria-labelledby="pl-tab-what" data-pl-panel="pl-what">
+          <h2 class="pl-h pl-h--3 pl-pdp__panel-h">What you get</h2>
+          <div class="pl-rte">{{ product.description }}</div>
+          {%- assign inside_img = product.metafields.arena.whats_inside_one_pack -%}
+          {%- if inside_img != blank or pieces > 0 -%}
+            <div class="pl-pdp__inside">
+              <span class="pl-label">What's inside</span>
+              {%- if inside_img != blank -%}
+                {{ inside_img | image_url: width: 1040 | image_tag: loading: 'lazy', widths: '520, 1040', sizes: '(min-width: 1024px) 520px, 100vw', alt: inside_alt }}
+              {%- endif -%}
+              <p class="pl-pdp__piece" data-pl-piece{% if pieces == 0 %} hidden{% endif %}>{%- if pieces > 0 -%}{% render 'plaay-aed', fils: per_piece %} a {{ unit }}{%- endif -%}</p>
+            </div>
+          {%- else -%}
+            <p class="pl-pdp__piece" data-pl-piece hidden></p>
+          {%- endif -%}
+        </section>
+
+        <section class="pl-pdp__panel" id="pl-reviews" role="tabpanel" aria-labelledby="pl-tab-reviews" data-pl-panel="pl-reviews">
+          <h2 class="pl-h pl-h--3 pl-pdp__panel-h">Reviews ({{ rating_count_num }})</h2>
+          <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}" data-product-title="{{ product.title | escape }}">{{ product.metafields.judgeme.widget }}</div>
+        </section>
+
+        <section class="pl-pdp__panel" id="pl-faq" role="tabpanel" aria-labelledby="pl-tab-faq" data-pl-panel="pl-faq">
+          <h2 class="pl-h pl-h--3 pl-pdp__panel-h">FAQ</h2>
+          <div class="pl-card pl-card--flat">
+            {%- capture acc_ingredients -%}{{ product.metafields.arena.exact_ingredients | metafield_tag }}{%- endcapture -%}
+            {%- capture acc_allergens -%}{{ product.metafields.custom.allergens | metafield_tag }}{%- endcapture -%}
+            {%- capture acc_nutrition -%}{{ product.metafields.custom.nutrition_facts | metafield_tag }}{%- endcapture -%}
+            {%- capture acc_suitable -%}{{ product.metafields.custom.suitable_for | metafield_tag }}{%- endcapture -%}
+
+            {%- if acc_ingredients != blank -%}
+              <details class="pl-acc">
+                <summary>
+                  <span class="pl-col pl-gap1"><span class="pl-acc__t">Ingredients</span><span class="pl-acc__s">{{ acc_ingredients | strip_html | strip | truncate: 70 }}</span></span>
+                  {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
+                </summary>
+                <div class="pl-acc__body">{{ acc_ingredients }}</div>
+              </details>
+            {%- endif -%}
+            {%- if acc_allergens != blank -%}
+              <details class="pl-acc">
+                <summary>
+                  <span class="pl-col pl-gap1"><span class="pl-acc__t">Allergens</span><span class="pl-acc__s">{{ acc_allergens | strip_html | strip | truncate: 70 }}</span></span>
+                  {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
+                </summary>
+                <div class="pl-acc__body">{{ acc_allergens }}</div>
+              </details>
+            {%- endif -%}
+            {%- if acc_nutrition != blank -%}
+              <details class="pl-acc">
+                <summary>
+                  <span class="pl-col pl-gap1"><span class="pl-acc__t">Nutrition</span><span class="pl-acc__s">Per serving</span></span>
+                  {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
+                </summary>
+                <div class="pl-acc__body">{{ acc_nutrition }}</div>
+              </details>
+            {%- endif -%}
+            <details class="pl-acc">
+              <summary>
+                <span class="pl-col pl-gap1"><span class="pl-acc__t">Storage</span><span class="pl-acc__s">{{ storage_copy }}</span></span>
+                {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
+              </summary>
+              <div class="pl-acc__body">{{ storage_copy }}</div>
+            </details>
+            {%- if acc_suitable != blank -%}
+              <details class="pl-acc">
+                <summary>
+                  <span class="pl-col pl-gap1"><span class="pl-acc__t">Suitable for</span><span class="pl-acc__s">{{ acc_suitable | strip_html | strip | truncate: 70 }}</span></span>
+                  {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
+                </summary>
+                <div class="pl-acc__body">{{ acc_suitable }}</div>
+              </details>
+            {%- endif -%}
+          </div>
+        </section>
+
+        <section class="pl-pdp__panel" id="pl-shipping" role="tabpanel" aria-labelledby="pl-tab-shipping" data-pl-panel="pl-shipping">
+          <h2 class="pl-h pl-h--3 pl-pdp__panel-h">Shipping &amp; returns</h2>
+          {%- capture shipping_copy -%}{{ product.metafields.custom.shipping_policy | metafield_tag }}{%- endcapture -%}
+          <div class="pl-card pl-card--flat">
+            {%- if shipping_copy != blank -%}
+              <div class="pl-rte">{{ shipping_copy }}</div>
+            {%- else -%}
+              <p class="pl-rte">Free delivery AED 75+ · 1–2 day UAE-wide · GCC 3–5 days</p>
+            {%- endif -%}
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="pl-sticky" data-pl-sticky aria-hidden="true">
+    <button type="button" class="pl-iconbtn pl-sticky__heart" data-pl-wish data-handle="{{ product.handle }}" aria-pressed="false" aria-label="Save {{ product.title | escape }} to your flavours">
+      {%- render 'pl-icon', name: 'heart', size: 20, stroke: 1.8 -%}
+    </button>
+    <button type="button" class="pl-btn" data-pl-sticky-add{% unless variant.available %} disabled{% endunless %}>
+      <span data-pl-sticky-cta>{%- if variant.available -%}Add to bag · <span data-pl-sticky-price>{%- render 'plaay-aed', fils: sticky_price -%}</span>{%- else -%}Sold out{%- endif -%}</span>
+    </button>
+  </div>
+</div>
+<script src="{{ 'pl-product.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Plaay product",
+  "tag": "section",
+  "class": "pl-section-product",
+  "settings": [
+    {
+      "type": "select",
+      "id": "kind",
+      "label": "Product kind",
+      "info": "Drives the breadcrumb, pack row, storage copy and the default upsell line. Auto: Pack Size option or Truffle in the title = truffles; type Chocolate Bars or Slab = slabs; Bar + 12 = bars; else packs.",
+      "options": [
+        { "value": "auto", "label": "Auto" },
+        { "value": "bars", "label": "Bars" },
+        { "value": "truffles", "label": "Truffles" },
+        { "value": "slabs", "label": "Slabs" },
+        { "value": "packs", "label": "Variety packs" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "product",
+      "id": "upsell_product",
+      "label": "Pairs well with"
+    },
+    {
+      "type": "text",
+      "id": "upsell_line",
+      "label": "Upsell line",
+      "info": "Leave blank for the kind default (bars: All five flavours in one box; truffles: Try all five flavours; slabs: All five slabs, 80 g each)."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_video",
+      "label": "Show product videos in the gallery",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

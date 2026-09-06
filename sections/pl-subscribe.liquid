@@ -1,0 +1,103 @@
+{%- comment -%}
+  Plaay 2026 — Subscribe & Save card (cream by default, yellow optional). Eyebrow, heading,
+  body, bullet blocks with icons, button, "From AED x a tube". Image on the right on desktop.
+{%- endcomment -%}
+{{ 'pl-home.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  assign bg = s.bg | default: 'cream'
+  assign btn_url = s.btn_url | default: '/pages/subscribe-save'
+-%}
+<div class="pl pl-section pl-subscribe" id="pl-{{ section.id }}">
+  <div class="pl-wrap">
+    <div class="pl-card pl-card--flat pl-card--{{ bg }} pl-subscribe__card pl-subscribe__card--{{ bg }}">
+      <div class="pl-subscribe__body">
+        {%- if s.eyebrow != blank -%}<span class="pl-eyebrow">{{ s.eyebrow | escape }}</span>{%- endif -%}
+        {%- if s.heading != blank -%}<h2 class="pl-h pl-h--2">{{ s.heading | escape }}</h2>{%- endif -%}
+        {%- if s.body != blank -%}<p class="pl-subscribe__text">{{ s.body | escape }}</p>{%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+          <ul class="pl-subscribe__list">
+            {%- for block in section.blocks -%}
+              {%- if block.settings.label == blank -%}{%- continue -%}{%- endif -%}
+              <li class="pl-subscribe__li" {{ block.shopify_attributes }}>
+                <span class="pl-subscribe__ic" aria-hidden="true">{%- render 'pl-icon', name: block.settings.icon, size: 15, stroke: 2.2 -%}</span>
+                <span>{{ block.settings.label | escape }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+        {%- if s.btn_label != blank or s.from != blank -%}
+          <div class="pl-subscribe__cta">
+            {%- if s.btn_label != blank -%}<a class="pl-btn pl-btn--navy pl-btn--full" href="{{ btn_url }}">{{ s.btn_label | escape }}</a>{%- endif -%}
+            {%- if s.from != blank -%}<span class="pl-subscribe__from">{{ s.from | escape }}</span>{%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+      {%- if s.image != blank -%}
+        <div class="pl-subscribe__media">
+          {{ s.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '480, 640, 800, 1000', sizes: '(min-width: 1024px) 480px, 1px' }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Plaay subscribe card",
+  "max_blocks": 5,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Subscribe & Save" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Your favourites, every 4 weeks." },
+    { "type": "text", "id": "body", "label": "Body", "default": "Pick your box once. It arrives every 4 weeks at 15% off, and you can change it whenever you like." },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Build your box" },
+    { "type": "url", "id": "btn_url", "label": "Button link", "default": "/pages/subscribe-save" },
+    { "type": "text", "id": "from", "label": "Small price line", "default": "From AED 41.65 a tube" },
+    { "type": "image_picker", "id": "image", "label": "Image (desktop, right)" },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Card colour",
+      "default": "cream",
+      "options": [
+        { "value": "cream", "label": "Cream" },
+        { "value": "yellow", "label": "Yellow" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bullet",
+      "name": "Bullet",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "check",
+          "options": [
+            { "value": "check", "label": "Check" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "refresh", "label": "Refresh" },
+            { "value": "gift", "label": "Gift" },
+            { "value": "sparkle", "label": "Sparkle" },
+            { "value": "heart", "label": "Heart" }
+          ]
+        },
+        { "type": "text", "id": "label", "label": "Label", "default": "15% off every delivery" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Plaay subscribe card",
+      "category": "Plaay 2026",
+      "blocks": [
+        { "type": "bullet", "settings": { "icon": "check", "label": "15% off every delivery" } },
+        { "type": "bullet", "settings": { "icon": "truck", "label": "Free delivery, always" } },
+        { "type": "bullet", "settings": { "icon": "refresh", "label": "Skip, swap or cancel anytime" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,83 +1,159 @@
-<div class="flex flex-1 min-h-0 flex-col overflow-hidden" data-cart-drawer-content data-cart-item-count="{{ cart.item_count }}">
-  <div class="flex-shrink-0 px-5 pt-4 pb-2{% if cart.item_count == 0 %} hidden{% endif %}">
-    {%- liquid
-      assign fd_active = false
-      if settings.fathers_day_sale_enabled
-        assign fd_now = 'now' | date: '%s' | times: 1
-        assign fd_start = '2026-06-21T00:00:00+04:00' | date: '%s' | times: 1
-        assign fd_end = '2026-06-22T00:00:00+04:00' | date: '%s' | times: 1
-        if fd_now >= fd_start and fd_now < fd_end
-          assign fd_active = true
-        endif
-      endif
-      assign bts_active = false
-      if settings.bts_sale_enabled
-        assign bts_now = 'now' | date: '%s' | times: 1
-        assign bts_start = '2026-08-29T00:00:00+04:00' | date: '%s' | times: 1
-        assign bts_end = '2026-09-01T00:00:00+04:00' | date: '%s' | times: 1
-        if bts_now >= bts_start and bts_now < bts_end
-          assign bts_active = true
-        endif
-      endif
-    -%}
-    {%- unless fd_active -%}{%- render 'cart-tier-bar' -%}{%- endunless -%}
-    {%- render 'plaay-eid-countdown' -%}
-    {%- render 'plaay-summer-cart' -%}
-    {%- if fd_active -%}
-      <div style="margin-top:6px;">
-        <span class="font-walsheim-bold" style="display:block;font-size:11.5px;line-height:1.3;color:var(--plaay-navy);margin-bottom:3px;">🎁 Father's Day &middot; 30% off applied at checkout</span>
-        {%- render 'plaay-fd-countdown' -%}
+{%- comment -%}
+  Cart contents, shared by the drawer (default) and the cart page (page: true).
+
+  Drawer: root is [data-cart-drawer-content] carrying data-cart-item-count. It is swapped wholesale by
+  window.plaayRenderCartDrawerSections (assets/plaay-cart-gift-prompt.js) / bundle.cart-drawer-items.js
+  from the `cart-drawer-content` section after every cart change.
+
+  Page: root is <cart-items data-module="cart-items">. bundle.cart-items.js re-renders its innerHTML
+  from the `cart-items` section (sections/cart-items.liquid renders this same snippet with page: true),
+  and assets/plaay-gift.js refreshes the whole [data-cart-page-root] after its gift sync.
+
+  Ladder maths use the rewards settings and cart.original_total_price (pre-discount), matching
+  snippets/cart-tier-bar.liquid, so a percentage tier can never knock a shopper down a tier.
+{%- endcomment -%}
+{%- liquid
+  assign is_page = false
+  if page == true
+    assign is_page = true
+  endif
+
+  assign ship_fils = settings.cart_tier_ship | default: 75 | times: 100
+  assign t1_fils = settings.cart_tier_1_spend | default: 250 | times: 100
+  assign t2_fils = settings.cart_tier_2_spend | default: 350 | times: 100
+  assign t3_fils = settings.cart_tier_3_spend | default: 500 | times: 100
+  assign l1 = settings.cart_tier_1_label | default: '7% off'
+  assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift' | replace: '+ Mystery Gift', '+ a Mystery Gift'
+  assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift' | replace: '+ Mystery Gift', '+ a Mystery Gift'
+
+  assign total = cart.original_total_price
+  assign reached = -1
+  if total >= ship_fils
+    assign reached = 0
+  endif
+  if total >= t1_fils
+    assign reached = 1
+  endif
+  if total >= t2_fils
+    assign reached = 2
+  endif
+  if total >= t3_fils
+    assign reached = 3
+  endif
+
+  assign next_fils = 0
+  assign next_label = ''
+  assign done_label = ''
+  if reached == -1
+    assign next_fils = ship_fils
+    assign next_label = 'free delivery'
+  elsif reached == 0
+    assign next_fils = t1_fils
+    assign next_label = l1
+    assign done_label = 'Free delivery'
+  elsif reached == 1
+    assign next_fils = t2_fils
+    assign next_label = l2
+    assign done_label = l1
+  elsif reached == 2
+    assign next_fils = t3_fils
+    assign next_label = l3
+    assign done_label = l2
+  else
+    assign done_label = l3
+  endif
+  assign remaining_fils = next_fils | minus: total
+  if remaining_fils < 0
+    assign remaining_fils = 0
+  endif
+
+  assign first_product_id = false
+  if cart.items.size > 0
+    assign first_product_id = cart.items.first.product_id
+  endif
+-%}
+
+{%- capture ladder_html -%}
+  <div class="pl-card pl-ladder">
+    {%- if reached >= 0 -%}
+      <p class="pl-ladder__done pl-small pl-b pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}{{ done_label }} unlocked</p>
+    {%- endif -%}
+    {%- if reached < 3 -%}
+      <p class="pl-ladder__msg">{% render 'plaay-aed', fils: remaining_fils %} more unlocks {{ next_label }}</p>
+    {%- else -%}
+      <p class="pl-ladder__msg">All rewards unlocked</p>
+    {%- endif -%}
+    {%- render 'cart-tier-bar' -%}
+  </div>
+{%- endcapture -%}
+
+{%- capture trust_html -%}
+  <div class="pl-trust">
+    <span>{% render 'pl-icon', name: 'leaf', size: 14, stroke: 2 %}Halal</span>
+    <span>{% render 'pl-icon', name: 'refresh', size: 14, stroke: 2 %}Easy returns</span>
+    <span>{% render 'pl-icon', name: 'truck', size: 14, stroke: 2 %}1–2 day delivery</span>
+  </div>
+{%- endcapture -%}
+
+{%- if is_page -%}
+  <cart-items data-module="cart-items" class="pl-cartpage__grid{% if cart.item_count == 0 %} is-empty{% endif %}">
+    <span data-pl-cart-count-source data-cart-item-count="{{ cart.item_count }}" hidden></span>
+    <div class="pl-cart__loading loading_dots" aria-hidden="true"><span class="pl-cart__spin"></span></div>
+    {%- if cart.item_count > 0 -%}
+      <div class="pl-cartpage__main">
+        {{ ladder_html }}
+        {%- render 'plaay-eid-countdown' -%}
+        {%- render 'plaay-summer-cart' -%}
+        {%- render 'cart-drawer-items', bare: true -%}
+        <cart-page-recommendations class="pl-cartpage__recs" data-module="cart-page-recommendations" data-id="{{ first_product_id }}" data-url="{{ routes.product_recommendations_url }}">
+          <h2 class="pl-h pl-h--4" data-recommendations-title>You might also like</h2>
+          <div class="pl-grid pl-grid--2" data-cart-page-recommendations data-limit="4"></div>
+        </cart-page-recommendations>
+      </div>
+      <aside class="pl-cartpage__side">
+        <div class="pl-card pl-cartpage__summary" data-cart-drawer-footer>
+          {%- render 'cart-drawer-footer', ship_fils: ship_fils -%}
+          <a href="/checkout" class="pl-btn pl-btn--full" data-checkout-url="/checkout">Checkout</a>
+          {{ trust_html }}
+          <p class="pl-continue"><a href="{{ routes.collections_url }}/shop-all" class="pl-btn pl-btn--link">Continue shopping</a></p>
+        </div>
+      </aside>
+    {%- else -%}
+      <div class="pl-cartpage__main">
+        {%- render 'plaay-cart-empty-state' -%}
       </div>
     {%- endif -%}
-    {%- if bts_active -%}
-      <div style="margin-top:6px;">
-        <span class="font-walsheim-bold" style="display:block;font-size:11.5px;line-height:1.3;color:var(--plaay-navy);margin-bottom:3px;">🎒 Back to School &middot; 20% off sitewide, auto-applied at checkout</span>
-        {%- render 'plaay-bts-countdown' -%}
-      </div>
-    {%- endif -%}
-  </div>
-
-  <div class="flex-1 min-h-0 overflow-y-auto overscroll-contain" data-cart-items>
-    {% if cart.item_count > 0 %}
-      <div class="cart_items_container px-4 pb-2">
+  </cart-items>
+{%- else -%}
+  <div class="pl-drawer__body" data-cart-drawer-content data-cart-item-count="{{ cart.item_count }}">
+    <div class="pl-drawer__scroll" data-cart-items>
+      {%- if cart.item_count > 0 -%}
+        {{ ladder_html }}
+        {%- render 'plaay-eid-countdown' -%}
+        {%- render 'plaay-summer-cart' -%}
         {%- render 'cart-drawer-items' -%}
-      </div>
-      {%- render 'cart-recommendations' -%}
-    {% else %}
-      <div class="hidden" aria-hidden="true">
-        {%- render 'cart-drawer-items' -%}
-      </div>
-      {%- render 'plaay-cart-empty-state' -%}
-    {% endif %}
+        {%- render 'cart-recommendations', remaining_fils: remaining_fils, next_label: next_label, reached: reached -%}
+        <div class="pl-card pl-summary-card" data-cart-drawer-footer>
+          {%- render 'cart-drawer-footer', ship_fils: ship_fils -%}
+        </div>
+        {{ trust_html }}
+        <p class="pl-continue"><button type="button" class="pl-btn pl-btn--link" data-close>Continue shopping</button></p>
+      {%- else -%}
+        <div hidden aria-hidden="true">{%- render 'cart-drawer-items' -%}</div>
+        {%- render 'plaay-cart-empty-state' -%}
+      {%- endif -%}
+    </div>
+
+    <div class="pl-drawer__foot">
+      {%- if cart.item_count > 0 -%}
+        <div class="pl-drawer__total">
+          <span class="pl-tiny pl-mute">Total</span>
+          <span class="pl-drawer__total-v" data-pl-sticky-total>{% render 'plaay-aed', fils: cart.total_price %}</span>
+        </div>
+        <a href="/checkout" class="pl-btn pl-drawer__checkout" data-checkout-url="/checkout">Checkout</a>
+      {%- else -%}
+        <button type="button" class="pl-btn pl-btn--full" data-close>Continue shopping</button>
+      {%- endif -%}
+    </div>
   </div>
-
-  <div class="sticky bottom-0 z-20 flex-shrink-0 border-t border-dark-blue border-opacity-10 bg-white px-5 pt-4 pb-5 shadow-[0_-8px_24px_rgb(var(--plaay-navy-rgb) / 0.08)]">
-    {% if cart.item_count > 0 %}
-      <div data-cart-drawer-footer>
-        {%- render 'cart-drawer-footer' -%}
-      </div>
-
-      <a
-        href="/checkout"
-        class="plaay-cart-checkout-btn font-walsheim-bold uppercase">
-        {{ 'cart-drawer.checkout' | t }}
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
-
-      <button
-        type="button"
-        class="plaay-cart-continue-btn font-walsheim-regular"
-        data-close>
-        {{ 'cart-drawer.continue_shopping' | t }}
-      </button>
-    {% else %}
-      <button
-        type="button"
-        class="plaay-cart-checkout-btn font-walsheim-bold uppercase"
-        data-close>
-        Keep Browsing
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-    {% endif %}
-  </div>
-</div>
+{%- endif -%}

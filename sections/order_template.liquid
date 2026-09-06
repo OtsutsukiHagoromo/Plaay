@@ -1,224 +1,177 @@
-{% liquid
-  assign background_color = section.settings.background_color
-  assign background_color_main = section.settings.background_color_main
-%}
+{{ 'pl-account.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'pl-account.js' | asset_url }}" defer></script>
 
-{% style %}
-  .order_items_container::-webkit-scrollbar {
-    height: 4px;
-  }
-  /* Track */
-  .order_items_container::-webkit-scrollbar-track {
-    background: #ECECEC;
-    height: 4px;
-  }
-  /* Handle */
-  .order_items_container::-webkit-scrollbar-thumb {
-    background: #000;
-    width: 10px;
-  }
-  /* Handle on hover */
-  .order_items_container::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
-{% endstyle %}
-<div class="relative">
-  {% render 'account-banner' %}
-  <div style="background-color: {{ background_color_main }};">
-    <div class="container relative pb-10 | lg:pb-20 lg:pt-12 lg:flex lg:flex-row lg:justify-between | xl:pb-32">
-      {% comment %} account sidebar {% endcomment %}
-      <div class="lg:w-1/4 lg:mr-16">
-        {% render 'account-sidebar' %}
-      </div>
+{%- liquid
+  if order.cancelled
+    assign o_status = 'Cancelled'
+    assign o_status_cls = 'pl-tag--red'
+  elsif order.fulfillment_status == 'fulfilled'
+    assign o_status = 'Delivered'
+    assign o_status_cls = 'pl-tag--green'
+  elsif order.fulfillment_status == 'partial'
+    assign o_status = 'Partly delivered'
+    assign o_status_cls = 'pl-tag--yellow'
+  else
+    assign o_status = 'Processing'
+    assign o_status_cls = 'pl-tag--navy'
+  endif
 
-      {% comment %} order {% endcomment %}
-      <div class="w-full | lg:w-4/5">
-        <div class="flex flex-col">
-          {% render 'btn', href: '/account', style: 'blue', copy: 'account.account-area.back-to-account', width: 'large', additional_class: 'flex mb-10 text-sm' %}
+  assign reorder_items = ''
+  for item in order.line_items
+    if item.variant_id != blank and item.quantity > 0
+      if reorder_items != ''
+        assign reorder_items = reorder_items | append: ','
+      endif
+      assign reorder_items = reorder_items | append: '{"id":' | append: item.variant_id | append: ',"quantity":' | append: item.quantity | append: '}'
+    endif
+  endfor
+  assign order_reorder_json = '[' | append: reorder_items | append: ']'
 
-          {%- if order.cancelled -%}
-          {%- assign cancelled_at = order.cancelled_at | time_tag: format: "%d/%m/%Y" -%}
-            <div class="py-5">
-              <p class="text-dark-blue font-walsheim-bold text-xl mb-5">
-                {{ 'account.order.cancelled_html' | t }}
-              </p>
-              <p class="text-dark-blue font-walsheim text-sm">
-                {{ 'account.order.cancelled_reason' | t }}: 
-                <span class="ml-2 font-walsheim-bold underline">
-                  {{ order.cancel_reason_label }}
-                </span>
-              </p>
-            </div>
+  assign tracking_url = ''
+  for item in order.line_items
+    if tracking_url == '' and item.fulfillment.tracking_url != blank
+      assign tracking_url = item.fulfillment.tracking_url
+    endif
+  endfor
+-%}
+
+<div class="pl pl-account">
+  <div class="pl-wrap pl-acct">
+
+    <aside class="pl-acct__rail pl-hide-m">
+      <nav class="pl-card pl-acct-nav" aria-label="Account">
+        <a href="{{ routes.account_url }}" class="pl-acct-nav__a">Overview</a>
+        <a href="{{ routes.account_url }}#orders" class="pl-acct-nav__a is-on" aria-current="page">Orders {% render 'pl-icon', name: 'chev-right', size: 16, stroke: 2.2 %}</a>
+        <a href="{{ routes.account_url }}#subscription" class="pl-acct-nav__a">Subscription</a>
+        <a href="{{ routes.account_url }}#rewards" class="pl-acct-nav__a">Rewards</a>
+        <a href="/pages/wishlist" class="pl-acct-nav__a">Saved flavours</a>
+        <a href="{{ routes.account_addresses_url }}" class="pl-acct-nav__a">Addresses</a>
+        <a href="{{ routes.account_url }}#details" class="pl-acct-nav__a">Your details</a>
+        <a href="{{ routes.account_url }}#alerts" class="pl-acct-nav__a">Alerts</a>
+        <a href="{{ routes.account_logout_url }}" class="pl-acct-nav__a pl-acct-nav__a--out">Sign out</a>
+      </nav>
+    </aside>
+
+    <div class="pl-acct__main">
+      <a href="{{ routes.account_url }}#orders" class="pl-acct__back">{% render 'pl-icon', name: 'chev-left', size: 16, stroke: 2.2 %} Back to account</a>
+
+      <header class="pl-acct__head pl-acct__head--row">
+        <div class="pl-col pl-gap1">
+          <h1 class="pl-h pl-acct__title">Order {{ order.name }}</h1>
+          <p class="pl-body pl-mute">Placed {{ order.created_at | date: '%d %b %Y' }} · {{ order.item_count }} {% if order.item_count == 1 %}item{% else %}items{% endif %}</p>
+        </div>
+        <div class="pl-row">
+          <span class="pl-tag {{ o_status_cls }}">{{ o_status }}</span>
+          {%- if order.financial_status != 'paid' and order.financial_status_label != blank -%}
+            <span class="pl-tag pl-tag--mute">{{ order.financial_status_label }}</span>
           {%- endif -%}
-          <div class="lg:flex lg:items-start">
-            <div class="flex flex-col | lg:w-3/4 lg:mr-3">
-              {% comment %} order details {% endcomment %}
-              <div class="lg:bg-[#F8F8F8] lg:pt-7 lg:pl-7 lg:pr-14 lg:pb-8">
-                <h2 class="text-dark-blue font-walsheim-bold text-sm mb-10">
-                  {{ 'account.order.products' | t }}
-                </h2>
-          
-                <div class="order_items_container flex flex-row items-start overflow-x-auto | lg:overflow-x-hidden lg:flex-wrap lg:bg-white lg:pt-10 lg:px-6">
-                  {% comment %} items {% endcomment %}
-                  {% for line_item in order.line_items %}
-                    <div class="flex flex-col justify-between flex-170px m-3 | lg:flex-auto lg:max-w-[180px]">
-                      <div class=" aspec">
-                        {% render 'img', type: 'img', img: line_item.image, class: 'object-contain aspect-square w-full max-w-[180px] border border-black border-opacity-50 p-3' %}
-                      </div>
-                      <div class="mt-10 pt-9 pb-12 border-t border-black border-opacity-25 flex flex-col">
-                        <h3 class="text-dark-blue text-xs font-walsheim-bold">{{ line_item.title }}</h3>
-                        <p class="text-xs text-dark-blue font-walsheim-medium mt-2">{{ 'account.order.item' | t }}: {{ line_item.id }}</p>
-                        <p class="text-xs text-dark-blue font-walsheim-medium mt-2">{{ 'account.order.price' | t }}: {{ line_item.price | money }}</p>
-                      </div>
-                    </div>
-                  {% endfor %}
-                </div>
-              </div>
-              {% comment %} order information {% endcomment %}
-              <div class="border-t border-black border-opacity-25 mt-8 pt-5">
-                <div>
-                  <h2 class="text-sm text-dark-blue font-walsheim-bold mb-9">{{ 'account.order.order-information-title' | t }}</h2>
-                  <div class="flex flex-col">
-                    <p class="text-xs font-walsheim text-dark-blue flex items-center">
-                      {{ 'account.order.order-number' | t }}:
-                      <span class="ml-2">
-                        {{ order.order_number }}
-                      </span>
-                    </p>
-                    <p class="text-xs font-walsheim text-dark-blue flex items-center mt-2">
-                      {{ 'account.order.order-status' | t }}:
-                      <span class="ml-2">
-                        {{ order.fulfillment_status_label }}
-                      </span>
-                    </p>
-                    <p class="text-xs font-walsheim text-dark-blue flex items-center mt-2">
-                      {{ 'account.order.date-ordered' | t }}:
-                      <span class="ml-2">
-                        {{ order.created_at | date: "%m %b %Y" }}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {% comment %} addresses / payment method {% endcomment %}
-              <div class="border-t border-black border-opacity-25 mt-6 pt-8">
-                <div class="grid grid-cols-2 | lg:grid-cols-3">
-                  <div class="">
-                    <h3 class="text-dark-blue font-walsheim mb-4 text-xs">{{ 'account.order.billing-address' | t }}</h3>
-                    <div class="text-xs text-dark-blue font-walsheim">
-                      {{ order.billing_address | format_address }}
-                    </div>
-                  </div>
-                  <div class="ml-5"> 
-                    <h3 class="text-dark-blue font-walsheim mb-4 text-xs">{{ 'account.order.delivery-address' | t }}</h3>
-                    <div class="text-xs text-dark-blue font-walsheim">
-                      {{ order.shipping_address | format_address }}
-                    </div>
-                  </div>
-                  {% if order.payment_details != blank %}
-                    <div class="ml-5">
-                      <h3 class="text-dark-blue font-walsheim mb-4 text-xs">{{ 'account.order.payment-method' | t }}</h3>
-                      <p class="text-xs text-dark-blue font-walsheim">{{ order.payment_details.credit_card_company }}</p>
-                      <p class="text-xs text-dark-blue font-walsheim">{{ 'account.order.amount' | t }}: {{ order.total_price | money }}</p>
-                    </div>
-                  {% endif %}
-                </div>
-                {% if order.payment_gateway_names  %}
-                  <div class="mt-5 ml-5">
-                    <h3 class="text-dark-blue font-walsheim text-xs mb-4">{{ 'account.order.delivery-method' | t }}</h3>
-                    <div class="text-dark-blue font-walsheim text-xs">
-                      {{ order.payment_gateway_names }}
-                    </div>
-                  </div>
-                {% endif %}
-              </div>
-            </div>
-            {% comment %} order total desktop {% endcomment %}
-            <div class="bg-[#F8F8F8] px-6 py-16 hidden | lg:ml-3 lg:block lg:w-1/4">
-              <h3 class="font-walsheim text-dark-blue text-xs mb-4 pb-9 border-b border-black border-opacity-25">{{ 'account.order.order-total' | t }}</h3>
-              <div class="font-walsheim text-dark-blue text-xs flex flex-col mb-3 border-b border-black border-opacity-25 pb-3">
-                <p class="w-full flex items-center justify-between">
-                  {{ 'account.order.subtotal' | t }}:
-                  <span>{{ order.subtotal_price | money }}</span>
-                </p>
-                <p class="w-full flex items-center justify-between mt-1">
-                  {{ 'account.order.discounts' | t }}:
-                  <span>{{ order.total_discounts | money  }}</span>
-                </p>
-                <p class="w-full flex items-center justify-between mt-1">
-                  {{ 'account.order.shipping' | t }}:
-                  <span>{{ order.shipping_price | money }}</span>
-                </p>
-                {% if order.total_tax %}
-                  <p class="w-full flex items-center justify-between mt-1">
-                    {{ 'account.order.vat' | t }}: 
-                    <span>{{ order.total_tax | money }}</span>
-                  </p>
-                {% endif %}
-              </div>
-              <p class="font-walsheim text-xs text-dark-blue w-full flex justify-between items-center">
-                {{ 'account.order.order-total' | t }}:
-                <span>{{ order.total_price | money }}</span>
-              </p>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
+      </header>
 
-    {% comment %} order total mobile {% endcomment %}
-    <div class="bg-white px-4 py-7 | lg:hidden">
-      <div class="bg-[#F8F8F8] px-6 py-16">
-        <h3 class="font-walsheim text-dark-blue text-xs mb-4 pb-9 border-b border-black border-opacity-25">{{ 'account.order.order-total' | t }}</h3>
-        <div class="font-walsheim text-dark-blue text-xs flex flex-col mb-3 border-b border-black border-opacity-25 pb-3">
-          <p class="w-full flex items-center justify-between mt-1">
-            {{ 'account.order.subtotal' | t }}:
-            <span>{{ order.subtotal_price | money }}</span>
-          </p>
-          <p class="w-full flex items-center justify-between mt-1">
-            {{ 'account.order.discounts' | t }}:
-            <span>{{ order.total_discounts | money  }}</span>
-          </p>
-          <p class="w-full flex items-center justify-between mt-1">
-            {{ 'account.order.shipping' | t }}:
-            <span>{{ order.shipping_price | money }}</span>
-          </p>
-          {% if order.total_tax %}
-            <p class="w-full flex items-center justify-between mt-1">
-              {{ 'account.order.vat' | t }}: 
-              <span>{{ order.total_tax | money }}</span>
-            </p>
-          {% endif %}
+      {%- if order.cancelled -%}
+        <div class="pl-card pl-card--flat pl-order__notice">
+          <p class="pl-b">This order was cancelled on {{ order.cancelled_at | date: '%d %b %Y' }}.</p>
+          {%- if order.cancel_reason_label != blank -%}<p class="pl-small pl-mute">Reason: {{ order.cancel_reason_label }}</p>{%- endif -%}
         </div>
-        <p class="font-walsheim text-xs text-dark-blue w-full flex justify-between items-center">
-          {{ 'account.order.order-total' | t }}:
-          <span>{{ order.total_price | money }}</span>
-        </p>
+      {%- endif -%}
+
+      <div class="pl-order">
+        <section class="pl-card pl-acct-card" aria-labelledby="pl-order-items-h">
+          <div class="pl-acct-card__head pl-acct-card__head--between">
+            <h2 class="pl-h--4" id="pl-order-items-h">Items</h2>
+            {%- if tracking_url != '' -%}
+              <a href="{{ tracking_url }}" class="pl-small pl-b" target="_blank" rel="noopener">Track delivery</a>
+            {%- elsif order.order_status_url != blank -%}
+              <a href="{{ order.order_status_url }}" class="pl-small pl-b">Track order</a>
+            {%- endif -%}
+          </div>
+          <ul class="pl-order__list" role="list">
+            {%- for item in order.line_items -%}
+              <li class="pl-order__item">
+                <div class="pl-order__img">
+                  {%- if item.image -%}
+                    {%- assign item_alt = item.title | escape -%}
+                    {{ item.image | image_url: width: 128 | image_tag: loading: 'lazy', widths: '64, 128', sizes: '64px', alt: item_alt }}
+                  {%- else -%}
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  {%- endif -%}
+                </div>
+                <div class="pl-order__meta">
+                  <p class="pl-b">
+                    {%- if item.product -%}<a href="{{ item.product.url }}">{{ item.product.title }}</a>{%- else -%}{{ item.title }}{%- endif -%}
+                  </p>
+                  {%- if item.variant.title != blank and item.variant.title != 'Default Title' -%}
+                    <p class="pl-small pl-mute">{{ item.variant.title }}</p>
+                  {%- endif -%}
+                  {%- if item.selling_plan_allocation -%}
+                    <span class="pl-tag pl-tag--yellow">{{ item.selling_plan_allocation.selling_plan.name }}</span>
+                  {%- endif -%}
+                  <p class="pl-small pl-mute">{{ item.quantity }} × {{ item.final_price | money_without_trailing_zeros }}</p>
+                  {%- if item.fulfillment.tracking_number != blank -%}
+                    <p class="pl-tiny pl-mute">Tracking {{ item.fulfillment.tracking_number }}</p>
+                  {%- endif -%}
+                </div>
+                <p class="pl-order__line">{{ item.final_line_price | money_without_trailing_zeros }}</p>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </section>
+
+        <aside class="pl-order__side">
+          <section class="pl-card pl-acct-card" aria-labelledby="pl-order-sum-h">
+            <h2 class="pl-h--4" id="pl-order-sum-h">Summary</h2>
+            <div class="pl-sum">
+              <div class="pl-sum__row"><span class="pl-mute">Subtotal</span><span>{{ order.subtotal_price | money_without_trailing_zeros }}</span></div>
+              {%- for d in order.discount_applications -%}
+                <div class="pl-sum__row"><span class="pl-mute">{{ d.title | default: 'Discount' }}</span><span class="pl-green">− {{ d.total_allocated_amount | money_without_trailing_zeros }}</span></div>
+              {%- endfor -%}
+              <div class="pl-sum__row"><span class="pl-mute">Delivery</span><span>{% if order.shipping_price > 0 %}{{ order.shipping_price | money_without_trailing_zeros }}{% else %}Free{% endif %}</span></div>
+              {%- if order.total_tax > 0 -%}
+                <div class="pl-sum__row"><span class="pl-mute">VAT</span><span>{{ order.total_tax | money_without_trailing_zeros }}</span></div>
+              {%- endif -%}
+              <div class="pl-sum__row pl-sum__row--total"><span>Total</span><span>{{ order.total_price | money_without_trailing_zeros }}</span></div>
+            </div>
+            {%- if reorder_items != '' -%}
+              <div class="pl-acct-card__actions">
+                <button type="button" class="pl-btn pl-btn--md" data-plaay-reorder='{{ order_reorder_json | strip }}'><span data-label>Reorder</span></button>
+              </div>
+            {%- endif -%}
+          </section>
+
+          <section class="pl-card pl-acct-card" aria-labelledby="pl-order-addr-h">
+            <h2 class="pl-h--4" id="pl-order-addr-h">Delivery and payment</h2>
+            <div class="pl-order__addr">
+              <div>
+                <p class="pl-label">Delivery address</p>
+                {%- if order.shipping_address -%}{{ order.shipping_address | format_address }}{%- else -%}<p class="pl-mute">Not needed</p>{%- endif -%}
+              </div>
+              <div>
+                <p class="pl-label">Billing address</p>
+                {%- if order.billing_address -%}{{ order.billing_address | format_address }}{%- else -%}<p class="pl-mute">Same as delivery</p>{%- endif -%}
+              </div>
+              {%- if order.shipping_methods.size > 0 -%}
+                <div>
+                  <p class="pl-label">Delivery method</p>
+                  {%- for m in order.shipping_methods -%}<p>{{ m.title }}</p>{%- endfor -%}
+                </div>
+              {%- endif -%}
+              {%- if order.payment_details.credit_card_company != blank -%}
+                <div>
+                  <p class="pl-label">Payment</p>
+                  <p>{{ order.payment_details.credit_card_company }}{% if order.payment_details.credit_card_last_four_digits != blank %} ending {{ order.payment_details.credit_card_last_four_digits }}{% endif %}</p>
+                </div>
+              {%- endif -%}
+            </div>
+          </section>
+        </aside>
       </div>
     </div>
   </div>
 </div>
 
 {% schema %}
-  {
-    "name": "Order",
-    "settings": [
-      {
-        "type": "color",
-        "id": "background_color",
-        "label": "Background color (header)",
-        "default": "#F5C08D"
-      }, {
-        "type": "color",
-        "id": "background_color_main",
-        "label": "Background color (main)",
-        "default": "#F4F4F4"
-      }, {
-        "id": "show_users_name",
-        "type": "checkbox",
-        "label": "Show users name?",
-        "default": true
-      }
-    ]
-  }
+{
+  "name": "Order",
+  "settings": []
+}
 {% endschema %}

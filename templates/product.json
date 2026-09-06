@@ -1,0 +1,110 @@
+{
+  "sections": {
+    "main": {
+      "type": "pl-product",
+      "settings": {
+        "kind": "auto",
+        "upsell_line": "",
+        "show_video": true
+      }
+    },
+    "video": {
+      "type": "pl-video-row",
+      "blocks": {
+        "reel_1": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-truffle-macro.jpg",
+            "caption": "Inside a truffle",
+            "video": "",
+            "link": ""
+          }
+        },
+        "reel_2": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-green-tubes.jpg",
+            "caption": "The whole truffle range",
+            "video": "",
+            "link": ""
+          }
+        },
+        "reel_3": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-apartment.jpg",
+            "caption": "The 3:30 pm reset",
+            "video": "",
+            "link": ""
+          }
+        },
+        "reel_4": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-stack-pour.jpg",
+            "caption": "How the pour happens",
+            "video": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "reel_1",
+        "reel_2",
+        "reel_3",
+        "reel_4"
+      ],
+      "settings": {
+        "heading": "See it in real life",
+        "sub": "Plaayers on camera. Tap to watch.",
+        "sub_desktop": "Plaayers on camera. Hover plays silently, click for sound.",
+        "link_label": "More on Instagram",
+        "link_url": "https://www.instagram.com/shopplaay",
+        "bg": "ground"
+      }
+    },
+    "apps_6td8dD": {
+      "type": "apps",
+      "blocks": {
+        "reelfy_videos_reelfy_section_bQp6qF": {
+          "type": "shopify://apps/reelfy-videos/blocks/reelfy-section/4022ffb0-05c3-4ef3-a409-6df51f4b1b3f",
+          "settings": {
+            "gallery_id": 18785,
+            "title": "",
+            "subtitle": "",
+            "heading_size": "1",
+            "heading_align": "center",
+            "heading_color": "",
+            "desc_style": "subtitle",
+            "desc_color": "",
+            "custom_class": "",
+            "background_color": "",
+            "padding_top": 0,
+            "padding_bottom": 0,
+            "padding_left_right": 0
+          }
+        }
+      },
+      "block_order": [
+        "reelfy_videos_reelfy_section_bQp6qF"
+      ],
+      "settings": {
+        "include_margins": true
+      }
+    },
+    "recommendations": {
+      "type": "pl-recommendations",
+      "settings": {
+        "heading": "You might also like",
+        "link_label": "Shop all",
+        "link_url": "/collections/shop-all"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "video",
+    "apps_6td8dD",
+    "recommendations"
+  ]
+}

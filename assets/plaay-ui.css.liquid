@@ -329,9 +329,8 @@
 @keyframes pl-skel { 0% { background-position: 100% 50%; } 100% { background-position: 0 50%; } }
 
 /* ---------- utilities ---------- */
-.pl-hide-m { display: none; }
-.pl-hide-d { display: block; }
-@media (min-width: 1024px) { .pl-hide-m { display: block; } .pl-hide-d { display: none; } }
+@media (max-width: 1023.98px) { .pl .pl-hide-m, .pl-hide-m { display: none !important; } }
+@media (min-width: 1024px) { .pl .pl-hide-d, .pl-hide-d { display: none !important; } }
 .pl-mt1 { margin-top: var(--pl-s1); } .pl-mt2 { margin-top: var(--pl-s2); } .pl-mt3 { margin-top: var(--pl-s3); } .pl-mt4 { margin-top: var(--pl-s4); } .pl-mt6 { margin-top: var(--pl-s6); }
 .pl-gap1 { gap: var(--pl-s1); } .pl-gap2 { gap: var(--pl-s2); } .pl-gap3 { gap: var(--pl-s3); } .pl-gap4 { gap: var(--pl-s4); } .pl-gap6 { gap: var(--pl-s6); }
 .pl-flex1 { flex: 1; min-width: 0; }

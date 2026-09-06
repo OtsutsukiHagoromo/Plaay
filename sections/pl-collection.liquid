@@ -1,0 +1,346 @@
+{%- comment -%}
+  Plaay 2026 collection grid. Used by every collection template and by list-collections.json
+  (which has no collection object, so the section setting "collection" points it at shop-all).
+  Filters are the standard Shopify Search & Discovery filters (collection.filters) rendered as a
+  GET form: a bottom sheet on mobile, a left rail on desktop. Sort is its own GET form so the two
+  never fight over sort_by. Load more is a plain link to paginate.next.url that pl-collection.js
+  enhances with a section_id fetch; the numbered pagination stays as the no-JS fallback.
+{%- endcomment -%}
+{{ 'pl-collection.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign col = collection
+  if section.settings.collection != blank
+    assign col = section.settings.collection
+  endif
+  if col == blank
+    assign col = collections['shop-all']
+  endif
+
+  assign per_page = section.settings.per_page | default: 24
+  assign show_sub = section.settings.show_sub_card
+  assign form_id = 'pl-filters-' | append: section.id
+
+  assign title = col.title
+  if template.name == 'list-collections'
+    assign title = 'Shop all'
+  endif
+
+  assign intro = ''
+  if section.settings.intro != blank
+    assign intro = section.settings.intro
+  elsif col.description != blank
+    assign intro = col.description | strip_html | strip | truncatewords: 40
+  endif
+
+  assign has_filters = false
+  if col.filters.size > 0
+    assign has_filters = true
+  endif
+
+  assign active_count = 0
+  for f in col.filters
+    if f.type == 'price_range'
+      if f.min_value.value != blank or f.max_value.value != blank
+        assign active_count = active_count | plus: 1
+      endif
+    else
+      assign active_count = active_count | plus: f.active_values.size
+    endif
+  endfor
+
+  assign current_sort = col.sort_by | default: col.default_sort_by
+
+  assign chip_labels = 'All|Bars|Truffles|Slabs|Variety packs|Limited' | split: '|'
+  assign chip_handles = 'shop-all|chocolate-bars|chocolate-truffles|new-chocolate-slabs|variety-packs|limited-editions' | split: '|'
+-%}
+<div class="pl pl-coll" data-pl-collection data-section-id="{{ section.id }}">
+  <div class="pl-wrap">
+
+    <header class="pl-coll__head">
+      <h1 class="pl-h pl-h--1">{{ title }}</h1>
+      {%- if intro != blank -%}
+        <p class="pl-coll__intro pl-body--lg pl-mute">{{ intro }}</p>
+      {%- endif -%}
+      {%- if col != blank -%}
+        <p class="pl-label">{{ col.products_count }} {% if col.products_count == 1 %}product{% else %}products{% endif %}</p>
+      {%- endif -%}
+    </header>
+
+    {%- if section.settings.show_type_chips -%}
+      <nav class="pl-coll__types" aria-label="Shop by type">
+        <div class="pl-pills pl-scroll">
+          {%- for h in chip_handles -%}
+            {%- assign i = forloop.index0 -%}
+            <a class="pl-pill" href="{{ routes.collections_url }}/{{ h }}"{% if col.handle == h %} aria-pressed="true" aria-current="page"{% else %} aria-pressed="false"{% endif %}>{{ chip_labels[i] }}</a>
+          {%- endfor -%}
+        </div>
+      </nav>
+    {%- endif -%}
+
+    {%- if has_filters or col.sort_options.size > 0 -%}
+      <div class="pl-coll__bar">
+        {%- if has_filters -%}
+          <button type="button" class="pl-coll__filterbtn" data-pl-filter-open aria-controls="{{ form_id }}-rail" aria-expanded="false">
+            {%- render 'pl-icon', name: 'filter', size: 18, stroke: 2 -%}
+            <span>Filter</span>
+            {%- if active_count > 0 -%}<span class="pl-coll__n">{{ active_count }}</span>{%- endif -%}
+          </button>
+        {%- endif -%}
+
+        {%- if col.sort_options.size > 0 -%}
+          <form class="pl-coll__sort" method="get" action="{{ col.url }}" data-pl-sort-form>
+            {%- for f in col.filters -%}
+              {%- if f.type == 'price_range' -%}
+                {%- if f.min_value.value != blank -%}
+                  <input type="hidden" name="{{ f.min_value.param_name }}" value="{{ f.min_value.value | money_without_currency | replace: ',', '' }}">
+                {%- endif -%}
+                {%- if f.max_value.value != blank -%}
+                  <input type="hidden" name="{{ f.max_value.param_name }}" value="{{ f.max_value.value | money_without_currency | replace: ',', '' }}">
+                {%- endif -%}
+              {%- else -%}
+                {%- for v in f.active_values -%}
+                  <input type="hidden" name="{{ v.param_name }}" value="{{ v.value | escape }}">
+                {%- endfor -%}
+              {%- endif -%}
+            {%- endfor -%}
+            <label class="pl-coll__sortlabel" for="{{ form_id }}-sort">Sort</label>
+            <select id="{{ form_id }}-sort" name="sort_by" class="pl-select" data-pl-sort>
+              {%- for option in col.sort_options -%}
+                <option value="{{ option.value | escape }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name | escape }}</option>
+              {%- endfor -%}
+            </select>
+            <noscript><button type="submit" class="pl-btn pl-btn--ghost pl-btn--sm">Go</button></noscript>
+          </form>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if active_count > 0 -%}
+      <div class="pl-coll__active" aria-label="Active filters">
+        {%- for f in col.filters -%}
+          {%- if f.type == 'price_range' -%}
+            {%- if f.min_value.value != blank or f.max_value.value != blank -%}
+              <a class="pl-pill" href="{{ f.url_to_remove }}">
+                {{ f.label | escape }}:
+                {% if f.min_value.value != blank %}{{ f.min_value.value | money_without_trailing_zeros }}{% else %}{{ 0 | money_without_trailing_zeros }}{% endif %}
+                &ndash;
+                {% if f.max_value.value != blank %}{{ f.max_value.value | money_without_trailing_zeros }}{% else %}{{ f.range_max | money_without_trailing_zeros }}{% endif %}
+                {%- render 'pl-icon', name: 'close', size: 14, stroke: 2.2 -%}
+                <span class="pl-vh">Remove</span>
+              </a>
+            {%- endif -%}
+          {%- else -%}
+            {%- for v in f.active_values -%}
+              <a class="pl-pill" href="{{ v.url_to_remove }}">
+                {{ v.label | escape }}
+                {%- render 'pl-icon', name: 'close', size: 14, stroke: 2.2 -%}
+                <span class="pl-vh">Remove</span>
+              </a>
+            {%- endfor -%}
+          {%- endif -%}
+        {%- endfor -%}
+        <a class="pl-btn pl-btn--link pl-small" href="{{ col.url }}">Clear all</a>
+      </div>
+    {%- endif -%}
+
+    <div class="pl-coll__layout{% if has_filters %} has-rail{% endif %}">
+
+      {%- if has_filters -%}
+        <div class="pl-coll__overlay" data-pl-overlay></div>
+        <aside class="pl-coll__rail" id="{{ form_id }}-rail" data-pl-rail aria-label="Filters">
+          <form id="{{ form_id }}" method="get" action="{{ col.url }}" data-pl-filter-form>
+            {%- if col.sort_by != blank -%}
+              <input type="hidden" name="sort_by" value="{{ col.sort_by | escape }}">
+            {%- endif -%}
+            <div class="pl-coll__railhead">
+              <h2 class="pl-h pl-h--3">Filter</h2>
+              <button type="button" class="pl-iconbtn pl-iconbtn--ghost pl-coll__close" data-pl-filter-close aria-label="Close filters">
+                {%- render 'pl-icon', name: 'close', size: 22, stroke: 2 -%}
+              </button>
+            </div>
+            <div class="pl-coll__railbody">
+              {%- for f in col.filters -%}
+                {%- liquid
+                  assign f_active = f.active_values.size
+                  if f.type == 'price_range'
+                    assign f_active = 0
+                    if f.min_value.value != blank or f.max_value.value != blank
+                      assign f_active = 1
+                    endif
+                  endif
+                  assign f_id = form_id | append: '-' | append: f.param_name | handleize
+                -%}
+                <details class="pl-acc pl-coll__group" open>
+                  <summary>
+                    <span class="pl-acc__t">{{ f.label | escape }}{% if f_active > 0 %} <span class="pl-coll__n">{{ f_active }}</span>{% endif %}</span>
+                    {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
+                  </summary>
+                  <div class="pl-acc__body">
+                    {%- case f.type -%}
+                      {%- when 'price_range' -%}
+                        {%- assign range_max = f.range_max | money_without_currency | replace: ',', '' -%}
+                        <div class="pl-coll__price">
+                          <label class="pl-vh" for="{{ f_id }}-gte">Minimum price</label>
+                          <input class="pl-input" type="number" inputmode="decimal" min="0" max="{{ range_max }}" placeholder="0" id="{{ f_id }}-gte" name="{{ f.min_value.param_name }}"{% if f.min_value.value != blank %} value="{{ f.min_value.value | money_without_currency | replace: ',', '' }}"{% endif %}>
+                          <span class="pl-small pl-mute">to</span>
+                          <label class="pl-vh" for="{{ f_id }}-lte">Maximum price</label>
+                          <input class="pl-input" type="number" inputmode="decimal" min="0" max="{{ range_max }}" placeholder="{{ range_max }}" id="{{ f_id }}-lte" name="{{ f.max_value.param_name }}"{% if f.max_value.value != blank %} value="{{ f.max_value.value | money_without_currency | replace: ',', '' }}"{% endif %}>
+                        </div>
+                      {%- else -%}
+                        <ul class="pl-coll__opts">
+                          {%- for v in f.values -%}
+                            {%- assign v_off = false -%}
+                            {%- if v.count == 0 and v.active == false -%}{%- assign v_off = true -%}{%- endif -%}
+                            <li>
+                              <label class="pl-coll__opt{% if v_off %} is-off{% endif %}">
+                                <input type="checkbox" name="{{ v.param_name }}" value="{{ v.value | escape }}"{% if v.active %} checked{% endif %}{% if v_off %} disabled{% endif %}>
+                                <span class="pl-coll__optlabel">{{ v.label | escape }}</span>
+                                <span class="pl-coll__optcount">{{ v.count }}</span>
+                              </label>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                    {%- endcase -%}
+                  </div>
+                </details>
+              {%- endfor -%}
+            </div>
+            <div class="pl-coll__railfoot">
+              <a class="pl-btn pl-btn--ghost pl-btn--md" href="{{ col.url }}">Clear all</a>
+              <button type="submit" class="pl-btn pl-btn--md pl-flex1">Apply</button>
+            </div>
+          </form>
+        </aside>
+      {%- endif -%}
+
+      <div class="pl-coll__main">
+        {%- if col != blank -%}
+          {%- paginate col.products by per_page -%}
+            {%- if paginate.items > 0 -%}
+              <div class="pl-coll__grid" data-pl-grid>
+                {%- for product in col.products -%}
+                  {%- unless product.tags contains 'Hide' -%}
+                    {%- liquid
+                      assign eager = false
+                      if forloop.index <= 4
+                        assign eager = true
+                      endif
+                    -%}
+                    {%- render 'pl-tile', product: product, eager: eager -%}
+                  {%- endunless -%}
+                  {%- liquid
+                    assign put_sub = false
+                    if show_sub and paginate.current_page == 1
+                      if forloop.index == 4
+                        assign put_sub = true
+                      elsif forloop.last and forloop.index < 4
+                        assign put_sub = true
+                      endif
+                    endif
+                  -%}
+                  {%- if put_sub -%}
+                    <aside class="pl-coll__sub pl-card pl-card--cream" data-pl-sub>
+                      <div class="pl-coll__subtext">
+                        <span class="pl-eyebrow">Subscribe &amp; Save</span>
+                        <h2 class="pl-h pl-h--3">Build your box</h2>
+                        <p class="pl-body pl-mute">Every 4 weeks. Free shipping. Skip or cancel anytime.</p>
+                      </div>
+                      <a class="pl-btn pl-btn--navy-y" href="/pages/subscribe-save">Subscribe &amp; Save</a>
+                    </aside>
+                  {%- endif -%}
+                {%- endfor -%}
+              </div>
+
+              {%- assign shown = paginate.current_offset | plus: paginate.page_size | at_most: paginate.items -%}
+              {%- assign cur_page = paginate.current_page | append: '' -%}
+              <div class="pl-coll__foot">
+                <p class="pl-small pl-mute" data-pl-count aria-live="polite">Showing {{ shown }} of {{ paginate.items }}</p>
+                {%- if paginate.next -%}
+                  <a class="pl-btn pl-btn--ghost pl-coll__more" href="{{ paginate.next.url }}" rel="next" data-pl-more>Load more</a>
+                {%- endif -%}
+                {%- if paginate.pages > 1 -%}
+                  <nav class="pl-coll__pages" data-pl-pages aria-label="Pages">
+                    {%- if paginate.previous -%}
+                      <a class="pl-coll__page" href="{{ paginate.previous.url }}" rel="prev" aria-label="Previous page">{% render 'pl-icon', name: 'chev-left', size: 16, stroke: 2.2 %}</a>
+                    {%- endif -%}
+                    {%- for part in paginate.parts -%}
+                      {%- if part.is_link -%}
+                        <a class="pl-coll__page" href="{{ part.url }}">{{ part.title }}</a>
+                      {%- elsif part.title == cur_page -%}
+                        <span class="pl-coll__page is-on" aria-current="page">{{ part.title }}</span>
+                      {%- else -%}
+                        <span class="pl-coll__page pl-coll__page--gap">{{ part.title }}</span>
+                      {%- endif -%}
+                    {%- endfor -%}
+                    {%- if paginate.next -%}
+                      <a class="pl-coll__page" href="{{ paginate.next.url }}" rel="next" aria-label="Next page">{% render 'pl-icon', name: 'chev-right', size: 16, stroke: 2.2 %}</a>
+                    {%- endif -%}
+                  </nav>
+                {%- endif -%}
+              </div>
+            {%- else -%}
+              <div class="pl-coll__empty">
+                <p class="pl-h pl-h--3">Nothing here yet.</p>
+                <div class="pl-row pl-row--center pl-mt4">
+                  {%- if active_count > 0 -%}
+                    <a class="pl-btn pl-btn--ghost pl-btn--md" href="{{ col.url }}">Clear filters</a>
+                  {%- endif -%}
+                  <a class="pl-btn pl-btn--md" href="{{ routes.collections_url }}/shop-all">Shop all</a>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endpaginate -%}
+        {%- else -%}
+          <div class="pl-coll__empty">
+            <p class="pl-h pl-h--3">Nothing here yet.</p>
+            <div class="pl-row pl-row--center pl-mt4">
+              <a class="pl-btn pl-btn--md" href="{{ routes.collections_url }}/shop-all">Shop all</a>
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{{ 'pl-collection.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Plaay collection",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "info": "Leave empty to use the page's own collection. On the /collections page set it to Shop all."
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro",
+      "info": "Shown under the title. Leave empty to use the collection description."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_type_chips",
+      "label": "Show type chips (All, Bars, Truffles, Slabs, Variety packs, Limited)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sub_card",
+      "label": "Show the Subscribe & Save card after the fourth product",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Products per page",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    }
+  ]
+}
+{% endschema %}

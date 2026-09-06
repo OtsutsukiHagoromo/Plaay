@@ -1,0 +1,124 @@
+{%- comment -%}
+  Plaay 2026 — store-wide rating + three quote cards.
+  Rating and count: shop.metafields.judgeme.all_reviews_rating / all_reviews_count,
+  falling back to theme settings store_rating_value / store_rating_count.
+  Blocks "quote": quote, name, product, tag, rating. Scroll row on mobile, 3 columns on desktop.
+{%- endcomment -%}
+{{ 'pl-home.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  assign rating = shop.metafields.judgeme.all_reviews_rating | append: '' | times: 1.0
+  assign count = shop.metafields.judgeme.all_reviews_count | append: '' | plus: 0
+  if rating <= 0
+    assign rating = settings.store_rating_value | append: '' | times: 1.0
+  endif
+  if count <= 0
+    assign count = settings.store_rating_count | append: '' | plus: 0
+  endif
+  assign rating = rating | round: 1
+  if rating > 5
+    assign rating = 5.0
+  endif
+  assign full = rating | floor
+  assign next = full | plus: 1
+  assign frac = rating | minus: full | times: 100 | round
+  assign show_rating = false
+  if rating > 0
+    assign show_rating = true
+  endif
+-%}
+{%- if show_rating or section.blocks.size > 0 -%}
+<div class="pl pl-section pl-reviews" id="pl-{{ section.id }}">
+  <div class="pl-wrap">
+    {%- if show_rating -%}
+      <div class="pl-reviews__head">
+        <span class="pl-reviews__num" aria-hidden="true">{{ rating }}</span>
+        <div class="pl-col pl-gap1">
+          <span class="pl-stars pl-stars--lg" role="img" aria-label="{{ rating }} out of 5 stars">
+            {%- for i in (1..5) -%}
+              {%- if i <= full -%}
+                {%- render 'pl-icon', name: 'star', size: 16 -%}
+              {%- elsif frac > 0 and i == next -%}
+                <span class="pl-reviews__part" style="--pl-frac: {{ frac }}%">{%- render 'pl-icon', name: 'star-empty', size: 16, class: 'is-empty' -%}{%- render 'pl-icon', name: 'star', size: 16 -%}</span>
+              {%- else -%}
+                {%- render 'pl-icon', name: 'star-empty', size: 16, class: 'is-empty' -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </span>
+          {%- if count > 0 and s.sub_suffix != blank -%}
+            <p class="pl-small pl-mute">{{ count }} {{ s.sub_suffix | escape }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+    {%- if section.blocks.size > 0 -%}
+      <div class="pl-scroll pl-reviews__row">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign b = block.settings
+            assign q_rating = b.rating | default: 5
+          -%}
+          {%- if b.quote == blank -%}{%- continue -%}{%- endif -%}
+          <figure class="pl-card pl-reviews__card" {{ block.shopify_attributes }}>
+            <div class="pl-row pl-row--between">
+              <span class="pl-stars" role="img" aria-label="{{ q_rating }} out of 5 stars">
+                {%- for i in (1..5) -%}
+                  {%- if i <= q_rating -%}
+                    {%- render 'pl-icon', name: 'star', size: 13 -%}
+                  {%- else -%}
+                    {%- render 'pl-icon', name: 'star-empty', size: 13, class: 'is-empty' -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              </span>
+              {%- if b.tag != blank -%}<span class="pl-tiny pl-mute">{{ b.tag | escape }}</span>{%- endif -%}
+            </div>
+            <blockquote class="pl-reviews__q">{{ b.quote | escape }}</blockquote>
+            {%- if b.name != blank or b.product != blank -%}
+              <figcaption class="pl-reviews__who">
+                {%- if b.name != blank -%}<span class="pl-b">{{ b.name | escape }}</span>{%- endif -%}
+                {%- if b.name != blank and b.product != blank -%}<span class="pl-mute"> · </span>{%- endif -%}
+                {%- if b.product != blank -%}<span class="pl-mute">{{ b.product | escape }}</span>{%- endif -%}
+              </figcaption>
+            {%- endif -%}
+          </figure>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Plaay reviews",
+  "max_blocks": 6,
+  "settings": [
+    { "type": "paragraph", "content": "The rating and count come from Judge.me (shop metafields), then from Theme settings > Store rating." },
+    { "type": "text", "id": "sub_suffix", "label": "Text after the review count", "default": "reviews across all Plaay products" }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": "Quote",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote" },
+        { "type": "text", "id": "name", "label": "Name" },
+        { "type": "text", "id": "product", "label": "Product (optional)" },
+        { "type": "text", "id": "tag", "label": "Tag", "default": "Verified buyer" },
+        { "type": "range", "id": "rating", "label": "Stars", "min": 1, "max": 5, "step": 1, "default": 5 }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Plaay reviews",
+      "category": "Plaay 2026",
+      "blocks": [
+        { "type": "quote", "settings": { "quote": "My kids love these. Feels good knowing exactly what's in them.", "name": "Omar J." } },
+        { "type": "quote", "settings": { "quote": "Perfect post-gym snack. High protein, genuinely delicious - ordering again.", "name": "Priya S." } },
+        { "type": "quote", "settings": { "quote": "The texture, the flavour, the ingredients - Plaay absolutely nailed it.", "name": "Nadia M." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,561 +1,186 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "4ae9c22c-dd9d-4d0b-bb5c-7da4d20021b3": {
-      "type": "two-sections-hero",
-      "blocks": {
-        "slide_earVyE": {
-          "type": "slide",
-          "settings": {
-            "hide_section_one_mobile": true,
-            "hide_section_two_mobile": false,
-            "title_color_mobile": "#021d49",
-            "title_color_desktop": "#021d49",
-            "heading_color_mobile": "#021d49",
-            "heading_color_desktop": "#021d49",
-            "title_tag_type": "1",
-            "content_vertical_position_mobile": "bottom-0 top-auto",
-            "content_horizontal_position_mobile": "text-center",
-            "content_vertical_position_desktop": "md:bottom-0 md:top-auto",
-            "content_horizontal_position_desktop": "md:text-center",
-            "title_size_desktop": 50,
-            "title_size_mobile": 32,
-            "heading_size_desktop": 34,
-            "heading_size_mobile": 22,
-            "link_one_style": "blue",
-            "link_one_style_mobile": "blue",
-            "link_two_style": "white",
-            "link_two_style_mobile": "blue-border",
-            "section_one_video_loop": true,
-            "section_two_video_loop": true,
-            "title": "",
-            "title_mobile": "",
-            "heading": "",
-            "heading_mobile": "",
-            "link_one": "shopify://collections",
-            "link_one_text": "Shop Now",
-            "link_two": "",
-            "link_two_text": "",
-            "img": "shopify://shop_images/Plaay_Rewards_Desktop_banner.jpg",
-            "m-img": "shopify://shop_images/Plaay_Rewards_Mobile_banner.jpg",
-            "section_one_video": "",
-            "section_two_video": ""
-          }
-        },
-        "slide_BwPeAp": {
-          "type": "slide",
-          "settings": {
-            "hide_section_one_mobile": true,
-            "hide_section_two_mobile": false,
-            "title_color_mobile": "#021d49",
-            "title_color_desktop": "#021d49",
-            "heading_color_mobile": "#021d49",
-            "heading_color_desktop": "#021d49",
-            "title_tag_type": "1",
-            "content_vertical_position_mobile": "bottom-0 top-auto",
-            "content_horizontal_position_mobile": "text-center",
-            "content_vertical_position_desktop": "md:bottom-0 md:top-auto",
-            "content_horizontal_position_desktop": "md:text-center",
-            "title_size_desktop": 50,
-            "title_size_mobile": 32,
-            "heading_size_desktop": 34,
-            "heading_size_mobile": 22,
-            "link_one_style": "blue",
-            "link_one_style_mobile": "blue",
-            "link_two_style": "white",
-            "link_two_style_mobile": "blue-border",
-            "section_one_video_loop": true,
-            "section_two_video_loop": true,
-            "title": "",
-            "title_mobile": "",
-            "heading": "",
-            "heading_mobile": "",
-            "link_one": "shopify://collections",
-            "link_one_text": "Shop Now",
-            "link_two": "",
-            "link_two_text": "",
-            "img": "shopify://shop_images/Website_Banner_Desktop_Version__jpg.jpg",
-            "m-img": "shopify://shop_images/Website_Banner_Mobile_Version_jpg.jpg",
-            "section_one_video": "",
-            "section_two_video": ""
-          }
-        },
-        "slide_YeGDTk": {
-          "type": "slide",
-          "settings": {
-            "hide_section_one_mobile": true,
-            "hide_section_two_mobile": false,
-            "title_color_mobile": "#021d49",
-            "title_color_desktop": "#021d49",
-            "heading_color_mobile": "#021d49",
-            "heading_color_desktop": "#021d49",
-            "title_tag_type": "1",
-            "content_vertical_position_mobile": "bottom-0 top-auto",
-            "content_horizontal_position_mobile": "text-center",
-            "content_vertical_position_desktop": "md:bottom-0 md:top-auto",
-            "content_horizontal_position_desktop": "md:text-center",
-            "title_size_desktop": 50,
-            "title_size_mobile": 32,
-            "heading_size_desktop": 34,
-            "heading_size_mobile": 22,
-            "link_one_style": "blue",
-            "link_one_style_mobile": "blue",
-            "link_two_style": "white",
-            "link_two_style_mobile": "blue-border",
-            "section_one_video_loop": true,
-            "section_two_video_loop": true,
-            "title": "",
-            "title_mobile": "",
-            "heading": "",
-            "heading_mobile": "",
-            "link_one": "https://shopplaay.com/pages/subscribe-save",
-            "link_one_text": "SHOP NOW",
-            "link_two": "",
-            "link_two_text": "",
-            "img": "shopify://shop_images/Website_Banner_Desktop_Version_030ce88d-7628-4cb2-b3b8-c83fcc8e70a1.jpg",
-            "m-img": "shopify://shop_images/Website_Banner_Mobile_Version_d46bbf7d-1e91-4697-865b-ead68fad74ee.jpg",
-            "section_one_video": "",
-            "section_two_video": ""
-          }
-        }
-      },
-      "block_order": [
-        "slide_earVyE",
-        "slide_BwPeAp",
-        "slide_YeGDTk"
-      ],
-      "custom_css": [
-        "video {width: 100%;}",
-        "@media screen and (max-width: 600px) {.two-sections-overlay .btn {font-size: 18px; min-width: 240px; padding: 18px 25px; }}"
-      ],
+    "pl_hero": {
+      "type": "pl-hero",
       "settings": {
-        "autoplay_speed": 700,
-        "height_desktop_large": 640,
-        "height_desktop": 640,
-        "height_tablet": 640,
-        "height_mobile": 640
+        "image_mobile": "shopify://shop_images/plaay26-stack-pour.jpg",
+        "image_desktop": "shopify://shop_images/plaay26-hero-pour.jpg",
+        "eyebrow": "Why Plaay",
+        "heading": "No guilt. All Plaay.",
+        "heading_accent": "All Plaay.",
+        "sub": "Zero refined sugar. 100% clean ingredients. Made in the UAE by a nutritionist.",
+        "btn1_label": "Shop bestsellers",
+        "btn1_url": "/collections/shop-all",
+        "btn2_label": "Build your box",
+        "btn2_url": "/pages/subscribe-save"
       }
     },
-    "marquee_slider_cM4zJb": {
-      "type": "marquee-slider",
+    "pl_claims": {
+      "type": "pl-claims",
       "blocks": {
-        "logo_78Ejr9": {
-          "type": "logo",
+        "claim_sugar": {
+          "type": "claim",
           "settings": {
-            "icon_text": "No Sugar Crash",
-            "com_logo": "shopify://shop_images/five-stars-icon-on-transparent-background-free-png.png"
+            "icon": "sparkle",
+            "label": "No refined sugar"
           }
         },
-        "logo_yaUrRp": {
-          "type": "logo",
+        "claim_clean": {
+          "type": "claim",
           "settings": {
-            "icon_text": "Indulgence, That Hits The Spot",
-            "com_logo": "shopify://shop_images/five-stars-icon-on-transparent-background-free-png.png"
+            "icon": "leaf",
+            "label": "100% clean"
           }
         },
-        "logo_a9cNxQ": {
-          "type": "logo",
+        "claim_nutritionist": {
+          "type": "claim",
           "settings": {
-            "icon_text": "No More Bloating",
-            "com_logo": "shopify://shop_images/five-stars-icon-on-transparent-background-free-png.png"
+            "icon": "heart",
+            "label": "Nutritionist founded"
           }
         },
-        "logo_gz74QP": {
-          "type": "logo",
+        "claim_uae": {
+          "type": "claim",
           "settings": {
-            "icon_text": "Guilt-Free Fix",
-            "com_logo": "shopify://shop_images/five-stars-icon-on-transparent-background-free-png.png"
-          }
-        },
-        "logo_tBQDhz": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "Insanely Satisfying",
-            "com_logo": "shopify://shop_images/five-stars-icon-on-transparent-background-free-png.png"
+            "icon": "pin",
+            "label": "Made in the UAE"
           }
         }
       },
       "block_order": [
-        "logo_78Ejr9",
-        "logo_yaUrRp",
-        "logo_a9cNxQ",
-        "logo_gz74QP",
-        "logo_tBQDhz"
-      ],
-      "custom_css": [
-        ".marquee {padding-block: 1.2rem;}"
+        "claim_sugar",
+        "claim_clean",
+        "claim_nutritionist",
+        "claim_uae"
       ],
       "settings": {
-        "gap": 30,
-        "duration": 20,
-        "background_color": "#021d49"
+        "aria_label": "Why Plaay"
       }
     },
-    "featured_products_wAKHQm": {
-      "type": "featured_products",
-      "blocks": {
-        "product_ypVKmj": {
-          "type": "product",
-          "settings": {
-            "product": "og-plaayer-pack"
-          }
-        },
-        "product_HmwjPK": {
-          "type": "product",
-          "settings": {
-            "product": "70-dark-chocolate-x-6"
-          }
-        },
-        "product_DtTtXE": {
-          "type": "product",
-          "settings": {
-            "product": "triple-chocolate-truffle"
-          }
-        },
-        "product_Kk63rA": {
-          "type": "product",
-          "settings": {
-            "product": "milk-chocolate-with-toffee-almond-x-6"
-          }
-        },
-        "product_RDp3ep": {
-          "type": "product",
-          "settings": {
-            "product": "cookies-and-cream-bar-x12"
-          }
-        },
-        "product_Jf9Jj8": {
-          "type": "product",
-          "settings": {
-            "product": "peanut-butter-truffle"
-          }
-        }
-      },
-      "block_order": [
-        "product_ypVKmj",
-        "product_HmwjPK",
-        "product_DtTtXE",
-        "product_Kk63rA",
-        "product_RDp3ep",
-        "product_Jf9Jj8"
-      ],
-      "name": "Featured products",
+    "pl_featured": {
+      "type": "pl-featured",
       "settings": {
-        "title": "Our Newest Chocolate Snack-Hacks",
-        "description": "Fresh slabs. Big flavour. Zero refined sugar.",
-        "background_color": "#ffffff",
-        "product_source": "collection",
-        "featured_collection": "new-chocolate-slabs",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1,
-        "column_size_mobile_small": 1,
-        "autoplay": 600,
-        "see_all_link": "shopify://collections/new-chocolate-slabs",
-        "see_all_link_text": "Shop New Slabs",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
+        "eyebrow": "Bestsellers",
+        "heading": "4 picks",
+        "product_list": [
+          "og-plaayer-pack",
+          "salted-caramel-bar-x12",
+          "triple-chocolate-truffle",
+          "new-chocolate-bars-mix-pack-of-5"
+        ],
+        "link_label": "See all",
+        "link_collection": "shop-all",
+        "link_url": ""
       }
     },
-    "featured_products_F9JTBW": {
-      "type": "featured_products",
+    "pl_cravings": {
+      "type": "pl-cravings",
       "blocks": {
-        "product_pwwYqY": {
-          "type": "product",
+        "crave_reset": {
+          "type": "tile",
           "settings": {
-            "product": "new-chocolate-bars-mix-pack-of-5"
+            "title": "The 3:30 pm reset",
+            "sub": "",
+            "image": "shopify://shop_images/plaay26-apartment.jpg",
+            "url": "/products/salted-caramel-bar-x12",
+            "wash": "#081D48"
           }
         },
-        "product_ExgAbw": {
-          "type": "product",
+        "crave_workout": {
+          "type": "tile",
           "settings": {
-            "product": "og-plaayer-pack"
+            "title": "Post-workout",
+            "sub": "",
+            "image": "shopify://shop_images/plaay26-cross-section.jpg",
+            "url": "/products/bar-bunch",
+            "wash": "#081D48"
           }
         },
-        "product_HnPfWD": {
-          "type": "product",
+        "crave_netflix": {
+          "type": "tile",
           "settings": {
-            "product": "triple-chocolate-truffle"
+            "title": "Netflix o'clock",
+            "sub": "",
+            "image": "shopify://shop_images/plaay26-truffle-spill.jpg",
+            "url": "/products/truffle-mix",
+            "wash": "#081D48"
           }
         },
-        "product_VtYfBt": {
-          "type": "product",
+        "crave_pms": {
+          "type": "tile",
           "settings": {
-            "product": "cookies-and-cream-bar-x12"
-          }
-        },
-        "product_ct3qnA": {
-          "type": "product",
-          "settings": {
-            "product": "peanut-butter-truffle"
+            "title": "The PMS kit",
+            "sub": "",
+            "image": "shopify://shop_images/plaay26-truffle-blush.jpg",
+            "url": "/products/triple-chocolate-truffle",
+            "wash": "#081D48"
           }
         }
       },
       "block_order": [
-        "product_pwwYqY",
-        "product_ExgAbw",
-        "product_HnPfWD",
-        "product_VtYfBt",
-        "product_ct3qnA"
+        "crave_reset",
+        "crave_workout",
+        "crave_netflix",
+        "crave_pms"
       ],
-      "name": "Featured products",
       "settings": {
-        "title": "Our Best Selling Chocolate Snack-Hacks",
-        "description": "Plaayer-approved faves, made for clean cravings on repeat.",
-        "background_color": "#ffffff",
-        "product_source": "manual",
-        "featured_collection": "shop-all",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1,
-        "column_size_mobile_small": 1,
-        "autoplay": 600,
-        "see_all_link": "shopify://collections",
-        "see_all_link_text": "Shop Bestsellers",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
+        "eyebrow": "Shop by craving",
+        "heading": "Not by category."
       }
     },
-    "marquee_slider_H7hNaz": {
-      "type": "marquee-slider",
+    "pl_video_row": {
+      "type": "pl-video-row",
       "blocks": {
-        "logo_cDma4D": {
-          "type": "logo",
+        "reel_pour": {
+          "type": "reel",
           "settings": {
-            "icon_text": "No Refined Sugars",
-            "com_logo": "shopify://shop_images/No_Refined_Sugar_a4ac9eb7-cf82-4ad5-8d9d-adb7da76d30a.png"
+            "image": "shopify://shop_images/plaay26-stack-pour.jpg",
+            "caption": "How the pour happens",
+            "video": "",
+            "link": ""
           }
         },
-        "logo_mkALDF": {
-          "type": "logo",
+        "reel_rashi": {
+          "type": "reel",
           "settings": {
-            "icon_text": "100% Clean Ingredients",
-            "com_logo": "shopify://shop_images/100_Clean_Ingredient.png"
+            "image": "shopify://shop_images/plaay26-founder.jpg",
+            "caption": "Rashi: why I made Plaay",
+            "video": "",
+            "link": ""
           }
         },
-        "logo_MmHFMD": {
-          "type": "logo",
+        "reel_reset": {
+          "type": "reel",
           "settings": {
-            "icon_text": "Nutritionist Founded",
-            "com_logo": "shopify://shop_images/Nutriotionist_Founded.png"
+            "image": "shopify://shop_images/plaay26-apartment.jpg",
+            "caption": "The 3:30 pm reset",
+            "video": "",
+            "link": ""
           }
         },
-        "logo_QXaPrM": {
-          "type": "logo",
+        "reel_game": {
+          "type": "reel",
           "settings": {
-            "icon_text": "Everyday Indulgence",
-            "com_logo": "shopify://shop_images/Everyday_Indulgence.png"
-          }
-        },
-        "logo_FGKrxQ": {
-          "type": "logo",
-          "settings": {
-            "icon_text": "Made in UAE",
-            "com_logo": "shopify://shop_images/Made_in_UAE.png"
+            "image": "shopify://shop_images/plaay26-card-game.jpg",
+            "caption": "Game night, Plaay style",
+            "video": "",
+            "link": ""
           }
         }
       },
       "block_order": [
-        "logo_cDma4D",
-        "logo_mkALDF",
-        "logo_MmHFMD",
-        "logo_QXaPrM",
-        "logo_FGKrxQ"
-      ],
-      "custom_css": [],
-      "settings": {
-        "gap": 30,
-        "duration": 20,
-        "background_color": "#021d49"
-      }
-    },
-    "17718262497155cfae": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_4b4ffbe_UjHcQ4": {
-          "type": "ai_gen_block_4b4ffbe",
-          "settings": {
-            "heading": "Shop By Category",
-            "subheading": "<p>Find your everyday indulgence, for every kind of craving</p>",
-            "desktop_width_percent": 100,
-            "text_alignment": "center",
-            "padding_top": 40,
-            "padding_bottom": 0,
-            "padding_left": 20,
-            "padding_right": 20,
-            "spacing_between": 15,
-            "heading_size": 46,
-            "heading_weight": "700",
-            "heading_line_height": 1.2,
-            "heading_color": "#021d49",
-            "subheading_size": 18,
-            "subheading_weight": "400",
-            "subheading_line_height": 1.5,
-            "subheading_color": "#021d49",
-            "background_color": "#ffffff"
-          },
-          "blocks": {}
-        },
-        "ai_gen_block_a27751e_8nfrLx": {
-          "type": "ai_gen_block_a27751e",
-          "settings": {
-            "content_alignment": "center",
-            "cards_per_row": 4,
-            "mobile_layout": "grid",
-            "card_spacing": 40,
-            "image_ratio": "1_1",
-            "enable_rounded_corners": false,
-            "corner_radius": 12,
-            "enable_overlay": false,
-            "overlay_color": "#000000",
-            "overlay_opacity": 0.3,
-            "title_size": 24,
-            "show_button": false,
-            "default_button_text": "Shop now",
-            "button_style": "filled",
-            "button_bg_color": "#021d49",
-            "button_text_color": "#ffffff",
-            "button_hover_color": "#333333",
-            "button_border_radius": 4,
-            "arrow_bg_color": "#ffffff",
-            "arrow_color": "#000000",
-            "arrow_hover_color": "#f4f4f4",
-            "card_1_enabled": true,
-            "card_1_image": "shopify://shop_images/Milk_Chocolate_Hazelnut_jpg.jpg",
-            "card_1_collection": "chocolate-bars",
-            "card_1_title": "Chocolate Bars",
-            "card_1_button_text": "",
-            "card_2_enabled": true,
-            "card_2_image": "shopify://shop_images/Triple_Chocolate.jpg_1.jpg",
-            "card_2_collection": "chocolate-truffles",
-            "card_2_title": "Chocolate Truffles",
-            "card_2_button_text": "",
-            "card_3_enabled": false,
-            "card_3_image": "shopify://shop_images/1.BarBunch_74ede1f6-8f11-4c27-9103-e40a3593fb7d.png",
-            "card_3_collection": "variety-packs",
-            "card_3_title": "Energy Bars",
-            "card_3_button_text": "",
-            "card_4_enabled": true,
-            "card_4_image": "shopify://shop_images/2._DSC00491.png",
-            "card_4_collection": "variety-packs",
-            "card_4_title": "Variety   Packs",
-            "card_4_button_text": "",
-            "card_5_enabled": true,
-            "card_5_image": "shopify://shop_images/Mexican_Chilli_Coffee_Date_Truffle_Cover_jpg.jpg",
-            "card_5_collection": "limited-editions",
-            "card_5_title": "Limited Edition",
-            "card_5_button_text": "",
-            "card_6_enabled": false,
-            "card_6_collection": "",
-            "card_6_title": "",
-            "card_6_button_text": "",
-            "card_7_enabled": false,
-            "card_7_collection": "",
-            "card_7_title": "",
-            "card_7_button_text": "",
-            "card_8_enabled": false,
-            "card_8_collection": "",
-            "card_8_title": "",
-            "card_8_button_text": "",
-            "card_9_enabled": false,
-            "card_9_collection": "",
-            "card_9_title": "",
-            "card_9_button_text": "",
-            "card_10_enabled": false,
-            "card_10_collection": "",
-            "card_10_title": "",
-            "card_10_button_text": "",
-            "card_11_enabled": false,
-            "card_11_collection": "",
-            "card_11_title": "",
-            "card_11_button_text": "",
-            "card_12_enabled": false,
-            "card_12_collection": "",
-            "card_12_title": "",
-            "card_12_button_text": ""
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_4b4ffbe_UjHcQ4",
-        "ai_gen_block_a27751e_8nfrLx"
-      ],
-      "settings": {}
-    },
-    "173589700867b1c6b5": {
-      "type": "apps",
-      "blocks": {
-        "rebuy_personalization_engine_rebuy_widget_kdGwtJ": {
-          "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-widget/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
-          "disabled": true,
-          "settings": {
-            "enabled": true,
-            "id": "191991",
-            "product_id_enabled": true,
-            "collection_id_enabled": false
-          }
-        }
-      },
-      "block_order": [
-        "rebuy_personalization_engine_rebuy_widget_kdGwtJ"
+        "reel_pour",
+        "reel_rashi",
+        "reel_reset",
+        "reel_game"
       ],
       "settings": {
-        "include_margins": true
-      }
-    },
-    "richtext_hVDgQC": {
-      "type": "richtext",
-      "blocks": {
-        "heading_c3TdFj": {
-          "type": "heading",
-          "settings": {
-            "heading": "LOVE AT FIRST BITE",
-            "color": "#021d49",
-            "font_size_desktop": 62,
-            "font_size_mobile": 40,
-            "spacing_top_desktop": 10,
-            "spacing_bottom_desktop": 10,
-            "spacing_top_mobile": 10,
-            "spacing_bottom_mobile": 10
-          }
-        }
-      },
-      "block_order": [
-        "heading_c3TdFj"
-      ],
-      "settings": {
-        "bkg_color": "#ffffff",
-        "full_width": true,
-        "enable_style": false,
-        "spacing_top_desktop": 10,
-        "spacing_bottom_desktop": 10,
-        "spacing_top_mobile": 10,
-        "spacing_bottom_mobile": 10
+        "heading": "Plaay on camera",
+        "sub": "Reels from the feed. Tap to watch with sound.",
+        "sub_desktop": "Reels from the feed. Hover plays silently, click for sound.",
+        "link_label": "More on Instagram",
+        "link_url": "https://www.instagram.com/shopplaay",
+        "bg": "ground"
       }
     },
     "1773387152feeb0121": {
@@ -587,1141 +212,203 @@
         "include_margins": true
       }
     },
-    "cu_countdown_timer_jJqyWW": {
-      "type": "cu-countdown-timer",
-      "name": "Countdown Timer",
+    "pl_founder": {
+      "type": "pl-founder",
       "settings": {
-        "title": "SALE ENDS IN:",
-        "end_time": "2026-08-31T23:59:59",
-        "start_time": "2026-08-29T00:00:00"
-      },
-      "disabled": true
+        "image": "shopify://shop_images/plaay26-founder.jpg",
+        "eyebrow": "From our nutritionist, Rashi",
+        "quote": "“You don’t need to earn chocolate.”",
+        "sub": "Women don’t have a sugar problem. They have a guilt problem.",
+        "byline": "Rashi Chowdhary, founder and nutritionist",
+        "link_label": "Read why I made this",
+        "link_url": "/pages/for-the-geeks-1"
+      }
     },
-    "scrolling_content_U784BN": {
-      "type": "scrolling-content",
+    "pl_rewards": {
+      "type": "pl-rewards",
+      "settings": {
+        "eyebrow": "Plaay rewards",
+        "heading": "Every order climbs the ladder.",
+        "ship_label": "Free delivery",
+        "short_labels": true,
+        "currency_label": "AED",
+        "note": "Applied automatically at checkout."
+      }
+    },
+    "pl_subscribe": {
+      "type": "pl-subscribe",
       "blocks": {
-        "slide_m3e73Y": {
-          "type": "slide",
+        "bullet_off": {
+          "type": "bullet",
           "settings": {
-            "image": "shopify://shop_images/On_the_go_cravings.png",
-            "title": "On-the go cravings",
-            "image-2": "shopify://shop_images/Nutriotionist_Made.png",
-            "title-2": "Nutritionist-Made",
-            "image-3": "shopify://shop_images/Guilt_Free_Indulgence.png",
-            "title-3": "Guilt-Free Indulgence",
-            "image-4": "shopify://shop_images/Refined_Sugar_Free_21dbf860-6c60-4e0b-8263-3b4fe300fac6.png",
-            "title-4": "Refined Sugar Free"
+            "icon": "check",
+            "label": "15% off every delivery"
           }
         },
-        "slide_e3gfe7": {
-          "type": "slide",
+        "bullet_delivery": {
+          "type": "bullet",
           "settings": {
-            "image": "shopify://shop_images/Gluten_Free_91e2abf3-be8f-41be-accc-0d7752590ca2.png",
-            "title": "Gluten Free",
-            "image-2": "shopify://shop_images/Soy_Free_221e8805-4814-43c7-8be4-fc7591d56000.png",
-            "title-2": "Soy Free",
-            "title-3": "",
-            "title-4": ""
+            "icon": "truck",
+            "label": "Free delivery, always"
           }
         },
-        "slide_WNXxDm": {
-          "type": "slide",
+        "bullet_skip": {
+          "type": "bullet",
           "settings": {
-            "image": "shopify://shop_images/On_the_go_cravings.png",
-            "title": "On-the go cravings",
-            "image-2": "shopify://shop_images/Nutriotionist_Made.png",
-            "title-2": "Nutritionist-Made",
-            "image-3": "shopify://shop_images/Guilt_Free_Indulgence.png",
-            "title-3": "Guilt-Free Indulgence",
-            "image-4": "shopify://shop_images/Refined_Sugar_Free_21dbf860-6c60-4e0b-8263-3b4fe300fac6.png",
-            "title-4": "Refined Sugar Free"
-          }
-        },
-        "slide_zj6FRb": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Gluten_Free_91e2abf3-be8f-41be-accc-0d7752590ca2.png",
-            "title": "Gluten Free",
-            "image-2": "shopify://shop_images/Soy_Free_221e8805-4814-43c7-8be4-fc7591d56000.png",
-            "title-2": "Soy Free",
-            "title-3": "",
-            "title-4": ""
-          }
-        },
-        "slide_a7yeWc": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/On_the_go_cravings.png",
-            "title": "On-the go cravings",
-            "image-2": "shopify://shop_images/Nutriotionist_Made.png",
-            "title-2": "Nutritionist-Made",
-            "image-3": "shopify://shop_images/Guilt_Free_Indulgence.png",
-            "title-3": "Guilt-Free Indulgence",
-            "image-4": "shopify://shop_images/Refined_Sugar_Free_21dbf860-6c60-4e0b-8263-3b4fe300fac6.png",
-            "title-4": "Refined Sugar Free"
-          }
-        },
-        "slide_UXwaMH": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Gluten_Free_91e2abf3-be8f-41be-accc-0d7752590ca2.png",
-            "title": "Gluten Free",
-            "image-2": "shopify://shop_images/Soy_Free_221e8805-4814-43c7-8be4-fc7591d56000.png",
-            "title-2": "Soy Free",
-            "title-3": "",
-            "title-4": ""
+            "icon": "refresh",
+            "label": "Skip, swap or cancel anytime"
           }
         }
       },
       "block_order": [
-        "slide_m3e73Y",
-        "slide_e3gfe7",
-        "slide_WNXxDm",
-        "slide_zj6FRb",
-        "slide_a7yeWc",
-        "slide_UXwaMH"
+        "bullet_off",
+        "bullet_delivery",
+        "bullet_skip"
       ],
-      "disabled": true,
       "settings": {
-        "background": "#021d49",
-        "padding_top": 0,
-        "padding_bottom": 0
+        "eyebrow": "Subscribe & Save",
+        "heading": "Your favourites, every 4 weeks.",
+        "body": "Pick your box once. It arrives every 4 weeks at 15% off, and you can change it whenever you like.",
+        "btn_label": "Build your box",
+        "btn_url": "/pages/subscribe-save",
+        "from": "From AED 41.65 a tube",
+        "image": "shopify://shop_images/plaay26-green-tubes.jpg",
+        "bg": "cream"
       }
     },
-    "featured_products_wLygrm": {
-      "type": "featured_products",
+    "pl_in_out": {
+      "type": "pl-in-out",
       "blocks": {
-        "product_YMdyme": {
-          "type": "product",
+        "in_cocoa": {
+          "type": "item",
           "settings": {
-            "product": "og-plaayer-pack"
+            "list": "in",
+            "label": "Real cocoa"
           }
         },
-        "product_cdQrNY": {
-          "type": "product",
+        "in_nuts": {
+          "type": "item",
           "settings": {
-            "product": "plaayer-pack"
+            "list": "in",
+            "label": "Nuts"
           }
         },
-        "product_Ni8khK": {
-          "type": "product",
+        "in_whey": {
+          "type": "item",
           "settings": {
-            "product": "plaay-mix-chocolate-bars-50g-pack-of-4"
+            "list": "in",
+            "label": "Whey protein"
           }
         },
-        "product_e8BjhB": {
-          "type": "product",
+        "in_coconut": {
+          "type": "item",
           "settings": {
-            "product": "truffle-mix"
+            "list": "in",
+            "label": "Coconut nectar"
           }
         },
-        "product_HRay93": {
-          "type": "product",
+        "out_sugar": {
+          "type": "item",
           "settings": {
-            "product": "bar-bunch"
+            "list": "out",
+            "label": "Refined sugar"
+          }
+        },
+        "out_gluten": {
+          "type": "item",
+          "settings": {
+            "list": "out",
+            "label": "Gluten"
+          }
+        },
+        "out_soy": {
+          "type": "item",
+          "settings": {
+            "list": "out",
+            "label": "Soy"
+          }
+        },
+        "out_palm": {
+          "type": "item",
+          "settings": {
+            "list": "out",
+            "label": "Palm oil"
           }
         }
       },
       "block_order": [
-        "product_YMdyme",
-        "product_cdQrNY",
-        "product_Ni8khK",
-        "product_e8BjhB",
-        "product_HRay93"
-      ],
-      "name": "Featured products",
-      "settings": {
-        "title": "More Flavours. Zero Compromise.",
-        "description": "",
-        "background_color": "#ffffff",
-        "product_source": "collection",
-        "featured_collection": "variety-packs",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1,
-        "column_size_mobile_small": 1,
-        "autoplay": 600,
-        "see_all_link": "shopify://collections",
-        "see_all_link_text": "Shop Variety Packs",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
-      }
-    },
-    "featured_products_RV9q3Y": {
-      "type": "featured_products",
-      "blocks": {
-        "product_NGbryf": {
-          "type": "product",
-          "settings": {
-            "product": "plaay-mix-chocolate-bars-50g-pack-of-4"
-          }
-        },
-        "product_hx6Rfr": {
-          "type": "product",
-          "settings": {
-            "product": "70-dark-chocolate-with-hazelnut-x-6"
-          }
-        },
-        "product_EjKEV8": {
-          "type": "product",
-          "settings": {
-            "product": "70-dark-chocolate-x-6"
-          }
-        },
-        "product_wYbfB9": {
-          "type": "product",
-          "settings": {
-            "product": "milk-chocolate-with-hazelnut-x-6"
-          }
-        },
-        "product_nHY7xr": {
-          "type": "product",
-          "settings": {
-            "product": "milk-chocolate-with-toffee-almond-x-6"
-          }
-        },
-        "product_EJRLcp": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "70-dark-chocolate-with-hazelnut"
-          }
-        },
-        "product_bnrQPN": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "70-dark-chocolate"
-          }
-        },
-        "product_t3AncN": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "milk-chocolate-with-toffee-almond"
-          }
-        },
-        "product_aLmAhL": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "milk-chocolate-with-hazelnut"
-          }
-        }
-      },
-      "block_order": [
-        "product_NGbryf",
-        "product_hx6Rfr",
-        "product_EjKEV8",
-        "product_wYbfB9",
-        "product_nHY7xr",
-        "product_EJRLcp",
-        "product_bnrQPN",
-        "product_t3AncN",
-        "product_aLmAhL"
-      ],
-      "disabled": true,
-      "name": "Featured products",
-      "settings": {
-        "title": "Chocolate Bars  ",
-        "description": "",
-        "background_color": "#ffffff",
-        "product_source": "collection",
-        "featured_collection": "chocolate-big-bars",
-        "collection_product_limit": 12,
-        "extra_top_padding": false,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 600,
-        "see_all_link": "shopify://collections/chocolate-bars",
-        "see_all_link_text": "Shop All Bars  ",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": true,
-        "hide_atc_on_tiles": false
-      }
-    },
-    "featured_products_83MdCp": {
-      "type": "featured_products",
-      "blocks": {
-        "product_GnbreG": {
-          "type": "product",
-          "settings": {
-            "product": "bar-bunch"
-          }
-        },
-        "product_3tnjWf": {
-          "type": "product",
-          "settings": {
-            "product": "mocha-almond-bar-x12"
-          }
-        },
-        "product_cHPEAj": {
-          "type": "product",
-          "settings": {
-            "product": "pistachio-chocolate-bar-x-12"
-          }
-        },
-        "product_wFKfyR": {
-          "type": "product",
-          "settings": {
-            "product": "cookies-and-cream-bar-x12"
-          }
-        },
-        "product_pQNDU8": {
-          "type": "product",
-          "settings": {
-            "product": "salted-caramel-bar-x12"
-          }
-        },
-        "product_LccC4j": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "salty-peanut-bar-x12"
-          }
-        },
-        "product_MinfVA": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "pistachio-chocolate-bar-35g"
-          }
-        },
-        "product_GG7wt4": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "cookies-and-cream-bar-35g-1"
-          }
-        },
-        "product_aGfCHx": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "cookies-and-cream-bar-35g-1"
-          }
-        },
-        "product_Je9rJj": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "salted-caramel-bar-35g-1"
-          }
-        },
-        "product_imYEYc": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "salty-peanut-bar-35g"
-          }
-        },
-        "product_mkxW86": {
-          "type": "product",
-          "disabled": true,
-          "settings": {
-            "product": "copy-of-mocha-almond-bar-35g"
-          }
-        }
-      },
-      "block_order": [
-        "product_GnbreG",
-        "product_3tnjWf",
-        "product_cHPEAj",
-        "product_wFKfyR",
-        "product_pQNDU8",
-        "product_LccC4j",
-        "product_MinfVA",
-        "product_GG7wt4",
-        "product_aGfCHx",
-        "product_Je9rJj",
-        "product_imYEYc",
-        "product_mkxW86"
-      ],
-      "disabled": true,
-      "name": "Featured products",
-      "settings": {
-        "title": "Energy Bars ",
-        "description": "",
-        "background_color": "#ffffff",
-        "product_source": "collection",
-        "featured_collection": "energy-bars",
-        "collection_product_limit": 12,
-        "extra_top_padding": false,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 600,
-        "see_all_link": "shopify://collections/chocolate-bars",
-        "see_all_link_text": "Shop All Energy Bars ",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": false,
-        "hide_atc_on_tiles": false
-      }
-    },
-    "icon_with_text_d6NfRr": {
-      "type": "icon-with-text",
-      "blocks": {
-        "icon_block_rnPbzy": {
-          "type": "icon_block",
-          "settings": {
-            "icon": "shopify://shop_images/Clean_Ingredient.png",
-            "title": "100% CLEAN",
-            "description": "No refined sugar. No preservatives. Just real ingredients."
-          }
-        },
-        "icon_block_X3WV3g": {
-          "type": "icon_block",
-          "settings": {
-            "icon": "shopify://shop_images/Warning.png",
-            "title": "HIGHLY INDULGENT",
-            "description": "Full-on flavour, made with ingredients you can trust"
-          }
-        },
-        "icon_block_8yrRwh": {
-          "type": "icon_block",
-          "settings": {
-            "icon": "shopify://shop_images/UAE.png",
-            "title": "PROUDLY LOCAL",
-            "description": "Founded & Made in UAE"
-          }
-        }
-      },
-      "block_order": [
-        "icon_block_rnPbzy",
-        "icon_block_X3WV3g",
-        "icon_block_8yrRwh"
-      ],
-      "disabled": true,
-      "settings": {
-        "background_color": "#021d49",
-        "text_color": "#f9c61d"
-      }
-    },
-    "cfd29eca-49e3-4778-ad49-c635383324c8": {
-      "type": "our_favourite_product",
-      "blocks": {
-        "image_etBWnD": {
-          "type": "image",
-          "settings": {
-            "block_image": "shopify://shop_images/pp1.png"
-          }
-        },
-        "e6aa1646-d3ca-4e8f-82d2-49c08d988617": {
-          "type": "icon",
-          "settings": {
-            "image": "shopify://shop_images/bar.png",
-            "icon_text_top": "x5",
-            "title": "Bars"
-          }
-        },
-        "46b483c4-d625-4b1c-b295-ca30603b3aca": {
-          "type": "icon",
-          "settings": {
-            "image": "shopify://shop_images/cylinder.png",
-            "icon_text_top": "x5",
-            "title": "Truffles 30g"
-          }
-        }
-      },
-      "block_order": [
-        "image_etBWnD",
-        "e6aa1646-d3ca-4e8f-82d2-49c08d988617",
-        "46b483c4-d625-4b1c-b295-ca30603b3aca"
-      ],
-      "disabled": true,
-      "custom_css": [
-        ".media_text_container h3 {color: #021d49; margin-bottom: 15px;}",
-        ".media_text_container .pb-8.mt-8.text-sm.font-bold.font-walsheim {margin-top: 20px;}"
+        "in_cocoa",
+        "in_nuts",
+        "in_whey",
+        "in_coconut",
+        "out_sugar",
+        "out_gluten",
+        "out_soy",
+        "out_palm"
       ],
       "settings": {
-        "background_color": "#ffffff",
-        "heading": "STILL CONFUSED? START HERE",
-        "underline": false,
-        "description": "<p>Can’t pick just one? The Plaayer Pack is your all-access pass to Plaay, packed with all our bestsellers so you can try it all before committing to a full box.<br/><br/>Delivered fast. Loved instantly.</p>",
-        "badge": "shopify://shop_images/Sticker3.png",
-        "badge_mobile": "shopify://shop_images/Sticker3.png",
-        "badge_copy": "shopify://shop_images/Vector_3_1.png",
-        "icon_heading": "What's Inside",
-        "link": "shopify://products/plaayer-pack",
-        "link_text": "Add to bag",
-        "button_style": "yellow",
-        "reverse": false,
-        "show_product_background_color": false,
-        "extra_padding": false,
-        "show_container": false
+        "eyebrow": "Chocolate Snack Hack",
+        "heading": "What’s in. What’s out.",
+        "in_label": "In",
+        "out_label": "Out",
+        "image": "shopify://shop_images/plaay26-cross-section.jpg"
       }
     },
-    "09dfb8e0-abe1-4ef8-910f-1531e59122ad": {
-      "type": "infinite-scroll-slider",
+    "pl_reviews": {
+      "type": "pl-reviews",
       "blocks": {
-        "slide_DTnwhF": {
-          "type": "slide",
+        "quote_omar": {
+          "type": "quote",
           "settings": {
-            "image": "shopify://shop_images/Localy_Logo_EN_1200x1200_6b81cd61-5cb4-4951-82a5-46748d36c1ff.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_3ec7UH": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Wild_The_Moon_Logo.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_iDVPFr": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Ivy_s_Secret_Garden_Logo.webp",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_8iMPTB": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Spinneys-Logo-Vector_svg.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.spinneys.com/en-ae/search/?q=Plaay"
-          }
-        },
-        "slide_XUXAL7": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Waitrose_Logo_svg.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.waitrose.ae/en/search/?q=plaay"
-          }
-        },
-        "cbecce53-1a7e-45ad-bcd2-65239ccca255": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/noon_c17fc7aa-a9ab-4156-8854-ecb90eadfd14.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://apps.apple.com/us/app/noon-shopping-food-grocery/id1269038866?mt=8"
-          }
-        },
-        "slide_qAcfnR": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/tmart.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://pzwv.adj.st/?c=ae&s=ds&t=2&i=199dd31c-0e47-4a07-bdf0-d6440ee0f391&adj_t=ubpopz9_qyj4s1t&adj_campaign=other_other_mix_gro_ma_ae_display_Plaay&adj_adgroup=Social&adj_creative=Allproducts&adj_deeplink=talabat%3A%2F%2F%3Fc%3Dae%26s%3Dds%26t%3D2%26i%3D199dd31c-0e47-4a07-bdf0-d6440ee0f391&adj_fallback=https%3A%2F%2Fwww.talabat.com%2Fuae%2Ftalabat-mart%3Futm_campaign%3Dother_other_web_gro_ma_ae_display_Plaay%26utm_source%3DSocial%26utm_medium%3Dother"
-          }
-        },
-        "04eb61c7-ed1b-43a2-9b86-9a1471251e61": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/careem_f7267597-bafe-447a-b477-c8947731987a.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "f6b09ece-fd7a-4cff-9b99-ce4c96ab4a21": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/deliveroo_fcfa4527-9435-4226-8df4-a5f40bb2aa61.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://deliveroo.ae/menu/dubai/dubai-investment-park-2/plaay-cocoa-and-chocolate-candies-dip?utm_campaign=organic&utm_medium=referrer&utm_source=menu_share"
-          }
-        },
-        "2c0e11db-dae7-4604-816c-3b44d64f2d4a": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/amazon_31c6a1c2-92d5-4112-87ec-e4c7e24a9875.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.amazon.ae/s?k=Plaay&ref=bl_dp_s_web_0"
-          }
-        },
-        "c618bafe-bf20-4e80-84b6-d6abd54ee58e": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/kibson.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.kibsons.com/en/origin/plaay"
-          }
-        },
-        "slide_HTpcNi": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/logo_SmilesMarket_EN.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "9eb0c31b-7ace-4ccb-be98-b471cb44f41e": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/choitrams.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.choithrams.com/en/search/?q=plaay"
-          }
-        },
-        "05cd6cca-8c1b-4050-a2bd-cccbd8fe2c29": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/grandiose.png",
-            "larger_image": true,
-            "text": "",
-            "link": "https://www.grandiose.ae/search/?q=plaay"
-          }
-        },
-        "slide_7kmNrc": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/almaya_208a3af1-6501-46e2-8e9b-65f336ad0829.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_TzFiVE": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/enoc.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_EpMhgC": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/emrat.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_RUyrND": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/allday.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_bj6ynQ": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Coop.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_R3rjmG": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/scuzi_a72cf9bf-58e8-487f-bf24-0655523f5a73.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_hxEHBK": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/zoom_4fae3570-38da-4e2f-bc6c-b3c4000fe285.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_FpARiq": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Colored.svg",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_BbAPdP": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Cycle_Souq.svg",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_KbjBiA": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Everyday_Roastery.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_VtM7YN": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Motion_Cycling.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_7QNTXf": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/pilates.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_yXchHc": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/hotel_Indigo.jpg",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_MYV6PT": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/AVANI_Hotels___Resorts_Corporate_Logo.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_pw7ccr": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/IHG-Logo.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_McBw7U": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/mediaone-logo.svg",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_wBRWDB": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Pauls.svg",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        },
-        "slide_PqJ3PC": {
-          "type": "slide",
-          "disabled": true,
-          "settings": {
-            "image": "shopify://shop_images/smiles.png",
-            "larger_image": true,
-            "text": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "slide_DTnwhF",
-        "slide_3ec7UH",
-        "slide_iDVPFr",
-        "slide_8iMPTB",
-        "slide_XUXAL7",
-        "cbecce53-1a7e-45ad-bcd2-65239ccca255",
-        "slide_qAcfnR",
-        "04eb61c7-ed1b-43a2-9b86-9a1471251e61",
-        "f6b09ece-fd7a-4cff-9b99-ce4c96ab4a21",
-        "2c0e11db-dae7-4604-816c-3b44d64f2d4a",
-        "c618bafe-bf20-4e80-84b6-d6abd54ee58e",
-        "slide_HTpcNi",
-        "9eb0c31b-7ace-4ccb-be98-b471cb44f41e",
-        "05cd6cca-8c1b-4050-a2bd-cccbd8fe2c29",
-        "slide_7kmNrc",
-        "slide_TzFiVE",
-        "slide_EpMhgC",
-        "slide_RUyrND",
-        "slide_bj6ynQ",
-        "slide_R3rjmG",
-        "slide_hxEHBK",
-        "slide_FpARiq",
-        "slide_BbAPdP",
-        "slide_KbjBiA",
-        "slide_VtM7YN",
-        "slide_7QNTXf",
-        "slide_yXchHc",
-        "slide_MYV6PT",
-        "slide_pw7ccr",
-        "slide_McBw7U",
-        "slide_wBRWDB",
-        "slide_PqJ3PC"
-      ],
-      "disabled": true,
-      "custom_css": [
-        "@media screen and (max-width: 600px) {}"
-      ],
-      "settings": {
-        "section_height": 130,
-        "hide_on_mobile": false,
-        "provide_container": false,
-        "provide_container_desktop": false,
-        "background_color": "#f7c744",
-        "slides_shown_desktop_extra_extra_extra_large": 4,
-        "slides_shown_desktop_extra_extra_large": 4,
-        "slides_shown_desktop_extra_large": 4,
-        "slides_shown_desktop_large": 4,
-        "slides_shown_desktop": 3,
-        "slides_shown_tablet": 2,
-        "slides_shown_mobile": 1,
-        "slides_shown_mobile_small": 1,
-        "autoplay": false,
-        "autoplay_speed": 2500,
-        "autoplay_mode": "linear",
-        "autoplay_on_mobile": false,
-        "font_size": 22,
-        "font_size_mobile": 22,
-        "font_family": "font-walsheim"
-      }
-    },
-    "3ee422c3-fa09-46a2-a29c-13a01c96c18e": {
-      "type": "what_were_made_of",
-      "blocks": {
-        "36cf002a-f95e-45bc-821a-1e5fbb29d8ae": {
-          "type": "point",
-          "settings": {
-            "image": "shopify://shop_images/Group_1.png",
-            "heading": "NOT JUST PREBIOTICS",
-            "description": "But 1000mg of Inulin from chicory root so that you get your good gut microbiome",
-            "full_description": "",
-            "point_background_image_position": "-top-10 -left-10",
-            "background_image": "shopify://shop_images/bacteria_2_1_1.png"
-          }
-        },
-        "1214522e-1541-4bf4-a01c-a9ce2da77658": {
-          "type": "point",
-          "settings": {
-            "image": "shopify://shop_images/probiotic_1_1.png",
-            "heading": "Not just Probiotics:",
-            "description": "But a strain called Bacillus Coagulans that actually stay alive in the stomach unlike other probiotics",
-            "full_description": "But a strain called Bacillus Coagulans that actually stay alive in the stomach unlike other probiotics",
-            "point_background_image_position": "-top-10 -right-10",
-            "background_image": "shopify://shop_images/bacteria_2_1_1.png"
-          }
-        },
-        "bc5f208a-a268-4d91-b412-dbc9e36a31ab": {
-          "type": "point",
-          "settings": {
-            "image": "shopify://shop_images/nuts_1_1.png",
-            "heading": "Not just nuts: But nuts that are ALWAYS whole.",
-            "description": "Whole nuts mean no oxidation, making everything fresher and better for your heart",
-            "full_description": "",
-            "point_background_image_position": "-left-10 -bottom-10",
-            "background_image": "shopify://shop_images/bacteria_2_1_1.png"
-          }
-        },
-        "482763ac-8ae9-4eac-8358-6cf4c2401597": {
-          "type": "point",
-          "settings": {
-            "image": "shopify://shop_images/Group_2_1.png",
-            "heading": "NOT JUST WHEY PROTEIN",
-            "description": "But Grass-Fed Whey Protein that naturally gives you even more Omega 3, helping curb inflammation",
-            "full_description": "You'll find our Grass Fed Whey Protein in 4 of our products: Salty Peanut Bar, Cookies and Cream Bar, Triple Chocolate Truffles and the Peanut Butter Truffles.",
-            "point_background_image_position": "-right-10 -bottom-10",
-            "background_image": "shopify://shop_images/bacteria_2_1_1.png"
-          }
-        },
-        "1d634c1b-ad38-44f0-b0a7-f53559917382": {
-          "type": "point",
-          "settings": {
-            "image": "shopify://shop_images/inclined-chocolate-bar_1_1.png",
-            "heading": "Not just dark chocolate",
-            "description": "But 71% Vegan dark chocolate that we create in-house from Creamy Spanish Cacao Butter",
-            "full_description": "",
-            "point_background_image_position": "-top-10 -left-10",
-            "background_image": "shopify://shop_images/bacteria_2_1_1.png"
-          }
-        },
-        "1faa7c4b-03a1-4319-bc3c-9b284f9930f0": {
-          "type": "point",
-          "disabled": true,
-          "settings": {
-            "image": "shopify://shop_images/plant-based_4_1_1.png",
-            "heading": "NOT JUST VEGAN PROTEIN",
-            "description": "But plant-based pea protein from peas processed by using water-based methods and organic pumpkin seeds",
-            "full_description": "You'll find our Vegan Protein in 4 of our products: Salted Caramel Bar, Almond Mocha Bar, Almond Brownie Truffles and the Cashew Caramel truffles.",
-            "point_background_image_position": "-top-10 -left-10",
-            "background_image": "shopify://shop_images/bacteria_2_1_1.png"
-          }
-        },
-        "7bb1ff7a-9c74-4bf1-a790-fe2f9bca4926": {
-          "type": "point",
-          "settings": {
-            "image": "shopify://shop_images/sunflower_2_1_1.png",
-            "heading": "Not soy lecithin but sunflower",
-            "description": "Sunflower lecithin is a rich source of Choline and better for your gut",
-            "full_description": "",
-            "point_background_image_position": "-top-10 -left-10"
-          }
-        }
-      },
-      "block_order": [
-        "36cf002a-f95e-45bc-821a-1e5fbb29d8ae",
-        "1214522e-1541-4bf4-a01c-a9ce2da77658",
-        "bc5f208a-a268-4d91-b412-dbc9e36a31ab",
-        "482763ac-8ae9-4eac-8358-6cf4c2401597",
-        "1d634c1b-ad38-44f0-b0a7-f53559917382",
-        "1faa7c4b-03a1-4319-bc3c-9b284f9930f0",
-        "7bb1ff7a-9c74-4bf1-a790-fe2f9bca4926"
-      ],
-      "disabled": true,
-      "settings": {
-        "title": "What Makes Us 100% Clean",
-        "background_color": "#f5c08d",
-        "central_image": "shopify://shop_images/Frame_1253_1_1.png",
-        "central_image_mobile": "shopify://shop_images/op_Almond_Brownie_02_6_1.png",
-        "sticker_background_color": "#f08b34",
-        "sticker_text_color": "#ffffff",
-        "sticker_backgound_image": "shopify://shop_images/silver-metallic-paper-textured-background_2_1_1.png",
-        "sticker_heading": "",
-        "sticker_text": "Hurry! Use the code PLAAY10 for 10% off your order! 🥳",
-        "sticker_rotation_text": "shopify://shop_images/scratch_for_joy_circle.png",
-        "show_scratch_sticker": false,
-        "provide_margin_top": false
-      }
-    },
-    "pdp_social_proof_rB7dqT": {
-      "type": "pdp-social-proof",
-      "blocks": {
-        "trust_badge_yWBHTR": {
-          "type": "trust_badge",
-          "settings": {
-            "label": "No Refined Sugar"
-          }
-        },
-        "trust_badge_p3KAxK": {
-          "type": "trust_badge",
-          "settings": {
-            "label": "100% Clean Ingredients"
-          }
-        },
-        "trust_badge_4VAyJg": {
-          "type": "trust_badge",
-          "settings": {
-            "label": "Halal certified"
-          }
-        },
-        "trust_badge_h9C4Ah": {
-          "type": "trust_badge",
-          "settings": {
-            "label": "Made in the UAE"
-          }
-        },
-        "review_Mx3QYf": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "Honestly the best chocolate snack I've tried. Tastes great and no chalky aftertaste.",
-            "reviewer": "Aisha K.",
-            "tag": "Verified buyer"
-          }
-        },
-        "review_YMCRaP": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
             "quote": "My kids love these. Feels good knowing exactly what's in them.",
-            "reviewer": "Omar J.",
-            "tag": "Verified buyer"
+            "name": "Omar J.",
+            "product": "",
+            "tag": "Verified buyer",
+            "rating": 5
           }
         },
-        "review_BQTCNh": {
-          "type": "review",
+        "quote_priya": {
+          "type": "quote",
           "settings": {
-            "rating": 5,
             "quote": "Perfect post-gym snack. High protein, genuinely delicious - ordering again.",
-            "reviewer": "Priya S.",
-            "tag": "Verified buyer"
+            "name": "Priya S.",
+            "product": "",
+            "tag": "Verified buyer",
+            "rating": 5
           }
         },
-        "review_jtKhht": {
-          "type": "review",
+        "quote_nadia": {
+          "type": "quote",
           "settings": {
-            "rating": 5,
-            "quote": "Finally found a chocolate snack that feels indulgent but still fits my routine.",
-            "reviewer": "Lina R.",
-            "tag": "Verified buyer"
-          }
-        },
-        "review_f63mF8": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
             "quote": "The texture, the flavour, the ingredients - Plaay absolutely nailed it.",
-            "reviewer": "Nadia M.",
-            "tag": "Verified buyer"
-          }
-        },
-        "review_atag6b": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "I ordered once out of curiosity and now keep a stash at home and at work.",
-            "reviewer": "Zayd H.",
-            "tag": "Verified buyer"
-          }
-        },
-        "review_YXmrHk": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "Tried these for the ingredients, stayed for the taste. Genuinely addictive in the best way.",
-            "reviewer": "Farah A.",
-            "tag": "Verified buyer"
-          }
-        },
-        "review_cYkTRt": {
-          "type": "review",
-          "settings": {
-            "rating": 5,
-            "quote": "These are the easiest yes in my pantry now. Clean, satisfying, and actually crave-worthy.",
-            "reviewer": "Daniel T.",
-            "tag": "Verified buyer"
+            "name": "Nadia M.",
+            "product": "",
+            "tag": "Verified buyer",
+            "rating": 5
           }
         }
       },
       "block_order": [
-        "trust_badge_yWBHTR",
-        "trust_badge_p3KAxK",
-        "trust_badge_4VAyJg",
-        "trust_badge_h9C4Ah",
-        "review_Mx3QYf",
-        "review_YMCRaP",
-        "review_BQTCNh",
-        "review_jtKhht",
-        "review_f63mF8",
-        "review_atag6b",
-        "review_YXmrHk",
-        "review_cYkTRt"
-      ],
-      "name": "PDP â€” Social Proof",
-      "settings": {
-        "background_color": "#f4f4f4",
-        "heading": "Loved by thousands",
-        "rating_text": "4.9 out of 5 from 100+ reviews"
-      }
-    },
-    "1726656192da5e6d75": {
-      "type": "apps",
-      "blocks": {
-        "rebuy_personalization_engine_rebuy_widget_DF3nWm": {
-          "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-widget/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
-          "settings": {
-            "enabled": true,
-            "id": "167671",
-            "product_id_enabled": true,
-            "collection_id_enabled": false
-          }
-        }
-      },
-      "block_order": [
-        "rebuy_personalization_engine_rebuy_widget_DF3nWm"
+        "quote_omar",
+        "quote_priya",
+        "quote_nadia"
       ],
       "settings": {
-        "include_margins": true
-      }
-    },
-    "instafeed_y9eagG": {
-      "type": "instafeed",
-      "settings": {
-        "heading_size": 20,
-        "feed_width": 100,
-        "html_area": ""
-      }
-    },
-    "1671195971148aab85": {
-      "type": "apps",
-      "settings": {
-        "include_margins": true
-      }
-    },
-    "related_articles_JgEJHR": {
-      "type": "related_articles",
-      "settings": {
-        "related_articles_title": "Related articles",
-        "related_articles_grid_mobile": 2,
-        "related_articles_grid_tablet": 2,
-        "related_articles_grid_desktop": 3,
-        "related_articles_grid_desktop_large": 4,
-        "hide_related_articles": false
+        "sub_suffix": "reviews across all Plaay products"
       }
     }
   },
   "order": [
-    "4ae9c22c-dd9d-4d0b-bb5c-7da4d20021b3",
-    "marquee_slider_cM4zJb",
-    "featured_products_wAKHQm",
-    "featured_products_F9JTBW",
-    "marquee_slider_H7hNaz",
-    "17718262497155cfae",
-    "173589700867b1c6b5",
-    "richtext_hVDgQC",
+    "pl_hero",
+    "pl_claims",
+    "pl_featured",
+    "pl_cravings",
+    "pl_video_row",
     "1773387152feeb0121",
-    "cu_countdown_timer_jJqyWW",
-    "scrolling_content_U784BN",
-    "featured_products_wLygrm",
-    "featured_products_RV9q3Y",
-    "featured_products_83MdCp",
-    "icon_with_text_d6NfRr",
-    "cfd29eca-49e3-4778-ad49-c635383324c8",
-    "09dfb8e0-abe1-4ef8-910f-1531e59122ad",
-    "3ee422c3-fa09-46a2-a29c-13a01c96c18e",
-    "pdp_social_proof_rB7dqT",
-    "1726656192da5e6d75",
-    "instafeed_y9eagG",
-    "1671195971148aab85",
-    "related_articles_JgEJHR"
+    "pl_founder",
+    "pl_rewards",
+    "pl_subscribe",
+    "pl_in_out",
+    "pl_reviews"
   ]
 }

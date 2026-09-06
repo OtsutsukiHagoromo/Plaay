@@ -1,0 +1,109 @@
+{%- comment -%}
+  Plaay 2026 — "What's in. What's out." Two lists side by side inside a card
+  (In: green checks; Out: struck, red-mute crosses). Blocks: list (in|out) + label.
+  Optional image: above the card on mobile, left column on desktop.
+{%- endcomment -%}
+{{ 'pl-home.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign s = section.settings
+  assign in_count = 0
+  assign out_count = 0
+  for block in section.blocks
+    if block.settings.label == blank
+      continue
+    endif
+    if block.settings.list == 'out'
+      assign out_count = out_count | plus: 1
+    else
+      assign in_count = in_count | plus: 1
+    endif
+  endfor
+-%}
+{%- if in_count > 0 or out_count > 0 -%}
+<div class="pl pl-section pl-in-out" id="pl-{{ section.id }}">
+  <div class="pl-wrap pl-in-out__grid">
+    {%- if s.image != blank -%}
+      <div class="pl-in-out__media">
+        {{ s.image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '480, 640, 800, 1000, 1200', sizes: '(min-width: 1024px) 600px, 100vw' }}
+      </div>
+    {%- endif -%}
+    <div class="pl-in-out__body">
+      {%- if s.eyebrow != blank -%}<span class="pl-eyebrow">{{ s.eyebrow | escape }}</span>{%- endif -%}
+      {%- if s.heading != blank -%}<h2 class="pl-h pl-h--2">{{ s.heading | escape }}</h2>{%- endif -%}
+      <div class="pl-card pl-in-out__card">
+        <div class="pl-in-out__cols">
+          <ul class="pl-in-out__list pl-in-out__list--in" aria-label="{{ s.in_label | default: 'In' | escape }}">
+            <li class="pl-label">{{ s.in_label | default: 'In' | escape }}</li>
+            {%- for block in section.blocks -%}
+              {%- if block.settings.label == blank or block.settings.list == 'out' -%}{%- continue -%}{%- endif -%}
+              <li class="pl-in-out__li pl-in-out__li--in" {{ block.shopify_attributes }}>
+                {%- render 'pl-icon', name: 'check', size: 16, stroke: 2.4 -%}
+                <span>{{ block.settings.label | escape }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+          <ul class="pl-in-out__list pl-in-out__list--out" aria-label="{{ s.out_label | default: 'Out' | escape }}">
+            <li class="pl-label">{{ s.out_label | default: 'Out' | escape }}</li>
+            {%- for block in section.blocks -%}
+              {%- if block.settings.label == blank or block.settings.list != 'out' -%}{%- continue -%}{%- endif -%}
+              <li class="pl-in-out__li pl-in-out__li--out" {{ block.shopify_attributes }}>
+                {%- render 'pl-icon', name: 'close', size: 16, stroke: 2.4 -%}
+                <span>{{ block.settings.label | escape }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Plaay what's in / out",
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Chocolate Snack Hack" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What’s in. What’s out." },
+    { "type": "text", "id": "in_label", "label": "In column label", "default": "In" },
+    { "type": "text", "id": "out_label", "label": "Out column label", "default": "Out" },
+    { "type": "image_picker", "id": "image", "label": "Image (optional)" }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "list",
+          "label": "List",
+          "default": "in",
+          "options": [
+            { "value": "in", "label": "In" },
+            { "value": "out", "label": "Out" }
+          ]
+        },
+        { "type": "text", "id": "label", "label": "Label", "default": "Real cocoa" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Plaay what's in / out",
+      "category": "Plaay 2026",
+      "blocks": [
+        { "type": "item", "settings": { "list": "in", "label": "Real cocoa" } },
+        { "type": "item", "settings": { "list": "in", "label": "Nuts" } },
+        { "type": "item", "settings": { "list": "in", "label": "Whey protein" } },
+        { "type": "item", "settings": { "list": "in", "label": "Coconut nectar" } },
+        { "type": "item", "settings": { "list": "out", "label": "Refined sugar" } },
+        { "type": "item", "settings": { "list": "out", "label": "Gluten" } },
+        { "type": "item", "settings": { "list": "out", "label": "Soy" } },
+        { "type": "item", "settings": { "list": "out", "label": "Palm oil" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

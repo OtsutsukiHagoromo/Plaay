@@ -1,0 +1,28 @@
+{{ 'pl-account.css' | asset_url | stylesheet_tag }}
+
+<div class="pl pl-account pl-account--auth">
+  <div class="pl-wrap">
+    <div class="pl-card pl-auth">
+      <div class="pl-auth__intro">
+        <h1 class="pl-h pl-h--2">Activate your account</h1>
+        <p class="pl-body pl-mute">Set a password and your orders, subscription and rewards are one tap away.</p>
+      </div>
+
+      {%- form 'activate_customer_account', class: 'pl-auth__form' -%}
+        {%- if form.errors -%}
+          <div class="pl-form-errors" role="alert" tabindex="-1" autofocus>{{ form.errors | default_errors }}</div>
+        {%- endif -%}
+        <label class="pl-auth__field" for="ActivatePassword">
+          <span class="pl-label">Password</span>
+          <input class="pl-input" type="password" name="customer[password]" id="ActivatePassword" autocomplete="new-password" placeholder="At least 5 characters" required {% if form.errors contains 'password' %}aria-invalid="true"{% endif %}>
+        </label>
+        <label class="pl-auth__field" for="ActivatePasswordConfirm">
+          <span class="pl-label">Confirm password</span>
+          <input class="pl-input" type="password" name="customer[password_confirmation]" id="ActivatePasswordConfirm" autocomplete="new-password" placeholder="Type it again" required {% if form.errors contains 'password_confirmation' %}aria-invalid="true"{% endif %}>
+        </label>
+        <button type="submit" class="pl-btn pl-btn--full">Activate account</button>
+        <button type="submit" name="decline" class="pl-btn pl-btn--full pl-btn--ghost">Decline invitation</button>
+      {%- endform -%}
+    </div>
+  </div>
+</div>

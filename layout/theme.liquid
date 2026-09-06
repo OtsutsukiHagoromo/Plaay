@@ -30,18 +30,38 @@
       href="{{ 'bundle.theme.js' | asset_url }}"
       as="script">
 
-    {%- if template -%}
-      {%- capture file_name -%}bundle.{{- template | remove: 'customers/' -}}.js{%- endcapture -%}
+    {%- liquid
+      comment
+        Per-template bundles (bundle.<template>.css/js) are only loaded for templates that
+        still use legacy sections, and only when the bundle file actually exists. Existing
+        bundles: account, blog, cart, collection, index, product, search, checkout. The
+        redesigned templates (index, product, collection, search, cart, list-collections)
+        load nothing here.
+      endcomment
+      assign pl_template = template | remove: 'customers/' | split: '.' | first
+      assign pl_bundle_templates = 'blog article page account activate_account addresses login order register reset_password password 404 gift_card' | split: ' '
+      assign pl_existing_bundles = 'account blog cart collection index product search checkout' | split: ' '
+      assign pl_legacy_templates = 'blog article page password 404 gift_card' | split: ' '
+      assign pl_bundle = ''
+      if pl_bundle_templates contains pl_template and pl_existing_bundles contains pl_template
+        assign pl_bundle = pl_template
+      endif
+      assign pl_is_legacy = false
+      if pl_legacy_templates contains pl_template
+        assign pl_is_legacy = true
+      endif
+    -%}
+    {%- if pl_bundle != blank -%}
       <link
         rel="preload"
-        href="{{- file_name | asset_url -}}"
+        href="{{- pl_bundle | prepend: 'bundle.' | append: '.js' | asset_url -}}"
         as="script">
     {%- endif -%}
 
     {% if settings.favicon %}
       <link
         rel="shortcut icon"
-        href="{{- settings.favicon | img_url: '32x32' -}}"
+        href="{{- settings.favicon | image_url: width: 32, height: 32 -}}"
         type="image/png">
     {% endif %}
 
@@ -70,17 +90,22 @@
 
     {{ 'bundle.theme.css' | asset_url | stylesheet_tag }}
     {{ 'custom.css' | asset_url | stylesheet_tag }}
+    {{ 'plaay-ui.css' | asset_url | stylesheet_tag }}
+    {{ 'pl-shell.css' | asset_url | stylesheet_tag }}
     {% render 'head.fonts' %}
 
-    {%- if template -%}
-      {%- capture file_name -%}bundle.{{- template | remove: 'customers/' -}}.css{%- endcapture -%}
-      {{ file_name | asset_url | stylesheet_tag }}
-    {% endif %}
+    {%- if pl_bundle != blank -%}
+      {{ pl_bundle | prepend: 'bundle.' | append: '.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
 
     {{ content_for_header }}
 
+    {%- comment -%}
+      Derive the CDN assets folder for webpack's public path from an asset that exists.
+      This used to reference site.webmanifest.json, which is not in the theme.
+    {%- endcomment -%}
     {%- capture file -%}
-      {{ 'site.webmanifest.json' | asset_url }}
+      {{ 'bundle.theme.js' | asset_url }}
     {%- endcapture -%}
 
     {%- liquid
@@ -90,7 +115,7 @@
         assign is_dev_theme = true
       endif
 
-      assign assets_path = file | split: 'site.webmanifest.json' | first
+      assign assets_path = file | split: 'bundle.theme.js' | first
 
       if is_dev_theme
         assign assets_path = '/assets/'
@@ -126,11 +151,11 @@
   {% render 'shogun-head' %}
 </head>
 
-    <body class="template-{{ template  | remove :"."}}">
+    <body class="pl-body pl-has-tabbar template-{{ template | remove: '.' }}{% if pl_is_legacy %} pl-legacy{% endif %}">
     {%- render 'icon-sprite' -%}
     <a class="plaay-skip-link" href="#main">Skip to content</a>
-    {% section 'announcement-bar' %}
-    {% section 'header' %}
+    {% section 'pl-announcement' %}
+    {% section 'pl-header' %}
     <main id="main" role="main">
       <div class="page-overlay transition-all duration-300 bg-black w-full h-full fixed opacity-0 invisible z-10 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"></div>
       {{ content_for_layout }}
@@ -142,12 +167,11 @@
     {%- render 'plaay-summer-countdown-js' -%}
     {%- render 'plaay-bts-countdown-js' -%}
     {%- render 'drawers' -%}
-    {% section 'footer' %}
+    {% section 'pl-footer' %}
 
     <script defer src="{{ 'bundle.theme.js' | asset_url }}"></script>
-    {%- if template -%}
-      {%- capture file_name -%}bundle.{{- template | remove: 'customers/' -}}.js{%- endcapture -%}
-      <script defer src="{{ file_name | asset_url }}"></script>
+    {%- if pl_bundle != blank -%}
+      <script defer src="{{ pl_bundle | prepend: 'bundle.' | append: '.js' | asset_url }}"></script>
     {%- endif -%}
     <script defer src="{{ 'glide.static.min.js' | asset_url }}"></script>
     {% if template contains 'collection' or template contains 'search' %}
@@ -186,6 +210,10 @@
 
           e.preventDefault();
           e.stopImmediatePropagation();
+
+          /* The cart page renders no drawer (snippets/drawers.liquid), so there is nothing to open. */
+          if (document.body.classList.contains('template-cart')) return;
+          if (window.plCloseSheets) window.plCloseSheets();
 
           var sd = document.querySelector('site-drawers');
           /* If the Drawers custom-element has been upgraded, use its API */
@@ -251,6 +279,6 @@
      cart handler - see the comment above it. */
 </script>
 
-      {% render 'mobile-bottom-nav' %}
+      {% render 'pl-tabbar' %}
     </body>
 </html>

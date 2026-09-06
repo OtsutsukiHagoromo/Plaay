@@ -62,7 +62,8 @@
     {%- if badge_text != blank -%}<span class="pl-tag pl-tag--yellow pl-badge">{{ badge_text }}</span>{%- endif -%}
     <a href="{{ product.url }}" tabindex="-1" aria-hidden="true">
       {%- if product.featured_image -%}
-        {{ product.featured_image | image_url: width: 600 | image_tag: loading: load, sizes: img_sizes, widths: '240, 360, 480, 600', alt: product.featured_image.alt | default: product.title, class: 'pl-tile__pic' }}
+        {%- assign img_alt = product.featured_image.alt | default: product.title -%}
+        {{ product.featured_image | image_url: width: 600 | image_tag: loading: load, sizes: img_sizes, widths: '240, 360, 480, 600', alt: img_alt, class: 'pl-tile__pic' }}
       {%- else -%}
         {{ 'product-1' | placeholder_svg_tag: 'pl-tile__pic' }}
       {%- endif -%}
@@ -74,9 +75,9 @@
   <h3 class="pl-tile__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
   <div class="pl-tile__foot">
     <div class="pl-col pl-gap1">
-      <span class="pl-tile__price">{{ v.price | money_without_trailing_zeros }}</span>
+      <span class="pl-tile__price">{%- render 'plaay-aed', fils: v.price -%}</span>
       {%- if show_sub != false and sub_price > 0 -%}
-        <span class="pl-tile__sub">{{ sub_price | money_without_trailing_zeros }} subscribed</span>
+        <span class="pl-tile__sub">{%- render 'plaay-aed', fils: sub_price -%} subscribed</span>
       {%- endif -%}
     </div>
     {%- unless hide_add or v.available == false -%}

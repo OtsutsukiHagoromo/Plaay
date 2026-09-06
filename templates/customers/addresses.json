@@ -1,1 +1,9 @@
-{"sections":{"address_template":{"type":"address_template","settings":{}}},"order":["address_template"]}
+{
+  "sections": {
+    "address_template": {
+      "type": "address_template",
+      "settings": {}
+    }
+  },
+  "order": ["address_template"]
+}

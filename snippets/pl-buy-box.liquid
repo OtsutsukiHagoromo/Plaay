@@ -1,0 +1,92 @@
+{%- comment -%}
+  Plaay 2026 buy card + quantity row.
+  Usage: {% render 'pl-buy-box', product: product, variant: variant, sub_pct: sub_pct, default_plan_id: default_plan_id, section_id: section.id %}
+  With selling plans: ONE card with "Subscribe & Save 15%" (selected by default) and "One-time".
+  Without: the card shows just the price. Below: pl-stepper (1-10) + "Add to bag · AED x".
+  No form: pl-product.js calls cart-drawer-items.add(variantId, qty, sellingPlanId).
+  All prices are rendered with plaay-aed so the server copy matches the JS formatter byte for byte.
+{%- endcomment -%}
+{%- liquid
+  assign has_sub = false
+  if product.selling_plan_groups.size > 0 and sub_pct > 0
+    assign has_sub = true
+  endif
+  assign keep = 100 | minus: sub_pct
+  assign sub_price = variant.price | times: keep | divided_by: 100
+  assign save = variant.price | minus: sub_price
+  assign cta_price = variant.price
+  if has_sub
+    assign cta_price = sub_price
+  endif
+  assign radio_name = 'pl-mode-' | append: section_id
+-%}
+<div class="pl-buybox" data-pl-buybox>
+  {%- if has_sub -%}
+    <div class="pl-buy is-sub" data-pl-buy>
+      <label class="pl-buy__opt pl-buy__opt--sub">
+        <span class="pl-buy__head">
+          <input type="radio" name="{{ radio_name }}" value="sub" checked data-pl-mode>
+          <span class="pl-radio" aria-hidden="true"></span>
+          <span class="pl-buy__title">Subscribe &amp; Save {{ sub_pct }}%</span>
+          <span class="pl-tag">Most popular</span>
+        </span>
+        <span class="pl-buy__detail">
+          <span class="pl-buy__prices">
+            <span class="pl-buy__now" data-pl-sub-price>{%- render 'plaay-aed', fils: sub_price -%}</span>
+            <span class="pl-buy__was" data-pl-sub-was>{%- render 'plaay-aed', fils: variant.price -%}</span>
+            <span class="pl-buy__save" data-pl-sub-save>save {% render 'plaay-aed', fils: save %}</span>
+          </span>
+          <span class="pl-buy__freq">
+            <span class="pl-freq">
+              <select data-pl-freq aria-label="Delivery frequency">
+                {%- for group in product.selling_plan_groups -%}
+                  {%- for plan in group.selling_plans -%}
+                    {%- liquid
+                      assign pct = 0
+                      for adj in plan.price_adjustments
+                        if adj.value_type == 'percentage' and adj.value > pct
+                          assign pct = adj.value
+                        endif
+                      endfor
+                      assign freq = plan.name | downcase | split: 'every ' | last | strip
+                      if freq == blank
+                        assign freq = plan.name
+                      endif
+                    -%}
+                    <option value="{{ plan.id }}" data-pct="{{ pct }}"{% if plan.id == default_plan_id %} selected{% endif %}>Every {{ freq }}</option>
+                  {%- endfor -%}
+                {%- endfor -%}
+              </select>
+              {%- render 'pl-icon', name: 'chev-down', size: 14, stroke: 2.2 -%}
+            </span>
+            <span class="pl-buy__note">Free delivery · skip, swap or cancel anytime</span>
+          </span>
+        </span>
+      </label>
+      <label class="pl-buy__opt pl-buy__opt--one">
+        <span class="pl-buy__head">
+          <input type="radio" name="{{ radio_name }}" value="one" data-pl-mode>
+          <span class="pl-radio" aria-hidden="true"></span>
+          <span class="pl-buy__title">One-time</span>
+          <span class="pl-buy__price" data-pl-one-price>{%- render 'plaay-aed', fils: variant.price -%}</span>
+        </span>
+      </label>
+    </div>
+  {%- else -%}
+    <div class="pl-buy pl-buy--plain" data-pl-buy data-single>
+      <span class="pl-buy__now" data-pl-one-price>{%- render 'plaay-aed', fils: variant.price -%}</span>
+      <span class="pl-buy__was" data-pl-compare{% unless variant.compare_at_price > variant.price %} hidden{% endunless %}>{%- if variant.compare_at_price > variant.price -%}{%- render 'plaay-aed', fils: variant.compare_at_price -%}{%- endif -%}</span>
+      <span class="pl-buy__stock" data-pl-stock{% if variant.available %} hidden{% endif %}>Sold out</span>
+    </div>
+  {%- endif -%}
+  <div class="pl-buyrow">
+    <div class="pl-stepper" data-pl-stepper>
+      <button type="button" data-minus aria-label="Decrease quantity">−</button>
+      <input type="number" inputmode="numeric" value="1" min="1" max="10" data-pl-qty aria-label="Quantity">
+      <button type="button" data-plus aria-label="Increase quantity">+</button>
+    </div>
+    <button type="button" class="pl-btn pl-btn--full" data-pl-add data-state="idle"{% unless variant.available %} disabled{% endunless %}>
+      <span data-pl-cta>{%- if variant.available -%}Add to bag · <span data-pl-cta-price>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- else -%}Sold out{%- endif -%}</span>
+    </button>
+  </div>
+</div>

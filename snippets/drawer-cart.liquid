@@ -1,42 +1,42 @@
-{% style %}
-  .cart_items_container::-webkit-scrollbar { width: 3px; }
-  .cart_items_container::-webkit-scrollbar-track { background: #f0f0f0; }
-  .cart_items_container::-webkit-scrollbar-thumb { background: rgb(var(--plaay-navy-rgb) / 0.25); border-radius: 4px; }
-{% endstyle %}
+{%- comment -%}
+  Plaay 2026 cart drawer shell.
 
-<cart-drawer class="group/cart"
-  data-module="drawer-cart"
-  data-drawer="cart">
-  <div class="translate-x-full opacity-0 invisible fixed inset-y-0 right-0 w-screen md:w-[65vw] lg:max-w-[620px] z-[17500] transition-all duration-500 group-active/cart:translate-x-0 group-active/cart:opacity-100 group-active/cart:visible" data-drawer>
-    <div class="relative flex w-full h-full min-h-0 overflow-hidden z-10 flex-col" style="background-color: {{ settings.cart_drawer_background | default: '#ffffff' }}">
+  JS contract (bundle.drawers.js / bundle.drawer-cart.js / the inline fallback in layout/theme.liquid):
+    - site-drawers.activeDrawer = 'cart' finds [data-drawer="cart"] (this element) and calls .open()
+    - Drawer.open() toggles the class `active` on <cart-drawer>; assets/pl-cart.css slides the inner
+      [data-drawer] panel in on `cart-drawer.active`. Drawer.loading toggles `loading` the same way.
+    - [data-close] buttons must live inside [data-drawer]; the drawer JS binds them on open and
+      assets/pl-cart.js also delegates so buttons in re-rendered content keep working.
+  Module stubs at the end make bundle.theme.js (an init-only loader) import every cart module even
+  when the cart is empty on first paint, so re-rendered content upgrades correctly.
+{%- endcomment -%}
+{{ 'pl-cart.css' | asset_url | stylesheet_tag }}
 
-      {% comment %} Header {% endcomment %}
-      <div class="flex items-center justify-between px-6 py-4 border-b border-dark-blue border-opacity-10 flex-shrink-0">
-        <div class="flex items-center gap-3">
-          <h3 class="text-xl text-dark-blue uppercase font-walsheim-bold">{{ 'cart-drawer.title' | t }}</h3>
-          <span class="flex items-center justify-center w-6 h-6 text-xs bg-yellow rounded-full font-walsheim-bold text-dark-blue{% if cart.item_count == 0 %} hidden{% endif %}" data-cart-drawer-count-wrapper>
-            <span data-cart-drawer-count>{{ cart.item_count }}</span>
-          </span>
-        </div>
-        <button
-          type="button"
-          class="flex h-8 w-8 items-center justify-center rounded-full text-dark-blue transition-all hover:bg-dark-blue hover:text-white"
-          aria-label="Close cart"
-          data-close>
-          <span class="h-4 w-4 flex">{% render 'icon-cross-thin' %}</span>
+<cart-drawer data-module="drawer-cart" data-drawer="cart">
+  <div class="pl pl-drawer" data-drawer role="dialog" aria-modal="true" aria-label="Your bag" tabindex="-1">
+    <div class="pl-drawer__panel">
+      <header class="pl-drawer__head">
+        <h2 class="pl-h pl-h--3 pl-drawer__title">
+          <span>Your bag</span>
+          <span data-cart-drawer-count-wrapper{% if cart.item_count == 0 %} class="hidden"{% endif %}>(<span data-cart-drawer-count>{{ cart.item_count }}</span>)</span>
+        </h2>
+        <button type="button" class="pl-iconbtn pl-drawer__close" aria-label="Close bag" data-close>
+          {%- render 'pl-icon', name: 'close', size: 20, stroke: 2 -%}
         </button>
-      </div>
+      </header>
 
       {%- render 'cart-drawer-content' -%}
 
-      {% comment %} Loading overlay {% endcomment %}
-      <div class="flex items-center justify-center absolute inset-0 bg-black bg-opacity-30 opacity-0 invisible group-loading/cart:opacity-100 group-loading/cart:visible z-50">
-        {%- render 'loader' type: 'light' -%}
-      </div>
-
+      <div class="pl-cart__loading pl-drawer__loading" aria-hidden="true"><span class="pl-cart__spin"></span></div>
     </div>
   </div>
+
+  {%- comment -%} Module stubs: never visible, only here so the loader imports the bundles. {%- endcomment -%}
+  <cart-recommendations data-module="cart-recommendations" data-backup-product="{{ settings.backup_recommendations_product.id }}" hidden></cart-recommendations>
+  <quick-add data-module="quick-add" hidden></quick-add>
+  <cart-remove-button data-module="cart-remove-button" hidden></cart-remove-button>
+  <quantity-adjuster data-module="quantity-adjuster" hidden></quantity-adjuster>
 </cart-drawer>
 
-{% comment %} Cart drawer: gift message prompt and discount-code field. - moved to assets/plaay-cart-gift-prompt.js {% endcomment %}
 <script defer src="{{ 'plaay-cart-gift-prompt.js' | asset_url }}"></script>
+<script defer src="{{ 'pl-cart.js' | asset_url }}"></script>
