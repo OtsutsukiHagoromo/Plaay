@@ -108,16 +108,15 @@
   endfor
 
   comment
-    Rating: per-product Judge.me metafield when it has reviews, else store-wide, else the theme settings stand-in.
+    Rating: the store-wide Judge.me score, not this product's. Most products carry
+    two or three reviews, which reads as thinner proof than the shop actually has,
+    so every page shows the same 122-review average and says so in the label.
+    The reviews panel reads this product's own reviews straight off its
+    review_widget_data metafield, so nothing per-product is needed up here.
   endcomment
-  assign rating_raw = product.metafields.reviews.rating.value
-  assign rating = rating_raw.value | default: rating_raw
-  assign rating_count = product.metafields.reviews.rating_count | default: 0
-  if rating == blank or rating_count == 0
-    assign rating = shop.metafields.judgeme.all_reviews_rating
-    assign rating_count = shop.metafields.judgeme.all_reviews_count
-  endif
-  if rating == blank
+  assign rating = shop.metafields.judgeme.all_reviews_rating
+  assign rating_count = shop.metafields.judgeme.all_reviews_count
+  if rating == blank or rating_count == blank
     assign rating = settings.store_rating_value
     assign rating_count = settings.store_rating_count
   endif
@@ -244,7 +243,7 @@
                   {%- endif -%}
                 {%- endfor -%}
               </span>
-              <span>{{ rating_num }} · {{ rating_count_num }} reviews</span>
+              <span>{{ rating_num }} · {{ rating_count_num }} reviews across Plaay</span>
             </a>
           {%- endif -%}
           {%- if sub_line != blank -%}
@@ -324,7 +323,177 @@
 
         <section class="pl-pdp__panel" id="pl-reviews" role="tabpanel" aria-labelledby="pl-tab-reviews" data-pl-panel="pl-reviews">
           <h2 class="pl-h pl-h--3 pl-pdp__panel-h">Reviews ({{ rating_count_num }})</h2>
-          <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}" data-product-title="{{ product.title | escape }}">{{ product.metafields.judgeme.widget }}</div>
+          {%- comment -%}
+            This panel used to print product.metafields.judgeme.widget, which Judge.me
+            now leaves as an empty <div></div> on every product, so it rendered blank.
+
+            It is rebuilt store-wide on purpose. Judge.me holds 122 reviews across the
+            shop but only a handful per product, so a per-product wall reads thin and,
+            on a two-review product, unflattering. The score, the count and the
+            histogram are the shop's and are labelled as the shop's; the quotes are
+            this product's first, then the rest of the catalogue.
+
+            Everything comes from shop.metafields.judgeme.all_reviews_widget_v2025_data
+            (summary, histogram, photo gallery, trust medals, 10 latest reviews) plus
+            product.metafields.judgeme.review_widget_data for this product's own.
+          {%- endcomment -%}
+          {%- liquid
+            assign jm = shop.metafields.judgeme.all_reviews_widget_v2025_data.value
+            assign jm_avg = jm.average_rating | default: rating_num | times: 1.0
+            assign jm_count = jm.number_of_reviews | default: rating_count_num | times: 1
+            assign jm_full = jm_avg | floor
+            assign jm_next = jm_full | plus: 1
+            assign jm_frac = jm_avg | minus: jm_full | times: 100 | round
+            assign pj = product.metafields.judgeme.review_widget_data.value
+            assign min_stars = 4
+          -%}
+
+          {%- if jm_count > 0 -%}
+            <div class="pl-rv__sum pl-card pl-card--cream pl-card--flat">
+              <div class="pl-rv__score">
+                <span class="pl-rv__num" aria-hidden="true">{{ jm_avg | round: 1 }}</span>
+                <span class="pl-stars pl-stars--lg" role="img" aria-label="{{ jm_avg | round: 1 }} out of 5 stars">
+                  {%- for i in (1..5) -%}
+                    {%- if i <= jm_full -%}
+                      {%- render 'pl-icon', name: 'star', size: 16 -%}
+                    {%- elsif jm_frac > 0 and i == jm_next -%}
+                      <span class="pl-reviews__part" style="--pl-frac: {{ jm_frac }}%">{%- render 'pl-icon', name: 'star-empty', size: 16, class: 'is-empty' -%}{%- render 'pl-icon', name: 'star', size: 16 -%}</span>
+                    {%- else -%}
+                      {%- render 'pl-icon', name: 'star-empty', size: 16, class: 'is-empty' -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                </span>
+                <p class="pl-tiny pl-mute">{{ jm_count }} verified reviews across Plaay</p>
+              </div>
+              {%- if jm.histogram != blank -%}
+                <ul class="pl-rv__hist">
+                  {%- for row in jm.histogram -%}
+                    <li>
+                      <span class="pl-tiny pl-mute pl-rv__hnum">{{ row.rating }}</span>
+                      {%- render 'pl-icon', name: 'star', size: 10 -%}
+                      <span class="pl-rv__bar"><span style="width:{{ row.percentage }}%"></span></span>
+                      <span class="pl-tiny pl-mute pl-rv__hfreq">{{ row.frequency }}</span>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </div>
+
+            {%- if jm.shop_medals != blank -%}
+              <ul class="pl-scroll pl-rv__medals">
+                {%- for m in jm.shop_medals limit: 4 -%}
+                  <li class="pl-rv__medal">
+                    <img src="{{ m.medal_image_url }}" alt="" loading="lazy" width="28" height="28">
+                    <span class="pl-tiny">{{ m.title }}</span>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+            {%- if jm.photo_gallery != blank and jm.photo_gallery.size > 0 -%}
+              <h3 class="pl-eyebrow pl-rv__eyebrow">Snapped by customers</h3>
+              <ul class="pl-scroll pl-rv__pics">
+                {%- for g in jm.photo_gallery limit: 8 -%}
+                  {%- if g.pictures_urls == blank or g.pictures_urls.size == 0 -%}{%- continue -%}{%- endif -%}
+                  {%- assign pic = g.pictures_urls | first -%}
+                  <li class="pl-rv__pic">
+                    <a href="{{ g.product_url | default: '/' }}">
+                      <img src="{{ pic.compact | default: pic.original }}" alt="Review photo from {{ g.reviewer_name | escape }}" loading="lazy" width="150" height="150">
+                      <span class="pl-rv__pic-cap pl-tiny">{{ g.reviewer_name }}</span>
+                    </a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- comment -%} This product's own reviews, best first. Anything under four stars is left to the store histogram above rather than quoted here. {%- endcomment -%}
+          {%- assign own = 0 -%}
+          {%- if pj.reviews != blank -%}
+            {%- capture own_cards -%}
+              {%- for r in pj.reviews -%}
+                {%- if own >= 3 -%}{%- break -%}{%- endif -%}
+                {%- if r.rating < min_stars -%}{%- continue -%}{%- endif -%}
+                <li class="pl-card pl-rv__item">
+                  <div class="pl-row pl-row--between">
+                    <span class="pl-stars" role="img" aria-label="{{ r.rating }} out of 5 stars">
+                      {%- for i in (1..5) -%}
+                        {%- if i <= r.rating -%}{%- render 'pl-icon', name: 'star', size: 13 -%}{%- else -%}{%- render 'pl-icon', name: 'star-empty', size: 13, class: 'is-empty' -%}{%- endif -%}
+                      {%- endfor -%}
+                    </span>
+                    <span class="pl-tiny pl-mute">{{ r.created_at | date: '%b %Y' }}</span>
+                  </div>
+                  {%- if r.title != blank -%}<p class="pl-rv__title">{{ r.title }}</p>{%- endif -%}
+                  <div class="pl-rv__body">{{ r.body_html }}</div>
+                  {%- if r.pictures_urls != blank and r.pictures_urls.size > 0 -%}
+                    <ul class="pl-rv__shots">
+                      {%- for pic in r.pictures_urls limit: 3 -%}
+                        <li><img src="{{ pic.compact | default: pic.original }}" alt="" loading="lazy" width="72" height="72"></li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                  <div class="pl-rv__by">
+                    <span class="pl-rv__av" aria-hidden="true">{{ r.reviewer_initial | default: 'P' }}</span>
+                    <span class="pl-tiny pl-b">{{ r.reviewer_name | default: 'Anonymous' }}</span>
+                    {%- if r.verified_buyer -%}<span class="pl-tiny pl-rv__ok">{%- render 'pl-icon', name: 'check', size: 11, stroke: 3 -%}Verified</span>{%- endif -%}
+                  </div>
+                </li>
+                {%- assign own = own | plus: 1 -%}
+              {%- endfor -%}
+            {%- endcapture -%}
+          {%- endif -%}
+
+          {%- if own > 0 -%}
+            <h3 class="pl-eyebrow pl-rv__eyebrow">On this one</h3>
+            <ul class="pl-rv__list">{{ own_cards }}</ul>
+          {%- endif -%}
+
+          {%- comment -%} The wall from the rest of the catalogue. Same four-star floor, and this product is skipped so its quotes are not printed twice. {%- endcomment -%}
+          {%- assign wall = 0 -%}
+          {%- capture wall_cards -%}
+            {%- for r in jm.all_reviews -%}
+              {%- if wall >= 6 -%}{%- break -%}{%- endif -%}
+              {%- if r.rating < min_stars -%}{%- continue -%}{%- endif -%}
+              {%- if own > 0 and r.product_url == product.url -%}{%- continue -%}{%- endif -%}
+              <li class="pl-card pl-rv__item">
+                <div class="pl-row pl-row--between">
+                  <span class="pl-stars" role="img" aria-label="{{ r.rating }} out of 5 stars">
+                    {%- for i in (1..5) -%}
+                      {%- if i <= r.rating -%}{%- render 'pl-icon', name: 'star', size: 13 -%}{%- else -%}{%- render 'pl-icon', name: 'star-empty', size: 13, class: 'is-empty' -%}{%- endif -%}
+                    {%- endfor -%}
+                  </span>
+                  <span class="pl-tiny pl-mute">{{ r.created_at | date: '%b %Y' }}</span>
+                </div>
+                {%- if r.title != blank -%}<p class="pl-rv__title">{{ r.title }}</p>{%- endif -%}
+                <div class="pl-rv__body">{{ r.body_html }}</div>
+                <div class="pl-rv__by">
+                  <span class="pl-rv__av" aria-hidden="true">{{ r.reviewer_initial | default: 'P' }}</span>
+                  <span class="pl-tiny pl-b">{{ r.reviewer_name | default: 'Anonymous' }}</span>
+                  {%- if r.verified_buyer -%}<span class="pl-tiny pl-rv__ok">{%- render 'pl-icon', name: 'check', size: 11, stroke: 3 -%}Verified</span>{%- endif -%}
+                </div>
+                {%- if r.product_title != blank and r.is_shop_review != true -%}
+                  <a class="pl-rv__on" href="{{ r.product_url | default: '/' }}">
+                    {%- if r.product_pictures_url != blank -%}
+                      <img src="{{ r.product_pictures_url }}" alt="" loading="lazy" width="32" height="32">
+                    {%- endif -%}
+                    <span class="pl-tiny">{{ r.product_title }}</span>
+                  </a>
+                {%- endif -%}
+              </li>
+              {%- assign wall = wall | plus: 1 -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+
+          {%- if wall > 0 -%}
+            <h3 class="pl-eyebrow pl-rv__eyebrow">{% if own > 0 %}From across Plaay{% else %}What Plaayers say{% endif %}</h3>
+            <ul class="pl-rv__list">{{ wall_cards }}</ul>
+          {%- endif -%}
+
+          {%- if jm_count == 0 and own == 0 -%}
+            <p class="pl-small pl-mute">No reviews yet. If you have tried this one, we would love to hear what you thought.</p>
+          {%- endif -%}
+          {%- comment -%} Judge.me's own mount point, kept so their script keeps tracking impressions and so the write-a-review form still lands here. {%- endcomment -%}
+          <div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-id="{{ product.id }}" data-product-title="{{ product.title | escape }}"></div>
         </section>
 
         <section class="pl-pdp__panel" id="pl-faq" role="tabpanel" aria-labelledby="pl-tab-faq" data-pl-panel="pl-faq">

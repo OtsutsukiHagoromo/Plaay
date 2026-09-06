@@ -174,3 +174,63 @@
 .pl-recs__link { display: inline-flex; align-items: center; gap: 4px; font-size: var(--pl-t3); font-weight: 700; color: var(--pl-purple); white-space: nowrap; }
 .pl-recs__link:hover { color: var(--pl-navy); }
 .pl-recs__link svg { width: 14px; height: 14px; }
+
+/* ---------- reviews panel ----------
+   Store-wide summary, trust medals, customer photos, then the quote cards.
+   .pl-reviews__num / __part are copied from pl-home.css: the home stylesheet is
+   not loaded on a product page, and these two rules carry the big score and the
+   half-star clip. */
+.pl-reviews__num { font-size: var(--pl-t8); font-weight: 900; line-height: .9; letter-spacing: -.02em; }
+.pl-reviews__part { position: relative; display: inline-flex; }
+.pl-reviews__part svg + svg { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pl-frac, 50%)) 0 0); }
+
+.pl-rv__sum { display: flex; align-items: center; gap: var(--pl-s5); }
+.pl-rv__score { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 0 0 auto; text-align: center; }
+.pl-rv__score .pl-rv__num { font-size: var(--pl-t8); font-weight: 900; line-height: .9; letter-spacing: -.02em; }
+.pl-rv__score p { max-width: 118px; }
+.pl-rv__hist { display: flex; flex-direction: column; gap: 5px; flex: 1 1 auto; min-width: 0; }
+.pl-rv__hist li { display: flex; align-items: center; gap: 6px; }
+.pl-rv__hist svg { width: 10px; height: 10px; color: var(--pl-yellow); flex: 0 0 auto; }
+.pl-rv__hnum { flex: 0 0 8px; text-align: right; }
+.pl-rv__hfreq { flex: 0 0 22px; text-align: right; font-variant-numeric: tabular-nums; }
+.pl-rv__bar { flex: 1 1 auto; height: 6px; border-radius: var(--pl-r-pill); background: rgba(8, 29, 72, .1); overflow: hidden; }
+.pl-rv__bar > span { display: block; height: 100%; border-radius: inherit; background: var(--pl-yellow); }
+
+.pl-rv__medals { margin-top: var(--pl-s3); }
+.pl-rv__medal { display: flex; align-items: center; gap: 6px; padding: 6px 10px 6px 6px; border: 1px solid var(--pl-line); border-radius: var(--pl-r-pill); max-width: 190px; }
+.pl-rv__medal img { width: 26px; height: 26px; flex: 0 0 auto; }
+.pl-rv__medal span { line-height: 1.15; }
+
+.pl-rv__eyebrow { margin: var(--pl-s6) 0 var(--pl-s3); }
+.pl-rv__pics { margin-top: 0; }
+.pl-rv__pic a { display: block; position: relative; width: 132px; border-radius: 14px; overflow: hidden; }
+.pl-rv__pic img { display: block; width: 132px; height: 132px; object-fit: cover; }
+.pl-rv__pic-cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 16px 8px 6px; color: var(--pl-white); font-weight: 700;
+  background: linear-gradient(to top, rgba(8, 29, 72, .72), rgba(8, 29, 72, 0)); }
+
+.pl-rv__list { display: flex; flex-direction: column; gap: var(--pl-s3); }
+.pl-rv__item { display: flex; flex-direction: column; gap: var(--pl-s2); }
+.pl-rv__item .pl-stars svg { color: var(--pl-yellow); }
+.pl-rv__title { font-size: var(--pl-t4); font-weight: 700; }
+.pl-rv__body { font-size: var(--pl-t3); line-height: 1.5; }
+.pl-rv__body p { margin: 0; }
+.pl-rv__body p + p { margin-top: 6px; }
+.pl-rv__shots { display: flex; gap: 6px; flex-wrap: wrap; }
+.pl-rv__shots img { width: 68px; height: 68px; object-fit: cover; border-radius: 10px; }
+.pl-rv__by { display: flex; align-items: center; gap: 6px; }
+.pl-rv__av { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--pl-cream);
+  font-size: var(--pl-t2); font-weight: 900; flex: 0 0 auto; }
+.pl-rv__ok { display: inline-flex; align-items: center; gap: 3px; color: var(--pl-green); font-weight: 700; }
+.pl-rv__ok svg { width: 11px; height: 11px; }
+.pl-rv__on { display: flex; align-items: center; gap: 8px; padding-top: var(--pl-s2); border-top: 1px solid var(--pl-line-2); color: var(--pl-mute); }
+.pl-rv__on img { width: 30px; height: 30px; object-fit: cover; border-radius: 8px; background: var(--pl-cream); }
+.pl-rv__on:hover { color: var(--pl-purple); }
+
+@media (min-width: 640px) {
+  .pl-rv__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
+@media (min-width: 1024px) {
+  .pl-rv__sum { gap: var(--pl-s8); padding: var(--pl-s6); }
+  .pl-rv__hist { max-width: 340px; }
+  .pl-rv__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
