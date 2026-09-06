@@ -132,6 +132,7 @@
 
       <div class="pl-header__right">
         <form class="pl-field pl-header__search" action="{{ routes.search_url }}" method="get" role="search">
+        <input type="hidden" name="options[prefix]" value="last">
           {%- render 'pl-icon', name: 'search', size: 18, stroke: 2 -%}
           <label class="pl-vh" for="pl-header-search-{{ section.id }}">Search</label>
           <input id="pl-header-search-{{ section.id }}" type="search" name="q" placeholder="Search flavours, packs, gifts" autocomplete="off" data-pl-search-trigger>
@@ -155,6 +156,7 @@
   {%- comment -%} Search sheet {%- endcomment -%}
   <div class="pl-sheet pl-sheet--search" role="dialog" aria-modal="true" aria-label="Search" aria-hidden="true" data-pl-sheet="search">
     <form class="pl-search__head" action="{{ routes.search_url }}" method="get" role="search" data-pl-search-form data-currency="{{ cart.currency.iso_code | default: shop.currency }}">
+        <input type="hidden" name="options[prefix]" value="last">
       <div class="pl-field pl-search__field">
         {%- render 'pl-icon', name: 'search', size: 20, stroke: 2 -%}
         <label class="pl-vh" for="pl-search-input-{{ section.id }}">Search</label>

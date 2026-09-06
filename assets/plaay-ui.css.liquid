@@ -86,13 +86,14 @@
   font-size: var(--pl-t4);
   line-height: 1.4;
 }
-.pl a { color: inherit; text-decoration: none; }
-.pl a:hover { color: var(--pl-purple); }
-.pl img, .pl svg, .pl video { display: block; max-width: 100%; }
-.pl button { font-family: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
-.pl input, .pl select, .pl textarea { font-family: inherit; color: inherit; }
-.pl ul, .pl ol { list-style: none; margin: 0; padding: 0; }
-.pl p, .pl h1, .pl h2, .pl h3, .pl h4 { margin: 0; }
+/* Element resets sit at zero class specificity (:where) so any single component class wins. */
+:where(.pl) a { color: inherit; text-decoration: none; }
+:where(.pl) a:where(:hover) { color: var(--pl-purple); }
+:where(.pl) img, :where(.pl) svg, :where(.pl) video { display: block; max-width: 100%; }
+:where(.pl) button { font-family: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+:where(.pl) input, :where(.pl) select, :where(.pl) textarea { font-family: inherit; color: inherit; }
+:where(.pl) ul, :where(.pl) ol { list-style: none; margin: 0; padding: 0; }
+:where(.pl) p, :where(.pl) h1, :where(.pl) h2, :where(.pl) h3, :where(.pl) h4 { margin: 0; }
 .pl [hidden] { display: none !important; }
 .pl-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
