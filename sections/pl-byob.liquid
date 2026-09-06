@@ -134,18 +134,28 @@
           {%- assign ck = 'cat_' | append: i | append: '_collection' -%}
           {%- if s[ck] == blank -%}{%- continue -%}{%- endif -%}
           {%- for p in collections[s[ck]].products limit: 40 -%}
-            {%- assign pid = '|' | append: p.id | append: '|' -%}
-            {%- if seen contains pid -%}{%- continue -%}{%- endif -%}
-            {%- assign seen = seen | append: pid -%}
+            {%- comment -%}
+              These tabs point at retail collections, so the same flavour arrives several times
+              over at different pack weights, and the ready-made mix packs arrive too. Fold the
+              pack wording away case-insensitively, drop the mixes, and keep the first tile per
+              flavour. The name is only a picker label: what reaches the cart is the box variant
+              carrying these names as line-item properties.
+            {%- endcomment -%}
             {%- liquid
-              assign nm = p.title | replace: 'PLAAY ', '' | replace: 'Plaay ', ''
-              assign nm = nm | split: ' Slab' | first | split: ' Bar' | first | split: ' Truffle' | first
+              assign low = p.title | downcase
+              assign nm = low | replace: 'plaay ', ''
+              assign nm = nm | split: ' slab' | first | split: ' bar' | first | split: ' truffle' | first
               assign nm = nm | split: ' 12 x' | first | split: ' 10 x' | first | split: ' 6 x' | first | split: ' 2 x' | first
-              assign nm = nm | split: ' 150' | first | strip
+              assign nm = nm | split: ' 150' | first | split: ' 80gm' | first | split: ' 30g' | first | split: ' 60g' | first
+              assign nm = nm | strip
               if nm == blank
-                assign nm = p.title
+                assign nm = low | strip
               endif
+              assign key = '|' | append: nm | append: '|'
             -%}
+            {%- if low contains 'mix pack' or low contains 'exclusive mix' or low contains 'variety' -%}{%- continue -%}{%- endif -%}
+            {%- if seen contains key -%}{%- continue -%}{%- endif -%}
+            {%- assign seen = seen | append: key -%}
             <div class="pl-byob__item" data-pl-item data-cat="c{{ i }}" data-name="{{ nm | escape }}">
               <div class="pl-byob__pic">
                 {%- if p.featured_image -%}

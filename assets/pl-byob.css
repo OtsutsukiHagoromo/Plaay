@@ -81,6 +81,9 @@
 .pl .pl-byob__name {
   font-size: var(--pl-t3); font-weight: 700; line-height: 1.2;
   color: var(--pl-navy); text-align: center;
+  /* Names are lower-cased in Liquid so pack wording folds away regardless of how a
+     product was typed; the casing is put back here. */
+  text-transform: capitalize;
 }
 
 /* stepper */
