@@ -268,8 +268,7 @@
     {
       "type": "url",
       "id": "mega_btn_url",
-      "label": "Card button link",
-      "default": "/pages/subscribe-save"
+      "label": "Card button link"
     }
   ],
   "blocks": [
@@ -286,8 +285,7 @@
         {
           "type": "url",
           "id": "url",
-          "label": "Link",
-          "default": "/collections/shop-all"
+          "label": "Link"
         },
         {
           "type": "checkbox",
@@ -301,28 +299,57 @@
   "max_blocks": 8,
   "default": {
     "blocks": [
-      { "type": "link", "settings": { "label": "Shop", "url": "/collections/shop-all", "mega": true } },
-      { "type": "link", "settings": { "label": "Bars", "url": "/collections/chocolate-bars" } },
-      { "type": "link", "settings": { "label": "Truffles", "url": "/collections/chocolate-truffles" } },
-      { "type": "link", "settings": { "label": "Slabs", "url": "/collections/new-chocolate-slabs" } },
-      { "type": "link", "settings": { "label": "Variety packs", "url": "/collections/variety-packs" } },
-      { "type": "link", "settings": { "label": "Subscribe & Save", "url": "/pages/subscribe-save" } },
-      { "type": "link", "settings": { "label": "Our story", "url": "/pages/for-the-geeks-1" } }
+      {
+        "type": "link",
+        "settings": {
+          "label": "Shop",
+          "url": "/collections/shop-all",
+          "mega": true
+        }
+      },
+      {
+        "type": "link",
+        "settings": {
+          "label": "Bars",
+          "url": "/collections/chocolate-bars"
+        }
+      },
+      {
+        "type": "link",
+        "settings": {
+          "label": "Truffles",
+          "url": "/collections/chocolate-truffles"
+        }
+      },
+      {
+        "type": "link",
+        "settings": {
+          "label": "Slabs",
+          "url": "/collections/new-chocolate-slabs"
+        }
+      },
+      {
+        "type": "link",
+        "settings": {
+          "label": "Variety packs",
+          "url": "/collections/variety-packs"
+        }
+      },
+      {
+        "type": "link",
+        "settings": {
+          "label": "Subscribe & Save",
+          "url": "/pages/subscribe-save"
+        }
+      },
+      {
+        "type": "link",
+        "settings": {
+          "label": "Our story",
+          "url": "/pages/for-the-geeks-1"
+        }
+      }
     ]
-  },
-  "presets": [
-    {
-      "name": "Header (2026)",
-      "blocks": [
-        { "type": "link", "settings": { "label": "Shop", "url": "/collections/shop-all", "mega": true } },
-        { "type": "link", "settings": { "label": "Bars", "url": "/collections/chocolate-bars" } },
-        { "type": "link", "settings": { "label": "Truffles", "url": "/collections/chocolate-truffles" } },
-        { "type": "link", "settings": { "label": "Slabs", "url": "/collections/new-chocolate-slabs" } },
-        { "type": "link", "settings": { "label": "Variety packs", "url": "/collections/variety-packs" } },
-        { "type": "link", "settings": { "label": "Subscribe & Save", "url": "/pages/subscribe-save" } },
-        { "type": "link", "settings": { "label": "Our story", "url": "/pages/for-the-geeks-1" } }
-      ]
-    }
-  ]
+  }
 }
 {% endschema %}

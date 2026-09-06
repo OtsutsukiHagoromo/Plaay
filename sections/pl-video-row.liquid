@@ -64,20 +64,53 @@
   "name": "Plaay video row",
   "max_blocks": 8,
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Plaay on camera" },
-    { "type": "text", "id": "sub", "label": "Sub line (mobile)", "default": "Reels from the feed. Tap to watch with sound." },
-    { "type": "text", "id": "sub_desktop", "label": "Sub line (desktop)", "default": "Reels from the feed. Hover plays silently, click for sound." },
-    { "type": "text", "id": "link_label", "label": "Link label", "default": "More on Instagram" },
-    { "type": "url", "id": "link_url", "label": "Link URL", "default": "https://www.instagram.com/shopplaay" },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Plaay on camera"
+    },
+    {
+      "type": "text",
+      "id": "sub",
+      "label": "Sub line (mobile)",
+      "default": "Reels from the feed. Tap to watch with sound."
+    },
+    {
+      "type": "text",
+      "id": "sub_desktop",
+      "label": "Sub line (desktop)",
+      "default": "Reels from the feed. Hover plays silently, click for sound."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "More on Instagram"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
     {
       "type": "select",
       "id": "bg",
       "label": "Background",
       "default": "ground",
       "options": [
-        { "value": "ground", "label": "Ground" },
-        { "value": "cream", "label": "Cream" },
-        { "value": "navy", "label": "Navy" }
+        {
+          "value": "ground",
+          "label": "Ground"
+        },
+        {
+          "value": "cream",
+          "label": "Cream"
+        },
+        {
+          "value": "navy",
+          "label": "Navy"
+        }
       ]
     }
   ],
@@ -86,10 +119,27 @@
       "type": "reel",
       "name": "Reel",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Cover image (9:16)" },
-        { "type": "text", "id": "caption", "label": "Caption" },
-        { "type": "text", "id": "video", "label": "Video URL (mp4, optional)", "info": "Upload the file under Content > Files and paste its URL. Plays inline." },
-        { "type": "url", "id": "link", "label": "Link (used when there is no video)" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Cover image (9:16)"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption"
+        },
+        {
+          "type": "text",
+          "id": "video",
+          "label": "Video URL (mp4, optional)",
+          "info": "Upload the file under Content > Files and paste its URL. Plays inline."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (used when there is no video)"
+        }
       ]
     }
   ],
@@ -98,10 +148,30 @@
       "name": "Plaay video row",
       "category": "Plaay 2026",
       "blocks": [
-        { "type": "reel", "settings": { "caption": "How the pour happens" } },
-        { "type": "reel", "settings": { "caption": "Rashi: why I made Plaay" } },
-        { "type": "reel", "settings": { "caption": "The 3:30 pm reset" } },
-        { "type": "reel", "settings": { "caption": "Game night, Plaay style" } }
+        {
+          "type": "reel",
+          "settings": {
+            "caption": "How the pour happens"
+          }
+        },
+        {
+          "type": "reel",
+          "settings": {
+            "caption": "Rashi: why I made Plaay"
+          }
+        },
+        {
+          "type": "reel",
+          "settings": {
+            "caption": "The 3:30 pm reset"
+          }
+        },
+        {
+          "type": "reel",
+          "settings": {
+            "caption": "Game night, Plaay style"
+          }
+        }
       ]
     }
   ]
