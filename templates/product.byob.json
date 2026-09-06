@@ -1,42 +1,31 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "byob-builder": {
-      "type": "byob-builder",
+    "main": {
+      "type": "pl-byob",
       "settings": {
-        "bg_color": "#021d49",
-        "heading": "Build Your Box",
-        "subheading": "Mix & match your favourite Plaay flavours — your box, your rules.",
-        "tier_1_qty": 6,
-        "tier_1_saving": "Save 10%",
-        "tier_1_popular": false,
-        "tier_2_qty": 12,
-        "tier_2_saving": "Save 15%",
-        "tier_2_popular": true,
-        "tier_3_qty": 24,
-        "tier_3_saving": "Save 20%",
-        "tier_3_popular": false,
-        "cat_1_label": "Truffles",
-        "cat_1_collection": "chocolate-bars",
-        "cat_2_label": "Chocolate Bars",
-        "cat_2_collection": "",
-        "cat_3_label": "Energy Bars",
+        "eyebrow": "Mix and match",
+        "heading": "Build your box",
+        "subheading": "Pick any flavours you like, in any combination. Same price as our ready-made packs — you just choose what goes in.",
+        "size_heading": "Choose your box size",
+        "pick_heading": "Fill your box",
+        "buy_heading": "How often?",
+        "best_value_index": 3,
+        "tier_1_qty": 0,
+        "tier_2_qty": 0,
+        "tier_3_qty": 0,
+        "cat_1_label": "Slabs",
+        "cat_1_collection": "new-chocolate-slabs",
+        "cat_2_label": "Truffles",
+        "cat_2_collection": "chocolate-truffles",
+        "cat_3_label": "",
         "cat_3_collection": "",
-        "grid_bg": "#f4f4f4",
-        "picker_heading": "Choose Your Flavours",
-        "atc_label": "Add Box to Cart"
+        "note": "Every box ships free. Skip, swap or cancel a subscription any time."
       }
+    },
+    "recommendations": {
+      "type": "pl-recommendations",
+      "settings": {}
     }
   },
-  "order": [
-    "byob-builder"
-  ]
+  "order": ["main", "recommendations"]
 }

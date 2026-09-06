@@ -18,7 +18,7 @@
     assign heading = heading | replace_first: accent, accent_html
   endif
   assign btn1_url = s.btn1_url | default: '/collections/shop-all'
-  assign btn2_url = s.btn2_url | default: '/pages/subscribe-save'
+  assign btn2_url = s.btn2_url | default: '/products/build-your-box'
 -%}
 <div class="pl pl-section pl-hero" id="pl-{{ section.id }}">
   {%- if img_m != blank -%}

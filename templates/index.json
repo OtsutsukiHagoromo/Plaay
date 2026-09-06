@@ -12,7 +12,7 @@
         "btn1_label": "Shop bestsellers",
         "btn1_url": "/collections/shop-all",
         "btn2_label": "Build your box",
-        "btn2_url": "/pages/subscribe-save"
+        "btn2_url": "/products/build-your-box"
       }
     },
     "pl_claims": {
@@ -270,7 +270,7 @@
         "heading": "Your favourites, every 4 weeks.",
         "body": "Pick your box once. It arrives every 4 weeks at 15% off, and you can change it whenever you like.",
         "btn_label": "Build your box",
-        "btn_url": "/pages/subscribe-save",
+        "btn_url": "/products/build-your-box",
         "from": "From AED 41.65 a tube",
         "image": "shopify://shop_images/plaay26-green-tubes.jpg",
         "bg": "cream"

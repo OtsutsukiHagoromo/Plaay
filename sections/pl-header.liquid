@@ -54,7 +54,7 @@
   assign promo_title = section.settings.mega_title | default: 'Build your box'
   assign promo_text = section.settings.mega_text | default: 'Every 4 weeks. Free shipping. Skip or cancel anytime.'
   assign promo_btn = section.settings.mega_btn_label | default: 'Subscribe & Save'
-  assign promo_url = section.settings.mega_btn_url | default: '/pages/subscribe-save'
+  assign promo_url = section.settings.mega_btn_url | default: '/products/build-your-box'
 
   if customer
     assign account_url = routes.account_url
