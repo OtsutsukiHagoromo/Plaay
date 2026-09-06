@@ -1,0 +1,94 @@
+{%- comment -%}
+  Plaay 2026 product tile.
+  Usage: {% render 'pl-tile', product: product, eager: false, show_sub: true, hide_add: false, sizes: '(min-width:1024px) 300px, 46vw' %}
+  Renders: badge (from product tags, via plaay-badge rules), image, eyebrow, title, price,
+  subscribed price line (when the product has a selling plan), and a one-tap add button that
+  reuses the theme's <quick-add> module (adds first available variant, one-time purchase).
+  Subscription products keep the same one-tap add; the shopper can switch to Subscribe & Save in the cart drawer.
+{%- endcomment -%}
+{%- liquid
+  assign v = product.selected_or_first_available_variant
+  assign has_sub = false
+  if product.selling_plan_groups.size > 0
+    assign has_sub = true
+  endif
+  assign sub_pct = 0
+  if has_sub
+    for grp in product.selling_plan_groups
+      for plan in grp.selling_plans
+        for adj in plan.price_adjustments
+          if adj.value_type == 'percentage' and adj.value > sub_pct
+            assign sub_pct = adj.value
+          endif
+        endfor
+      endfor
+    endfor
+  endif
+  assign sub_price = 0
+  if sub_pct > 0
+    assign keep = 100 | minus: sub_pct
+    assign sub_price = v.price | times: keep | divided_by: 100
+  endif
+  assign badge_text = ''
+  for tag in product.tags
+    assign tl = tag | downcase | strip
+    if badge_text == ''
+      case tl
+        when 'badge:bestseller'
+          assign badge_text = 'Bestseller'
+        when 'badge:new-launch'
+          assign badge_text = 'New launch'
+        when 'badge:new'
+          assign badge_text = 'New'
+        when 'badge:limited', 'limited edition'
+          assign badge_text = 'Limited'
+        when 'badge:favourite'
+          assign badge_text = 'Fan favourite'
+        when 'badge:staff'
+          assign badge_text = 'Staff pick'
+        when 'badge:gift'
+          assign badge_text = 'Gift ready'
+      endcase
+    endif
+  endfor
+  assign img_sizes = sizes | default: '(min-width: 1024px) 300px, 46vw'
+  assign load = 'lazy'
+  if eager
+    assign load = 'eager'
+  endif
+-%}
+<article class="pl-tile" data-pl-tile data-product-id="{{ product.id }}" data-handle="{{ product.handle }}">
+  <div class="pl-tile__img">
+    {%- if badge_text != blank -%}<span class="pl-tag pl-tag--yellow pl-badge">{{ badge_text }}</span>{%- endif -%}
+    <a href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+      {%- if product.featured_image -%}
+        {{ product.featured_image | image_url: width: 600 | image_tag: loading: load, sizes: img_sizes, widths: '240, 360, 480, 600', alt: product.featured_image.alt | default: product.title, class: 'pl-tile__pic' }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'pl-tile__pic' }}
+      {%- endif -%}
+    </a>
+  </div>
+  {%- if badge_text != blank and badge_text != 'Limited' -%}
+    <span class="pl-tile__eyebrow">{{ badge_text }}</span>
+  {%- endif -%}
+  <h3 class="pl-tile__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+  <div class="pl-tile__foot">
+    <div class="pl-col pl-gap1">
+      <span class="pl-tile__price">{{ v.price | money_without_trailing_zeros }}</span>
+      {%- if show_sub != false and sub_price > 0 -%}
+        <span class="pl-tile__sub">{{ sub_price | money_without_trailing_zeros }} subscribed</span>
+      {%- endif -%}
+    </div>
+    {%- unless hide_add or v.available == false -%}
+      <quick-add class="pl-tile__add" data-module="quick-add" data-id="{{ v.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="button" class="pl-plus" data-add aria-label="Add {{ product.title | escape }} to bag">
+          {%- render 'pl-icon', name: 'plus', size: 18, stroke: 2.4 -%}
+        </button>
+      </quick-add>
+    {%- endunless -%}
+    {%- if v.available == false -%}
+      <span class="pl-tiny pl-mute pl-b">Sold out</span>
+    {%- endif -%}
+  </div>
+</article>
