@@ -370,5 +370,12 @@
       if (e.target && e.target.querySelector && e.target.querySelector('[data-pl-header]')) { active = null; initMega(); initSearch(); }
     });
   }
+  /* Theme-preview bar (staging review): lift the tab bar above it. */
+  function previewBarOffset() {
+    var bar = d.getElementById('preview-bar-iframe');
+    var h = bar ? Math.round(bar.getBoundingClientRect().height) : 0;
+    d.documentElement.style.setProperty('--pl-preview-bar', h + 'px');
+  }
+  [0, 800, 2500].forEach(function (t) { setTimeout(previewBarOffset, t); });
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', init); else init();
 })();

@@ -32,10 +32,12 @@
   </div>
 
   {%- comment -%} Module stubs: never visible, only here so the loader imports the bundles. {%- endcomment -%}
-  <cart-recommendations data-module="cart-recommendations" data-backup-product="{{ settings.backup_recommendations_product.id }}" hidden></cart-recommendations>
-  <quick-add data-module="quick-add" hidden></quick-add>
-  <cart-remove-button data-module="cart-remove-button" hidden></cart-remove-button>
-  <quantity-adjuster data-module="quantity-adjuster" hidden></quantity-adjuster>
+  <div data-module="cart-recommendations" hidden></div>
+  <div data-module="quick-add" hidden></div>
+  <div data-module="cart-remove-button" hidden></div>
+  <div data-module="quantity-adjuster" hidden></div>
+  {%- comment -%} bundle.cart-items.js reads .promotion_message in its constructor (legacy free-shipping confetti); threshold never reached. {%- endcomment -%}
+  <div class="promotion_message" data-total="{{ cart.total_price }}" data-threshold="999999999" hidden></div>
 </cart-drawer>
 
 <script defer src="{{ 'plaay-cart-gift-prompt.js' | asset_url }}"></script>
