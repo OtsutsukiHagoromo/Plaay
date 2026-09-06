@@ -13,9 +13,9 @@
 
     <div class="plaay-upsell-card__price-row">
       {% if product.compare_at_price > product.price %}
-        <span class="plaay-upsell-card__compare font-walsheim-bold">{{ product.compare_at_price | money }}</span>
+        <span class="plaay-upsell-card__compare font-walsheim-bold">{%- render 'plaay-aed', fils: product.compare_at_price -%}</span>
       {% endif %}
-      <span class="plaay-upsell-card__price font-walsheim-bold text-dark-blue">{{ product.price | money }}</span>
+      <span class="plaay-upsell-card__price font-walsheim-bold text-dark-blue">{%- render 'plaay-aed', fils: product.price -%}</span>
     </div>
 
     <quick-add data-module="quick-add" data-id="{{ product.first_available_variant.id }}">
