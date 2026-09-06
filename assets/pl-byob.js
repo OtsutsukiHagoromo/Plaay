@@ -174,9 +174,15 @@
 
   function addToBag() {
     if (!current || addBtn.disabled) return;
+    // Names are held lower-cased so pack wording folds away whatever the casing in
+    // Shopify; the grid restores it in CSS, but these keys travel to the order email
+    // and the packing slip, so put the casing back before they leave the page.
     var props = {};
     Object.keys(picks).forEach(function (name) {
-      props[name] = 'x' + picks[name];
+      var label = name.replace(/(^|[\s-])([a-z])/g, function (m, lead, ch) {
+        return lead + ch.toUpperCase();
+      });
+      props[label] = 'x' + picks[name];
     });
 
     var body = {
