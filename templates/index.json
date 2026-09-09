@@ -44,8 +44,8 @@
             "link_one_text": "Shop Now",
             "link_two": "",
             "link_two_text": "",
-            "img": "shopify://shop_images/Plaay_Rewards_Desktop_banner.jpg",
-            "m-img": "shopify://shop_images/Plaay_Rewards_Mobile_banner.jpg",
+            "img": "shopify://shop_images/Plaay_offers_banner_desktop_1_1.jpg",
+            "m-img": "shopify://shop_images/Plaay_offers_banner_mobile_2_1.jpg",
             "section_one_video": "",
             "section_two_video": ""
           }
@@ -137,6 +137,7 @@
         "@media screen and (max-width: 600px) {.two-sections-overlay .btn {font-size: 18px; min-width: 240px; padding: 18px 25px; }}"
       ],
       "settings": {
+        "seo_heading": "Plaay - clean chocolate snack-hacks, made in the UAE",
         "autoplay_speed": 700,
         "height_desktop_large": 640,
         "height_desktop": 640,
@@ -589,13 +590,13 @@
     },
     "cu_countdown_timer_jJqyWW": {
       "type": "cu-countdown-timer",
+      "disabled": true,
       "name": "Countdown Timer",
       "settings": {
         "title": "SALE ENDS IN:",
         "end_time": "2026-08-31T23:59:59",
         "start_time": "2026-08-29T00:00:00"
-      },
-      "disabled": true
+      }
     },
     "scrolling_content_U784BN": {
       "type": "scrolling-content",
