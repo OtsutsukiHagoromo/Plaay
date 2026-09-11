@@ -12,10 +12,6 @@
     "favicon": "shopify://shop_images/Blue_logo_on_Yellow_Choco_Snack_Hack_Zoomed.jpg",
     "global_recharge_point_two": "15% Off Regular Price",
     "ingredients_icons_link_list": "ingredients-icons",
-    "eid_sale_enabled": false,
-    "fathers_day_sale_enabled": false,
-    "summer_sale_enabled": false,
-    "bts_sale_enabled": false,
     "cart_tier_ship": 75,
     "cart_tier_1_spend": 250,
     "cart_tier_1_label": "7% off",
@@ -23,6 +19,10 @@
     "cart_tier_2_label": "10% off + Mystery Gift",
     "cart_tier_3_spend": 500,
     "cart_tier_3_label": "15% off + Mystery Gift",
+    "eid_sale_enabled": false,
+    "fathers_day_sale_enabled": false,
+    "summer_sale_enabled": false,
+    "bts_sale_enabled": false,
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",
@@ -374,6 +374,11 @@
       },
       "10641372206048101839": {
         "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-global-embed/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
+        "disabled": false,
+        "settings": {}
+      },
+      "855628211100114053": {
+        "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/klaviyo-onsite-embed/2632fe16-c075-4321-a88b-50b567f42507",
         "disabled": false,
         "settings": {}
       }
