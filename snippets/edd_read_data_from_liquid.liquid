@@ -20,7 +20,7 @@
 {% assign product_title = product.title  %}
 {% assign product_handle = product.handle  %}
 {% assign product_tag = product.tags  %}
-{% assign product_type = product.type || replace:'`',''  %}
+{% assign product_type = product.type | replace: '`', '' %}
 {% assign product_vendor = product.vendor  %}
 {% assign product_avaiable = product.available  %}
 
@@ -624,4 +624,13 @@ var loadScriptInLiquidData = function (url, callback) {
       is_set_msg_for_all_product = '1';
     }
   }
-</script>
+</script>{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% assign product_type = product.type || replace:'`',''  %}"
+  to: "{% assign product_type = product.type | replace: '`', '' %}"
+  position: 830..889
+{%- endcomment -%}
