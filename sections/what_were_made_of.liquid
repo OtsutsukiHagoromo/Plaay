@@ -173,7 +173,7 @@
             {% if sticker_rotation_text != blank %}
               {% render 'img', type: 'img', img: sticker_rotation_text, lazy: true, class: 'animate-rotateText object-contain h-[220px] w-[220px] md:h-[240px] md:w-[240px] absolute transform left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2' %}
             {% endif %}
-            {% render 'scratch-sticker', text_color: sticker_text_color, background_image, sticker_background_image: sticker_background_image, background_color: sticker_background_color, text: sticker_text, heading: sticker_heading %}
+            {% render 'scratch-sticker', text_color: sticker_text_color, sticker_background_image: sticker_background_image, background_color: sticker_background_color, text: sticker_text, heading: sticker_heading %}
           </div>
         </div>
       {% endif %}
@@ -395,4 +395,17 @@
       }
     ]
   }
-{% endschema %}
+{% endschema %}{%- comment -%}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% render 'scratch-sticker', text_color: sticker_text_color, background_image,
+    sticker_background_image: sticker_background_image, background_color: sticker_background_color,
+    text: sticker_text, heading: sticker_heading %}"
+  to: "{% render 'scratch-sticker', text_color: sticker_text_color, sticker_background_image:
+    sticker_background_image, background_color: sticker_background_color, text: sticker_text,
+    heading: sticker_heading %}"
+  position: 5486..5690
+{%- endcomment -%}
