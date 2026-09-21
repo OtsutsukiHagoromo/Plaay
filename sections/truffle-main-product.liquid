@@ -48,6 +48,44 @@
 {%- endfor -%}
 {%- assign unique_size_arr = unique_sizes | split: '||' -%}
 
+{% comment %}
+  ── Default pack size ──
+  Pre-select the pack size configured in the section settings (e.g. 10*60gm)
+  instead of whatever variant Shopify happens to list first. Sizes are matched
+  loosely so '10*60gm', '10 X 60G' and '10x60' all resolve to the same tile.
+  A variant explicitly requested via ?variant= always wins.
+{% endcomment %}
+{%- assign default_size_value = section.settings.default_size_value | default: section.settings.popular_size_value -%}
+{%- assign default_size_key = default_size_value | downcase | remove: ' ' | remove: '*' | remove: 'x' | remove: 'gm' | remove: 'g' -%}
+{%- assign selected_size = product.selected_or_first_available_variant.options[size_option_index] -%}
+{%- unless product.selected_variant -%}
+  {%- if default_size_key != blank -%}
+    {%- for size_val in unique_size_arr -%}
+      {%- assign size_key = size_val | downcase | remove: ' ' | remove: '*' | remove: 'x' | remove: 'gm' | remove: 'g' -%}
+      {%- if size_key == default_size_key -%}
+        {%- for v in product.variants -%}
+          {%- if v.options[size_option_index] == size_val and v.available -%}
+            {%- assign selected_size = size_val -%}
+            {%- break -%}
+          {%- endif -%}
+        {%- endfor -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endunless -%}
+
+{% comment %} Variant backing the default size, so the first paint shows its price. {% endcomment %}
+{%- assign default_variant = product.selected_or_first_available_variant -%}
+{%- if selected_size != blank and default_variant.options[size_option_index] != selected_size -%}
+  {%- for v in product.variants -%}
+    {%- if v.options[size_option_index] == selected_size and v.available -%}
+      {%- assign default_variant = v -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
 {% style %}
   @media (max-width: 767px) {
     #shopify-section-{{ section.id }} .container { padding-top: 80px; }
@@ -418,7 +456,7 @@
         <p class="my-3 text-sm text-dark-blue">{{ subtitle_text }}</p>
       {% endif %}
 
-      {% render 'product-price', product: product %}
+      {% render 'product-price', product: product, variant: default_variant %}
       {%- render 'plaay-rating-badge' -%}
       {%- render 'plaay-eid-offer-strip' -%}
       {%- render 'plaay-fd-offer-strip' -%}
@@ -453,7 +491,6 @@
       </div>
 
       {% if size_option_index != nil and unique_sizes != blank %}
-        {%- assign selected_size = product.selected_or_first_available_variant.options[size_option_index] -%}
         {%- assign popular_size_compact = section.settings.popular_size_value | downcase | remove: ' ' -%}
         <p class="text-xs uppercase text-dark-blue font-walsheim-bold mb-2" style="letter-spacing:0.07em;">{{ size_option_label }}</p>
         <div class="truffle-sizes-row" id="truffle-sizes-row-{{ section.id }}" data-size-option-index="{{ size_option_index }}">
@@ -617,7 +654,7 @@
 </div>
 
 
-{%- assign sticky_variant = product.selected_or_first_available_variant -%}
+{%- assign sticky_variant = default_variant -%}
 
 {% comment %} ── Mobile sticky ATC (shown on mobile when inline button scrolls out) ── {% endcomment %}
 <div id="plaay-sticky-mobile" class="plaay-sticky-mobile" aria-hidden="true">
@@ -713,6 +750,7 @@
   var SECTION_ID = '{{ section.id }}';
   var SIZE_OPTION_INDEX = {{ size_option_index | default: 0 }};
   var SELECTED_OPTIONS = {{ product.selected_or_first_available_variant.options | json }};
+  var DEFAULT_SIZE = {{ selected_size | default: '' | json }};
 
   var variantDataEl = document.getElementById('truffle-variant-data-' + SECTION_ID);
   if (!variantDataEl) return;
@@ -721,7 +759,7 @@
   var sizesRow = document.getElementById('truffle-sizes-row-' + SECTION_ID);
 
   var state = {
-    selectedSize: SELECTED_OPTIONS[SIZE_OPTION_INDEX] || (TRUFFLE_VARIANTS[0] && TRUFFLE_VARIANTS[0].options ? TRUFFLE_VARIANTS[0].options[SIZE_OPTION_INDEX] : '')
+    selectedSize: DEFAULT_SIZE || SELECTED_OPTIONS[SIZE_OPTION_INDEX] || (TRUFFLE_VARIANTS[0] && TRUFFLE_VARIANTS[0].options ? TRUFFLE_VARIANTS[0].options[SIZE_OPTION_INDEX] : '')
   };
 
   function variantSize(variant) {
@@ -1283,6 +1321,13 @@
       "id": "show_size_badge",
       "label": "Show popular badge on one size",
       "default": true
+    },
+    {
+      "type": "text",
+      "id": "default_size_value",
+      "label": "Default pack size",
+      "default": "10*60gm",
+      "info": "Pack size pre-selected when the page loads. Must match the size option value, ignoring spaces."
     },
     {
       "type": "text",

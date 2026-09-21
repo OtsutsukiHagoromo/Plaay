@@ -43,6 +43,7 @@
         "size_option_name": "Pack Size",
         "show_size_per_truffle": true,
         "show_size_badge": true,
+        "default_size_value": "10 X 60G",
         "popular_size_value": "10 X 60G",
         "popular_size_badge_text": "Most Popular",
         "tab_info_label": "Product Info",

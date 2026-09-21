@@ -1,4 +1,4 @@
-{% assign _first_variant = product.variants.first %}
+{% assign _first_variant = variant | default: product.variants.first %}
 <div class="{% if _first_variant.compare_at_price > _first_variant.price %} on-sale flex items-center flex-wrap {% else %} inline-block {% endif %}">
   <span class="product_price font-walsheim-black text-center {% if text_white %}text-white{% else %}text-dark-blue{% endif %} {% if _first_variant.compare_at_price > _first_variant.price %}text-xs{% else %}text-sm md:text-base{% endif %}">
     {{ shop.currency }} {{- _first_variant.price | money_without_currency -}}
