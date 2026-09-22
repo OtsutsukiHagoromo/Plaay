@@ -50,7 +50,11 @@
 {% endstyle %}
 
 {% liquid 
-  assign current_variant = product.selected_or_first_available_variant
+  comment
+    Callers may pass selected_variant to pre-select a variant other than the one
+    Shopify lists first (e.g. the truffle PDP's default pack size).
+  endcomment
+  assign current_variant = selected_variant | default: product.selected_or_first_available_variant
   assign whats_inside_one_pack = product.metafields.arena.whats_inside_one_pack
   assign global_recharge_point_one = settings.global_recharge_point_one
   assign global_recharge_point_two = settings.global_recharge_point_two
@@ -91,10 +95,10 @@
       method="post"
       enctype="multipart/form-data"
       class="product-page-form"
-      id="add-to-cart-{{ product.selected_or_first_available_variant.id }}-{{ section.id }}"
+      id="add-to-cart-{{ current_variant.id }}-{{ section.id }}"
       data-add-to-cart
       data-product-page-add-to-cart>
-      <quick-add data-module="quick-add" data-id="{{- product.first_available_variant.id -}}">
+      <quick-add data-module="quick-add" data-id="{{- selected_variant.id | default: product.first_available_variant.id -}}">
         <select
           name="id"
           id="productSelect"
@@ -234,7 +238,7 @@
                     </button>
                   {%- endfor -%}
                 </div>
-                <input type="hidden" value="{{ product.selected_or_first_available_variant.id }}" data-variant-id />
+                <input type="hidden" value="{{ current_variant.id }}" data-variant-id />
                 <input type="hidden" value="{{ product.variants | json | escape }}" data-variants />
                 <input type="hidden" value="false" data-subscription />
                 <input type="hidden" name="selling_plan" value="{{ product.selling_plan_groups[0].selling_plans[0].id }}" data-selling-plan-id disabled />
@@ -421,7 +425,7 @@
         <input
           type="hidden"
           name="id"
-          value="{{ product.selected_or_first_available_variant.id }}"
+          value="{{ current_variant.id }}"
           data-add-to-cart-variant-id />
         <input
           type="hidden"

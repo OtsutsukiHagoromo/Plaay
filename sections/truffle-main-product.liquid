@@ -545,7 +545,7 @@
       {% endif %}
 
       <div class="truffle-atc-wrap">
-        {% render 'product.add-to-cart', product: product, hide_inline_atc: true, hide_inline_quantity: true %}
+        {% render 'product.add-to-cart', product: product, selected_variant: default_variant, hide_inline_atc: true, hide_inline_quantity: true %}
       </div>
       {%- render 'plaay-delivery-promise' -%}
 
