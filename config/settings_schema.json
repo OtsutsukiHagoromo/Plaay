@@ -196,12 +196,12 @@
       },
       {
         "type": "header",
-        "content": "Back to School Sale (29–31 Aug)"
+        "content": "Sitewide sale kit (currently: Plaay Day Sale, 27–30 Sep)"
       },
       {
         "type": "checkbox",
         "id": "bts_sale_enabled",
-        "label": "Enable Back to School sale (flat 20% off sitewide, auto-shows 29–31 Aug only)",
+        "label": "Enable sitewide sale kit (Plaay Day: flat 20% off, auto-shows 27–30 Sep only)",
         "default": false
       },
       {

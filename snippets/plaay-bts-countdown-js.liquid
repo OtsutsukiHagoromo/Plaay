@@ -1,7 +1,7 @@
 {%- comment -%}
-  Plaay - Back to School countdown ticker. Loaded once globally. Ticks every
+  Plaay - sitewide sale countdown ticker (BTS kit, now Plaay Day Sale). Loaded once globally. Ticks every
   [data-bts-countdown] on the page each second (multi-instance: PDP + cart drawer).
-  Hides them all when the sale ends (1 September 00:00 Dubai / +04:00 = end of 31 Aug).
+  Hides them all when the sale ends (1 October 00:00 Dubai / +04:00 = end of 30 Sep).
 {%- endcomment -%}
 {%- if settings.bts_sale_enabled -%}
 <script>
@@ -9,7 +9,7 @@
   if (window.plaayBtsCountdownReady) return;
   window.plaayBtsCountdownReady = true;
 
-  var END = new Date('2026-09-01T00:00:00+04:00').getTime();
+  var END = new Date('2026-10-01T00:00:00+04:00').getTime();
 
   function pad(n) { return n < 10 ? '0' + n : '' + n; }
 

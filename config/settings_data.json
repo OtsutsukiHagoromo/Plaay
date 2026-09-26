@@ -22,7 +22,7 @@
     "eid_sale_enabled": false,
     "fathers_day_sale_enabled": false,
     "summer_sale_enabled": false,
-    "bts_sale_enabled": false,
+    "bts_sale_enabled": true,
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",
@@ -44,13 +44,13 @@
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"
-            }
+            },
+            "disabled": true
           },
           "announcement_text_yP4HrN": {
             "type": "announcement_text",
-            "disabled": true,
             "settings": {
-              "text": "Summer Sale. Flat 30% Off on Everything.",
+              "text": "🎉 Plaay Day Sale · Flat 20% Off Sitewide · 27–30 Sep · No Code Needed",
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"

@@ -1,0 +1,43 @@
+name: Plaay Day sale auto teardown (27-30 Sep 2026)
+
+on:
+  schedule:
+    # Sep 30 20:05 UTC = Oct 1 00:05 GST (UTC+4). GitHub silently skipped the first
+    # scheduled firing of a freshly-pushed workflow during the Aug 2026 Back to School
+    # sale, so retry every 15 min for two hours. Disabling is idempotent and the commit
+    # step is a no-op when nothing changed, so every firing after the first does nothing.
+    - cron: '5,20,35,50 20,21 30 9 *'
+  workflow_dispatch:        # manual run from GitHub Actions UI
+    inputs:
+      mode:
+        description: 'enable or disable the sale'
+        required: true
+        type: choice
+        options:
+          - disable
+          - enable
+
+permissions:
+  contents: write
+
+jobs:
+  toggle-sale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toggle Plaay Day sale in theme JSON
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python3 .github/scripts/toggle_plaay_day_sale.py ${{ inputs.mode }} --force
+          else
+            python3 .github/scripts/toggle_plaay_day_sale.py disable
+          fi
+
+      - name: Commit and push
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add config/settings_data.json templates/index.json
+          git diff --cached --quiet || git commit -m "Auto: toggle Plaay Day sale (27-30 Sep) [skip ci]"
+          git push

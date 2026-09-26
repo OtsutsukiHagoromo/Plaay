@@ -166,6 +166,13 @@
         %}
 
         <li id="slide-{{ block.id }}" class="relative flex {% if block.settings.img == blank %}h-full{% endif %} {% if slides_size > 1 %} glide__slide {% endif %}">
+          {%- comment -%}
+            Banners with a CTA baked into the mobile artwork hide the theme buttons below md;
+            the whole slide becomes the link instead so the printed CTA still works.
+          {%- endcomment -%}
+          {%- if block.settings.hide_links_mobile and link_one != blank -%}
+            <a href="{{ link_one }}" class="absolute inset-0 z-10 md:hidden" aria-label="{{ link_one_text | escape }}"></a>
+          {%- endif -%}
           {% if block.settings.img != blank %}
             <div style="width: 100%" class="main-hero-full-img">
               {%- comment -%}
@@ -335,7 +342,7 @@
               </h2>
             {% endif %}
             {% comment %} buttons {% endcomment %}
-            <div class="flex items-center justify-center mt-7">
+            <div class="flex items-center justify-center mt-7{% if block.settings.hide_links_mobile %} hidden md:flex{% endif %}">
               {% if link_one != blank %}
                 {% render 'btn',
                   href: link_one,
@@ -715,6 +722,12 @@
           "type": "url",
           "id": "link_one",
           "label": "Link one"
+        }, {
+          "type": "checkbox",
+          "id": "hide_links_mobile",
+          "label": "Hide buttons on mobile",
+          "info": "Use when the mobile banner already has a CTA in the artwork.",
+          "default": false
         }, {
           "type": "text",
           "id": "link_one_text",

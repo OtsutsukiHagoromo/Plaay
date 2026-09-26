@@ -1,13 +1,13 @@
 {%- comment -%}
-  Plaay - Back to School offer card for the product page. 20% off sitewide, 29-31 August.
-  Reuses the Eid offer-card CSS. Auto-hides outside the 29-31 August (Dubai) window.
+  Plaay - sitewide sale offer card for the product page (BTS kit, now Plaay Day Sale). 20% off sitewide, 27-30 September.
+  Reuses the Eid offer-card CSS. Auto-hides outside the 27-30 September (Dubai) window.
 {%- endcomment -%}
 {%- liquid
   assign bts_active = false
   if settings.bts_sale_enabled
     assign bts_now = 'now' | date: '%s' | times: 1
-    assign bts_start = '2026-08-29T00:00:00+04:00' | date: '%s' | times: 1
-    assign bts_end = '2026-09-01T00:00:00+04:00' | date: '%s' | times: 1
+    assign bts_start = '2026-09-27T00:00:00+04:00' | date: '%s' | times: 1
+    assign bts_end = '2026-10-01T00:00:00+04:00' | date: '%s' | times: 1
     if bts_now >= bts_start and bts_now < bts_end
       assign bts_active = true
     endif
@@ -16,16 +16,16 @@
 {%- if bts_active -%}
 <div class="plaay-eid-card">
   <div class="plaay-eid-card__header">
-    <span class="plaay-eid-card__emoji">🎒</span>
-    <span class="plaay-eid-card__title">Back to School Sale &middot; Flat 20% Off Sitewide</span>
+    <span class="plaay-eid-card__emoji">🎉</span>
+    <span class="plaay-eid-card__title">Plaay Day Sale &middot; Flat 20% Off Sitewide</span>
   </div>
   <ul class="plaay-eid-card__tiers">
     <li class="plaay-eid-card__tier">
       <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-      <strong>20% off</strong> your entire order, 29&ndash;31 Aug
+      <strong>20% off</strong> your entire order, 27&ndash;30 Sep
     </li>
   </ul>
   {%- render 'plaay-bts-countdown' -%}
-  <p class="plaay-eid-card__note">Discount applied automatically at checkout &middot; Ends 11:59 PM, 31 August</p>
+  <p class="plaay-eid-card__note">Discount applied automatically at checkout &middot; Ends 11:59 PM, 30 September</p>
 </div>
 {%- endif -%}

@@ -19,6 +19,15 @@
   if settings.eid_sale_enabled
     assign rewards_live = false
   endif
+  # Plaay Day Sale (27-30 Sep 2026): the flat 20% does not combine with the tier discounts
+  # and the PDP shows the sale offer card instead, so stand down for the window.
+  if settings.bts_sale_enabled
+    assign pd_start = '2026-09-27T00:00:00+04:00' | date: '%s' | times: 1
+    assign pd_end = '2026-10-01T00:00:00+04:00' | date: '%s' | times: 1
+    if rw_now >= pd_start and rw_now < pd_end
+      assign rewards_live = false
+    endif
+  endif
 -%}
 {%- if rewards_live -%}
   {%- liquid

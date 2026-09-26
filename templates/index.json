@@ -12,6 +12,45 @@
     "4ae9c22c-dd9d-4d0b-bb5c-7da4d20021b3": {
       "type": "two-sections-hero",
       "blocks": {
+        "slide_plaayDay": {
+          "type": "slide",
+          "settings": {
+            "hide_section_one_mobile": true,
+            "hide_section_two_mobile": false,
+            "title_color_mobile": "#021d49",
+            "title_color_desktop": "#021d49",
+            "heading_color_mobile": "#021d49",
+            "heading_color_desktop": "#021d49",
+            "title_tag_type": "1",
+            "content_vertical_position_mobile": "bottom-0 top-auto",
+            "content_horizontal_position_mobile": "text-center",
+            "content_vertical_position_desktop": "md:bottom-0 md:top-auto",
+            "content_horizontal_position_desktop": "md:text-center",
+            "title_size_desktop": 50,
+            "title_size_mobile": 32,
+            "heading_size_desktop": 34,
+            "heading_size_mobile": 22,
+            "link_one_style": "blue",
+            "link_one_style_mobile": "blue",
+            "link_two_style": "white",
+            "link_two_style_mobile": "blue-border",
+            "section_one_video_loop": true,
+            "section_two_video_loop": true,
+            "title": "",
+            "title_mobile": "",
+            "heading": "",
+            "heading_mobile": "",
+            "link_one": "shopify://collections/all",
+            "link_one_text": "Shop Now",
+            "link_two": "",
+            "link_two_text": "",
+            "img": "shopify://shop_images/Plaay_Day_Sale_Desktop_banner.jpg",
+            "m-img": "shopify://shop_images/Plaay_Day_Sale_Mobile_banner.jpg",
+            "section_one_video": "",
+            "section_two_video": "",
+            "hide_links_mobile": true
+          }
+        },
         "slide_earVyE": {
           "type": "slide",
           "settings": {
@@ -48,7 +87,8 @@
             "m-img": "shopify://shop_images/Plaay_offers_banner_mobile_2_1.jpg",
             "section_one_video": "",
             "section_two_video": ""
-          }
+          },
+          "disabled": true
         },
         "slide_BwPeAp": {
           "type": "slide",
@@ -128,6 +168,7 @@
         }
       },
       "block_order": [
+        "slide_plaayDay",
         "slide_earVyE",
         "slide_BwPeAp",
         "slide_YeGDTk"
@@ -590,12 +631,11 @@
     },
     "cu_countdown_timer_jJqyWW": {
       "type": "cu-countdown-timer",
-      "disabled": true,
       "name": "Countdown Timer",
       "settings": {
-        "title": "SALE ENDS IN:",
-        "end_time": "2026-08-31T23:59:59",
-        "start_time": "2026-08-29T00:00:00"
+        "title": "PLAAY DAY SALE ENDS IN:",
+        "end_time": "2026-09-30T23:59:59",
+        "start_time": "2026-09-27T00:00:00"
       }
     },
     "scrolling_content_U784BN": {

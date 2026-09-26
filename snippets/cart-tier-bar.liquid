@@ -28,10 +28,26 @@
     assign rewards_live = true
   endif
 
+  # Plaay Day Sale (27-30 Sep 2026, Dubai / +04:00): the flat 20% automatic discount does
+  # not combine with the rewards tier discounts, so during the window the ladder would
+  # promise 7/10/15% that never applies. Show free delivery + the mystery gift instead,
+  # with the gift raised to AED 440 in cart (~AED 352 paid after 20%). Self-reverts.
+  assign pd_active = false
+  if settings.bts_sale_enabled
+    assign pd_start = '2026-09-27T00:00:00+04:00' | date: '%s' | times: 1
+    assign pd_end = '2026-10-01T00:00:00+04:00' | date: '%s' | times: 1
+    if rw_now >= pd_start and rw_now < pd_end
+      assign pd_active = true
+    endif
+  endif
+
   assign amounts = ship_aed | append: ''
   assign labels = 'Free delivery'
 
-  if settings.eid_sale_enabled
+  if pd_active
+    assign amounts = amounts | append: ',440'
+    assign labels = labels | append: '|Mystery Gift'
+  elsif settings.eid_sale_enabled
     assign a1 = settings.eid_tier_1_spend | default: 250
     assign l1 = settings.eid_tier_1_label | default: '20% Off + Mystery Gift'
     assign a2 = settings.eid_tier_2_spend | default: 400
