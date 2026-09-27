@@ -10,7 +10,7 @@
   assign full_image_slides = 0
 
   for block in slides
-    if block.settings.img != blank
+    if block.settings.img != blank or block.settings.img_asset != blank
       assign full_image_slides = full_image_slides | plus: 1
     endif
   endfor
@@ -163,9 +163,17 @@
           assign section_two_image_mobile = block.settings.section_two_image_mobile
           assign section_two_image_desktop = block.settings.section_two_image_desktop
           assign full_image_mobile = block.settings['m-img']
+
+          # Banners can also ship as theme assets from the repo (no Files upload needed).
+          assign img_asset = block.settings.img_asset
+          assign m_img_asset = block.settings.m_img_asset
+          assign has_img = false
+          if block.settings.img != blank or img_asset != blank
+            assign has_img = true
+          endif
         %}
 
-        <li id="slide-{{ block.id }}" class="relative flex {% if block.settings.img == blank %}h-full{% endif %} {% if slides_size > 1 %} glide__slide {% endif %}">
+        <li id="slide-{{ block.id }}" class="relative flex {% unless has_img %}h-full{% endunless %} {% if slides_size > 1 %} glide__slide {% endif %}">
           {%- comment -%}
             Banners with a CTA baked into the mobile artwork hide the theme buttons below md;
             the whole slide becomes the link instead so the printed CTA still works.
@@ -173,7 +181,28 @@
           {%- if block.settings.hide_links_mobile and link_one != blank -%}
             <a href="{{ link_one }}" class="absolute inset-0 z-10 md:hidden" aria-label="{{ link_one_text | escape }}"></a>
           {%- endif -%}
-          {% if block.settings.img != blank %}
+          {% if img_asset != blank %}
+            <div style="width: 100%" class="main-hero-full-img">
+              <picture>
+                {% if m_img_asset != blank %}
+                  <source
+                    media="(max-width: 767px)"
+                    srcset="{{ m_img_asset | asset_img_url: '480x' }} 480w, {{ m_img_asset | asset_img_url: '750x' }} 750w, {{ m_img_asset | asset_img_url: '1000x' }} 1000w"
+                    sizes="100vw"
+                  >
+                {% endif %}
+                <img
+                  style="width: 100%; height: 100%;"
+                  src="{{ img_asset | asset_img_url: '1500x' }}"
+                  srcset="{{ img_asset | asset_img_url: '750x' }} 750w, {{ img_asset | asset_img_url: '1100x' }} 1100w, {{ img_asset | asset_img_url: '1500x' }} 1500w, {{ img_asset | asset_img_url: '1920x' }} 1920w"
+                  sizes="100vw"
+                  {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                  decoding="async"
+                  alt="{{ block.settings.title_mobile | default: block.settings.title | default: link_one_text | escape }}"
+                >
+              </picture>
+            </div>
+          {% elsif block.settings.img != blank %}
             <div style="width: 100%" class="main-hero-full-img">
               {%- comment -%}
                 LCP element on the homepage. Previously served `img_url: 'master'` (the
@@ -204,7 +233,7 @@
               </picture>
             </div>
           {% endif %}
-          {% if block.settings.img == blank %}
+          {% unless has_img %}
             {% style %}
               #slide-{{ block.id | append: ' ' }}.title_mobile {
                 color: {{ title_color_mobile }}
@@ -318,7 +347,7 @@
                 {% endif %}
               {% endif %}
             </div>
-          {% endif %}
+          {% endunless %}
           {% comment %} textual content {% endcomment %}
           <div class="textual_content container absolute transform w-full py-4 left-1/2 -translate-x-1/2 {{ content_vertical_position_mobile }} {{ content_horizontal_position_mobile }} | {{ content_vertical_position_desktop }} {{ content_horizontal_position_desktop }}">
             {% if title != blank %}
@@ -722,6 +751,15 @@
           "type": "url",
           "id": "link_one",
           "label": "Link one"
+        }, {
+          "type": "text",
+          "id": "img_asset",
+          "label": "Desktop banner from theme assets (filename)",
+          "info": "e.g. plaay-day-sale-desktop.jpg in /assets. Used instead of the image picker when set."
+        }, {
+          "type": "text",
+          "id": "m_img_asset",
+          "label": "Mobile banner from theme assets (filename)"
         }, {
           "type": "checkbox",
           "id": "hide_links_mobile",

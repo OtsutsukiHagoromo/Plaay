@@ -44,11 +44,13 @@
             "link_one_text": "Shop Now",
             "link_two": "",
             "link_two_text": "",
-            "img": "shopify://shop_images/Plaay_Day_Sale_Desktop_banner.jpg",
-            "m-img": "shopify://shop_images/Plaay_Day_Sale_Mobile_banner.jpg",
+            "img": "",
+            "m-img": "",
             "section_one_video": "",
             "section_two_video": "",
-            "hide_links_mobile": true
+            "hide_links_mobile": true,
+            "img_asset": "plaay-day-sale-desktop.jpg",
+            "m_img_asset": "plaay-day-sale-mobile.jpg"
           }
         },
         "slide_earVyE": {
