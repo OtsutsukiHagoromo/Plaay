@@ -41,20 +41,19 @@
             "heading": "",
             "heading_mobile": "",
             "link_one": "shopify://collections/all",
+            "img_asset": "plaay-day-sale-desktop.jpg",
+            "m_img_asset": "plaay-day-sale-mobile.jpg",
+            "hide_links_mobile": true,
             "link_one_text": "Shop Now",
             "link_two": "",
             "link_two_text": "",
-            "img": "",
-            "m-img": "",
             "section_one_video": "",
-            "section_two_video": "",
-            "hide_links_mobile": true,
-            "img_asset": "plaay-day-sale-desktop.jpg",
-            "m_img_asset": "plaay-day-sale-mobile.jpg"
+            "section_two_video": ""
           }
         },
         "slide_earVyE": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "hide_section_one_mobile": true,
             "hide_section_two_mobile": false,
@@ -82,6 +81,9 @@
             "heading": "",
             "heading_mobile": "",
             "link_one": "shopify://collections",
+            "img_asset": "",
+            "m_img_asset": "",
+            "hide_links_mobile": false,
             "link_one_text": "Shop Now",
             "link_two": "",
             "link_two_text": "",
@@ -89,8 +91,7 @@
             "m-img": "shopify://shop_images/Plaay_offers_banner_mobile_2_1.jpg",
             "section_one_video": "",
             "section_two_video": ""
-          },
-          "disabled": true
+          }
         },
         "slide_BwPeAp": {
           "type": "slide",
@@ -121,6 +122,9 @@
             "heading": "",
             "heading_mobile": "",
             "link_one": "shopify://collections",
+            "img_asset": "",
+            "m_img_asset": "",
+            "hide_links_mobile": false,
             "link_one_text": "Shop Now",
             "link_two": "",
             "link_two_text": "",
@@ -159,6 +163,9 @@
             "heading": "",
             "heading_mobile": "",
             "link_one": "https://shopplaay.com/pages/subscribe-save",
+            "img_asset": "",
+            "m_img_asset": "",
+            "hide_links_mobile": false,
             "link_one_text": "SHOP NOW",
             "link_two": "",
             "link_two_text": "",
@@ -1740,9 +1747,29 @@
         "related_articles_grid_desktop_large": 4,
         "hide_related_articles": false
       }
+    },
+    "blocks_PqBbJD": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_900bb11_9RgwHV": {
+          "type": "ai_gen_block_900bb11",
+          "settings": {
+            "spacing_desktop": 50,
+            "spacing_mobile": 30,
+            "background_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_900bb11_9RgwHV"
+      ],
+      "name": "Spacer",
+      "settings": {}
     }
   },
   "order": [
+    "blocks_PqBbJD",
     "4ae9c22c-dd9d-4d0b-bb5c-7da4d20021b3",
     "marquee_slider_cM4zJb",
     "featured_products_wAKHQm",
