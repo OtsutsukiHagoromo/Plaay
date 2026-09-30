@@ -49,11 +49,11 @@
             "link_two_text": "",
             "section_one_video": "",
             "section_two_video": ""
-          }
+          },
+          "disabled": true
         },
         "slide_earVyE": {
           "type": "slide",
-          "disabled": true,
           "settings": {
             "hide_section_one_mobile": true,
             "hide_section_two_mobile": false,
@@ -645,7 +645,8 @@
         "title": "PLAAY DAY SALE ENDS IN:",
         "end_time": "2026-09-30T23:59:59",
         "start_time": "2026-09-27T00:00:00"
-      }
+      },
+      "disabled": true
     },
     "scrolling_content_U784BN": {
       "type": "scrolling-content",
