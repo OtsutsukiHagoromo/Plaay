@@ -1,0 +1,54 @@
+{%- comment -%}
+  Option A / Option B preview: shop by category. A: white outlined tiles with a packshot on the
+  left. B: flavour-colour tiles with the packshot bleeding off the corner and a sticker arrow.
+  Packshot = the block image, else the chosen product's featured image.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<div class="pl plo plo-sec">
+  <div class="plo-wrap">
+    {%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light -%}
+    <div class="plo-cats">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign pic = b.image
+          if pic == blank and b.product != blank
+            assign pic = b.product.featured_image
+          endif
+          assign href = b.url | default: '/collections/shop-all'
+        -%}
+        <a class="plo-cat plo-box" href="{{ href }}" style="--tint: {{ b.tint }};" {{ block.shopify_attributes }}>
+          {%- if pic != blank -%}{{ pic | image_url: width: 300 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
+          <span><span class="plo-cat__n">{{ b.title }}</span><span class="plo-cat__c">{{ b.sub }}</span></span>
+          <span class="plo-cat__go" aria-hidden="true">{%- render 'pl-icon', name: 'arrow-right', size: 14, stroke: 2.4 -%}</span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: categories",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label (Option A only)", "default": "Shop" },
+    { "type": "text", "id": "heading", "label": "Heading, bold part", "default": "Find your" },
+    { "type": "text", "id": "heading_light", "label": "Heading, light part", "default": "favourite" }
+  ],
+  "blocks": [
+    {
+      "type": "cat",
+      "name": "Category",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Slabs" },
+        { "type": "text", "id": "sub", "label": "Sub line", "default": "7 flavours" },
+        { "type": "url", "id": "url", "label": "Link" },
+        { "type": "product", "id": "product", "label": "Packshot from product" },
+        { "type": "image_picker", "id": "image", "label": "Packshot (overrides product)" },
+        { "type": "color", "id": "tint", "label": "Tile colour (Option B)", "default": "#FFF0B3" }
+      ]
+    }
+  ]
+}
+{% endschema %}

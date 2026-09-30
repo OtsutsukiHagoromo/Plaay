@@ -92,6 +92,15 @@
     {{ 'custom.css' | asset_url | stylesheet_tag }}
     {{ 'plaay-ui.css' | asset_url | stylesheet_tag }}
     {{ 'pl-shell.css' | asset_url | stylesheet_tag }}
+    {%- comment -%}
+      Redesign preview: templates with the suffix option-a / option-b (opened with ?view=option-a
+      or ?view=option-b) get the Option A / Option B skin. Nothing else loads this.
+    {%- endcomment -%}
+    {%- assign plo_skin = '' -%}
+    {%- if template.suffix == 'option-a' or template.suffix == 'option-b' -%}
+      {%- assign plo_skin = template.suffix | remove: 'option-' -%}
+      {{ 'pl-opt.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
     {% render 'head.fonts' %}
 
     {%- if pl_bundle != blank -%}
@@ -151,7 +160,7 @@
   {% render 'shogun-head' %}
 </head>
 
-    <body class="pl-body pl-has-tabbar template-{{ template | remove: '.' }}{% if pl_is_legacy %} pl-legacy{% endif %}">
+    <body class="pl-body pl-has-tabbar template-{{ template | remove: '.' }}{% if pl_is_legacy %} pl-legacy{% endif %}{% if plo_skin != blank %} pl-skin-{{ plo_skin }}{% endif %}">
     {%- render 'icon-sprite' -%}
     <a class="plaay-skip-link" href="#main">Skip to content</a>
     {% section 'pl-announcement' %}
@@ -280,5 +289,9 @@
 </script>
 
       {% render 'pl-tabbar' %}
+      {%- if plo_skin != blank -%}
+        {%- render 'plo-switch' -%}
+        <script defer src="{{ 'pl-opt.js' | asset_url }}"></script>
+      {%- endif -%}
     </body>
 </html>

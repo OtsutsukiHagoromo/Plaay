@@ -1,0 +1,7 @@
+{%- comment -%}
+  Five stars for the Option A / Option B preview templates. Colour comes from --o-star
+  (navy in A, yellow in B). Usage: {% render 'plo-stars', size: 13, label: '4.6 out of 5' %}
+{%- endcomment -%}
+<span class="plo-stars" style="--s: {{ size | default: 13 }}px"{% if label != blank %} role="img" aria-label="{{ label | escape }}"{% else %} aria-hidden="true"{% endif %}>
+  {%- for i in (1..5) -%}{%- render 'pl-icon', name: 'star', size: size -%}{%- endfor -%}
+</span>

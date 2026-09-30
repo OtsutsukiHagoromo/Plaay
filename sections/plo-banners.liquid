@@ -1,0 +1,149 @@
+{%- comment -%}
+  Option A / Option B preview: homepage banners. One slide = a single banner; two or more
+  slides = a swipeable carousel with dots that auto-advances until touched.
+  Slide styles:
+    photo   – product photo with the copy on a panel matching the photo backdrop (slabs banner)
+    navy    – flat-lay photo on navy with a skewed edge and a round sticker (Mix Pack)
+    collage – two tilted photos and a sticker on a solid colour (brand banner)
+  Photos: an image_picker wins; otherwise the *_asset file name from /assets is used.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign rating = shop.metafields.judgeme.all_reviews_rating | append: '' | times: 1.0
+  assign count = shop.metafields.judgeme.all_reviews_count | append: '' | plus: 0
+  if rating <= 0
+    assign rating = settings.store_rating_value | append: '' | times: 1.0
+  endif
+  if count <= 0
+    assign count = settings.store_rating_count | append: '' | plus: 0
+  endif
+  assign rating = rating | round: 1
+  assign n = section.blocks.size
+-%}
+{%- capture tick -%}{%- render 'pl-icon', name: 'check', size: 10, stroke: 4 -%}{%- endcapture -%}
+{%- capture arrow -%}{%- render 'pl-icon', name: 'arrow-right', size: 18, stroke: 3 -%}{%- endcapture -%}
+
+<div class="pl plo{% if s.promo %} plo-promo{% endif %}">
+  <div class="plo-car"{% if n > 1 %} data-plo-carousel data-interval="{{ s.interval }}"{% endif %}>
+    <div class="plo-car__track" data-plo-track>
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign dark = false
+          if b.style == 'navy'
+            assign dark = true
+          endif
+          assign chips = b.chips | split: ','
+          assign heading_html = b.heading | escape
+          if b.heading_mark != blank
+            assign mark = b.heading_mark | escape
+            assign mark_html = '<span class="plo-bn__mark">' | append: mark | append: '</span>'
+            if b.style == 'navy'
+              assign mark_html = '<span class="plo-bn__accent">' | append: mark | append: '</span>'
+            elsif b.style == 'collage'
+              assign mark_html = '<span class="plo-bn__outline">' | append: mark | append: '</span>'
+            endif
+            assign heading_html = heading_html | replace: mark, mark_html
+          endif
+          assign heading_html = heading_html | replace: '|', '<br>'
+        -%}
+        <section class="plo-bn plo-bn--{{ b.style }}" style="--bn-bg: {{ b.bg }};" data-bg="{{ b.bg }}" data-dark="{{ dark }}" aria-roledescription="slide" aria-label="{{ forloop.index }} of {{ n }}" {{ block.shopify_attributes }}>
+          {%- case b.style -%}
+            {%- when 'collage' -%}
+              <div class="plo-bn__art" aria-hidden="true">
+                <div class="plo-bn__photo plo-bn__photo--1">{%- render 'plo-img', image: b.image, asset: b.image_asset, width: 900, eager: forloop.first -%}</div>
+                <div class="plo-bn__photo plo-bn__photo--2">{%- render 'plo-img', image: b.image_2, asset: b.image_2_asset, width: 700, eager: forloop.first -%}</div>
+                {%- if b.sticker_big != blank -%}<div class="plo-sticker"><span>{{ b.sticker_big }}<br><small style="font-size:.7em">{{ b.sticker_small }}</small></span></div>{%- endif -%}
+              </div>
+            {%- else -%}
+              <div class="plo-bn__media">{%- render 'plo-img', image: b.image, asset: b.image_asset, width: 2000, alt: b.image_alt, eager: forloop.first -%}</div>
+              {%- if b.style == 'navy' and b.sticker_big != blank -%}
+                <div class="plo-sticker"><span><span style="font-size:2.6em;display:block;line-height:.9">{{ b.sticker_big }}</span>{{ b.sticker_small }}</span></div>
+              {%- endif -%}
+          {%- endcase -%}
+
+          <div class="plo-bn__body">
+            {%- if b.eyebrow != blank -%}
+              <span class="plo-bn__eyebrow{% if b.style == 'photo' %} plo-bn__pill{% endif %}">{{ b.eyebrow }}</span>
+            {%- endif -%}
+            {%- if forloop.first and s.promo == false -%}
+              <h1 class="plo-bn__h">{{ heading_html }}</h1>
+            {%- else -%}
+              <h2 class="plo-bn__h">{{ heading_html }}</h2>
+            {%- endif -%}
+            {%- if b.body != blank -%}<p class="plo-bn__p">{{ b.body }}</p>{%- endif -%}
+            <div class="plo-bn__cta">
+              {%- if b.btn_label != blank -%}
+                <a class="plo-btn{% if b.btn_navy %} plo-btn--navy{% endif %}" href="{{ b.btn_url | default: '/collections/shop-all' }}">{{ b.btn_label }}{% if b.btn_arrow %} {{ arrow }}{% endif %}</a>
+              {%- endif -%}
+              {%- if b.show_rating or b.link_label != blank -%}
+                <div class="plo-bn__meta">
+                  {%- if b.show_rating and rating > 0 -%}
+                    <span class="plo-bn__proof">{%- render 'plo-stars', size: 15 -%}{{ rating }} from {{ count }} reviews</span>
+                  {%- endif -%}
+                  {%- if b.link_label != blank -%}<a class="plo-bn__link" href="{{ b.link_url | default: '/collections/shop-all' }}">{{ b.link_label }}</a>{%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+            {%- if b.chips != blank -%}
+              <div class="plo-bn__chips">
+                {%- for c in chips -%}<span class="plo-chip"><i>{{ tick }}</i>{{ c | strip }}</span>{%- endfor -%}
+              </div>
+            {%- endif -%}
+          </div>
+        </section>
+      {%- endfor -%}
+    </div>
+    {%- if n > 1 -%}
+      <div class="plo-car__dots" data-plo-dots role="tablist" aria-label="Choose banner">
+        {%- for block in section.blocks -%}
+          <button type="button" class="plo-car__dot" data-plo-dot aria-label="Banner {{ forloop.index }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: banners",
+  "tag": "div",
+  "settings": [
+    { "type": "checkbox", "id": "promo", "label": "Mid-page promo (adds top spacing, no h1)", "default": false },
+    { "type": "range", "id": "interval", "label": "Auto-advance (seconds, 0 = off)", "min": 0, "max": 12, "step": 1, "default": 6 }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Banner",
+      "settings": [
+        { "type": "select", "id": "style", "label": "Style", "default": "photo", "options": [
+          { "value": "photo", "label": "Photo + copy panel" },
+          { "value": "navy", "label": "Navy + flat-lay" },
+          { "value": "collage", "label": "Colour + photo collage" }
+        ] },
+        { "type": "color", "id": "bg", "label": "Background", "default": "#FDF3E6" },
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "image_asset", "label": "Photo fallback (theme asset file)" },
+        { "type": "text", "id": "image_alt", "label": "Photo alt text" },
+        { "type": "image_picker", "id": "image_2", "label": "Second photo (collage)" },
+        { "type": "text", "id": "image_2_asset", "label": "Second photo fallback (theme asset file)" },
+        { "type": "text", "id": "eyebrow", "label": "Label" },
+        { "type": "text", "id": "heading", "label": "Heading", "info": "Use | for a line break." },
+        { "type": "text", "id": "heading_mark", "label": "Highlighted words", "info": "Must appear in the heading exactly." },
+        { "type": "textarea", "id": "body", "label": "Text" },
+        { "type": "text", "id": "btn_label", "label": "Button label" },
+        { "type": "url", "id": "btn_url", "label": "Button link" },
+        { "type": "checkbox", "id": "btn_arrow", "label": "Arrow on button", "default": true },
+        { "type": "checkbox", "id": "btn_navy", "label": "Navy button", "default": false },
+        { "type": "text", "id": "link_label", "label": "Text link label" },
+        { "type": "url", "id": "link_url", "label": "Text link" },
+        { "type": "checkbox", "id": "show_rating", "label": "Show store rating", "default": true },
+        { "type": "text", "id": "chips", "label": "Claim chips (comma separated)" },
+        { "type": "text", "id": "sticker_big", "label": "Sticker, big text" },
+        { "type": "text", "id": "sticker_small", "label": "Sticker, small text" }
+      ]
+    }
+  ]
+}
+{% endschema %}

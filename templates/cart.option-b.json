@@ -1,0 +1,29 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "plo-cart",
+      "settings": {
+        "upsell": "triple-chocolate-truffle",
+        "trust": "Halal · Easy returns · 1–2 day delivery",
+        "empty_products": [
+          "new-chocolate-bars-mix-pack-of-5",
+          "og-plaayer-pack",
+          "triple-chocolate-truffle",
+          "salted-caramel-bar-x12"
+        ]
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,244 @@
+{%- comment -%}
+  Option A / Option B preview: cart page.
+  A: title row, reward ladder box, lines in one box, upsell box, summary box.
+  B: yellow band with title + ladder, lines grouped into "Delivered on repeat" / "One-time",
+     a cream "add one" band, open summary.
+  Ladder maths match snippets/pl-rewards-line.liquid (theme settings cart_tier_*; totals in fils,
+  measured on cart.original_total_price). Line actions live in assets/pl-opt.js.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign skin = template.suffix | remove: 'option-'
+  assign view_q = ''
+  if template.suffix != blank
+    assign view_q = '?view=' | append: template.suffix
+  endif
+
+  assign ship_aed = settings.cart_tier_ship | default: 75
+  assign a1 = settings.cart_tier_1_spend | default: 250
+  assign l1 = settings.cart_tier_1_label | default: '7% off'
+  assign a2 = settings.cart_tier_2_spend | default: 350
+  assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift'
+  assign a3 = settings.cart_tier_3_spend | default: 500
+  assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift'
+  assign amounts = ship_aed | append: ',' | append: a1 | append: ',' | append: a2 | append: ',' | append: a3 | split: ','
+  assign labels = 'Free delivery|' | append: l1 | append: '|' | append: l2 | append: '|' | append: l3 | split: '|'
+
+  assign total = cart.original_total_price
+  assign reached = -1
+  for amt in amounts
+    assign amt_fils = amt | times: 100
+    if total >= amt_fils
+      assign reached = forloop.index0
+    endif
+  endfor
+  assign next_index = reached | plus: 1
+  assign last_index = amounts.size | minus: 1
+  assign last_fils = amounts[last_index] | times: 100
+  assign pct = total | times: 100 | divided_by: last_fils
+  if pct > 100
+    assign pct = 100
+  endif
+  assign remaining = 0
+  assign next_label = ''
+  if reached < last_index
+    assign remaining = amounts[next_index] | times: 100 | minus: total
+    assign next_label = labels[next_index]
+  endif
+  assign got = ''
+  assign reached_to = reached
+  if reached_to < 0
+    assign reached_to = 0
+  endif
+  for i in (0..reached_to)
+    if reached < 0
+      break
+    endif
+    if got == ''
+      assign got = labels[i]
+    else
+      assign got = got | append: ' and ' | append: labels[i]
+    endif
+  endfor
+
+  assign full = 0
+  assign has_sub = false
+  assign has_one = false
+  for item in cart.items
+    assign line_full = item.final_line_price
+    if item.selling_plan_allocation and item.selling_plan_allocation.compare_at_price > item.selling_plan_allocation.price
+      assign line_full = item.selling_plan_allocation.compare_at_price | times: item.quantity
+    elsif item.original_line_price > item.final_line_price
+      assign line_full = item.original_line_price
+    endif
+    assign full = full | plus: line_full
+    if item.selling_plan_allocation
+      assign has_sub = true
+    else
+      assign has_one = true
+    endif
+  endfor
+  assign line_savings = full | minus: cart.items_subtotal_price
+  assign ship_fils = ship_aed | times: 100
+
+  assign up = s.upsell
+  assign up_in_cart = false
+  if up != blank
+    for item in cart.items
+      if item.product_id == up.id
+        assign up_in_cart = true
+      endif
+    endfor
+  endif
+  assign up_msg = 'A bestseller for the road'
+  if up != blank and reached < last_index
+    assign upv = up.selected_or_first_available_variant
+    if upv.price >= remaining
+      assign up_msg = 'Unlocks ' | append: next_label
+    else
+      assign up_msg = 'Gets you closer to ' | append: next_label
+    endif
+  endif
+  assign tints = '#FFF1CC,#FFE6CC,#FDE3E2,#D6F1EF,#E9DDF7' | split: ','
+-%}
+{%- capture ladder -%}
+  <div class="plo-ladder plo-box">
+    <p class="plo-ladder__msg">
+      {%- if reached == last_index -%}
+        <b>{{ labels[last_index] }}</b> unlocked · applied automatically at checkout
+      {%- else -%}
+        <b>{%- render 'plaay-aed', fils: remaining -%}</b> more {% if skin == 'b' %}unlocks <b>{{ next_label }}</b>{% else %}for {{ next_label }}{% endif %}
+      {%- endif -%}
+    </p>
+    <div class="plo-ladder__bar">
+      <div class="plo-ladder__fill" style="width: {{ pct }}%"></div>
+      {%- for amt in amounts -%}
+        {%- assign at = amt | times: 100 | divided_by: amounts[last_index] -%}
+        {%- if at > 96 -%}{%- assign at = 96 -%}{%- endif -%}
+        <span class="plo-ladder__stop{% if forloop.index0 <= reached %} is-on{% endif %}" style="left: {{ at }}%"></span>
+      {%- endfor -%}
+    </div>
+    {%- if skin == 'b' -%}
+      <div class="plo-ladder__labels">
+        {%- for l in labels -%}
+          {%- assign short = l | replace: ' + Mystery Gift', ' + gift' | replace: 'Free delivery', 'Free delivery' -%}
+          <span{% if forloop.index0 <= reached %} class="is-on"{% endif %}>{{ short }}{% if forloop.index0 <= reached %} ✓{% endif %}</span>
+        {%- endfor -%}
+      </div>
+    {%- elsif reached >= 0 -%}
+      <div class="plo-ladder__ok">{%- render 'pl-icon', name: 'check', size: 14, stroke: 2.6 -%}{{ got }} unlocked</div>
+    {%- endif -%}
+  </div>
+{%- endcapture -%}
+{%- capture upsell -%}
+  {%- if up != blank and up_in_cart == false and up.available -%}
+    {%- assign upv = up.selected_or_first_available_variant -%}
+    <div class="plo-upsell plo-box" data-plo-line data-key="" data-qty="0">
+      <a class="plo-upsell__pic" href="{{ up.url }}">{%- if up.featured_image -%}{{ up.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: up.title }}{%- endif -%}</a>
+      <div>
+        <p class="plo-upsell__t">{{ up.title }}{% if skin == 'a' %} · {% render 'plaay-aed', fils: upv.price %}{% endif %}</p>
+        <p class="plo-upsell__s">{% if skin == 'b' %}{% render 'plaay-aed', fils: upv.price %} · {% endif %}{{ up_msg }}</p>
+      </div>
+      <button type="button" class="plo-btn{% if skin == 'a' %} plo-btn--sec{% endif %}" data-plo-cart="add" data-variant="{{ upv.id }}">Add</button>
+    </div>
+  {%- endif -%}
+{%- endcapture -%}
+{%- capture summary -%}
+  <div class="plo-sum plo-box">
+    <div class="plo-sum__r"><span>Subtotal</span><b>{%- render 'plaay-aed', fils: full -%}</b></div>
+    {%- if line_savings > 0 -%}
+      <div class="plo-sum__r is-green"><span>{% if has_sub %}Subscription savings{% else %}Savings{% endif %}</span><b>− {% render 'plaay-aed', fils: line_savings %}</b></div>
+    {%- endif -%}
+    {%- for d in cart.cart_level_discount_applications -%}
+      <div class="plo-sum__r is-green"><span>{{ d.title }}</span><b>− {% render 'plaay-aed', fils: d.total_allocated_amount %}</b></div>
+    {%- endfor -%}
+    {%- if reached >= 1 and cart.cart_level_discount_applications.size == 0 -%}
+      <div class="plo-sum__r is-green"><span>Rewards: {{ labels[reached] }}</span><b>At checkout</b></div>
+    {%- endif -%}
+    <div class="plo-sum__r"><span>Delivery</span><b>{% if total >= ship_fils %}Free{% else %}At checkout{% endif %}</b></div>
+    <div class="plo-sum__hr"></div>
+    <div class="plo-sum__t"><span>Total</span><b>{%- render 'plaay-aed', fils: cart.total_price -%}</b></div>
+  </div>
+  <form class="plo-checkout" action="{{ routes.cart_url }}" method="post">
+    <button type="submit" name="checkout" class="plo-btn plo-btn--full">Checkout · {% render 'plaay-aed', fils: cart.total_price %}</button>
+    <p class="plo-checkout__note">{{ s.trust }}</p>
+  </form>
+{%- endcapture -%}
+{%- capture top -%}
+  <div class="plo-cart__top">
+    <h1 class="plo-title"><b>Your bag</b>{% if cart.item_count > 0 %} <span>({{ cart.item_count }})</span>{% endif %}</h1>
+    <a class="plo-cart__close" href="{{ routes.collections_url }}/shop-all{{ view_q }}" aria-label="Keep shopping">{%- render 'pl-icon', name: 'close', size: 20 -%}</a>
+  </div>
+{%- endcapture -%}
+
+<div class="pl plo plo-cart{% if cart.item_count > 0 %} has-items{% endif %}">
+  {%- if cart.item_count == 0 -%}
+    <div class="plo-wrap">
+      {{ top }}
+      <div class="plo-cart__empty">
+        <p>Your bag is empty. Here’s where most people start.</p>
+        <a class="plo-btn" href="{{ routes.collections_url }}/shop-all{{ view_q }}">Shop bestsellers</a>
+      </div>
+      {%- if s.empty_products.size > 0 -%}
+        <div class="plo-sec" style="padding-top:28px"><div class="plo-grid">
+          {%- for product in s.empty_products -%}{%- render 'plo-card', product: product -%}{%- endfor -%}
+        </div></div>
+      {%- endif -%}
+    </div>
+  {%- elsif skin == 'b' -%}
+    <div class="plo-cart__band"><div class="plo-wrap">{{ top }}{{ ladder }}</div></div>
+    <div class="plo-wrap">
+      <div class="plo-cart__cols">
+        <div>
+          <div class="plo-lines">
+            {%- if has_sub -%}
+              <div class="plo-cart__grp">
+                <div class="plo-group">{%- render 'pl-icon', name: 'refresh', size: 16, stroke: 2 -%}Delivered on repeat</div>
+                {%- for item in cart.items -%}{%- if item.selling_plan_allocation -%}{%- assign ti = forloop.index0 | modulo: 5 -%}{%- render 'plo-cart-line', line: item, tint: tints[ti] -%}{%- endif -%}{%- endfor -%}
+              </div>
+            {%- endif -%}
+            {%- if has_one -%}
+              <div class="plo-cart__grp">
+                <div class="plo-group">One-time</div>
+                {%- for item in cart.items -%}{%- unless item.selling_plan_allocation -%}{%- assign ti = forloop.index0 | modulo: 5 -%}{%- render 'plo-cart-line', line: item, tint: tints[ti] -%}{%- endunless -%}{%- endfor -%}
+              </div>
+            {%- endif -%}
+          </div>
+          {%- if upsell != blank -%}
+            <div class="plo-cart__upband">
+              <h2 class="plo-title"><b>Add one,</b> <span>{% if next_label contains 'Gift' %}get a gift{% else %}for the road{% endif %}</span></h2>
+              {{ upsell }}
+            </div>
+          {%- endif -%}
+        </div>
+        <div class="plo-cart__side">{{ summary }}</div>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="plo-wrap">
+      {{ top }}
+      <div class="plo-cart__cols">
+        <div>
+          <div class="plo-cart__blk">{{ ladder }}</div>
+          <div class="plo-cart__blk"><div class="plo-lines plo-box">
+            {%- for item in cart.items -%}{%- render 'plo-cart-line', line: item -%}{%- endfor -%}
+          </div></div>
+          {%- if upsell != blank -%}<div class="plo-cart__blk">{{ upsell }}</div>{%- endif -%}
+        </div>
+        <div class="plo-cart__side"><div class="plo-cart__blk">{{ summary }}</div></div>
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Preview: cart",
+  "tag": "section",
+  "settings": [
+    { "type": "product", "id": "upsell", "label": "Upsell product" },
+    { "type": "text", "id": "trust", "label": "Line under checkout", "default": "Halal · Easy returns · 1–2 day delivery" },
+    { "type": "product_list", "id": "empty_products", "label": "Products when the bag is empty", "limit": 4 }
+  ]
+}
+{% endschema %}

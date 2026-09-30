@@ -1,0 +1,76 @@
+{%- comment -%}
+  One cart line for sections/plo-cart.liquid. Usage: {% render 'plo-cart-line', line: item, tint: '#FFF1CC' %}
+  Subscribed lines show their plan and the struck one-time price; one-time lines of a product
+  that has a selling plan get a "Subscribe & save" switch (A: toggle row, B: cream row + button).
+  Buttons carry data-plo-cart; assets/pl-opt.js posts to /cart/change.js and reloads.
+{%- endcomment -%}
+{%- liquid
+  assign alloc = line.selling_plan_allocation
+  assign strike = 0
+  if alloc and alloc.compare_at_price > alloc.price
+    assign strike = alloc.compare_at_price | times: line.quantity
+  elsif line.original_line_price > line.final_line_price
+    assign strike = line.original_line_price
+  endif
+
+  assign plan_id = ''
+  assign plan_pct = 0
+  if alloc == nil and line.product.selling_plan_groups.size > 0
+    for grp in line.product.selling_plan_groups
+      for plan in grp.selling_plans
+        if plan_id == ''
+          assign plan_id = plan.id
+          for adj in plan.price_adjustments
+            if adj.value_type == 'percentage'
+              assign plan_pct = adj.value
+            endif
+          endfor
+        endif
+      endfor
+    endfor
+  endif
+  assign plan_save = line.final_line_price | times: plan_pct | divided_by: 100
+
+  assign meta = ''
+  if line.variant.title != 'Default Title'
+    assign meta = line.variant.title
+  endif
+  if alloc
+    assign meta_plan = alloc.selling_plan.name
+  else
+    assign meta_plan = 'One-time'
+  endif
+-%}
+<div class="plo-line" data-plo-line data-key="{{ line.key }}" data-qty="{{ line.quantity }}">
+  <a class="plo-line__pic" href="{{ line.url }}" style="--tint: {{ tint | default: '#FFF7DD' }}">
+    {%- if line.image -%}{{ line.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: line.product.title }}{%- endif -%}
+  </a>
+  <div class="plo-line__main">
+    <div class="plo-line__row">
+      <h3 class="plo-line__name"><a href="{{ line.url }}">{{ line.product.title }}</a></h3>
+      <button type="button" class="plo-line__rm" data-plo-cart="remove" aria-label="Remove {{ line.product.title | escape }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/></svg>
+      </button>
+    </div>
+    <p class="plo-line__meta">{% if meta != blank %}{{ meta }} · {% endif %}{{ meta_plan }}</p>
+    {%- if alloc -%}
+      <div class="plo-line__sub">{%- render 'pl-icon', name: 'refresh', size: 14, stroke: 2.2 -%}Delivered on repeat{% if strike > 0 %} · saving {% assign sv = strike | minus: line.final_line_price %}{%- render 'plaay-aed', fils: sv -%}{% endif %}</div>
+    {%- elsif plan_id != '' -%}
+      <button type="button" class="plo-line__switch" data-plo-cart="subscribe" data-plan="{{ plan_id }}">
+        <span>Subscribe &amp; save {% render 'plaay-aed', fils: plan_save -%}</span>
+        <span class="plo-toggle" aria-hidden="true"></span><em>Switch</em>
+      </button>
+    {%- endif -%}
+    <div class="plo-line__foot">
+      <div class="plo-step">
+        <button type="button" data-plo-cart="dec" aria-label="One less">{%- render 'pl-icon', name: 'minus', size: 14, stroke: 2.2 -%}</button>
+        <span>{{ line.quantity }}</span>
+        <button type="button" data-plo-cart="inc" aria-label="One more">{%- render 'pl-icon', name: 'plus', size: 14, stroke: 2.2 -%}</button>
+      </div>
+      <div class="plo-price">
+        <b>{%- render 'plaay-aed', fils: line.final_line_price -%}</b>
+        {%- if strike > 0 -%}<s>{%- render 'plaay-aed', fils: strike -%}</s>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>

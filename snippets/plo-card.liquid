@@ -1,0 +1,99 @@
+{%- comment -%}
+  Product card for the Option A / Option B preview templates.
+  Usage: {% render 'plo-card', product: product, eager: false %}
+  One markup, two looks: A is a white outlined box with the add button in the footer,
+  B is a lifted image tile with a sticker add button on the image and the repeat price
+  under the price. The add buttons reuse the theme's <quick-add> module (first available
+  variant, one-time purchase), the same as snippets/pl-tile.liquid.
+{%- endcomment -%}
+{%- liquid
+  assign v = product.selected_or_first_available_variant
+  assign sub_pct = 0
+  for grp in product.selling_plan_groups
+    for plan in grp.selling_plans
+      for adj in plan.price_adjustments
+        if adj.value_type == 'percentage' and adj.value > sub_pct
+          assign sub_pct = adj.value
+        endif
+      endfor
+    endfor
+  endfor
+  assign sub_price = 0
+  if sub_pct > 0
+    assign keep = 100 | minus: sub_pct
+    assign sub_price = v.price | times: keep | divided_by: 100
+  endif
+
+  assign badge_text = ''
+  assign badge_mod = ''
+  for tag in product.tags
+    assign tl = tag | downcase | strip
+    if badge_text == ''
+      case tl
+        when 'badge:bestseller'
+          assign badge_text = 'Best seller'
+        when 'badge:new-launch', 'badge:new'
+          assign badge_text = 'New'
+          assign badge_mod = 'new'
+        when 'badge:limited', 'limited edition'
+          assign badge_text = 'Limited'
+          assign badge_mod = 'limited'
+        when 'badge:favourite'
+          assign badge_text = 'Fan fave'
+        when 'badge:staff'
+          assign badge_text = 'Staff pick'
+      endcase
+    endif
+  endfor
+  if badge != blank
+    assign badge_text = badge
+  endif
+
+  assign meta = ''
+  if product.variants.size > 1
+    assign meta = product.variants.size | append: ' pack sizes'
+  elsif v.title != 'Default Title'
+    assign meta = v.title
+  endif
+
+  assign load = 'lazy'
+  if eager
+    assign load = 'eager'
+  endif
+-%}
+<article class="plo-card">
+  <div class="plo-card__img">
+    <a href="{{ product.url }}" tabindex="-1" aria-hidden="true">
+      {%- if product.featured_image -%}
+        {{ product.featured_image | image_url: width: 600 | image_tag: loading: load, sizes: '(min-width: 1024px) 300px, 46vw', widths: '240, 360, 480, 600', alt: product.title }}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag }}
+      {%- endif -%}
+    </a>
+    {%- if badge_text != blank -%}<span class="plo-badge{% if badge_mod != blank %} plo-badge--{{ badge_mod }}{% endif %}">{{ badge_text }}</span>{%- endif -%}
+    {%- if v.available -%}
+      <quick-add class="plo-card__add-b" data-module="quick-add" data-id="{{ v.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="button" class="plo-add" data-add aria-label="Add {{ product.title | escape }} to bag">{%- render 'pl-icon', name: 'plus', size: 18, stroke: 2.4 -%}</button>
+      </quick-add>
+    {%- endif -%}
+  </div>
+  <div class="plo-card__body">
+    <h3 class="plo-card__name"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    {%- if meta != blank -%}<p class="plo-card__meta">{{ meta }}</p>{%- endif -%}
+    <div class="plo-card__foot">
+      <div>
+        <div class="plo-card__price">{%- if product.variants.size > 1 -%}From {% endif -%}{%- render 'plaay-aed', fils: v.price -%}</div>
+        {%- if sub_price > 0 -%}<div class="plo-card__sub">{%- render 'plaay-aed', fils: sub_price -%} on repeat</div>{%- endif -%}
+      </div>
+      {%- if v.available -%}
+        <quick-add class="plo-card__add-a" data-module="quick-add" data-id="{{ v.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="button" class="plo-add" data-add aria-label="Add {{ product.title | escape }} to bag">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</button>
+        </quick-add>
+      {%- else -%}
+        <span class="plo-card__soldout">Sold out</span>
+      {%- endif -%}
+    </div>
+  </div>
+</article>

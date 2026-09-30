@@ -1,0 +1,141 @@
+{%- comment -%}
+  Option A / Option B preview: collection page. Head (label, title, intro, and for the bars
+  collection a row of bar packs), type chips, count + sort, product grid (snippets/plo-card),
+  a Subscribe & Save promo after the first rows, and a load-more link.
+  Every link keeps ?view= so the shopper stays in the option being previewed.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign view = template.suffix
+  assign view_q = ''
+  if view != blank
+    assign view_q = 'view=' | append: view
+  endif
+
+  assign intro = s.intro
+  if intro == blank and collection.description != blank
+    assign intro = collection.description | strip_html | strip | truncatewords: 30
+  endif
+  assign is_bars = false
+  if collection.handle == s.bars_handle
+    assign is_bars = true
+  endif
+  assign current_sort = collection.sort_by | default: collection.default_sort_by
+
+  assign chip_labels = s.chip_labels | split: '|'
+  assign chip_handles = s.chip_handles | split: '|'
+  assign promo_after = s.promo_after
+  assign bars = 'plo-bar-caramel.png,plo-bar-cookies.png,plo-bar-mocha.png,plo-bar-peanut.png,plo-bar-pistachio.png' | split: ','
+-%}
+<div class="pl plo">
+  {%- paginate collection.products by s.per_page -%}
+    <header class="plo-lhead{% if is_bars %} plo-lhead--bars{% endif %}">
+      <div class="plo-wrap" style="display:flex;flex-direction:column;gap:10px">
+        <p class="plo-eyebrow plo-eyebrow--sec">{{ collection.products_count }} products</p>
+        <h1 class="plo-title"><b>{{ collection.title }}</b></h1>
+        {%- if intro != blank -%}<p class="plo-lhead__p">{{ intro }}</p>{%- endif -%}
+        {%- if is_bars -%}
+          <div class="plo-lhead__bars plo-box" aria-hidden="true">
+            {%- for f in bars -%}<img src="{{ f | asset_url }}" alt="" loading="eager" width="160" height="260">{%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </header>
+
+    <div class="plo-wrap">
+      <nav class="plo-chips" aria-label="Shop by type">
+        {%- for h in chip_handles -%}
+          {%- assign i = forloop.index0 -%}
+          <a href="{{ routes.collections_url }}/{{ h }}{% if view_q != blank %}?{{ view_q }}{% endif %}"{% if collection.handle == h %} aria-current="page"{% endif %}>{{ chip_labels[i] }}</a>
+        {%- endfor -%}
+      </nav>
+
+      <div class="plo-sortbar plo-box">
+        <span class="plo-sortbar__n">{{ collection.products_count }} products</span>
+        {%- if collection.sort_options.size > 0 -%}
+          <form method="get" action="{{ collection.url }}">
+            {%- if view != blank -%}<input type="hidden" name="view" value="{{ view }}">{%- endif -%}
+            <label for="plo-sort-{{ section.id }}">Sort:</label>
+            <select id="plo-sort-{{ section.id }}" name="sort_by" onchange="this.form.submit()">
+              {%- for option in collection.sort_options -%}
+                <option value="{{ option.value | escape }}"{% if option.value == current_sort %} selected{% endif %}>{{ option.name | escape }}</option>
+              {%- endfor -%}
+            </select>
+            <noscript><button type="submit">Go</button></noscript>
+          </form>
+        {%- endif -%}
+      </div>
+
+      {%- if collection.products.size > 0 -%}
+        <div class="plo-lgrid">
+          <div class="plo-grid">
+            {%- for product in collection.products -%}
+              {%- liquid
+                assign eager = false
+                if forloop.index <= 4
+                  assign eager = true
+                endif
+              -%}
+              {%- render 'plo-card', product: product, eager: eager -%}
+              {%- if s.show_promo and forloop.index == promo_after and paginate.current_page == 1 and forloop.length > promo_after -%}
+                <div class="plo-lpromo">
+                  <div class="plo-lpromo__in">
+                    <div class="plo-sticker" aria-hidden="true"><span>{{ s.promo_sticker }}</span></div>
+                    <div style="display:flex;flex-direction:column;gap:10px">
+                      <p class="plo-eyebrow">{{ s.promo_eyebrow }}</p>
+                      <h2 class="plo-title"><b>{{ s.promo_heading }}</b></h2>
+                      <p>{{ s.promo_body }}</p>
+                    </div>
+                    <a class="plo-btn" href="{{ s.promo_url }}">{{ s.promo_btn }}</a>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- else -%}
+        <p class="plo-empty">Nothing here yet. <a class="plo-u" href="{{ routes.collections_url }}/shop-all{% if view_q != blank %}?{{ view_q }}{% endif %}">Shop all</a></p>
+      {%- endif -%}
+
+      {%- if paginate.next -%}
+        {%- liquid
+          assign shown = paginate.current_page | times: paginate.page_size
+          assign next_url = paginate.next.url
+          if view_q != blank
+            if next_url contains '?'
+              assign next_url = next_url | append: '&' | append: view_q
+            else
+              assign next_url = next_url | append: '?' | append: view_q
+            endif
+          endif
+        -%}
+        <div class="plo-more">
+          <span>Showing {{ shown }} of {{ paginate.items }}</span>
+          <a class="plo-btn plo-btn--sec" href="{{ next_url }}">Load more</a>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+  "name": "Preview: collection",
+  "tag": "section",
+  "settings": [
+    { "type": "textarea", "id": "intro", "label": "Intro (blank = collection description)" },
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 16 },
+    { "type": "text", "id": "chip_labels", "label": "Chip labels (| separated)", "default": "All|Slabs|Truffles|Bars|Variety|Limited" },
+    { "type": "text", "id": "chip_handles", "label": "Chip collection handles (| separated)", "default": "shop-all|new-chocolate-slabs|chocolate-truffles|chocolate-bars|variety-packs|limited-editions" },
+    { "type": "text", "id": "bars_handle", "label": "Collection that shows the bar-pack row", "default": "chocolate-bars" },
+    { "type": "checkbox", "id": "show_promo", "label": "Show Subscribe & Save promo", "default": true },
+    { "type": "range", "id": "promo_after", "label": "Promo after product number", "min": 2, "max": 12, "step": 2, "default": 8 },
+    { "type": "text", "id": "promo_eyebrow", "label": "Promo label (Option A)", "default": "Subscribe & save" },
+    { "type": "text", "id": "promo_heading", "label": "Promo heading", "default": "15% off, every 4 weeks" },
+    { "type": "text", "id": "promo_body", "label": "Promo text", "default": "Free delivery on every order. Skip, swap or cancel any time." },
+    { "type": "text", "id": "promo_btn", "label": "Promo button", "default": "How it works" },
+    { "type": "url", "id": "promo_url", "label": "Promo link" },
+    { "type": "text", "id": "promo_sticker", "label": "Promo sticker (Option B)", "default": "Save 15%" }
+  ]
+}
+{% endschema %}

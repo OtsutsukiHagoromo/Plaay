@@ -1,0 +1,31 @@
+{%- comment -%}
+  Option A / Option B preview: the four brand claims.
+  A: a white outlined box with four ticked claims. B: a navy marquee in yellow caps.
+{%- endcomment -%}
+<div class="pl plo">
+  <div class="plo-wrap plo-claims-a plo-skin-only-a">
+    <div class="plo-box" role="list">
+      {%- for block in section.blocks -%}
+        <div class="plo-claim" role="listitem" {{ block.shopify_attributes }}>{%- render 'pl-icon', name: 'check', size: 18, stroke: 2.6 -%}<span>{{ block.settings.label }}</span></div>
+      {%- endfor -%}
+    </div>
+  </div>
+  <div class="plo-marquee plo-skin-only-b" aria-label="{{ section.blocks | map: 'settings' | map: 'label' | join: ', ' | escape }}">
+    <div class="plo-marquee__track" aria-hidden="true">
+      {%- for i in (1..4) -%}
+        {%- for block in section.blocks -%}<span>{{ block.settings.label }}</span><span>✦</span>{%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: claims",
+  "tag": "div",
+  "max_blocks": 4,
+  "blocks": [
+    { "type": "claim", "name": "Claim", "settings": [ { "type": "text", "id": "label", "label": "Label", "default": "No refined sugar" } ] }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,13 @@
+{%- comment -%}
+  Section heading for the Option A / Option B preview templates.
+  Usage: {% render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light, link_label: s.link_label, link_url: s.link_url, tag: 'h2' %}
+  A shows the purple label and one heavy weight; B hides the label and sets `light` in the regular weight.
+{%- endcomment -%}
+{%- assign t = tag | default: 'h2' -%}
+<div class="plo-head">
+  <div>
+    {%- if eyebrow != blank -%}<p class="plo-eyebrow plo-eyebrow--sec">{{ eyebrow }}</p>{%- endif -%}
+    <{{ t }} class="plo-title"><b>{{ bold }}</b>{% if light != blank %} <span>{{ light }}</span>{% endif %}</{{ t }}>
+  </div>
+  {%- if link_label != blank and link_url != blank -%}<a class="plo-head__link" href="{{ link_url }}">{{ link_label }}</a>{%- endif -%}
+</div>

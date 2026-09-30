@@ -1,0 +1,336 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "plo-banners",
+      "settings": {
+        "promo": false,
+        "interval": 6
+      },
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "style": "photo",
+            "bg": "#FDF3E6",
+            "image_asset": "plo-slabs-banner.webp",
+            "image_alt": "70% dark chocolate hazelnut and sea salt slabs",
+            "eyebrow": "New · 80 g slabs",
+            "heading": "Very good|chocolate.",
+            "heading_mark": "good",
+            "body": "Rich, snappable slabs with 100% clean ingredients and 0% refined sugar.",
+            "btn_label": "Shop the slabs",
+            "btn_url": "/collections/new-chocolate-slabs",
+            "btn_arrow": true,
+            "btn_navy": false,
+            "link_label": "Mix Pack of 5 · AED 125",
+            "link_url": "/products/new-chocolate-bars-mix-pack-of-5",
+            "show_rating": false,
+            "chips": "0% refined sugar, Gluten free, Made in the UAE"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "style": "collage",
+            "bg": "#FFB600",
+            "image_asset": "plo-truffle-spill.jpg",
+            "image_2_asset": "plo-truffle-hand.jpg",
+            "eyebrow": "Made in the UAE by a nutritionist",
+            "heading": "No guilt.|All Plaay.",
+            "heading_mark": "All Plaay.",
+            "body": "Truffles, bars and slabs that taste like a treat and skip the refined sugar.",
+            "btn_label": "Shop all",
+            "btn_url": "/collections/shop-all",
+            "btn_arrow": true,
+            "btn_navy": true,
+            "show_rating": true,
+            "chips": "Truffles, Bars, Slabs",
+            "sticker_big": "0%",
+            "sticker_small": "refined sugar"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2"
+      ]
+    },
+    "claims": {
+      "type": "plo-claims",
+      "settings": {},
+      "blocks": {
+        "claim_1": {
+          "type": "claim",
+          "settings": {
+            "label": "No refined sugar"
+          }
+        },
+        "claim_2": {
+          "type": "claim",
+          "settings": {
+            "label": "100% clean"
+          }
+        },
+        "claim_3": {
+          "type": "claim",
+          "settings": {
+            "label": "Nutritionist founded"
+          }
+        },
+        "claim_4": {
+          "type": "claim",
+          "settings": {
+            "label": "Made in the UAE"
+          }
+        }
+      },
+      "block_order": [
+        "claim_1",
+        "claim_2",
+        "claim_3",
+        "claim_4"
+      ]
+    },
+    "bestsellers": {
+      "type": "plo-products",
+      "settings": {
+        "eyebrow": "Bestsellers",
+        "heading": "What everyone",
+        "heading_light": "buys",
+        "products": [
+          "new-chocolate-bars-mix-pack-of-5",
+          "og-plaayer-pack",
+          "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g",
+          "cashew-caramel-truffle"
+        ],
+        "link_label": "Shop all",
+        "link_url": "/collections/shop-all?view=option-a"
+      }
+    },
+    "promo": {
+      "type": "plo-banners",
+      "settings": {
+        "promo": true,
+        "interval": 0
+      },
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "style": "navy",
+            "bg": "#081D48",
+            "image_asset": "plo-slabs-flatlay.jpg",
+            "image_alt": "Plaay slabs in every flavour",
+            "eyebrow": "Bestseller · 529 sold",
+            "heading": "Can't pick one?|Take all five.",
+            "heading_mark": "Take all five.",
+            "body": "Five 80 g slabs in one box. Clean ingredients, 0% refined sugar, zero decision-making.",
+            "btn_label": "Shop the Mix Pack · AED 125",
+            "btn_url": "/products/new-chocolate-bars-mix-pack-of-5",
+            "btn_arrow": false,
+            "btn_navy": false,
+            "show_rating": true,
+            "chips": "5 × 80 g, 0% refined sugar",
+            "sticker_big": "5",
+            "sticker_small": "flavours"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1"
+      ]
+    },
+    "categories": {
+      "type": "plo-categories",
+      "settings": {
+        "eyebrow": "Shop",
+        "heading": "Find your",
+        "heading_light": "favourite"
+      },
+      "blocks": {
+        "cat_1": {
+          "type": "cat",
+          "settings": {
+            "title": "Slabs",
+            "sub": "6 flavours",
+            "url": "/collections/new-chocolate-slabs?view=option-a",
+            "product": "new-chocolate-bars-mix-pack-of-5",
+            "tint": "#F6D9F0"
+          }
+        },
+        "cat_2": {
+          "type": "cat",
+          "settings": {
+            "title": "Truffles",
+            "sub": "8 flavours",
+            "url": "/collections/chocolate-truffles?view=option-a",
+            "product": "truffle-mix",
+            "tint": "#FFE3B8"
+          }
+        },
+        "cat_3": {
+          "type": "cat",
+          "settings": {
+            "title": "Bars",
+            "sub": "5 flavours",
+            "url": "/collections/chocolate-bars?view=option-a",
+            "product": "salted-caramel-bar-x12",
+            "tint": "#D6F1EF"
+          }
+        },
+        "cat_4": {
+          "type": "cat",
+          "settings": {
+            "title": "Variety",
+            "sub": "Try everything",
+            "url": "/collections/variety-packs?view=option-a",
+            "product": "og-plaayer-pack",
+            "tint": "#FFF0B3"
+          }
+        }
+      },
+      "block_order": [
+        "cat_1",
+        "cat_2",
+        "cat_3",
+        "cat_4"
+      ]
+    },
+    "why": {
+      "type": "plo-why",
+      "settings": {
+        "link_url": "/pages/for-the-geeks-1",
+        "eyebrow": "Why Plaay",
+        "heading": "Made by a",
+        "heading_light": "nutritionist",
+        "image_asset": "plo-rashi.jpg",
+        "quote": "“You don’t need to earn chocolate.”",
+        "byline": "Rashi Chowdhary, nutritionist and founder",
+        "link_label": "Read her story",
+        "in_label": "In",
+        "in_list": "Real cocoa\nNuts\nWhey protein\nCoconut nectar",
+        "out_label": "Out",
+        "out_list": "Refined sugar\nGluten\nSoy\nPalm oil",
+        "touch_prev": false
+      }
+    },
+    "reviews": {
+      "type": "plo-reviews",
+      "settings": {
+        "breakdown": "104,5,5,1,7",
+        "write_label": "",
+        "all_url": "",
+        "eyebrow": "Reviews",
+        "heading": "What people",
+        "heading_light": "say"
+      },
+      "blocks": {
+        "photo_1": {
+          "type": "photo",
+          "settings": {
+            "image_asset": "plo-review-jc.jpg",
+            "quote": "I am in love with every product. Started off as a pistachio truffle fan…",
+            "name": "JC",
+            "product": "Plaay Store"
+          }
+        },
+        "photo_2": {
+          "type": "photo",
+          "settings": {
+            "image_asset": "plo-review-fidha.jpg",
+            "quote": "Undoubtedly the tastiest guilt-free chocolate I’ve ever had!",
+            "name": "Fidha N.",
+            "product": "70% Dark Hazelnut"
+          }
+        },
+        "text_3": {
+          "type": "text",
+          "settings": {
+            "quote": "Truly indulgent, without the guilt :)",
+            "name": "Deepa D.",
+            "product": "Almond Brownie Truffles"
+          }
+        },
+        "text_4": {
+          "type": "text",
+          "settings": {
+            "quote": "Absolutely delicious and healthy! Love it.",
+            "name": "Shreya",
+            "product": "Plaay Store"
+          }
+        }
+      },
+      "block_order": [
+        "photo_1",
+        "photo_2",
+        "text_3",
+        "text_4"
+      ]
+    },
+    "videos": {
+      "type": "plo-videos",
+      "settings": {
+        "link_label": "Instagram",
+        "link_url": "https://www.instagram.com/shopplaay",
+        "eyebrow": "On camera",
+        "heading": "See it in",
+        "heading_light": "real life"
+      },
+      "blocks": {
+        "reel_1": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-stack-pour.jpg",
+            "caption": "How the pour happens"
+          }
+        },
+        "reel_2": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-apartment.jpg",
+            "caption": "The 3:30 pm reset"
+          }
+        },
+        "reel_3": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-card-game.jpg",
+            "caption": "Game night, Plaay style"
+          }
+        },
+        "reel_4": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-truffle-spill.jpg",
+            "caption": "Truffle mix, unboxed"
+          }
+        }
+      },
+      "block_order": [
+        "reel_1",
+        "reel_2",
+        "reel_3",
+        "reel_4"
+      ]
+    }
+  },
+  "order": [
+    "hero",
+    "claims",
+    "bestsellers",
+    "promo",
+    "categories",
+    "why",
+    "reviews",
+    "videos"
+  ]
+}
