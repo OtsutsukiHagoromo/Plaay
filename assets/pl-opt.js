@@ -187,6 +187,68 @@
     }
   }
 
+
+  /* ---------- bag: stay inside the option being previewed ----------
+     The theme's bag icon and quick-add open the live cart drawer, which is the same in both
+     options. On the preview templates the bag icon goes to the option's own cart page, and
+     the card "+" adds in place and shows a small toast with a link to that cart.
+     Window capture runs before the theme's document-capture cart handler. */
+  function viewName() {
+    var m = document.body.className.match(/pl-skin-([ab])/);
+    return m ? 'option-' + m[1] : '';
+  }
+  function cartHref() {
+    var v = viewName();
+    return ((window.routes || {}).cart_url || '/cart') + (v ? '?view=' + v : '');
+  }
+  var toastTimer = null;
+  function toast(msg) {
+    var el = document.querySelector('.plo-toast');
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'plo-toast';
+      el.setAttribute('role', 'status');
+      document.body.appendChild(el);
+    }
+    el.innerHTML = '<span></span><a href="' + cartHref() + '">View bag</a>';
+    el.firstChild.textContent = msg;
+    el.classList.add('is-on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('is-on'); }, 4000);
+  }
+  function syncCount() {
+    fetch(((window.routes || {}).cart_url || '/cart') + '.js', { headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (c) {
+        Array.prototype.forEach.call(document.querySelectorAll('[data-cart-count]'), function (el) {
+          el.textContent = c.item_count;
+          el.hidden = c.item_count === 0;
+        });
+      }).catch(function () {});
+  }
+  window.addEventListener('click', function (e) {
+    if (!viewName() || !e.target.closest) return;
+    var bag = e.target.closest('.header__icon--cart, [data-drawer-trigger="cart"], [data-pl-tab="bag"]');
+    if (bag) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      window.location.href = cartHref();
+      return;
+    }
+    var add = e.target.closest('.plo-card [data-add]');
+    if (add) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      var host = add.closest('[data-id]');
+      var card = add.closest('.plo-card');
+      var name = card && card.querySelector('.plo-card__name') ? card.querySelector('.plo-card__name').textContent.trim() : 'Item';
+      add.classList.add('is-busy');
+      post(((window.routes || {}).cart_add_url || '/cart/add') + '.js', { items: [{ id: Number(host.getAttribute('data-id')), quantity: 1 }] })
+        .then(function () { add.classList.remove('is-busy'); toast(name + ' added to your bag'); syncCount(); })
+        .catch(function (err) { fail(add, err); });
+    }
+  }, true);
+
   function init() {
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-carousel]'), initCarousel);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-pdp]'), initPdp);

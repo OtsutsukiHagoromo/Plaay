@@ -748,3 +748,9 @@ body:has(.plo-sticky.is-on) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 84px
 .pl-skin-b .plo-faq { background: none; box-shadow: none; border-radius: 0; padding: 0; border-top: 1px solid rgba(8, 29, 72, .1); border-bottom: 1px solid rgba(8, 29, 72, .1); }
 .pl-skin-b .plo-faq__i + .plo-faq__i { border-top-color: rgba(8, 29, 72, .1); }
 @media (min-width: 1024px) { .plo-faq { max-width: 820px; } }
+
+/* Added-to-bag toast (card "+" on the preview templates) */
+.plo-toast { position: fixed; left: 50%; top: calc(var(--pl-header-h) + 12px); z-index: 80; transform: translate(-50%, -12px); opacity: 0; pointer-events: none; transition: opacity .2s ease, transform .2s ease; display: flex; align-items: center; gap: 14px; max-width: calc(100vw - 32px); padding: 12px 16px; border-radius: 14px; background: var(--pl-navy); color: #fff; font-family: var(--pl-font); font-size: 14px; font-weight: 500; box-shadow: 0 8px 24px rgba(8, 29, 72, .25); }
+.plo-toast.is-on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.plo-toast a { color: var(--pl-yellow); font-weight: 700; white-space: nowrap; text-decoration: underline; text-underline-offset: 3px; }
+.plo-add.is-busy { opacity: .5; pointer-events: none; }
