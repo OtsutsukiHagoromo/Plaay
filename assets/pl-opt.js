@@ -1,7 +1,9 @@
 /* Plaay redesign preview (Option A / Option B templates only).
    1. Banner carousel: dots follow the scroll position, auto-advance until the shopper touches it.
    2. Cart page: quantity, remove, subscribe switch and upsell add, each a /cart/*.js call
-      followed by a reload so the page (and its ?view= option) re-renders from Liquid. */
+      followed by a reload so the page (and its ?view= option) re-renders from Liquid.
+   3. Product page: gallery thumbs, pack size and subscribe/one-time prices, quantity, add to
+      bag via /cart/add.js then the cart in the same option, and the sticky add bar. */
 (function () {
   'use strict';
 
@@ -103,8 +105,91 @@
     });
   });
 
+
+  /* ---------- product page ---------- */
+  function aed(fils) {
+    var whole = Math.floor(fils / 100), frac = fils % 100;
+    return 'AED ' + whole + (frac ? '.' + (frac < 10 ? '0' : '') + frac : '');
+  }
+  function initPdp(root) {
+    var form = root.querySelector('[data-plo-form]');
+    if (!form) return;
+    var pct = Number(root.getAttribute('data-pct') || 0);
+    var view = root.getAttribute('data-view') || '';
+    var variantInput = form.querySelector('[data-plo-variant]');
+    var planInput = form.querySelector('[data-plo-plan]');
+    var qty = form.querySelector('[data-plo-qty]');
+    var addBtn = form.querySelector('[data-plo-add]');
+    var main = root.querySelector('.plo-gal__img');
+    var checked = form.querySelector('[data-plo-size]:checked');
+    var price = checked ? Number(checked.getAttribute('data-price')) : 0;
+
+    function isSub() {
+      var m = form.querySelector('[data-plo-mode]:checked');
+      return !!(m && m.value === 'sub' && planInput);
+    }
+    function paint() {
+      if (!price) return;
+      var sub = Math.floor(price * (100 - pct) / 100);
+      var set = function (sel, txt) { Array.prototype.forEach.call(root.querySelectorAll(sel), function (el) { el.textContent = txt; }); };
+      set('[data-plo-sub]', aed(sub));
+      set('[data-plo-was]', aed(price));
+      set('[data-plo-save]', 'save ' + aed(price - sub));
+      set('[data-plo-one]', aed(price));
+      set('[data-plo-cta]', aed(isSub() ? sub : price));
+      set('[data-plo-sticky-p]', aed(isSub() ? sub : price) + (isSub() ? ' · every 4 weeks' : ''));
+    }
+    form.addEventListener('change', function (e) {
+      if (e.target.matches('[data-plo-size]')) {
+        variantInput.value = e.target.value;
+        price = Number(e.target.getAttribute('data-price'));
+      }
+      if (planInput) planInput.disabled = !isSub();
+      paint();
+    });
+    Array.prototype.forEach.call(form.querySelectorAll('[data-plo-q]'), function (b) {
+      b.addEventListener('click', function () {
+        var n = Math.max(1, Math.min(20, (Number(qty.value) || 1) + Number(b.getAttribute('data-plo-q'))));
+        qty.value = n;
+      });
+    });
+    Array.prototype.forEach.call(root.querySelectorAll('[data-plo-thumb]'), function (t) {
+      t.addEventListener('click', function () {
+        if (main) { main.removeAttribute('srcset'); main.src = t.getAttribute('data-src'); }
+        Array.prototype.forEach.call(root.querySelectorAll('[data-plo-thumb]'), function (x) { x.classList.toggle('is-on', x === t); });
+      });
+    });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var item = { id: Number(variantInput.value), quantity: Number(qty.value) || 1 };
+      if (isSub()) item.selling_plan = Number(planInput.value);
+      addBtn.classList.add('is-busy');
+      post(((window.routes || {}).cart_add_url || '/cart/add') + '.js', { items: [item] })
+        .then(function () { window.location.href = ((window.routes || {}).cart_url || '/cart') + (view ? '?view=' + view : ''); })
+        .catch(function (err) { fail(addBtn, err); });
+    });
+
+    var sticky = root.querySelector('[data-plo-sticky]');
+    if (sticky) {
+      sticky.querySelector('[data-plo-sticky-add]').addEventListener('click', function () {
+        if (form.requestSubmit) form.requestSubmit(); else addBtn.click();
+      });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (entries) {
+          entries.forEach(function (en) { sticky.classList.toggle('is-on', !en.isIntersecting && en.boundingClientRect.top < 0); });
+        }).observe(addBtn);
+      }
+    }
+    if (!price) {
+      var m = (root.querySelector('[data-plo-one]') || {}).textContent || '';
+      var num = parseFloat(m.replace(/[^0-9.]/g, ''));
+      if (num) price = Math.round(num * 100);
+    }
+  }
+
   function init() {
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-carousel]'), initCarousel);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-pdp]'), initPdp);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

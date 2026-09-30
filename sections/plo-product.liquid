@@ -1,0 +1,215 @@
+{%- comment -%}
+  Option A / Option B preview: product page top. Gallery + buy box + a sticky add bar on mobile.
+  Buy box: label, title, rating, short description, flavour row (sibling products from the flavour
+  lists below, shown when this product is in one), pack size (variants), Subscribe & save /
+  One-time, quantity and "Add to bag". assets/pl-opt.js adds to /cart/add.js with the chosen
+  variant and selling plan, then opens the cart in the same option (?view=).
+  A: white outlined gallery box, cream subscribe row, flat yellow button.
+  B: flavour-tinted gallery with a sticker, sticker buttons, yellow selected flavour ring.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign v = product.selected_or_first_available_variant
+  assign view = template.suffix
+  assign sub_pct = 0
+  assign plan_id = ''
+  for grp in product.selling_plan_groups
+    for plan in grp.selling_plans
+      for adj in plan.price_adjustments
+        if adj.value_type == 'percentage' and adj.value > sub_pct
+          assign sub_pct = adj.value
+          assign plan_id = plan.id
+        endif
+      endfor
+    endfor
+  endfor
+  assign keep = 100 | minus: sub_pct
+  assign sub_price = v.price | times: keep | divided_by: 100
+  assign save = v.price | minus: sub_price
+
+  assign rating = shop.metafields.judgeme.all_reviews_rating | append: '' | times: 1.0
+  assign count = shop.metafields.judgeme.all_reviews_count | append: '' | plus: 0
+  if rating <= 0
+    assign rating = settings.store_rating_value | append: '' | times: 1.0
+  endif
+  if count <= 0
+    assign count = settings.store_rating_count | append: '' | plus: 0
+  endif
+  assign rating = rating | round: 1
+
+  assign tint = s.tint_default
+  assign tint_lines = s.tints | newline_to_br | split: '<br />'
+  for l in tint_lines
+    assign pair = l | strip | split: ':'
+    if pair[0] == product.handle
+      assign tint = pair[1] | strip
+    endif
+  endfor
+
+  assign flavours = nil
+  for p in s.flavours_1
+    if p.id == product.id
+      assign flavours = s.flavours_1
+    endif
+  endfor
+  for p in s.flavours_2
+    if p.id == product.id
+      assign flavours = s.flavours_2
+    endif
+  endfor
+  for p in s.flavours_3
+    if p.id == product.id
+      assign flavours = s.flavours_3
+    endif
+  endfor
+
+  assign badge_text = ''
+  for tag in product.tags
+    assign tl = tag | downcase | strip
+    if badge_text == ''
+      case tl
+        when 'badge:bestseller'
+          assign badge_text = 'Best seller'
+        when 'badge:new-launch', 'badge:new'
+          assign badge_text = 'New'
+        when 'badge:limited', 'limited edition'
+          assign badge_text = 'Limited'
+      endcase
+    endif
+  endfor
+  assign eyebrow = badge_text
+
+  assign desc = product.description | strip_html | strip | truncatewords: s.desc_words
+  assign has_sub = false
+  if sub_pct > 0 and plan_id != ''
+    assign has_sub = true
+  endif
+  assign cta_price = v.price
+  if has_sub
+    assign cta_price = sub_price
+  endif
+  assign strip_words = s.strip_words | split: '|'
+-%}
+<div class="pl plo plo-pdp" data-plo-pdp data-view="{{ view }}" data-pct="{{ sub_pct }}">
+  <div class="plo-pdp__cols">
+    <div class="plo-gal" style="--tint: {{ tint }};">
+      <div class="plo-gal__main">
+        {%- if product.featured_image -%}
+          {{ product.featured_image | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 50vw, 100vw', widths: '500, 750, 1000', alt: product.title, class: 'plo-gal__img' }}
+        {%- endif -%}
+        {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge">{{ badge_text }}</span>{%- endif -%}
+      </div>
+      {%- if product.images.size > 1 -%}
+        <div class="plo-gal__thumbs">
+          {%- for img in product.images limit: 5 -%}
+            <button type="button" class="plo-gal__th{% if forloop.first %} is-on{% endif %}" data-plo-thumb data-src="{{ img | image_url: width: 1000 }}" aria-label="Image {{ forloop.index }}">
+              {{ img | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="plo-buy">
+      {%- if eyebrow != blank -%}<p class="plo-eyebrow plo-eyebrow--sec">{{ eyebrow }}</p>{%- endif -%}
+      <h1 class="plo-buy__t">{{ product.title }}</h1>
+      {%- if rating > 0 -%}
+        <a class="plo-buy__rate" href="#plo-reviews">{%- render 'plo-stars', size: 14 -%}<span>{{ rating }} · {{ count }} reviews</span></a>
+      {%- endif -%}
+      {%- if desc != blank -%}<p class="plo-buy__d">{{ desc }}</p>{%- endif -%}
+
+      {%- form 'product', product, class: 'plo-form', data-plo-form: '' -%}
+        <input type="hidden" name="id" value="{{ v.id }}" data-plo-variant>
+        {%- if has_sub -%}<input type="hidden" name="selling_plan" value="{{ plan_id }}" data-plo-plan>{%- endif -%}
+
+        {%- if flavours != nil and flavours.size > 1 -%}
+          <div class="plo-opt">
+            <p class="plo-opt__l">Flavour: <b>{{ product.title | remove: strip_words[0] | remove: strip_words[1] | remove: strip_words[2] | remove: strip_words[3] | strip }}</b></p>
+            <div class="plo-flav">
+              {%- for f in flavours -%}
+                {%- assign fname = f.title | remove: strip_words[0] | remove: strip_words[1] | remove: strip_words[2] | remove: strip_words[3] | strip -%}
+                <a class="plo-flav__i{% if f.id == product.id %} is-on{% endif %}" href="{{ f.url }}{% if view != blank %}?view={{ view }}{% endif %}"{% if f.id == product.id %} aria-current="true"{% endif %}>
+                  <span class="plo-flav__pic">{%- if f.featured_image -%}{{ f.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
+                  <span class="plo-flav__n">{{ fname }}</span>
+                </a>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if product.has_only_default_variant == false -%}
+          <div class="plo-opt">
+            <p class="plo-opt__l">{{ product.options.first }}</p>
+            <div class="plo-sizes">
+              {%- for variant in product.variants -%}
+                <label class="plo-size">
+                  <input type="radio" name="plo-size-{{ section.id }}" value="{{ variant.id }}" data-price="{{ variant.price }}"{% if variant.id == v.id %} checked{% endif %}{% unless variant.available %} disabled{% endunless %} data-plo-size>
+                  <span>{{ variant.title }}</span>
+                </label>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- if has_sub -%}
+          <div class="plo-modes">
+            <label class="plo-mode plo-mode--sub">
+              <input type="radio" name="plo-mode-{{ section.id }}" value="sub" checked data-plo-mode>
+              <span class="plo-mode__r" aria-hidden="true"></span>
+              <span class="plo-mode__b">
+                <span class="plo-mode__h"><b>Subscribe &amp; save {{ sub_pct }}%</b><span class="plo-mode__tag">Most popular</span></span>
+                <span class="plo-mode__p"><b data-plo-sub>{%- render 'plaay-aed', fils: sub_price -%}</b> <s data-plo-was>{%- render 'plaay-aed', fils: v.price -%}</s> <em data-plo-save>save {% render 'plaay-aed', fils: save %}</em></span>
+                <span class="plo-mode__n">{{ s.sub_note }}</span>
+              </span>
+            </label>
+            <label class="plo-mode">
+              <input type="radio" name="plo-mode-{{ section.id }}" value="one" data-plo-mode>
+              <span class="plo-mode__r" aria-hidden="true"></span>
+              <span class="plo-mode__b"><span class="plo-mode__h"><b>One-time</b><span data-plo-one>{%- render 'plaay-aed', fils: v.price -%}</span></span></span>
+            </label>
+          </div>
+        {%- else -%}
+          <p class="plo-buy__price" data-plo-one>{%- render 'plaay-aed', fils: v.price -%}</p>
+        {%- endif -%}
+
+        <div class="plo-buy__row">
+          <div class="plo-step plo-step--lg">
+            <button type="button" data-plo-q="-1" aria-label="One less">{%- render 'pl-icon', name: 'minus', size: 16, stroke: 2.2 -%}</button>
+            <input type="number" name="quantity" value="1" min="1" max="20" inputmode="numeric" aria-label="Quantity" data-plo-qty>
+            <button type="button" data-plo-q="1" aria-label="One more">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.2 -%}</button>
+          </div>
+          <button type="submit" class="plo-btn plo-btn--full plo-buy__add" data-plo-add{% unless v.available %} disabled{% endunless %}>
+            {%- if v.available -%}Add to bag · <span data-plo-cta>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- else -%}Sold out{%- endif -%}
+          </button>
+        </div>
+        {%- if s.trust != blank -%}<p class="plo-buy__trust">{{ s.trust }}</p>{%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+
+  {%- if v.available -%}
+    <div class="plo-sticky" data-plo-sticky>
+      <span class="plo-sticky__pic" style="--tint: {{ tint }};">{%- if product.featured_image -%}{{ product.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
+      <span class="plo-sticky__t"><b>{{ product.title }}</b><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}{% if has_sub %} · every 4 weeks{% endif %}</span></span>
+      <button type="button" class="plo-btn" data-plo-sticky-add>Add to bag</button>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Preview: product",
+  "tag": "section",
+  "settings": [
+    { "type": "range", "id": "desc_words", "label": "Description length (words)", "min": 10, "max": 60, "step": 5, "default": 22 },
+    { "type": "text", "id": "sub_note", "label": "Subscribe note", "default": "Every 4 weeks · free delivery · skip or cancel any time" },
+    { "type": "text", "id": "trust", "label": "Line under the button", "default": "Halal · Made in the UAE · 1–2 day delivery" },
+    { "type": "product_list", "id": "flavours_1", "label": "Flavour set 1", "limit": 10 },
+    { "type": "product_list", "id": "flavours_2", "label": "Flavour set 2", "limit": 10 },
+    { "type": "product_list", "id": "flavours_3", "label": "Flavour set 3", "limit": 10 },
+    { "type": "text", "id": "strip_words", "label": "Words dropped from flavour names (| separated, max 4)", "default": " Bar 12 x 35g| Chocolate Truffles| Slab 6 x 80g| Bar x 12" },
+    { "type": "color", "id": "tint_default", "label": "Gallery tint (Option B)", "default": "#FFF7DD" },
+    { "type": "textarea", "id": "tints", "label": "Gallery tint per product (handle:#hex, one per line)" }
+  ]
+}
+{% endschema %}

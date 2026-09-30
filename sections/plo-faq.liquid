@@ -1,0 +1,35 @@
+{%- comment -%}
+  Option A / Option B preview: FAQ accordion (native details/summary, first one open).
+  A: rows inside a white outlined box. B: open rows between hairlines.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<div class="pl plo plo-sec">
+  <div class="plo-wrap">
+    {%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light -%}
+    <div class="plo-faq plo-box">
+      {%- for block in section.blocks -%}
+        <details class="plo-faq__i"{% if forloop.first %} open{% endif %} {{ block.shopify_attributes }}>
+          <summary><span>{{ block.settings.q }}</span>{%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2 -%}</summary>
+          <div class="plo-faq__a">{{ block.settings.a }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: FAQ",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label (Option A only)", "default": "FAQ" },
+    { "type": "text", "id": "heading", "label": "Heading, bold part", "default": "Good to" },
+    { "type": "text", "id": "heading_light", "label": "Heading, light part", "default": "know" }
+  ],
+  "blocks": [
+    { "type": "qa", "name": "Question", "settings": [
+      { "type": "text", "id": "q", "label": "Question" },
+      { "type": "richtext", "id": "a", "label": "Answer" } ] }
+  ]
+}
+{% endschema %}

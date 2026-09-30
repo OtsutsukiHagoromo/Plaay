@@ -1,0 +1,455 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "plo-product",
+      "settings": {
+        "flavours_1": [
+          "salted-caramel-bar-x12",
+          "cookies-and-cream-bar-x12",
+          "mocha-almond-bar-x12",
+          "salty-peanut-bar-x12",
+          "pistachio-chocolate-bar-x-12"
+        ],
+        "flavours_2": [
+          "triple-chocolate-truffle",
+          "peanut-butter-truffle",
+          "almond-brownie-truffle",
+          "cashew-caramel-truffle",
+          "pistachio-truffle"
+        ],
+        "flavours_3": [
+          "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g",
+          "plaay-70-dark-chocolate-sea-salt-bar-6-x-80g",
+          "plaay-70-dark-chocolate-bar-6-x-80g",
+          "plaay-70-dark-chocolate-caramel-crunch-mousse-bar-6-x-80g",
+          "plaay-milk-chocolate-toffee-almond-bar-6-x-80g",
+          "plaay-milk-chocolate-cheesecake-bar-6-x-80g"
+        ],
+        "tints": "og-plaayer-pack:#FFF1CC\nsalted-caramel-bar-x12:#FFE6CC\ncookies-and-cream-bar-x12:#D6F1EF\nmocha-almond-bar-x12:#DCE3F5\nsalty-peanut-bar-x12:#FFF1CC\npistachio-chocolate-bar-x-12:#DDEFD9\ntriple-chocolate-truffle:#EBDDF5\npeanut-butter-truffle:#FFF1CC\nalmond-brownie-truffle:#F3E3D6\ncashew-caramel-truffle:#FDE3E2\npistachio-truffle:#DDEFD9\nnew-chocolate-bars-mix-pack-of-5:#F6D9F0",
+        "desc_words": 22,
+        "sub_note": "Every 4 weeks · free delivery · skip or cancel any time",
+        "trust": "Halal · Made in the UAE · 1–2 day delivery",
+        "strip_words": " Bar 12 x 35g| Chocolate Truffles| Slab 6 x 80g| Bar x 12",
+        "tint_default": "#FFF7DD"
+      }
+    },
+    "claims": {
+      "type": "plo-claims",
+      "settings": {},
+      "blocks": {
+        "claim_1": {
+          "type": "claim",
+          "settings": {
+            "label": "No refined sugar"
+          }
+        },
+        "claim_2": {
+          "type": "claim",
+          "settings": {
+            "label": "100% clean"
+          }
+        },
+        "claim_3": {
+          "type": "claim",
+          "settings": {
+            "label": "Nutritionist founded"
+          }
+        },
+        "claim_4": {
+          "type": "claim",
+          "settings": {
+            "label": "Made in the UAE"
+          }
+        }
+      },
+      "block_order": [
+        "claim_1",
+        "claim_2",
+        "claim_3",
+        "claim_4"
+      ]
+    },
+    "inside_pack": {
+      "type": "plo-inside",
+      "settings": {
+        "handles": "og-plaayer-pack",
+        "eyebrow": "Inside the pack",
+        "heading": "What’s",
+        "heading_light": "inside",
+        "fill": "#FFB600"
+      },
+      "blocks": {
+        "group_1": {
+          "type": "group",
+          "settings": {
+            "title": "Truffles",
+            "note": "1 × 60 g tube of each"
+          }
+        },
+        "unit_2": {
+          "type": "unit",
+          "settings": {
+            "image_asset": "plo-unit-triple.png",
+            "name": "Triple Chocolate"
+          }
+        },
+        "unit_3": {
+          "type": "unit",
+          "settings": {
+            "image_asset": "plo-unit-peanut.png",
+            "name": "Peanut Butter"
+          }
+        },
+        "unit_4": {
+          "type": "unit",
+          "settings": {
+            "image_asset": "plo-unit-almond.png",
+            "name": "Almond Brownie"
+          }
+        },
+        "unit_5": {
+          "type": "unit",
+          "settings": {
+            "image_asset": "plo-unit-cashew.png",
+            "name": "Cashew Caramel"
+          }
+        },
+        "group_6": {
+          "type": "group",
+          "settings": {
+            "title": "Bars",
+            "note": "1 × 35 g bar of each"
+          }
+        },
+        "unit_7": {
+          "type": "unit",
+          "settings": {
+            "image_asset": "plo-unit-bar-caramel.png",
+            "name": "Salted Caramel"
+          }
+        },
+        "unit_8": {
+          "type": "unit",
+          "settings": {
+            "image_asset": "plo-unit-bar-mocha.jpg",
+            "name": "Mocha Almond"
+          }
+        },
+        "unit_9": {
+          "type": "unit",
+          "settings": {
+            "image_asset": "plo-unit-bar-peanut.jpg",
+            "name": "Salty Peanut"
+          }
+        },
+        "unit_10": {
+          "type": "unit",
+          "settings": {
+            "image_asset": "plo-unit-bar-cookies.png",
+            "name": "Cookies & Cream"
+          }
+        }
+      },
+      "block_order": [
+        "group_1",
+        "unit_2",
+        "unit_3",
+        "unit_4",
+        "unit_5",
+        "group_6",
+        "unit_7",
+        "unit_8",
+        "unit_9",
+        "unit_10"
+      ]
+    },
+    "inside_bar": {
+      "type": "plo-inside",
+      "settings": {
+        "handles": "salted-caramel-bar-x12,cookies-and-cream-bar-x12,mocha-almond-bar-x12,salty-peanut-bar-x12,pistachio-chocolate-bar-x-12",
+        "eyebrow": "Inside the bar",
+        "heading": "What’s in",
+        "heading_light": "the bar",
+        "fill": "#FF9115",
+        "fills": "salted-caramel-bar-x12:#FF9115\ncookies-and-cream-bar-x12:#00BCB4\nmocha-almond-bar-x12:#AFC0EE\nsalty-peanut-bar-x12:#FFB81C\npistachio-chocolate-bar-x-12:#7CC576"
+      },
+      "blocks": {
+        "fact_1": {
+          "type": "fact",
+          "settings": {
+            "big": "0 g",
+            "small": "refined sugar"
+          }
+        },
+        "fact_2": {
+          "type": "fact",
+          "settings": {
+            "big": "35 g",
+            "small": "per bar"
+          }
+        },
+        "fact_3": {
+          "type": "fact",
+          "settings": {
+            "big": "12",
+            "small": "bars a box"
+          }
+        },
+        "point_4": {
+          "type": "point",
+          "settings": {
+            "text": "Real cocoa"
+          }
+        },
+        "point_5": {
+          "type": "point",
+          "settings": {
+            "text": "Nuts and whey protein"
+          }
+        },
+        "point_6": {
+          "type": "point",
+          "settings": {
+            "text": "Sweetened with coconut nectar"
+          }
+        }
+      },
+      "block_order": [
+        "fact_1",
+        "fact_2",
+        "fact_3",
+        "point_4",
+        "point_5",
+        "point_6"
+      ]
+    },
+    "videos": {
+      "type": "plo-videos",
+      "settings": {
+        "link_label": "Instagram",
+        "link_url": "https://www.instagram.com/shopplaay",
+        "eyebrow": "On camera",
+        "heading": "See it in",
+        "heading_light": "real life"
+      },
+      "blocks": {
+        "reel_1": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-apartment.jpg",
+            "caption": "The 3:30 pm reset"
+          }
+        },
+        "reel_2": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-stack-pour.jpg",
+            "caption": "How the pour happens"
+          }
+        },
+        "reel_3": {
+          "type": "reel",
+          "settings": {
+            "image": "shopify://shop_images/plaay26-card-game.jpg",
+            "caption": "Game night, Plaay style"
+          }
+        }
+      },
+      "block_order": [
+        "reel_1",
+        "reel_2",
+        "reel_3"
+      ]
+    },
+    "why": {
+      "type": "plo-why",
+      "settings": {
+        "link_url": "/pages/for-the-geeks-1",
+        "eyebrow": "Why Plaay",
+        "heading": "Made by a",
+        "heading_light": "nutritionist",
+        "image_asset": "plo-rashi.jpg",
+        "quote": "“You don’t need to earn chocolate.”",
+        "byline": "Rashi Chowdhary, nutritionist and founder",
+        "link_label": "Read her story",
+        "in_label": "In",
+        "in_list": "Real cocoa\nNuts\nWhey protein\nCoconut nectar",
+        "out_label": "Out",
+        "out_list": "Refined sugar\nGluten\nSoy\nPalm oil",
+        "touch_prev": false
+      }
+    },
+    "reviews": {
+      "type": "plo-reviews",
+      "settings": {
+        "breakdown": "104,5,5,1,7",
+        "write_label": "",
+        "all_url": "",
+        "eyebrow": "Reviews",
+        "heading": "What people",
+        "heading_light": "say"
+      },
+      "blocks": {
+        "photo_1": {
+          "type": "photo",
+          "settings": {
+            "image_asset": "plo-review-jc.jpg",
+            "quote": "I am in love with every product. Started off as a pistachio truffle fan…",
+            "name": "JC",
+            "product": "Plaay Store"
+          }
+        },
+        "photo_2": {
+          "type": "photo",
+          "settings": {
+            "image_asset": "plo-review-fidha.jpg",
+            "quote": "Undoubtedly the tastiest guilt-free chocolate I’ve ever had!",
+            "name": "Fidha N.",
+            "product": "70% Dark Hazelnut"
+          }
+        },
+        "text_3": {
+          "type": "text",
+          "settings": {
+            "quote": "Truly indulgent, without the guilt :)",
+            "name": "Deepa D.",
+            "product": "Almond Brownie Truffles"
+          }
+        },
+        "text_4": {
+          "type": "text",
+          "settings": {
+            "quote": "Absolutely delicious and healthy! Love it.",
+            "name": "Shreya",
+            "product": "Plaay Store"
+          }
+        }
+      },
+      "block_order": [
+        "photo_1",
+        "photo_2",
+        "text_3",
+        "text_4"
+      ]
+    },
+    "how": {
+      "type": "plo-how",
+      "settings": {
+        "eyebrow": "Subscribe & save",
+        "heading": "How it",
+        "heading_light": "works"
+      },
+      "blocks": {
+        "step_1": {
+          "type": "step",
+          "settings": {
+            "title": "Pick your pack",
+            "body": "This one, or any of our bestsellers."
+          }
+        },
+        "step_2": {
+          "type": "step",
+          "settings": {
+            "title": "We deliver every 4 weeks",
+            "body": "15% off and free delivery, every time."
+          }
+        },
+        "step_3": {
+          "type": "step",
+          "settings": {
+            "title": "You stay in control",
+            "body": "Skip, swap flavours or cancel from your account."
+          }
+        }
+      },
+      "block_order": [
+        "step_1",
+        "step_2",
+        "step_3"
+      ]
+    },
+    "faq": {
+      "type": "plo-faq",
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "Good to",
+        "heading_light": "know"
+      },
+      "blocks": {
+        "qa_1": {
+          "type": "qa",
+          "settings": {
+            "q": "Does it need to be kept in the fridge?",
+            "a": "<p>Keep it refrigerated, then enjoy it at room temperature for the best texture.</p>"
+          }
+        },
+        "qa_2": {
+          "type": "qa",
+          "settings": {
+            "q": "How fast is delivery?",
+            "a": "<p>1–2 days across the UAE. Delivery is free from AED 75.</p>"
+          }
+        },
+        "qa_3": {
+          "type": "qa",
+          "settings": {
+            "q": "Can I skip or cancel my subscription?",
+            "a": "<p>Yes. Skip a delivery, swap flavours or cancel from your account at any time.</p>"
+          }
+        },
+        "qa_4": {
+          "type": "qa",
+          "settings": {
+            "q": "Ingredients & allergens",
+            "a": "<p>The full ingredient and allergen list is in the product photos. Questions? Message us on WhatsApp.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "qa_1",
+        "qa_2",
+        "qa_3",
+        "qa_4"
+      ]
+    },
+    "related": {
+      "type": "plo-products",
+      "settings": {
+        "eyebrow": "More from Plaay",
+        "heading": "You might",
+        "heading_light": "also like",
+        "products": [
+          "og-plaayer-pack",
+          "new-chocolate-bars-mix-pack-of-5",
+          "triple-chocolate-truffle",
+          "salted-caramel-bar-x12",
+          "cashew-caramel-truffle"
+        ],
+        "limit": 4,
+        "link_label": "Shop all",
+        "link_url": "/collections/shop-all?view=option-b"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "claims",
+    "inside_pack",
+    "inside_bar",
+    "videos",
+    "why",
+    "reviews",
+    "how",
+    "faq",
+    "related"
+  ]
+}

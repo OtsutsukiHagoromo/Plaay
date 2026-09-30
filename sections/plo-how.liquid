@@ -1,0 +1,38 @@
+{%- comment -%}
+  Option A / Option B preview: how Subscribe & Save works (numbered steps). Hidden on products
+  without a selling plan. A: steps in a white outlined box, navy numbers. B: open list, yellow
+  sticker numbers.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- if product == blank or product.selling_plan_groups.size > 0 -%}
+<div class="pl plo plo-sec">
+  <div class="plo-wrap">
+    {%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light -%}
+    <ol class="plo-how plo-box">
+      {%- for block in section.blocks -%}
+        <li class="plo-how__s" {{ block.shopify_attributes }}>
+          <span class="plo-how__n">{{ forloop.index }}</span>
+          <span><b>{{ block.settings.title }}</b><span>{{ block.settings.body }}</span></span>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Preview: how it works",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label (Option A only)", "default": "Subscribe & save" },
+    { "type": "text", "id": "heading", "label": "Heading, bold part", "default": "How it" },
+    { "type": "text", "id": "heading_light", "label": "Heading, light part", "default": "works" }
+  ],
+  "blocks": [
+    { "type": "step", "name": "Step", "settings": [
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "text", "id": "body", "label": "Text" } ] }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,97 @@
+{%- comment -%}
+  Option A / Option B preview: what's inside / what's in the bar. Shown only on the products
+  listed in "Show on" (handles). Blocks, in order:
+    group – a row heading ("Truffles", "1 × 60 g tube of each"); the units after it form its grid
+    unit  – one single-unit photo + name
+    fact  – a big number + label (facts row)
+    point – a ticked line
+  A: labelled heading and white outlined boxes. B: a full-bleed band in the product's colour,
+  units and facts as navy-edged stickers.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign handles = s.handles | split: ','
+  assign show = false
+  for h in handles
+    assign hs = h | strip
+    if hs == product.handle
+      assign show = true
+    endif
+  endfor
+  assign fill = s.fill
+  assign tint_lines = s.fills | newline_to_br | split: '<br />'
+  for l in tint_lines
+    assign pair = l | strip | split: ':'
+    if pair[0] == product.handle
+      assign fill = pair[1] | strip
+    endif
+  endfor
+-%}
+{%- if show -%}
+<div class="pl plo plo-fillb plo-inside" style="--fill: {{ fill }};">
+  <div class="plo-wrap">
+    {%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light -%}
+    <div class="plo-inside__body">
+      {%- assign open = false -%}
+      {%- assign facts_open = false -%}
+      {%- assign points_open = false -%}
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        {%- case block.type -%}
+          {%- when 'group' -%}
+            {%- if open -%}</div></div>{%- endif -%}
+            <div class="plo-grp">
+              <p class="plo-grp__h"><b>{{ b.title }}</b> <span>{{ b.note }}</span></p>
+              <div class="plo-units">
+            {%- assign open = true -%}
+          {%- when 'unit' -%}
+            <figure class="plo-unit">
+              <span class="plo-unit__pic plo-box" style="background-image: url({% if b.image != blank %}{{ b.image | image_url: width: 400 }}{% else %}{{ b.image_asset | asset_url }}{% endif %});"></span>
+              <figcaption>{{ b.name }}</figcaption>
+            </figure>
+          {%- when 'fact' -%}
+            {%- unless facts_open -%}<div class="plo-facts">{%- assign facts_open = true -%}{%- endunless -%}
+            <div class="plo-fact plo-box"><b>{{ b.big }}</b><span>{{ b.small }}</span></div>
+            {%- assign next_i = forloop.index -%}
+            {%- if section.blocks[next_i].type != 'fact' -%}</div>{%- endif -%}
+          {%- when 'point' -%}
+            {%- unless points_open -%}<ul class="plo-points">{%- assign points_open = true -%}{%- endunless -%}
+            <li>{%- render 'pl-icon', name: 'check', size: 18, stroke: 2.8 -%}{{ b.text }}</li>
+            {%- assign next_i = forloop.index -%}
+            {%- if section.blocks[next_i].type != 'point' -%}</ul>{%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+      {%- if open -%}</div></div>{%- endif -%}
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Preview: what's inside",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "handles", "label": "Show on products (handles, comma separated)" },
+    { "type": "text", "id": "eyebrow", "label": "Label (Option A only)", "default": "Inside the pack" },
+    { "type": "text", "id": "heading", "label": "Heading, bold part", "default": "What’s" },
+    { "type": "text", "id": "heading_light", "label": "Heading, light part", "default": "inside" },
+    { "type": "color", "id": "fill", "label": "Band colour (Option B)", "default": "#FFB600" },
+    { "type": "textarea", "id": "fills", "label": "Band colour per product (handle:#hex, one per line)" }
+  ],
+  "blocks": [
+    { "type": "group", "name": "Group", "settings": [
+      { "type": "text", "id": "title", "label": "Title", "default": "Truffles" },
+      { "type": "text", "id": "note", "label": "Note", "default": "1 × 60 g tube of each" } ] },
+    { "type": "unit", "name": "Unit", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Photo" },
+      { "type": "text", "id": "image_asset", "label": "Photo fallback (theme asset file)" },
+      { "type": "text", "id": "name", "label": "Name" } ] },
+    { "type": "fact", "name": "Fact", "settings": [
+      { "type": "text", "id": "big", "label": "Number", "default": "0 g" },
+      { "type": "text", "id": "small", "label": "Label", "default": "refined sugar" } ] },
+    { "type": "point", "name": "Point", "settings": [
+      { "type": "text", "id": "text", "label": "Text", "default": "Real cocoa" } ] }
+  ]
+}
+{% endschema %}
