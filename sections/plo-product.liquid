@@ -23,6 +23,21 @@
       endfor
     endfor
   endfor
+  comment
+    Prefer the 4-week plan among the best-discount plans: the copy on the page says every 4 weeks.
+  endcomment
+  for grp in product.selling_plan_groups
+    for plan in grp.selling_plans
+      assign pname = plan.name | downcase
+      if pname contains '4 week'
+        for adj in plan.price_adjustments
+          if adj.value_type == 'percentage' and adj.value == sub_pct
+            assign plan_id = plan.id
+          endif
+        endfor
+      endif
+    endfor
+  endfor
   assign keep = 100 | minus: sub_pct
   assign sub_price = v.price | times: keep | divided_by: 100
   assign save = v.price | minus: sub_price
