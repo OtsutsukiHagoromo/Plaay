@@ -31,6 +31,14 @@
   endif
   assign plan_save = line.final_line_price | times: plan_pct | divided_by: 100
 
+  assign href = line.url
+  if template.suffix == 'option-a' or template.suffix == 'option-b'
+    if href contains '?'
+      assign href = href | append: '&view=' | append: template.suffix
+    else
+      assign href = href | append: '?view=' | append: template.suffix
+    endif
+  endif
   assign meta = ''
   if line.variant.title != 'Default Title'
     assign meta = line.variant.title
@@ -42,12 +50,12 @@
   endif
 -%}
 <div class="plo-line" data-plo-line data-key="{{ line.key }}" data-qty="{{ line.quantity }}">
-  <a class="plo-line__pic" href="{{ line.url }}" style="--tint: {{ tint | default: '#FFF7DD' }}">
+  <a class="plo-line__pic" href="{{ href }}" style="--tint: {{ tint | default: '#FFF7DD' }}">
     {%- if line.image -%}{{ line.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: line.product.title }}{%- endif -%}
   </a>
   <div class="plo-line__main">
     <div class="plo-line__row">
-      <h3 class="plo-line__name"><a href="{{ line.url }}">{{ line.product.title }}</a></h3>
+      <h3 class="plo-line__name"><a href="{{ href }}">{{ line.product.title }}</a></h3>
       <button type="button" class="plo-line__rm" data-plo-cart="remove" aria-label="Remove {{ line.product.title | escape }}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/></svg>
       </button>
