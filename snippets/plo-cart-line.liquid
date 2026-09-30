@@ -1,5 +1,5 @@
 {%- comment -%}
-  One cart line for sections/plo-cart.liquid. Usage: {% render 'plo-cart-line', line: item, tint: '#FFF1CC' %}
+  One cart line for sections/plo-cart.liquid. Usage: {% render 'plo-cart-line', line: item, tint: '#FFF1CC', view: template.suffix %}
   Subscribed lines show their plan and the struck one-time price; one-time lines of a product
   that has a selling plan get a "Subscribe & save" switch (A: toggle row, B: cream row + button).
   Buttons carry data-plo-cart; assets/pl-opt.js posts to /cart/change.js and reloads.
@@ -32,11 +32,11 @@
   assign plan_save = line.final_line_price | times: plan_pct | divided_by: 100
 
   assign href = line.url
-  if template.suffix == 'option-a' or template.suffix == 'option-b'
+  if view == 'option-a' or view == 'option-b'
     if href contains '?'
-      assign href = href | append: '&view=' | append: template.suffix
+      assign href = href | append: '&view=' | append: view
     else
-      assign href = href | append: '?view=' | append: template.suffix
+      assign href = href | append: '?view=' | append: view
     endif
   endif
   assign meta = ''

@@ -16,7 +16,7 @@
     <div class="plo-grid">
       {%- for p in s.products -%}
         {%- if p.id != current_id and shown < s.limit -%}
-          {%- render 'plo-card', product: p, eager: false -%}
+          {%- render 'plo-card', product: p, eager: false, view: template.suffix -%}
           {%- assign shown = shown | plus: 1 -%}
         {%- endif -%}
       {%- endfor -%}

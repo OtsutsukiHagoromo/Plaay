@@ -83,7 +83,7 @@
                   assign eager = true
                 endif
               -%}
-              {%- render 'plo-card', product: product, eager: eager, skip_new: true -%}
+              {%- render 'plo-card', product: product, eager: eager, skip_new: true, view: template.suffix -%}
             {%- endfor -%}
           </div>
         </div>

@@ -181,7 +181,7 @@
       </div>
       {%- if s.empty_products.size > 0 -%}
         <div class="plo-sec" style="padding-top:28px"><div class="plo-grid">
-          {%- for product in s.empty_products -%}{%- render 'plo-card', product: product -%}{%- endfor -%}
+          {%- for product in s.empty_products -%}{%- render 'plo-card', product: product, view: template.suffix -%}{%- endfor -%}
         </div></div>
       {%- endif -%}
     </div>
@@ -194,13 +194,13 @@
             {%- if has_sub -%}
               <div class="plo-cart__grp">
                 <div class="plo-group">{%- render 'pl-icon', name: 'refresh', size: 16, stroke: 2 -%}Delivered on repeat</div>
-                {%- for item in cart.items -%}{%- if item.selling_plan_allocation -%}{%- assign ti = forloop.index0 | modulo: 5 -%}{%- render 'plo-cart-line', line: item, tint: tints[ti] -%}{%- endif -%}{%- endfor -%}
+                {%- for item in cart.items -%}{%- if item.selling_plan_allocation -%}{%- assign ti = forloop.index0 | modulo: 5 -%}{%- render 'plo-cart-line', line: item, tint: tints[ti], view: template.suffix -%}{%- endif -%}{%- endfor -%}
               </div>
             {%- endif -%}
             {%- if has_one -%}
               <div class="plo-cart__grp">
                 <div class="plo-group">One-time</div>
-                {%- for item in cart.items -%}{%- unless item.selling_plan_allocation -%}{%- assign ti = forloop.index0 | modulo: 5 -%}{%- render 'plo-cart-line', line: item, tint: tints[ti] -%}{%- endunless -%}{%- endfor -%}
+                {%- for item in cart.items -%}{%- unless item.selling_plan_allocation -%}{%- assign ti = forloop.index0 | modulo: 5 -%}{%- render 'plo-cart-line', line: item, tint: tints[ti], view: template.suffix -%}{%- endunless -%}{%- endfor -%}
               </div>
             {%- endif -%}
           </div>
@@ -221,7 +221,7 @@
         <div>
           <div class="plo-cart__blk">{{ ladder }}</div>
           <div class="plo-cart__blk"><div class="plo-lines plo-box">
-            {%- for item in cart.items -%}{%- render 'plo-cart-line', line: item -%}{%- endfor -%}
+            {%- for item in cart.items -%}{%- render 'plo-cart-line', line: item, view: template.suffix -%}{%- endfor -%}
           </div></div>
           {%- if upsell != blank -%}<div class="plo-cart__blk">{{ upsell }}</div>{%- endif -%}
         </div>
