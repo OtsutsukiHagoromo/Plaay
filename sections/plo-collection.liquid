@@ -1,7 +1,7 @@
 {%- comment -%}
   Option A / Option B preview: collection page. Head (label, title, intro, and for the bars
-  collection a row of bar packs), type chips, count + sort, product grid (snippets/plo-card),
-  a Subscribe & Save promo after the first rows, and a load-more link.
+  collection a row of bar packs), type chips, count + sort, a one-line Subscribe & Save strip,
+  product grid (snippets/plo-card) and a load-more link.
   Every link keeps ?view= so the shopper stays in the option being previewed.
 {%- endcomment -%}
 {%- liquid
@@ -24,7 +24,6 @@
 
   assign chip_labels = s.chip_labels | split: '|'
   assign chip_handles = s.chip_handles | split: '|'
-  assign promo_after = s.promo_after
   assign bars = 'plo-bar-caramel.png,plo-bar-cookies.png,plo-bar-mocha.png,plo-bar-peanut.png,plo-bar-pistachio.png' | split: ','
 -%}
 <div class="pl plo">
@@ -66,6 +65,14 @@
         {%- endif -%}
       </div>
 
+      {%- if s.show_promo -%}
+        <a class="plo-substrip" href="{{ s.promo_url | default: '/pages/subscribe-save' }}">
+          <span class="plo-substrip__ic" aria-hidden="true">{%- render 'pl-icon', name: 'refresh', size: 16, stroke: 2.2 -%}</span>
+          <span class="plo-substrip__t"><b>{{ s.promo_heading }}</b> {{ s.promo_body }}</span>
+          <span class="plo-substrip__go">{{ s.promo_btn }}</span>
+        </a>
+      {%- endif -%}
+
       {%- if collection.products.size > 0 -%}
         <div class="plo-lgrid">
           <div class="plo-grid">
@@ -76,20 +83,7 @@
                   assign eager = true
                 endif
               -%}
-              {%- render 'plo-card', product: product, eager: eager -%}
-              {%- if s.show_promo and forloop.index == promo_after and paginate.current_page == 1 and forloop.length > promo_after -%}
-                <div class="plo-lpromo">
-                  <div class="plo-lpromo__in">
-                    <div class="plo-sticker" aria-hidden="true"><span>{{ s.promo_sticker }}</span></div>
-                    <div style="display:flex;flex-direction:column;gap:10px">
-                      <p class="plo-eyebrow">{{ s.promo_eyebrow }}</p>
-                      <h2 class="plo-title"><b>{{ s.promo_heading }}</b></h2>
-                      <p>{{ s.promo_body }}</p>
-                    </div>
-                    <a class="plo-btn" href="{{ s.promo_url }}">{{ s.promo_btn }}</a>
-                  </div>
-                </div>
-              {%- endif -%}
+              {%- render 'plo-card', product: product, eager: eager, skip_new: true -%}
             {%- endfor -%}
           </div>
         </div>
@@ -123,19 +117,67 @@
   "name": "Preview: collection",
   "tag": "section",
   "settings": [
-    { "type": "textarea", "id": "intro", "label": "Intro (blank = collection description)" },
-    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 16 },
-    { "type": "text", "id": "chip_labels", "label": "Chip labels (| separated)", "default": "All|Slabs|Truffles|Bars|Variety|Limited" },
-    { "type": "text", "id": "chip_handles", "label": "Chip collection handles (| separated)", "default": "shop-all|new-chocolate-slabs|chocolate-truffles|chocolate-bars|variety-packs|limited-editions" },
-    { "type": "text", "id": "bars_handle", "label": "Collection that shows the bar-pack row", "default": "chocolate-bars" },
-    { "type": "checkbox", "id": "show_promo", "label": "Show Subscribe & Save promo", "default": true },
-    { "type": "range", "id": "promo_after", "label": "Promo after product number", "min": 2, "max": 12, "step": 2, "default": 8 },
-    { "type": "text", "id": "promo_eyebrow", "label": "Promo label (Option A)", "default": "Subscribe & save" },
-    { "type": "text", "id": "promo_heading", "label": "Promo heading", "default": "15% off, every 4 weeks" },
-    { "type": "text", "id": "promo_body", "label": "Promo text", "default": "Free delivery on every order. Skip, swap or cancel any time." },
-    { "type": "text", "id": "promo_btn", "label": "Promo button", "default": "How it works" },
-    { "type": "url", "id": "promo_url", "label": "Promo link" },
-    { "type": "text", "id": "promo_sticker", "label": "Promo sticker (Option B)", "default": "Save 15%" }
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro (blank = collection description)"
+    },
+    {
+      "type": "range",
+      "id": "per_page",
+      "label": "Products per page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 16
+    },
+    {
+      "type": "text",
+      "id": "chip_labels",
+      "label": "Chip labels (| separated)",
+      "default": "All|Slabs|Truffles|Bars|Variety|Limited"
+    },
+    {
+      "type": "text",
+      "id": "chip_handles",
+      "label": "Chip collection handles (| separated)",
+      "default": "shop-all|new-chocolate-slabs|chocolate-truffles|chocolate-bars|variety-packs|limited-editions"
+    },
+    {
+      "type": "text",
+      "id": "bars_handle",
+      "label": "Collection that shows the bar-pack row",
+      "default": "chocolate-bars"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_promo",
+      "label": "Show Subscribe & Save strip",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "promo_heading",
+      "label": "Strip, bold part",
+      "default": "Subscribe & save 15%"
+    },
+    {
+      "type": "text",
+      "id": "promo_body",
+      "label": "Strip, text",
+      "default": "on every order, with free delivery. Skip or cancel any time."
+    },
+    {
+      "type": "text",
+      "id": "promo_btn",
+      "label": "Strip, link label",
+      "default": "How it works"
+    },
+    {
+      "type": "url",
+      "id": "promo_url",
+      "label": "Promo link"
+    }
   ]
 }
 {% endschema %}

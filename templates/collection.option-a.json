@@ -14,16 +14,13 @@
       "settings": {
         "per_page": 16,
         "show_promo": true,
-        "promo_after": 8,
         "promo_url": "/pages/subscribe-save",
         "chip_labels": "All|Slabs|Truffles|Bars|Variety|Limited",
         "chip_handles": "shop-all|new-chocolate-slabs|chocolate-truffles|chocolate-bars|variety-packs|limited-editions",
         "bars_handle": "chocolate-bars",
-        "promo_eyebrow": "Subscribe & save",
-        "promo_heading": "15% off, every 4 weeks",
-        "promo_body": "Free delivery on every order. Skip, swap or cancel any time.",
-        "promo_btn": "How it works",
-        "promo_sticker": "Save 15%"
+        "promo_heading": "Subscribe & save 15%",
+        "promo_body": "on every order, with free delivery. Skip or cancel any time.",
+        "promo_btn": "How it works"
       }
     }
   },

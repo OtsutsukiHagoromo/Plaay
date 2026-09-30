@@ -1,9 +1,9 @@
 {%- comment -%}
   Product card for the Option A / Option B preview templates.
-  Usage: {% render 'plo-card', product: product, eager: false %}
+  Usage: {% render 'plo-card', product: product, eager: false, show_sub: false, skip_new: false %}
   One markup, two looks: A is a white outlined box with the add button in the footer,
-  B is a lifted image tile with a sticker add button on the image and the repeat price
-  under the price. The add buttons reuse the theme's <quick-add> module (first available
+  B is a lifted image tile with a sticker add button on the image. show_sub adds the
+  subscribe price under the price (off by default: listings stay one price per card). The add buttons reuse the theme's <quick-add> module (first available
   variant, one-time purchase), the same as snippets/pl-tile.liquid.
 {%- endcomment -%}
 {%- liquid
@@ -48,6 +48,12 @@
   if badge != blank
     assign badge_text = badge
   endif
+  comment
+    Listings pass skip_new: when most of a collection is new, a New badge on every card is noise.
+  endcomment
+  if skip_new and badge_mod == 'new'
+    assign badge_text = ''
+  endif
 
   assign meta = ''
   if product.variants.size > 1
@@ -84,7 +90,7 @@
     <div class="plo-card__foot">
       <div>
         <div class="plo-card__price">{%- if product.variants.size > 1 -%}From {% endif -%}{%- render 'plaay-aed', fils: v.price -%}</div>
-        {%- if sub_price > 0 -%}<div class="plo-card__sub">{%- render 'plaay-aed', fils: sub_price -%} on repeat</div>{%- endif -%}
+        {%- if show_sub and sub_price > 0 -%}<div class="plo-card__sub">{%- render 'plaay-aed', fils: sub_price -%} on repeat</div>{%- endif -%}
       </div>
       {%- if v.available -%}
         <quick-add class="plo-card__add-a" data-module="quick-add" data-id="{{ v.id }}">
