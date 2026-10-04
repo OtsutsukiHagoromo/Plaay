@@ -1,0 +1,18 @@
+{%- comment -%}
+  Refreshed product photography for the Option A / B previews (theme assets plo-ph-<key>-1..8.jpg,
+  from the Sept/Oct 2026 shoot). Outputs the photo key for a product handle, or nothing.
+  Usage: {%- capture pkey -%}{%- render 'plo-photo-key', handle: product.handle -%}{%- endcapture -%}
+  Photo 1 is the clean pack shot used on cards and in the cart; 2–8 fill the product gallery.
+  Only the preview templates read this, so live product media is untouched.
+{%- endcomment -%}
+{%- case handle -%}
+  {%- when 'plaay-70-dark-chocolate-hazelnut-bar-6-x-80g' -%}hazel
+  {%- when 'plaay-70-dark-chocolate-sea-salt-bar-6-x-80g' -%}seasalt
+  {%- when 'plaay-70-dark-chocolate-bar-6-x-80g' -%}dark
+  {%- when 'plaay-70-dark-chocolate-caramel-crunch-mousse-bar-6-x-80g' -%}caramel
+  {%- when 'plaay-milk-chocolate-cheesecake-bar-6-x-80g' -%}cheese
+  {%- when 'plaay-milk-chocolate-toffee-almond-bar-6-x-80g' -%}toffee
+  {%- when 'pistachio-chocolate-bar-x-12' -%}pistbar
+  {%- when 'triple-chocolate-truffle' -%}triple
+  {%- when 'peanut-butter-truffle' -%}pb
+{%- endcase -%}

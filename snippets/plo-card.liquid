@@ -62,6 +62,10 @@
     assign meta = v.title
   endif
 
+  capture pkey
+    render 'plo-photo-key', handle: product.handle
+  endcapture
+  assign pkey = pkey | strip
   assign href = product.url
   if view == 'option-a' or view == 'option-b'
     assign href = product.url | append: '?view=' | append: view
@@ -75,7 +79,10 @@
 <article class="plo-card">
   <div class="plo-card__img">
     <a href="{{ href }}" tabindex="-1" aria-hidden="true">
-      {%- if product.featured_image -%}
+      {%- if pkey != blank -%}
+        {%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}
+        <img src="{{ ph | asset_url }}" alt="{{ product.title | escape }}" loading="{{ load }}" width="800" height="1000" class="is-photo">
+      {%- elsif product.featured_image -%}
         {{ product.featured_image | image_url: width: 600 | image_tag: loading: load, sizes: '(min-width: 1024px) 300px, 46vw', widths: '240, 360, 480, 600', alt: product.title }}
       {%- else -%}
         {{ 'product-1' | placeholder_svg_tag }}

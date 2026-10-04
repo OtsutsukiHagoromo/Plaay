@@ -134,7 +134,12 @@
   {%- if up != blank and up_in_cart == false and up.available -%}
     {%- assign upv = up.selected_or_first_available_variant -%}
     <div class="plo-upsell plo-box" data-plo-line data-key="" data-qty="0">
-      <a class="plo-upsell__pic" href="{{ up.url }}">{%- if up.featured_image -%}{{ up.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: up.title }}{%- endif -%}</a>
+      {%- capture up_key -%}{%- render 'plo-photo-key', handle: up.handle -%}{%- endcapture -%}
+      {%- assign up_key = up_key | strip -%}
+      <a class="plo-upsell__pic" href="{{ up.url }}{% if template.suffix != blank %}?view={{ template.suffix }}{% endif %}">
+        {%- if up_key != blank -%}{%- assign ph = 'plo-ph-' | append: up_key | append: '-1.jpg' -%}<img src="{{ ph | asset_url }}" alt="{{ up.title | escape }}" loading="lazy" width="160" height="200" class="is-photo">
+        {%- elsif up.featured_image -%}{{ up.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: up.title }}{%- endif -%}
+      </a>
       <div>
         <p class="plo-upsell__t">{{ up.title }}{% if skin == 'a' %} · {% render 'plaay-aed', fils: upv.price %}{% endif %}</p>
         <p class="plo-upsell__s">{% if skin == 'b' %}{% render 'plaay-aed', fils: upv.price %} · {% endif %}{{ up_msg }}</p>

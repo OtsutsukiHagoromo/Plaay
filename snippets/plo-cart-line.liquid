@@ -31,6 +31,10 @@
   endif
   assign plan_save = line.final_line_price | times: plan_pct | divided_by: 100
 
+  capture pkey
+    render 'plo-photo-key', handle: line.product.handle
+  endcapture
+  assign pkey = pkey | strip
   assign href = line.url
   if view == 'option-a' or view == 'option-b'
     if href contains '?'
@@ -51,7 +55,10 @@
 -%}
 <div class="plo-line" data-plo-line data-key="{{ line.key }}" data-qty="{{ line.quantity }}">
   <a class="plo-line__pic" href="{{ href }}" style="--tint: {{ tint | default: '#FFF7DD' }}">
-    {%- if line.image -%}{{ line.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: line.product.title }}{%- endif -%}
+    {%- if pkey != blank -%}
+      {%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}
+      <img src="{{ ph | asset_url }}" alt="{{ line.product.title | escape }}" loading="lazy" width="160" height="200" class="is-photo">
+    {%- elsif line.image -%}{{ line.image | image_url: width: 200 | image_tag: loading: 'lazy', alt: line.product.title }}{%- endif -%}
   </a>
   <div class="plo-line__main">
     <div class="plo-line__row">

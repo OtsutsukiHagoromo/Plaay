@@ -249,9 +249,32 @@
     }
   }, true);
 
+
+  /* ---------- photo gallery (refreshed photography) ---------- */
+  function initPhotos(root) {
+    var track = root.querySelector('[data-plo-phtrack]');
+    var thumbs = Array.prototype.slice.call(root.querySelectorAll('[data-plo-go]'));
+    if (!track) return;
+    function mark(i) { thumbs.forEach(function (t, n) { t.classList.toggle('is-on', n === i); }); }
+    thumbs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        var i = Number(t.getAttribute('data-plo-go'));
+        var img = track.children[i];
+        if (img) track.scrollTo({ left: img.offsetLeft - track.offsetLeft, behavior: 'smooth' });
+        mark(i);
+      });
+    });
+    var raf = null;
+    track.addEventListener('scroll', function () {
+      if (raf) return;
+      raf = requestAnimationFrame(function () { raf = null; mark(Math.round(track.scrollLeft / Math.max(1, track.clientWidth))); });
+    }, { passive: true });
+  }
+
   function init() {
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-carousel]'), initCarousel);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-pdp]'), initPdp);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-photos]'), initPhotos);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

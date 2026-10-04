@@ -754,3 +754,23 @@ body:has(.plo-sticky.is-on) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 84px
 .plo-toast.is-on { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
 .plo-toast a { color: var(--pl-yellow); font-weight: 700; white-space: nowrap; text-decoration: underline; text-underline-offset: 3px; }
 .plo-add.is-busy { opacity: .5; pointer-events: none; }
+
+/* Refreshed photography (snippets/plo-photo-key): pack shots fill the tile; the product
+   gallery becomes a swipeable run of full photos with thumbnails. */
+.plo-card__img img.is-photo, .plo-line__pic img.is-photo, .plo-upsell__pic img.is-photo,
+.plo-flav__pic img.is-photo, .plo-sticky__pic img.is-photo { width: 100%; height: 100%; object-fit: cover; mix-blend-mode: normal; }
+.plo-gal--photos .plo-gal__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; aspect-ratio: 4 / 5; border-radius: 16px; background: #fff; border: 1px solid var(--pl-line); }
+.plo-gal--photos .plo-gal__track::-webkit-scrollbar { display: none; }
+.plo-gal--photos .plo-gal__track img { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; }
+.plo-gal--photos { position: relative; }
+.plo-gal--photos .plo-gal__badge { position: absolute; left: calc(var(--o-side) + 12px); top: 28px; }
+.plo-gal--photos .plo-gal__th { width: 52px; height: 64px; }
+.plo-gal--photos .plo-gal__th img { object-fit: cover; }
+.pl-skin-b .plo-gal--photos .plo-gal__track { border: 0; border-radius: 0 0 32px 32px; }
+.pl-skin-b .plo-gal--photos .plo-gal__badge { left: 18px; top: 18px; }
+.pl-skin-b .plo-gal--photos .plo-gal__th { border-radius: 12px; background: #fff; }
+@media (min-width: 1024px) {
+  .plo-gal--photos .plo-gal__badge { left: 16px; top: 16px; }
+  .plo-gal--photos .plo-gal__track { max-height: calc(100vh - var(--pl-header-h) - 140px); aspect-ratio: 4 / 5; margin: 0 auto; }
+  .pl-skin-b .plo-gal--photos .plo-gal__track { border-radius: 0 0 40px 40px; }
+}
