@@ -9,6 +9,7 @@
   comment
     name | collection | tile colour | refreshed pack-shot key | tag | full-bleed photo | photo focus
     Tiles with a full-bleed photo use it as the whole tile (colour = the photo's backdrop).
+    Only rows with a photo are shown, so the set always matches.
   endcomment
   assign rows = 'Truffles|chocolate-truffles|#FED8B5|triple||plo-cat-truffles.jpg|96% 50%,Bars|chocolate-bars|#A9FAE8|pistbar||plo-cat-bars.jpg|78% 50%,Slabs|new-chocolate-slabs|#F8C5EB|hazel|New|plo-cat-slabs.jpg|94% 50%,Variety packs|variety-packs|#FCD730||Gifting|plo-cat-packs.jpg|96% 50%,Limited editions|limited-editions|#FFF0C4|||||' | split: ','
   assign n = 0
@@ -20,7 +21,7 @@
     if c == blank or c.products_count == 0
       continue
     endif
-    if size == 'sm' and f[1] == 'limited-editions'
+    if f[5] == blank
       continue
     endif
     assign n = n | plus: 1
