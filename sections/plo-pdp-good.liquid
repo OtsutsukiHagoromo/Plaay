@@ -1,0 +1,153 @@
+{%- comment -%}
+  Option B product page: "what's inside" panel. One cream panel: photo on the left, then the
+  product's key numbers (or, for packs, the units in the box), what's in / what's out, and a
+  one-line nutritionist credit.
+  The photo is the refreshed ingredient shot (plo-ph-<key>-5) when the product has one, else
+  the section image. Each "Product set" block lists the handles it applies to; the first match
+  wins, and a set with no handles is the default.
+    facts: one per line, "big|small"          e.g. 0 g|refined sugar
+    units: one per line, "asset file|name"; a line "# Title|note" starts a group
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  capture pkey
+    render 'plo-photo-key', handle: product.handle
+  endcapture
+  assign pkey = pkey | strip
+
+  assign set = nil
+  assign fallback = nil
+  for block in section.blocks
+    assign hs = block.settings.handles | split: ','
+    if hs.size == 0 and fallback == nil
+      assign fallback = block
+    endif
+    for h in hs
+      assign hh = h | strip
+      if hh == product.handle and set == nil
+        assign set = block
+      endif
+    endfor
+  endfor
+  if set == nil
+    assign set = fallback
+  endif
+
+  assign eyebrow = s.eyebrow
+  assign in_list = s.in_list
+  assign out_list = s.out_list
+  assign facts = ''
+  assign units = ''
+  if set
+    if set.settings.eyebrow != blank
+      assign eyebrow = set.settings.eyebrow
+    endif
+    if set.settings.in_list != blank
+      assign in_list = set.settings.in_list
+    endif
+    assign facts = set.settings.facts | newline_to_br | split: '<br />'
+    assign units = set.settings.units | newline_to_br | split: '<br />'
+  endif
+  assign ins = in_list | newline_to_br | split: '<br />'
+  assign outs = out_list | newline_to_br | split: '<br />'
+-%}
+<div class="pl plo plo-px plo-good">
+  <div class="plo-wrap">
+    <div class="plo-good__panel">
+      <div class="plo-good__media">
+        {%- if pkey != blank -%}
+          {%- render 'pl-photo', key: pkey, n: s.photo_n, alt: product.title -%}
+        {%- elsif s.image != blank -%}
+          {{ s.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '480, 720, 1000', sizes: '(min-width: 1024px) 520px, 100vw', alt: product.title }}
+        {%- endif -%}
+      </div>
+      <div class="plo-good__body">
+        {%- if eyebrow != blank -%}<p class="plo-eyebrow">{{ eyebrow }}</p>{%- endif -%}
+        <h2 class="plo-px__t">{{ s.heading }}</h2>
+
+        {%- assign has_facts = false -%}
+        {%- for f in facts -%}{%- if f contains '|' -%}{%- assign has_facts = true -%}{%- endif -%}{%- endfor -%}
+        {%- if has_facts -%}
+          <dl class="plo-good__facts">
+            {%- for f in facts -%}
+              {%- assign p = f | strip | split: '|' -%}
+              {%- if p.size > 1 -%}<div><dt>{{ p[0] }}</dt><dd>{{ p[1] }}</dd></div>{%- endif -%}
+            {%- endfor -%}
+          </dl>
+        {%- endif -%}
+
+        {%- assign open = false -%}
+        {%- for u in units -%}
+          {%- assign line = u | strip -%}
+          {%- if line == blank -%}{%- continue -%}{%- endif -%}
+          {%- assign p = line | split: '|' -%}
+          {%- if p[0] contains '#' -%}
+            {%- if open -%}</ul></div>{%- endif -%}
+            <div class="plo-good__grp">
+              <p class="plo-good__gh"><b>{{ p[0] | remove_first: '#' | strip }}</b>{% if p[1] %} <span>{{ p[1] }}</span>{% endif %}</p>
+              <ul class="plo-good__units">
+            {%- assign open = true -%}
+          {%- else -%}
+            {%- unless open -%}<div class="plo-good__grp"><ul class="plo-good__units">{%- assign open = true -%}{%- endunless -%}
+            <li><span class="plo-good__u"><img src="{{ p[0] | asset_url }}" alt="" loading="lazy" width="160" height="160"></span>{{ p[1] }}</li>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if open -%}</ul></div>{%- endif -%}
+
+        <div class="plo-good__io">
+          <ul class="plo-good__in" aria-label="{{ s.in_label }}">
+            <li class="plo-good__lbl">{{ s.in_label }}</li>
+            {%- for x in ins -%}{%- assign x = x | strip -%}{%- if x != blank -%}<li>{%- render 'pl-icon', name: 'check', size: 16, stroke: 2.6 -%}<span>{{ x }}</span></li>{%- endif -%}{%- endfor -%}
+          </ul>
+          <ul class="plo-good__out" aria-label="{{ s.out_label }}">
+            <li class="plo-good__lbl">{{ s.out_label }}</li>
+            {%- for x in outs -%}{%- assign x = x | strip -%}{%- if x != blank -%}<li>{%- render 'pl-icon', name: 'close', size: 16, stroke: 2.6 -%}<span>{{ x }}</span></li>{%- endif -%}{%- endfor -%}
+          </ul>
+        </div>
+
+        {%- if s.by_name != blank -%}
+          <a class="plo-good__by" href="{{ s.by_url | default: '/pages/for-the-geeks-1' }}">
+            {%- if s.by_asset != blank -%}<img src="{{ s.by_asset | asset_url }}" alt="" loading="lazy" width="48" height="48">{%- endif -%}
+            <span>{{ s.by_lead }} <b>{{ s.by_name }}</b></span>
+            <span class="plo-good__go">{{ s.by_link }}{%- render 'pl-icon', name: 'chev-right', size: 14, stroke: 2.4 -%}</span>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: what's inside",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label", "default": "Inside every Plaay" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What’s in. What’s not." },
+    { "type": "image_picker", "id": "image", "label": "Photo (products without the refreshed shoot)" },
+    { "type": "range", "id": "photo_n", "label": "Refreshed shoot photo to use", "min": 1, "max": 8, "step": 1, "default": 5 },
+    { "type": "text", "id": "in_label", "label": "In label", "default": "In" },
+    { "type": "textarea", "id": "in_list", "label": "In (one per line)", "default": "Real cocoa\nNuts\nWhey protein\nCoconut nectar" },
+    { "type": "text", "id": "out_label", "label": "Out label", "default": "Out" },
+    { "type": "textarea", "id": "out_list", "label": "Out (one per line)", "default": "Refined sugar\nGluten\nSoy\nPalm oil" },
+    { "type": "text", "id": "by_asset", "label": "Credit photo (theme asset file)", "default": "plo-rashi.jpg" },
+    { "type": "text", "id": "by_lead", "label": "Credit text", "default": "Made by nutritionist" },
+    { "type": "text", "id": "by_name", "label": "Credit name", "default": "Rashi Chowdhary" },
+    { "type": "text", "id": "by_link", "label": "Credit link label", "default": "Read her story" },
+    { "type": "url", "id": "by_url", "label": "Credit link" }
+  ],
+  "blocks": [
+    {
+      "type": "set",
+      "name": "Product set",
+      "settings": [
+        { "type": "text", "id": "handles", "label": "Products (handles, comma separated; blank = default)" },
+        { "type": "text", "id": "eyebrow", "label": "Label" },
+        { "type": "textarea", "id": "facts", "label": "Key numbers (big|small, one per line)" },
+        { "type": "textarea", "id": "units", "label": "In the box (asset file|name; '# Title|note' starts a group)" },
+        { "type": "textarea", "id": "in_list", "label": "In (overrides the section list)" }
+      ]
+    }
+  ]
+}
+{% endschema %}

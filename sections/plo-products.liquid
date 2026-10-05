@@ -11,7 +11,7 @@
   assign shown = 0
   assign lim = s.limit | default: 4
 -%}
-<div class="pl plo plo-sec">
+<div class="pl plo plo-sec{% if s.pad_bottom %} plo-sec--end{% endif %}">
   <div class="plo-wrap">
     {%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light, link_label: s.link_label, link_url: s.link_url -%}
     <div class="plo-grid">
@@ -36,7 +36,8 @@
     { "type": "product_list", "id": "products", "label": "Products", "limit": 8 },
     { "type": "range", "id": "limit", "label": "Cards to show", "min": 2, "max": 8, "step": 2, "default": 4 },
     { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop all" },
-    { "type": "url", "id": "link_url", "label": "Link" }
+    { "type": "url", "id": "link_url", "label": "Link" },
+    { "type": "checkbox", "id": "pad_bottom", "label": "Space below (last section on the page)", "default": false }
   ]
 }
 {% endschema %}

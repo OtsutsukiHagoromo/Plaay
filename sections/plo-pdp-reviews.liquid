@@ -1,0 +1,111 @@
+{%- comment -%}
+  Option B product page: reviews. Summary card (store rating, count, 5★–2★ bars) beside a grid
+  of equal-height review cards. Rating and count come from the Judge.me shop metafields
+  (falling back to theme settings); the breakdown counts are a setting.
+  Mobile: summary, then the cards in a swipe row.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign rating = shop.metafields.judgeme.all_reviews_rating | append: '' | times: 1.0
+  assign count = shop.metafields.judgeme.all_reviews_count | append: '' | plus: 0
+  if rating <= 0
+    assign rating = settings.store_rating_value | append: '' | times: 1.0
+  endif
+  if count <= 0
+    assign count = settings.store_rating_count | append: '' | plus: 0
+  endif
+  assign rating = rating | round: 1
+  assign counts = s.breakdown | split: ','
+  assign total = 0
+  for c in counts
+    assign total = total | plus: c
+  endfor
+  if total == 0
+    assign total = 1
+  endif
+  assign count_s = count | append: ''
+  assign heading = s.heading | replace: '[count]', count_s
+-%}
+<div class="pl plo plo-px plo-prev" id="plo-reviews">
+  <div class="plo-wrap">
+    <div class="plo-px__head">
+      <div>
+        {%- if s.eyebrow != blank -%}<p class="plo-eyebrow">{{ s.eyebrow }}</p>{%- endif -%}
+        <h2 class="plo-px__t">{{ heading }}</h2>
+      </div>
+      {%- if s.all_url != blank -%}<a class="plo-px__link" href="{{ s.all_url }}">{{ s.all_label }}{%- render 'pl-icon', name: 'chev-right', size: 14, stroke: 2.4 -%}</a>{%- endif -%}
+    </div>
+    <div class="plo-prev__grid">
+      <div class="plo-prev__sum">
+        <div class="plo-prev__score"><b>{{ rating }}</b><span>/5</span></div>
+        {%- capture lbl -%}{{ rating }} out of 5 stars{%- endcapture -%}
+        {%- render 'plo-stars', size: 16, label: lbl -%}
+        <p class="plo-prev__c">Based on <b>{{ count }}</b> reviews across all Plaay products</p>
+        <div class="plo-prev__bars">
+          {%- for c in counts limit: s.rows -%}
+            {%- liquid
+              assign star = 6 | minus: forloop.index
+              assign cn = c | plus: 0
+              assign pct = cn | times: 100 | divided_by: total
+              assign pct_label = pct | append: '%'
+              if pct == 0 and cn > 0
+                assign pct_label = '<1%'
+              endif
+            -%}
+            <div class="plo-prev__bar"><span>{{ star }} star</span><i><u style="width: {{ pct }}%"></u></i><span>{{ pct_label | escape }}</span></div>
+          {%- endfor -%}
+        </div>
+      </div>
+      <div class="plo-prev__cards">
+        {%- for block in section.blocks -%}
+          {%- assign b = block.settings -%}
+          <figure class="plo-prev__card" {{ block.shopify_attributes }}>
+            <div class="plo-prev__top">
+              {%- render 'plo-stars', size: 13 -%}
+              <span class="plo-prev__ver">{%- render 'pl-icon', name: 'check', size: 12, stroke: 2.6 -%}Verified buyer</span>
+            </div>
+            <blockquote>“{{ b.quote }}”</blockquote>
+            <figcaption>
+              {%- if b.image != blank -%}
+                {{ b.image | image_url: width: 120 | image_tag: loading: 'lazy', class: 'plo-prev__av', alt: '' }}
+              {%- elsif b.image_asset != blank -%}
+                <img class="plo-prev__av" src="{{ b.image_asset | asset_url }}" alt="" loading="lazy" width="48" height="48">
+              {%- else -%}
+                <span class="plo-prev__av plo-prev__av--i" aria-hidden="true">{{ b.name | slice: 0 }}</span>
+              {%- endif -%}
+              <span><b>{{ b.name }}</b>{%- if b.product != blank -%}<small>{{ b.product }}</small>{%- endif -%}</span>
+            </figcaption>
+          </figure>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: product reviews",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label", "default": "Reviews" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Loved by [count] Plaayers", "info": "[count] = live review count" },
+    { "type": "text", "id": "breakdown", "label": "Reviews per star, 5 to 1 (counts)", "default": "104,5,5,1,7" },
+    { "type": "range", "id": "rows", "label": "Star rows to show", "min": 3, "max": 5, "step": 1, "default": 4 },
+    { "type": "text", "id": "all_label", "label": "All reviews link label", "default": "Read all reviews" },
+    { "type": "url", "id": "all_url", "label": "All reviews page" }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "textarea", "id": "quote", "label": "Quote" },
+        { "type": "text", "id": "name", "label": "Name" },
+        { "type": "text", "id": "product", "label": "Product" },
+        { "type": "image_picker", "id": "image", "label": "Photo (optional)" },
+        { "type": "text", "id": "image_asset", "label": "Photo fallback (theme asset file)" }
+      ]
+    }
+  ]
+}
+{% endschema %}

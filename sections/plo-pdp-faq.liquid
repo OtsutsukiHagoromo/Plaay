@@ -1,0 +1,48 @@
+{%- comment -%}
+  Option B product page: FAQ. Desktop: heading, intro and links (all FAQs, contact) on the left,
+  the questions on the right. Mobile: heading, questions, then the links.
+  Native details/summary; the first question starts open.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<div class="pl plo plo-px plo-pfaq">
+  <div class="plo-wrap plo-pfaq__grid">
+    <div class="plo-pfaq__head">
+      {%- if s.eyebrow != blank -%}<p class="plo-eyebrow">{{ s.eyebrow }}</p>{%- endif -%}
+      <h2 class="plo-px__t">{{ s.heading }}</h2>
+      {%- if s.intro != blank -%}<p class="plo-pfaq__p">{{ s.intro }}</p>{%- endif -%}
+    </div>
+    <div class="plo-pfaq__list">
+      {%- for block in section.blocks -%}
+        <details class="plo-pfaq__i"{% if forloop.first %} open{% endif %} {{ block.shopify_attributes }}>
+          <summary><span>{{ block.settings.q }}</span><i aria-hidden="true">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</i></summary>
+          <div class="plo-pfaq__a">{{ block.settings.a }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+    <div class="plo-pfaq__cta">
+      {%- if s.all_label != blank -%}<a class="plo-btn plo-btn--sec" href="{{ s.all_url | default: '/pages/faqs' }}">{{ s.all_label }}</a>{%- endif -%}
+      {%- if s.contact_label != blank -%}<a class="plo-pfaq__contact" href="{{ s.contact_url | default: '/pages/contact' }}">{{ s.contact_label }}</a>{%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: product FAQ",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label", "default": "FAQ" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Good to know" },
+    { "type": "textarea", "id": "intro", "label": "Intro" },
+    { "type": "text", "id": "all_label", "label": "All FAQs button", "default": "See all FAQs" },
+    { "type": "url", "id": "all_url", "label": "All FAQs page" },
+    { "type": "text", "id": "contact_label", "label": "Contact link label", "default": "Still stuck? Contact us" },
+    { "type": "url", "id": "contact_url", "label": "Contact page" }
+  ],
+  "blocks": [
+    { "type": "qa", "name": "Question", "settings": [
+      { "type": "text", "id": "q", "label": "Question" },
+      { "type": "richtext", "id": "a", "label": "Answer" } ] }
+  ]
+}
+{% endschema %}
