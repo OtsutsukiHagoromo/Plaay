@@ -80,22 +80,27 @@
       ]
     },
     "related": {
-      "type": "plo-products",
+      "type": "plo-pdp-related",
       "settings": {
         "eyebrow": "More from Plaay",
         "heading": "You might",
         "heading_light": "also like",
-        "products": [
-          "og-plaayer-pack",
-          "new-chocolate-bars-mix-pack-of-5",
-          "triple-chocolate-truffle",
-          "salted-caramel-bar-x12",
-          "cashew-caramel-truffle"
-        ],
         "limit": 4,
+        "pack_truffles": "truffle-mix",
+        "pack_bars": "bar-bunch",
+        "pack_slabs": "new-chocolate-bars-mix-pack-of-5",
+        "hero_truffles": "triple-chocolate-truffle",
+        "hero_bars": "salted-caramel-bar-x12",
+        "hero_slabs": "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g",
+        "fill": [
+          "og-plaayer-pack",
+          "plaayer-pack",
+          "pistachio-chocolate-bar-x-12",
+          "peanut-butter-truffle",
+          "plaay-70-dark-chocolate-sea-salt-bar-6-x-80g"
+        ],
         "link_label": "Shop all",
-        "link_url": "/collections/shop-all?view=option-b",
-        "pad_bottom": true
+        "link_url": "/collections/shop-all"
       }
     },
     "good": {

@@ -1001,3 +1001,11 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 .plo-ig__facts dd { margin: 0; color: var(--pl-navy); font-weight: 600; }
 .plo-ig__facts > div.is-note dd { font-size: 12px; font-weight: 400; color: var(--pl-mute); }
 .plo-pan:has(.plo-nf, .plo-ig, .plo-al) { max-height: none; overflow: visible; }
+
+/* Product page suggestions: reason line, swipe row on mobile */
+.plo-card__why { margin: 0 0 4px; font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--pl-purple); }
+.plo-rel__row { display: grid; grid-auto-flow: column; grid-auto-columns: 62%; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; margin: 0 calc(var(--o-side) * -1); padding: 4px var(--o-side) 8px; scroll-padding: 0 var(--o-side); }
+.plo-rel__row::-webkit-scrollbar { display: none; }
+.plo-rel__row > * { scroll-snap-align: start; min-width: 0; }
+@media (min-width: 768px) { .plo-rel__row { grid-auto-columns: 38%; } }
+@media (min-width: 1024px) { .plo-rel__row { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-columns: auto; overflow: visible; margin: 0; padding: 0; gap: 20px; } }

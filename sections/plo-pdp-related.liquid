@@ -1,0 +1,110 @@
+{%- comment -%}
+  Product page: "You might also like", picked by rules for the product being viewed.
+  Up to `limit` cards, in this order (current product, duplicates and sold-out skipped):
+    1. Complementary products set in Shopify Search & Discovery for this product ("Goes with it")
+    2. The multi-pack of this product's range ("Try them all")
+    3. One hero from each other range ("Pairs well")
+    4. Fill-ups from the list below ("Fan favourite")
+  The range comes from the product's collections (truffles / bars / slabs / variety packs).
+  Mobile: a swipe row. Desktop: a 4-up grid.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign lim = s.limit | default: 4
+
+  assign kind = 'packs'
+  for c in product.collections
+    case c.handle
+      when 'chocolate-truffles', 'limited-editions'
+        assign kind = 'truffles'
+      when 'chocolate-bars'
+        if kind == 'packs'
+          assign kind = 'bars'
+        endif
+      when 'new-chocolate-slabs'
+        assign kind = 'slabs'
+    endcase
+  endfor
+  if product.handle == s.pack_truffles.handle or product.handle == s.pack_bars.handle or product.handle == s.pack_slabs.handle
+    assign kind = 'packs'
+  endif
+
+  comment
+    Build an ordered list of "handle~reason" entries, then render the first `lim` usable ones.
+  endcomment
+  assign list = ''
+  assign comp = product.metafields['shopify--discovery--product_recommendation'].complementary_products.value
+  for p in comp
+    assign list = list | append: p.handle | append: '~Goes with it|'
+  endfor
+
+  case kind
+    when 'truffles'
+      assign list = list | append: s.pack_truffles.handle | append: '~Try them all|' | append: s.hero_bars.handle | append: '~Pairs well|' | append: s.hero_slabs.handle | append: '~Pairs well|'
+    when 'bars'
+      assign list = list | append: s.pack_bars.handle | append: '~Try them all|' | append: s.hero_truffles.handle | append: '~Pairs well|' | append: s.hero_slabs.handle | append: '~Pairs well|'
+    when 'slabs'
+      assign list = list | append: s.pack_slabs.handle | append: '~Try them all|' | append: s.hero_truffles.handle | append: '~Pairs well|' | append: s.hero_bars.handle | append: '~Pairs well|'
+    else
+      assign list = list | append: s.pack_truffles.handle | append: '~Try them all|' | append: s.pack_slabs.handle | append: '~Try them all|' | append: s.hero_truffles.handle | append: '~Pairs well|'
+  endcase
+  for p in s.fill
+    assign list = list | append: p.handle | append: '~Fan favourite|'
+  endfor
+
+  assign entries = list | split: '|'
+  assign used = ',' | append: product.handle | append: ','
+  assign shown = 0
+-%}
+<div class="pl plo plo-sec plo-sec--end plo-rel">
+  <div class="plo-wrap">
+    {%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light, link_label: s.link_label, link_url: s.link_url -%}
+    <div class="plo-rel__row">
+      {%- for e in entries -%}
+        {%- if shown >= lim -%}{%- break -%}{%- endif -%}
+        {%- liquid
+          assign parts = e | split: '~'
+          assign h = parts[0] | strip
+          if h == blank
+            continue
+          endif
+          assign key = ',' | append: h | append: ','
+          if used contains key
+            continue
+          endif
+          assign p = all_products[h]
+          if p == blank or p.available == false
+            continue
+          endif
+          assign used = used | append: h | append: ','
+          assign shown = shown | plus: 1
+        -%}
+        {%- render 'plo-card', product: p, eager: false, view: template.suffix, reason: parts[1] -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: suggestions",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label", "default": "More from Plaay" },
+    { "type": "text", "id": "heading", "label": "Heading, bold part", "default": "You might" },
+    { "type": "text", "id": "heading_light", "label": "Heading, light part", "default": "also like" },
+    { "type": "range", "id": "limit", "label": "Cards", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "header", "content": "Multi-pack per range (\"Try them all\")" },
+    { "type": "product", "id": "pack_truffles", "label": "Truffles" },
+    { "type": "product", "id": "pack_bars", "label": "Bars" },
+    { "type": "product", "id": "pack_slabs", "label": "Slabs" },
+    { "type": "header", "content": "Hero per range (\"Pairs well\")" },
+    { "type": "product", "id": "hero_truffles", "label": "Truffles" },
+    { "type": "product", "id": "hero_bars", "label": "Bars" },
+    { "type": "product", "id": "hero_slabs", "label": "Slabs" },
+    { "type": "product_list", "id": "fill", "label": "Fill-ups (\"Fan favourite\")", "limit": 8 },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop all" },
+    { "type": "url", "id": "link_url", "label": "Link" }
+  ]
+}
+{% endschema %}
