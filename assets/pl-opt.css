@@ -1016,3 +1016,49 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 .pl-skin-b .plo-cat--photo:hover .plo-cat__photo { transform: scale(1.05); }
 .pl-skin-b .plo-cat--photo .plo-cat__n, .pl-skin-b .plo-cat--photo .plo-cat__c { position: relative; }
 .plo-cat--photo .plo-cat__photo { width: 100%; height: 100%; }
+
+/* ==========================================================================
+   Collection banner (plo-collection): photo backdrop + title on the left,
+   colour fade so the text always reads; Shop all shows the range tiles.
+   ========================================================================== */
+.plo-hero { position: relative; overflow: hidden; background: var(--tint, var(--pl-cream)); isolation: isolate; }
+.plo-hero__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 85% 50%); }
+.plo-hero--photo::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, var(--tint) 0%, var(--tint) 30%, color-mix(in srgb, var(--tint) 70%, transparent) 46%, transparent 64%); }
+.plo-hero__in { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding-top: 28px; padding-bottom: 28px; }
+.plo-hero--photo .plo-hero__in { min-height: 236px; justify-content: flex-end; }
+.plo-hero__n { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--pl-navy); opacity: .7; }
+.plo-hero__t { margin: 0; max-width: 62%; font-size: 36px; font-weight: 900; line-height: .95; text-transform: uppercase; letter-spacing: -.01em; color: var(--pl-navy); }
+.plo-hero--all .plo-hero__t, .plo-hero:not(.plo-hero--photo) .plo-hero__t { max-width: none; }
+.plo-hero__p { margin: 0; max-width: 56%; font-size: 14px; line-height: 1.45; color: var(--pl-navy); opacity: .8; }
+.plo-hero:not(.plo-hero--photo) .plo-hero__p { max-width: 560px; }
+.plo-hero__facts { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 0; padding: 0; list-style: none; max-width: 62%; }
+.plo-hero__facts li { padding: 5px 10px; border-radius: 999px; background: rgba(255, 255, 255, .8); font-size: 11px; font-weight: 800; color: var(--pl-navy); line-height: 1.2; }
+.plo-hero__tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding-bottom: 28px; }
+.plo-hero__tiles .pl-mtile__pic { aspect-ratio: 5 / 4; }
+@media (min-width: 1024px) {
+  .plo-hero--photo .plo-hero__in { min-height: 400px; justify-content: center; padding-top: 48px; padding-bottom: 48px; }
+  .plo-hero__in { padding-top: 48px; padding-bottom: 40px; gap: 12px; }
+  .plo-hero__t { font-size: 72px; max-width: 48%; }
+  .plo-hero__p { font-size: 17px; max-width: 40%; }
+  .plo-hero__facts { max-width: 48%; gap: 8px; }
+  .plo-hero__facts li { padding: 7px 14px; font-size: 13px; }
+  .plo-hero--photo::before { background: linear-gradient(90deg, var(--tint) 0%, var(--tint) 34%, color-mix(in srgb, var(--tint) 60%, transparent) 46%, transparent 58%); }
+  .plo-hero__tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; padding-bottom: 48px; }
+  .plo-hero__tiles .pl-mtile__pic { aspect-ratio: 4 / 3; }
+}
+/* chips: count */
+.plo-chips a small { margin-left: 6px; font-size: 11px; font-weight: 700; opacity: .55; }
+/* Shop all: one row per range */
+.plo-group { padding-top: 32px; }
+.plo-group + .plo-group { border-top: 1px solid rgba(8, 29, 72, .08); margin-top: 32px; }
+.plo-group__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.plo-group__t { margin: 0; font-size: 24px; font-weight: 900; text-transform: uppercase; line-height: 1; }
+.plo-group__t small { margin-left: 6px; font-size: 13px; font-weight: 700; color: var(--pl-mute); vertical-align: middle; }
+.plo-group__all { display: inline-flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 800; white-space: nowrap; }
+.plo-group__all:hover { color: var(--pl-purple); }
+@media (min-width: 1024px) {
+  .plo-group { padding-top: 48px; } .plo-group + .plo-group { margin-top: 48px; }
+  .plo-group__t { font-size: 32px; }
+  .plo-group__row > :nth-child(n+5) { display: none; }
+}
+.plo-group:last-of-type { padding-bottom: 24px; }

@@ -15,12 +15,15 @@
         "per_page": 16,
         "show_promo": true,
         "promo_url": "/pages/subscribe-save",
-        "chip_labels": "All|Slabs|Truffles|Bars|Variety|Limited",
-        "chip_handles": "shop-all|new-chocolate-slabs|chocolate-truffles|chocolate-bars|variety-packs|limited-editions",
+        "chip_labels": "All|Truffles|Bars|Slabs|Variety|Limited",
+        "chip_handles": "shop-all|chocolate-truffles|chocolate-bars|new-chocolate-slabs|variety-packs|limited-editions",
         "bars_handle": "chocolate-bars",
         "promo_heading": "Subscribe & save 15%",
         "promo_body": "on every order, with free delivery. Skip or cancel any time.",
-        "promo_btn": "How it works"
+        "promo_btn": "How it works",
+        "banners": "chocolate-truffles|plo-cat-truffles.jpg|#FED8B5|96% 50%|15 g a truffle;75 kcal each;0 g refined sugar\nchocolate-bars|plo-cat-bars.jpg|#A9FAE8|78% 50%|35 g a bar;12 in a box;0 g refined sugar\nnew-chocolate-slabs|plo-cat-slabs.jpg|#F8C5EB|94% 50%|80 g a slab;6 in a box;0 g refined sugar\nvariety-packs|plo-cat-packs.jpg|#FCD730|96% 50%|Every flavour in one box;Made for gifting\nlimited-editions||#FFF0C4||Small batches;While they last\nshop-all||#FFF6DE||",
+        "all_handle": "shop-all",
+        "group_all": true
       }
     }
   },

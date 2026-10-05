@@ -1,7 +1,8 @@
 {%- comment -%}
-  Option A / Option B preview: collection page. Head (label, title, intro, and for the bars
-  collection a row of bar packs), type chips, count + sort, a one-line Subscribe & Save strip,
-  product grid (snippets/plo-card) and a load-more link.
+  Option B collection page. Banner (collection image, else a theme photo per handle, with the
+  backdrop colour behind the title and a few fact pills; Shop all shows the range tiles), range
+  chips with counts, count + sort, a one-line Subscribe & Save strip, then the grid
+  (snippets/plo-card) with load-more. Shop all without a sort shows one row per range.
   Every link keeps ?view= so the shopper stays in the option being previewed.
 {%- endcomment -%}
 {%- liquid
@@ -16,36 +17,76 @@
   if intro == blank and collection.description != blank
     assign intro = collection.description | strip_html | strip | truncatewords: 30
   endif
-  assign is_bars = false
-  if collection.handle == s.bars_handle
-    assign is_bars = true
-  endif
   assign current_sort = collection.sort_by | default: collection.default_sort_by
+
+  comment
+    Banner: the collection's own image (Shopify admin > Collection > Image) wins; otherwise the
+    row for this handle in "Banners" (handle|theme asset|backdrop colour|photo focus|fact;fact).
+  endcomment
+  assign b_asset = ''
+  assign b_tint = '#FFF6DE'
+  assign b_pos = '85% 50%'
+  assign b_facts = ''
+  assign b_lines = s.banners | newline_to_br | split: '<br />'
+  for l in b_lines
+    assign f = l | strip | split: '|'
+    if f[0] == collection.handle
+      assign b_asset = f[1] | strip
+      if f[2] != blank
+        assign b_tint = f[2] | strip
+      endif
+      if f[3] != blank
+        assign b_pos = f[3] | strip
+      endif
+      assign b_facts = f[4] | split: ';'
+    endif
+  endfor
+  assign has_photo = false
+  if collection.image != blank or b_asset != blank
+    assign has_photo = true
+  endif
+
+  assign is_all = false
+  if collection.handle == s.all_handle or collection.handle == 'all'
+    assign is_all = true
+  endif
+  comment
+    Shop all, page 1, no sort picked: one row per range instead of one long grid.
+  endcomment
+  assign grouped = false
+  if is_all and s.group_all and collection.sort_by == blank
+    assign grouped = true
+  endif
 
   assign chip_labels = s.chip_labels | split: '|'
   assign chip_handles = s.chip_handles | split: '|'
-  assign bars = 'plo-bar-caramel.png,plo-bar-cookies.png,plo-bar-mocha.png,plo-bar-peanut.png,plo-bar-pistachio.png' | split: ','
 -%}
 <div class="pl plo">
   {%- paginate collection.products by s.per_page -%}
-    <header class="plo-lhead{% if is_bars %} plo-lhead--bars{% endif %}">
-      <div class="plo-wrap" style="display:flex;flex-direction:column;gap:10px">
-        <p class="plo-eyebrow plo-eyebrow--sec">{{ collection.products_count }} products</p>
-        <h1 class="plo-title"><b>{{ collection.title }}</b></h1>
-        {%- if intro != blank -%}<p class="plo-lhead__p">{{ intro }}</p>{%- endif -%}
-        {%- if is_bars -%}
-          <div class="plo-lhead__bars plo-box" aria-hidden="true">
-            {%- for f in bars -%}<img src="{{ f | asset_url }}" alt="" loading="eager" width="160" height="260">{%- endfor -%}
-          </div>
+    <header class="plo-hero{% if has_photo %} plo-hero--photo{% endif %}{% if is_all %} plo-hero--all{% endif %}" style="--tint: {{ b_tint }}; --pos: {{ b_pos }};">
+      {%- if collection.image != blank -%}
+        {{ collection.image | image_url: width: 2400 | image_tag: class: 'plo-hero__img', loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '800, 1200, 1600, 2400', alt: '' }}
+      {%- elsif b_asset != blank -%}
+        <img class="plo-hero__img" src="{{ b_asset | asset_url }}" alt="" width="1100" height="825" loading="eager" fetchpriority="high">
+      {%- endif -%}
+      <div class="plo-wrap plo-hero__in">
+        <p class="plo-hero__n">{{ collection.products_count }} products</p>
+        <h1 class="plo-hero__t">{{ collection.title }}</h1>
+        {%- if intro != blank -%}<p class="plo-hero__p">{{ intro }}</p>{%- endif -%}
+        {%- if b_facts.size > 0 -%}
+          <ul class="plo-hero__facts">{%- for x in b_facts -%}{%- assign x = x | strip -%}{%- if x != blank -%}<li>{{ x }}</li>{%- endif -%}{%- endfor -%}</ul>
         {%- endif -%}
       </div>
+      {%- if is_all -%}
+        <div class="plo-wrap plo-hero__tiles">{%- render 'pl-menu-tiles', size: 'lg' -%}</div>
+      {%- endif -%}
     </header>
 
     <div class="plo-wrap">
       <nav class="plo-chips" aria-label="Shop by type">
         {%- for h in chip_handles -%}
           {%- assign i = forloop.index0 -%}
-          <a href="{{ routes.collections_url }}/{{ h }}{% if view_q != blank %}?{{ view_q }}{% endif %}"{% if collection.handle == h %} aria-current="page"{% endif %}>{{ chip_labels[i] }}</a>
+          <a href="{{ routes.collections_url }}/{{ h }}{% if view_q != blank %}?{{ view_q }}{% endif %}"{% if collection.handle == h %} aria-current="page"{% endif %}>{{ chip_labels[i] }}<small>{{ collections[h].products_count }}</small></a>
         {%- endfor -%}
       </nav>
 
@@ -73,7 +114,23 @@
         </a>
       {%- endif -%}
 
-      {%- if collection.products.size > 0 -%}
+      {%- if grouped -%}
+        {%- for h in chip_handles -%}
+          {%- assign gc = collections[h] -%}
+          {%- if h == collection.handle or gc == blank or gc.products_count == 0 -%}{%- continue -%}{%- endif -%}
+          <section class="plo-group">
+            <div class="plo-group__head">
+              <h2 class="plo-group__t">{{ gc.title }} <small>{{ gc.products_count }}</small></h2>
+              <a class="plo-group__all" href="{{ gc.url }}{% if view_q != blank %}?{{ view_q }}{% endif %}">See all {% render 'pl-icon', name: 'arrow-right', size: 14, stroke: 2.4 %}</a>
+            </div>
+            <div class="plo-rel__row plo-group__row">
+              {%- for product in gc.products limit: 8 -%}
+                {%- render 'plo-card', product: product, eager: false, skip_new: true, view: template.suffix -%}
+              {%- endfor -%}
+            </div>
+          </section>
+        {%- endfor -%}
+      {%- elsif collection.products.size > 0 -%}
         <div class="plo-lgrid">
           <div class="plo-grid">
             {%- for product in collection.products -%}
@@ -91,7 +148,7 @@
         <p class="plo-empty">Nothing here yet. <a class="plo-u" href="{{ routes.collections_url }}/shop-all{% if view_q != blank %}?{{ view_q }}{% endif %}">Shop all</a></p>
       {%- endif -%}
 
-      {%- if paginate.next -%}
+      {%- if paginate.next and grouped == false -%}
         {%- liquid
           assign shown = paginate.current_page | times: paginate.page_size
           assign next_url = paginate.next.url
@@ -146,6 +203,24 @@
       "id": "chip_handles",
       "label": "Chip collection handles (| separated)",
       "default": "shop-all|new-chocolate-slabs|chocolate-truffles|chocolate-bars|variety-packs|limited-editions"
+    },
+    {
+      "type": "textarea",
+      "id": "banners",
+      "label": "Banners (handle|theme asset|backdrop colour|photo focus|fact;fact)",
+      "info": "Used when the collection has no image of its own in Shopify admin."
+    },
+    {
+      "type": "text",
+      "id": "all_handle",
+      "label": "Shop all collection handle",
+      "default": "shop-all"
+    },
+    {
+      "type": "checkbox",
+      "id": "group_all",
+      "label": "Shop all: one row per range (until a sort is picked)",
+      "default": true
     },
     {
       "type": "text",
