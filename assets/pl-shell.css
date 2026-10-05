@@ -504,3 +504,8 @@ body.pl-scrolled .pl-header__logo img { transform: scale(.92); }
 }
 .pl-footer .pl-footer__legal { align-items: center; }
 .pl-footer .pl-footer__legal a { min-height: 0; }
+/* Phones: show the whole wordmark above the tab bar (no crop), one divider above the facts */
+@media (max-width: 1023.98px) {
+  .pl-footer .pl-footer__mark { margin: 12px 0 0; padding-bottom: 20px; line-height: .9; font-size: 30vw; }
+  .pl-footer__col:last-child { border-bottom: 0; }
+}
