@@ -822,7 +822,7 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 
 /* what's inside */
 .plo-good__panel { display: grid; background: var(--pl-cream); border-radius: 28px; overflow: hidden; }
-.plo-good__media { aspect-ratio: 4 / 3; background: rgba(8, 29, 72, .06); }
+.plo-good__media { aspect-ratio: 4 / 5; background: rgba(8, 29, 72, .06); }
 .plo-good__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .plo-good__body { display: flex; flex-direction: column; gap: 20px; padding: 24px 20px 28px; }
 .plo-good__body > .plo-eyebrow { margin: 0 0 -12px; }
