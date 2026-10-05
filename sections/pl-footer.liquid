@@ -1,8 +1,8 @@
 {%- comment -%}
-  Plaay 2026 footer. Navy, cream text, yellow accents. Newsletter form (customer form,
-  tag "newsletter"), three link columns (blocks of type "link_column" with a menu picker;
-  when there are no blocks the approved Shop / Plaay / Help columns render), bottom row
-  with delivery line, Halal, payment line, socials, policy links and copyright.
+  Plaay 2026 footer. Navy, cream text, yellow accents. A yellow newsletter card (customer
+  form, tag "newsletter"), brand line + socials, three link groups (blocks of type
+  "link_column" with a menu picker, else Shop / Plaay / Help; folded on phones), delivery /
+  Halal facts with payment icons, legal links, and a big "plaay" wordmark to close.
   Styles: assets/pl-shell.css (loaded from layout/theme.liquid).
 {%- endcomment -%}
 {%- liquid
@@ -21,22 +21,17 @@
 -%}
 <footer class="pl pl-footer" data-pl-footer>
   <div class="pl-wrap">
-    <div class="pl-footer__top">
-      <div class="pl-footer__mail">
-        <a class="pl-footer__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
-          {%- if logo != blank -%}
-            {{ logo | image_url: width: 300 | image_tag: width: logo_w, height: 24, loading: 'lazy', alt: shop.name }}
-          {%- else -%}
-            <span class="pl-h pl-h--3">plaay</span>
-          {%- endif -%}
-        </a>
-        <p class="pl-label pl-footer__label">{{ section.settings.mail_heading | default: 'Plaay mail' }}</p>
-        <p class="pl-body">{{ section.settings.mail_text | default: 'Fresh drops, flavour votes and a code for your first order.' }}</p>
-        {%- form 'customer', id: 'ContactFooter', class: 'pl-row pl-footer__form' -%}
-          <input type="hidden" name="contact[tags]" value="newsletter">
-          <label class="pl-vh" for="ContactFooter-email">Email</label>
+    <div class="pl-footer__news">
+      <div class="pl-footer__news-copy">
+        <p class="pl-footer__kicker">{{ section.settings.mail_heading | default: 'Plaay mail' }}</p>
+        <p class="pl-footer__news-t">{{ section.settings.news_title | default: 'Get the good stuff first' }}</p>
+        <p class="pl-footer__news-p">{{ section.settings.mail_text | default: 'Fresh drops, flavour votes and a code for your first order.' }}</p>
+      </div>
+      {%- form 'customer', id: 'ContactFooter', class: 'pl-footer__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <label class="pl-vh" for="ContactFooter-email">Email</label>
+        <span class="pl-footer__field">
           <input
-            class="pl-input"
             type="email"
             name="contact[email]"
             id="ContactFooter-email"
@@ -47,73 +42,30 @@
             autocapitalize="off"
             required
             {% if form.errors %}aria-invalid="true" aria-describedby="ContactFooter-error"{% elsif form.posted_successfully? %}aria-describedby="ContactFooter-success"{% endif %}>
-          <button type="submit" class="pl-btn">Sign up</button>
-          {%- if form.errors -%}
-            <p class="pl-footer__msg pl-footer__msg--error" id="ContactFooter-error" role="alert">
-              {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
-            </p>
-          {%- elsif form.posted_successfully? -%}
-            <p class="pl-footer__msg" id="ContactFooter-success" role="status">Thanks, you are on the list.</p>
-          {%- endif -%}
-        {%- endform -%}
-      </div>
-
-      <nav class="pl-footer__cols" aria-label="Footer">
-        {%- if columns.size > 0 -%}
-          {%- for block in columns -%}
-            {%- assign menu = block.settings.menu -%}
-            <div class="pl-footer__col" {{ block.shopify_attributes }}>
-              <p class="pl-label">{{ block.settings.title | default: menu.title }}</p>
-              {%- if menu != blank and menu.links.size > 0 -%}
-                <ul>
-                  {%- for link in menu.links -%}
-                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-                  {%- endfor -%}
-                </ul>
-              {%- endif -%}
-            </div>
-          {%- endfor -%}
+          <button type="submit">Sign up {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.4 %}</button>
+        </span>
+        {%- if form.errors -%}
+          <p class="pl-footer__msg pl-footer__msg--error" id="ContactFooter-error" role="alert">
+            {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
+          </p>
+        {%- elsif form.posted_successfully? -%}
+          <p class="pl-footer__msg" id="ContactFooter-success" role="status">You’re in! Check your inbox for your code.</p>
         {%- else -%}
-          <div class="pl-footer__col">
-            <p class="pl-label">Shop</p>
-            <ul>
-              <li><a href="{{ routes.collections_url }}/chocolate-bars">Bars</a></li>
-              <li><a href="{{ routes.collections_url }}/chocolate-truffles">Truffles</a></li>
-              <li><a href="{{ routes.collections_url }}/new-chocolate-slabs">Slabs</a></li>
-              <li><a href="{{ routes.collections_url }}/variety-packs">Variety packs</a></li>
-              <li><a href="{{ routes.collections_url }}/limited-editions">Limited editions</a></li>
-              <li><a href="{{ routes.collections_url }}/shop-all">Shop all</a></li>
-            </ul>
-          </div>
-          <div class="pl-footer__col">
-            <p class="pl-label">Plaay</p>
-            <ul>
-              <li><a href="/pages/for-the-geeks-1">Our story</a></li>
-              <li><a href="/pages/subscribe-save">Subscribe &amp; Save</a></li>
-              <li><a href="/pages/subscribe-save">Rewards</a></li>
-              <li><a href="/pages/retailers">Retailers</a></li>
-            </ul>
-          </div>
-          <div class="pl-footer__col">
-            <p class="pl-label">Help</p>
-            <ul>
-              <li><a href="/pages/shipping-policy">Delivery</a></li>
-              <li><a href="/pages/returns-refunds">Returns</a></li>
-              <li><a href="/pages/faqs">FAQ</a></li>
-              <li><a href="/pages/contact">Contact</a></li>
-            </ul>
-          </div>
+          <p class="pl-footer__fine">No spam. Unsubscribe any time.</p>
         {%- endif -%}
-      </nav>
+      {%- endform -%}
     </div>
 
-    <div class="pl-footer__bottom">
-      <div class="pl-footer__facts">
-        <span class="pl-footer__fact">{% render 'pl-icon', name: 'truck', size: 18 %}{{ section.settings.delivery_line | default: 'Free delivery AED 75+ · 1–2 day UAE-wide · GCC 3–5 days' }}</span>
-        <span class="pl-footer__fact">{% render 'pl-icon', name: 'check', size: 18, stroke: 2.2 %}{{ section.settings.halal_line | default: 'Halal certified' }}</span>
-        <span class="pl-footer__fact">{% render 'pl-icon', name: 'lock', size: 18 %}{{ section.settings.payment_line | default: 'Visa · Mastercard · Apple Pay' }}</span>
-      </div>
-      <div class="pl-footer__meta">
+    <div class="pl-footer__top">
+      <div class="pl-footer__brand">
+        <a class="pl-footer__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
+          {%- if logo != blank -%}
+            {{ logo | image_url: width: 300 | image_tag: width: logo_w, height: 24, loading: 'lazy', alt: shop.name }}
+          {%- else -%}
+            <span class="pl-h pl-h--3">plaay</span>
+          {%- endif -%}
+        </a>
+        <p class="pl-footer__about">{{ section.settings.about | default: 'Clean chocolate snacks with zero refined sugar. Made in the UAE by a nutritionist.' }}</p>
         <div class="pl-footer__social">
           {%- if instagram_url != blank -%}
             <a href="{{ instagram_url }}" target="_blank" rel="noopener" aria-label="Plaay on Instagram">{% render 'pl-icon', name: 'instagram', size: 18 %}</a>
@@ -122,15 +74,90 @@
             <a href="{{ tiktok_url }}" target="_blank" rel="noopener" aria-label="Plaay on TikTok">{% render 'pl-icon', name: 'tiktok', size: 18 %}</a>
           {%- endif -%}
         </div>
-        <div class="pl-footer__legal">
-          <a href="/policies/privacy-policy">Privacy</a>
-          <a href="/policies/terms-of-service">Terms</a>
-          <span>© {{ year }} Plaay</span>
-        </div>
       </div>
+
+      <nav class="pl-footer__cols" aria-label="Footer">
+        {%- if columns.size > 0 -%}
+          {%- for block in columns -%}
+            {%- assign menu = block.settings.menu -%}
+            <details class="pl-footer__col" open {{ block.shopify_attributes }}>
+              <summary class="pl-label">{{ block.settings.title | default: menu.title }}{% render 'pl-icon', name: 'plus', size: 14, stroke: 2.4 %}</summary>
+              {%- if menu != blank and menu.links.size > 0 -%}
+                <ul>
+                  {%- for link in menu.links -%}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            </details>
+          {%- endfor -%}
+        {%- else -%}
+          <details class="pl-footer__col" open>
+            <summary class="pl-label">Shop{% render 'pl-icon', name: 'plus', size: 14, stroke: 2.4 %}</summary>
+            <ul>
+              <li><a href="{{ routes.collections_url }}/chocolate-truffles">Truffles</a></li>
+              <li><a href="{{ routes.collections_url }}/chocolate-bars">Bars</a></li>
+              <li><a href="{{ routes.collections_url }}/new-chocolate-slabs">Slabs <em class="pl-footer__new">New</em></a></li>
+              <li><a href="{{ routes.collections_url }}/variety-packs">Variety packs</a></li>
+              <li><a href="{{ routes.collections_url }}/limited-editions">Limited editions</a></li>
+              <li><a href="{{ routes.collections_url }}/shop-all">Shop all</a></li>
+            </ul>
+          </details>
+          <details class="pl-footer__col" open>
+            <summary class="pl-label">Plaay{% render 'pl-icon', name: 'plus', size: 14, stroke: 2.4 %}</summary>
+            <ul>
+              <li><a href="/pages/for-the-geeks-1">Our story</a></li>
+              <li><a href="/pages/subscribe-save">Subscribe &amp; Save</a></li>
+              <li><a href="/pages/subscribe-save">Rewards</a></li>
+              <li><a href="/pages/retailers">Stockists &amp; retail</a></li>
+            </ul>
+          </details>
+          <details class="pl-footer__col" open>
+            <summary class="pl-label">Help{% render 'pl-icon', name: 'plus', size: 14, stroke: 2.4 %}</summary>
+            <ul>
+              <li><a href="{{ routes.account_url }}">Track my order</a></li>
+              <li><a href="/pages/shipping-policy">Delivery</a></li>
+              <li><a href="/pages/returns-refunds">Refunds</a></li>
+              <li><a href="/pages/faqs">FAQ</a></li>
+              <li><a href="/pages/contact">Contact us</a></li>
+            </ul>
+          </details>
+        {%- endif -%}
+      </nav>
+    </div>
+
+    <div class="pl-footer__bottom">
+      <div class="pl-footer__facts">
+        <span class="pl-footer__fact">{% render 'pl-icon', name: 'truck', size: 18 %}{{ section.settings.delivery_line | default: 'Free delivery AED 75+ · 1–2 day UAE-wide · GCC 3–5 days' }}</span>
+        <span class="pl-footer__fact">{% render 'pl-icon', name: 'check', size: 18, stroke: 2.2 %}{{ section.settings.halal_line | default: 'Halal certified' }}</span>
+      </div>
+      {%- if shop.enabled_payment_types.size > 0 -%}
+        <ul class="pl-footer__pay" aria-label="Payment methods">
+          {%- for type in shop.enabled_payment_types -%}<li>{{ type | payment_type_svg_tag }}</li>{%- endfor -%}
+        </ul>
+      {%- else -%}
+        <span class="pl-footer__fact">{% render 'pl-icon', name: 'lock', size: 18 %}{{ section.settings.payment_line | default: 'Visa · Mastercard · Apple Pay' }}</span>
+      {%- endif -%}
+    </div>
+    <div class="pl-footer__legal">
+      <span>© {{ year }} Plaay</span>
+      <a href="/policies/privacy-policy">Privacy</a>
+      <a href="/policies/terms-of-service">Terms</a>
+      <a href="/policies/refund-policy">Refund policy</a>
     </div>
   </div>
+  <a class="pl-footer__mark" href="{{ routes.root_url }}" aria-hidden="true" tabindex="-1">plaay</a>
 </footer>
+<script>
+  (function () {
+    /* Footer link groups: open on desktop, folded on phones (tap a heading to open). */
+    var cols = document.querySelectorAll('.pl-footer__col');
+    var mq = window.matchMedia('(max-width: 767.98px)');
+    function set() { cols.forEach(function (d) { d.open = !mq.matches; }); }
+    set();
+    if (mq.addEventListener) mq.addEventListener('change', set);
+  })();
+</script>
 
 {% schema %}
 {
@@ -146,6 +173,18 @@
     {
       "type": "header",
       "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "news_title",
+      "label": "Newsletter title",
+      "default": "Get the good stuff first"
+    },
+    {
+      "type": "textarea",
+      "id": "about",
+      "label": "About line (under the logo)",
+      "default": "Clean chocolate snacks with zero refined sugar. Made in the UAE by a nutritionist."
     },
     {
       "type": "text",
