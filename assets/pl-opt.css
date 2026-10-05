@@ -796,3 +796,5 @@ body:has(.plo-sticky.is-on) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 84px
 .plo-gift { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; background: var(--pl-cream); font-size: 12px; font-weight: 700; color: var(--pl-purple); }
 .plo-gift svg { width: 14px; height: 14px; stroke: var(--pl-purple); }
 .pl-skin-b .plo-gift { background: #F6E9FA; }
+/* B: a colour band straight after the claims marquee sits flush against it (no white strip). */
+.pl-skin-b .shopify-section:has(.plo-marquee) + .shopify-section > .plo-fillb { margin-top: 0; }
