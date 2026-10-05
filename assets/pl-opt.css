@@ -1000,3 +1000,4 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 .plo-ig__facts dt { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--pl-mute); padding-top: 2px; }
 .plo-ig__facts dd { margin: 0; color: var(--pl-navy); font-weight: 600; }
 .plo-ig__facts > div.is-note dd { font-size: 12px; font-weight: 400; color: var(--pl-mute); }
+.plo-pan:has(.plo-nf, .plo-ig, .plo-al) { max-height: none; overflow: visible; }
