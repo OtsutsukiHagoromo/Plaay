@@ -924,22 +924,18 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
   .plo-pfaq__i summary { font-size: 18px; padding: 22px 0; }
 }
 
-/* Product details accordion under Add to bag (B product page) */
-.plo-details { margin-top: 28px; border-top: 1px solid rgba(8, 29, 72, .12); }
-.plo-details__h { margin: 0; padding: 18px 0 6px; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--pl-mute); }
-.plo-det { border-bottom: 1px solid rgba(8, 29, 72, .12); }
-.plo-det summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; font-size: 15px; font-weight: 800; cursor: pointer; }
-.plo-det summary::-webkit-details-marker { display: none; }
-.plo-det summary svg { flex: 0 0 auto; transition: transform .2s ease; }
-.plo-det[open] summary svg { transform: rotate(45deg); }
-.plo-det summary:hover span { color: var(--pl-purple); }
-.plo-det__b { padding: 0 0 18px; font-size: 14px; line-height: 1.6; color: rgba(8, 29, 72, .78); }
-.plo-det__b p { margin: 0 0 10px; }
-.plo-det__b p:last-child { margin-bottom: 0; }
-.plo-det__b b, .plo-det__b strong { color: var(--pl-navy); }
-.plo-det__b ul { margin: 0 0 10px; padding-left: 18px; }
-.plo-det__b table { width: 100%; border-collapse: collapse; }
-.plo-det__b td, .plo-det__b th { padding: 6px 0; border-bottom: 1px solid rgba(8, 29, 72, .08); text-align: left; }
-.plo-det__b img { max-width: 100%; height: auto; border-radius: 12px; }
-@media (min-width: 1024px) { .plo-det summary { font-size: 16px; } }
-.plo-det__nf { display: block; width: 100%; max-width: 360px; height: auto; }
+/* Product details under Add to bag (B product page): one row of tabs, one panel at a time */
+.plo-details { margin-top: 20px; }
+.plo-tabs { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--o-side) * -1); padding: 2px var(--o-side) 4px; }
+.plo-tabs::-webkit-scrollbar { display: none; }
+.plo-tab { flex: 0 0 auto; height: 38px; padding: 0 16px; border-radius: 999px; border: 1.5px solid rgba(8, 29, 72, .18); background: #fff; font: inherit; font-size: 14px; font-weight: 700; color: var(--pl-navy); cursor: pointer; white-space: nowrap; }
+.plo-tab:hover { border-color: var(--pl-navy); }
+.plo-tab.is-on { background: var(--pl-navy); border-color: var(--pl-navy); color: #fff; }
+.plo-pan { margin-top: 12px; padding: 16px 18px; border-radius: 16px; background: var(--pl-cream); font-size: 14px; line-height: 1.6; color: rgba(8, 29, 72, .8); max-height: 260px; overflow-y: auto; }
+.plo-pan p { margin: 0 0 10px; }
+.plo-pan p:last-child { margin-bottom: 0; }
+.plo-pan b, .plo-pan strong { color: var(--pl-navy); }
+.plo-pan ul { margin: 0 0 10px; padding-left: 18px; }
+.plo-pan img { max-width: 100%; height: auto; border-radius: 12px; }
+.plo-det__nf { display: block; width: 100%; max-width: 320px; height: auto; }
+@media (min-width: 1024px) { .plo-tabs { margin: 0; padding: 2px 0 4px; flex-wrap: wrap; } .plo-pan { max-height: 320px; } }

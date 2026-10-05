@@ -211,6 +211,22 @@
   }, true);
 
 
+  /* ---------- product details tabs ---------- */
+  document.addEventListener('click', function (e) {
+    var tab = e.target.closest && e.target.closest('[data-plo-tab]');
+    if (!tab) return;
+    var box = tab.closest('[data-plo-tabs]');
+    Array.prototype.forEach.call(box.querySelectorAll('[data-plo-tab]'), function (t) {
+      var on = t === tab;
+      t.classList.toggle('is-on', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+      var pan = document.getElementById(t.getAttribute('aria-controls'));
+      if (pan) pan.hidden = !on;
+    });
+    tab.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  });
+
+
   /* ---------- photo gallery (refreshed photography) ---------- */
   function initPhotos(root) {
     var track = root.querySelector('[data-plo-phtrack]');

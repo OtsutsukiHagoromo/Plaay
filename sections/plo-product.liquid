@@ -253,32 +253,83 @@
           assign d_storage = 'Keep refrigerated. Best cold.'
         endif
       -%}
-      <div class="plo-details" id="plo-details">
-        <p class="plo-details__h">Product details</p>
-        {%- if product.description != blank -%}
-          <details class="plo-det"><summary><span>Description</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b plo-rte">{{ product.description }}</div></details>
-        {%- endif -%}
-        {%- if d_ingredients != blank -%}
-          <details class="plo-det"><summary><span>Ingredients</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{{ d_ingredients }}</div></details>
-        {%- endif -%}
-        {%- if d_allergens != blank -%}
-          <details class="plo-det"><summary><span>Allergens</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{{ d_allergens }}</div></details>
-        {%- endif -%}
-        {%- if d_nutrition != blank -%}
-          <details class="plo-det"><summary><span>Nutrition</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{{ d_nutrition }}</div></details>
-        {%- elsif d_nutrition_n != blank -%}
-          {%- capture nalt -%}Nutrition facts for {{ product.title }}{%- endcapture -%}
-          <details class="plo-det"><summary><span>Nutrition</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{%- render 'pl-photo', key: pkey, n: d_nutrition_n, alt: nalt, class: 'plo-det__nf' -%}</div></details>
-        {%- endif -%}
-        <details class="plo-det"><summary><span>Storage</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b"><p>{{ d_storage }}</p></div></details>
-        {%- if d_suitable != blank -%}
-          <details class="plo-det"><summary><span>Suitable for</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{{ d_suitable }}</div></details>
-        {%- endif -%}
-        <details class="plo-det"><summary><span>Shipping &amp; delivery</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary>
-          <div class="plo-det__b plo-rte">
-            {%- if d_shipping != blank -%}{{ d_shipping }}{%- else -%}<p>Free delivery on orders over AED 75. 1–2 days across the UAE, 3–5 days to the GCC.</p>{%- endif -%}
-          </div>
-        </details>
+      {%- liquid
+        capture p_desc
+          echo product.description
+        endcapture
+        capture p_nutrition
+          if d_nutrition != blank
+            echo d_nutrition
+          elsif d_nutrition_n != blank
+            assign nalt = 'Nutrition facts for ' | append: product.title
+            render 'pl-photo', key: pkey, n: d_nutrition_n, alt: nalt, class: 'plo-det__nf'
+          endif
+        endcapture
+        capture p_storage
+          echo '<p>' | append: d_storage | append: '</p>'
+        endcapture
+        capture p_shipping
+          if d_shipping != blank
+            echo d_shipping
+          else
+            echo '<p>Free delivery on orders over AED 75. 1–2 days across the UAE, 3–5 days to the GCC.</p>'
+          endif
+        endcapture
+        assign t_names = 'Description|Ingredients|Allergens|Nutrition|Storage|Suitable for|Shipping' | split: '|'
+      -%}
+      <div class="plo-details" id="plo-details" data-plo-tabs>
+        <div class="plo-tabs" role="tablist" aria-label="Product details">
+          {%- assign on = true -%}
+          {%- for name in t_names -%}
+            {%- liquid
+              case forloop.index
+                when 1
+                  assign body = p_desc
+                when 2
+                  assign body = d_ingredients
+                when 3
+                  assign body = d_allergens
+                when 4
+                  assign body = p_nutrition
+                when 5
+                  assign body = p_storage
+                when 6
+                  assign body = d_suitable
+                when 7
+                  assign body = p_shipping
+              endcase
+            -%}
+            {%- if body != blank -%}
+              <button type="button" class="plo-tab{% if on %} is-on{% endif %}" role="tab" id="plo-tab-{{ forloop.index }}" aria-controls="plo-pan-{{ forloop.index }}" aria-selected="{{ on }}" data-plo-tab="{{ forloop.index }}">{{ name }}</button>
+              {%- assign on = false -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        {%- assign on = true -%}
+        {%- for name in t_names -%}
+          {%- liquid
+            case forloop.index
+              when 1
+                assign body = p_desc
+              when 2
+                assign body = d_ingredients
+              when 3
+                assign body = d_allergens
+              when 4
+                assign body = p_nutrition
+              when 5
+                assign body = p_storage
+              when 6
+                assign body = d_suitable
+              when 7
+                assign body = p_shipping
+            endcase
+          -%}
+          {%- if body != blank -%}
+            <div class="plo-pan plo-rte" role="tabpanel" id="plo-pan-{{ forloop.index }}" aria-labelledby="plo-tab-{{ forloop.index }}"{% unless on %} hidden{% endunless %}>{{ body }}</div>
+            {%- assign on = false -%}
+          {%- endif -%}
+        {%- endfor -%}
       </div>
     </div>
   </div>
