@@ -491,7 +491,18 @@
       });
     });
     var raf = null;
+    /* The "1 / 8" counter shows while the photos move (swipe or thumb tap) and fades out
+       1.2s after they settle. It also shows briefly when the page opens, as a hint. */
+    var badge = root.querySelector('.plo-gal__count'), idle;
+    function wake() {
+      if (!badge) return;
+      badge.classList.add('is-live');
+      clearTimeout(idle);
+      idle = setTimeout(function () { badge.classList.remove('is-live'); }, 1200);
+    }
+    wake();
     track.addEventListener('scroll', function () {
+      wake();
       if (raf) return;
       raf = requestAnimationFrame(function () { raf = null; mark(Math.round(track.scrollLeft / Math.max(1, track.clientWidth))); });
     }, { passive: true });
