@@ -760,6 +760,7 @@ body:has(.plo-sticky.is-on) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 84px
 .plo-gal--photos .plo-gal__track::-webkit-scrollbar { display: none; }
 .plo-gal--photos .plo-gal__track img { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; scroll-snap-align: start; }
 .plo-gal--photos { position: relative; }
+@media (min-width: 1024px) { .plo-gal--photos { position: sticky; } }
 .plo-gal--photos .plo-gal__badge { position: absolute; left: calc(var(--o-side) + 12px); top: 28px; }
 .plo-gal--photos .plo-gal__th { width: 52px; height: 64px; }
 .plo-gal--photos .plo-gal__th img { object-fit: cover; }
