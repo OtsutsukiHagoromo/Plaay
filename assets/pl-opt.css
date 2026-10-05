@@ -964,3 +964,39 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 .plo-size__tag { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); padding: 3px 8px; border-radius: 999px; background: var(--pl-purple); color: #fff; font-size: 9px; font-style: normal; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; line-height: 1.2; }
 .pl-skin-b .plo-sizes--units .plo-size span { border-width: 2px; }
 .pl-skin-b .plo-sizes--units .plo-size input:checked + span { box-shadow: 0 3px 0 var(--pl-navy); }
+
+/* Product details widgets (built by pl-opt.js from the metafield text) */
+/* Nutrition facts label */
+.plo-nf { max-width: 360px; padding: 14px 16px 12px; border: 2px solid var(--pl-navy); border-radius: 14px; background: #fff; color: var(--pl-navy); }
+.plo-nf__t { margin: 0 0 4px; font-size: 22px; font-weight: 900; line-height: 1; text-transform: uppercase; letter-spacing: -.01em; }
+.plo-nf__s { display: flex; justify-content: space-between; gap: 12px; margin: 0; padding-bottom: 8px; border-bottom: 8px solid var(--pl-navy); font-size: 13px; }
+.plo-nf__s b { font-weight: 800; }
+.plo-nf__cal { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 0; padding: 6px 0; border-bottom: 4px solid var(--pl-navy); font-size: 18px; font-weight: 900; }
+.plo-nf__cal b { font-size: 22px; font-weight: 900; }
+.plo-nf__rows { margin: 0; }
+.plo-nf__rows > div { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid rgba(8, 29, 72, .18); font-size: 14px; }
+.plo-nf__rows dt { font-weight: 700; }
+.plo-nf__rows dd { margin: 0; font-weight: 600; }
+.plo-nf__rows > div.is-zero dd { color: #2F8A3B; font-weight: 900; }
+.plo-nf__n { margin: 8px 0 0 !important; font-size: 11px; line-height: 1.4; color: var(--pl-mute); }
+
+/* Allergens */
+.plo-al { display: flex; flex-direction: column; gap: 14px; }
+.plo-al__l { margin: 0 0 8px !important; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--pl-mute); }
+.plo-al ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.plo-al li { padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 700; line-height: 1.2; }
+.plo-al li.is-in { background: #FDE9E7; color: #A3241C; }
+.plo-al li.is-may { border: 1px solid rgba(8, 29, 72, .2); color: rgba(8, 29, 72, .75); font-weight: 600; }
+.plo-al__n { margin: 0 !important; font-size: 12px; color: var(--pl-mute); }
+
+/* Ingredients */
+.plo-ig__list { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.plo-ig__list li { display: inline-flex; flex-direction: column; padding: 6px 12px; border-radius: 12px; background: var(--pl-cream); line-height: 1.3; max-width: 100%; }
+.plo-ig__list b { font-size: 13px; font-weight: 700; color: var(--pl-navy); }
+.plo-ig__list small { font-size: 11px; color: var(--pl-mute); }
+.plo-ig__facts { margin: 14px 0 0; border-top: 1px solid rgba(8, 29, 72, .1); }
+.plo-ig__facts > div { display: grid; grid-template-columns: 96px 1fr; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(8, 29, 72, .08); font-size: 13px; }
+.plo-ig__facts > div:not(:has(dt)) { grid-template-columns: 1fr; }
+.plo-ig__facts dt { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--pl-mute); padding-top: 2px; }
+.plo-ig__facts dd { margin: 0; color: var(--pl-navy); font-weight: 600; }
+.plo-ig__facts > div.is-note dd { font-size: 12px; font-weight: 400; color: var(--pl-mute); }

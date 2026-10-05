@@ -236,6 +236,136 @@
   });
 
 
+  /* ---------- product details: ingredients / allergens / nutrition widgets ----------
+     The metafields are free text. Each panel is rebuilt into a small widget when its text
+     matches the usual shape; otherwise the text is left as it is. */
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function clean(s) { return (s || '').replace(/ /g, ' ').replace(/\s+/g, ' ').trim(); }
+  function linesOf(el) {
+    // Paragraphs split on <br>, as plain text, with any <b>Label:</b> kept as "Label:".
+    var out = [];
+    Array.prototype.forEach.call(el.querySelectorAll('p'), function (p) {
+      p.innerHTML.split(/<br\s*\/?>/i).forEach(function (h) {
+        var d = document.createElement('div'); d.innerHTML = h;
+        var t = clean(d.textContent); if (t) out.push(t);
+      });
+    });
+    return out;
+  }
+  function splitTop(s) {
+    // Split on commas that are not inside () or [].
+    var parts = [], depth = 0, cur = '';
+    for (var i = 0; i < s.length; i++) {
+      var c = s[i];
+      if (c === '(' || c === '[') depth++;
+      if (c === ')' || c === ']') depth = Math.max(0, depth - 1);
+      if (c === ',' && depth === 0) { parts.push(cur); cur = ''; } else cur += c;
+    }
+    parts.push(cur);
+    return parts.map(clean).filter(Boolean);
+  }
+  function listItems(s) {
+    return clean(s).replace(/\.$/, '').split(/\s*,\s*|\s*&\s*|\s+and\s+/i).map(clean).filter(Boolean);
+  }
+
+  function nutritionWidget(el) {
+    var rows = [], notes = [], serving = '';
+    linesOf(el).forEach(function (l) {
+      var m = l.match(/^([A-Za-z][A-Za-z ]{1,30}):\s*(.+)$/);
+      if (!m) { notes.push(l); return; }
+      var k = clean(m[1]), v = clean(m[2]);
+      if (/serving/i.test(k)) { serving = v; return; }
+      var r = v.match(/^([\d.]+)\s*(kcal|g)?\s*[–-]\s*([\d.]+)\s*(kcal|g)?$/i);
+      var unit = /calor/i.test(k) ? 'kcal' : 'g';
+      if (r) v = r[1] + '–' + r[3] + ' ' + (r[2] || r[4] || unit).toLowerCase();
+      else if (/^[\d.]+\s*(kcal|g)?$/i.test(v)) v = parseFloat(v) + ' ' + (v.match(/kcal|g/i) || [unit])[0].toLowerCase();
+      k = k.replace(/^Total /i, '').replace(/Carbohydrates?/i, 'Carbs');
+      rows.push({ k: k, v: v });
+    });
+    if (rows.length < 3) return;
+    var cal = rows.filter(function (r) { return /calor/i.test(r.k); })[0];
+    var rest = rows.filter(function (r) { return r !== cal; });
+    var h = '<div class="plo-nf"><p class="plo-nf__t">Nutrition facts</p>';
+    if (serving) h += '<p class="plo-nf__s"><span>Serving size</span><b>' + esc(serving.replace(/(\d)\s*g\b/i, '$1 g')) + '</b></p>';
+    if (cal) h += '<p class="plo-nf__cal"><span>Calories</span><b>' + esc(cal.v) + '</b></p>';
+    h += '<dl class="plo-nf__rows">';
+    rest.forEach(function (r) {
+      var zero = /^0\s*g$/.test(r.v) && /sugar/i.test(r.k);
+      h += '<div' + (zero ? ' class="is-zero"' : '') + '><dt>' + esc(r.k) + '</dt><dd>' + esc(r.v) + '</dd></div>';
+    });
+    h += '</dl>';
+    var note = notes.filter(function (n) { return /differ/i.test(n); })[0];
+    if (note) h += '<p class="plo-nf__n">' + esc(note.replace(/\.?$/, '.')) + '</p>';
+    el.innerHTML = h + '</div>';
+  }
+
+  function allergenWidget(el) {
+    var t = clean(el.textContent);
+    var mc = t.match(/contains:?\s*(.+?)(?=\s*\.?\s*may contain|$)/i);
+    var mm = t.match(/may contain:?\s*(?:traces of\s*)?(.+)$/i);
+    if (!mc && !mm) return;
+    var note = '';
+    var may = mm ? mm[1] : '';
+    var dep = may.match(/\s+(depending on [^.]+)\.?$/i);
+    if (dep) { note = dep[1]; may = may.slice(0, dep.index); }
+    function pills(list, cls) { return list.map(function (x) { return '<li class="' + cls + '">' + esc(x.replace(/^traces of\s*/i, '')) + '</li>'; }).join(''); }
+    var h = '<div class="plo-al">';
+    if (mc) h += '<div class="plo-al__g"><p class="plo-al__l">Contains</p><ul>' + pills(listItems(mc[1]), 'is-in') + '</ul></div>';
+    if (may) h += '<div class="plo-al__g"><p class="plo-al__l">May contain traces of</p><ul>' + pills(listItems(may), 'is-may') + '</ul></div>';
+    if (note) h += '<p class="plo-al__n">' + esc(note.charAt(0).toUpperCase() + note.slice(1)) + '.</p>';
+    el.innerHTML = h + '</div>';
+  }
+
+  function ingredientWidget(el) {
+    var lines = linesOf(el);
+    if (!lines.length) return;
+    // The list itself can wrap over several <br> lines; a later line in that paragraph is a
+    // separate fact only when it reads "Label: value" with no comma (e.g. "Chocolate: Cocoa Solids 70% Min.").
+    var first = el.querySelector('p');
+    var firstLines = first ? linesOf({ querySelectorAll: function () { return [first]; } }) : [lines[0]];
+    var list = firstLines[0], extra = [];
+    firstLines.slice(1).forEach(function (l) {
+      if (/^[A-Z][A-Za-z ]{1,30}:\s/.test(l) && l.indexOf(',') < 0) extra.push(l);
+      else if (!extra.length) list += ' ' + l;
+      else extra.push(l);
+    });
+    lines = [list].concat(extra, lines.slice(firstLines.length));
+    var items = splitTop(list);
+    if (items.length < 3) return;
+    var facts = [];
+    lines.slice(1).forEach(function (l) {
+      var m = l.match(/^([A-Za-z][A-Za-z ]{1,30}):\s*(.+)$/);
+      if (m && /allergen/i.test(m[1])) return; // shown on the Allergens tab
+      if (m) facts.push({ k: clean(m[1]), v: clean(m[2]) });
+      else if (!/^contains|^may contain/i.test(l)) facts.push({ k: '', v: l });
+    });
+    var h = '<div class="plo-ig"><ul class="plo-ig__list">';
+    items.forEach(function (it) {
+      var m = it.match(/^([^(\[]+?)\s*[(\[](.+)[)\]]$/);
+      h += m ? '<li><b>' + esc(m[1]) + '</b><small>' + esc(m[2]) + '</small></li>' : '<li><b>' + esc(it) + '</b></li>';
+    });
+    h += '</ul>';
+    if (facts.length) {
+      h += '<dl class="plo-ig__facts">';
+      facts.forEach(function (f) {
+        var k = f.k.replace(/ (Details|Guidelines)$/i, '');
+        h += '<div' + (/disclaimer/i.test(k) ? ' class="is-note"' : '') + '>' + (k ? '<dt>' + esc(k) + '</dt>' : '') + '<dd>' + esc(f.v.replace(/\s*\|\s*/g, ' · ')) + '</dd></div>';
+      });
+      h += '</dl>';
+    }
+    el.innerHTML = h + '</div>';
+  }
+
+  function initDetailWidgets() {
+    var map = { nutrition: nutritionWidget, allergens: allergenWidget, ingredients: ingredientWidget };
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-tabs] .plo-pan[data-kind]'), function (pan) {
+      var fn = map[pan.getAttribute('data-kind')];
+      if (!fn || pan.querySelector('img')) return;
+      try { fn(pan); } catch (e) { /* keep the plain text */ }
+    });
+  }
+
+
   /* ---------- photo gallery (refreshed photography) ---------- */
   function initPhotos(root) {
     var track = root.querySelector('[data-plo-phtrack]');
@@ -275,6 +405,7 @@
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-carousel]'), initCarousel);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-pdp]'), initPdp);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-photos]'), initPhotos);
+    initDetailWidgets();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

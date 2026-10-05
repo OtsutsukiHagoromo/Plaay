@@ -344,6 +344,7 @@
           endif
         endcapture
         assign t_names = 'Description|Ingredients|Allergens|Nutrition|Storage|Suitable for|Shipping' | split: '|'
+        assign t_kinds = 'desc|ingredients|allergens|nutrition|storage|suitable|shipping' | split: '|'
       -%}
       <div class="plo-details" id="plo-details" data-plo-tabs>
         <div class="plo-tabs" role="tablist" aria-label="Product details">
@@ -394,7 +395,7 @@
             endcase
           -%}
           {%- if body != blank -%}
-            <div class="plo-pan plo-rte" role="tabpanel" id="plo-pan-{{ forloop.index }}" aria-labelledby="plo-tab-{{ forloop.index }}"{% unless on %} hidden{% endunless %}>{{ body }}</div>
+            <div class="plo-pan plo-rte" role="tabpanel" id="plo-pan-{{ forloop.index }}" aria-labelledby="plo-tab-{{ forloop.index }}" data-kind="{{ t_kinds[forloop.index0] }}"{% unless on %} hidden{% endunless %}>{{ body }}</div>
             {%- assign on = false -%}
           {%- endif -%}
         {%- endfor -%}
