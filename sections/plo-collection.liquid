@@ -76,7 +76,7 @@
           {{ banner_d | image_url: width: 2400 | image_tag: class: 'plo-hero__img', loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '1200, 1600, 2400', alt: '' }}
         </picture>
       {%- elsif b_asset != blank -%}
-        <img class="plo-hero__img" src="{{ b_asset | asset_url }}" alt="" width="1100" height="825" loading="eager" fetchpriority="high">
+        <img class="plo-hero__img is-half" src="{{ b_asset | asset_url }}" alt="" width="1448" height="1086" loading="eager" fetchpriority="high">
       {%- elsif collection.image != blank -%}
         {{ collection.image | image_url: width: 2400 | image_tag: class: 'plo-hero__img', loading: 'eager', sizes: '100vw', widths: '800, 1200, 1600, 2400', alt: '' }}
       {%- endif -%}

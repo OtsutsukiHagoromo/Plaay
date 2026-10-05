@@ -29,7 +29,7 @@
   <a class="pl-mtile{% if f[5] != blank %} pl-mtile--photo{% endif %}" href="{{ c.url }}" style="--tile: {{ f[2] }}; --i: {{ n }};{% if f[6] != blank %} --pos: {{ f[6] }};{% endif %}">
     <span class="pl-mtile__pic">
       {%- if f[5] != blank -%}
-        <img class="is-full" src="{{ f[5] | asset_url }}" alt="" loading="lazy" width="1100" height="825">
+        <img class="is-full" src="{{ f[5] | asset_url }}" alt="" loading="lazy" width="1448" height="1086">
       {%- elsif f[3] != blank -%}
         {%- assign ph = 'plo-ph-' | append: f[3] | append: '-1.jpg' -%}
         <img class="is-photo" src="{{ ph | asset_url }}" alt="" loading="lazy" width="400" height="500">

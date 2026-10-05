@@ -20,7 +20,7 @@
         -%}
         <a class="plo-cat plo-box{% if b.photo_asset != blank %} plo-cat--photo{% endif %}" href="{{ href }}" style="--tint: {{ b.tint }};{% if b.photo_pos != blank %} --pos: {{ b.photo_pos }};{% endif %}" {{ block.shopify_attributes }}>
           {%- if b.photo_asset != blank -%}
-            <img class="plo-cat__photo" src="{{ b.photo_asset | asset_url }}" alt="" loading="lazy" width="1100" height="825">
+            <img class="plo-cat__photo" src="{{ b.photo_asset | asset_url }}" alt="" loading="lazy" width="1448" height="1086">
           {%- elsif pic != blank -%}{{ pic | image_url: width: 300 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
           <span><span class="plo-cat__n">{{ b.title }}</span><span class="plo-cat__c">{{ b.sub }}</span></span>
           <span class="plo-cat__go" aria-hidden="true">{%- render 'pl-icon', name: 'arrow-right', size: 14, stroke: 2.4 -%}</span>

@@ -1062,3 +1062,11 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
   .plo-range__row > :nth-child(n+5) { display: none; }
 }
 .plo-range:last-of-type { padding-bottom: 24px; }
+/* Desktop: a theme range photo (4:3) sits on the right half instead of stretching across the
+   whole banner; its backdrop matches the tint so the join is invisible. Wide uploaded banners
+   (custom.banner) keep filling the full width. */
+@media (min-width: 1024px) {
+  .plo-hero--photo .plo-hero__img.is-half { left: auto; width: 54%; object-position: 70% 50%; }
+  .plo-hero--photo:has(.is-half)::before { background: linear-gradient(90deg, var(--tint) 0%, var(--tint) 46%, color-mix(in srgb, var(--tint) 0%, transparent) 54%); }
+  .plo-hero--photo .plo-hero__in { min-height: 440px; }
+}
