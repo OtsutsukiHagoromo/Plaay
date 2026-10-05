@@ -313,3 +313,26 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 
 /* lines glide (FLIP in pl-cart.js); keep them on their own layer while moving */
 .pl [data-cart-item] { will-change: auto; backface-visibility: hidden; }
+
+/* ---------- next-reward picks (rewards card) ---------- */
+.pl .pl-gap { margin-top: 2px; border-top: 1px solid rgba(8, 29, 72, .08); }
+.pl .pl-gap summary { list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 0 0; font-size: 13px; line-height: 1.3; cursor: pointer; }
+.pl .pl-gap summary::-webkit-details-marker { display: none; }
+.pl .pl-gap summary b { font-weight: 900; }
+.pl .pl-gap__cta { display: inline-flex; align-items: center; gap: 4px; flex: 0 0 auto; padding: 6px 10px; border-radius: 999px; background: var(--pl-yellow); font-size: 12px; font-weight: 800; color: var(--pl-navy); }
+.pl .pl-gap__cta .pl-ic { transition: transform .25s ease; }
+.pl .pl-gap[open] .pl-gap__cta .pl-ic { transform: rotate(180deg); }
+.pl .pl-gap__list { display: flex; flex-direction: column; gap: 8px; margin: 10px 0 0; padding: 0; list-style: none; }
+.pl .pl-gap__i { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 14px; background: var(--pl-cream); }
+.pl .pl-gap[open] .pl-gap__i { animation: pl-gap-in .35s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 1) * 50ms); }
+@keyframes pl-gap-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.pl .pl-gap__pic { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 10px; overflow: hidden; background: #fff; }
+.pl .pl-gap__pic img { width: 100%; height: 100%; object-fit: cover; }
+.pl .pl-gap__t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.pl .pl-gap__t a { font-size: 13px; font-weight: 700; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl .pl-gap__t small { font-size: 11px; color: var(--pl-mute); }
+.pl .pl-gap__add { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--pl-navy); color: #fff; cursor: pointer; transition: transform .15s ease, background .2s ease; }
+.pl .pl-gap__add:hover { background: var(--pl-purple); }
+.pl .pl-gap__add:active { transform: scale(.9); }
+.pl .pl-gap__add.is-busy { opacity: .5; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .pl .pl-gap[open] .pl-gap__i { animation: none; } }

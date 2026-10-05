@@ -218,6 +218,8 @@
     }
     rewardMoments();
     measureLines();
+    var gap = q('cart-drawer [data-pl-gap]');
+    if (gap && gapOpen && !gap.open) gap.open = true;
   }
 
   function onMutation() {
@@ -439,6 +441,26 @@
     var subbed = line.classList.contains('is-sub');
     if (btn.hasAttribute('data-pl-sub-off') && subbed) unsubscribe(line);
     if (btn.hasAttribute('data-pl-sub-on') && !subbed) subscribe(line, null);
+  });
+
+  /* Next-reward picks: one tap adds the product and re-renders the bag (the rewards bar then
+     celebrates the new tier). The panel's open state survives the re-render. */
+  var gapOpen = false;
+  document.addEventListener('toggle', function (e) {
+    if (e.target && e.target.matches && e.target.matches('[data-pl-gap]')) gapOpen = e.target.open;
+  }, true);
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('[data-pl-gap-add]');
+    if (!btn || btn.classList.contains('is-busy')) return;
+    e.preventDefault();
+    btn.classList.add('is-busy');
+    gapOpen = false;
+    post(ADD_URL, { items: [{ id: Number(btn.getAttribute('data-pl-gap-add')), quantity: 1 }], sections: SECTIONS })
+      .then(function (res) {
+        if (!res.ok) throw new Error('add failed');
+        return render(res.json);
+      })
+      .catch(function () { btn.classList.remove('is-busy'); refreshAll(); });
   });
 
   /* Frequency picker: move the line to the chosen plan. */

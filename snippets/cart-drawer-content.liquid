@@ -81,6 +81,79 @@
       <p class="pl-ladder__msg pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}All rewards unlocked</p>
     {%- endif -%}
     {%- render 'cart-tier-bar' -%}
+    {%- if reached < 3 and cart.item_count > 0 -%}
+      {%- liquid
+        comment
+          Next-reward preview: up to 3 products that close the gap on their own (cheapest first,
+          price >= what is missing), else the 3 priciest. Not already in the bag, available,
+          no gift. Taps add through assets/pl-cart.js ([data-pl-gap-add]).
+        endcomment
+        assign in_bag = ''
+        for it in cart.items
+          assign in_bag = in_bag | append: ',' | append: it.product_id | append: ','
+        endfor
+        assign pool = collections['shop-all'].products | sort: 'price'
+        assign picks = ''
+        assign n_picks = 0
+        for pr in pool
+          if n_picks >= 3
+            break
+          endif
+          assign pid = ',' | append: pr.id | append: ','
+          if pr.available == false or in_bag contains pid or pr.price == 0 or pr.handle contains 'gift'
+            continue
+          endif
+          if pr.price >= remaining_fils
+            assign picks = picks | append: pr.handle | append: '|'
+            assign n_picks = n_picks | plus: 1
+          endif
+        endfor
+        if n_picks == 0
+          assign rev = pool | reverse
+          for pr in rev
+            if n_picks >= 3
+              break
+            endif
+            assign pid = ',' | append: pr.id | append: ','
+            if pr.available == false or in_bag contains pid or pr.price == 0 or pr.handle contains 'gift'
+              continue
+            endif
+            assign picks = picks | append: pr.handle | append: '|'
+            assign n_picks = n_picks | plus: 1
+          endfor
+        endif
+        assign pick_handles = picks | split: '|'
+      -%}
+      {%- if n_picks > 0 -%}
+        <details class="pl-gap" data-pl-gap>
+          <summary>
+            <span>Add <b>{% render 'plaay-aed', fils: remaining_fils %}</b> for {{ next_label }}</span>
+            <span class="pl-gap__cta">See picks {% render 'pl-icon', name: 'chev-down', size: 14, stroke: 2.4 %}</span>
+          </summary>
+          <ul class="pl-gap__list">
+            {%- for h in pick_handles -%}
+              {%- assign pr = all_products[h] -%}
+              {%- assign pv = pr.selected_or_first_available_variant -%}
+              {%- capture gk -%}{%- render 'plo-photo-key', handle: pr.handle -%}{%- endcapture -%}{%- assign gk = gk | strip -%}
+              <li class="pl-gap__i" style="--i: {{ forloop.index }}">
+                <a class="pl-gap__pic" href="{{ pr.url }}" tabindex="-1" aria-hidden="true">
+                  {%- if gk != blank -%}
+                    {%- render 'pl-photo', key: gk, n: 1, alt: '' -%}
+                  {%- elsif pr.featured_image -%}
+                    {{ pr.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+                  {%- endif -%}
+                </a>
+                <span class="pl-gap__t">
+                  <a href="{{ pr.url }}">{{ pr.title }}</a>
+                  <small>{% render 'plaay-aed', fils: pv.price %}{% if pv.price >= remaining_fils %} · unlocks it{% endif %}</small>
+                </span>
+                <button type="button" class="pl-gap__add" data-pl-gap-add="{{ pv.id }}" aria-label="Add {{ pr.title | escape }}">{% render 'pl-icon', name: 'plus', size: 16, stroke: 2.6 %}</button>
+              </li>
+            {%- endfor -%}
+          </ul>
+        </details>
+      {%- endif -%}
+    {%- endif -%}
   </div>
 {%- endcapture -%}
 
