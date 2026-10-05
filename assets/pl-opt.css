@@ -878,7 +878,7 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 .plo-prev__bar i { display: block; height: 6px; border-radius: 999px; background: rgba(8, 29, 72, .1); overflow: hidden; }
 .plo-prev__bar u { display: block; height: 100%; min-width: 4px; border-radius: 999px; background: var(--pl-navy); }
 .plo-prev__bar span:last-child { text-align: right; color: var(--pl-mute); }
-.plo-prev__cards { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; margin: 0 calc(var(--o-side) * -1); padding: 0 var(--o-side) 4px; }
+.plo-prev__cards { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; scroll-snap-type: x mandatory; scroll-padding: 0 var(--o-side); margin: 0 calc(var(--o-side) * -1); padding: 0 var(--o-side) 4px; }
 .plo-prev__cards::-webkit-scrollbar { display: none; }
 .plo-prev__card { flex: 0 0 82%; scroll-snap-align: start; margin: 0; display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 20px; background: #fff; border: 1px solid rgba(8, 29, 72, .1); }
 .plo-prev__top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
