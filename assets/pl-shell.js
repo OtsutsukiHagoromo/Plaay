@@ -239,7 +239,7 @@
   }
   function productRow(p, term) {
     var img = p.image || (p.featured_image && p.featured_image.url) || '';
-    var many = p.variants && p.variants.length > 1;
+    var many = (p.variants && p.variants.length > 1) || (p.price_min && p.price_max && p.price_min !== p.price_max);
     return '<li><a class="pl-search__row" href="' + esc(withView(p.url)) + '">' +
       (img ? '<img class="pl-search__thumb" src="' + esc(imgSize(img, 112)) + '" width="56" height="56" alt="" loading="lazy">' : '<span class="pl-search__thumb"></span>') +
       '<span class="pl-search__info"><span class="pl-search__title">' + hl(p.title, term) + '</span>' +
