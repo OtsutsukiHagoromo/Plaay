@@ -27,11 +27,19 @@
   <cart-remove-button data-module="cart-remove-button" hidden></cart-remove-button>
   <quantity-adjuster data-module="quantity-adjuster" hidden></quantity-adjuster>
   <div class="pl-items">
+    {%- comment -%} Two passes: reward gifts (Mystery Gift) first, then everything else. {%- endcomment -%}
+    {%- for pass in (1..2) -%}
     {%- for item in cart.items -%}
       {%- liquid
         assign is_gift = false
         if item.properties._plaay_reward != blank
           assign is_gift = true
+        endif
+        if pass == 1 and is_gift == false
+          continue
+        endif
+        if pass == 2 and is_gift
+          continue
         endif
 
         assign is_sub = false
@@ -211,6 +219,7 @@
           </div>
         {%- endif -%}
       </div>
+    {%- endfor -%}
     {%- endfor -%}
   </div>
 {%- unless is_bare -%}

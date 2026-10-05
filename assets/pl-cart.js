@@ -97,7 +97,84 @@
   var observers = [];
   var renderTimer = null;
 
+  /* ---------- reward moments ----------
+     The drawer is swapped wholesale after every change, so the tier reached, the bar fill and the
+     line keys are remembered here and compared after each render:
+       - the fill slides from its old width to the new one;
+       - a newly reached stop pops, throws a little confetti and shows a short "unlocked" pill;
+       - a newly added Mystery Gift line slides in with a shine. */
+  var lastTier = null, lastPct = null, lastKeys = null;
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var COLORS = ['#FFB600', '#8A2BE2', '#FF3EB5', '#2F8A3B', '#081D48', '#00BCB4'];
+
+  function confetti(dot) {
+    if (calm || !dot) return;
+    var host = dot.parentNode;
+    for (var i = 0; i < 16; i += 1) {
+      var s = document.createElement('i');
+      s.className = 'pl-confetti';
+      var a = (Math.PI * 2 * i) / 16 + Math.random() * .4;
+      var r = 26 + Math.random() * 26;
+      s.style.left = dot.style.left;
+      s.style.setProperty('--dx', Math.round(Math.cos(a) * r) + 'px');
+      s.style.setProperty('--dy', Math.round(Math.sin(a) * r - 10) + 'px');
+      s.style.setProperty('--rot', Math.round(Math.random() * 360) + 'deg');
+      s.style.background = COLORS[i % COLORS.length];
+      host.appendChild(s);
+    }
+    setTimeout(function () { qa('.pl-confetti', host).forEach(function (n) { n.remove(); }); }, 1100);
+  }
+
+  function pill(card, text) {
+    if (!card) return;
+    var old = q('.pl-ladder__pop', card);
+    if (old) old.remove();
+    var el = document.createElement('p');
+    el.className = 'pl-ladder__pop';
+    el.setAttribute('role', 'status');
+    el.textContent = text;
+    card.appendChild(el);
+    setTimeout(function () { el.remove(); }, 2800);
+  }
+
+  function rewardMoments() {
+    var root = q('[data-cart-drawer-content]') || q('[data-cart-page-root]');
+    if (!root) return;
+    var bar = q('[data-plaay-tier-bar]', root);
+    var fill = bar && q('.plaay-tier-bar__fill', bar);
+    var dots = bar ? qa('.plaay-tier-bar__dot', bar) : [];
+    var done = bar ? qa('.plaay-tier-bar__dot.is-done', bar).length : 0;
+    var pct = fill ? parseFloat(fill.style.width) || 0 : 0;
+
+    if (fill && lastPct !== null && pct !== lastPct && !calm) {
+      fill.style.transition = 'none';
+      fill.style.width = lastPct + '%';
+      void fill.offsetWidth;
+      fill.style.transition = '';
+      fill.style.width = pct + '%';
+    }
+
+    if (bar && lastTier !== null && done > lastTier) {
+      for (var i = lastTier; i < done; i += 1) if (dots[i]) dots[i].classList.add('is-new');
+      var top = done - 1;
+      var label = bar.getAttribute('data-stop-' + (top + 1) + '-label') || '';
+      setTimeout(function () { confetti(dots[top]); }, 380);
+      pill(bar.closest('.pl-ladder'), (top === 0 ? '🚚 ' : '🎉 ') + label + ' unlocked!');
+    }
+
+    var lines = qa('[data-cart-item]', root);
+    var keys = lines.map(function (l) { return l.getAttribute('data-key'); });
+    if (lastKeys) {
+      lines.forEach(function (l) {
+        if (l.classList.contains('pl-item--gift') && lastKeys.indexOf(l.getAttribute('data-key')) < 0) l.classList.add('is-new');
+      });
+    }
+    if (bar) { lastTier = done; lastPct = pct; }
+    lastKeys = keys;
+  }
+
   function afterRender() {
+    rewardMoments();
     syncCount();
     decorateUpsell();
     clearStuckLoading();
@@ -337,6 +414,7 @@
 
   /* ---------- boot ---------- */
   function init() {
+    rewardMoments();
     observe();
     syncCount();
     decorateUpsell();
