@@ -36,9 +36,9 @@
     assign nav_urls = urls_s | split: '|'
     assign nav_megas = megas_s | split: '|'
   else
-    assign nav_labels = 'Shop|Bars|Truffles|Slabs|Variety packs|Subscribe & Save|Our story' | split: '|'
-    assign nav_urls = '/collections/shop-all|/collections/chocolate-bars|/collections/chocolate-truffles|/collections/new-chocolate-slabs|/collections/variety-packs|/pages/subscribe-save|/pages/for-the-geeks-1' | split: '|'
-    assign nav_megas = '1|0|0|0|0|0|0' | split: '|'
+    assign nav_labels = 'Shop|Truffles|Bars|Slabs|Subscribe & Save|Our story' | split: '|'
+    assign nav_urls = '/collections/shop-all|/collections/chocolate-truffles|/collections/chocolate-bars|/collections/new-chocolate-slabs|/pages/subscribe-save|/pages/for-the-geeks-1' | split: '|'
+    assign nav_megas = '1|0|0|0|0|0' | split: '|'
   endif
 
   assign type_labels = 'Bars|Truffles|Slabs|Variety packs|Limited editions|Shop all' | split: '|'
@@ -51,10 +51,19 @@
   if promo_img == blank
     assign promo_img = images['plaay26-green-tubes.jpg']
   endif
-  assign promo_title = section.settings.mega_title | default: 'Build your box'
-  assign promo_text = section.settings.mega_text | default: 'Every 4 weeks. Free shipping. Skip or cancel anytime.'
-  assign promo_btn = section.settings.mega_btn_label | default: 'Subscribe & Save'
-  assign promo_url = section.settings.mega_btn_url | default: '/products/build-your-box'
+  assign promo_title = section.settings.mega_title | default: 'Subscribe & save 15%'
+  assign promo_text = section.settings.mega_text | default: 'Your favourites every 4 weeks with free delivery. Skip or cancel any time.'
+  assign promo_btn = section.settings.mega_btn_label | default: 'How it works'
+  assign promo_url = section.settings.mega_btn_url | default: '/pages/subscribe-save'
+  comment
+    Build your box is not offered right now: a card still set up for it shows Subscribe & Save.
+  endcomment
+  if promo_url contains 'build-your-box' or promo_title == 'Build your box'
+    assign promo_url = '/pages/subscribe-save'
+    assign promo_text = 'Your favourites every 4 weeks with free delivery. Skip or cancel any time.'
+    assign promo_title = 'Subscribe & save 15%'
+    assign promo_btn = 'How it works'
+  endif
 
   if customer
     assign account_url = routes.account_url
@@ -89,39 +98,36 @@
             <li class="pl-header__item{% if is_mega %} has-mega{% endif %}"{% if is_mega %} data-pl-mega-parent{% endif %}{% if link_blocks.size > 0 %} {{ link_blocks[i].shopify_attributes }}{% endif %}>
               <a class="pl-header__link" href="{{ url }}"{% if is_mega %} aria-haspopup="true" aria-expanded="false"{% endif %}>
                 {{- label | escape -}}
+                {%- if url contains 'new-chocolate-slabs' %}<em class="pl-header__new">New</em>{% endif -%}
                 {%- if is_mega %} {% render 'pl-icon', name: 'chev-down', size: 16, stroke: 2.2 %}{% endif -%}
               </a>
               {%- if is_mega -%}
                 <div class="pl-mega" data-pl-mega>
                   <div class="pl-wrap pl-mega__grid">
-                    <div class="pl-mega__col">
-                      <p class="pl-label">Shop by type</p>
-                      <ul class="pl-mega__list">
-                        {%- for t in type_labels -%}
-                          <li><a href="{{ type_urls[forloop.index0] }}">{{ t }}</a></li>
-                        {%- endfor -%}
-                      </ul>
+                    <div class="pl-mega__shop">
+                      <div class="pl-mega__head"><p class="pl-label">Shop by type</p><a class="pl-mega__all" href="{{ routes.collections_url }}/shop-all">Shop all {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.2 %}</a></div>
+                      <div class="pl-mega__tiles">{%- render 'pl-menu-tiles', size: 'lg' -%}</div>
                     </div>
                     <div class="pl-mega__col">
                       <p class="pl-label">Shop by craving</p>
                       <ul class="pl-mega__list">
                         {%- for c in crave_labels -%}
-                          <li><a href="{{ crave_urls[forloop.index0] }}"><span class="pl-dot" style="--pl-dot: var(--pl-f-{{ crave_colors[forloop.index0] }})" aria-hidden="true"></span>{{ c }}</a></li>
+                          <li style="--i: {{ forloop.index | plus: 5 }}"><a href="{{ crave_urls[forloop.index0] }}"><span class="pl-dot" style="--pl-dot: var(--pl-f-{{ crave_colors[forloop.index0] }})" aria-hidden="true"></span>{{ c }}</a></li>
                         {%- endfor -%}
                       </ul>
                     </div>
-                    <div class="pl-card pl-card--cream pl-mega__promo">
+                    <a class="pl-mega__promo" href="{{ promo_url }}" style="--i: 9">
                       {%- if promo_img != blank -%}
-                        <div class="pl-mega__promo-img">
-                          {{ promo_img | image_url: width: 840 | image_tag: loading: 'lazy', sizes: '420px', widths: '420, 840', alt: promo_img.alt | default: promo_title }}
-                        </div>
+                        <span class="pl-mega__promo-img">
+                          {{ promo_img | image_url: width: 720 | image_tag: loading: 'lazy', sizes: '320px', widths: '360, 720', alt: '' }}
+                        </span>
                       {%- endif -%}
-                      <div class="pl-mega__promo-body">
-                        <p class="pl-h pl-h--3">{{ promo_title }}</p>
-                        <p class="pl-small pl-mute">{{ promo_text }}</p>
-                        <a class="pl-btn pl-btn--navy-y pl-btn--md" href="{{ promo_url }}">{{ promo_btn }}</a>
-                      </div>
-                    </div>
+                      <span class="pl-mega__promo-body">
+                        <b>{{ promo_title }}</b>
+                        <small>{{ promo_text }}</small>
+                        <span class="pl-mega__promo-go">{{ promo_btn }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.2 %}</span>
+                      </span>
+                    </a>
                   </div>
                 </div>
               {%- endif -%}
@@ -204,24 +210,32 @@
       </button>
     </div>
     <nav class="pl-menu__body" aria-label="Menu">
+      <div class="pl-menu__sec">
+        <div class="pl-menu__sechead"><p class="pl-label">Shop</p><a href="{{ routes.collections_url }}/shop-all">Shop all {% render 'pl-icon', name: 'arrow-right', size: 14, stroke: 2.2 %}</a></div>
+        <div class="pl-menu__tiles">{%- render 'pl-menu-tiles', size: 'sm' -%}</div>
+      </div>
       <ul class="pl-menu__list">
-        {%- for label in nav_labels -%}
-          <li><a href="{{ nav_urls[forloop.index0] | default: '#' }}">{{ label | escape }}{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
-        {%- endfor -%}
+        <li><a href="/pages/subscribe-save"><span>Subscribe &amp; Save</span><em class="pl-menu__tag">15% off</em>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
+        <li><a href="/pages/for-the-geeks-1"><span>Our story</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
+        <li><a href="{{ account_url }}"><span>{% if customer %}My account{% else %}Sign in{% endif %}</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
       </ul>
       <div class="pl-menu__group">
         <p class="pl-label">Shop by craving</p>
-        <ul class="pl-menu__cravings">
+        <div class="pl-menu__cravings">
           {%- for c in crave_labels -%}
-            <li><a href="{{ crave_urls[forloop.index0] }}"><span class="pl-dot" style="--pl-dot: var(--pl-f-{{ crave_colors[forloop.index0] }})" aria-hidden="true"></span>{{ c }}</a></li>
+            <a href="{{ crave_urls[forloop.index0] }}"><span class="pl-dot" style="--pl-dot: var(--pl-f-{{ crave_colors[forloop.index0] }})" aria-hidden="true"></span>{{ c }}</a>
           {%- endfor -%}
-        </ul>
+        </div>
       </div>
+      <a class="pl-menu__rewards" href="/pages/subscribe-save">
+        {%- render 'pl-icon', name: 'gift', size: 20, stroke: 2 -%}
+        <span><b>Free delivery over AED {{ settings.cart_tier_ship | default: 75 }}</b><small>Up to 15% off + a Mystery Gift as your bag grows</small></span>
+      </a>
       <ul class="pl-menu__small">
-        <li><a href="{{ account_url }}">Account</a></li>
-        <li><a href="/pages/retailers">Retailers</a></li>
+        <li><a href="/pages/shipping-policy">Delivery</a></li>
         <li><a href="/pages/faqs">FAQ</a></li>
         <li><a href="/pages/contact">Contact</a></li>
+        <li><a href="/pages/retailers">Retailers</a></li>
       </ul>
     </nav>
   </div>
@@ -253,19 +267,19 @@
       "type": "text",
       "id": "mega_title",
       "label": "Card title",
-      "default": "Build your box"
+      "default": "Subscribe & save 15%"
     },
     {
       "type": "text",
       "id": "mega_text",
       "label": "Card text",
-      "default": "Every 4 weeks. Free shipping. Skip or cancel anytime."
+      "default": "Your favourites every 4 weeks with free delivery. Skip or cancel any time."
     },
     {
       "type": "text",
       "id": "mega_btn_label",
       "label": "Card button label",
-      "default": "Subscribe & Save"
+      "default": "How it works"
     },
     {
       "type": "url",

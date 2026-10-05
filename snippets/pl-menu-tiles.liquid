@@ -1,0 +1,38 @@
+{%- comment -%}
+  Category tiles for the header's Shop panel (desktop) and the mobile menu sheet.
+  One tile per collection: tinted card, pack shot, name, product count, optional tag.
+  Pack shots come from the refreshed shoot (plo-ph-<key>-1.jpg) where there is one, else the
+  collection's first product image. Collections with no products are skipped.
+  Usage: {% render 'pl-menu-tiles', size: 'lg' %}  (lg = desktop panel, sm = mobile sheet)
+{%- endcomment -%}
+{%- liquid
+  assign rows = 'Truffles|chocolate-truffles|#F9DCE4|triple|,Bars|chocolate-bars|#DDEFD6|pistbar|,Slabs|new-chocolate-slabs|#F3E2D2|hazel|New,Variety packs|variety-packs|#E1E6F7||Gifting,Limited editions|limited-editions|#FFF0C4||' | split: ','
+  assign n = 0
+-%}
+{%- for row in rows -%}
+  {%- liquid
+    assign f = row | split: '|'
+    assign c = collections[f[1]]
+    if c == blank or c.products_count == 0
+      continue
+    endif
+    if size == 'sm' and f[1] == 'limited-editions'
+      continue
+    endif
+    assign n = n | plus: 1
+  -%}
+  <a class="pl-mtile" href="{{ c.url }}" style="--tile: {{ f[2] }}; --i: {{ n }}">
+    <span class="pl-mtile__pic">
+      {%- if f[3] != blank -%}
+        {%- assign ph = 'plo-ph-' | append: f[3] | append: '-1.jpg' -%}
+        <img src="{{ ph | asset_url }}" alt="" loading="lazy" width="400" height="500">
+      {%- elsif c.featured_image -%}
+        {{ c.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: '' }}
+      {%- elsif c.products.first.featured_image -%}
+        {{ c.products.first.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: '' }}
+      {%- endif -%}
+      {%- if f[4] != blank -%}<em class="pl-mtile__tag">{{ f[4] }}</em>{%- endif -%}
+    </span>
+    <span class="pl-mtile__t"><b>{{ f[0] }}</b><small>{{ c.products_count }} {% if c.products_count == 1 %}product{% else %}products{% endif %}</small></span>
+  </a>
+{%- endfor -%}
