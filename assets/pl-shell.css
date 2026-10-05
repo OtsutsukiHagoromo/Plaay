@@ -334,14 +334,12 @@ body.pl-lock { overflow: hidden; }
 .pl-mtile__pic img.is-photo { filter: brightness(1.09) contrast(1.04); }
 
 /* ---------- mobile header + tab bar (one job each) ----------
-   Top: search on the left, logo in the centre, bag (with count) on the right.
+   Top: menu on the left, logo in the centre, bag (with count) on the right (no search).
    Bottom tab bar: Home / Shop / Search / Account. It slides away while scrolling down and
    comes back on scroll up; everything pinned above it follows --pl-tab-offset. */
 :root { --pl-tab-offset: var(--pl-tabbar-h); }
 body.pl-tab-hide { --pl-tab-offset: 0px; }
 @media (max-width: 1023.98px) {
-  .pl-header .pl-header__menu { display: none; }
-  .pl-header__search-m { margin-left: -8px; }
   .pl-header__logo img { height: 24px; }
   .pl-header .pl-header__search-btn, .pl-header .pl-header__account { display: none; }
   .pl-shell .pl-header .header__icon--cart { display: inline-flex !important; margin-right: -8px; }
@@ -355,7 +353,6 @@ body.pl-tab-hide { --pl-tab-offset: 0px; }
 /* bag count: a little bounce when it goes up */
 @keyframes pl-bump { 0% { transform: scale(1); } 35% { transform: scale(1.45); } 70% { transform: scale(.9); } 100% { transform: scale(1); } }
 .pl-count.is-bump { animation: pl-bump .5s cubic-bezier(.3, 1.6, .5, 1); }
-@media (min-width: 1024px) { .pl-header__search-m { display: none; } }
 
 /* ---------- playful logo ----------
    Drops in with a little bounce once per visit (.is-intro), wiggles on hover / tap,
