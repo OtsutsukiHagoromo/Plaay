@@ -1,0 +1,42 @@
+{%- comment -%}
+  Renders a product metafield as clean HTML for the PDP accordions.
+  Usage: {%- render 'pl-mf-text', mf: product.metafields.arena.exact_ingredients -%}
+  Rich text goes through metafield_tag. Plain multi-line text from the product data feed carries
+  "<br/><br/>" and "<b>…</b>" typed in as text (metafield_tag shows them literally): the value is
+  escaped, the typed <br/> markers are dropped (the line breaks already separate the blocks), the
+  typed <b>/</b> come back as real bold, and newlines become line breaks. Nothing else is let through.
+{%- endcomment -%}
+{%- liquid
+  if mf == blank
+    break
+  endif
+  assign t = mf.type | append: ''
+  if t contains 'rich_text'
+    echo mf | metafield_tag
+  else
+    assign v = mf.value | append: '' | strip | escape
+    assign v = v | replace: '&lt;br/&gt;', '' | replace: '&lt;br /&gt;', '' | replace: '&lt;br&gt;', '' | replace: '&lt;BR/&gt;', ''
+    assign v = v | replace: '&lt;b&gt;', '<b>' | replace: '&lt;/b&gt;', '</b>' | replace: '&lt;strong&gt;', '<b>' | replace: '&lt;/strong&gt;', '</b>'
+    assign v = v | replace: '&#39;', '’'
+    assign lines = v | newline_to_br | split: '<br />'
+    assign out = ''
+    assign gap = false
+    for l in lines
+      assign s = l | strip
+      if s == blank
+        assign gap = true
+      else
+        if out != ''
+          if gap
+            assign out = out | append: '</p><p>'
+          else
+            assign out = out | append: '<br>'
+          endif
+        endif
+        assign out = out | append: s
+        assign gap = false
+      endif
+    endfor
+    echo '<p>' | append: out | append: '</p>'
+  endif
+-%}

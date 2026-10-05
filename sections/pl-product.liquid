@@ -255,12 +255,6 @@
         {%- render 'pl-pack-row', product: product, kind: kind, has_pack_size: has_pack_size, selected: variant -%}
         {%- render 'pl-buy-box', product: product, variant: variant, sub_pct: sub_pct, default_plan_id: default_plan_id, section_id: section.id -%}
 
-        <ul class="pl-trust">
-          <li>{%- render 'pl-icon', name: 'truck', size: 16, stroke: 1.8 -%}<span>Free delivery AED 75+ · 1–2 day UAE-wide</span></li>
-          <li>{%- render 'pl-icon', name: 'refresh', size: 16, stroke: 1.8 -%}<span>Skip, swap or cancel anytime</span></li>
-          <li>{%- render 'pl-icon', name: 'leaf', size: 16, stroke: 1.8 -%}<span>Halal · no refined sugar</span></li>
-        </ul>
-
         <div class="pl-chips">
           {%- for chip in usp -%}
             {%- if chip != blank -%}<span class="pl-chip">{{ chip }}</span>{%- endif -%}
@@ -499,15 +493,15 @@
         <section class="pl-pdp__panel" id="pl-faq" role="tabpanel" aria-labelledby="pl-tab-faq" data-pl-panel="pl-faq">
           <h2 class="pl-h pl-h--3 pl-pdp__panel-h">FAQ</h2>
           <div class="pl-card pl-card--flat">
-            {%- capture acc_ingredients -%}{{ product.metafields.arena.exact_ingredients | metafield_tag }}{%- endcapture -%}
-            {%- capture acc_allergens -%}{{ product.metafields.custom.allergens | metafield_tag }}{%- endcapture -%}
-            {%- capture acc_nutrition -%}{{ product.metafields.custom.nutrition_facts | metafield_tag }}{%- endcapture -%}
-            {%- capture acc_suitable -%}{{ product.metafields.custom.suitable_for | metafield_tag }}{%- endcapture -%}
+            {%- capture acc_ingredients -%}{%- render 'pl-mf-text', mf: product.metafields.arena.exact_ingredients -%}{%- endcapture -%}
+            {%- capture acc_allergens -%}{%- render 'pl-mf-text', mf: product.metafields.custom.allergens -%}{%- endcapture -%}
+            {%- capture acc_nutrition -%}{%- render 'pl-mf-text', mf: product.metafields.custom.nutrition_facts -%}{%- endcapture -%}
+            {%- capture acc_suitable -%}{%- render 'pl-mf-text', mf: product.metafields.custom.suitable_for -%}{%- endcapture -%}
 
             {%- if acc_ingredients != blank -%}
               <details class="pl-acc">
                 <summary>
-                  <span class="pl-col pl-gap1"><span class="pl-acc__t">Ingredients</span><span class="pl-acc__s">{{ acc_ingredients | strip_html | strip | truncate: 70 }}</span></span>
+                  <span class="pl-acc__t">Ingredients</span>
                   {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
                 </summary>
                 <div class="pl-acc__body">{{ acc_ingredients }}</div>
@@ -516,7 +510,7 @@
             {%- if acc_allergens != blank -%}
               <details class="pl-acc">
                 <summary>
-                  <span class="pl-col pl-gap1"><span class="pl-acc__t">Allergens</span><span class="pl-acc__s">{{ acc_allergens | strip_html | strip | truncate: 70 }}</span></span>
+                  <span class="pl-acc__t">Allergens</span>
                   {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
                 </summary>
                 <div class="pl-acc__body">{{ acc_allergens }}</div>
@@ -525,7 +519,7 @@
             {%- if acc_nutrition != blank -%}
               <details class="pl-acc">
                 <summary>
-                  <span class="pl-col pl-gap1"><span class="pl-acc__t">Nutrition</span><span class="pl-acc__s">Per serving</span></span>
+                  <span class="pl-acc__t">Nutrition</span>
                   {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
                 </summary>
                 <div class="pl-acc__body">{{ acc_nutrition }}</div>
@@ -533,15 +527,15 @@
             {%- endif -%}
             <details class="pl-acc">
               <summary>
-                <span class="pl-col pl-gap1"><span class="pl-acc__t">Storage</span><span class="pl-acc__s">{{ storage_copy }}</span></span>
+                <span class="pl-acc__t">Storage</span>
                 {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
               </summary>
-              <div class="pl-acc__body">{{ storage_copy }}</div>
+              <div class="pl-acc__body"><p>{{ storage_copy }}</p></div>
             </details>
             {%- if acc_suitable != blank -%}
               <details class="pl-acc">
                 <summary>
-                  <span class="pl-col pl-gap1"><span class="pl-acc__t">Suitable for</span><span class="pl-acc__s">{{ acc_suitable | strip_html | strip | truncate: 70 }}</span></span>
+                  <span class="pl-acc__t">Suitable for</span>
                   {%- render 'pl-icon', name: 'chev-down', size: 18, stroke: 2, class: 'pl-acc__ic' -%}
                 </summary>
                 <div class="pl-acc__body">{{ acc_suitable }}</div>
