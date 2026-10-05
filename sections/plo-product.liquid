@@ -10,6 +10,19 @@
 {%- liquid
   assign s = section.settings
   assign v = product.selected_or_first_available_variant
+  comment
+    Default pack size: the variant whose title matches the "Default pack size" setting
+    (spaces and case ignored), unless the URL already picked a variant.
+  endcomment
+  if product.selected_variant == blank and s.default_size != blank
+    assign want = s.default_size | downcase | remove: ' '
+    for variant in product.variants
+      assign vt = variant.title | downcase | remove: ' '
+      if vt == want and variant.available
+        assign v = variant
+      endif
+    endfor
+  endif
   assign view = template.suffix
   assign sub_pct = 0
   assign plan_id = ''
@@ -119,7 +132,8 @@
           {%- endfor -%}
         </div>
         {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge">{{ badge_text }}</span>{%- endif -%}
-        <div class="plo-gal__thumbs">
+        <span class="plo-gal__count" aria-hidden="true"><b data-plo-count>1</b> / 8</span>
+        <div class="plo-gal__thumbs" data-plo-thumbrow>
           {%- for i in (1..8) -%}
             {%- assign ph = 'plo-ph-' | append: pkey | append: '-' | append: i | append: '.jpg' -%}
             <button type="button" class="plo-gal__th{% if forloop.first %} is-on{% endif %}" data-plo-go="{{ forloop.index0 }}" aria-label="Photo {{ i }}"><img src="{{ ph | asset_url }}" alt="" loading="lazy" width="80" height="100"></button>
@@ -177,11 +191,65 @@
         {%- if product.has_only_default_variant == false -%}
           <div class="plo-opt">
             <p class="plo-opt__l">{{ product.options.first }}</p>
-            <div class="plo-sizes">
+            {%- liquid
+              comment
+                Pack sizes like "10 X 60G": count × grams. For truffles (one piece = the
+                "Piece weight" setting) each chip shows the price per truffle, and the lowest
+                per-truffle price gets a "Best value" badge.
+              endcomment
+              assign per_unit = false
+              if s.piece_g > 0 and product.title contains 'Truffle'
+                assign per_unit = true
+              endif
+              assign best_per = 0
+              assign best_id = 0
+              if per_unit
+                for variant in product.variants
+                  assign tt = variant.title | downcase | remove: ' ' | split: 'x'
+                  assign n = tt[0] | plus: 0
+                  assign g = tt[1] | remove: 'g' | plus: 0
+                  assign pcs = n | times: g | divided_by: s.piece_g
+                  if pcs > 0 and variant.available
+                    assign per = variant.price | divided_by: pcs
+                    if best_per == 0 or per < best_per
+                      assign best_per = per
+                      assign best_id = variant.id
+                    endif
+                  endif
+                endfor
+              endif
+            -%}
+            <div class="plo-sizes{% if per_unit %} plo-sizes--units{% endif %}">
               {%- for variant in product.variants -%}
-                <label class="plo-size">
-                  <input type="radio" name="plo-size-{{ section.id }}" value="{{ variant.id }}" data-price="{{ variant.price }}"{% if variant.id == v.id %} checked{% endif %}{% unless variant.available %} disabled{% endunless %} data-plo-size>
-                  <span>{{ variant.title }}</span>
+                {%- liquid
+                  assign label = variant.title
+                  assign pcs = 0
+                  if per_unit
+                    assign tt = variant.title | downcase | remove: ' ' | split: 'x'
+                    assign n = tt[0] | plus: 0
+                    assign g = tt[1] | remove: 'g' | plus: 0
+                    assign pcs = n | times: g | divided_by: s.piece_g
+                    if pcs > 0
+                      assign label = n | append: ' × ' | append: g | append: 'g'
+                    endif
+                  endif
+                -%}
+                <label class="plo-size{% if variant.id == best_id %} is-best{% endif %}">
+                  <input type="radio" name="plo-size-{{ section.id }}" value="{{ variant.id }}" data-price="{{ variant.price }}"{% if pcs > 0 %} data-pcs="{{ pcs }}"{% endif %}{% if variant.id == v.id %} checked{% endif %}{% unless variant.available %} disabled{% endunless %} data-plo-size>
+                  <span>
+                    {%- if variant.id == best_id -%}<em class="plo-size__tag">Best value</em>{%- endif -%}
+                    <b>{{ label }}</b>
+                    {%- if pcs > 0 -%}
+                      {%- liquid
+                        assign eff = variant.price
+                        if has_sub
+                          assign eff = variant.price | times: keep | divided_by: 100
+                        endif
+                        assign per = eff | times: 1.0 | divided_by: pcs | round | times: 1
+                      -%}
+                      <small data-plo-per>{%- render 'plaay-aed', fils: per -%} / truffle</small>
+                    {%- endif -%}
+                  </span>
                 </label>
               {%- endfor -%}
             </div>
@@ -351,6 +419,8 @@
     { "type": "range", "id": "desc_words", "label": "Description length (words)", "min": 10, "max": 60, "step": 5, "default": 20 },
     { "type": "text", "id": "sub_note", "label": "Subscribe note", "default": "Every 4 weeks · free delivery · skip or cancel any time" },
     { "type": "text", "id": "trust", "label": "Line under the button", "default": "Halal · Made in the UAE · 1–2 day delivery" },
+    { "type": "text", "id": "default_size", "label": "Default pack size (variant title)", "default": "10 x 60g" },
+    { "type": "range", "id": "piece_g", "label": "Truffle piece weight (g), for the per-truffle price", "min": 0, "max": 30, "step": 1, "default": 15 },
     { "type": "product_list", "id": "flavours_1", "label": "Flavour set 1", "limit": 10 },
     { "type": "product_list", "id": "flavours_2", "label": "Flavour set 2", "limit": 10 },
     { "type": "product_list", "id": "flavours_3", "label": "Flavour set 3", "limit": 10 },

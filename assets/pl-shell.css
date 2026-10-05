@@ -35,13 +35,17 @@ body.pl-lock { overflow: hidden; }
 .pl-ann { background: var(--pl-navy); color: var(--pl-cream); }
 .pl-ann__wrap { position: relative; height: 32px; }
 .pl-ann__msg {
-  position: absolute; inset: 0;
+  position: absolute; inset: 0; margin: 0;
   display: flex; align-items: center; justify-content: center;
-  font-size: var(--pl-t2); font-weight: 500; line-height: 1; letter-spacing: .01em;
+  font-size: var(--pl-t2); font-weight: 500; line-height: 1; letter-spacing: .02em;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  opacity: 0; transition: opacity .45s ease; pointer-events: none;
+  opacity: 0; transform: translateY(70%); pointer-events: none;
+  transition: opacity .4s ease, transform .55s cubic-bezier(.2, .7, .2, 1);
 }
-.pl-ann__msg.is-on { opacity: 1; pointer-events: auto; }
+.pl-ann__msg b { font-weight: 800; color: var(--pl-yellow); }
+.pl-ann__msg.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.pl-ann__msg.is-out { transform: translateY(-70%); }
+@media (prefers-reduced-motion: reduce) { .pl-ann__msg { transition: none; transform: none; } }
 .pl-ann__msg a { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; color: inherit; }
 .pl-ann__msg a:hover { color: var(--pl-yellow); }
 @media (min-width: 1024px) { .pl-ann__wrap { height: 36px; } }

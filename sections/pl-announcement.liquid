@@ -1,17 +1,39 @@
 {%- comment -%}
   Plaay 2026 announcement bar. Slim navy strip, cream 12px text. One message shows at a
-  time; with more than one block they rotate every 4 s with a fade (inline JS, no library).
+  time; with more than one they rotate every 3.5 s, sliding up (inline JS, no library).
+  With no blocks it shows the rewards ladder from the cart tier settings, one tier per line.
   Styles live in assets/pl-shell.css (loaded from layout/theme.liquid).
 {%- endcomment -%}
 {%- liquid
   assign messages = section.blocks | where: 'type', 'message'
-  assign fallback = 'Free delivery AED 75+ · 7% off AED 250+ · 10% off + Mystery Gift AED 350+ · 15% off AED 500+'
   assign shown = 0
   for block in messages
     if block.settings.text != blank
       assign shown = shown | plus: 1
     endif
   endfor
+
+  comment
+    No blocks: the rewards ladder as short rotating lines, built from the cart tier settings.
+  endcomment
+  assign ship = settings.cart_tier_ship | default: 75
+  assign a1 = settings.cart_tier_1_spend | default: 250
+  assign a2 = settings.cart_tier_2_spend | default: 350
+  assign a3 = settings.cart_tier_3_spend | default: 500
+  assign l1 = settings.cart_tier_1_label | default: '7% off'
+  assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift' | replace: '+ Mystery Gift', '+ a Mystery Gift'
+  assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift' | replace: '+ Mystery Gift', '+ a Mystery Gift'
+  capture fb
+    echo 'Free delivery on orders over <b>AED ' | append: ship | append: '</b>'
+    echo '|<b>' | append: l1 | append: '</b> on orders over AED ' | append: a1
+    echo '|<b>' | append: l2 | append: '</b> over AED ' | append: a2
+    echo '|<b>' | append: l3 | append: '</b> over AED ' | append: a3
+  endcapture
+  assign fallback = fb | strip | split: '|'
+  assign count = shown
+  if shown == 0
+    assign count = fallback.size
+  endif
 -%}
 <div class="pl pl-ann{% if section.settings.hide_mobile %} pl-hide-m{% endif %}" id="pl-ann-{{ section.id }}" data-pl-announcement role="region" aria-label="Announcement">
   <div class="pl-wrap pl-ann__wrap">
@@ -29,11 +51,13 @@
         {%- assign first = false -%}
       {%- endfor -%}
     {%- else -%}
-      <p class="pl-ann__msg is-on">{{ fallback }}</p>
+      {%- for m in fallback -%}
+        <p class="pl-ann__msg{% if forloop.first %} is-on{% endif %}"{% unless forloop.first %} aria-hidden="true"{% endunless %}>{{ m }}</p>
+      {%- endfor -%}
     {%- endif -%}
   </div>
 </div>
-{%- if shown > 1 -%}
+{%- if count > 1 -%}
 <script>
   (function () {
     var root = document.getElementById('pl-ann-{{ section.id }}');
@@ -42,16 +66,18 @@
     if (msgs.length < 2) return;
     var i = 0;
     function show(n) {
+      Array.prototype.forEach.call(msgs, function (m) { m.classList.remove('is-out'); });
       msgs[i].classList.remove('is-on');
+      msgs[i].classList.add('is-out');
       msgs[i].setAttribute('aria-hidden', 'true');
       i = n;
       msgs[i].classList.add('is-on');
       msgs[i].removeAttribute('aria-hidden');
     }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    var timer = setInterval(function () { show((i + 1) % msgs.length); }, 4000);
+    var timer = setInterval(function () { show((i + 1) % msgs.length); }, 3500);
     root.addEventListener('mouseenter', function () { clearInterval(timer); });
-    root.addEventListener('mouseleave', function () { timer = setInterval(function () { show((i + 1) % msgs.length); }, 4000); });
+    root.addEventListener('mouseleave', function () { timer = setInterval(function () { show((i + 1) % msgs.length); }, 3500); });
     {%- if request.design_mode %}
     document.addEventListener('shopify:block:select', function (e) {
       var idx = Array.prototype.indexOf.call(msgs, e.target);

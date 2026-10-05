@@ -137,6 +137,14 @@
       set('[data-plo-one]', aed(price));
       set('[data-plo-cta]', aed(isSub() ? sub : price));
       set('[data-plo-sticky-p]', aed(isSub() ? sub : price) + (isSub() ? ' · every 4 weeks' : ''));
+      /* Pack chips: price per truffle at the price the shopper is about to pay. */
+      Array.prototype.forEach.call(form.querySelectorAll('[data-plo-size][data-pcs]'), function (r) {
+        var out = r.parentNode.querySelector('[data-plo-per]');
+        var p = Number(r.getAttribute('data-price')), n = Number(r.getAttribute('data-pcs'));
+        if (!out || !p || !n) return;
+        var eff = isSub() ? Math.floor(p * (100 - pct) / 100) : p;
+        out.textContent = aed(Math.round(eff / n)) + ' / truffle';
+      });
     }
     form.addEventListener('change', function (e) {
       if (e.target.matches('[data-plo-size]')) {
@@ -146,6 +154,7 @@
       if (planInput) planInput.disabled = !isSub();
       paint();
     });
+    paint();
     Array.prototype.forEach.call(form.querySelectorAll('[data-plo-q]'), function (b) {
       b.addEventListener('click', function () {
         var n = Math.max(1, Math.min(20, (Number(qty.value) || 1) + Number(b.getAttribute('data-plo-q'))));
@@ -230,9 +239,23 @@
   /* ---------- photo gallery (refreshed photography) ---------- */
   function initPhotos(root) {
     var track = root.querySelector('[data-plo-phtrack]');
+    var row = root.querySelector('[data-plo-thumbrow]');
+    var count = root.querySelector('[data-plo-count]');
     var thumbs = Array.prototype.slice.call(root.querySelectorAll('[data-plo-go]'));
     if (!track) return;
-    function mark(i) { thumbs.forEach(function (t, n) { t.classList.toggle('is-on', n === i); }); }
+    var current = 0;
+    /* Highlight the thumb for photo i, bring it to the middle of the thumb row and update the
+       counter. Runs only when the index changes, so the row glides once per photo. */
+    function mark(i) {
+      if (i === current && thumbs[i] && thumbs[i].classList.contains('is-on')) return;
+      current = i;
+      thumbs.forEach(function (t, n) { t.classList.toggle('is-on', n === i); t.setAttribute('aria-current', n === i ? 'true' : 'false'); });
+      if (count) count.textContent = i + 1;
+      var t = thumbs[i];
+      if (row && t && row.scrollWidth > row.clientWidth) {
+        row.scrollTo({ left: t.offsetLeft - (row.clientWidth - t.offsetWidth) / 2, behavior: 'smooth' });
+      }
+    }
     thumbs.forEach(function (t) {
       t.addEventListener('click', function () {
         var i = Number(t.getAttribute('data-plo-go'));

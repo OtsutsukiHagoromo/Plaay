@@ -25,8 +25,6 @@ body.pl-skin-b {
 body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 
 /* ---------- shell tweaks ---------- */
-.pl-skin-b .pl-ann { background: var(--pl-yellow); color: var(--pl-navy); }
-.pl-skin-b .pl-ann__msg a:hover { color: var(--pl-purple); }
 .pl-skin-a .pl-header { background: #FFFDF7; }
 .pl-skin-b .pl-header { background: #fff; }
 .pl-skin-b .pl-header .pl-count { border: 1.5px solid var(--pl-navy); }
@@ -924,18 +922,45 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
   .plo-pfaq__i summary { font-size: 18px; padding: 22px 0; }
 }
 
-/* Product details under Add to bag (B product page): one row of tabs, one panel at a time */
-.plo-details { margin-top: 20px; }
-.plo-tabs { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--o-side) * -1); padding: 2px var(--o-side) 4px; }
+/* Product details under Add to bag (B product page): a card with underline tabs and one panel */
+.plo-details { margin-top: 24px; border: 1px solid rgba(8, 29, 72, .12); border-radius: 20px; background: #fff; overflow: hidden; }
+.plo-tabs { position: relative; display: flex; gap: 22px; overflow-x: auto; scrollbar-width: none; padding: 0 18px; border-bottom: 1px solid rgba(8, 29, 72, .1); -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
 .plo-tabs::-webkit-scrollbar { display: none; }
-.plo-tab { flex: 0 0 auto; height: 38px; padding: 0 16px; border-radius: 999px; border: 1.5px solid rgba(8, 29, 72, .18); background: #fff; font: inherit; font-size: 14px; font-weight: 700; color: var(--pl-navy); cursor: pointer; white-space: nowrap; }
-.plo-tab:hover { border-color: var(--pl-navy); }
-.plo-tab.is-on { background: var(--pl-navy); border-color: var(--pl-navy); color: #fff; }
-.plo-pan { margin-top: 12px; padding: 16px 18px; border-radius: 16px; background: var(--pl-cream); font-size: 14px; line-height: 1.6; color: rgba(8, 29, 72, .8); max-height: 260px; overflow-y: auto; }
+.plo-tab { position: relative; flex: 0 0 auto; padding: 15px 0 13px; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 700; color: var(--pl-mute); cursor: pointer; white-space: nowrap; }
+.plo-tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--pl-navy); transform: scaleX(0); transition: transform .25s ease; }
+.plo-tab:hover { color: var(--pl-navy); }
+.plo-tab.is-on { color: var(--pl-navy); }
+.plo-tab.is-on::after { transform: scaleX(1); }
+.plo-tab:last-child { margin-right: 24px; }
+.plo-pan { padding: 16px 18px 18px; font-size: 14px; line-height: 1.6; color: rgba(8, 29, 72, .8); max-height: 280px; overflow-y: auto; animation: plo-pan-in .25s ease; }
+@keyframes plo-pan-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .plo-pan p { margin: 0 0 10px; }
 .plo-pan p:last-child { margin-bottom: 0; }
 .plo-pan b, .plo-pan strong { color: var(--pl-navy); }
 .plo-pan ul { margin: 0 0 10px; padding-left: 18px; }
 .plo-pan img { max-width: 100%; height: auto; border-radius: 12px; }
+@media (min-width: 1024px) { .plo-tabs { -webkit-mask-image: none; mask-image: none; flex-wrap: wrap; gap: 4px 24px; padding: 0 22px; } .plo-pan { padding: 18px 22px 22px; max-height: 340px; } }
 .plo-det__nf { display: block; width: 100%; max-width: 320px; height: auto; }
 @media (min-width: 1024px) { .plo-tabs { margin: 0; padding: 2px 0 4px; flex-wrap: wrap; } .plo-pan { max-height: 320px; } }
+
+/* Photo gallery: smooth swipe, counter, thumbs that follow the photo */
+.plo-gal--photos .plo-gal__track { overscroll-behavior-x: contain; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+.plo-gal--photos .plo-gal__track img { scroll-snap-stop: always; }
+.plo-gal__count { position: absolute; right: 18px; top: 18px; z-index: 2; padding: 5px 10px; border-radius: 999px; background: rgba(8, 29, 72, .7); color: #fff; font-size: 12px; font-weight: 600; letter-spacing: .02em; line-height: 1.2; pointer-events: none; }
+@media (min-width: 1024px) { .plo-gal__count { right: 16px; top: 16px; } }
+.plo-gal__count b { font-weight: 800; }
+.plo-gal--photos .plo-gal__thumbs { position: relative; scroll-behavior: smooth; padding-top: 2px; padding-bottom: 2px; }
+.plo-gal--photos .plo-gal__th { opacity: .55; transition: opacity .25s ease, transform .25s ease, box-shadow .25s ease; }
+.plo-gal--photos .plo-gal__th.is-on { opacity: 1; transform: translateY(-1px); }
+.plo-gal--photos .plo-gal__th:hover { opacity: 1; }
+
+/* Pack size chips with price per truffle (truffles) */
+.plo-sizes--units { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding-top: 8px; }
+.plo-sizes--units .plo-size { position: relative; display: block; }
+.plo-sizes--units .plo-size span { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; height: auto; min-height: 60px; padding: 10px 6px; border-radius: 16px; text-align: center; line-height: 1.1; }
+.plo-sizes--units .plo-size b { font-size: 15px; font-weight: 900; }
+.plo-sizes--units .plo-size small { font-size: 11px; font-weight: 600; color: var(--pl-mute); white-space: nowrap; }
+.plo-sizes--units .plo-size input:checked + span small { color: var(--pl-navy); }
+.plo-size__tag { position: absolute; top: -9px; left: 50%; transform: translateX(-50%); padding: 3px 8px; border-radius: 999px; background: var(--pl-purple); color: #fff; font-size: 9px; font-style: normal; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; line-height: 1.2; }
+.pl-skin-b .plo-sizes--units .plo-size span { border-width: 2px; }
+.pl-skin-b .plo-sizes--units .plo-size input:checked + span { box-shadow: 0 3px 0 var(--pl-navy); }
