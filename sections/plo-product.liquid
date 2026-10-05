@@ -284,7 +284,7 @@
             <button type="button" data-plo-q="1" aria-label="One more">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.2 -%}</button>
           </div>
           <button type="submit" class="plo-btn plo-btn--full plo-buy__add" data-plo-add{% unless v.available %} disabled{% endunless %}>
-            {%- if v.available -%}Add to bag · <span data-plo-cta>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- else -%}Sold out{%- endif -%}
+            {%- if v.available -%}<span class="plo-buy__lbl">Add to bag</span><span class="plo-buy__p" data-plo-cta>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- else -%}Sold out{%- endif -%}
           </button>
         </div>
         {%- if s.trust != blank -%}<p class="plo-buy__trust">{{ s.trust }}</p>{%- endif -%}

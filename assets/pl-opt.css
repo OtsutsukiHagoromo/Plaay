@@ -1257,3 +1257,17 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
   .plo-size__tag, .plo-add.is-busy svg { animation: none; }
   .plo-card:hover .plo-card__img img { transform: none; }
 }
+
+/* PDP buy row: compact stepper + an add button whose label and price always fit, down to
+   320px screens (the price sits in its own pill; the label shrinks before anything clips). */
+.plo-buy__row .plo-step--lg { gap: 2px; padding: 0 4px; }
+.plo-buy__row .plo-step--lg button { width: 36px; height: 44px; }
+.plo-buy__row .plo-step--lg input { width: 28px; }
+.plo-buy__add { gap: 8px; padding: 0 8px 0 18px; justify-content: space-between; overflow: hidden; }
+.plo-buy__lbl { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: clamp(14px, 4.3vw, 17px); }
+.plo-buy__p { flex: 0 0 auto; padding: 8px 12px; border-radius: 999px; background: rgba(255, 255, 255, .55); font-size: clamp(13px, 3.9vw, 16px); }
+.plo-buy__add[disabled] { justify-content: center; padding: 0 18px; }
+
+/* Gallery counter: only visible while swiping (pl-opt.js adds .is-live). */
+.plo-gal__count { opacity: 0; transform: translateY(-4px); transition: opacity .5s ease, transform .5s ease; }
+.plo-gal__count.is-live { opacity: 1; transform: none; transition-duration: .15s; }
