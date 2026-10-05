@@ -95,7 +95,11 @@
         {%- liquid
           assign shown = paginate.current_page | times: paginate.page_size
           assign next_url = paginate.next.url
-          if view_q != blank
+          assign has_view = false
+          if next_url contains 'view='
+            assign has_view = true
+          endif
+          if view_q != blank and has_view == false
             if next_url contains '?'
               assign next_url = next_url | append: '&' | append: view_q
             else

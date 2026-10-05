@@ -43,6 +43,14 @@
       assign href = href | append: '?view=' | append: view
     endif
   endif
+  comment
+    A zero-priced line is the automatic Mystery Gift from the rewards ladder: no stepper, no
+    remove, no subscribe switch; it is labelled as a free gift.
+  endcomment
+  assign is_gift = false
+  if line.original_line_price == 0
+    assign is_gift = true
+  endif
   assign meta = ''
   if line.variant.title != 'Default Title'
     assign meta = line.variant.title
@@ -63,10 +71,16 @@
   <div class="plo-line__main">
     <div class="plo-line__row">
       <h3 class="plo-line__name"><a href="{{ href }}">{{ line.product.title }}</a></h3>
+      {%- unless is_gift -%}
       <button type="button" class="plo-line__rm" data-plo-cart="remove" aria-label="Remove {{ line.product.title | escape }}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13"/></svg>
       </button>
+      {%- endunless -%}
     </div>
+    {%- if is_gift -%}
+      <p class="plo-line__meta">Unlocked with your rewards</p>
+      <div class="plo-line__foot"><span class="plo-gift">{%- render 'pl-icon', name: 'gift', size: 14, stroke: 2.2 -%}Free gift</span><div class="plo-price"><b>Free</b></div></div>
+    {%- else -%}
     <p class="plo-line__meta">{% if meta != blank %}{{ meta }} · {% endif %}{{ meta_plan }}</p>
     {%- if alloc -%}
       <div class="plo-line__sub">{%- render 'pl-icon', name: 'refresh', size: 14, stroke: 2.2 -%}Delivered on repeat{% if strike > 0 %} · saving {% assign sv = strike | minus: line.final_line_price %}{%- render 'plaay-aed', fils: sv -%}{% endif %}</div>
@@ -87,5 +101,6 @@
         {%- if strike > 0 -%}<s>{%- render 'plaay-aed', fils: strike -%}</s>{%- endif -%}
       </div>
     </div>
+    {%- endif -%}
   </div>
 </div>

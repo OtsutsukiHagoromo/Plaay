@@ -793,3 +793,6 @@ body:has(.plo-sticky.is-on) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 84px
 /* ReCharge injects its own one-time / subscribe picker into every product form. The preview's
    buy box already offers both (and adds with the chosen plan itself), so hide the duplicate. */
 .plo-form .rc-container-wrapper, .plo-form .rc_container_wrapper, .plo-form [class^="rc-widget"], .plo-form .rc_popup { display: none !important; }
+.plo-gift { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; background: var(--pl-cream); font-size: 12px; font-weight: 700; color: var(--pl-purple); }
+.plo-gift svg { width: 14px; height: 14px; stroke: var(--pl-purple); }
+.pl-skin-b .plo-gift { background: #F6E9FA; }

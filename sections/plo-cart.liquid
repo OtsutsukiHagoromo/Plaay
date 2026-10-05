@@ -64,6 +64,7 @@
   assign full = 0
   assign has_sub = false
   assign has_one = false
+  assign has_gift = false
   for item in cart.items
     assign line_full = item.final_line_price
     if item.selling_plan_allocation and item.selling_plan_allocation.compare_at_price > item.selling_plan_allocation.price
@@ -72,7 +73,9 @@
       assign line_full = item.original_line_price
     endif
     assign full = full | plus: line_full
-    if item.selling_plan_allocation
+    if item.original_line_price == 0
+      assign has_gift = true
+    elsif item.selling_plan_allocation
       assign has_sub = true
     else
       assign has_one = true
@@ -205,7 +208,13 @@
             {%- if has_one -%}
               <div class="plo-cart__grp">
                 <div class="plo-group">One-time</div>
-                {%- for item in cart.items -%}{%- unless item.selling_plan_allocation -%}{%- assign ti = forloop.index0 | modulo: 5 -%}{%- render 'plo-cart-line', line: item, tint: tints[ti], view: template.suffix -%}{%- endunless -%}{%- endfor -%}
+                {%- for item in cart.items -%}{%- unless item.selling_plan_allocation or item.original_line_price == 0 -%}{%- assign ti = forloop.index0 | modulo: 5 -%}{%- render 'plo-cart-line', line: item, tint: tints[ti], view: template.suffix -%}{%- endunless -%}{%- endfor -%}
+              </div>
+            {%- endif -%}
+            {%- if has_gift -%}
+              <div class="plo-cart__grp">
+                <div class="plo-group">{%- render 'pl-icon', name: 'gift', size: 16, stroke: 2 -%}Free with your order</div>
+                {%- for item in cart.items -%}{%- if item.original_line_price == 0 -%}{%- render 'plo-cart-line', line: item, tint: '#FFF1CC', view: template.suffix -%}{%- endif -%}{%- endfor -%}
               </div>
             {%- endif -%}
           </div>
