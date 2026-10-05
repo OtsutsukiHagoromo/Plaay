@@ -340,7 +340,7 @@ body.pl-lock { overflow: hidden; }
 :root { --pl-tab-offset: var(--pl-tabbar-h); }
 body.pl-tab-hide { --pl-tab-offset: 0px; }
 @media (max-width: 1023.98px) {
-  .pl-header__menu { display: none; }
+  .pl-header .pl-header__menu { display: none; }
   .pl-header__search-m { margin-left: -8px; }
   .pl-header__logo img { height: 24px; }
   .pl-header .pl-header__search-btn, .pl-header .pl-header__account { display: none; }
