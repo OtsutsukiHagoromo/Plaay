@@ -942,3 +942,4 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 .plo-det__b td, .plo-det__b th { padding: 6px 0; border-bottom: 1px solid rgba(8, 29, 72, .08); text-align: left; }
 .plo-det__b img { max-width: 100%; height: auto; border-radius: 12px; }
 @media (min-width: 1024px) { .plo-det summary { font-size: 16px; } }
+.plo-det__nf { display: block; width: 100%; max-width: 360px; height: auto; }

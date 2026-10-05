@@ -1,0 +1,25 @@
+{%- comment -%}
+  Allergen line for products whose Shopify data has none, copied from the pack card in the
+  refreshed shoot (plo-ph-<key>-8). Also says which shoot photo is the Nutrition Facts panel.
+  Usage: {% render 'plo-photo-facts', key: pkey, want: 'allergens' %} → text, or blank
+         {% render 'plo-photo-facts', key: pkey, want: 'nutrition_n' %} → photo number, or blank
+{%- endcomment -%}
+{%- liquid
+  assign traces = 'May contain traces of Almond, Cashewnut, Hazelnut, Peanut, Pistachio and Sesame.'
+  assign a = ''
+  case key
+    when 'hazel'
+      assign a = 'Contains Hazelnut, Milk. May contain traces of Almond, Cashewnut, Peanut, Pistachio and Sesame.'
+    when 'seasalt', 'dark', 'cheese'
+      assign a = 'Contains Milk. ' | append: traces
+    when 'caramel'
+      assign a = 'Contains Milk, Sesame. May contain traces of Almond, Cashew, Hazelnut, Peanut and Pistachio.'
+    when 'toffee'
+      assign a = 'Contains Almond, Milk. May contain traces of Cashewnut, Hazelnut, Peanut, Pistachio and Sesame.'
+  endcase
+  if want == 'allergens'
+    echo a
+  elsif want == 'nutrition_n' and a != ''
+    echo '7'
+  endif
+-%}

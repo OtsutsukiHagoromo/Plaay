@@ -237,6 +237,17 @@
         capture d_shipping
           echo product.metafields.custom.shipping_policy | metafield_tag
         endcapture
+        capture d_nutrition_n
+          render 'plo-photo-facts', key: pkey, want: 'nutrition_n'
+        endcapture
+        if d_allergens == blank and pkey != blank
+          capture d_allergens
+            render 'plo-photo-facts', key: pkey, want: 'allergens'
+          endcapture
+          if d_allergens != blank
+            assign d_allergens = '<p>' | append: d_allergens | append: '</p>'
+          endif
+        endif
         assign d_storage = 'Keep refrigerated. Best at room temperature.'
         if product.title contains 'Truffle'
           assign d_storage = 'Keep refrigerated. Best cold.'
@@ -255,6 +266,9 @@
         {%- endif -%}
         {%- if d_nutrition != blank -%}
           <details class="plo-det"><summary><span>Nutrition</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{{ d_nutrition }}</div></details>
+        {%- elsif d_nutrition_n != blank -%}
+          {%- capture nalt -%}Nutrition facts for {{ product.title }}{%- endcapture -%}
+          <details class="plo-det"><summary><span>Nutrition</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{%- render 'pl-photo', key: pkey, n: d_nutrition_n, alt: nalt, class: 'plo-det__nf' -%}</div></details>
         {%- endif -%}
         <details class="plo-det"><summary><span>Storage</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b"><p>{{ d_storage }}</p></div></details>
         {%- if d_suitable != blank -%}
