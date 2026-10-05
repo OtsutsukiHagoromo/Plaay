@@ -338,6 +338,68 @@
           "hide_on_mobile": false,
           "hide_on_desktop": false
         }
+      },
+      "pl-header": {
+        "type": "pl-header",
+        "blocks": {
+          "link_1": {
+            "type": "link",
+            "settings": {
+              "label": "Shop",
+              "url": "/collections/shop-all",
+              "mega": true
+            }
+          },
+          "link_2": {
+            "type": "link",
+            "settings": {
+              "label": "Truffles",
+              "url": "/collections/chocolate-truffles",
+              "mega": false
+            }
+          },
+          "link_3": {
+            "type": "link",
+            "settings": {
+              "label": "Bars",
+              "url": "/collections/chocolate-bars",
+              "mega": false
+            }
+          },
+          "link_4": {
+            "type": "link",
+            "settings": {
+              "label": "Slabs",
+              "url": "/collections/new-chocolate-slabs",
+              "mega": false
+            }
+          },
+          "link_5": {
+            "type": "link",
+            "settings": {
+              "label": "Subscribe & Save",
+              "url": "/pages/subscribe-save",
+              "mega": false
+            }
+          },
+          "link_6": {
+            "type": "link",
+            "settings": {
+              "label": "Our story",
+              "url": "/pages/for-the-geeks-1",
+              "mega": false
+            }
+          }
+        },
+        "block_order": [
+          "link_1",
+          "link_2",
+          "link_3",
+          "link_4",
+          "link_5",
+          "link_6"
+        ],
+        "settings": {}
       }
     },
     "content_for_index": [],
