@@ -25,7 +25,7 @@
     <span class="pl-mtile__pic">
       {%- if f[3] != blank -%}
         {%- assign ph = 'plo-ph-' | append: f[3] | append: '-1.jpg' -%}
-        <img src="{{ ph | asset_url }}" alt="" loading="lazy" width="400" height="500">
+        <img class="is-photo" src="{{ ph | asset_url }}" alt="" loading="lazy" width="400" height="500">
       {%- elsif c.featured_image -%}
         {{ c.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', alt: '' }}
       {%- elsif c.products.first.featured_image -%}

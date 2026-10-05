@@ -331,3 +331,4 @@ body.pl-lock { overflow: hidden; }
 .pl-tabbar__tab.is-on .pl-tabbar__ic::before { opacity: 1; transform: none; }
 .pl-tabbar .pl-count { top: -7px; right: -11px; }
 @media (min-width: 1024px) { .pl-tabbar { display: none; } }
+.pl-mtile__pic img.is-photo { filter: brightness(1.09) contrast(1.04); }
