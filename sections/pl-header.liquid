@@ -78,9 +78,12 @@
         <button type="button" class="pl-iconbtn pl-iconbtn--ghost pl-header__menu" aria-label="Menu" aria-haspopup="dialog" aria-expanded="false" data-pl-open-menu>
           {%- render 'pl-icon', name: 'menu', size: 24, stroke: 2 -%}
         </button>
+        <button type="button" class="pl-iconbtn pl-iconbtn--ghost pl-header__search-m" aria-label="Search" data-pl-open-search>
+          {%- render 'pl-icon', name: 'search', size: 22, stroke: 2 -%}
+        </button>
       </div>
 
-      <a class="pl-header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
+      <a class="pl-header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home" data-pl-logo>
         {%- if logo != blank -%}
           {{ logo | image_url: width: 300 | image_tag: width: logo_w, height: 22, loading: 'eager', alt: shop.name, class: 'pl-header__logo-img' }}
         {%- else -%}

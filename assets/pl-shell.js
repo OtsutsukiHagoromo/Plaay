@@ -118,7 +118,7 @@
       var before = parseInt(el.textContent, 10) || 0;
       if (n !== null && n !== undefined && String(n) !== el.textContent.trim()) {
         el.textContent = String(n);
-        if (Number(n) > before) { el.classList.remove('is-bump'); void el.offsetWidth; el.classList.add('is-bump'); }
+        if (Number(n) > before) { el.classList.remove('is-bump'); void el.offsetWidth; el.classList.add('is-bump'); logoPlay('is-hop'); }
       }
       var v = parseInt(el.textContent, 10) || 0;
       if (v === 0) el.setAttribute('hidden', ''); else el.removeAttribute('hidden');
@@ -397,5 +397,29 @@
       if (Math.abs(dy) > 6) lastY = y;
     }
     window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  })();
+
+  /* ---------- playful logo + scrolled header ---------- */
+  function logoPlay(cls) {
+    var logo = q('[data-pl-logo]');
+    if (!logo) return;
+    logo.classList.remove('is-intro', 'is-hop', 'is-wiggle');
+    void logo.offsetWidth;
+    logo.classList.add(cls);
+    setTimeout(function () { logo.classList.remove(cls); }, 900);
+  }
+  (function () {
+    var logo = q('[data-pl-logo]');
+    if (logo) {
+      var seen = false;
+      try { seen = sessionStorage.getItem('pl-logo-intro') === '1'; sessionStorage.setItem('pl-logo-intro', '1'); } catch (e) { seen = true; }
+      if (!seen) logoPlay('is-intro');
+      /* touch has no hover: a quick wiggle on tap, then the link follows */
+      logo.addEventListener('touchstart', function () { logoPlay('is-wiggle'); }, { passive: true });
+    }
+    var on = false;
+    function mark() { var s = window.scrollY > 8; if (s !== on) { on = s; document.body.classList.toggle('pl-scrolled', s); } }
+    window.addEventListener('scroll', mark, { passive: true });
+    mark();
   })();
 })();
