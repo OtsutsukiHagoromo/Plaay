@@ -1230,3 +1230,30 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
   @view-transition { navigation: none; }
   body.pl-body .plo-rv { opacity: 1; transform: none; transition: none; }
 }
+
+/* ---------- Micro-interactions ---------- */
+/* Fly-to-bag ghost (pl-opt.js flyToBag) */
+.plo-fly { position: fixed; z-index: 200; border-radius: 50%; object-fit: cover; background: #F2F4F3; box-shadow: 0 8px 22px rgba(8, 29, 72, .25); pointer-events: none; will-change: transform; }
+/* Photos fade in as they arrive instead of popping (class added by pl-opt.js, never on
+   above-the-fold or cached images). */
+.plo-fade { opacity: 0; }
+.plo-fade.is-loaded { opacity: 1; transition: opacity .35s ease; }
+/* Card photo zooms gently on hover (pointer devices only). */
+@media (hover: hover) {
+  .plo-card__img img { transition: transform .45s cubic-bezier(.2, .7, .2, 1); }
+  .plo-card:hover .plo-card__img img { transform: scale(1.04); }
+  .plo-marquee:hover .plo-marquee__track { animation-play-state: paused; }
+}
+/* "+" press feedback and a spin while adding. */
+.plo-add { transition: transform .12s ease, box-shadow .12s ease; }
+.pl-skin-b .plo-card__add-b .plo-add:active { transform: translateY(2px) scale(.94); box-shadow: 0 0 0 var(--pl-navy); }
+.plo-add.is-busy svg { animation: plo-spin .6s linear infinite; }
+@keyframes plo-spin { to { transform: rotate(90deg); } }
+/* "Best value" tag pops once when the size picker comes into view. */
+.plo-size__tag { animation: plo-pop .5s cubic-bezier(.3, 1.6, .5, 1) .6s both; }
+@keyframes plo-pop { from { transform: translateX(-50%) scale(.4); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .plo-fade { opacity: 1; }
+  .plo-size__tag, .plo-add.is-busy svg { animation: none; }
+  .plo-card:hover .plo-card__img img { transform: none; }
+}

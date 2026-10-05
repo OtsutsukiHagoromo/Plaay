@@ -111,6 +111,14 @@
     var whole = Math.floor(fils / 100), frac = fils % 100;
     return 'AED ' + whole + (frac ? '.' + (frac < 10 ? '0' : '') + frac : '');
   }
+  /* The gallery photo currently in view (the swipe track holds all of them side by side). */
+  function visiblePhoto(root) {
+    var track = root.querySelector('[data-plo-phtrack]');
+    if (!track) return null;
+    var i = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+    return track.querySelectorAll('img')[i] || track.querySelector('img');
+  }
+
   function initPdp(root) {
     var form = root.querySelector('[data-plo-form]');
     if (!form) return;
@@ -173,7 +181,8 @@
       if (isSub()) item.selling_plan = Number(planInput.value);
       addBtn.classList.add('is-busy');
       post(((window.routes || {}).cart_add_url || '/cart/add') + '.js', { items: [item] })
-        .then(function () { addBtn.classList.remove('is-busy'); openBag(); })
+        .then(function () { addBtn.classList.remove('is-busy'); return flyToBag(root.querySelector('[data-plo-phtrack]') ? { querySelector: function () { return visiblePhoto(root); } } : null); })
+        .then(openBag)
         .catch(function (err) { fail(addBtn, err); });
     });
 
@@ -207,6 +216,35 @@
       window.location.href = (window.routes || {}).cart_url || '/cart';
     }
   }
+  /* Fly-to-bag: a small copy of the product photo arcs from where it was added to the bag
+     icon (the drawer then slides in). Purely decorative; skipped for reduced motion or when
+     there is no photo / bag icon on screen. Resolves when the flight lands. */
+  function flyToBag(from) {
+    var img = from && from.querySelector && from.querySelector('img');
+    var bag = document.querySelector('.pl-header .header__icon--cart');
+    if (!img || !bag || !img.animate || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return Promise.resolve();
+    var a = img.getBoundingClientRect(), b = bag.getBoundingClientRect();
+    if (!a.width || !b.width || a.bottom < 0 || a.top > window.innerHeight) return Promise.resolve();
+    var size = Math.min(a.width, a.height, 120);
+    var ghost = document.createElement('img');
+    ghost.src = img.currentSrc || img.src;
+    ghost.alt = '';
+    ghost.className = 'plo-fly';
+    ghost.style.cssText = 'left:' + (a.left + a.width / 2 - size / 2) + 'px;top:' + (a.top + a.height / 2 - size / 2) + 'px;width:' + size + 'px;height:' + size + 'px';
+    document.body.appendChild(ghost);
+    var dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - (a.top + a.height / 2);
+    var anim = ghost.animate([
+      { transform: 'translate(0,0) scale(1)', opacity: 1 },
+      { transform: 'translate(' + dx * .45 + 'px,' + (dy * .45 - 60) + 'px) scale(.6)', opacity: 1, offset: .5 },
+      { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(.12)', opacity: .4 }
+    ], { duration: 520, easing: 'cubic-bezier(.5,0,.6,1)' });
+    return anim.finished.then(function () {
+      ghost.remove();
+      if (bag.animate) bag.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { duration: 300, easing: 'ease-out' });
+    }, function () { ghost.remove(); });
+  }
+  window.ploFlyToBag = flyToBag;
+
   window.addEventListener('click', function (e) {
     if (!e.target.closest) return;
     var add = e.target.closest('[data-plo-quick]');
@@ -215,7 +253,8 @@
     e.stopImmediatePropagation();
     add.classList.add('is-busy');
     post(((window.routes || {}).cart_add_url || '/cart/add') + '.js', { items: [{ id: Number(add.getAttribute('data-plo-quick')), quantity: 1 }] })
-      .then(function () { add.classList.remove('is-busy'); openBag(); })
+      .then(function () { add.classList.remove('is-busy'); return flyToBag(add.closest('.plo-card, .plo-tile, .plo-prev__card') || null); })
+      .then(openBag)
       .catch(function (err) { fail(add, err); });
   }, true);
 
@@ -515,7 +554,21 @@
   }
   initTransitions();
 
+  /* Lazy photos fade in when they arrive. Only images still loading get the class, so cached
+     and above-the-fold photos never flicker. */
+  function initFades() {
+    var imgs = document.querySelectorAll('.plo-card__img img, .plo-cat img, .plo-prev__shot, .plo-gal__track img[loading="lazy"]');
+    Array.prototype.forEach.call(imgs, function (img) {
+      if (img.complete || img.getAttribute('loading') !== 'lazy') return;
+      img.classList.add('plo-fade');
+      var done = function () { img.classList.add('is-loaded'); };
+      img.addEventListener('load', done, { once: true });
+      img.addEventListener('error', done, { once: true });
+    });
+  }
+
   function init() {
+    initFades();
     initReveal();
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-carousel]'), initCarousel);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-pdp]'), initPdp);
