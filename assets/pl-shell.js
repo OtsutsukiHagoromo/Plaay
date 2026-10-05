@@ -356,10 +356,19 @@
 
   /* ---------- events ---------- */
   d.addEventListener('click', function (e) {
-    var t = e.target.closest ? e.target.closest('[data-pl-open-search],[data-pl-open-menu],[data-pl-close],[data-pl-overlay],[data-pl-tab],[data-pl-search-clear],[data-pl-search-clear-recent],[data-pl-recent-term],[data-pl-recent-remove],[data-pl-search-all],[data-pl-search-results] a') : null;
+    var t = e.target.closest ? e.target.closest('[data-pl-open-search],[data-pl-open-menu],[data-pl-open-account],[data-pl-close],[data-pl-overlay],[data-pl-tab],[data-pl-search-clear],[data-pl-search-clear-recent],[data-pl-recent-term],[data-pl-recent-remove],[data-pl-search-all],[data-pl-search-results] a') : null;
     if (!t) return;
     if (t.hasAttribute('data-pl-open-search')) { e.preventDefault(); window.plOpenSearch(); return; }
     if (t.hasAttribute('data-pl-open-menu')) { e.preventDefault(); window.plOpenMenu(); return; }
+    if (t.hasAttribute('data-pl-open-account')) {
+      if (!sheet('account') || e.metaKey || e.ctrlKey) return;
+      e.preventDefault();
+      if (active === 'account') { closeSheets(); return; }
+      openSheet('account');
+      var go = q('[data-pl-sheet="account"] a');
+      if (go) setTimeout(function () { try { go.focus({ preventScroll: true }); } catch (x) {} }, 60);
+      return;
+    }
     if (t.hasAttribute('data-pl-close') || t.hasAttribute('data-pl-overlay')) { e.preventDefault(); closeSheets(); return; }
     if (t.hasAttribute('data-pl-tab')) {
       var which = t.getAttribute('data-pl-tab');

@@ -1,0 +1,39 @@
+{%- comment -%}
+  Account panel (header account icon + mobile tab bar "Account"). Sign-in and the account
+  pages are Shopify-hosted (new customer accounts, account.shopplaay.com), so this panel is the
+  branded step before them: signed out it says what an account is for and links to sign in
+  (the same flow creates an account); signed in it greets the shopper and links straight to
+  orders, subscriptions, profile and sign out. Opened by [data-pl-open-account] (pl-shell.js).
+{%- endcomment -%}
+{%- liquid
+  assign ship = settings.cart_tier_ship | default: 75
+-%}
+<div class="pl-sheet pl-sheet--account" role="dialog" aria-modal="true" aria-label="Account" aria-hidden="true" data-pl-sheet="account">
+  <div class="pl-acc__grab" aria-hidden="true"></div>
+  <button type="button" class="pl-iconbtn pl-iconbtn--ghost pl-acc__x" aria-label="Close" data-pl-close>{%- render 'pl-icon', name: 'close', size: 20, stroke: 2 -%}</button>
+  {%- if customer -%}
+    <div class="pl-acc__hi">
+      <span class="pl-acc__av" aria-hidden="true">{{ customer.first_name | default: customer.email | slice: 0 | upcase }}</span>
+      <div>
+        <p class="pl-acc__t">Hi {{ customer.first_name | default: 'there' }}</p>
+        <p class="pl-acc__s">{{ customer.email }}</p>
+      </div>
+    </div>
+    <ul class="pl-acc__links">
+      <li><a href="{{ routes.account_url }}">{%- render 'pl-icon', name: 'bag', size: 20, stroke: 2 -%}<span><b>Orders</b><small>Track and reorder{% if customer.orders_count > 0 %} · {{ customer.orders_count }} so far{% endif %}</small></span>{%- render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 -%}</a></li>
+      <li><a href="/tools/recurring/login">{%- render 'pl-icon', name: 'refresh', size: 20, stroke: 2 -%}<span><b>Subscriptions</b><small>Skip, swap flavours or cancel</small></span>{%- render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 -%}</a></li>
+      <li><a href="{{ routes.account_url }}/profile">{%- render 'pl-icon', name: 'user', size: 20, stroke: 2 -%}<span><b>Profile &amp; addresses</b><small>Name, email, delivery addresses</small></span>{%- render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 -%}</a></li>
+    </ul>
+    <a class="pl-acc__out" href="{{ routes.account_logout_url }}">Sign out</a>
+  {%- else -%}
+    <p class="pl-acc__t">Your Plaay account</p>
+    <p class="pl-acc__s">Sign in with your email, no password needed. New here? The same step creates your account.</p>
+    <ul class="pl-acc__perks">
+      <li>{%- render 'pl-icon', name: 'truck', size: 18, stroke: 2.2 -%}<span>Track every order, reorder in one tap</span></li>
+      <li>{%- render 'pl-icon', name: 'refresh', size: 18, stroke: 2.2 -%}<span>Skip, swap or cancel your subscription</span></li>
+      <li>{%- render 'pl-icon', name: 'gift', size: 18, stroke: 2.2 -%}<span>Free delivery over AED {{ ship }} and a Mystery Gift as your bag grows</span></li>
+    </ul>
+    <a class="plo-btn pl-acc__go" href="{{ routes.account_login_url }}">Sign in or create account</a>
+    <p class="pl-acc__fine">Checking out as a guest is fine too.</p>
+  {%- endif -%}
+</div>

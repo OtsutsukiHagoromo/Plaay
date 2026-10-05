@@ -146,7 +146,7 @@
         <button type="button" class="pl-iconbtn pl-iconbtn--ghost pl-header__search-btn" aria-label="Search" data-pl-open-search>
           {%- render 'pl-icon', name: 'search', size: 22, stroke: 2 -%}
         </button>
-        <a class="pl-iconbtn pl-iconbtn--ghost pl-header__account" href="{{ account_url }}" aria-label="Account">
+        <a class="pl-iconbtn pl-iconbtn--ghost pl-header__account{% if customer %} is-in{% endif %}" href="{{ account_url }}" aria-label="Account" data-pl-open-account>
           {%- render 'pl-icon', name: 'user', size: 22, stroke: 2 -%}
         </a>
         <button type="button" class="pl-iconbtn pl-iconbtn--ghost header__icon--cart" data-drawer-trigger="cart" aria-label="Bag">
@@ -207,6 +207,8 @@
       </section>
     </div>
   </div>
+
+  {%- render 'pl-account-sheet' -%}
 
   {%- comment -%} Mobile menu sheet {%- endcomment -%}
   <div class="pl-sheet pl-sheet--menu" role="dialog" aria-modal="true" aria-label="Menu" aria-hidden="true" data-pl-sheet="menu">

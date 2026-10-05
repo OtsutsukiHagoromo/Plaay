@@ -38,7 +38,7 @@
     <span class="pl-tabbar__ic">{% render 'pl-icon', name: 'search', size: 22, stroke: 2 %}</span>
     <span>Search</span>
   </button>
-  <a class="pl-tabbar__tab{% if on_account %} is-on{% endif %}" href="{{ account_url }}" data-pl-tab-path="/account"{% if on_account %} aria-current="page"{% endif %}>
+  <a class="pl-tabbar__tab{% if on_account %} is-on{% endif %}" href="{{ account_url }}" data-pl-tab-path="/account" data-pl-open-account{% if on_account %} aria-current="page"{% endif %}>
     <span class="pl-tabbar__ic">{% render 'pl-icon', name: 'user', size: 22, stroke: 2 %}</span>
     <span>Account</span>
   </a>
