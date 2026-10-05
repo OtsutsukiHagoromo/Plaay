@@ -1,0 +1,18 @@
+{%- comment -%}
+  Short flavour name for the product preview's flavour row.
+  Usage: {%- render 'plo-flavour-name', title: product.title, strip: section.settings.strip_words -%}
+  Drops every |-separated word or phrase in `strip` from the title (pack sizes, "Chocolate Truffles",
+  "70% Dark Chocolate" …). If nothing is left (the plain 70% dark slab) it prints the fallback.
+{%- endcomment -%}
+{%- liquid
+  assign n = title
+  assign parts = strip | split: '|'
+  for w in parts
+    assign n = n | remove: w
+  endfor
+  assign n = n | strip
+  if n == blank
+    assign n = fallback | default: 'Classic'
+  endif
+-%}
+{{- n -}}

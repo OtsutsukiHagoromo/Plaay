@@ -89,13 +89,9 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
   background: var(--pl-purple); color: #fff; font-size: 9px; font-weight: 700; letter-spacing: .08em;
   text-transform: uppercase; padding: 4px 8px; border-radius: 999px; line-height: 1.2;
 }
-.pl-skin-b .plo-badge {
-  width: 54px; height: 54px; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  text-align: center; font-size: 10px; font-weight: 900; letter-spacing: 0; line-height: 1;
-  background: var(--pl-yellow); color: var(--pl-navy); transform: rotate(-12deg); box-shadow: 0 2px 0 rgba(8, 29, 72, .2);
-}
-.pl-skin-b .plo-badge--new { background: var(--pl-purple); color: #fff; }
-.pl-skin-b .plo-badge--limited { background: #FF3EB5; color: #fff; }
+/* Both options use the Option A pill badge (the team preferred it over B's round sticker). */
+.plo-badge--limited { background: #FF3EB5; }
+@media (min-width: 1024px) { .plo-badge { font-size: 10px; padding: 5px 10px; left: 12px; top: 12px; } }
 
 /* ---------- stickers (banners) ---------- */
 .plo-sticker {
@@ -673,7 +669,8 @@ body:has(.plo-sticky.is-on) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 84px
 .pl-skin-b .plo-gal { padding: 0; }
 .pl-skin-b .plo-gal__main { border: 0; border-radius: 0 0 32px 32px; background: var(--tint); aspect-ratio: auto; height: 400px; }
 .pl-skin-b .plo-gal__main img { width: 80%; height: 84%; mix-blend-mode: multiply; }
-.pl-skin-b .plo-gal__badge { left: 18px; top: 18px; width: 66px; height: 66px; font-size: 11px; }
+.plo-gal__badge { font-size: 11px; padding: 6px 12px; }
+.pl-skin-b .plo-gal__badge { left: 18px; top: 18px; }
 .pl-skin-b .plo-gal__thumbs { padding: 0 var(--o-side); }
 .pl-skin-b .plo-gal__th { border-radius: 14px; border: 0; background: var(--pl-cream); }
 .pl-skin-b .plo-gal__th.is-on { box-shadow: inset 0 0 0 2px var(--pl-navy); }
@@ -774,3 +771,20 @@ body:has(.plo-sticky.is-on) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 84px
   .plo-gal--photos .plo-gal__track { max-height: calc(100vh - var(--pl-header-h) - 140px); aspect-ratio: 4 / 5; margin: 0 auto; }
   .pl-skin-b .plo-gal--photos .plo-gal__track { border-radius: 0 0 40px 40px; }
 }
+
+/* Card tiles: always a square, one neutral backdrop for packshots and photos alike. */
+.plo-card__img { overflow: hidden; background: #F2F4F3; }
+.plo-card__img > a { position: absolute; inset: 0; }
+.plo-card__img img:not(.is-photo) { mix-blend-mode: multiply; }
+.pl-skin-a .plo-card__img { background: #F2F4F3; }
+.plo-card__body { gap: 6px; }
+.plo-card__foot { align-items: flex-end; }
+.plo-card__price { line-height: 1.2; }
+@media (min-width: 1024px) {
+  .plo-card__name { font-size: 16px; }
+  .plo-card__price { font-size: 17px; }
+  .pl-skin-b .plo-card__add-b .plo-add { width: 42px; height: 42px; }
+}
+.plo-card__img img.is-photo { object-fit: contain; }
+@media (min-width: 1024px) { .plo-lhead__p { font-size: 17px; } }
+.pl-skin-b .plo-step--lg { height: 56px; }

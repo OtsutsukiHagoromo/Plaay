@@ -103,7 +103,6 @@
   if has_sub
     assign cta_price = sub_price
   endif
-  assign strip_words = s.strip_words | split: '|'
   capture pkey
     render 'plo-photo-key', handle: product.handle
   endcapture
@@ -161,10 +160,10 @@
 
         {%- if flavours != nil and flavours.size > 1 -%}
           <div class="plo-opt">
-            <p class="plo-opt__l">Flavour: <b>{{ product.title | remove: strip_words[0] | remove: strip_words[1] | remove: strip_words[2] | remove: strip_words[3] | strip }}</b></p>
+            <p class="plo-opt__l">Flavour: <b>{%- render 'plo-flavour-name', title: product.title, strip: s.strip_words, fallback: s.flavour_fallback -%}</b></p>
             <div class="plo-flav">
               {%- for f in flavours -%}
-                {%- assign fname = f.title | remove: strip_words[0] | remove: strip_words[1] | remove: strip_words[2] | remove: strip_words[3] | strip -%}
+                {%- capture fname -%}{%- render 'plo-flavour-name', title: f.title, strip: s.strip_words, fallback: s.flavour_fallback -%}{%- endcapture -%}
                 <a class="plo-flav__i{% if f.id == product.id %} is-on{% endif %}" href="{{ f.url }}{% if view != blank %}?view={{ view }}{% endif %}"{% if f.id == product.id %} aria-current="true"{% endif %}>
                   {%- capture fkey -%}{%- render 'plo-photo-key', handle: f.handle -%}{%- endcapture -%}{%- assign fkey = fkey | strip -%}
                   <span class="plo-flav__pic">{%- if fkey != blank -%}{%- assign ph = 'plo-ph-' | append: fkey | append: '-1.jpg' -%}<img src="{{ ph | asset_url }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif f.featured_image -%}{{ f.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
@@ -245,7 +244,8 @@
     { "type": "product_list", "id": "flavours_1", "label": "Flavour set 1", "limit": 10 },
     { "type": "product_list", "id": "flavours_2", "label": "Flavour set 2", "limit": 10 },
     { "type": "product_list", "id": "flavours_3", "label": "Flavour set 3", "limit": 10 },
-    { "type": "text", "id": "strip_words", "label": "Words dropped from flavour names (| separated, max 4)", "default": " Bar 12 x 35g| Chocolate Truffles| Slab 6 x 80g| Bar x 12" },
+    { "type": "text", "id": "strip_words", "label": "Words dropped from flavour names (| separated)", "default": " Bar 12 x 35g| Bar x 12| Chocolate Truffles| Truffles| Slab 6 x 80g| Slab 6 x 35g|70% Dark Chocolate |Milk Chocolate |70% Dark Chocolate| Mousse" },
+    { "type": "text", "id": "flavour_fallback", "label": "Flavour name when nothing is left", "default": "70% Dark" },
     { "type": "color", "id": "tint_default", "label": "Gallery tint (Option B)", "default": "#FFF7DD" },
     { "type": "textarea", "id": "tints", "label": "Gallery tint per product (handle:#hex, one per line)" }
   ]

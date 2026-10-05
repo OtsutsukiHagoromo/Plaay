@@ -38,8 +38,9 @@
         "desc_words": 20,
         "sub_note": "Every 4 weeks · free delivery · skip or cancel any time",
         "trust": "Halal · Made in the UAE · 1–2 day delivery",
-        "strip_words": " Bar 12 x 35g| Chocolate Truffles| Slab 6 x 80g| Bar x 12",
-        "tint_default": "#FFF7DD"
+        "strip_words": " Bar 12 x 35g| Bar x 12| Chocolate Truffles| Truffles| Slab 6 x 80g| Slab 6 x 35g|70% Dark Chocolate |Milk Chocolate |70% Dark Chocolate| Mousse",
+        "tint_default": "#FFF7DD",
+        "flavour_fallback": "70% Dark"
       }
     },
     "claims": {
@@ -438,6 +439,66 @@
         "link_label": "Shop all",
         "link_url": "/collections/shop-all?view=option-b"
       }
+    },
+    "inside_slab": {
+      "type": "plo-inside",
+      "settings": {
+        "handles": "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g,plaay-70-dark-chocolate-sea-salt-bar-6-x-80g,plaay-70-dark-chocolate-bar-6-x-80g,plaay-70-dark-chocolate-caramel-crunch-mousse-bar-6-x-80g,plaay-milk-chocolate-toffee-almond-bar-6-x-80g,plaay-milk-chocolate-cheesecake-bar-6-x-80g",
+        "eyebrow": "Inside the slab",
+        "heading": "What’s in",
+        "heading_light": "the slab",
+        "fill": "#F4C7D4",
+        "fills": "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g:#BFE3D9\nplaay-70-dark-chocolate-sea-salt-bar-6-x-80g:#C9D7F2\nplaay-70-dark-chocolate-bar-6-x-80g:#F4C7D4\nplaay-70-dark-chocolate-caramel-crunch-mousse-bar-6-x-80g:#DADDE0\nplaay-milk-chocolate-toffee-almond-bar-6-x-80g:#EBC6DA\nplaay-milk-chocolate-cheesecake-bar-6-x-80g:#F6C9CF"
+      },
+      "blocks": {
+        "fact_1": {
+          "type": "fact",
+          "settings": {
+            "big": "0 g",
+            "small": "refined sugar"
+          }
+        },
+        "fact_2": {
+          "type": "fact",
+          "settings": {
+            "big": "80 g",
+            "small": "per slab"
+          }
+        },
+        "fact_3": {
+          "type": "fact",
+          "settings": {
+            "big": "6",
+            "small": "slabs a box"
+          }
+        },
+        "point_4": {
+          "type": "point",
+          "settings": {
+            "text": "Real cocoa and cocoa butter"
+          }
+        },
+        "point_5": {
+          "type": "point",
+          "settings": {
+            "text": "No refined sugar"
+          }
+        },
+        "point_6": {
+          "type": "point",
+          "settings": {
+            "text": "100% clean ingredients"
+          }
+        }
+      },
+      "block_order": [
+        "fact_1",
+        "fact_2",
+        "fact_3",
+        "point_4",
+        "point_5",
+        "point_6"
+      ]
     }
   },
   "order": [
@@ -445,6 +506,7 @@
     "claims",
     "inside_pack",
     "inside_bar",
+    "inside_slab",
     "videos",
     "why",
     "reviews",

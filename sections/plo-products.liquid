@@ -9,13 +9,14 @@
     assign current_id = product.id
   endif
   assign shown = 0
+  assign lim = s.limit | default: 4
 -%}
 <div class="pl plo plo-sec">
   <div class="plo-wrap">
     {%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light, link_label: s.link_label, link_url: s.link_url -%}
     <div class="plo-grid">
       {%- for p in s.products -%}
-        {%- if p.id != current_id and shown < s.limit -%}
+        {%- if p.id != current_id and shown < lim -%}
           {%- render 'plo-card', product: p, eager: false, view: template.suffix -%}
           {%- assign shown = shown | plus: 1 -%}
         {%- endif -%}
