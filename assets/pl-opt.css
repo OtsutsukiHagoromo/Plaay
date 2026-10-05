@@ -1165,3 +1165,4 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 /* hero: dots over the slide on mobile, rating on one line */
 @media (max-width: 1023.98px) { .plo-car__dots { position: absolute; left: 0; right: 0; bottom: 10px; padding: 0; background: transparent !important; } }
 .plo-bn__proof { white-space: nowrap; }
+.plo-sec:has(.plo-vids):last-child, .shopify-section:last-child > .plo-sec:has(.plo-vids) { padding-bottom: var(--o-gap); }

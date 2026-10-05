@@ -95,9 +95,9 @@
               {%- if r.product_pictures_url != blank and r.is_shop_review != true -%}
                 <img class="plo-prev__av" src="{{ r.product_pictures_url }}" alt="" loading="lazy" width="48" height="48">
               {%- else -%}
-                <span class="plo-prev__av plo-prev__av--i" aria-hidden="true">{{ r.reviewer_initial | default: r.reviewer_name | slice: 0 }}</span>
+                <span class="plo-prev__av plo-prev__av--i" aria-hidden="true">{{ r.reviewer_initial | default: 'P' }}</span>
               {%- endif -%}
-              <span><b>{{ r.reviewer_name | default: 'Plaayer' }}</b>{%- if r.product_title != blank and r.is_shop_review != true -%}<small><a href="{{ r.product_url }}">{{ r.product_title }}</a></small>{%- endif -%}</span>
+              {%- assign rn = r.reviewer_name | default: 'Anonymous' | strip -%}{%- if rn == 'Anonymous' or rn == blank -%}{%- assign rn = 'A Plaayer' -%}{%- endif -%}<span><b>{{ rn }}</b>{%- if r.product_title != blank and r.is_shop_review != true -%}<small><a href="{{ r.product_url }}">{{ r.product_title }}</a></small>{%- endif -%}</span>
             </figcaption>
           </figure>
         {%- endfor -%}
