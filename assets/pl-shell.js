@@ -218,6 +218,37 @@
     if (popular) popular.removeAttribute('hidden');
     renderRecent();
   }
+  /* Highlight the typed words inside a title (escaped first, so only <mark> is markup). */
+  function hl(title, term) {
+    var out = esc(title);
+    term.split(/\s+/).filter(function (w) { return w.length > 1; }).forEach(function (w) {
+      var re = new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+      out = out.replace(re, '<mark>$1</mark>');
+    });
+    return out;
+  }
+  function allResultsUrl(term) {
+    var f = q('[data-pl-search-form]');
+    var v = f && f.getAttribute('data-view');
+    return searchUrl() + '?q=' + encodeURIComponent(term) + '&type=product&options%5Bprefix%5D=last&options%5Bfields%5D=title,product_type,variants.title,tag' + (v ? '&view=' + v : '');
+  }
+  function withView(url) {
+    var f = q('[data-pl-search-form]');
+    var v = f && f.getAttribute('data-view');
+    return v ? url + (url.indexOf('?') > -1 ? '&' : '?') + 'view=' + v : url;
+  }
+  function productRow(p, term) {
+    var img = p.image || (p.featured_image && p.featured_image.url) || '';
+    var many = p.variants && p.variants.length > 1;
+    return '<li><a class="pl-search__row" href="' + esc(withView(p.url)) + '">' +
+      (img ? '<img class="pl-search__thumb" src="' + esc(imgSize(img, 112)) + '" width="56" height="56" alt="" loading="lazy">' : '<span class="pl-search__thumb"></span>') +
+      '<span class="pl-search__info"><span class="pl-search__title">' + hl(p.title, term) + '</span>' +
+      (p.price ? '<span class="pl-search__price">' + (many ? 'From ' : '') + esc(money(p.price)) + '</span>' : '') + '</span>' +
+      icon('chev') + '</a></li>';
+  }
+  /* Results: what the shopper typed appears in the title -> "Best matches"; the rest of
+     Shopify's suggestions (matched on type / tags) -> "You might also like", capped at 3.
+     Query suggestions and ranges show as chips above. */
   function renderResults(json, term) {
     var results = q('[data-pl-search-results]');
     var popular = q('[data-pl-search-popular]');
@@ -226,39 +257,44 @@
     var res = (json && json.resources && json.resources.results) || {};
     var products = res.products || [];
     var cols = res.collections || [];
+    var queries = (res.queries || []).filter(function (x) { return x.text && x.text.toLowerCase() !== term.toLowerCase(); }).slice(0, 4);
+    var words = term.toLowerCase().split(/\s+/).filter(Boolean);
+    var hit = function (p) { var t = p.title.toLowerCase(); return words.every(function (w) { return t.indexOf(w) > -1; }); };
+    var best = products.filter(hit), rest = products.filter(function (p) { return !hit(p); }).slice(0, best.length ? 3 : 6);
     var html = '';
-    if (!products.length && !cols.length) {
-      html = '<p class="pl-search__empty">No results for “' + esc(term) + '”. Try “salted caramel” or browse all flavours.</p>';
-    } else {
-      html += '<p class="pl-label">Results</p><ul class="pl-search__list">';
-      products.forEach(function (p) {
-        var img = p.image || (p.featured_image && p.featured_image.url) || '';
-        html += '<li><a class="pl-search__row" href="' + esc(p.url) + '">' +
-          (img ? '<img class="pl-search__thumb" src="' + esc(imgSize(img, 112)) + '" width="56" height="56" alt="" loading="lazy">' : '<span class="pl-search__thumb"></span>') +
-          '<span class="pl-search__info"><span class="pl-search__title">' + esc(p.title) + '</span>' +
-          (p.price ? '<span class="pl-search__price">' + esc(money(p.price)) + '</span>' : '') + '</span>' +
-          icon('chev') + '</a></li>';
-      });
-      cols.forEach(function (c) {
-        var img = (c.featured_image && c.featured_image.url) || '';
-        html += '<li><a class="pl-search__row" href="' + esc(c.url) + '">' +
-          (img ? '<img class="pl-search__thumb" src="' + esc(imgSize(img, 112)) + '" width="56" height="56" alt="" loading="lazy">' : '<span class="pl-search__thumb"></span>') +
-          '<span class="pl-search__info"><span class="pl-search__title">' + esc(c.title) + '</span><span class="pl-search__price">Collection</span></span>' +
-          icon('chev') + '</a></li>';
-      });
-      html += '</ul>';
+    if (queries.length || cols.length) {
+      html += '<div class="pl-search__sugg">';
+      queries.forEach(function (x) { html += '<a class="pl-search__chip" href="' + esc(allResultsUrl(x.text)) + '" data-pl-search-all>' + icon('arrow') + hl(x.text, term) + '</a>'; });
+      cols.slice(0, 3).forEach(function (c) { html += '<a class="pl-search__chip is-col" href="' + esc(withView(c.url)) + '">' + esc(c.title) + '</a>'; });
+      html += '</div>';
     }
-    html += '<a class="pl-search__all" href="' + esc(searchUrl()) + '?q=' + encodeURIComponent(term) + '" data-pl-search-all>See all results ' + icon('arrow') + '</a>';
+    if (!products.length) {
+      html += '<div class="pl-search__empty"><b>No match for “' + esc(term) + '”</b><span>Check the spelling, or try a popular search below.</span></div>';
+    } else {
+      if (best.length) html += '<p class="pl-label">Best matches</p><ul class="pl-search__list">' + best.map(function (p) { return productRow(p, term); }).join('') + '</ul>';
+      if (rest.length) html += '<p class="pl-label pl-search__lbl2">' + (best.length ? 'You might also like' : 'Related') + '</p><ul class="pl-search__list">' + rest.map(function (p) { return productRow(p, term); }).join('') + '</ul>';
+      html += '<a class="pl-search__all" href="' + esc(allResultsUrl(term)) + '" data-pl-search-all>See all results for “' + esc(term) + '” ' + icon('arrow') + '</a>';
+    }
     results.innerHTML = html;
     results.removeAttribute('hidden');
-    if (popular) popular.setAttribute('hidden', '');
+    sel = -1;
+    if (popular) { if (products.length) popular.setAttribute('hidden', ''); else popular.removeAttribute('hidden'); }
     if (recent) recent.setAttribute('hidden', '');
+  }
+
+  /* Keyboard: arrow keys move through the result rows, Enter opens the highlighted one. */
+  var sel = -1;
+  function rows() { return qa('[data-pl-search-results] .pl-search__row, [data-pl-search-results] .pl-search__all'); }
+  function mark(i) {
+    var r = rows();
+    r.forEach(function (x, n) { x.classList.toggle('is-sel', n === i); });
+    if (r[i]) r[i].scrollIntoView({ block: 'nearest' });
   }
   function runSuggest(term) {
     if (controller) controller.abort();
     controller = window.AbortController ? new AbortController() : null;
     var url = searchUrl() + '/suggest.json?q=' + encodeURIComponent(term) +
-      '&resources[type]=product,collection&resources[limit]=6&resources[options][fields]=title,product_type,variants.title';
+      '&resources[type]=query,product,collection&resources[limit]=8&resources[limit_scope]=each&resources[options][unavailable_products]=last&resources[options][fields]=title,product_type,variants.title,tag';
     var opts = { credentials: 'same-origin' };
     if (controller) opts.signal = controller.signal;
     fetch(url, opts).then(function (r) { return r.json(); }).then(function (json) {
@@ -284,6 +320,13 @@
       clearTimeout(suggestTimer);
       if (v.length < 2) { showIdle(); return; }
       suggestTimer = setTimeout(function () { runSuggest(v); }, 200);
+    });
+    input.addEventListener('keydown', function (e) {
+      var r = rows();
+      if (!r.length) return;
+      if (e.key === 'ArrowDown') { e.preventDefault(); sel = Math.min(r.length - 1, sel + 1); mark(sel); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); sel = Math.max(-1, sel - 1); mark(sel); }
+      else if (e.key === 'Enter' && sel > -1 && r[sel]) { e.preventDefault(); saveRecent(input.value.trim()); window.location.href = r[sel].href; }
     });
     form.addEventListener('submit', function (e) {
       var v = input.value.trim();

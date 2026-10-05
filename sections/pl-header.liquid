@@ -161,8 +161,11 @@
 
   {%- comment -%} Search sheet {%- endcomment -%}
   <div class="pl-sheet pl-sheet--search" role="dialog" aria-modal="true" aria-label="Search" aria-hidden="true" data-pl-sheet="search">
-    <form class="pl-search__head" action="{{ routes.search_url }}" method="get" role="search" data-pl-search-form data-currency="{{ cart.currency.iso_code | default: shop.currency }}">
+    <form class="pl-search__head" action="{{ routes.search_url }}" method="get" role="search" data-pl-search-form data-currency="{{ cart.currency.iso_code | default: shop.currency }}"{% if template.suffix == 'option-b' %} data-view="option-b"{% endif %}>
         <input type="hidden" name="options[prefix]" value="last">
+        <input type="hidden" name="options[fields]" value="title,product_type,variants.title,tag">
+        <input type="hidden" name="type" value="product">
+        {%- if template.suffix == 'option-b' -%}<input type="hidden" name="view" value="option-b">{%- endif -%}
       <div class="pl-field pl-search__field">
         {%- render 'pl-icon', name: 'search', size: 20, stroke: 2 -%}
         <label class="pl-vh" for="pl-search-input-{{ section.id }}">Search</label>
@@ -176,13 +179,23 @@
     <div class="pl-search__body">
       <div class="pl-search__results" data-pl-search-results aria-live="polite" hidden></div>
       <section class="pl-search__group" data-pl-search-popular>
-        <p class="pl-label">Popular right now</p>
-        <div class="pl-pills pl-search__chips">
-          <a class="pl-pill" href="{{ routes.search_url }}?q=salted+caramel">Salted caramel</a>
-          <a class="pl-pill" href="{{ routes.collections_url }}/chocolate-truffles">Truffles</a>
-          <a class="pl-pill" href="{{ routes.collections_url }}/new-chocolate-slabs">New slabs</a>
-          <a class="pl-pill" href="{{ routes.collections_url }}/variety-packs">Gift packs</a>
-          <a class="pl-pill" href="/pages/subscribe-save">Subscribe &amp; Save</a>
+        <p class="pl-label">Popular searches</p>
+        <div class="pl-search__chips">
+          {%- assign pop = 'Salted caramel|Pistachio|Peanut butter|Dark chocolate|Gift box' | split: '|' -%}
+          {%- for t in pop -%}
+            <a class="pl-search__chip" href="{{ routes.search_url }}?q={{ t | url_encode }}&type=product&options%5Bprefix%5D=last{% if template.suffix == 'option-b' %}&view=option-b{% endif %}">{% render 'pl-icon', name: 'search', size: 13, stroke: 2.4 %}{{ t }}</a>
+          {%- endfor -%}
+        </div>
+        <p class="pl-label pl-search__lbl2">Shop by range</p>
+        <div class="pl-search__ranges">
+          {%- assign rr = 'Truffles|chocolate-truffles|plo-cat-truffles.jpg|#FED8B5,Bars|chocolate-bars|plo-cat-bars.jpg|#A9FAE8,Slabs|new-chocolate-slabs|plo-cat-slabs.jpg|#F8C5EB,Variety|variety-packs|plo-cat-packs.jpg|#FCD730' | split: ',' -%}
+          {%- for r in rr -%}
+            {%- assign f = r | split: '|' -%}
+            <a class="pl-search__range" href="{{ routes.collections_url }}/{{ f[1] }}{% if template.suffix == 'option-b' %}?view=option-b{% endif %}" style="--tile: {{ f[3] }}">
+              <img src="{{ f[2] | asset_url }}" alt="" loading="lazy" width="1448" height="1086">
+              <span>{{ f[0] }}</span>
+            </a>
+          {%- endfor -%}
         </div>
       </section>
       <section class="pl-search__group" data-pl-search-recent hidden>

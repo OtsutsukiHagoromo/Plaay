@@ -1,0 +1,131 @@
+{%- comment -%}
+  Option B search results (templates/search.option-b.json).
+  - Search is limited to product titles, types, variant names and tags (options[fields]) so
+    loose matches from descriptions do not flood the results.
+  - Big "Results for …" heading with the count, then range chips that filter the grid in place
+    (each card carries data-range from its collections), then the grid of plo-card.
+  - No results: a friendly line, popular searches and bestsellers.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign n = search.results_count
+  assign has_terms = false
+  if search.performed and search.terms != blank
+    assign has_terms = true
+  endif
+  assign pop = s.popular | split: '|'
+  assign view = template.suffix
+-%}
+<div class="pl plo plo-coll plo-srch" data-plo-srch>
+  <div class="plo-wrap">
+    <form class="plo-srch__form" action="{{ routes.search_url }}" method="get" role="search">
+      <input type="hidden" name="type" value="product">
+      <input type="hidden" name="options[prefix]" value="last">
+      <input type="hidden" name="options[fields]" value="title,product_type,variants.title,tag">
+      {%- if view != blank -%}<input type="hidden" name="view" value="{{ view }}">{%- endif -%}
+      <label class="pl-vh" for="plo-srch-q">Search</label>
+      <span class="plo-srch__field">
+        {%- render 'pl-icon', name: 'search', size: 20, stroke: 2.2 -%}
+        <input id="plo-srch-q" type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search flavours, packs, gifts" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
+      </span>
+      <button type="submit" class="plo-btn plo-srch__go">Search</button>
+    </form>
+
+    {%- if has_terms and n > 0 -%}
+      <h1 class="plo-srch__h"><span>{{ n }} {% if n == 1 %}result{% else %}results{% endif %} for</span> “{{ search.terms | escape }}”</h1>
+      {%- paginate search.results by 48 -%}
+        {%- capture cards -%}
+          {%- assign ranges = '' -%}
+          {%- for item in search.results -%}
+            {%- if item.object_type != 'product' -%}{%- continue -%}{%- endif -%}
+            {%- liquid
+              assign r = 'packs'
+              for c in item.collections
+                case c.handle
+                  when 'chocolate-truffles', 'limited-editions'
+                    assign r = 'truffles'
+                  when 'chocolate-bars'
+                    if r == 'packs'
+                      assign r = 'bars'
+                    endif
+                  when 'new-chocolate-slabs'
+                    assign r = 'slabs'
+                endcase
+              endfor
+              unless ranges contains r
+                assign ranges = ranges | append: r | append: ','
+              endunless
+              assign eager = false
+              if forloop.index <= 4
+                assign eager = true
+              endif
+            -%}
+            <div class="plo-srch__cell" data-range="{{ r }}">{%- render 'plo-card', product: item, eager: eager, view: view -%}</div>
+          {%- endfor -%}
+        {%- endcapture -%}
+        {%- assign range_list = ranges | split: ',' -%}
+        {%- if range_list.size > 1 -%}
+          <div class="plo-chips plo-srch__chips" role="group" aria-label="Filter results">
+            <button type="button" class="is-on" data-plo-srch-f="all" aria-pressed="true">All<small>{{ n }}</small></button>
+            {%- assign labels = 'truffles:Truffles,bars:Bars,slabs:Slabs,packs:Variety' | split: ',' -%}
+            {%- for l in labels -%}
+              {%- assign kv = l | split: ':' -%}
+              {%- if ranges contains kv[0] -%}<button type="button" data-plo-srch-f="{{ kv[0] }}" aria-pressed="false">{{ kv[1] }}</button>{%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        <div class="plo-grid plo-srch__grid">{{ cards }}</div>
+        {%- if paginate.next -%}
+          <div class="plo-more"><a class="plo-btn plo-btn--sec" href="{{ paginate.next.url }}">More results</a></div>
+        {%- endif -%}
+      {%- endpaginate -%}
+
+    {%- else -%}
+      <div class="plo-srch__none">
+        {%- if has_terms -%}
+          <h1 class="plo-srch__h"><span>No match for</span> “{{ search.terms | escape }}”</h1>
+          <p class="plo-srch__p">Check the spelling, or try one of these.</p>
+        {%- else -%}
+          <h1 class="plo-srch__h"><span>What are you</span> craving?</h1>
+        {%- endif -%}
+        <div class="plo-srch__pop">
+          {%- for t in pop -%}<a href="{{ routes.search_url }}?q={{ t | url_encode }}{% if view != blank %}&view={{ view }}{% endif %}">{%- render 'pl-icon', name: 'search', size: 14, stroke: 2.4 -%}{{ t }}</a>{%- endfor -%}
+        </div>
+      </div>
+      {%- if s.fallback != blank -%}
+        <div class="plo-srch__best">
+          {%- render 'plo-head', bold: s.fallback_heading, light: s.fallback_heading_light -%}
+          <div class="plo-grid">
+            {%- for p in s.fallback limit: 4 -%}{%- render 'plo-card', product: p, eager: false, view: view -%}{%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</div>
+<script>
+  (function () {
+    var root = document.querySelector('[data-plo-srch]');
+    if (!root) return;
+    root.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-plo-srch-f]');
+      if (!b) return;
+      var f = b.getAttribute('data-plo-srch-f');
+      root.querySelectorAll('[data-plo-srch-f]').forEach(function (x) { var on = x === b; x.classList.toggle('is-on', on); x.setAttribute('aria-pressed', on); });
+      root.querySelectorAll('.plo-srch__cell').forEach(function (c) { c.hidden = f !== 'all' && c.getAttribute('data-range') !== f; });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Preview: search",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "popular", "label": "Popular searches (| separated)", "default": "Salted caramel|Pistachio|Peanut butter|Dark chocolate|Truffles|Gift box" },
+    { "type": "product_list", "id": "fallback", "label": "Shown when nothing matches", "limit": 8 },
+    { "type": "text", "id": "fallback_heading", "label": "Their heading, bold", "default": "Our" },
+    { "type": "text", "id": "fallback_heading_light", "label": "Their heading, light", "default": "bestsellers" }
+  ]
+}
+{% endschema %}

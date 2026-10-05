@@ -1087,3 +1087,32 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
   .plo-hero__usps { grid-column: 1 / -1; grid-row: 3; margin-top: 6px; }
   .plo-hero--all .plo-hero__t, .plo-hero--all .plo-hero__n { grid-column: 1 / -1; }
 }
+
+/* ---------- search results (plo-search) ---------- */
+.plo-srch { padding-top: 20px; }
+.plo-srch__form { display: flex; gap: 8px; }
+.plo-srch__field { flex: 1; display: flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px; border: 2px solid var(--pl-navy); border-radius: 999px; background: #fff; }
+.plo-srch__field input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 16px; font-weight: 600; color: var(--pl-navy); }
+.plo-srch__field input::-webkit-search-cancel-button { -webkit-appearance: none; display: none; }
+.plo-srch__field:focus-within { box-shadow: 0 0 0 4px rgba(255, 182, 0, .45); }
+.plo-srch__go { height: 52px; padding: 0 22px; }
+.plo-srch__h { margin: 28px 0 0; font-size: 30px; font-weight: 900; line-height: 1; text-transform: uppercase; color: var(--pl-navy); overflow-wrap: anywhere; }
+.plo-srch__h span { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 700; letter-spacing: .1em; color: var(--pl-mute); }
+.plo-srch__chips { padding-top: 18px; }
+.plo-srch__chips button { flex: 0 0 auto; height: 38px; padding: 0 16px; border-radius: 999px; border: 2px solid var(--pl-navy); background: #fff; font: inherit; font-size: 14px; font-weight: 700; color: var(--pl-navy); cursor: pointer; }
+.plo-srch__chips button.is-on { background: var(--pl-yellow); box-shadow: 0 2px 0 var(--pl-navy); }
+.plo-srch__chips small { margin-left: 6px; font-size: 11px; opacity: .55; }
+.plo-srch__grid { margin-top: 20px; }
+.plo-srch__cell[hidden] { display: none; }
+.plo-srch__cell > * { height: 100%; }
+.plo-srch__p { margin: 10px 0 0; font-size: 15px; color: var(--pl-mute); }
+.plo-srch__pop { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.plo-srch__pop a { display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border-radius: 999px; background: var(--pl-cream); font-size: 14px; font-weight: 700; color: var(--pl-navy); }
+.plo-srch__pop a:hover { background: var(--pl-yellow); }
+.plo-srch__best { margin-top: 48px; }
+@media (min-width: 1024px) {
+  .plo-srch { padding-top: 40px; }
+  .plo-srch__form { max-width: 720px; }
+  .plo-srch__h { font-size: 56px; margin-top: 40px; }
+  .plo-srch__h span { font-size: 14px; }
+}
