@@ -256,17 +256,18 @@
     return false;
   }
 
-  function subscribe(line, input) {
+  function subscribe(line, input, planId) {
     var d = lineData(line);
-    if (!d.key || !d.planId) return;
+    var plan = planId || d.planId;
+    if (!d.key || !plan) return;
     setBusy(line, true);
-    post(CHANGE_URL, { id: d.key, quantity: d.qty, selling_plan: Number(d.planId), sections: SECTIONS })
+    post(CHANGE_URL, { id: d.key, quantity: d.qty, selling_plan: Number(plan), sections: SECTIONS })
       .then(function (res) {
         if (!res.ok) throw new Error((res.json && res.json.description) || 'Could not switch to a subscription');
         return render(res.json);
       })
       .catch(function () {
-        input.checked = false;
+        if (input) input.checked = false;
         setBusy(line, false);
         refreshAll();
       });
@@ -311,13 +312,28 @@
     if (t.checked) subscribe(line, t);
   }, true);
 
+  /* Purchase option buttons: One-time drops the plan, Subscribe adds the default (4-week) plan.
+     A tap on the option already chosen does nothing. */
   document.addEventListener('click', function (e) {
-    var btn = e.target.closest && e.target.closest('[data-pl-sub-off]');
+    var btn = e.target.closest && e.target.closest('[data-pl-sub-off], [data-pl-sub-on]');
     if (!btn) return;
     e.preventDefault();
     var line = btn.closest('[data-cart-item]');
-    if (line) unsubscribe(line);
+    if (!line || line.classList.contains('is-busy')) return;
+    var subbed = line.classList.contains('is-sub');
+    if (btn.hasAttribute('data-pl-sub-off') && subbed) unsubscribe(line);
+    if (btn.hasAttribute('data-pl-sub-on') && !subbed) subscribe(line, null);
   });
+
+  /* Frequency picker: move the line to the chosen plan. */
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (!t || !t.matches || !t.matches('[data-pl-sub-freq]')) return;
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+    var line = t.closest('[data-cart-item]');
+    if (line) subscribe(line, null, t.value);
+  }, true);
 
   /* ---------- boot ---------- */
   function init() {

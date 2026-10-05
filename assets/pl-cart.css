@@ -268,3 +268,20 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 .pl .pl-item--gift .pl-item__row { gap: 0; }
 .pl .pl-item--gift .pl-item__now { font-size: 14px; color: var(--pl-green); }
 .pl .pl-item--gift .pl-item__top { align-items: center; }
+
+/* Purchase option per line: One-time | Subscribe, frequency picker, saving */
+.pl .pl-buymode { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; border-top: 1px dashed rgba(8, 29, 72, .12); }
+.pl .pl-seg { position: relative; display: grid; grid-template-columns: 1fr 1fr; padding: 3px; border-radius: 999px; background: var(--pl-cream); }
+.pl .pl-seg__b { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; gap: 5px; height: 32px; padding: 0 10px; border: 0; border-radius: 999px; background: transparent; font: inherit; font-size: 12px; font-weight: 800; color: var(--pl-mute); cursor: pointer; transition: color .2s ease, background .25s ease, box-shadow .25s ease; }
+.pl .pl-seg__b em { font-style: normal; color: var(--pl-green); font-weight: 800; }
+.pl .pl-seg__b.is-on { background: #fff; color: var(--pl-navy); box-shadow: 0 1px 2px rgba(8, 29, 72, .08), 0 2px 8px rgba(8, 29, 72, .08); }
+.pl .pl-buymode.is-sub .pl-seg__b.is-on { background: var(--pl-navy); color: #fff; }
+.pl .pl-buymode.is-sub .pl-seg__b.is-on em { color: var(--pl-yellow); }
+.pl .pl-seg__b:not(.is-on):hover { color: var(--pl-navy); }
+.pl .pl-buymode__row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.pl .pl-freq { position: relative; display: inline-flex; align-items: center; }
+.pl .pl-freq select { appearance: none; -webkit-appearance: none; height: 30px; padding: 0 28px 0 12px; border: 1px solid rgba(8, 29, 72, .18); border-radius: 999px; background: #fff; font: inherit; font-size: 12px; font-weight: 700; color: var(--pl-navy); cursor: pointer; }
+.pl .pl-freq .pl-ic { position: absolute; right: 10px; pointer-events: none; color: var(--pl-navy); }
+.pl .pl-buymode__save { font-size: 12px; font-weight: 800; color: var(--pl-green); white-space: nowrap; }
+.pl .pl-buymode__hint { margin: 0; font-size: 11px; line-height: 1.35; color: var(--pl-mute); }
+.pl .pl-item.is-busy .pl-buymode { opacity: .5; pointer-events: none; }

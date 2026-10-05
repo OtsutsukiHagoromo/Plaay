@@ -86,6 +86,28 @@
         endif
         assign offer_saving = line_price | times: plan_pct | divided_by: 100
 
+        comment
+          Every plan on the product, for the frequency picker ("Delivery every 2 Weeks" -> "Every 2 weeks").
+        endcomment
+        assign cur_plan_id = ''
+        if is_sub
+          assign cur_plan_id = item.selling_plan_allocation.selling_plan.id
+        endif
+        capture plan_opts
+          if has_plans
+            for plan in item.product.selling_plan_groups.first.selling_plans
+              assign pl_label = plan.name | downcase | remove: 'delivery' | remove: 'every' | strip | prepend: 'Every '
+              assign pl_sel = ''
+              if plan.id == cur_plan_id
+                assign pl_sel = ' selected'
+              endif
+              echo '<option value="' | append: plan.id | append: '"' | append: pl_sel | append: '>' | append: pl_label | append: '</option>'
+            endfor
+          endif
+        endcapture
+
+        assign variant_label = item.variant.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: ' G', 'g' | replace: 'G', 'g'
+
         assign sub_pct = 15
         assign sub_freq = 'Every 4 weeks'
         if is_sub
@@ -134,7 +156,7 @@
               {%- endunless -%}
             </div>
             {%- if show_variant -%}
-              <span class="pl-item__variant">{{ item.variant.title }}</span>
+              <span class="pl-item__variant">{{ variant_label }}</span>
             {%- endif -%}
             <div class="pl-item__row">
               {%- if is_gift -%}
@@ -151,6 +173,8 @@
               <div class="pl-item__price">
                 {%- if show_was -%}
                   <s class="pl-item__was">{% render 'plaay-aed', fils: line_compare %}</s>
+                {%- elsif is_sub and sub_saving > 0 -%}
+                  <s class="pl-item__was">{% render 'plaay-aed', fils: line_one_time %}</s>
                 {%- endif -%}
                 {%- if is_gift and line_price == 0 -%}
                   <b class="pl-item__now">Free</b>
@@ -162,25 +186,29 @@
           </div>
         </div>
 
-        {%- if is_sub -%}
-          <div class="pl-item__sub">
-            <span class="pl-tag pl-tag--navy pl-item__subtag">{% render 'pl-icon', name: 'refresh', size: 12, stroke: 2.4 %}{{ sub_freq }} &middot; {{ sub_pct }}% off</span>
-            {%- if sub_saving > 0 -%}
-              <span class="pl-item__saving">−{% render 'plaay-aed', fils: sub_saving %}</span>
+        {%- if has_plans and plan_id != '' -%}
+          {%- comment -%}
+            Purchase option: One-time | Subscribe, and while subscribed a frequency picker.
+            Wired in assets/pl-cart.js ([data-pl-sub-on], [data-pl-sub-off], [data-pl-sub-freq]).
+          {%- endcomment -%}
+          <div class="pl-buymode{% if is_sub %} is-sub{% endif %}">
+            <div class="pl-seg" role="group" aria-label="Purchase option for {{ item.product.title | escape }}">
+              <button type="button" class="pl-seg__b{% unless is_sub %} is-on{% endunless %}" data-pl-sub-off aria-pressed="{% if is_sub %}false{% else %}true{% endif %}">One-time</button>
+              <button type="button" class="pl-seg__b{% if is_sub %} is-on{% endif %}" data-pl-sub-on aria-pressed="{% if is_sub %}true{% else %}false{% endif %}">{% render 'pl-icon', name: 'refresh', size: 12, stroke: 2.4 %}Subscribe <em>−{{ sub_pct }}%</em></button>
+            </div>
+            {%- if is_sub -%}
+              <div class="pl-buymode__row">
+                <label class="pl-freq">
+                  <span class="pl-vh">Delivery frequency</span>
+                  <select data-pl-sub-freq>{{ plan_opts }}</select>
+                  {%- render 'pl-icon', name: 'chev-down', size: 14, stroke: 2.4 -%}
+                </label>
+                {%- if sub_saving > 0 -%}<span class="pl-buymode__save">You save {% render 'plaay-aed', fils: sub_saving %}</span>{%- endif -%}
+              </div>
+            {%- else -%}
+              <p class="pl-buymode__hint">Subscribe and save {% render 'plaay-aed', fils: offer_saving %} · free delivery · skip or cancel any time</p>
             {%- endif -%}
-            <button type="button" class="pl-item__switch" data-pl-sub-off aria-label="Switch {{ item.product.title | escape }} to one-time">One-time</button>
           </div>
-        {%- elsif has_plans and plan_id != '' -%}
-          <label class="pl-item__offer">
-            <span class="pl-col pl-gap1">
-              <span class="pl-item__offer-t">Subscribe &amp; save {% render 'plaay-aed', fils: offer_saving %}</span>
-              <span class="pl-item__offer-s">Every 4 weeks &middot; free delivery &middot; cancel any time</span>
-            </span>
-            <span class="pl-switch">
-              <input type="checkbox" data-pl-sub-toggle aria-label="Subscribe and save on {{ item.product.title | escape }}">
-              <span></span>
-            </span>
-          </label>
         {%- endif -%}
       </div>
     {%- endfor -%}
