@@ -160,7 +160,7 @@
   {% render 'shogun-head' %}
 </head>
 
-    <body class="pl-body pl-has-tabbar template-{{ template | remove: '.' }}{% if pl_is_legacy %} pl-legacy{% endif %}{% if plo_skin != blank %} pl-skin-{{ plo_skin }}{% endif %}">
+    <body class="pl-body pl-has-tabbar template-{{ template | remove: '.' }}{% if template.suffix == 'option-a' or template.suffix == 'option-b' %} template-{{ template.name }}{% endif %}{% if pl_is_legacy %} pl-legacy{% endif %}{% if plo_skin != blank %} pl-skin-{{ plo_skin }}{% endif %}">
     {%- render 'icon-sprite' -%}
     <a class="plaay-skip-link" href="#main">Skip to content</a>
     {% section 'pl-announcement' %}

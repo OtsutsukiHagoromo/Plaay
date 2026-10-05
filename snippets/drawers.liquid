@@ -1,5 +1,5 @@
 <site-drawers data-module="drawers">
-  {%- unless template == 'cart' -%}
+  {%- unless template.name == 'cart' -%}
     {%- render 'drawer-cart' -%}
   {%- endunless -%}
 

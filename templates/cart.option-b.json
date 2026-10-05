@@ -10,17 +10,8 @@
 {
   "sections": {
     "main": {
-      "type": "plo-cart",
-      "settings": {
-        "upsell": "triple-chocolate-truffle",
-        "trust": "Secure checkout · 1–2 day UAE delivery · Halal",
-        "empty_products": [
-          "new-chocolate-bars-mix-pack-of-5",
-          "og-plaayer-pack",
-          "triple-chocolate-truffle",
-          "salted-caramel-bar-x12"
-        ]
-      }
+      "type": "main-cart",
+      "settings": {}
     }
   },
   "order": [

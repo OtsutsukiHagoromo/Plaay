@@ -41,7 +41,7 @@
     <span class="pl-tabbar__ic">{% render 'pl-icon', name: 'search', size: 22, stroke: 2 %}</span>
     <span>Search</span>
   </button>
-  {%- if template == 'cart' -%}
+  {%- if template.name == 'cart' -%}
     <a class="pl-tabbar__tab is-on" href="{{ routes.cart_url }}" aria-current="page">
       <span class="pl-tabbar__ic">
         {%- render 'pl-icon', name: 'bag', size: 22, stroke: 2 -%}
