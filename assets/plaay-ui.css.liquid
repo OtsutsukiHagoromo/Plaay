@@ -316,7 +316,7 @@
 /* ---------- sticky bars ---------- */
 .pl-sticky { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--pl-z-sticky); background: rgba(255,253,247,.97); backdrop-filter: blur(8px); border-top: 1px solid var(--pl-line); padding: 10px var(--pl-gutter) calc(10px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 12px; transform: translateY(110%); transition: transform .2s ease; }
 .pl-sticky.is-on { transform: translateY(0); }
-.pl-has-tabbar .pl-sticky { bottom: calc(var(--pl-tabbar-h) + var(--pl-preview-bar, 0px)); }
+.pl-has-tabbar .pl-sticky { bottom: calc(var(--pl-tab-offset, var(--pl-tabbar-h)) + var(--pl-preview-bar, 0px)); transition: transform .2s ease, bottom .35s cubic-bezier(.2, .7, .2, 1); }
 @media (min-width: 1024px) { .pl-sticky { display: none; } }
 
 /* ---------- reveal (Plaay Motion, reduced-motion safe) ---------- */

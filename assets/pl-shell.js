@@ -115,7 +115,11 @@
   }
   function syncCount(n) {
     qa('[data-cart-count]').forEach(function (el) {
-      if (n !== null && n !== undefined && String(n) !== el.textContent.trim()) el.textContent = String(n);
+      var before = parseInt(el.textContent, 10) || 0;
+      if (n !== null && n !== undefined && String(n) !== el.textContent.trim()) {
+        el.textContent = String(n);
+        if (Number(n) > before) { el.classList.remove('is-bump'); void el.offsetWidth; el.classList.add('is-bump'); }
+      }
       var v = parseInt(el.textContent, 10) || 0;
       if (v === 0) el.setAttribute('hidden', ''); else el.removeAttribute('hidden');
     });
@@ -378,4 +382,20 @@
   }
   [0, 800, 2500].forEach(function (t) { setTimeout(previewBarOffset, t); });
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', init); else init();
+
+  /* ---------- mobile tab bar: hide while scrolling down, show on scroll up ---------- */
+  (function () {
+    var bar = q('[data-pl-tabbar]');
+    if (!bar) return;
+    var lastY = window.scrollY, ticking = false;
+    function update() {
+      ticking = false;
+      var y = window.scrollY, dy = y - lastY;
+      var nearEnd = window.innerHeight + y >= document.documentElement.scrollHeight - 80;
+      if (active || y < 120 || nearEnd || dy < -6) document.body.classList.remove('pl-tab-hide');
+      else if (dy > 6) document.body.classList.add('pl-tab-hide');
+      if (Math.abs(dy) > 6) lastY = y;
+    }
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  })();
 })();

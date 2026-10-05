@@ -1,6 +1,6 @@
 {%- comment -%}
   Plaay 2026 mobile tab bar (< 1024px). Home / Shop (menu sheet) / Search (search sheet) /
-  Bag (cart drawer, shows [data-cart-count]) / Account. Rendered last in layout/theme.liquid.
+  Account. The bag lives in the header (top right). The bar hides while scrolling down. Rendered last in layout/theme.liquid.
   Behaviour comes from assets/pl-shell.js (data-pl-tab, data-pl-tab-path); it does not use
   assets/plaay-bottom-nav.js. Styles: assets/pl-shell.css.
 {%- endcomment -%}
@@ -9,7 +9,6 @@
   assign on_home = false
   assign on_shop = false
   assign on_search = false
-  assign on_bag = false
   assign on_account = false
   if path == '/' or path == routes.root_url
     assign on_home = true
@@ -17,8 +16,6 @@
     assign on_shop = true
   elsif path contains '/search'
     assign on_search = true
-  elsif path contains '/cart'
-    assign on_bag = true
   elsif path contains '/account'
     assign on_account = true
   endif
@@ -41,23 +38,6 @@
     <span class="pl-tabbar__ic">{% render 'pl-icon', name: 'search', size: 22, stroke: 2 %}</span>
     <span>Search</span>
   </button>
-  {%- if template.name == 'cart' -%}
-    <a class="pl-tabbar__tab is-on" href="{{ routes.cart_url }}" aria-current="page">
-      <span class="pl-tabbar__ic">
-        {%- render 'pl-icon', name: 'bag', size: 22, stroke: 2 -%}
-        <span class="pl-count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
-      </span>
-      <span>Bag</span>
-    </a>
-  {%- else -%}
-    <button type="button" class="pl-tabbar__tab{% if on_bag %} is-on{% endif %}" data-pl-tab="bag" aria-label="Bag">
-      <span class="pl-tabbar__ic">
-        {%- render 'pl-icon', name: 'bag', size: 22, stroke: 2 -%}
-        <span class="pl-count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
-      </span>
-      <span aria-hidden="true">Bag</span>
-    </button>
-  {%- endif -%}
   <a class="pl-tabbar__tab{% if on_account %} is-on{% endif %}" href="{{ account_url }}" data-pl-tab-path="/account"{% if on_account %} aria-current="page"{% endif %}>
     <span class="pl-tabbar__ic">{% render 'pl-icon', name: 'user', size: 22, stroke: 2 %}</span>
     <span>Account</span>

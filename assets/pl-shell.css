@@ -332,3 +332,27 @@ body.pl-lock { overflow: hidden; }
 .pl-tabbar .pl-count { top: -7px; right: -11px; }
 @media (min-width: 1024px) { .pl-tabbar { display: none; } }
 .pl-mtile__pic img.is-photo { filter: brightness(1.09) contrast(1.04); }
+
+/* ---------- mobile header + tab bar (one job each) ----------
+   Top: logo on the left, bag (with count) on the right.
+   Bottom tab bar: Home / Shop / Search / Account. It slides away while scrolling down and
+   comes back on scroll up; everything pinned above it follows --pl-tab-offset. */
+:root { --pl-tab-offset: var(--pl-tabbar-h); }
+body.pl-tab-hide { --pl-tab-offset: 0px; }
+@media (max-width: 1023.98px) {
+  .pl-header__row { grid-template-columns: auto 1fr; }
+  .pl-header__left { display: none; }
+  .pl-header__logo { justify-self: start; }
+  .pl-header__logo img { height: 24px; }
+  .pl-header .pl-header__search-btn, .pl-header .pl-header__account { display: none; }
+  .pl-shell .pl-header .header__icon--cart { display: inline-flex !important; margin-right: -8px; }
+  .pl-tabbar { grid-template-columns: repeat(4, minmax(0, 1fr)); transition: transform .35s cubic-bezier(.2, .7, .2, 1); box-shadow: 0 -8px 24px -18px rgba(8, 29, 72, .35); }
+  body.pl-tab-hide .pl-tabbar { transform: translateY(calc(100% + 2px)); }
+}
+.pl-tabbar__tab { font-size: 11px; }
+.pl-tabbar__ic::before { transition: opacity .2s ease, transform .3s cubic-bezier(.3, 1.6, .5, 1); }
+.pl-tabbar__tab:active .pl-tabbar__ic { transform: scale(.9); }
+.pl-tabbar__ic { transition: transform .15s ease; }
+/* bag count: a little bounce when it goes up */
+@keyframes pl-bump { 0% { transform: scale(1); } 35% { transform: scale(1.45); } 70% { transform: scale(.9); } 100% { transform: scale(1); } }
+.pl-count.is-bump { animation: pl-bump .5s cubic-bezier(.3, 1.6, .5, 1); }
