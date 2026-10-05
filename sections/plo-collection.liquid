@@ -43,12 +43,12 @@
   endfor
   comment
     Banner priority: collection metafields custom.banner (+ custom.banner_mobile) > the theme photo
-    for this handle > the collection's own image.
+    for this handle > a plain colour banner. (The old collection images were not made for banners.)
   endcomment
   assign banner_d = collection.metafields.custom.banner.value
   assign banner_m = collection.metafields.custom.banner_mobile.value
   assign has_photo = false
-  if banner_d != blank or b_asset != blank or collection.image != blank
+  if banner_d != blank or b_asset != blank
     assign has_photo = true
   endif
 
@@ -77,8 +77,6 @@
         </picture>
       {%- elsif b_asset != blank -%}
         <img class="plo-hero__img is-half" src="{{ b_asset | asset_url }}" alt="" width="1448" height="1086" loading="eager" fetchpriority="high">
-      {%- elsif collection.image != blank -%}
-        {{ collection.image | image_url: width: 2400 | image_tag: class: 'plo-hero__img', loading: 'eager', sizes: '100vw', widths: '800, 1200, 1600, 2400', alt: '' }}
       {%- endif -%}
       <div class="plo-wrap plo-hero__in">
         <p class="plo-hero__n">{{ collection.products_count }} products</p>
@@ -219,7 +217,7 @@
       "type": "textarea",
       "id": "banners",
       "label": "Banners (handle|theme asset|backdrop colour|photo focus|fact;fact)",
-      "info": "Photo order: collection metafield custom.banner (and custom.banner_mobile), then this theme photo, then the collection image."
+      "info": "Photo order: collection metafield custom.banner (and custom.banner_mobile), then this theme photo, else a plain colour banner."
     },
     {
       "type": "text",
