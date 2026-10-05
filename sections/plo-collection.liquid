@@ -20,8 +20,8 @@
   assign current_sort = collection.sort_by | default: collection.default_sort_by
 
   comment
-    Banner: the collection's own image (Shopify admin > Collection > Image) wins; otherwise the
-    row for this handle in "Banners" (handle|theme asset|backdrop colour|photo focus|fact;fact).
+    Banner settings for this handle from "Banners" (handle|theme asset|backdrop colour|photo
+    focus|fact;fact).
   endcomment
   assign b_asset = ''
   assign b_tint = '#FFF6DE'
@@ -41,8 +41,14 @@
       assign b_facts = f[4] | split: ';'
     endif
   endfor
+  comment
+    Banner priority: collection metafields custom.banner (+ custom.banner_mobile) > the theme photo
+    for this handle > the collection's own image.
+  endcomment
+  assign banner_d = collection.metafields.custom.banner.value
+  assign banner_m = collection.metafields.custom.banner_mobile.value
   assign has_photo = false
-  if collection.image != blank or b_asset != blank
+  if banner_d != blank or b_asset != blank or collection.image != blank
     assign has_photo = true
   endif
 
@@ -64,10 +70,15 @@
 <div class="pl plo">
   {%- paginate collection.products by s.per_page -%}
     <header class="plo-hero{% if has_photo %} plo-hero--photo{% endif %}{% if is_all %} plo-hero--all{% endif %}" style="--tint: {{ b_tint }}; --pos: {{ b_pos }};">
-      {%- if collection.image != blank -%}
-        {{ collection.image | image_url: width: 2400 | image_tag: class: 'plo-hero__img', loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '800, 1200, 1600, 2400', alt: '' }}
+      {%- if banner_d != blank -%}
+        <picture>
+          {%- if banner_m != blank -%}<source media="(max-width: 767px)" srcset="{{ banner_m | image_url: width: 800 }} 800w, {{ banner_m | image_url: width: 1200 }} 1200w" sizes="100vw">{%- endif -%}
+          {{ banner_d | image_url: width: 2400 | image_tag: class: 'plo-hero__img', loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '1200, 1600, 2400', alt: '' }}
+        </picture>
       {%- elsif b_asset != blank -%}
         <img class="plo-hero__img" src="{{ b_asset | asset_url }}" alt="" width="1100" height="825" loading="eager" fetchpriority="high">
+      {%- elsif collection.image != blank -%}
+        {{ collection.image | image_url: width: 2400 | image_tag: class: 'plo-hero__img', loading: 'eager', sizes: '100vw', widths: '800, 1200, 1600, 2400', alt: '' }}
       {%- endif -%}
       <div class="plo-wrap plo-hero__in">
         <p class="plo-hero__n">{{ collection.products_count }} products</p>
@@ -118,12 +129,12 @@
         {%- for h in chip_handles -%}
           {%- assign gc = collections[h] -%}
           {%- if h == collection.handle or gc == blank or gc.products_count == 0 -%}{%- continue -%}{%- endif -%}
-          <section class="plo-group">
-            <div class="plo-group__head">
-              <h2 class="plo-group__t">{{ gc.title }} <small>{{ gc.products_count }}</small></h2>
-              <a class="plo-group__all" href="{{ gc.url }}{% if view_q != blank %}?{{ view_q }}{% endif %}">See all {% render 'pl-icon', name: 'arrow-right', size: 14, stroke: 2.4 %}</a>
+          <section class="plo-range">
+            <div class="plo-range__head">
+              <h2 class="plo-range__t">{{ chip_labels[forloop.index0] }} <small>{{ gc.products_count }}</small></h2>
+              <a class="plo-range__all" href="{{ gc.url }}{% if view_q != blank %}?{{ view_q }}{% endif %}">See all {% render 'pl-icon', name: 'arrow-right', size: 14, stroke: 2.4 %}</a>
             </div>
-            <div class="plo-rel__row plo-group__row">
+            <div class="plo-rel__row plo-range__row">
               {%- for product in gc.products limit: 8 -%}
                 {%- render 'plo-card', product: product, eager: false, skip_new: true, view: template.suffix -%}
               {%- endfor -%}
@@ -208,7 +219,7 @@
       "type": "textarea",
       "id": "banners",
       "label": "Banners (handle|theme asset|backdrop colour|photo focus|fact;fact)",
-      "info": "Used when the collection has no image of its own in Shopify admin."
+      "info": "Photo order: collection metafield custom.banner (and custom.banner_mobile), then this theme photo, then the collection image."
     },
     {
       "type": "text",
