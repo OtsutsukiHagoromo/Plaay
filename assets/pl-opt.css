@@ -1271,3 +1271,11 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
 /* Gallery counter: only visible while swiping (pl-opt.js adds .is-live). */
 .plo-gal__count { opacity: 0; transform: translateY(-4px); transition: opacity .5s ease, transform .5s ease; }
 .plo-gal__count.is-live { opacity: 1; transform: none; transition-duration: .15s; }
+.plo-buy__row .plo-step--lg button { width: 32px; }
+.plo-buy__row .plo-step--lg input { width: 24px; }
+@media (max-width: 400px) {
+  /* Narrow phones: label over price, no pill, so nothing truncates. */
+  .plo-buy__add { flex-direction: column; justify-content: center; align-items: center; gap: 1px; padding: 0 12px; line-height: 1.1; }
+  .plo-buy__lbl { font-size: 15px; }
+  .plo-buy__p { padding: 0; background: none; font-size: 12px; font-weight: 700; opacity: .85; }
+}
