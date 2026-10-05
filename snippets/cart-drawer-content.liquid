@@ -75,13 +75,10 @@
 
 {%- capture ladder_html -%}
   <div class="pl-card pl-ladder">
-    {%- if reached >= 0 -%}
-      <p class="pl-ladder__done pl-small pl-b pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}{{ done_label }} unlocked</p>
-    {%- endif -%}
     {%- if reached < 3 -%}
-      <p class="pl-ladder__msg">{% render 'plaay-aed', fils: remaining_fils %} more unlocks {{ next_label }}</p>
+      <p class="pl-ladder__msg"><b>{% render 'plaay-aed', fils: remaining_fils %}</b> away from <b>{{ next_label }}</b></p>
     {%- else -%}
-      <p class="pl-ladder__msg">All rewards unlocked</p>
+      <p class="pl-ladder__msg pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}All rewards unlocked</p>
     {%- endif -%}
     {%- render 'cart-tier-bar' -%}
   </div>

@@ -98,19 +98,29 @@
       </p>
     {%- endif -%}
 
-    <div class="plaay-tier-bar__track" role="progressbar" aria-valuenow="{{ bar_pct }}" aria-valuemin="0" aria-valuemax="100">
-      <div class="plaay-tier-bar__fill" style="width:{{ bar_pct }}%"></div>
-    </div>
-
-    <div class="plaay-tier-bar__pills">
+    {%- comment -%}
+      Rail: the track with one dot per stop, placed at the stop's share of the top threshold.
+      Labels sit under their dots (amount + short reward). Reached stops get a check.
+    {%- endcomment -%}
+    {%- assign next_i = reached | plus: 1 -%}
+    <div class="plaay-tier-bar__rail">
+      <div class="plaay-tier-bar__track" role="progressbar" aria-valuenow="{{ bar_pct }}" aria-valuemin="0" aria-valuemax="100">
+        <div class="plaay-tier-bar__fill" style="width:{{ bar_pct }}%"></div>
+      </div>
       {%- for amt in stop_amounts -%}
         {%- assign amt_fils = amt | times: 100 -%}
-        {%- assign pill_done = false -%}
-        {%- if total >= amt_fils -%}{%- assign pill_done = true -%}{%- endif -%}
-        <span class="plaay-tier-bar__pill{% if pill_done %} plaay-tier-bar__pill--done{% endif %}">
-          {%- if pill_done -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
-          {%- if forloop.first -%}{{ stop_labels[forloop.index0] }}{%- else -%}AED {{ amt }} &#8594; {{ stop_labels[forloop.index0] }}{%- endif -%}
+        {%- assign at = amt_fils | times: 100 | divided_by: last_fils -%}
+        <span class="plaay-tier-bar__dot{% if total >= amt_fils %} is-done{% elsif forloop.index0 == next_i %} is-next{% endif %}" style="left:{{ at }}%">
+          {%- if total >= amt_fils -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
         </span>
+      {%- endfor -%}
+    </div>
+    <div class="plaay-tier-bar__stops">
+      {%- for amt in stop_amounts -%}
+        {%- assign amt_fils = amt | times: 100 -%}
+        {%- assign at = amt_fils | times: 100 | divided_by: last_fils -%}
+        {%- assign short = stop_labels[forloop.index0] | replace: ' off + Mystery Gift', ' + gift' | replace: ' Off + Mystery Gift', ' + gift' | replace: 'Mystery Gift', 'Gift' -%}
+        <span class="plaay-tier-bar__stop{% if total >= amt_fils %} is-done{% endif %}{% if forloop.last %} is-last{% endif %}" style="left:{{ at }}%"><b>AED {{ amt }}</b>{{ short }}</span>
       {%- endfor -%}
     </div>
   </div>

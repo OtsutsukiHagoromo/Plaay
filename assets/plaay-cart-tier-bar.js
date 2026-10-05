@@ -85,15 +85,20 @@
     // maths gives 58, so the bar twitched back a percent on the first client update.
     var pct = Math.min(100, Math.floor(total * 100 / last));
 
-    var pills = '';
+    // Rail: one dot per stop at its share of the top threshold, labels underneath.
+    // Same markup as snippets/cart-tier-bar.liquid (integer maths to match Liquid).
+    var dots = '', labels = '';
     for (var i = 0; i < stops.length; i += 1) {
-      var label = i === 0 ? stops[i].label : 'AED ' + (stops[i].fils / 100) + ' → ' + stops[i].label;
-      pills += pill(total >= stops[i].fils, label);
+      var done = total >= stops[i].fils;
+      var at = Math.floor(stops[i].fils * 100 / last);
+      var short = stops[i].label.replace(' off + Mystery Gift', ' + gift').replace(' Off + Mystery Gift', ' + gift').replace('Mystery Gift', 'Gift');
+      dots += '<span class="plaay-tier-bar__dot' + (done ? ' is-done' : (i === reached + 1 ? ' is-next' : '')) + '" style="left:' + at + '%">' + (done ? CHECK : '') + '</span>';
+      labels += '<span class="plaay-tier-bar__stop' + (done ? ' is-done' : '') + (i === stops.length - 1 ? ' is-last' : '') + '" style="left:' + at + '%"><b>AED ' + (stops[i].fils / 100) + '</b>' + short + '</span>';
     }
 
     return '<p class="plaay-tier-bar__msg' + (msgDone ? ' plaay-tier-bar__msg--done' : '') + '">' + msg + '</p>' +
-      track(pct) +
-      '<div class="plaay-tier-bar__pills">' + pills + '</div>';
+      '<div class="plaay-tier-bar__rail">' + track(pct) + dots + '</div>' +
+      '<div class="plaay-tier-bar__stops">' + labels + '</div>';
   }
 
   // Scroll position and unlocked-tier index are tracked per bar, because the drawer bar
@@ -148,11 +153,11 @@
       var all = bars();
       for (var i = 0; i < all.length; i += 1) {
         var bar = all[i];
-        // Seed from the tier the SERVER actually rendered, counted off the ticked pills.
+        // Seed from the tier the SERVER actually rendered, counted off the ticked dots.
         // reachedIndex(0, ...) was always -1, so a page loaded with an already-qualifying
         // cart treated its first update as a tier gain and fired the unlock celebration
         // scroll when nothing had been crossed.
-        var doneCount = bar.querySelectorAll('.plaay-tier-bar__pill--done').length;
+        var doneCount = bar.querySelectorAll('.plaay-tier-bar__dot.is-done').length;
         bar.setAttribute('data-tier-index', doneCount - 1);
         scrollPillsToActive(bar, false);
       }

@@ -166,15 +166,15 @@
           <div class="pl-item__sub">
             <span class="pl-tag pl-tag--navy pl-item__subtag">{% render 'pl-icon', name: 'refresh', size: 12, stroke: 2.4 %}{{ sub_freq }} &middot; {{ sub_pct }}% off</span>
             {%- if sub_saving > 0 -%}
-              <span class="pl-item__saving">Saving {% render 'plaay-aed', fils: sub_saving %}</span>
+              <span class="pl-item__saving">−{% render 'plaay-aed', fils: sub_saving %}</span>
             {%- endif -%}
-            <button type="button" class="pl-item__switch" data-pl-sub-off>Switch to one-time</button>
+            <button type="button" class="pl-item__switch" data-pl-sub-off aria-label="Switch {{ item.product.title | escape }} to one-time">One-time</button>
           </div>
         {%- elsif has_plans and plan_id != '' -%}
           <label class="pl-item__offer">
             <span class="pl-col pl-gap1">
               <span class="pl-item__offer-t">Subscribe &amp; save {% render 'plaay-aed', fils: offer_saving %}</span>
-              <span class="pl-item__offer-s">Every 4 weeks &middot; free delivery &middot; cancel anytime</span>
+              <span class="pl-item__offer-s">Every 4 weeks &middot; free delivery &middot; cancel any time</span>
             </span>
             <span class="pl-switch">
               <input type="checkbox" data-pl-sub-toggle aria-label="Subscribe and save on {{ item.product.title | escape }}">
