@@ -2,8 +2,8 @@
   Option B search results (templates/search.option-b.json).
   - Search is limited to product titles, types, variant names and tags (options[fields]) so
     loose matches from descriptions do not flood the results.
-  - Big "Results for …" heading with the count, then range chips that filter the grid in place
-    (each card carries data-range from its collections), then the grid of plo-card.
+  - Big "Results for …" heading with the count of real matches, range chips that filter the grid
+    in place (each card carries data-range), the grid of plo-card, then loose matches.
   - No results: a friendly line, popular searches and bestsellers.
 {%- endcomment -%}
 {%- liquid
@@ -31,54 +31,102 @@
       <button type="submit" class="plo-btn plo-srch__go">Search</button>
     </form>
 
-    {%- if has_terms and n > 0 -%}
-      <h1 class="plo-srch__h"><span>{{ n }} {% if n == 1 %}result{% else %}results{% endif %} for</span> “{{ search.terms | escape }}”</h1>
-      {%- paginate search.results by 48 -%}
-        {%- capture cards -%}
-          {%- assign ranges = '' -%}
-          {%- for item in search.results -%}
-            {%- if item.object_type != 'product' -%}{%- continue -%}{%- endif -%}
-            {%- liquid
-              assign r = 'packs'
-              for c in item.collections
-                case c.handle
-                  when 'chocolate-truffles', 'limited-editions'
-                    assign r = 'truffles'
-                  when 'chocolate-bars'
-                    if r == 'packs'
-                      assign r = 'bars'
-                    endif
-                  when 'new-chocolate-slabs'
-                    assign r = 'slabs'
-                endcase
-              endfor
-              unless ranges contains r
-                assign ranges = ranges | append: r | append: ','
+    {%- liquid
+      comment
+        Shopify's search is typo-tolerant, so even nonsense returns "similar" products. A result
+        counts as a match when every typed word (its first 4 letters, so plurals still match)
+        appears in its title, type or tags. Matches fill the grid; the rest show below as
+        "You might also like", or as "Closest we have" when nothing matches.
+      endcomment
+      assign words = search.terms | downcase | split: ' '
+      assign matched = ''
+      assign others = ''
+      assign m_count = 0
+      assign ranges = ''
+      if has_terms
+        for item in search.results
+          if item.object_type != 'product'
+            continue
+          endif
+          assign hay = item.title | append: ' ' | append: item.type | append: ' ' | append: item.tags | join: ' ' | downcase
+          assign ok = true
+          for w in words
+            assign w4 = w | slice: 0, 4
+            if w4.size > 1
+              unless hay contains w4
+                assign ok = false
               endunless
-              assign eager = false
-              if forloop.index <= 4
-                assign eager = true
-              endif
-            -%}
-            <div class="plo-srch__cell" data-range="{{ r }}">{%- render 'plo-card', product: item, eager: eager, view: view -%}</div>
+            endif
+          endfor
+          if ok
+            assign matched = matched | append: item.handle | append: ','
+            assign m_count = m_count | plus: 1
+            assign r = 'packs'
+            for c in item.collections
+              case c.handle
+                when 'chocolate-truffles', 'limited-editions'
+                  assign r = 'truffles'
+                when 'chocolate-bars'
+                  if r == 'packs'
+                    assign r = 'bars'
+                  endif
+                when 'new-chocolate-slabs'
+                  assign r = 'slabs'
+              endcase
+            endfor
+            unless ranges contains r
+              assign ranges = ranges | append: r | append: ','
+            endunless
+          else
+            assign others = others | append: item.handle | append: ','
+          endif
+        endfor
+      endif
+      assign matched_h = matched | split: ','
+      assign others_h = others | split: ','
+    -%}
+    {%- if has_terms and m_count > 0 -%}
+      <h1 class="plo-srch__h"><span>{{ m_count }} {% if m_count == 1 %}result{% else %}results{% endif %} for</span> “{{ search.terms | escape }}”</h1>
+      {%- assign range_list = ranges | split: ',' -%}
+      {%- if range_list.size > 1 -%}
+        <div class="plo-chips plo-srch__chips" role="group" aria-label="Filter results">
+          <button type="button" class="is-on" data-plo-srch-f="all" aria-pressed="true">All<small>{{ m_count }}</small></button>
+          {%- assign labels = 'truffles:Truffles,bars:Bars,slabs:Slabs,packs:Variety' | split: ',' -%}
+          {%- for l in labels -%}
+            {%- assign kv = l | split: ':' -%}
+            {%- if ranges contains kv[0] -%}<button type="button" data-plo-srch-f="{{ kv[0] }}" aria-pressed="false">{{ kv[1] }}</button>{%- endif -%}
           {%- endfor -%}
-        {%- endcapture -%}
-        {%- assign range_list = ranges | split: ',' -%}
-        {%- if range_list.size > 1 -%}
-          <div class="plo-chips plo-srch__chips" role="group" aria-label="Filter results">
-            <button type="button" class="is-on" data-plo-srch-f="all" aria-pressed="true">All<small>{{ n }}</small></button>
-            {%- assign labels = 'truffles:Truffles,bars:Bars,slabs:Slabs,packs:Variety' | split: ',' -%}
-            {%- for l in labels -%}
-              {%- assign kv = l | split: ':' -%}
-              {%- if ranges contains kv[0] -%}<button type="button" data-plo-srch-f="{{ kv[0] }}" aria-pressed="false">{{ kv[1] }}</button>{%- endif -%}
-            {%- endfor -%}
+        </div>
+      {%- endif -%}
+      <div class="plo-grid plo-srch__grid">
+        {%- for h in matched_h -%}
+          {%- assign item = all_products[h] -%}
+          {%- liquid
+            assign r = 'packs'
+            for c in item.collections
+              case c.handle
+                when 'chocolate-truffles', 'limited-editions'
+                  assign r = 'truffles'
+                when 'chocolate-bars'
+                  if r == 'packs'
+                    assign r = 'bars'
+                  endif
+                when 'new-chocolate-slabs'
+                  assign r = 'slabs'
+              endcase
+            endfor
+          -%}
+          <div class="plo-srch__cell" data-range="{{ r }}">{%- render 'plo-card', product: item, eager: forloop.first, view: view -%}</div>
+        {%- endfor -%}
+      </div>
+      {%- if others_h.size > 0 -%}
+        <div class="plo-srch__best">
+          {%- render 'plo-head', bold: 'You might', light: 'also like' -%}
+          <div class="plo-rel__row">
+            {%- for h in others_h limit: 8 -%}{%- render 'plo-card', product: all_products[h], eager: false, view: view -%}{%- endfor -%}
           </div>
-        {%- endif -%}
-        <div class="plo-grid plo-srch__grid">{{ cards }}</div>
-        {%- if paginate.next -%}
-          <div class="plo-more"><a class="plo-btn plo-btn--sec" href="{{ paginate.next.url }}">More results</a></div>
-        {%- endif -%}
-      {%- endpaginate -%}
+        </div>
+      {%- endif -%}
 
     {%- else -%}
       <div class="plo-srch__none">
@@ -92,7 +140,14 @@
           {%- for t in pop -%}<a href="{{ routes.search_url }}?q={{ t | url_encode }}{% if view != blank %}&view={{ view }}{% endif %}">{%- render 'pl-icon', name: 'search', size: 14, stroke: 2.4 -%}{{ t }}</a>{%- endfor -%}
         </div>
       </div>
-      {%- if s.fallback != blank -%}
+      {%- if others_h.size > 0 -%}
+        <div class="plo-srch__best">
+          {%- render 'plo-head', bold: 'Closest', light: 'we have' -%}
+          <div class="plo-rel__row">
+            {%- for h in others_h limit: 8 -%}{%- render 'plo-card', product: all_products[h], eager: false, view: view -%}{%- endfor -%}
+          </div>
+        </div>
+      {%- elsif s.fallback != blank -%}
         <div class="plo-srch__best">
           {%- render 'plo-head', bold: s.fallback_heading, light: s.fallback_heading_light -%}
           <div class="plo-grid">

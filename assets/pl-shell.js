@@ -264,7 +264,7 @@
     var html = '';
     if (queries.length || cols.length) {
       html += '<div class="pl-search__sugg">';
-      queries.forEach(function (x) { html += '<a class="pl-search__chip" href="' + esc(allResultsUrl(x.text)) + '" data-pl-search-all>' + icon('arrow') + hl(x.text, term) + '</a>'; });
+      queries.forEach(function (x) { html += '<a class="pl-search__chip" href="' + esc(allResultsUrl(x.text)) + '" data-pl-search-all>' + icon('arrow') + '<span>' + hl(x.text, term) + '</span></a>'; });
       cols.slice(0, 3).forEach(function (c) { html += '<a class="pl-search__chip is-col" href="' + esc(withView(c.url)) + '">' + esc(c.title) + '</a>'; });
       html += '</div>';
     }
