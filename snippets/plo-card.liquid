@@ -3,8 +3,9 @@
   Usage: {% render 'plo-card', product: product, eager: false, show_sub: false, skip_new: false, view: template.suffix %}
   One markup, two looks: A is a white outlined box with the add button in the footer,
   B is a lifted image tile with a sticker add button on the image. show_sub adds the
-  subscribe price under the price (off by default: listings stay one price per card). The add buttons reuse the theme's <quick-add> module (first available
-  variant, one-time purchase), the same as snippets/pl-tile.liquid.
+  subscribe price under the price (off by default: listings stay one price per card). The "+" buttons carry
+  data-plo-quick (first available variant id) and are handled by assets/pl-opt.js rather than the
+  theme's <quick-add> module, which opens the live cart drawer and leaves the preview.
 {%- endcomment -%}
 {%- liquid
   assign v = product.selected_or_first_available_variant
@@ -90,10 +91,7 @@
     </a>
     {%- if badge_text != blank -%}<span class="plo-badge{% if badge_mod != blank %} plo-badge--{{ badge_mod }}{% endif %}">{{ badge_text }}</span>{%- endif -%}
     {%- if v.available -%}
-      <quick-add class="plo-card__add-b" data-module="quick-add" data-id="{{ v.id }}">
-        <input type="hidden" name="quantity" value="1">
-        <button type="button" class="plo-add" data-add aria-label="Add {{ product.title | escape }} to bag">{%- render 'pl-icon', name: 'plus', size: 18, stroke: 2.4 -%}</button>
-      </quick-add>
+      <span class="plo-card__add-b"><button type="button" class="plo-add" data-plo-quick="{{ v.id }}" aria-label="Add {{ product.title | escape }} to bag">{%- render 'pl-icon', name: 'plus', size: 18, stroke: 2.4 -%}</button></span>
     {%- endif -%}
   </div>
   <div class="plo-card__body">
@@ -105,10 +103,7 @@
         {%- if show_sub and sub_price > 0 -%}<div class="plo-card__sub">{%- render 'plaay-aed', fils: sub_price -%} on repeat</div>{%- endif -%}
       </div>
       {%- if v.available -%}
-        <quick-add class="plo-card__add-a" data-module="quick-add" data-id="{{ v.id }}">
-          <input type="hidden" name="quantity" value="1">
-          <button type="button" class="plo-add" data-add aria-label="Add {{ product.title | escape }} to bag">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</button>
-        </quick-add>
+        <span class="plo-card__add-a"><button type="button" class="plo-add" data-plo-quick="{{ v.id }}" aria-label="Add {{ product.title | escape }} to bag">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</button></span>
       {%- else -%}
         <span class="plo-card__soldout">Sold out</span>
       {%- endif -%}

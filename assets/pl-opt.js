@@ -235,15 +235,14 @@
       window.location.href = cartHref();
       return;
     }
-    var add = e.target.closest('.plo-card [data-add]');
+    var add = e.target.closest('[data-plo-quick]');
     if (add) {
       e.preventDefault();
       e.stopImmediatePropagation();
-      var host = add.closest('[data-id]');
       var card = add.closest('.plo-card');
       var name = card && card.querySelector('.plo-card__name') ? card.querySelector('.plo-card__name').textContent.trim() : 'Item';
       add.classList.add('is-busy');
-      post(((window.routes || {}).cart_add_url || '/cart/add') + '.js', { items: [{ id: Number(host.getAttribute('data-id')), quantity: 1 }] })
+      post(((window.routes || {}).cart_add_url || '/cart/add') + '.js', { items: [{ id: Number(add.getAttribute('data-plo-quick')), quantity: 1 }] })
         .then(function () { add.classList.remove('is-busy'); toast(name + ' added to your bag'); syncCount(); })
         .catch(function (err) { fail(add, err); });
     }
