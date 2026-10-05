@@ -1,0 +1,12 @@
+{%- comment -%}
+  One refreshed product photo (theme asset plo-ph-<key>-<n>.jpg, see snippets/plo-photo-key).
+  Usage: {%- render 'pl-photo', key: pkey, n: 1, alt: product.title, class: 'pl-tile__pic', eager: false -%}
+{%- endcomment -%}
+{%- liquid
+  assign f = 'plo-ph-' | append: key | append: '-' | append: n | append: '.jpg'
+  assign load = 'lazy'
+  if eager
+    assign load = 'eager'
+  endif
+-%}
+<img src="{{ f | asset_url }}" alt="{{ alt | escape }}"{% if class != blank %} class="{{ class }}"{% endif %} loading="{{ load }}" decoding="async" width="800" height="1000">

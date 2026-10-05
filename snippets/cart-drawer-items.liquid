@@ -115,7 +115,10 @@
         data-properties="{{ item.properties | json | escape }}">
         <div class="pl-item__top">
           <a href="{{ item.url }}" class="pl-item__img" tabindex="-1" aria-hidden="true">
-            {%- if item.image -%}
+            {%- capture ikey -%}{%- render 'plo-photo-key', handle: item.product.handle -%}{%- endcapture -%}{%- assign ikey = ikey | strip -%}
+            {%- if ikey != blank -%}
+              {%- render 'pl-photo', key: ikey, n: 1, alt: item.product.title, class: 'is-photo' -%}
+            {%- elsif item.image -%}
               {{ item.image | image_url: width: 176 | image_tag: loading: 'lazy', widths: '88, 176', sizes: '72px', alt: item.product.title }}
             {%- endif -%}
           </a>

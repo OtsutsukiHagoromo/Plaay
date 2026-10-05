@@ -61,7 +61,11 @@
   <div class="pl-tile__img">
     {%- if badge_text != blank -%}<span class="pl-tag pl-tag--yellow pl-badge">{{ badge_text }}</span>{%- endif -%}
     <a href="{{ product.url }}" tabindex="-1" aria-hidden="true">
-      {%- if product.featured_image -%}
+      {%- capture pkey -%}{%- render 'plo-photo-key', handle: product.handle -%}{%- endcapture -%}
+      {%- assign pkey = pkey | strip -%}
+      {%- if pkey != blank -%}
+        {%- render 'pl-photo', key: pkey, n: 1, alt: product.title, class: 'pl-tile__pic is-photo', eager: eager -%}
+      {%- elsif product.featured_image -%}
         {%- assign img_alt = product.featured_image.alt | default: product.title -%}
         {{ product.featured_image | image_url: width: 600 | image_tag: loading: load, sizes: img_sizes, widths: '240, 360, 480, 600', alt: img_alt, class: 'pl-tile__pic' }}
       {%- else -%}

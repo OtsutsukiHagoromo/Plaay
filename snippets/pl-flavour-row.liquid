@@ -40,7 +40,10 @@
       {%- unless has_self -%}
         <a class="pl-choice__item is-on" href="{{ product.url }}" aria-current="page">
           <span class="pl-choice__box">
-            {%- if product.featured_image -%}
+            {%- capture fkey -%}{%- render 'plo-photo-key', handle: product.handle -%}{%- endcapture -%}{%- assign fkey = fkey | strip -%}
+            {%- if fkey != blank -%}
+              {%- render 'pl-photo', key: fkey, n: 1, alt: '', class: 'is-photo' -%}
+            {%- elsif product.featured_image -%}
               {{ product.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 160', sizes: '80px', alt: '' }}
             {%- endif -%}
             <span class="pl-check">{%- render 'pl-icon', name: 'check', size: 10, stroke: 3 -%}</span>
@@ -67,7 +70,10 @@
         -%}
         <a class="pl-choice__item{% if is_self %} is-on{% endif %}" href="{{ sib.url }}"{% if is_self %} aria-current="page"{% endif %} data-handle="{{ sib.handle }}">
           <span class="pl-choice__box">
-            {%- if sib.featured_image -%}
+            {%- capture fkey -%}{%- render 'plo-photo-key', handle: sib.handle -%}{%- endcapture -%}{%- assign fkey = fkey | strip -%}
+            {%- if fkey != blank -%}
+              {%- render 'pl-photo', key: fkey, n: 1, alt: '', class: 'is-photo' -%}
+            {%- elsif sib.featured_image -%}
               {{ sib.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', widths: '80, 160', sizes: '80px', alt: '' }}
             {%- endif -%}
             <span class="pl-check">{%- render 'pl-icon', name: 'check', size: 10, stroke: 3 -%}</span>

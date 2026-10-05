@@ -544,20 +544,6 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
   .pl-skin-b .plo-cart__side .plo-sum { padding: 24px; background: #fff; border-radius: 20px; box-shadow: 0 1px 2px rgba(8, 29, 72, .05), 0 8px 24px rgba(8, 29, 72, .08); margin-top: 24px; }
 }
 
-/* ==========================================================================
-   Preview switcher (only on the option templates)
-   ========================================================================== */
-body:has(.plo-cart.has-items) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 140px + env(safe-area-inset-bottom)); }
-.plo-switch {
-  position: fixed; z-index: 58; left: 12px; bottom: calc(var(--pl-tabbar-h) + 12px + env(safe-area-inset-bottom));
-  display: flex; align-items: center; gap: 4px; padding: 4px; border-radius: 999px;
-  background: var(--pl-navy); color: #fff; font-family: var(--pl-font); font-size: 12px; font-weight: 700;
-  box-shadow: 0 6px 20px rgba(8, 29, 72, .25);
-}
-.plo-switch span { padding: 0 8px 0 10px; opacity: .7; font-weight: 500; }
-.plo-switch a { color: #fff; padding: 7px 12px; border-radius: 999px; text-decoration: none; }
-.plo-switch a[aria-current="true"] { background: var(--pl-yellow); color: var(--pl-navy); }
-@media (min-width: 1024px) { .plo-switch, body:has(.plo-cart.has-items) .plo-switch { bottom: 20px; left: 20px; font-size: 13px; } }
 .pl-skin-a .plaay-wa-float, .pl-skin-b .plaay-wa-float { bottom: calc(var(--pl-tabbar-h) + 64px); }
 
 /* Section that is a plain gap-separated section in A and a full-bleed colour band in B. */
@@ -654,7 +640,6 @@ body:has(.plo-cart.has-items) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 14
 .plo-sticky__t { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 12px; color: var(--pl-mute); }
 .plo-sticky__t b { font-size: 13px; color: var(--pl-navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .plo-sticky .plo-btn { height: 44px; padding: 0 18px; font-size: 14px; }
-body:has(.plo-sticky.is-on) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 84px + env(safe-area-inset-bottom)); }
 @media (min-width: 1024px) {
   .plo-pdp__cols { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 56px; max-width: calc(1280px + var(--o-side) * 2); margin: 0 auto; padding: 32px var(--o-side) 0; align-items: start; }
   .plo-gal, .plo-buy { padding: 0; }
@@ -663,7 +648,6 @@ body:has(.plo-sticky.is-on) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 84px
   .plo-buy__t { font-size: 44px; }
   .plo-flav { margin: 0; padding: 2px 0 4px; flex-wrap: wrap; }
   .plo-sticky { display: none; }
-  body:has(.plo-sticky.is-on) .plo-switch { bottom: 20px; }
 }
 /* B product page */
 .pl-skin-b .plo-gal { padding: 0; }

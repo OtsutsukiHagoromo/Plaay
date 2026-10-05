@@ -7,6 +7,10 @@
   snippets/plaay-wishlist-heart.liquid) and dispatches "plaay:wishlist:change".
 {%- endcomment -%}
 {%- liquid
+  capture pkey
+    render 'plo-photo-key', handle: product.handle
+  endcapture
+  assign pkey = pkey | strip
   assign media_list = product.media
   assign slide_count = 0
   for media in media_list
@@ -15,6 +19,12 @@
     endif
     assign slide_count = slide_count | plus: 1
   endfor
+  comment
+    Products with the refreshed shoot (plo-photo-key) show its 8 photos instead of their media.
+  endcomment
+  if pkey != blank
+    assign slide_count = 8
+  endif
 -%}
 <div class="pl-gal" data-pl-gallery>
   <div class="pl-gal__frame">
@@ -27,6 +37,14 @@
         <div class="pl-gal__slide" data-media-id="0" data-index="0">
           {{ 'product-1' | placeholder_svg_tag: 'pl-gal__placeholder' }}
         </div>
+      {%- endif -%}
+      {%- if pkey != blank -%}
+        {%- for n in (1..8) -%}
+          <div class="pl-gal__slide" data-media-id="ph{{ n }}" data-index="{{ forloop.index0 }}" role="group" aria-roledescription="slide" aria-label="{{ n }} of 8">
+            {%- render 'pl-photo', key: pkey, n: n, alt: product.title, eager: forloop.first -%}
+          </div>
+        {%- endfor -%}
+        {%- assign media_list = nil -%}
       {%- endif -%}
       {%- assign i = 0 -%}
       {%- for media in media_list -%}
@@ -60,6 +78,11 @@
       {%- endfor -%}
     </div>
     <div class="pl-gal__thumbs" data-pl-thumbs>
+      {%- if pkey != blank -%}
+        {%- for n in (1..8) -%}
+          <button type="button" class="pl-gal__thumb{% if forloop.first %} is-on{% endif %}" data-pl-thumb="{{ forloop.index0 }}" aria-label="Photo {{ n }}">{%- render 'pl-photo', key: pkey, n: n, alt: '' -%}</button>
+        {%- endfor -%}
+      {%- endif -%}
       {%- assign t = 0 -%}
       {%- for media in media_list -%}
         {%- if show_video == false and media.media_type != 'image' -%}{%- continue -%}{%- endif -%}
