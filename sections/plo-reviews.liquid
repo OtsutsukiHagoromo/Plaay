@@ -26,23 +26,33 @@
 -%}
 <div class="pl plo plo-fillb plo-revsec" id="plo-reviews">
   <div class="plo-wrap">
-    {%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light, link_label: s.write_label, link_url: s.all_url -%}
+    {%- liquid
+      assign count_s = count | append: ''
+      assign h_bold = s.heading | replace: '[count]', count_s
+      assign h_light = s.heading_light | replace: '[count]', count_s
+    -%}
+    {%- render 'plo-head', eyebrow: s.eyebrow, bold: h_bold, light: h_light, link_label: s.write_label, link_url: s.all_url -%}
     <div class="plo-revwrap">
       <div>
         <div class="plo-revsum plo-box">
-          <div>
-            <div class="plo-revsum__n">{{ rating }}</div>
+          <div class="plo-revsum__score">
+            <div class="plo-revsum__n">{{ rating }}<small>/5</small></div>
             {%- capture lbl -%}{{ rating }} out of 5 stars{%- endcapture -%}
-            {%- render 'plo-stars', size: 13, label: lbl -%}
-            <div class="plo-revsum__c">{{ count }} reviews</div>
+            {%- render 'plo-stars', size: 15, label: lbl -%}
+            <div class="plo-revsum__c">from <b>{{ count }}</b> reviews</div>
           </div>
           <div class="plo-revsum__bars">
-            {%- for c in counts -%}
+            {%- for c in counts limit: s.rows -%}
               {%- liquid
                 assign star = 6 | minus: forloop.index
-                assign pct = c | plus: 0 | times: 100 | divided_by: total
+                assign cn = c | plus: 0
+                assign pct = cn | times: 100 | divided_by: total
+                assign pct_label = pct | append: '%'
+                if pct == 0 and cn > 0
+                  assign pct_label = '<1%'
+                endif
               -%}
-              <div class="plo-hbar"><b>{{ star }}★</b><span class="plo-hbar__t"><i style="width: {{ pct }}%"></i></span><span>{{ c | strip }}</span></div>
+              <div class="plo-hbar"><b>{{ star }}</b>{%- render 'pl-icon', name: 'star', size: 11 -%}<span class="plo-hbar__t"><i style="width: {{ pct }}%"></i></span><span>{{ pct_label | escape }}</span></div>
             {%- endfor -%}
           </div>
         </div>
@@ -72,32 +82,103 @@
   "name": "Preview: reviews",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Label (Option A only)", "default": "Reviews" },
-    { "type": "text", "id": "heading", "label": "Heading, bold part", "default": "What people" },
-    { "type": "text", "id": "heading_light", "label": "Heading, light part", "default": "say" },
-    { "type": "text", "id": "breakdown", "label": "Review counts for 5,4,3,2,1 stars", "default": "104,5,5,1,7" },
-    { "type": "text", "id": "write_label", "label": "Link label", "default": "Write a review" },
-    { "type": "url", "id": "all_url", "label": "All reviews page" }
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Label (Option A only)",
+      "default": "Reviews"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading, bold part",
+      "default": "Loved by",
+      "info": "[count] = live review count"
+    },
+    {
+      "type": "text",
+      "id": "heading_light",
+      "label": "Heading, light part",
+      "default": "[count] Plaayers"
+    },
+    {
+      "type": "text",
+      "id": "breakdown",
+      "label": "Share of reviews for 5,4,3,2,1 stars (counts)",
+      "default": "104,5,5,1,7"
+    },
+    {
+      "type": "range",
+      "id": "rows",
+      "label": "Star rows to show",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "write_label",
+      "label": "Link label",
+      "default": "Write a review"
+    },
+    {
+      "type": "url",
+      "id": "all_url",
+      "label": "All reviews page"
+    }
   ],
   "blocks": [
     {
       "type": "photo",
       "name": "Photo review",
       "settings": [
-        { "type": "image_picker", "id": "image", "label": "Photo" },
-        { "type": "text", "id": "image_asset", "label": "Photo fallback (theme asset file)" },
-        { "type": "textarea", "id": "quote", "label": "Quote" },
-        { "type": "text", "id": "name", "label": "Name" },
-        { "type": "text", "id": "product", "label": "Product" }
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "text",
+          "id": "image_asset",
+          "label": "Photo fallback (theme asset file)"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "text",
+          "id": "product",
+          "label": "Product"
+        }
       ]
     },
     {
       "type": "text",
       "name": "Text review",
       "settings": [
-        { "type": "textarea", "id": "quote", "label": "Quote" },
-        { "type": "text", "id": "name", "label": "Name" },
-        { "type": "text", "id": "product", "label": "Product" }
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Quote"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name"
+        },
+        {
+          "type": "text",
+          "id": "product",
+          "label": "Product"
+        }
       ]
     }
   ]

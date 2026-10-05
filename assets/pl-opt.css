@@ -798,3 +798,23 @@ body:has(.plo-sticky.is-on) .plo-switch { bottom: calc(var(--pl-tabbar-h) + 84px
 .pl-skin-b .plo-gift { background: #F6E9FA; }
 /* B: a colour band straight after the claims marquee sits flush against it (no white strip). */
 .pl-skin-b .shopify-section:has(.plo-marquee) + .shopify-section > .plo-fillb { margin-top: 0; }
+
+/* Reviews summary v2: score block + 4 percentage bars (5★–2★). */
+.plo-revsum { grid-template-columns: auto 1fr; gap: 24px; padding: 20px 22px; }
+.plo-revsum__score { display: flex; flex-direction: column; gap: 6px; }
+.plo-revsum__n { font-size: 48px; letter-spacing: -.02em; }
+.plo-revsum__n small { font-size: 16px; font-weight: 700; color: var(--pl-mute); margin-left: 2px; letter-spacing: 0; }
+.plo-revsum__c { margin-top: 2px; font-size: 13px; color: var(--pl-mute); }
+.plo-revsum__c b { color: var(--pl-navy); }
+.plo-revsum__bars { gap: 10px; align-self: center; }
+.plo-hbar { gap: 8px; font-size: 13px; }
+.plo-hbar b { width: auto; min-width: 8px; font-weight: 700; }
+.plo-hbar > svg { width: 11px; height: 11px; color: var(--o-star); fill: currentColor; margin-left: -4px; flex: 0 0 auto; }
+.plo-hbar__t { height: 6px; background: rgba(8, 29, 72, .08); }
+.plo-hbar__t i, .pl-skin-b .plo-hbar__t i { box-shadow: none; min-width: 6px; background: var(--pl-navy); }
+.pl-skin-b .plo-hbar__t { background: rgba(8, 29, 72, .08); }
+.plo-hbar span:last-child { width: 34px; font-size: 12px; }
+.pl-skin-b .plo-revsec { padding-bottom: 44px; }
+.plo-revs { padding-bottom: 4px; }
+@media (min-width: 1024px) { .plo-revsum { padding: 26px 28px; } .plo-revsum__n { font-size: 56px; } .pl-skin-b .plo-revsec { padding-bottom: 72px; } }
+.plo-revs { align-items: flex-start; }

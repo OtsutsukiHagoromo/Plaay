@@ -296,8 +296,9 @@
         "write_label": "",
         "all_url": "",
         "eyebrow": "Reviews",
-        "heading": "What people",
-        "heading_light": "say"
+        "heading": "Loved by",
+        "heading_light": "[count] Plaayers",
+        "rows": 4
       },
       "blocks": {
         "photo_1": {
