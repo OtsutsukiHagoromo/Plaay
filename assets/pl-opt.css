@@ -1078,3 +1078,12 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
   .plo-range__row > :nth-child(n+5) { display: none; }
 }
 .plo-range:last-of-type { padding-bottom: 24px; }
+/* Mobile banner: title + price line beside the sticker photo, USPs full width underneath */
+@media (max-width: 1023.98px) {
+  .plo-hero__copy { display: contents; }
+  .plo-hero__t { grid-column: 1; grid-row: 1; align-self: end; }
+  .plo-hero__n { grid-column: 1; grid-row: 2; align-self: start; }
+  .plo-hero__card { grid-column: 2; grid-row: 1 / span 2; }
+  .plo-hero__usps { grid-column: 1 / -1; grid-row: 3; margin-top: 6px; }
+  .plo-hero--all .plo-hero__t, .plo-hero--all .plo-hero__n { grid-column: 1 / -1; }
+}
