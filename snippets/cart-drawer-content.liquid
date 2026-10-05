@@ -88,10 +88,12 @@
 {%- endcapture -%}
 
 {%- capture trust_html -%}
-  <div class="pl-trust">
-    <span>{% render 'pl-icon', name: 'leaf', size: 14, stroke: 2 %}Halal</span>
-    <span>{% render 'pl-icon', name: 'refresh', size: 14, stroke: 2 %}Easy returns</span>
-    <span>{% render 'pl-icon', name: 'truck', size: 14, stroke: 2 %}1–2 day delivery</span>
+  {%- comment -%}
+    Two quiet facts under the summary. No returns promise: the products are perishable.
+  {%- endcomment -%}
+  <div class="pl-trust pl-trust--quiet">
+    <span>{% render 'pl-icon', name: 'truck', size: 14, stroke: 1.8 %}1–2 day UAE delivery · GCC 3–5 days</span>
+    <span>{% render 'pl-icon', name: 'lock', size: 14, stroke: 1.8 %}Secure checkout · Halal certified</span>
   </div>
 {%- endcapture -%}
 
