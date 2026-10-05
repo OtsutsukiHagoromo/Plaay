@@ -223,20 +223,59 @@
     "why": {
       "type": "plo-why",
       "settings": {
-        "link_url": "/pages/for-the-geeks-1",
-        "eyebrow": "Why Plaay",
         "heading": "Made by a",
         "heading_light": "nutritionist",
         "image_asset": "plo-rashi.jpg",
         "quote": "“You don’t need to earn chocolate.”",
         "byline": "Rashi Chowdhary, nutritionist and founder",
-        "link_label": "Read her story",
-        "in_label": "In",
-        "in_list": "Real cocoa\nNuts\nWhey protein\nCoconut nectar",
-        "out_label": "Out",
-        "out_list": "Refined sugar\nGluten\nSoy\nPalm oil",
+        "link_label": "Read our story",
+        "link_url": "/pages/for-the-geeks-1",
         "touch_prev": false
-      }
+      },
+      "blocks": {
+        "u1": {
+          "type": "usp",
+          "settings": {
+            "icon": "sparkle",
+            "big": "0 g refined sugar",
+            "small": "Sweetened with dates and coconut sugar",
+            "color": "#FFB600"
+          }
+        },
+        "u2": {
+          "type": "usp",
+          "settings": {
+            "icon": "leaf",
+            "big": "No palm oil",
+            "small": "Real cocoa butter and nuts instead",
+            "color": "#46A140"
+          }
+        },
+        "u3": {
+          "type": "usp",
+          "settings": {
+            "icon": "heart",
+            "big": "Gut friendly",
+            "small": "Prebiotic fibre in our truffles and bars",
+            "color": "#FF3EB5"
+          }
+        },
+        "u4": {
+          "type": "usp",
+          "settings": {
+            "icon": "check",
+            "big": "100% clean",
+            "small": "No gluten, no soy, real ingredients",
+            "color": "#00BCB4"
+          }
+        }
+      },
+      "block_order": [
+        "u1",
+        "u2",
+        "u3",
+        "u4"
+      ]
     },
     "reviews": {
       "type": "plo-pdp-reviews",

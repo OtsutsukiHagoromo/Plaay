@@ -220,6 +220,53 @@
   }, true);
 
 
+  /* ---------- reels (plo-videos) ----------
+     Videos play muted while on screen. A tap opens the pop-up: the video with sound, or the
+     exact Instagram post (embed) when there is no video; no video and no post -> profile. */
+  function initReels(root) {
+    var lb = root.querySelector('[data-plo-lb]');
+    var media = root.querySelector('[data-plo-lb-media]');
+    var ig = root.querySelector('[data-plo-lb-ig]');
+    var calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var vids = Array.prototype.slice.call(root.querySelectorAll('.plo-vid video'));
+    if ('IntersectionObserver' in window && !calm) {
+      var io = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          var v = e.target;
+          if (e.isIntersecting) { if (!v.src) v.src = v.getAttribute('data-src'); v.play().catch(function () {}); v.closest('.plo-vid').classList.add('is-playing'); }
+          else v.pause();
+        });
+      }, { threshold: .5 });
+      vids.forEach(function (v) { io.observe(v); });
+    }
+    function close() {
+      lb.hidden = true; media.innerHTML = ''; document.body.classList.remove('pl-lock');
+    }
+    root.addEventListener('click', function (e) {
+      if (e.target.closest('[data-plo-lb-close]') || e.target === lb) { close(); return; }
+      var t = e.target.closest('[data-plo-reel]');
+      if (!t) return;
+      var v = t.getAttribute('data-video'), em = t.getAttribute('data-embed'), post = t.getAttribute('data-post');
+      if (!v && !em) { if (post) window.open(post, '_blank', 'noopener'); return; }
+      media.innerHTML = '';
+      if (v) {
+        var el = document.createElement('video');
+        el.src = v; el.controls = true; el.autoplay = true; el.playsInline = true; el.loop = true;
+        media.appendChild(el);
+        media.className = 'plo-lb__media is-video';
+      } else {
+        var f = document.createElement('iframe');
+        f.src = em; f.setAttribute('allow', 'autoplay; encrypted-media'); f.setAttribute('title', 'Instagram post'); f.setAttribute('loading', 'lazy');
+        media.appendChild(f);
+        media.className = 'plo-lb__media is-ig';
+      }
+      ig.href = post || ig.href;
+      lb.hidden = false; document.body.classList.add('pl-lock');
+      root.querySelector('[data-plo-lb-close]').focus();
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !lb.hidden) close(); });
+  }
+
   /* ---------- product grid tabs (plo-products) ---------- */
   document.addEventListener('click', function (e) {
     var b = e.target.closest && e.target.closest('[data-plo-tabsel]');
@@ -416,6 +463,7 @@
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-pdp]'), initPdp);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-photos]'), initPhotos);
     initDetailWidgets();
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-reels]'), initReels);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

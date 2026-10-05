@@ -1,37 +1,32 @@
 {%- comment -%}
-  Option A / Option B preview: why Plaay. Founder quote card + what's in / what's out.
-  A: two white outlined boxes under a labelled heading. B: a navy band, white copy, yellow-edged photo.
+  Option B: "Made by a nutritionist". Navy band: founder card (photo, quote, name, Read our
+  story) on the left, a grid of USP tiles on the right (icon, big claim, one line). USP blocks
+  are editable; defaults are the claims the packs back up.
 {%- endcomment -%}
-{%- liquid
-  assign s = section.settings
-  assign ins = s.in_list | newline_to_br | split: '<br />'
-  assign outs = s.out_list | newline_to_br | split: '<br />'
--%}
-<div class="pl plo plo-fillb plo-whysec{% if s.touch_prev %} plo-fillb-touch{% endif %}">
-  <div class="plo-wrap">
-    <div class="plo-skin-only-a">{%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light -%}</div>
-    <div class="plo-skin-only-b plo-on-dark">{%- render 'plo-head', bold: s.heading, light: s.heading_light -%}</div>
-    <div class="plo-why">
-      <div class="plo-founder plo-box">
-        {%- render 'plo-img', image: s.image, asset: s.image_asset, width: 480, alt: s.byline, class: 'plo-founder__pic' -%}
-        <div>
-          <p class="plo-founder__q">{{ s.quote }}</p>
-          <p class="plo-founder__by">{{ s.byline }}</p>
-          {%- if s.link_label != blank -%}<a class="plo-founder__link" href="{{ s.link_url }}">{{ s.link_label }}</a>{%- endif -%}
-        </div>
-      </div>
-      <div class="plo-inout plo-box">
-        <div class="plo-inout__in">
-          <h3>{{ s.in_label }}</h3>
-          <ul>{%- for x in ins -%}{%- assign x = x | strip -%}{%- if x != blank -%}<li><span class="plo-inout__dot">{%- render 'pl-icon', name: 'check', size: 14, stroke: 2.8 -%}</span>{{ x }}</li>{%- endif -%}{%- endfor -%}</ul>
-        </div>
-        <div class="plo-inout__out">
-          <h3>{{ s.out_label }}</h3>
-          <ul>{%- for x in outs -%}{%- assign x = x | strip -%}{%- if x != blank -%}<li><span class="plo-inout__dot">{%- render 'pl-icon', name: 'close', size: 14, stroke: 2.8 -%}</span>{{ x }}</li>{%- endif -%}{%- endfor -%}</ul>
-        </div>
-      </div>
+{%- assign s = section.settings -%}
+<div class="pl plo plo-fillb plo-whysec plo-why2{% if s.touch_prev %} plo-fillb-touch{% endif %}">
+  <div class="plo-wrap plo-why2__grid">
+    <div class="plo-why2__founder">
+      <h2 class="plo-why2__h">{{ s.heading }} <span>{{ s.heading_light }}</span></h2>
+      <figure class="plo-why2__card">
+        {%- render 'plo-img', image: s.image, asset: s.image_asset, width: 600, alt: s.byline, class: 'plo-why2__pic' -%}
+        <figcaption>
+          <blockquote>{{ s.quote }}</blockquote>
+          <p class="plo-why2__by">{{ s.byline }}</p>
+          {%- if s.link_label != blank -%}<a class="plo-why2__link" href="{{ s.link_url | default: '/pages/for-the-geeks-1' }}">{{ s.link_label }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.4 %}</a>{%- endif -%}
+        </figcaption>
+      </figure>
     </div>
-    {%- if s.link_label != blank -%}<a class="plo-why__more" href="{{ s.link_url }}">{{ s.link_label }}</a>{%- endif -%}
+    <ul class="plo-why2__usps">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <li class="plo-why2__usp" style="--c: {{ b.color }}; --i: {{ forloop.index }}" {{ block.shopify_attributes }}>
+          <span class="plo-why2__ic">{%- render 'pl-icon', name: b.icon, size: 22, stroke: 2.2 -%}</span>
+          <b>{{ b.big }}</b>
+          <span>{{ b.small }}</span>
+        </li>
+      {%- endfor -%}
+    </ul>
   </div>
 </div>
 
@@ -40,20 +35,24 @@
   "name": "Preview: why Plaay",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Label (Option A only)", "default": "Why Plaay" },
     { "type": "text", "id": "heading", "label": "Heading, bold part", "default": "Made by a" },
     { "type": "text", "id": "heading_light", "label": "Heading, light part", "default": "nutritionist" },
     { "type": "image_picker", "id": "image", "label": "Founder photo" },
-    { "type": "text", "id": "image_asset", "label": "Founder photo fallback (theme asset file)", "default": "plo-rashi.jpg" },
+    { "type": "text", "id": "image_asset", "label": "Founder photo fallback (theme asset)", "default": "plo-rashi.jpg" },
     { "type": "text", "id": "quote", "label": "Quote", "default": "“You don’t need to earn chocolate.”" },
     { "type": "text", "id": "byline", "label": "Byline", "default": "Rashi Chowdhary, nutritionist and founder" },
-    { "type": "text", "id": "link_label", "label": "Link label", "default": "Read her story" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "Read our story" },
     { "type": "url", "id": "link_url", "label": "Link" },
-    { "type": "text", "id": "in_label", "label": "In label", "default": "In" },
-    { "type": "textarea", "id": "in_list", "label": "In (one per line)", "default": "Real cocoa\nNuts\nWhey protein\nCoconut nectar" },
-    { "type": "text", "id": "out_label", "label": "Out label", "default": "Out" },
-    { "type": "textarea", "id": "out_list", "label": "Out (one per line)", "default": "Refined sugar\nGluten\nSoy\nPalm oil" },
-    { "type": "checkbox", "id": "touch_prev", "label": "Option B: sit flush against the band above", "default": false }
+    { "type": "checkbox", "id": "touch_prev", "label": "Sit flush against the band above", "default": false }
+  ],
+  "blocks": [
+    { "type": "usp", "name": "USP", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "sparkle", "options": [
+        { "value": "sparkle", "label": "Sparkle" }, { "value": "leaf", "label": "Leaf" }, { "value": "heart", "label": "Heart" },
+        { "value": "check", "label": "Check" }, { "value": "pin", "label": "Pin" }, { "value": "clock", "label": "Clock" }, { "value": "gift", "label": "Gift" } ] },
+      { "type": "text", "id": "big", "label": "Claim", "default": "0 g refined sugar" },
+      { "type": "text", "id": "small", "label": "Line", "default": "Sweetened with dates and coconut sugar" },
+      { "type": "color", "id": "color", "label": "Icon colour", "default": "#FFB600" } ] }
   ]
 }
 {% endschema %}
