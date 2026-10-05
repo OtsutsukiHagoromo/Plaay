@@ -1,7 +1,8 @@
 {%- comment -%}
   Option A / Option B preview: shop by category. A: white outlined tiles with a packshot on the
   left. B: flavour-colour tiles with the packshot bleeding off the corner and a sticker arrow.
-  Packshot = the block image, else the chosen product's featured image.
+  Packshot = the block image, else the chosen product's featured image. A block with a
+  full-bleed photo (theme asset) fills the tile instead, its backdrop matching the tile colour.
 {%- endcomment -%}
 {%- assign s = section.settings -%}
 <div class="pl plo plo-sec">
@@ -17,8 +18,10 @@
           endif
           assign href = b.url | default: '/collections/shop-all'
         -%}
-        <a class="plo-cat plo-box" href="{{ href }}" style="--tint: {{ b.tint }};" {{ block.shopify_attributes }}>
-          {%- if pic != blank -%}{{ pic | image_url: width: 300 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
+        <a class="plo-cat plo-box{% if b.photo_asset != blank %} plo-cat--photo{% endif %}" href="{{ href }}" style="--tint: {{ b.tint }};{% if b.photo_pos != blank %} --pos: {{ b.photo_pos }};{% endif %}" {{ block.shopify_attributes }}>
+          {%- if b.photo_asset != blank -%}
+            <img class="plo-cat__photo" src="{{ b.photo_asset | asset_url }}" alt="" loading="lazy" width="1100" height="825">
+          {%- elsif pic != blank -%}{{ pic | image_url: width: 300 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
           <span><span class="plo-cat__n">{{ b.title }}</span><span class="plo-cat__c">{{ b.sub }}</span></span>
           <span class="plo-cat__go" aria-hidden="true">{%- render 'pl-icon', name: 'arrow-right', size: 14, stroke: 2.4 -%}</span>
         </a>
@@ -46,7 +49,9 @@
         { "type": "url", "id": "url", "label": "Link" },
         { "type": "product", "id": "product", "label": "Packshot from product" },
         { "type": "image_picker", "id": "image", "label": "Packshot (overrides product)" },
-        { "type": "color", "id": "tint", "label": "Tile colour (Option B)", "default": "#FFF0B3" }
+        { "type": "color", "id": "tint", "label": "Tile colour (Option B)", "default": "#FFF0B3" },
+        { "type": "text", "id": "photo_asset", "label": "Full-bleed photo (theme asset file)", "info": "Fills the tile; set the tile colour to the photo's backdrop." },
+        { "type": "text", "id": "photo_pos", "label": "Photo focus (CSS object-position)", "default": "85% 50%" }
       ]
     }
   ]

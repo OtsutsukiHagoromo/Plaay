@@ -134,7 +134,9 @@
             "sub": "6 flavours",
             "url": "/collections/new-chocolate-slabs?view=option-b",
             "product": "new-chocolate-bars-mix-pack-of-5",
-            "tint": "#F6D9F0"
+            "tint": "#F8C5EB",
+            "photo_asset": "plo-cat-slabs.jpg",
+            "photo_pos": "92% 50%"
           }
         },
         "cat_2": {
@@ -144,7 +146,9 @@
             "sub": "8 flavours",
             "url": "/collections/chocolate-truffles?view=option-b",
             "product": "truffle-mix",
-            "tint": "#FFE3B8"
+            "tint": "#FED8B5",
+            "photo_asset": "plo-cat-truffles.jpg",
+            "photo_pos": "95% 50%"
           }
         },
         "cat_3": {
@@ -154,7 +158,9 @@
             "sub": "5 flavours",
             "url": "/collections/chocolate-bars?view=option-b",
             "product": "salted-caramel-bar-x12",
-            "tint": "#D6F1EF"
+            "tint": "#A9FAE8",
+            "photo_asset": "plo-cat-bars.jpg",
+            "photo_pos": "80% 50%"
           }
         },
         "cat_4": {
@@ -164,7 +170,9 @@
             "sub": "Try everything",
             "url": "/collections/variety-packs?view=option-b",
             "product": "og-plaayer-pack",
-            "tint": "#FFF0B3"
+            "tint": "#FCD730",
+            "photo_asset": "plo-cat-packs.jpg",
+            "photo_pos": "95% 50%"
           }
         }
       },

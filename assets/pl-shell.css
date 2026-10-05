@@ -386,3 +386,6 @@ body.pl-scrolled .pl-header__logo img { transform: scale(.92); }
 @media (prefers-reduced-motion: reduce) {
   .pl-header__logo img, .pl-header__logo.is-intro img, .pl-header__logo:hover img, .pl-header__logo.is-hop img, .pl-header__logo.is-wiggle img { animation: none !important; transition: none; }
 }
+/* menu tiles with a full-bleed photo */
+.pl-mtile--photo .pl-mtile__pic img.is-full { padding: 0; object-fit: cover; object-position: var(--pos, 85% 50%); mix-blend-mode: normal; filter: none; }
+.pl-mtile--photo:hover .pl-mtile__pic img.is-full { transform: scale(1.06); }

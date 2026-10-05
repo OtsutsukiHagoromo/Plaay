@@ -6,7 +6,11 @@
   Usage: {% render 'pl-menu-tiles', size: 'lg' %}  (lg = desktop panel, sm = mobile sheet)
 {%- endcomment -%}
 {%- liquid
-  assign rows = 'Truffles|chocolate-truffles|#F9DCE4|triple|,Bars|chocolate-bars|#DDEFD6|pistbar|,Slabs|new-chocolate-slabs|#F3E2D2|hazel|New,Variety packs|variety-packs|#E1E6F7||Gifting,Limited editions|limited-editions|#FFF0C4||' | split: ','
+  comment
+    name | collection | tile colour | refreshed pack-shot key | tag | full-bleed photo | photo focus
+    Tiles with a full-bleed photo use it as the whole tile (colour = the photo's backdrop).
+  endcomment
+  assign rows = 'Truffles|chocolate-truffles|#FED8B5|triple||plo-cat-truffles.jpg|96% 50%,Bars|chocolate-bars|#A9FAE8|pistbar||plo-cat-bars.jpg|78% 50%,Slabs|new-chocolate-slabs|#F8C5EB|hazel|New|plo-cat-slabs.jpg|94% 50%,Variety packs|variety-packs|#FCD730||Gifting|plo-cat-packs.jpg|96% 50%,Limited editions|limited-editions|#FFF0C4|||||' | split: ','
   assign n = 0
 -%}
 {%- for row in rows -%}
@@ -21,9 +25,11 @@
     endif
     assign n = n | plus: 1
   -%}
-  <a class="pl-mtile" href="{{ c.url }}" style="--tile: {{ f[2] }}; --i: {{ n }}">
+  <a class="pl-mtile{% if f[5] != blank %} pl-mtile--photo{% endif %}" href="{{ c.url }}" style="--tile: {{ f[2] }}; --i: {{ n }};{% if f[6] != blank %} --pos: {{ f[6] }};{% endif %}">
     <span class="pl-mtile__pic">
-      {%- if f[3] != blank -%}
+      {%- if f[5] != blank -%}
+        <img class="is-full" src="{{ f[5] | asset_url }}" alt="" loading="lazy" width="1100" height="825">
+      {%- elsif f[3] != blank -%}
         {%- assign ph = 'plo-ph-' | append: f[3] | append: '-1.jpg' -%}
         <img class="is-photo" src="{{ ph | asset_url }}" alt="" loading="lazy" width="400" height="500">
       {%- elsif c.featured_image -%}
