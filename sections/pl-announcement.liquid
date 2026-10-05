@@ -54,7 +54,7 @@
       {%- endfor -%}
     {%- else -%}
       {%- for m in fallback -%}
-        <p class="pl-ann__msg{% if forloop.first %} is-on{% endif %}"{% unless forloop.first %} aria-hidden="true"{% endunless %}>{{ m }}</p>
+        <p class="pl-ann__msg{% if forloop.first %} is-on{% endif %}"{% unless forloop.first %} aria-hidden="true"{% endunless %}><span>{{ m }}</span></p>
       {%- endfor -%}
     {%- endif -%}
   </div>
