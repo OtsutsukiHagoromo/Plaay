@@ -174,7 +174,6 @@
   }
 
   function afterRender() {
-    rewardMoments();
     syncCount();
     decorateUpsell();
     clearStuckLoading();
@@ -182,7 +181,47 @@
     document.dispatchEvent(new CustomEvent('plaay:cart:updated', { detail: { count: readCount() } }));
   }
 
+  /* ---------- seamless re-renders ----------
+     Every renderer swaps the drawer's HTML wholesale. MutationObserver callbacks run before the
+     browser paints, so here (synchronously) the scroll position is put back, every line glides
+     from where it was to where it is now (FLIP), and the reward moments start in the same frame
+     as the swap. Nothing is ever painted in an in-between state. */
+  var savedScroll = 0, linePos = {};
+  document.addEventListener('scroll', function (e) {
+    var t = e.target;
+    if (t && t.matches && t.matches('cart-drawer .pl-drawer__scroll')) savedScroll = t.scrollTop;
+  }, true);
+
+  function measureLines() {
+    linePos = {};
+    qa('cart-drawer [data-cart-item], [data-cart-page-root] [data-cart-item]').forEach(function (l) {
+      linePos[l.getAttribute('data-key')] = l.offsetTop;
+    });
+  }
+
+  function settleSync() {
+    var sc = q('cart-drawer .pl-drawer__scroll');
+    if (sc && Math.abs(sc.scrollTop - savedScroll) > 1) sc.scrollTop = savedScroll;
+    if (!calm) {
+      qa('cart-drawer [data-cart-item], [data-cart-page-root] [data-cart-item]').forEach(function (l) {
+        var was = linePos[l.getAttribute('data-key')];
+        if (was == null || l.classList.contains('is-new')) return;
+        var dy = was - l.offsetTop;
+        if (!dy) return;
+        l.style.transition = 'none';
+        l.style.transform = 'translateY(' + dy + 'px)';
+        void l.offsetHeight;
+        l.style.transition = 'transform .45s cubic-bezier(.2, .7, .2, 1)';
+        l.style.transform = '';
+        setTimeout(function () { l.style.transition = ''; }, 500);
+      });
+    }
+    rewardMoments();
+    measureLines();
+  }
+
   function onMutation() {
+    settleSync();
     clearTimeout(renderTimer);
     renderTimer = setTimeout(afterRender, 60);
   }
@@ -415,6 +454,7 @@
   /* ---------- boot ---------- */
   function init() {
     rewardMoments();
+    measureLines();
     observe();
     syncCount();
     decorateUpsell();
