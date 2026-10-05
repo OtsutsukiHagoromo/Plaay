@@ -1212,3 +1212,21 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 .plo-lb__media.is-ig iframe { display: block; width: 100%; height: min(720px, 78vh); border: 0; }
 .plo-lb__x { position: absolute; top: -14px; right: -6px; z-index: 2; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 2px solid var(--pl-navy); border-radius: 50%; background: var(--pl-yellow); color: var(--pl-navy); box-shadow: 0 3px 0 var(--pl-navy); cursor: pointer; }
 .plo-lb__ig { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; background: #fff; color: var(--pl-navy); font-size: 14px; font-weight: 800; }
+
+/* ---------- Motion: page transitions + scroll reveal ---------- */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
+::view-transition-group(plo-photo) { animation-duration: .35s; animation-timing-function: cubic-bezier(.2,.8,.2,1); }
+::view-transition-old(plo-photo), ::view-transition-new(plo-photo) { height: 100%; object-fit: cover; }
+/* Header and tab bar stay put while the page changes underneath. */
+.pl-header { view-transition-name: pl-header; }
+.pl-tabbar { view-transition-name: pl-tabbar; }
+::view-transition-group(pl-header), ::view-transition-group(pl-tabbar) { animation: none; }
+
+body.pl-body .plo-rv { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .6s cubic-bezier(.2,.8,.2,1); }
+body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  body.pl-body .plo-rv { opacity: 1; transform: none; transition: none; }
+}

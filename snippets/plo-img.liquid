@@ -2,17 +2,27 @@
   Image with a theme-asset fallback, for the Option A / Option B preview sections.
   Usage: {% render 'plo-img', image: block.settings.image, asset: block.settings.image_asset, width: 1200, alt: 'x', class: 'y', eager: true %}
   `image` (an image_picker value) wins; otherwise `asset` is a file name in /assets.
+  eager: the image is above the fold (loads first, fetchpriority high).
+  Theme assets get a srcset from Shopify's CDN resizer (asset_img_url) so phones fetch a smaller file.
 {%- endcomment -%}
 {%- liquid
   assign w = width | default: 1200
   assign load = 'lazy'
+  assign prio = 'auto'
   if eager
     assign load = 'eager'
+    assign prio = 'high'
   endif
 -%}
 {%- if image != blank -%}
   {%- assign a = alt | default: image.alt -%}
-  {{ image | image_url: width: w | image_tag: loading: load, alt: a, class: class, sizes: sizes }}
+  {{ image | image_url: width: w | image_tag: loading: load, fetchpriority: prio, alt: a, class: class, sizes: sizes }}
 {%- elsif asset != blank -%}
-  <img src="{{ asset | asset_url }}" alt="{{ alt | escape }}" class="{{ class }}" loading="{{ load }}" decoding="async" width="{{ w }}" height="{{ h | default: w }}">
+  {%- capture set -%}
+    {%- for cw in (1..5) -%}
+      {%- assign px = cw | times: 400 -%}
+      {%- if px < w -%}{%- assign sz = px | append: 'x' -%}{{ asset | asset_img_url: sz }} {{ px }}w, {% endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  <img src="{{ asset | asset_url }}"{% if set != blank %} srcset="{{ set }}{{ asset | asset_url }} {{ w }}w" sizes="{{ sizes | default: '100vw' }}"{% endif %} alt="{{ alt | escape }}" class="{{ class }}" loading="{{ load }}" fetchpriority="{{ prio }}" decoding="{% if eager %}sync{% else %}async{% endif %}" width="{{ w }}" height="{{ h | default: w }}">
 {%- endif -%}

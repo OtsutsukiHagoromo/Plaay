@@ -406,12 +406,12 @@
     "blocks": {
       "16216491870256628967": {
         "type": "shopify://apps/bss-product-labels-badges/blocks/bss-pl-config-data/91bfe765-b604-49a1-805e-3599fa600b24",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       },
       "1232542678405107163": {
         "type": "shopify://apps/instafeed/blocks/head-block/c447db20-095d-4a10-9725-b5977662c9d5",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       },
       "17676059084223943535": {
@@ -426,7 +426,7 @@
       },
       "2200952712151285029": {
         "type": "shopify://apps/microsoft-clarity/blocks/brandAgents_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       },
       "14060646107696862457": {
@@ -436,7 +436,7 @@
       },
       "10641372206048101839": {
         "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-global-embed/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
-        "disabled": false,
+        "disabled": true,
         "settings": {}
       }
     }

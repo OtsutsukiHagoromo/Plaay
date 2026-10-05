@@ -458,7 +458,65 @@
     }, { passive: true });
   }
 
+  /* Scroll reveal: cards and headings below the fold rise in as they enter the viewport,
+     staggered within each row. Anything already on screen at load is left alone (no flash),
+     and nothing animates when the visitor prefers reduced motion. */
+  function initReveal() {
+    if (!('IntersectionObserver' in window)) return;
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var sel = '.plo-head, .plo-px__head, .plo-card, .plo-cat, .plo-perk, .plo-why2__usp, .plo-prev__card, .plo-vid, .plo-range, .plo-pfaq__i';
+    var els = document.querySelectorAll(sel);
+    var vh = window.innerHeight;
+    var io = new IntersectionObserver(function (es) {
+      var n = 0;
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        e.target.style.transitionDelay = Math.min(n++ * 60, 300) + 'ms';
+        e.target.classList.add('is-in');
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    Array.prototype.forEach.call(els, function (el) {
+      if (el.getBoundingClientRect().top < vh) return;
+      el.classList.add('plo-rv');
+      io.observe(el);
+    });
+    /* Once shown, hand the element back to its own styles (hover transitions etc.). */
+    document.addEventListener('transitionend', function (e) {
+      var t = e.target;
+      if (e.propertyName !== 'transform' || !t.classList || !t.classList.contains('is-in')) return;
+      t.style.transitionDelay = '';
+      t.classList.remove('plo-rv', 'is-in');
+    });
+  }
+
+  /* Page transitions (cross-document View Transitions, Chrome/Edge/Safari 18+): the product
+     photo the visitor tapped morphs into the product page's first photo. The name is set on
+     the clicked card only (names must be unique), and on the gallery's first photo when the
+     product page is revealed. */
+  function initTransitions() {
+    var card = null;
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href*="/products/"]');
+      if (!a || e.defaultPrevented) return;
+      var c = a.closest('.plo-card, .plo-tile, .pl-search__row');
+      var img = c && c.querySelector('img');
+      if (card) card.style.viewTransitionName = '';
+      if (img) { img.style.viewTransitionName = 'plo-photo'; card = img; }
+    }, true);
+    window.addEventListener('pageshow', function () { if (card) { card.style.viewTransitionName = ''; card = null; } });
+    window.addEventListener('pagereveal', function (e) {
+      if (!e.viewTransition) return;
+      var hero = document.querySelector('[data-plo-phtrack] img');
+      if (!hero) return;
+      hero.style.viewTransitionName = 'plo-photo';
+      e.viewTransition.finished.then(function () { hero.style.viewTransitionName = ''; });
+    });
+  }
+  initTransitions();
+
   function init() {
+    initReveal();
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-carousel]'), initCarousel);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-pdp]'), initPdp);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-photos]'), initPhotos);
