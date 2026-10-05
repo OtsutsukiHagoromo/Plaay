@@ -116,8 +116,45 @@
         ],
         "link_label": "Shop all",
         "link_url": "/collections/shop-all?view=option-b",
-        "limit": 4
-      }
+        "limit": 4,
+        "tab_label": "Bestsellers"
+      },
+      "blocks": {
+        "t_tr": {
+          "type": "tab",
+          "settings": {
+            "label": "Truffles",
+            "collection": "chocolate-truffles"
+          }
+        },
+        "t_ba": {
+          "type": "tab",
+          "settings": {
+            "label": "Bars",
+            "collection": "chocolate-bars"
+          }
+        },
+        "t_sl": {
+          "type": "tab",
+          "settings": {
+            "label": "Slabs",
+            "collection": "new-chocolate-slabs"
+          }
+        },
+        "t_va": {
+          "type": "tab",
+          "settings": {
+            "label": "Variety",
+            "collection": "variety-packs"
+          }
+        }
+      },
+      "block_order": [
+        "t_tr",
+        "t_ba",
+        "t_sl",
+        "t_va"
+      ]
     },
     "categories": {
       "type": "plo-categories",
@@ -202,58 +239,61 @@
       }
     },
     "reviews": {
-      "type": "plo-reviews",
-      "settings": {
-        "breakdown": "104,5,5,1,7",
-        "write_label": "",
-        "all_url": "",
-        "eyebrow": "Reviews",
-        "heading": "Loved by",
-        "heading_light": "[count] Plaayers",
-        "rows": 4
-      },
+      "type": "plo-pdp-reviews",
       "blocks": {
-        "photo_1": {
-          "type": "photo",
+        "r0": {
+          "type": "review",
           "settings": {
-            "image_asset": "plo-review-jc.jpg",
             "quote": "I am in love with every product. Started off as a pistachio truffle fan…",
             "name": "JC",
-            "product": "Plaay Store"
+            "product": "Plaay Store",
+            "image_asset": "plo-review-jc.jpg"
           }
         },
-        "photo_2": {
-          "type": "photo",
+        "r1": {
+          "type": "review",
           "settings": {
-            "image_asset": "plo-review-fidha.jpg",
             "quote": "Undoubtedly the tastiest guilt-free chocolate I’ve ever had!",
             "name": "Fidha N.",
-            "product": "70% Dark Hazelnut"
+            "product": "70% Dark Hazelnut",
+            "image_asset": "plo-review-fidha.jpg"
           }
         },
-        "text_3": {
-          "type": "text",
+        "r2": {
+          "type": "review",
           "settings": {
             "quote": "Truly indulgent, without the guilt :)",
             "name": "Deepa D.",
-            "product": "Almond Brownie Truffles"
+            "product": "Almond Brownie Truffles",
+            "image_asset": ""
           }
         },
-        "text_4": {
-          "type": "text",
+        "r3": {
+          "type": "review",
           "settings": {
             "quote": "Absolutely delicious and healthy! Love it.",
             "name": "Shreya",
-            "product": "Plaay Store"
+            "product": "Plaay Store",
+            "image_asset": ""
           }
         }
       },
       "block_order": [
-        "photo_1",
-        "photo_2",
-        "text_3",
-        "text_4"
-      ]
+        "r0",
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "settings": {
+        "eyebrow": "Reviews",
+        "heading": "Loved by [count] Plaayers",
+        "breakdown": "104,5,5,1,7",
+        "rows": 4,
+        "all_label": "",
+        "all_url": "",
+        "live_count": 4,
+        "band": true
+      }
     },
     "videos": {
       "type": "plo-videos",
@@ -300,6 +340,15 @@
         "reel_3",
         "reel_4"
       ]
+    },
+    "perks": {
+      "type": "plo-perks",
+      "settings": {
+        "sub_heading": "15% off every box",
+        "sub_link": "How it works",
+        "sub_url": "/pages/subscribe-save",
+        "ladder_heading": "The more you plaay"
+      }
     }
   },
   "order": [
@@ -307,6 +356,7 @@
     "claims",
     "bestsellers",
     "categories",
+    "perks",
     "why",
     "reviews",
     "videos"

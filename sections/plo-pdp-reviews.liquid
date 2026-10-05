@@ -23,10 +23,21 @@
   if total == 0
     assign total = 1
   endif
+  comment
+    Live Judge.me data (same metafield as the staging product page): real histogram and the
+    latest 4-5 star reviews with text. Falls back to the breakdown setting and blocks.
+  endcomment
+  assign jm = shop.metafields.judgeme.all_reviews_widget_v2025_data.value
+  if jm.average_rating
+    assign rating = jm.average_rating | times: 1.0 | round: 1
+  endif
+  if jm.number_of_reviews
+    assign count = jm.number_of_reviews | plus: 0
+  endif
   assign count_s = count | append: ''
   assign heading = s.heading | replace: '[count]', count_s
 -%}
-<div class="pl plo plo-px plo-prev" id="plo-reviews">
+<div class="pl plo plo-px plo-prev{% if s.band %} plo-prev--band{% endif %}" id="plo-reviews">
   <div class="plo-wrap">
     <div class="plo-px__head">
       <div>
@@ -42,6 +53,13 @@
         {%- render 'plo-stars', size: 16, label: lbl -%}
         <p class="plo-prev__c">Based on <b>{{ count }}</b> reviews across all Plaay products</p>
         <div class="plo-prev__bars">
+          {%- if jm.histogram != blank -%}
+            {%- assign hist = jm.histogram | sort: 'rating' | reverse -%}
+            {%- for row in hist limit: s.rows -%}
+              {%- assign pct = row.percentage | round -%}
+              <div class="plo-prev__bar"><span>{{ row.rating }} star</span><i><u style="width: {{ pct }}%"></u></i><span>{% if pct == 0 and row.frequency > 0 %}&lt;1{% else %}{{ pct }}{% endif %}%</span></div>
+            {%- endfor -%}
+          {%- else -%}
           {%- for c in counts limit: s.rows -%}
             {%- liquid
               assign star = 6 | minus: forloop.index
@@ -54,9 +72,36 @@
             -%}
             <div class="plo-prev__bar"><span>{{ star }} star</span><i><u style="width: {{ pct }}%"></u></i><span>{{ pct_label | escape }}</span></div>
           {%- endfor -%}
+          {%- endif -%}
         </div>
       </div>
       <div class="plo-prev__cards">
+        {%- assign shown = 0 -%}
+        {%- for r in jm.all_reviews -%}
+          {%- if shown >= s.live_count -%}{%- break -%}{%- endif -%}
+          {%- assign body = r.body_html | strip_html | strip -%}
+          {%- if r.rating < 4 or body.size < 25 -%}{%- continue -%}{%- endif -%}
+          {%- assign shown = shown | plus: 1 -%}
+          {%- assign pic = r.pictures_urls | first -%}
+          <figure class="plo-prev__card">
+            <div class="plo-prev__top">
+              {%- capture rl -%}{{ r.rating }} out of 5 stars{%- endcapture -%}
+              {%- render 'plo-stars', size: 13, label: rl -%}
+              {%- if r.verified_buyer -%}<span class="plo-prev__ver">{%- render 'pl-icon', name: 'check', size: 12, stroke: 2.6 -%}Verified buyer</span>{%- endif -%}
+            </div>
+            {%- if pic -%}<img class="plo-prev__shot" src="{{ pic.compact | default: pic.original }}" alt="Photo from {{ r.reviewer_name | escape }}" loading="lazy" width="160" height="160">{%- endif -%}
+            <blockquote>“{{ body | truncatewords: 34 }}”</blockquote>
+            <figcaption>
+              {%- if r.product_pictures_url != blank and r.is_shop_review != true -%}
+                <img class="plo-prev__av" src="{{ r.product_pictures_url }}" alt="" loading="lazy" width="48" height="48">
+              {%- else -%}
+                <span class="plo-prev__av plo-prev__av--i" aria-hidden="true">{{ r.reviewer_initial | default: r.reviewer_name | slice: 0 }}</span>
+              {%- endif -%}
+              <span><b>{{ r.reviewer_name | default: 'Plaayer' }}</b>{%- if r.product_title != blank and r.is_shop_review != true -%}<small><a href="{{ r.product_url }}">{{ r.product_title }}</a></small>{%- endif -%}</span>
+            </figcaption>
+          </figure>
+        {%- endfor -%}
+        {%- if shown == 0 -%}
         {%- for block in section.blocks -%}
           {%- assign b = block.settings -%}
           <figure class="plo-prev__card" {{ block.shopify_attributes }}>
@@ -77,6 +122,7 @@
             </figcaption>
           </figure>
         {%- endfor -%}
+        {%- endif -%}
       </div>
     </div>
   </div>
@@ -92,7 +138,9 @@
     { "type": "text", "id": "breakdown", "label": "Reviews per star, 5 to 1 (counts)", "default": "104,5,5,1,7" },
     { "type": "range", "id": "rows", "label": "Star rows to show", "min": 3, "max": 5, "step": 1, "default": 4 },
     { "type": "text", "id": "all_label", "label": "All reviews link label", "default": "Read all reviews" },
-    { "type": "url", "id": "all_url", "label": "All reviews page" }
+    { "type": "url", "id": "all_url", "label": "All reviews page" },
+    { "type": "range", "id": "live_count", "label": "Live reviews to show (Judge.me)", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "band", "label": "Cream band background", "default": false }
   ],
   "blocks": [
     {

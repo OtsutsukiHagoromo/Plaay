@@ -1,0 +1,53 @@
+{%- comment -%}
+  Option B homepage: the two reasons to buy more from Plaay, side by side.
+  Left: Subscribe & Save (saving, three steps, link). Right: the rewards ladder from the cart
+  tier settings (same numbers as the bag), so the homepage, the announcement and the bag agree.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign ship = settings.cart_tier_ship | default: 75
+  assign a1 = settings.cart_tier_1_spend | default: 250
+  assign a2 = settings.cart_tier_2_spend | default: 350
+  assign a3 = settings.cart_tier_3_spend | default: 500
+  assign l1 = settings.cart_tier_1_label | default: '7% off'
+  assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift'
+  assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift'
+-%}
+<div class="pl plo plo-sec plo-perks">
+  <div class="plo-wrap plo-perks__grid">
+    <a class="plo-perk plo-perk--sub" href="{{ s.sub_url | default: '/pages/subscribe-save' }}">
+      <span class="plo-perk__tag">{%- render 'pl-icon', name: 'refresh', size: 14, stroke: 2.4 -%}Subscribe &amp; save</span>
+      <h2 class="plo-perk__t">{{ s.sub_heading }}</h2>
+      <ol class="plo-perk__steps">
+        <li><b>1</b><span>Pick your favourites</span></li>
+        <li><b>2</b><span>We deliver every 2 or 4 weeks, free</span></li>
+        <li><b>3</b><span>Skip, swap or cancel any time</span></li>
+      </ol>
+      <span class="plo-perk__go">{{ s.sub_link }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.4 %}</span>
+    </a>
+    <div class="plo-perk plo-perk--ladder">
+      <span class="plo-perk__tag">{%- render 'pl-icon', name: 'gift', size: 14, stroke: 2.4 -%}Bag rewards</span>
+      <h2 class="plo-perk__t">{{ s.ladder_heading }}</h2>
+      <ol class="plo-ladder">
+        <li><b>AED {{ ship }}</b><span>Free delivery</span></li>
+        <li><b>AED {{ a1 }}</b><span>{{ l1 }}</span></li>
+        <li><b>AED {{ a2 }}</b><span>{{ l2 }}</span></li>
+        <li><b>AED {{ a3 }}</b><span>{{ l3 }}</span></li>
+      </ol>
+      <p class="plo-perk__fine">Applied automatically in your bag.</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: perks",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "sub_heading", "label": "Subscribe card heading", "default": "15% off every box" },
+    { "type": "text", "id": "sub_link", "label": "Subscribe card link label", "default": "How it works" },
+    { "type": "url", "id": "sub_url", "label": "Subscribe card link" },
+    { "type": "text", "id": "ladder_heading", "label": "Rewards card heading", "default": "The more you plaay" }
+  ]
+}
+{% endschema %}

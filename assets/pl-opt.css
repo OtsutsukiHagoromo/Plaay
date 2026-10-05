@@ -1116,3 +1116,52 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
   .plo-srch__h { font-size: 56px; margin-top: 40px; }
   .plo-srch__h span { font-size: 14px; }
 }
+
+/* ---------- homepage: product tabs, perks, reviews band, videos ---------- */
+.plo-tabsel { padding-top: 0; margin-bottom: 20px; }
+.plo-tabsel button { flex: 0 0 auto; height: 38px; padding: 0 16px; border-radius: 999px; border: 2px solid var(--pl-navy); background: #fff; font: inherit; font-size: 14px; font-weight: 700; color: var(--pl-navy); cursor: pointer; }
+.plo-tabsel button.is-on { background: var(--pl-yellow); box-shadow: 0 2px 0 var(--pl-navy); }
+.plo-tabpan.is-in > * { animation: plo-usp-in .4s cubic-bezier(.2, .7, .2, 1) both; }
+.plo-tabpan.is-in > :nth-child(2) { animation-delay: .05s; } .plo-tabpan.is-in > :nth-child(3) { animation-delay: .1s; } .plo-tabpan.is-in > :nth-child(4) { animation-delay: .15s; }
+/* cards: name max two lines, price at the bottom so rows line up */
+.plo-card { display: flex; flex-direction: column; }
+.plo-card__body { flex: 1; display: flex; flex-direction: column; }
+.plo-card__name { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.plo-card__foot { margin-top: auto; }
+
+.plo-perks__grid { display: grid; gap: 14px; }
+.plo-perk { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 24px 22px; border-radius: 28px; color: var(--pl-navy); overflow: hidden; }
+.plo-perk--sub { background: var(--pl-yellow); }
+.plo-perk--ladder { background: #E1E6F7; }
+.plo-perk__tag { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #fff; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.plo-perk__t { margin: 0; font-size: 30px; font-weight: 900; line-height: .95; text-transform: uppercase; }
+.plo-perk__steps { display: grid; gap: 10px; margin: 4px 0 0; padding: 0; list-style: none; }
+.plo-perk__steps li { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 700; }
+.plo-perk__steps b { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: #fff; border: 2px solid var(--pl-navy); box-shadow: 0 2px 0 var(--pl-navy); font-size: 13px; font-weight: 900; }
+.plo-perk__go { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font-size: 15px; font-weight: 800; }
+.plo-perk--sub:hover .plo-perk__go .pl-ic { transform: translateX(4px); }
+.plo-perk__go .pl-ic { transition: transform .2s ease; }
+.plo-ladder { position: relative; display: grid; gap: 10px; margin: 4px 0 0; padding: 0 0 0 22px; list-style: none; }
+.plo-ladder::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 3px; border-radius: 3px; background: linear-gradient(var(--pl-yellow), var(--pl-purple)); }
+.plo-ladder li { position: relative; display: flex; align-items: baseline; gap: 12px; font-size: 15px; font-weight: 700; }
+.plo-ladder li::before { content: ""; position: absolute; left: -22px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 3px solid var(--pl-navy); box-sizing: border-box; }
+.plo-ladder b { min-width: 76px; font-size: 13px; font-weight: 900; opacity: .7; }
+.plo-perk__fine { margin: 0; font-size: 12px; opacity: .7; }
+@media (min-width: 1024px) {
+  .plo-perks__grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .plo-perk { padding: 40px; gap: 16px; }
+  .plo-perk__t { font-size: 44px; }
+  .plo-perk__steps li, .plo-ladder li { font-size: 17px; }
+}
+/* reviews as a cream band (homepage) */
+.plo-prev--band { background: var(--pl-cream); padding-top: 56px; padding-bottom: 56px; margin-top: 0; }
+.plo-prev--band .plo-prev__sum { background: #fff; }
+.plo-prev__shot { width: 64px; height: 64px; border-radius: 12px; object-fit: cover; }
+.plo-prev__card blockquote { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+.plo-prev__card small a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+@media (min-width: 1024px) { .plo-prev--band { padding-top: 88px; padding-bottom: 88px; } }
+/* "See it in real life": shorter cards on desktop */
+@media (min-width: 1024px) { .plo-vid, .pl-skin-b .plo-vid { aspect-ratio: 4 / 5; } }
+/* hero: dots over the slide on mobile, rating on one line */
+@media (max-width: 1023.98px) { .plo-car__dots { position: absolute; left: 0; right: 0; bottom: 10px; padding: 0; background: transparent !important; } }
+.plo-bn__proof { white-space: nowrap; }

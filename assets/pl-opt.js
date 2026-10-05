@@ -220,6 +220,16 @@
   }, true);
 
 
+  /* ---------- product grid tabs (plo-products) ---------- */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-plo-tabsel]');
+    if (!b) return;
+    var root = b.closest('.plo-wrap');
+    var i = b.getAttribute('data-plo-tabsel');
+    Array.prototype.forEach.call(root.querySelectorAll('[data-plo-tabsel]'), function (x) { var on = x === b; x.classList.toggle('is-on', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    Array.prototype.forEach.call(root.querySelectorAll('[data-plo-tabpan]'), function (pnl) { var on = pnl.getAttribute('data-plo-tabpan') === i; pnl.hidden = !on; if (on) { pnl.classList.remove('is-in'); void pnl.offsetWidth; pnl.classList.add('is-in'); } });
+  });
+
   /* ---------- product details tabs ---------- */
   document.addEventListener('click', function (e) {
     var tab = e.target.closest && e.target.closest('[data-plo-tab]');

@@ -14,7 +14,20 @@
 <div class="pl plo plo-sec{% if s.pad_bottom %} plo-sec--end{% endif %}">
   <div class="plo-wrap">
     {%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light, link_label: s.link_label, link_url: s.link_url -%}
-    <div class="plo-grid">
+    {%- liquid
+      comment
+        Optional tabs: the first tab is the product list above ("First tab label"), each "Tab"
+        block adds a collection. Panels render up front; the chips switch them in place.
+      endcomment
+      assign tabs = section.blocks | where: 'type', 'tab'
+    -%}
+    {%- if tabs.size > 0 -%}
+      <div class="plo-chips plo-tabsel" role="tablist" aria-label="Browse">
+        <button type="button" role="tab" class="is-on" aria-selected="true" data-plo-tabsel="0">{{ s.tab_label }}</button>
+        {%- for b in tabs -%}<button type="button" role="tab" aria-selected="false" data-plo-tabsel="{{ forloop.index }}" {{ b.shopify_attributes }}>{{ b.settings.label }}</button>{%- endfor -%}
+      </div>
+    {%- endif -%}
+    <div class="plo-grid plo-tabpan" data-plo-tabpan="0">
       {%- for p in s.products -%}
         {%- if p.id != current_id and shown < lim -%}
           {%- render 'plo-card', product: p, eager: false, view: template.suffix -%}
@@ -22,6 +35,16 @@
         {%- endif -%}
       {%- endfor -%}
     </div>
+    {%- for b in tabs -%}
+      <div class="plo-grid plo-tabpan" data-plo-tabpan="{{ forloop.index }}" hidden>
+        {%- assign n = 0 -%}
+        {%- for p in b.settings.collection.products -%}
+          {%- if p.id == current_id or p.available == false or n >= lim -%}{%- continue -%}{%- endif -%}
+          {%- render 'plo-card', product: p, eager: false, view: template.suffix -%}
+          {%- assign n = n | plus: 1 -%}
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
   </div>
 </div>
 
@@ -37,7 +60,13 @@
     { "type": "range", "id": "limit", "label": "Cards to show", "min": 2, "max": 8, "step": 2, "default": 4 },
     { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop all" },
     { "type": "url", "id": "link_url", "label": "Link" },
-    { "type": "checkbox", "id": "pad_bottom", "label": "Space below (last section on the page)", "default": false }
+    { "type": "checkbox", "id": "pad_bottom", "label": "Space below (last section on the page)", "default": false },
+    { "type": "text", "id": "tab_label", "label": "First tab label (when tabs are added)", "default": "Bestsellers" }
+  ],
+  "blocks": [
+    { "type": "tab", "name": "Tab", "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "Truffles" },
+      { "type": "collection", "id": "collection", "label": "Collection" } ] }
   ]
 }
 {% endschema %}
