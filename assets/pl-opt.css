@@ -1018,34 +1018,50 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
 .plo-cat--photo .plo-cat__photo { width: 100%; height: 100%; }
 
 /* ==========================================================================
-   Collection banner (plo-collection): photo backdrop + title on the left,
-   colour fade so the text always reads; Shop all shows the range tiles.
+   Collection banner (plo-collection): bold range colour, big title, a price line, USPs with
+   icons, and the range photo as a tilted sticker card (right on desktop, top-right on mobile).
    ========================================================================== */
-.plo-hero { position: relative; overflow: hidden; background: var(--tint, var(--pl-cream)); isolation: isolate; }
-.plo-hero__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 85% 50%); }
-.plo-hero--photo::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, var(--tint) 0%, var(--tint) 30%, color-mix(in srgb, var(--tint) 70%, transparent) 46%, transparent 64%); }
-.plo-hero__in { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding-top: 28px; padding-bottom: 28px; }
-.plo-hero--photo .plo-hero__in { min-height: 236px; justify-content: flex-end; }
-.plo-hero__n { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--pl-navy); opacity: .7; }
-.plo-hero__t { margin: 0; max-width: 62%; font-size: 36px; font-weight: 900; line-height: .95; text-transform: uppercase; letter-spacing: -.01em; color: var(--pl-navy); }
-.plo-hero--all .plo-hero__t, .plo-hero:not(.plo-hero--photo) .plo-hero__t { max-width: none; }
-.plo-hero__p { margin: 0; max-width: 56%; font-size: 14px; line-height: 1.45; color: var(--pl-navy); opacity: .8; }
-.plo-hero:not(.plo-hero--photo) .plo-hero__p { max-width: 560px; }
-.plo-hero__facts { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 0; padding: 0; list-style: none; max-width: 62%; }
-.plo-hero__facts li { padding: 5px 10px; border-radius: 999px; background: rgba(255, 255, 255, .8); font-size: 11px; font-weight: 800; color: var(--pl-navy); line-height: 1.2; }
-.plo-hero__tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding-bottom: 28px; }
+.plo-hero { position: relative; overflow: hidden; background: var(--tint, var(--pl-yellow)); color: var(--ink, var(--pl-navy)); }
+.plo-hero__in { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 14px; padding-top: 24px; padding-bottom: 24px; }
+.plo-hero__copy { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.plo-hero__t { margin: 0; font-size: 34px; font-weight: 900; line-height: .95; text-transform: uppercase; letter-spacing: -.01em; color: var(--ink); }
+.plo-hero__n { margin: 0; font-size: 13px; font-weight: 700; color: var(--ink); opacity: .85; }
+.plo-hero__usps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 10px; margin: 8px 0 0; padding: 0; list-style: none; grid-column: 1 / -1; }
+.plo-hero__usps li { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; line-height: 1.2; color: var(--ink); }
+.plo-hero__ic { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #fff; color: var(--pl-navy); box-shadow: 0 2px 0 rgba(8, 29, 72, .9); }
+.plo-hero__card { width: 128px; aspect-ratio: 1; border-radius: 20px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 0 var(--pl-navy), 0 12px 24px -12px rgba(8, 29, 72, .5); transform: rotate(4deg); margin: 4px 2px 0 0; animation: plo-card-in .7s cubic-bezier(.3, 1.4, .5, 1) both; }
+.plo-hero__card img, .plo-hero__card picture { display: block; width: 100%; height: 100%; }
+.plo-hero__img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 60% 50%); }
+@keyframes plo-card-in { from { opacity: 0; transform: rotate(12deg) scale(.85); } to { opacity: 1; transform: rotate(4deg); } }
+.plo-hero__usps li { animation: plo-usp-in .45s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(.15s + var(--i, 1) * 60ms); }
+@keyframes plo-usp-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.plo-hero--all .plo-hero__copy { grid-column: 1 / -1; }
+.plo-hero__tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding-bottom: 24px; }
 .plo-hero__tiles .pl-mtile__pic { aspect-ratio: 5 / 4; }
+.plo-hero__tiles .pl-mtile, .plo-hero__tiles .pl-mtile__t b { color: var(--ink); }
+.plo-hero__tiles .pl-mtile__t small { color: var(--ink); opacity: .7; }
+@media (min-width: 768px) { .plo-hero__usps { grid-template-columns: repeat(4, max-content); gap: 10px 24px; } }
 @media (min-width: 1024px) {
-  .plo-hero--photo .plo-hero__in { min-height: 400px; justify-content: center; padding-top: 48px; padding-bottom: 48px; }
-  .plo-hero__in { padding-top: 48px; padding-bottom: 40px; gap: 12px; }
-  .plo-hero__t { font-size: 72px; max-width: 48%; }
-  .plo-hero__p { font-size: 17px; max-width: 40%; }
-  .plo-hero__facts { max-width: 48%; gap: 8px; }
-  .plo-hero__facts li { padding: 7px 14px; font-size: 13px; }
-  .plo-hero--photo::before { background: linear-gradient(90deg, var(--tint) 0%, var(--tint) 34%, color-mix(in srgb, var(--tint) 60%, transparent) 46%, transparent 58%); }
+  .plo-hero__in { grid-template-columns: minmax(0, 1fr) minmax(0, 44%); align-items: center; gap: 48px; padding-top: 48px; padding-bottom: 48px; min-height: 380px; }
+  .plo-hero__copy { gap: 12px; }
+  .plo-hero__t { font-size: 72px; }
+  .plo-hero__n { font-size: 16px; }
+  .plo-hero__usps { grid-column: auto; margin-top: 14px; grid-template-columns: repeat(2, max-content); gap: 14px 28px; }
+  .plo-hero__usps li { font-size: 15px; gap: 10px; }
+  .plo-hero__ic { width: 34px; height: 34px; }
+  .plo-hero__card { width: 100%; aspect-ratio: 4 / 3; border-radius: 32px; border-width: 6px; box-shadow: 0 6px 0 var(--pl-navy), 0 24px 40px -20px rgba(8, 29, 72, .55); transform: rotate(2.5deg); margin: 0; }
+  @keyframes plo-card-in { from { opacity: 0; transform: rotate(8deg) scale(.92); } to { opacity: 1; transform: rotate(2.5deg); } }
   .plo-hero__tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; padding-bottom: 48px; }
   .plo-hero__tiles .pl-mtile__pic { aspect-ratio: 4 / 3; }
 }
+@media (prefers-reduced-motion: reduce) { .plo-hero__card, .plo-hero__usps li { animation: none; } }
+/* end of the page: room above the footer */
+.plo-coll { padding-bottom: 72px; }
+@media (min-width: 1024px) { .plo-coll { padding-bottom: 112px; } }
+/* swipe rows: keep a gutter after the last card */
+.plo-range__row::after { content: ""; flex: 0 0 1px; }
+@media (max-width: 1023.98px) { .plo-range__row { padding-right: var(--o-side); } }
+
 /* chips: count */
 .plo-chips a small { margin-left: 6px; font-size: 11px; font-weight: 700; opacity: .55; }
 /* Shop all: one row per range */
@@ -1062,11 +1078,3 @@ body.pl-skin-a, body.pl-skin-b { background: var(--o-ground); }
   .plo-range__row > :nth-child(n+5) { display: none; }
 }
 .plo-range:last-of-type { padding-bottom: 24px; }
-/* Desktop: a theme range photo (4:3) sits on the right half instead of stretching across the
-   whole banner; its backdrop matches the tint so the join is invisible. Wide uploaded banners
-   (custom.banner) keep filling the full width. */
-@media (min-width: 1024px) {
-  .plo-hero--photo .plo-hero__img.is-half { left: auto; width: 54%; object-position: 70% 50%; }
-  .plo-hero--photo:has(.is-half)::before { background: linear-gradient(90deg, var(--tint) 0%, var(--tint) 46%, color-mix(in srgb, var(--tint) 0%, transparent) 54%); }
-  .plo-hero--photo .plo-hero__in { min-height: 440px; }
-}

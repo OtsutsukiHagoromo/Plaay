@@ -24,6 +24,7 @@
     focus|fact;fact).
   endcomment
   assign b_asset = ''
+  assign b_ink = '#081D48'
   assign b_tint = '#FFF6DE'
   assign b_pos = '85% 50%'
   assign b_facts = ''
@@ -39,8 +40,12 @@
         assign b_pos = f[3] | strip
       endif
       assign b_facts = f[4] | split: ';'
+      if f[5] != blank
+        assign b_ink = f[5] | strip
+      endif
     endif
   endfor
+  assign min_price = collection.products | map: 'price' | sort | first
   comment
     Banner priority: collection metafields custom.banner (+ custom.banner_mobile) > the theme photo
     for this handle > a plain colour banner. (The old collection images were not made for banners.)
@@ -67,23 +72,36 @@
   assign chip_labels = s.chip_labels | split: '|'
   assign chip_handles = s.chip_handles | split: '|'
 -%}
-<div class="pl plo">
+<div class="pl plo plo-coll">
   {%- paginate collection.products by s.per_page -%}
-    <header class="plo-hero{% if has_photo %} plo-hero--photo{% endif %}{% if is_all %} plo-hero--all{% endif %}" style="--tint: {{ b_tint }}; --pos: {{ b_pos }};">
-      {%- if banner_d != blank -%}
-        <picture>
-          {%- if banner_m != blank -%}<source media="(max-width: 767px)" srcset="{{ banner_m | image_url: width: 800 }} 800w, {{ banner_m | image_url: width: 1200 }} 1200w" sizes="100vw">{%- endif -%}
-          {{ banner_d | image_url: width: 2400 | image_tag: class: 'plo-hero__img', loading: 'eager', fetchpriority: 'high', sizes: '100vw', widths: '1200, 1600, 2400', alt: '' }}
-        </picture>
-      {%- elsif b_asset != blank -%}
-        <img class="plo-hero__img is-half" src="{{ b_asset | asset_url }}" alt="" width="1448" height="1086" loading="eager" fetchpriority="high">
-      {%- endif -%}
+    <header class="plo-hero{% if has_photo %} plo-hero--photo{% endif %}{% if is_all %} plo-hero--all{% endif %}" style="--tint: {{ b_tint }}; --ink: {{ b_ink }}; --pos: {{ b_pos }};">
       <div class="plo-wrap plo-hero__in">
-        <p class="plo-hero__n">{{ collection.products_count }} products</p>
-        <h1 class="plo-hero__t">{{ collection.title }}</h1>
-        {%- if intro != blank -%}<p class="plo-hero__p">{{ intro }}</p>{%- endif -%}
-        {%- if b_facts.size > 0 -%}
-          <ul class="plo-hero__facts">{%- for x in b_facts -%}{%- assign x = x | strip -%}{%- if x != blank -%}<li>{{ x }}</li>{%- endif -%}{%- endfor -%}</ul>
+        <div class="plo-hero__copy">
+          <h1 class="plo-hero__t">{{ collection.title }}</h1>
+          <p class="plo-hero__n">{{ collection.products_count }} products{% if min_price > 0 %} · from {% render 'plaay-aed', fils: min_price %}{% endif %}</p>
+          {%- if b_facts.size > 0 -%}
+            <ul class="plo-hero__usps">
+              {%- for x in b_facts -%}
+                {%- assign x = x | strip -%}
+                {%- if x == blank -%}{%- continue -%}{%- endif -%}
+                {%- assign ux = x | split: ':' -%}
+                {%- if ux.size > 1 -%}{%- assign ic = ux[0] -%}{%- assign lb = ux[1] -%}{%- else -%}{%- assign ic = 'check' -%}{%- assign lb = x -%}{%- endif -%}
+                <li style="--i: {{ forloop.index }}"><span class="plo-hero__ic">{%- render 'pl-icon', name: ic, size: 16, stroke: 2.4 -%}</span>{{ lb }}</li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+        {%- if has_photo -%}
+          <div class="plo-hero__card">
+            {%- if banner_d != blank -%}
+              <picture>
+                {%- if banner_m != blank -%}<source media="(max-width: 767px)" srcset="{{ banner_m | image_url: width: 800 }} 800w, {{ banner_m | image_url: width: 1200 }} 1200w" sizes="50vw">{%- endif -%}
+                {{ banner_d | image_url: width: 1600 | image_tag: class: 'plo-hero__img', loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 50vw, 40vw', widths: '600, 1000, 1600', alt: '' }}
+              </picture>
+            {%- else -%}
+              <img class="plo-hero__img" src="{{ b_asset | asset_url }}" alt="" width="1448" height="1086" loading="eager" fetchpriority="high">
+            {%- endif -%}
+          </div>
         {%- endif -%}
       </div>
       {%- if is_all -%}
@@ -216,7 +234,7 @@
     {
       "type": "textarea",
       "id": "banners",
-      "label": "Banners (handle|theme asset|backdrop colour|photo focus|fact;fact)",
+      "label": "Banners (handle|photo asset|colour|photo focus|icon:USP;icon:USP|text colour)",
       "info": "Photo order: collection metafield custom.banner (and custom.banner_mobile), then this theme photo, else a plain colour banner."
     },
     {
