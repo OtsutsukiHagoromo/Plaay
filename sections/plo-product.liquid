@@ -221,6 +221,51 @@
         </div>
         {%- if s.trust != blank -%}<p class="plo-buy__trust">{{ s.trust }}</p>{%- endif -%}
       {%- endform -%}
+      {%- liquid
+        capture d_ingredients
+          render 'pl-mf-text', mf: product.metafields.arena.exact_ingredients
+        endcapture
+        capture d_allergens
+          render 'pl-mf-text', mf: product.metafields.custom.allergens
+        endcapture
+        capture d_nutrition
+          render 'pl-mf-text', mf: product.metafields.custom.nutrition_facts
+        endcapture
+        capture d_suitable
+          render 'pl-mf-text', mf: product.metafields.custom.suitable_for
+        endcapture
+        capture d_shipping
+          echo product.metafields.custom.shipping_policy | metafield_tag
+        endcapture
+        assign d_storage = 'Keep refrigerated. Best at room temperature.'
+        if product.title contains 'Truffle'
+          assign d_storage = 'Keep refrigerated. Best cold.'
+        endif
+      -%}
+      <div class="plo-details" id="plo-details">
+        <p class="plo-details__h">Product details</p>
+        {%- if product.description != blank -%}
+          <details class="plo-det"><summary><span>Description</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b plo-rte">{{ product.description }}</div></details>
+        {%- endif -%}
+        {%- if d_ingredients != blank -%}
+          <details class="plo-det"><summary><span>Ingredients</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{{ d_ingredients }}</div></details>
+        {%- endif -%}
+        {%- if d_allergens != blank -%}
+          <details class="plo-det"><summary><span>Allergens</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{{ d_allergens }}</div></details>
+        {%- endif -%}
+        {%- if d_nutrition != blank -%}
+          <details class="plo-det"><summary><span>Nutrition</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{{ d_nutrition }}</div></details>
+        {%- endif -%}
+        <details class="plo-det"><summary><span>Storage</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b"><p>{{ d_storage }}</p></div></details>
+        {%- if d_suitable != blank -%}
+          <details class="plo-det"><summary><span>Suitable for</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary><div class="plo-det__b">{{ d_suitable }}</div></details>
+        {%- endif -%}
+        <details class="plo-det"><summary><span>Shipping &amp; delivery</span>{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</summary>
+          <div class="plo-det__b plo-rte">
+            {%- if d_shipping != blank -%}{{ d_shipping }}{%- else -%}<p>Free delivery on orders over AED 75. 1–2 days across the UAE, 3–5 days to the GCC.</p>{%- endif -%}
+          </div>
+        </details>
+      </div>
     </div>
   </div>
 
