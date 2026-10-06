@@ -43,9 +43,6 @@
 
   assign type_labels = 'Bars|Truffles|Slabs|Variety packs|Limited editions|Shop all' | split: '|'
   assign type_urls = '/collections/chocolate-bars|/collections/chocolate-truffles|/collections/new-chocolate-slabs|/collections/variety-packs|/collections/limited-editions|/collections/shop-all' | split: '|'
-  assign crave_labels = "The 3:30 pm reset|Post-workout|Netflix o'clock|The PMS kit" | split: '|'
-  assign crave_urls = '/products/salted-caramel-bar-x12|/products/bar-bunch|/products/truffle-mix|/products/triple-chocolate-truffle' | split: '|'
-  assign crave_colors = 'caramel|pistachio|mocha|limited' | split: '|'
 
   assign promo_img = section.settings.mega_image
   if promo_img == blank
@@ -107,14 +104,6 @@
                     <div class="pl-mega__shop">
                       <div class="pl-mega__head"><p class="pl-label">Shop by type</p><a class="pl-mega__all" href="{{ routes.collections_url }}/shop-all">Shop all {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.2 %}</a></div>
                       <div class="pl-mega__tiles">{%- render 'pl-menu-tiles', size: 'lg' -%}</div>
-                    </div>
-                    <div class="pl-mega__col">
-                      <p class="pl-label">Shop by craving</p>
-                      <ul class="pl-mega__list">
-                        {%- for c in crave_labels -%}
-                          <li style="--i: {{ forloop.index | plus: 5 }}"><a href="{{ crave_urls[forloop.index0] }}"><span class="pl-dot" style="--pl-dot: var(--pl-f-{{ crave_colors[forloop.index0] }})" aria-hidden="true"></span>{{ c }}</a></li>
-                        {%- endfor -%}
-                      </ul>
                     </div>
                     <a class="pl-mega__promo" href="{{ promo_url }}" style="--i: 9">
                       {%- if promo_img != blank -%}
@@ -234,14 +223,6 @@
         <li><a href="/pages/for-the-geeks-1"><span>Our story</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
         <li><a href="{{ account_url }}"><span>{% if customer %}My account{% else %}Sign in{% endif %}</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
       </ul>
-      <div class="pl-menu__group">
-        <p class="pl-label">Shop by craving</p>
-        <div class="pl-menu__cravings">
-          {%- for c in crave_labels -%}
-            <a href="{{ crave_urls[forloop.index0] }}"><span class="pl-dot" style="--pl-dot: var(--pl-f-{{ crave_colors[forloop.index0] }})" aria-hidden="true"></span>{{ c }}</a>
-          {%- endfor -%}
-        </div>
-      </div>
       <a class="pl-menu__rewards" href="/pages/subscribe-save">
         {%- render 'pl-icon', name: 'gift', size: 20, stroke: 2 -%}
         <span><b>Free delivery over AED {{ settings.cart_tier_ship | default: 75 }}</b><small>Up to 15% off + a Mystery Gift as your bag grows</small></span>

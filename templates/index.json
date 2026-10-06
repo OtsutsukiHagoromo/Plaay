@@ -73,61 +73,6 @@
         "link_url": ""
       }
     },
-    "pl_cravings": {
-      "type": "pl-cravings",
-      "blocks": {
-        "crave_reset": {
-          "type": "tile",
-          "settings": {
-            "title": "The 3:30 pm reset",
-            "sub": "",
-            "image": "shopify://shop_images/plaay26-apartment.jpg",
-            "url": "/products/salted-caramel-bar-x12",
-            "wash": "#081D48"
-          }
-        },
-        "crave_workout": {
-          "type": "tile",
-          "settings": {
-            "title": "Post-workout",
-            "sub": "",
-            "image": "shopify://shop_images/plaay26-cross-section.jpg",
-            "url": "/products/bar-bunch",
-            "wash": "#081D48"
-          }
-        },
-        "crave_netflix": {
-          "type": "tile",
-          "settings": {
-            "title": "Netflix o'clock",
-            "sub": "",
-            "image": "shopify://shop_images/plaay26-truffle-spill.jpg",
-            "url": "/products/truffle-mix",
-            "wash": "#081D48"
-          }
-        },
-        "crave_pms": {
-          "type": "tile",
-          "settings": {
-            "title": "The PMS kit",
-            "sub": "",
-            "image": "shopify://shop_images/plaay26-truffle-blush.jpg",
-            "url": "/products/triple-chocolate-truffle",
-            "wash": "#081D48"
-          }
-        }
-      },
-      "block_order": [
-        "crave_reset",
-        "crave_workout",
-        "crave_netflix",
-        "crave_pms"
-      ],
-      "settings": {
-        "eyebrow": "Shop by craving",
-        "heading": "Not by category."
-      }
-    },
     "pl_video_row": {
       "type": "pl-video-row",
       "blocks": {
@@ -402,7 +347,6 @@
     "pl_hero",
     "pl_claims",
     "pl_featured",
-    "pl_cravings",
     "pl_video_row",
     "1773387152feeb0121",
     "pl_founder",
@@ -412,4 +356,3 @@
     "pl_reviews"
   ]
 }
-
