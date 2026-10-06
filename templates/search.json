@@ -10,8 +10,18 @@
 {
   "sections": {
     "main": {
-      "type": "pl-search",
-      "settings": {}
+      "type": "plo-search",
+      "settings": {
+        "popular": "Salted caramel|Pistachio|Peanut butter|Dark chocolate|Truffles|Gift box",
+        "fallback": [
+          "og-plaayer-pack",
+          "triple-chocolate-truffle",
+          "salted-caramel-bar-x12",
+          "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g"
+        ],
+        "fallback_heading": "Our",
+        "fallback_heading_light": "bestsellers"
+      }
     }
   },
   "order": [

@@ -98,9 +98,26 @@
     {%- endcomment -%}
     {%- assign plo_skin = '' -%}
     {%- comment -%} The Subscribe & Save page is built from the Option B sections. {%- endcomment -%}
-    {%- if template.suffix == 'option-a' or template.suffix == 'option-b' or template.name == 'page' and template.suffix == 'subscribe-save' -%}
-      {%- assign plo_skin = template.suffix | remove: 'option-' -%}
-      {%- if template.suffix == 'subscribe-save' -%}{%- assign plo_skin = 'b' -%}{%- endif -%}
+    {%- comment -%}
+      Option B is now the default look on this theme: home, product, collection, search and cart
+      templates (and their alternates, except Build your box) are the Option B layouts, and the
+      Subscribe & Save page is built from the same sections. ?view=option-b still works.
+    {%- endcomment -%}
+    {%- liquid
+      assign plo_b_names = 'index,product,collection,search,cart' | split: ','
+      assign plo_b = false
+      if template.suffix == 'option-b' or template.suffix == 'subscribe-save'
+        assign plo_b = true
+      elsif plo_b_names contains template.name
+        assign plo_b = true
+        if template.suffix contains 'byob' or template.suffix contains 'shogun' or template.suffix contains 'bss'
+          assign plo_b = false
+        endif
+      endif
+    -%}
+    {%- if template.suffix == 'option-a' or plo_b -%}
+      {%- assign plo_skin = 'b' -%}
+      {%- if template.suffix == 'option-a' -%}{%- assign plo_skin = 'a' -%}{%- endif -%}
       {{ 'pl-opt.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
     {% render 'head.fonts' %}
@@ -162,7 +179,7 @@
   {% render 'shogun-head' %}
 </head>
 
-    <body class="pl-body pl-has-tabbar template-{{ template | remove: '.' }}{% if template.suffix == 'option-a' or template.suffix == 'option-b' %} template-{{ template.name }}{% endif %}{% if pl_is_legacy %} pl-legacy{% endif %}{% if plo_skin != blank %} pl-skin-{{ plo_skin }}{% endif %}">
+    <body class="pl-body pl-has-tabbar template-{{ template | remove: '.' }}{% if plo_skin != blank %} template-{{ template.name }}{% endif %}{% if pl_is_legacy %} pl-legacy{% endif %}{% if plo_skin != blank %} pl-skin-{{ plo_skin }}{% endif %}">
     {%- render 'icon-sprite' -%}
     <a class="plaay-skip-link" href="#main">Skip to content</a>
     {% section 'pl-announcement' %}

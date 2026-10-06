@@ -9,8 +9,11 @@
 {%- liquid
   assign s = section.settings
   assign skin = template.suffix | remove: 'option-'
+  if skin != 'a'
+    assign skin = 'b'
+  endif
   assign view_q = ''
-  if template.suffix != blank
+  if template.suffix contains 'option-'
     assign view_q = '?view=' | append: template.suffix
   endif
 
@@ -139,7 +142,7 @@
     <div class="plo-upsell plo-box" data-plo-line data-key="" data-qty="0">
       {%- capture up_key -%}{%- render 'plo-photo-key', handle: up.handle -%}{%- endcapture -%}
       {%- assign up_key = up_key | strip -%}
-      <a class="plo-upsell__pic" href="{{ up.url }}{% if template.suffix != blank %}?view={{ template.suffix }}{% endif %}">
+      <a class="plo-upsell__pic" href="{{ up.url }}{{ view_q }}">
         {%- if up_key != blank -%}{%- assign ph = 'plo-ph-' | append: up_key | append: '-1.jpg' -%}<img src="{{ ph | asset_url }}" alt="{{ up.title | escape }}" loading="lazy" width="160" height="200" class="is-photo">
         {%- elsif up.featured_image -%}{{ up.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: up.title }}{%- endif -%}
       </a>

@@ -10,12 +10,20 @@
 {
   "sections": {
     "main": {
-      "type": "pl-collection",
+      "type": "plo-collection",
       "settings": {
-        "intro": "Thick slabs, 6 to a box. Zero added sugar, 100% clean.",
-        "show_type_chips": true,
-        "show_sub_card": true,
-        "per_page": 24
+        "per_page": 16,
+        "show_promo": true,
+        "promo_url": "/pages/subscribe-save",
+        "chip_labels": "All|Truffles|Bars|Slabs|Variety|Limited",
+        "chip_handles": "shop-all|chocolate-truffles|chocolate-bars|new-chocolate-slabs|variety-packs|limited-editions",
+        "bars_handle": "chocolate-bars",
+        "promo_heading": "Subscribe & save 15%",
+        "promo_body": "on every order, with free delivery. Skip or cancel any time.",
+        "promo_btn": "How it works",
+        "banners": "chocolate-truffles|plo-cat-truffles.jpg|#FF9115|60% 50%|sparkle:Zero refined sugar;leaf:No palm oil;heart:Prebiotic + probiotic;check:Keto friendly|#081D48\nchocolate-bars|plo-cat-bars.jpg|#00BCB4|60% 50%|sparkle:Zero refined sugar;leaf:No palm oil;heart:Prebiotic + probiotic;check:Sweetened with dates|#081D48\nnew-chocolate-slabs|plo-cat-slabs.jpg|#FF3EB5|62% 50%|sparkle:Zero refined sugar;leaf:No palm oil;check:Real cocoa butter;heart:100% clean ingredients|#081D48\nvariety-packs|plo-cat-packs.jpg|#FFB600|62% 50%|gift:Every flavour in one box;sparkle:Zero refined sugar;heart:Made for gifting|#081D48\nlimited-editions||#A028B4||clock:Small batches;sparkle:Zero refined sugar;heart:While they last|#FFFFFF\nshop-all||#081D48||sparkle:Zero refined sugar;leaf:No palm oil;heart:100% clean ingredients;check:Nutritionist founded|#FFFFFF",
+        "all_handle": "shop-all",
+        "group_all": true
       }
     }
   },
