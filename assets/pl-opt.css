@@ -1359,3 +1359,4 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
   .plo-sub__hero .plo-hero__copy { flex-direction: column; align-items: stretch; }
   .plo-sub__hero .plo-hero__t { font-size: 28px; }
 }
+.plo-sub__hero .plo-hero__t, .plo-sub__hero .plo-hero__n { text-align: left; white-space: normal; }
