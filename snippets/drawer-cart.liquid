@@ -18,7 +18,7 @@
       <header class="pl-drawer__head">
         <h2 class="pl-h pl-h--3 pl-drawer__title">
           <span>Your bag</span>
-          <span class="pl-drawer__count{% if cart.item_count == 0 %} hidden{% endif %}" data-cart-drawer-count-wrapper><span data-cart-drawer-count>{{ cart.item_count }}</span></span>
+          <span data-cart-drawer-count-wrapper{% if cart.item_count == 0 %} class="hidden"{% endif %}>(<span data-cart-drawer-count>{{ cart.item_count }}</span>)</span>
         </h2>
         <button type="button" class="pl-iconbtn pl-drawer__close" aria-label="Close bag" data-close>
           {%- render 'pl-icon', name: 'close', size: 20, stroke: 2 -%}
