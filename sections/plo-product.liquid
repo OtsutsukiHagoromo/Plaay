@@ -108,6 +108,7 @@
   assign eyebrow = badge_text
 
   assign desc = product.description | strip_html | strip | truncatewords: s.desc_words
+  assign desc_full = product.description | strip_html | strip | truncatewords: 90
   assign has_sub = false
   if sub_pct > 0 and plan_id != ''
     assign has_sub = true
@@ -166,7 +167,19 @@
       {%- if rating > 0 -%}
         <a class="plo-buy__rate" href="#plo-reviews">{%- render 'plo-stars', size: 14 -%}<span>{{ rating }} · {{ count }} reviews</span></a>
       {%- endif -%}
-      {%- if desc != blank -%}<p class="plo-buy__d">{{ desc }}</p>{%- endif -%}
+      {%- comment -%}
+        Two lines of the description; "More" (shown only when it overflows) expands it in place.
+        A custom.tagline metafield, when set, is used instead as a one-liner.
+      {%- endcomment -%}
+      {%- assign tagline = product.metafields.custom.tagline.value | default: product.metafields.custom.tagline -%}
+      {%- if tagline != blank -%}
+        <p class="plo-buy__d">{{ tagline | strip_html }}</p>
+      {%- elsif desc != blank -%}
+        <div class="plo-buy__dw" data-plo-more>
+          <p class="plo-buy__d plo-buy__d--clamp" id="plo-desc-{{ section.id }}">{{ desc_full }}</p>
+          <button type="button" class="plo-buy__more" aria-expanded="false" aria-controls="plo-desc-{{ section.id }}" hidden>More</button>
+        </div>
+      {%- endif -%}
 
       {%- form 'product', product, class: 'plo-form', data-plo-form: '', autocomplete: 'off' -%}
         <input type="hidden" name="id" value="{{ v.id }}" data-plo-variant>

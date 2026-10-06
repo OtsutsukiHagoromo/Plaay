@@ -1,0 +1,139 @@
+{%- comment -%}
+  Option B: Subscribe & Save page. A short hero (headline, one line, three perks), then straight
+  into the products: every product in the source collection that has a subscription plan, so
+  new subscription products (e.g. the slabs) appear here without editing the page.
+  Range chips filter the grid in place; the 2 / 4 week toggle sets which plan every "+" adds.
+  Cards lead with the subscribe price (snippets/plo-card, sub_mode).
+  Multi-size products show the "Default pack size" variant (truffles: 10 x 60g).
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign src = s.collection | default: collections['shop-all']
+  if src == blank or src.products.size == 0
+    assign src = collections.all
+  endif
+  assign want = s.default_size | downcase | remove: ' '
+
+  comment
+    Range of each product, from the collections it belongs to (first match in the order below).
+  endcomment
+  assign ranges = s.ranges | newline_to_br | split: '<br />'
+  assign used = ''
+  assign count = 0
+  for p in src.products
+    if p.selling_plan_groups.size > 0 and p.available
+      assign count = count | plus: 1
+    endif
+  endfor
+-%}
+<div class="pl plo plo-sub">
+  <header class="plo-hero plo-sub__hero" style="--tint: {{ s.tint }}; --ink: {{ s.ink }};">
+    <div class="plo-wrap plo-hero__in">
+      <div class="plo-hero__copy">
+        {%- if s.eyebrow != blank -%}<p class="plo-sub__tag">{%- render 'pl-icon', name: 'refresh', size: 14, stroke: 2.6 -%}{{ s.eyebrow }}</p>{%- endif -%}
+        <h1 class="plo-hero__t">{{ s.heading | replace: '|', '<br>' }}</h1>
+        {%- if s.line != blank -%}<p class="plo-hero__n">{{ s.line }}</p>{%- endif -%}
+        <ul class="plo-hero__usps">
+          {%- assign perks = s.perks | split: ';' -%}
+          {%- for u in perks -%}
+            {%- assign up = u | split: ':' -%}
+            {%- assign ic = up[0] | strip -%}{%- assign lb = up[1] | strip -%}
+            {%- if lb != blank -%}<li style="--i: {{ forloop.index }}"><span class="plo-hero__ic">{%- render 'pl-icon', name: ic, size: 16, stroke: 2.4 -%}</span>{{ lb }}</li>{%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </div>
+      <div class="plo-sub__badge" aria-hidden="true"><b>{{ s.save_big }}</b><span>{{ s.save_small }}</span></div>
+    </div>
+  </header>
+
+  <div class="plo-wrap plo-sub__shop" id="plo-sub-shop" data-plo-sub>
+    <div class="plo-sub__bar">
+      <div class="plo-chips plo-sub__chips" role="tablist" aria-label="Filter by range" data-plo-sub-chips>
+        <button type="button" role="tab" class="is-on" aria-selected="true" data-plo-range="">All <small>{{ count }}</small></button>
+        {%- for r in ranges -%}
+          {%- assign rp = r | strip | split: '|' -%}
+          {%- if rp.size < 2 -%}{%- continue -%}{%- endif -%}
+          {%- assign rh = rp[0] | strip -%}
+          {%- assign n = 0 -%}
+          {%- for p in collections[rh].products -%}{%- if p.selling_plan_groups.size > 0 and p.available -%}{%- assign n = n | plus: 1 -%}{%- endif -%}{%- endfor -%}
+          {%- if n > 0 -%}<button type="button" role="tab" aria-selected="false" data-plo-range="{{ rh }}">{{ rp[1] | strip }} <small>{{ n }}</small></button>{%- endif -%}
+        {%- endfor -%}
+      </div>
+      <div class="plo-sub__freq" role="radiogroup" aria-label="Delivery every">
+        <span>Deliver every</span>
+        <button type="button" role="radio" aria-checked="false" data-plo-freq="2">2 weeks</button>
+        <button type="button" role="radio" aria-checked="true" class="is-on" data-plo-freq="4">4 weeks</button>
+      </div>
+    </div>
+
+    <div class="plo-grid plo-sub__grid">
+      {%- for p in src.products -%}
+        {%- unless p.selling_plan_groups.size > 0 and p.available -%}{%- continue -%}{%- endunless -%}
+        {%- liquid
+          assign range = 'other'
+          for r in ranges
+            assign rp = r | strip | split: '|'
+            assign rh = rp[0] | strip
+            if range == 'other' and rh != blank
+              for c in p.collections
+                if c.handle == rh
+                  assign range = rh
+                endif
+              endfor
+            endif
+          endfor
+          assign pv = p.selected_or_first_available_variant
+          for x in p.variants
+            assign xt = x.title | downcase | remove: ' '
+            if xt == want and x.available
+              assign pv = x
+            endif
+          endfor
+        -%}
+        {%- render 'plo-card', product: p, variant: pv, sub_mode: true, range: range, eager: false, view: 'option-b' -%}
+      {%- endfor -%}
+    </div>
+    <p class="plo-sub__empty" hidden data-plo-sub-empty>Nothing on subscription in this range yet.</p>
+  </div>
+
+  <section class="plo-wrap plo-sub__how" aria-label="How it works">
+    {%- for block in section.blocks -%}
+      <div class="plo-sub__step" {{ block.shopify_attributes }}>
+        <span class="plo-sub__n">{{ forloop.index }}</span>
+        <p><b>{{ block.settings.title }}</b>{{ block.settings.text }}</p>
+      </div>
+    {%- endfor -%}
+    {%- if s.manage_label != blank -%}
+      <a class="plo-sub__manage" href="{{ s.manage_url | default: routes.account_url }}">{%- render 'pl-icon', name: 'user', size: 16, stroke: 2.2 -%}<span>{{ s.manage_lead }} <b>{{ s.manage_label }}</b></span>{%- render 'pl-icon', name: 'chev-right', size: 14, stroke: 2.4 -%}</a>
+    {%- endif -%}
+  </section>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: subscribe page",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Subscribe & Save" },
+    { "type": "text", "id": "heading", "label": "Heading (| = new line)", "default": "Good chocolate,|on repeat" },
+    { "type": "text", "id": "line", "label": "One line under the heading", "default": "Pick your favourites, we deliver them on your schedule." },
+    { "type": "text", "id": "perks", "label": "Perks (icon:text;…)", "default": "sparkle:15% off every order;truck:Free delivery;clock:Skip or pause anytime;refresh:Cancel in two taps" },
+    { "type": "text", "id": "save_big", "label": "Badge, big", "default": "15%" },
+    { "type": "text", "id": "save_small", "label": "Badge, small", "default": "off every order" },
+    { "type": "color", "id": "tint", "label": "Hero colour", "default": "#FFB600" },
+    { "type": "color", "id": "ink", "label": "Hero text colour", "default": "#081D48" },
+    { "type": "collection", "id": "collection", "label": "Products from (blank = Shop all)" },
+    { "type": "textarea", "id": "ranges", "label": "Range chips (collection handle|label)", "default": "chocolate-truffles|Truffles\nchocolate-bars|Bars\nnew-chocolate-slabs|Slabs\nvariety-packs|Packs" },
+    { "type": "text", "id": "default_size", "label": "Default pack size (variant title)", "default": "10 x 60g" },
+    { "type": "text", "id": "manage_lead", "label": "Manage line", "default": "Already subscribed?" },
+    { "type": "text", "id": "manage_label", "label": "Manage link label", "default": "Manage your deliveries" },
+    { "type": "url", "id": "manage_url", "label": "Manage link (blank = account)" }
+  ],
+  "blocks": [
+    { "type": "step", "name": "Step", "settings": [
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "text", "id": "text", "label": "Text" } ] }
+  ],
+  "presets": [{ "name": "Preview: subscribe page" }]
+}
+{% endschema %}

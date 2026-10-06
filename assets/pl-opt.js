@@ -250,6 +250,15 @@
   }
   window.ploFlyToBag = flyToBag;
 
+  /* Card "+": one unit of the card's variant, on a selling plan when the card carries one
+     (subscribe page). */
+  function quickItem(btn) {
+    var item = { id: Number(btn.getAttribute('data-plo-quick')), quantity: 1 };
+    var plan = btn.getAttribute('data-plo-plan');
+    if (plan) item.selling_plan = Number(plan);
+    return item;
+  }
+
   window.addEventListener('click', function (e) {
     if (!e.target.closest) return;
     var add = e.target.closest('[data-plo-quick]');
@@ -257,7 +266,7 @@
     e.preventDefault();
     e.stopImmediatePropagation();
     add.classList.add('is-busy');
-    post(((window.routes || {}).cart_add_url || '/cart/add') + '.js', { items: [{ id: Number(add.getAttribute('data-plo-quick')), quantity: 1 }] })
+    post(((window.routes || {}).cart_add_url || '/cart/add') + '.js', { items: [quickItem(add)] })
       .then(function () { add.classList.remove('is-busy'); return flyToBag(add.closest('.plo-card, .plo-tile, .plo-prev__card') || null); })
       .then(openBag)
       .catch(function (err) { fail(add, err); });
@@ -319,6 +328,32 @@
     var i = b.getAttribute('data-plo-tabsel');
     Array.prototype.forEach.call(root.querySelectorAll('[data-plo-tabsel]'), function (x) { var on = x === b; x.classList.toggle('is-on', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
     Array.prototype.forEach.call(root.querySelectorAll('[data-plo-tabpan]'), function (pnl) { var on = pnl.getAttribute('data-plo-tabpan') === i; pnl.hidden = !on; if (on) { pnl.classList.remove('is-in'); void pnl.offsetWidth; pnl.classList.add('is-in'); } });
+  });
+
+  /* ---------- Subscribe & Save page: range filter + delivery frequency ---------- */
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-plo-range], [data-plo-freq]');
+    if (!t) return;
+    var box = t.closest('[data-plo-sub]');
+    if (!box) return;
+    if (t.hasAttribute('data-plo-range')) {
+      var r = t.getAttribute('data-plo-range'), shown = 0;
+      Array.prototype.forEach.call(box.querySelectorAll('[data-plo-range]'), function (x) { var on = x === t; x.classList.toggle('is-on', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
+      Array.prototype.forEach.call(box.querySelectorAll('.plo-card[data-range]'), function (c) {
+        var on = !r || c.getAttribute('data-range') === r;
+        c.hidden = !on;
+        if (on) shown++;
+      });
+      var empty = box.querySelector('[data-plo-sub-empty]');
+      if (empty) empty.hidden = shown > 0;
+      /* Filtering while scrolled down: bring the top of the grid back into view. */
+      if (box.getBoundingClientRect().top < 0) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      var w = t.getAttribute('data-plo-freq');
+      Array.prototype.forEach.call(box.querySelectorAll('[data-plo-freq]'), function (x) { var on = x === t; x.classList.toggle('is-on', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); });
+      Array.prototype.forEach.call(box.querySelectorAll('[data-plo-plan' + w + ']'), function (b) { b.setAttribute('data-plo-plan', b.getAttribute('data-plo-plan' + w)); });
+      Array.prototype.forEach.call(box.querySelectorAll('[data-plo-freq-l]'), function (l) { l.textContent = 'every ' + w + ' weeks'; });
+    }
   });
 
   /* ---------- product details tabs ---------- */
@@ -583,7 +618,22 @@
     });
   }
 
+  /* PDP description: clamped to two lines; "More" appears only when the text overflows. */
+  function initMore() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-more]'), function (w) {
+      var p = w.querySelector('p'), b = w.querySelector('button');
+      if (!p || !b) return;
+      if (p.scrollHeight - p.clientHeight > 2) b.hidden = false;
+      b.addEventListener('click', function () {
+        var open = w.classList.toggle('is-open');
+        b.setAttribute('aria-expanded', open ? 'true' : 'false');
+        b.textContent = open ? 'Less' : 'More';
+      });
+    });
+  }
+
   function init() {
+    initMore();
     initFades();
     initReveal();
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-carousel]'), initCarousel);

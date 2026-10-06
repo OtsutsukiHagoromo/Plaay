@@ -2,6 +2,10 @@
   Product card for the Option A / Option B preview templates.
   Usage: {% render 'plo-card', product: product, eager: false, show_sub: false, skip_new: false, view: template.suffix, reason: '' %}
   reason: optional small line above the name (why the card is suggested).
+  variant: optional variant to show/add instead of the first available one.
+  sub_mode: subscription listing - the subscribe price leads (one-time struck through) and the
+    "+" adds on a selling plan (data-plo-plan; data-plo-plan2 / data-plo-plan4 let the page's
+    2 / 4 week toggle swap it).
   One markup, two looks: A is a white outlined box with the add button in the footer,
   B is a lifted image tile with a sticker add button on the image. show_sub adds the
   subscribe price under the price (off by default: listings stay one price per card). The "+" buttons carry
@@ -9,10 +13,21 @@
   theme's <quick-add> module, which opens the live cart drawer and leaves the preview.
 {%- endcomment -%}
 {%- liquid
-  assign v = product.selected_or_first_available_variant
+  assign v = variant | default: product.selected_or_first_available_variant
   assign sub_pct = 0
+  assign plan2 = ''
+  assign plan4 = ''
   for grp in product.selling_plan_groups
     for plan in grp.selling_plans
+      assign pn = plan.name | downcase
+      if pn contains 'every 2 week' or pn contains '2 week'
+        assign plan2 = plan.id
+      elsif pn contains 'every 4 week' or pn contains '4 week'
+        assign plan4 = plan.id
+      endif
+      if plan4 == '' and plan2 == '' and forloop.first
+        assign plan_first = plan.id
+      endif
       for adj in plan.price_adjustments
         if adj.value_type == 'percentage' and adj.value > sub_pct
           assign sub_pct = adj.value
@@ -20,6 +35,12 @@
       endfor
     endfor
   endfor
+  if plan4 == ''
+    assign plan4 = plan2 | default: plan_first
+  endif
+  if plan2 == ''
+    assign plan2 = plan4
+  endif
   assign sub_price = 0
   if sub_pct > 0
     assign keep = 100 | minus: sub_pct
@@ -58,7 +79,9 @@
   endif
 
   assign meta = ''
-  if product.variants.size > 1
+  if sub_mode and v.title != 'Default Title'
+    assign meta = v.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' | replace: ' g', 'g'
+  elsif product.variants.size > 1
     assign meta = product.variants.size | append: ' pack sizes'
   elsif v.title != 'Default Title'
     assign meta = v.title
@@ -78,7 +101,7 @@
     assign load = 'eager'
   endif
 -%}
-<article class="plo-card">
+<article class="plo-card"{% if range != blank %} data-range="{{ range }}"{% endif %}>
   <div class="plo-card__img">
     <a href="{{ href }}" tabindex="-1" aria-hidden="true">
       {%- if pkey != blank -%}
@@ -92,7 +115,7 @@
     </a>
     {%- if badge_text != blank -%}<span class="plo-badge{% if badge_mod != blank %} plo-badge--{{ badge_mod }}{% endif %}">{{ badge_text }}</span>{%- endif -%}
     {%- if v.available -%}
-      <span class="plo-card__add-b"><button type="button" class="plo-add" data-plo-quick="{{ v.id }}" aria-label="Add {{ product.title | escape }} to bag">{%- render 'pl-icon', name: 'plus', size: 18, stroke: 2.4 -%}</button></span>
+      <span class="plo-card__add-b"><button type="button" class="plo-add" data-plo-quick="{{ v.id }}"{% if sub_mode and plan4 != '' %} data-plo-plan="{{ plan4 }}" data-plo-plan2="{{ plan2 }}" data-plo-plan4="{{ plan4 }}"{% endif %} aria-label="{% if sub_mode %}Subscribe to{% else %}Add{% endif %} {{ product.title | escape }}{% unless sub_mode %} to bag{% endunless %}">{%- render 'pl-icon', name: 'plus', size: 18, stroke: 2.4 -%}</button></span>
     {%- endif -%}
   </div>
   <div class="plo-card__body">
@@ -101,11 +124,16 @@
     {%- if meta != blank -%}<p class="plo-card__meta">{{ meta }}</p>{%- endif -%}
     <div class="plo-card__foot">
       <div>
+        {%- if sub_mode and sub_price > 0 -%}
+          <div class="plo-card__price plo-card__price--sub">{%- render 'plaay-aed', fils: sub_price -%} <s>{%- render 'plaay-aed', fils: v.price -%}</s></div>
+          <div class="plo-card__sub" data-plo-freq-l>every 4 weeks</div>
+        {%- else -%}
         <div class="plo-card__price">{%- if product.variants.size > 1 -%}From {% endif -%}{%- render 'plaay-aed', fils: v.price -%}</div>
-        {%- if show_sub and sub_price > 0 -%}<div class="plo-card__sub">{%- render 'plaay-aed', fils: sub_price -%} on repeat</div>{%- endif -%}
+        {%- endif -%}
+        {%- if show_sub and sub_price > 0 and sub_mode == blank -%}<div class="plo-card__sub">{%- render 'plaay-aed', fils: sub_price -%} on repeat</div>{%- endif -%}
       </div>
       {%- if v.available -%}
-        <span class="plo-card__add-a"><button type="button" class="plo-add" data-plo-quick="{{ v.id }}" aria-label="Add {{ product.title | escape }} to bag">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</button></span>
+        <span class="plo-card__add-a"><button type="button" class="plo-add" data-plo-quick="{{ v.id }}"{% if sub_mode and plan4 != '' %} data-plo-plan="{{ plan4 }}" data-plo-plan2="{{ plan2 }}" data-plo-plan4="{{ plan4 }}"{% endif %} aria-label="{% if sub_mode %}Subscribe to{% else %}Add{% endif %} {{ product.title | escape }}{% unless sub_mode %} to bag{% endunless %}">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</button></span>
       {%- else -%}
         <span class="plo-card__soldout">Sold out</span>
       {%- endif -%}

@@ -97,8 +97,10 @@
       or ?view=option-b) get the Option A / Option B skin. Nothing else loads this.
     {%- endcomment -%}
     {%- assign plo_skin = '' -%}
-    {%- if template.suffix == 'option-a' or template.suffix == 'option-b' -%}
+    {%- comment -%} The Subscribe & Save page is built from the Option B sections. {%- endcomment -%}
+    {%- if template.suffix == 'option-a' or template.suffix == 'option-b' or template.name == 'page' and template.suffix == 'subscribe-save' -%}
       {%- assign plo_skin = template.suffix | remove: 'option-' -%}
+      {%- if template.suffix == 'subscribe-save' -%}{%- assign plo_skin = 'b' -%}{%- endif -%}
       {{ 'pl-opt.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
     {% render 'head.fonts' %}

@@ -1279,3 +1279,56 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
   .plo-buy__lbl { font-size: 15px; }
   .plo-buy__p { padding: 0; background: none; font-size: 12px; font-weight: 700; opacity: .85; }
 }
+
+/* ---------- Subscribe & Save page (sections/plo-sub) ---------- */
+.plo-sub__hero .plo-hero__in { padding-bottom: 20px; }
+.plo-sub__tag { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin: 0 0 2px; padding: 5px 10px; border-radius: 999px; background: var(--ink, var(--pl-navy)); color: var(--tint, var(--pl-yellow)); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.plo-sub__tag svg { stroke: currentColor; }
+.plo-sub__badge { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 96px; height: 96px; border-radius: 50%; background: #fff; color: var(--pl-navy); border: 3px solid var(--pl-navy); box-shadow: 0 4px 0 var(--pl-navy); transform: rotate(-8deg); text-align: center; animation: plo-card-in .7s cubic-bezier(.3, 1.4, .5, 1) both; }
+.plo-sub__badge b { font-size: 30px; font-weight: 900; line-height: .9; }
+.plo-sub__badge span { max-width: 70px; font-size: 10px; font-weight: 800; line-height: 1.1; text-transform: uppercase; letter-spacing: .04em; }
+.plo-sub__shop { padding-top: 4px; }
+/* Filter + frequency bar sticks under the header while browsing. */
+.plo-sub__bar { position: sticky; top: var(--pl-header-h, 64px); z-index: 5; display: flex; flex-direction: column; gap: 10px; margin: 0 calc(var(--o-side) * -1) 16px; padding: 12px var(--o-side); background: rgba(255, 255, 255, .94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(8, 29, 72, .08); }
+.plo-sub__chips { padding-top: 0; }
+.plo-sub__chips button { flex: 0 0 auto; height: 38px; padding: 0 16px; border-radius: 999px; border: 2px solid var(--pl-navy); background: #fff; color: var(--pl-navy); font-family: var(--pl-font); font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s ease, box-shadow .15s ease; }
+.plo-sub__chips button.is-on { background: var(--pl-yellow); box-shadow: 0 2px 0 var(--pl-navy); }
+.plo-sub__chips small { margin-left: 4px; font-size: 11px; opacity: .55; }
+.plo-sub__freq { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--pl-navy); }
+.plo-sub__freq span { margin-right: 4px; opacity: .7; }
+.plo-sub__freq button { height: 32px; padding: 0 12px; border-radius: 999px; border: 1.5px solid rgba(8, 29, 72, .25); background: #fff; color: var(--pl-navy); font-family: var(--pl-font); font-size: 13px; font-weight: 700; cursor: pointer; }
+.plo-sub__freq button.is-on { background: var(--pl-navy); border-color: var(--pl-navy); color: #fff; }
+.plo-card__price--sub s { margin-left: 4px; font-size: .8em; font-weight: 600; opacity: .5; }
+.plo-sub__grid .plo-card__sub { color: #2E7D32; font-weight: 700; }
+.plo-sub__grid .plo-card[hidden] { display: none; }
+.plo-sub__empty { padding: 24px 0; text-align: center; color: var(--pl-mute); }
+.plo-sub__how { display: grid; gap: 10px; padding-top: 40px; padding-bottom: 72px; }
+.plo-sub__step { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; border-radius: 18px; background: #FFF7DD; }
+.plo-sub__step p { margin: 0; display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 1.4; color: var(--pl-mute); }
+.plo-sub__step b { font-size: 15px; color: var(--pl-navy); }
+.plo-sub__n { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--pl-navy); color: var(--pl-yellow); font-weight: 900; font-size: 14px; }
+.plo-sub__manage { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 18px; border: 2px solid var(--pl-navy); color: var(--pl-navy); font-size: 14px; text-decoration: none; }
+.plo-sub__manage span { flex: 1; }
+@media (min-width: 768px) {
+  .plo-sub__bar { flex-direction: row; align-items: center; justify-content: space-between; }
+  .plo-sub__chips { margin: 0; padding: 0; }
+  .plo-sub__how { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .plo-sub__manage { grid-column: 1 / -1; justify-self: start; }
+}
+@media (min-width: 1024px) {
+  .plo-sub__hero .plo-hero__in { grid-template-columns: minmax(0, 1fr) auto; min-height: 0; padding-top: 40px; padding-bottom: 40px; }
+  .plo-sub__badge { width: 170px; height: 170px; border-width: 4px; box-shadow: 0 6px 0 var(--pl-navy); }
+  .plo-sub__badge b { font-size: 56px; }
+  .plo-sub__badge span { max-width: 120px; font-size: 13px; }
+  .plo-sub__hero .plo-hero__usps { grid-template-columns: repeat(4, max-content); }
+  .plo-sub__how { padding-bottom: 112px; }
+}
+@media (prefers-reduced-motion: reduce) { .plo-sub__badge { animation: none; } }
+.plo-sub__shop { scroll-margin-top: var(--pl-header-h, 64px); }
+
+/* PDP description under the title: two lines, then "More" expands in place. */
+.plo-buy__dw { position: relative; }
+.plo-buy__d--clamp { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+.plo-buy__dw.is-open .plo-buy__d--clamp { display: block; -webkit-line-clamp: unset; }
+.plo-buy__more { position: absolute; right: 0; bottom: 0; padding: 0 0 0 28px; border: 0; background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff 26px); color: var(--pl-navy); font-family: var(--pl-font); font-size: 15px; font-weight: 800; line-height: 1.5; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.plo-buy__dw.is-open .plo-buy__more { position: static; padding: 4px 0 0; background: none; }

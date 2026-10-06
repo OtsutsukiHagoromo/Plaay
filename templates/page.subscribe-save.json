@@ -1,287 +1,85 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "custom_collection_hero_basic_zDXbRC": {
-      "type": "custom-collection-hero-basic",
-      "disabled": true,
-      "name": "Custom hero basic",
-      "settings": {
-        "backup_hero_background_color": "#f5c08d",
-        "heading_backup_hero_description": "Subscribe & Save",
-        "backup_hero_description": "Save 15% on every recurring order. Skip, pause or cancel anytime."
-      }
-    },
-    "blocks_gCr4KH": {
-      "type": "_blocks",
+    "sub": {
+      "type": "plo-sub",
       "blocks": {
-        "ai_gen_block_900bb11_UyBBEd": {
-          "type": "ai_gen_block_900bb11",
+        "s1": {
+          "type": "step",
           "settings": {
-            "spacing_desktop": 80,
-            "spacing_mobile": 50,
-            "background_color": "#ffffff"
-          },
-          "blocks": {}
+            "title": "Pick your favourites",
+            "text": "Add any truffles, bars, slabs or packs. Mix as you like."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Choose every 2 or 4 weeks",
+            "text": "15% off and free delivery on every order."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Stay in control",
+            "text": "Skip, swap, pause or cancel from your account anytime."
+          }
         }
       },
       "block_order": [
-        "ai_gen_block_900bb11_UyBBEd"
+        "s1",
+        "s2",
+        "s3"
       ],
-      "name": "Spacer",
       "settings": {}
     },
-    "subscribe_save_benefits_cg7rXL": {
-      "type": "subscribe-save-benefits",
+    "faq": {
+      "type": "plo-pdp-faq",
       "blocks": {
-        "benefit_8iWf1m": {
-          "type": "benefit",
+        "q1": {
+          "type": "qa",
           "settings": {
-            "icon": "01",
-            "title": "Always 15% off",
-            "text": "Every recurring order is cheaper than buying one-off. The longer you keep it, the more you save — automatically."
+            "q": "How much do I save?",
+            "a": "<p>15% off every subscription order, plus free delivery. The discount applies automatically at checkout.</p>"
           }
         },
-        "benefit_BC5w6Q": {
-          "type": "benefit",
+        "q2": {
+          "type": "qa",
           "settings": {
-            "icon": "02",
-            "title": "Your stash runs itself",
-            "text": "Your favourites arrive before you run out. No reminders, no scrambling, no empty snack drawer mid-week."
+            "q": "Can I skip, pause or cancel?",
+            "a": "<p>Yes, anytime and with no fees. Manage everything from your account: skip a delivery, change the date, swap flavours or cancel.</p>"
           }
         },
-        "benefit_A8mVfK": {
-          "type": "benefit",
+        "q3": {
+          "type": "qa",
           "settings": {
-            "icon": "03",
-            "title": "Change your mind anytime",
-            "text": "Skip a delivery, swap a flavour, push it back a week or cancel — all from your account in two taps. No awkward forms."
+            "q": "Can I mix products in one subscription?",
+            "a": "<p>Yes. Add as many products as you like on subscription; they arrive together on your chosen schedule.</p>"
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "q": "When am I charged?",
+            "a": "<p>You pay for the first order today. After that you're charged just before each delivery, every 2 or 4 weeks, depending on what you choose.</p>"
           }
         }
       },
       "block_order": [
-        "benefit_8iWf1m",
-        "benefit_BC5w6Q",
-        "benefit_A8mVfK"
+        "q1",
+        "q2",
+        "q3",
+        "q4"
       ],
       "settings": {
-        "section_bg": "#ffffff",
-        "panel_bg": "#fffaf2",
-        "accent_bg": "#f9c61d",
-        "eyebrow": "Built for repeat snackers",
-        "heading": "Good chocolate, on repeat.",
-        "intro": "Subscribe once and keep your favourites stocked with less effort and better value. Pick your go-to packs, choose your delivery rhythm, and let Plaay handle the rest.",
-        "badge_one": "15% off every recurring order",
-        "badge_two": "Skip, pause or swap anytime",
-        "badge_three": "Delivered on your schedule",
-        "step_one_title": "Pick your products",
-        "step_one_text": "Choose the bars, truffles or variety packs you actually reorder. No need to browse the whole shop every time.",
-        "step_two_title": "Choose your pace",
-        "step_two_text": "Weekly, fortnightly or monthly — pick what fits your household. You'll get a reminder before each order ships so you can make changes first.",
-        "step_three_title": "It ships automatically",
-        "step_three_text": "Orders go out on schedule without you lifting a finger. Your snack drawer stays full while you focus on more important things.",
-        "reassurance": "No lock-in. No stress. Cancel anytime."
-      }
-    },
-    "custom_featured_product_xgw4eH": {
-      "type": "custom-featured-product",
-      "blocks": {
-        "product_WTDmkH": {
-          "type": "product",
-          "settings": {
-            "product": "plaayer-pack"
-          }
-        },
-        "product_JENtLP": {
-          "type": "product",
-          "settings": {
-            "product": "og-plaayer-pack"
-          }
-        }
-      },
-      "block_order": [
-        "product_WTDmkH",
-        "product_JENtLP"
-      ],
-      "name": "Custom Featured products",
-      "settings": {
-        "title": "Variety Packs For Easy Refills",
-        "description": "Start with crowd-pleasing bundles that keep your snack drawer covered without having to rebuild your order every time.",
-        "background_color": "#ffffff",
-        "product_source": "manual",
-        "featured_collection": "",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1,
-        "column_size_mobile_small": 1,
-        "see_all_link": "/",
-        "see_all_link_text": "",
-        "compact_mobile_grid": false
-      }
-    },
-    "featured_products_AcfGFf": {
-      "type": "featured_products",
-      "blocks": {
-        "product_3xzUwD": {
-          "type": "product",
-          "settings": {
-            "product": "pistachio-truffle"
-          }
-        },
-        "product_ixCryb": {
-          "type": "product",
-          "settings": {
-            "product": "triple-chocolate-truffle"
-          }
-        },
-        "product_hXNphV": {
-          "type": "product",
-          "settings": {
-            "product": "almond-brownie-truffle"
-          }
-        },
-        "product_iewA3j": {
-          "type": "product",
-          "settings": {
-            "product": "cashew-caramel-truffle"
-          }
-        },
-        "product_AbUGPg": {
-          "type": "product",
-          "settings": {
-            "product": "peanut-butter-truffle"
-          }
-        }
-      },
-      "block_order": [
-        "product_3xzUwD",
-        "product_ixCryb",
-        "product_hXNphV",
-        "product_iewA3j",
-        "product_AbUGPg"
-      ],
-      "name": "Featured products",
-      "settings": {
-        "title": "Truffle Multipacks",
-        "description": "Perfect if you want lighter, more frequent snack refills without running out between orders.",
-        "background_color": "#ffffff",
-        "product_source": "manual",
-        "featured_collection": "",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 600,
-        "see_all_link": "",
-        "see_all_link_text": "",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": false,
-        "hide_atc_on_tiles": false
-      }
-    },
-    "featured_products_XUGdAQ": {
-      "type": "featured_products",
-      "blocks": {
-        "product_Ck9kBh": {
-          "type": "product",
-          "settings": {
-            "product": "pistachio-chocolate-bar-x-12"
-          }
-        },
-        "product_rGzGxB": {
-          "type": "product",
-          "settings": {
-            "product": "salted-caramel-bar-x12"
-          }
-        },
-        "product_iDPb6W": {
-          "type": "product",
-          "settings": {
-            "product": "cookies-and-cream-bar-x12"
-          }
-        },
-        "product_fwtPN9": {
-          "type": "product",
-          "settings": {
-            "product": "mocha-almond-bar-x12"
-          }
-        },
-        "product_3w8X4C": {
-          "type": "product",
-          "settings": {
-            "product": "salty-peanut-bar-x12"
-          }
-        }
-      },
-      "block_order": [
-        "product_Ck9kBh",
-        "product_rGzGxB",
-        "product_iDPb6W",
-        "product_fwtPN9",
-        "product_3w8X4C"
-      ],
-      "name": "Featured products",
-      "settings": {
-        "title": "Bar Multipacks",
-        "description": "Your everyday favourites, set up for repeat delivery so the snack drawer never drops to zero.",
-        "background_color": "#ffffff",
-        "product_source": "manual",
-        "featured_collection": "",
-        "collection_product_limit": 12,
-        "extra_top_padding": true,
-        "extra_bottom_padding": false,
-        "column_size_desktop_extra_large": 4,
-        "column_size_desktop_large": 4,
-        "column_size_desktop": 4,
-        "column_size_tablet": 3,
-        "column_size_mobile": 1.2,
-        "column_size_mobile_small": 1.2,
-        "autoplay": 600,
-        "see_all_link": "",
-        "see_all_link_text": "",
-        "hide_arrows_desktop": false,
-        "hide_arrows_mobile": false,
-        "hide_bullets": true,
-        "compact_mobile_grid": false,
-        "hide_atc_on_tiles": false
-      }
-    },
-    "cu_countdown_timer_jbinj4": {
-      "type": "cu-countdown-timer",
-      "disabled": true,
-      "name": "Countdown Timer",
-      "settings": {
-        "title": "SALE ENDS IN:",
-        "end_time": "2025-09-15T23:59:59"
+        "eyebrow": "Subscriptions",
+        "heading": "Questions, answered",
+        "all_label": "See all FAQs",
+        "contact_label": "Still stuck? Contact us"
       }
     }
   },
   "order": [
-    "custom_collection_hero_basic_zDXbRC",
-    "blocks_gCr4KH",
-    "subscribe_save_benefits_cg7rXL",
-    "custom_featured_product_xgw4eH",
-    "featured_products_AcfGFf",
-    "featured_products_XUGdAQ",
-    "cu_countdown_timer_jbinj4"
+    "sub",
+    "faq"
   ]
 }
