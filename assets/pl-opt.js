@@ -430,7 +430,7 @@
       h += '<div' + (zero ? ' class="is-zero"' : '') + '><dt>' + esc(r.k) + '</dt><dd>' + esc(r.v) + '</dd></div>';
     });
     h += '</dl>';
-    var note = notes.filter(function (n) { return /differ/i.test(n); })[0];
+    var note = notes.filter(function (n) { return /differ|sugar|sweeten/i.test(n); })[0];
     if (note) h += '<p class="plo-nf__n">' + esc(note.replace(/\.?$/, '.')) + '</p>';
     el.innerHTML = h + '</div>';
   }

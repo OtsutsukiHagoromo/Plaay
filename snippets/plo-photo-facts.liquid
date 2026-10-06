@@ -1,8 +1,9 @@
 {%- comment -%}
   Allergen line for products whose Shopify data has none, copied from the pack card in the
-  refreshed shoot (plo-ph-<key>-8). Also says which shoot photo is the Nutrition Facts panel.
+  refreshed shoot (plo-ph-<key>-8), and nutrition per serving copied from the Nutrition Facts
+  panel (plo-ph-<key>-7) as "Label: value" lines, which pl-opt.js draws as a nutrition label.
   Usage: {% render 'plo-photo-facts', key: pkey, want: 'allergens' %} → text, or blank
-         {% render 'plo-photo-facts', key: pkey, want: 'nutrition_n' %} → photo number, or blank
+         {% render 'plo-photo-facts', key: pkey, want: 'nutrition' %} → html, or blank
 {%- endcomment -%}
 {%- liquid
   assign traces = 'May contain traces of Almond, Cashewnut, Hazelnut, Peanut, Pistachio and Sesame.'
@@ -17,9 +18,34 @@
     when 'toffee'
       assign a = 'Contains Almond, Milk. May contain traces of Cashewnut, Hazelnut, Peanut, Pistachio and Sesame.'
   endcase
+  comment
+    serving|kcal|fat|protein|carbs|added sugars|note
+  endcomment
+  assign n = ''
+  case key
+    when 'hazel'
+      assign n = '13.3g|80|6.6|1.2|5.1|2.9|Added sugars from coconut sugar.'
+    when 'seasalt'
+      assign n = '13.3g|79|6.2|1|5.8|3.6|Added sugars from coconut sugar.'
+    when 'dark'
+      assign n = '13.3g|63|6.1|1|5.9|0|Sweetened with allulose.'
+    when 'caramel'
+      assign n = '13.3g|76|5.5|0.9|6.6|3.2|Added sugars from coconut sugar.'
+    when 'cheese'
+      assign n = '13.3g|80|5.9|1.1|5.7|2.6|Added sugars from coconut sugar.'
+    when 'toffee'
+      assign n = '13.3g|78|5.5|1.1|6.2|4.6|Added sugars from coconut sugar.'
+  endcase
   if want == 'allergens'
     echo a
-  elsif want == 'nutrition_n' and a != ''
-    echo '7'
+  elsif want == 'nutrition' and n != ''
+    assign f = n | split: '|'
+    echo '<p>Serving size: ' | append: f[0] | append: '</p>'
+    echo '<p>Calories: ' | append: f[1] | append: ' kcal</p>'
+    echo '<p>Total Fat: ' | append: f[2] | append: 'g</p>'
+    echo '<p>Protein: ' | append: f[3] | append: 'g</p>'
+    echo '<p>Total Carbohydrates: ' | append: f[4] | append: 'g</p>'
+    echo '<p>Added Sugars: ' | append: f[5] | append: 'g</p>'
+    echo '<p>' | append: f[6] | append: '</p>'
   endif
 -%}

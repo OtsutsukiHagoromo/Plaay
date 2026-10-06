@@ -318,9 +318,12 @@
         capture d_shipping
           echo product.metafields.custom.shipping_policy | metafield_tag
         endcapture
-        capture d_nutrition_n
-          render 'plo-photo-facts', key: pkey, want: 'nutrition_n'
-        endcapture
+        assign d_nutrition = d_nutrition | strip
+        if d_nutrition == blank and pkey != blank
+          capture d_nutrition
+            render 'plo-photo-facts', key: pkey, want: 'nutrition'
+          endcapture
+        endif
         if d_allergens == blank and pkey != blank
           capture d_allergens
             render 'plo-photo-facts', key: pkey, want: 'allergens'
@@ -339,12 +342,7 @@
           echo product.description
         endcapture
         capture p_nutrition
-          if d_nutrition != blank
-            echo d_nutrition
-          elsif d_nutrition_n != blank
-            assign nalt = 'Nutrition facts for ' | append: product.title
-            render 'pl-photo', key: pkey, n: d_nutrition_n, alt: nalt, class: 'plo-det__nf'
-          endif
+          echo d_nutrition
         endcapture
         capture p_storage
           echo '<p>' | append: d_storage | append: '</p>'
