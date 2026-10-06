@@ -37,11 +37,17 @@
     </div>
     {%- for b in tabs -%}
       <div class="plo-grid plo-tabpan" data-plo-tabpan="{{ forloop.index }}" hidden>
+        {%- comment -%} Products with the refreshed photography (plo-photo-key) come first. {%- endcomment -%}
         {%- assign n = 0 -%}
+        {%- for pass in (1..2) -%}
         {%- for p in b.settings.collection.products -%}
           {%- if p.id == current_id or p.available == false or n >= lim -%}{%- continue -%}{%- endif -%}
+          {%- capture k -%}{%- render 'plo-photo-key', handle: p.handle -%}{%- endcapture -%}
+          {%- assign k = k | strip -%}
+          {%- if pass == 1 -%}{%- if k == blank -%}{%- continue -%}{%- endif -%}{%- elsif k != blank -%}{%- continue -%}{%- endif -%}
           {%- render 'plo-card', product: p, eager: false, view: template.suffix -%}
           {%- assign n = n | plus: 1 -%}
+        {%- endfor -%}
         {%- endfor -%}
       </div>
     {%- endfor -%}

@@ -108,12 +108,7 @@
         "eyebrow": "Bestsellers",
         "heading": "Our",
         "heading_light": "bestsellers",
-        "products": [
-          "new-chocolate-bars-mix-pack-of-5",
-          "og-plaayer-pack",
-          "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g",
-          "triple-chocolate-truffle"
-        ],
+        "products": ["triple-chocolate-truffle", "peanut-butter-truffle", "pistachio-chocolate-bar-x-12", "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g"],
         "link_label": "Shop all",
         "link_url": "/collections/shop-all",
         "limit": 4,
