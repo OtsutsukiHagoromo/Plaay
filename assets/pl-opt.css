@@ -1360,3 +1360,9 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
   .plo-sub__hero .plo-hero__t { font-size: 28px; }
 }
 .plo-sub__hero .plo-hero__t, .plo-sub__hero .plo-hero__n { text-align: left; white-space: normal; }
+@media (max-width: 1023.98px) {
+  .plo-sub__badge { display: none; }
+  .plo-sub__hero .plo-hero__copy > * { align-self: flex-start; }
+  .plo-sub__hero .plo-hero__t, .plo-sub__hero .plo-hero__n { max-width: none; }
+  .plo-sub__hero .plo-hero__usps { align-self: stretch; }
+}
