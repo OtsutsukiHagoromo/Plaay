@@ -410,10 +410,3 @@ cart-drawer .pl .pl-gap summary { color: rgba(255, 255, 255, .8); }
 cart-drawer .pl .pl-gap__i { background: #fff; }
 cart-drawer .pl .pl-gap__t a { color: var(--pl-navy); }
 cart-drawer .pl .pl-gap__add { background: var(--pl-yellow); color: var(--pl-navy); border: 2px solid var(--pl-navy); }
-/* Gift line, suggestions, links */
-cart-drawer .pl .pl-item--gift .pl-item__now { color: var(--pl-navy); background: #fff; padding: 4px 10px; border-radius: 999px; border: 2px solid var(--pl-navy); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
-cart-drawer .pl .pl-item--gift .pl-item__title { font-weight: 900; }
-cart-drawer .pl .pl-upsell { background: #fff; }
-cart-drawer .pl .pl-upsell button { border: 2px solid var(--pl-navy); box-shadow: 0 2px 0 var(--pl-navy); }
-cart-drawer .pl .pl-upsell button:active { transform: translateY(2px); box-shadow: none; }
-cart-drawer .pl .pl-continue .pl-btn--link, cart-drawer .pl .plaay-discount-toggle { color: var(--pl-navy); text-decoration: underline; text-underline-offset: 3px; }
