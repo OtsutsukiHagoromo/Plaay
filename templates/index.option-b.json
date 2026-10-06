@@ -115,7 +115,7 @@
           "triple-chocolate-truffle"
         ],
         "link_label": "Shop all",
-        "link_url": "/collections/shop-all?view=option-b",
+        "link_url": "/collections/shop-all",
         "limit": 4,
         "tab_label": "Bestsellers"
       },
@@ -169,7 +169,7 @@
           "settings": {
             "title": "Slabs",
             "sub": "6 flavours",
-            "url": "/collections/new-chocolate-slabs?view=option-b",
+            "url": "/collections/new-chocolate-slabs",
             "product": "new-chocolate-bars-mix-pack-of-5",
             "tint": "#F8C5EB",
             "photo_asset": "plo-cat-slabs.jpg",
@@ -181,7 +181,7 @@
           "settings": {
             "title": "Truffles",
             "sub": "8 flavours",
-            "url": "/collections/chocolate-truffles?view=option-b",
+            "url": "/collections/chocolate-truffles",
             "product": "truffle-mix",
             "tint": "#FED8B5",
             "photo_asset": "plo-cat-truffles.jpg",
@@ -193,7 +193,7 @@
           "settings": {
             "title": "Bars",
             "sub": "5 flavours",
-            "url": "/collections/chocolate-bars?view=option-b",
+            "url": "/collections/chocolate-bars",
             "product": "salted-caramel-bar-x12",
             "tint": "#A9FAE8",
             "photo_asset": "plo-cat-bars.jpg",
@@ -205,7 +205,7 @@
           "settings": {
             "title": "Variety",
             "sub": "Try everything",
-            "url": "/collections/variety-packs?view=option-b",
+            "url": "/collections/variety-packs",
             "product": "og-plaayer-pack",
             "tint": "#FCD730",
             "photo_asset": "plo-cat-packs.jpg",
