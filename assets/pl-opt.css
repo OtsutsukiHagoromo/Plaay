@@ -1348,3 +1348,10 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
   .plo-sub__bar { padding-top: 10px; padding-bottom: 10px; gap: 8px; }
   .plo-sub__chips button { height: 34px; padding: 0 13px; font-size: 13px; }
 }
+#main:has(.plo-sub) { padding-top: 0; }
+@media (max-width: 1023.98px) {
+  .plo-sub__hero .plo-hero__in { display: block; position: relative; }
+  .plo-sub__hero .plo-hero__copy { display: flex; }
+  .plo-sub__hero .plo-hero__t, .plo-sub__hero .plo-hero__n { max-width: calc(100% - 92px); }
+  .plo-sub__badge { position: absolute; top: 14px; right: var(--o-side); margin: 0; }
+}
