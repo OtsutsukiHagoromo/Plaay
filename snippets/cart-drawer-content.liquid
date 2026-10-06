@@ -218,11 +218,26 @@
 
     <div class="pl-drawer__foot">
       {%- if cart.item_count > 0 -%}
+        {%- liquid
+          comment
+            Everything the shopper saves in this bag: cart discounts (reward tiers, codes) plus the
+            subscribe-and-save difference on subscription lines.
+          endcomment
+          assign saved = cart.total_discount
+          for item in cart.items
+            assign spa = item.selling_plan_allocation
+            if spa and spa.compare_at_price > spa.price
+              assign d = spa.compare_at_price | minus: spa.price | times: item.quantity
+              assign saved = saved | plus: d
+            endif
+          endfor
+        -%}
         <div class="pl-drawer__total">
-          <span class="pl-tiny pl-mute">Total</span>
+          <span class="pl-drawer__total-l">Total</span>
           <span class="pl-drawer__total-v" data-pl-sticky-total>{% render 'plaay-aed', fils: cart.total_price %}</span>
+          {%- if saved > 0 -%}<span class="pl-drawer__saved">You save {% render 'plaay-aed', fils: saved %}</span>{%- endif -%}
         </div>
-        <a href="/checkout" class="pl-btn pl-drawer__checkout" data-checkout-url="/checkout">Checkout</a>
+        <a href="/checkout" class="pl-btn pl-drawer__checkout" data-checkout-url="/checkout">{% render 'pl-icon', name: 'lock', size: 16, stroke: 2.4 %}<span>Checkout</span>{% render 'pl-icon', name: 'arrow-right', size: 18, stroke: 2.6 %}</a>
       {%- else -%}
         <button type="button" class="pl-btn pl-btn--full" data-close>Continue shopping</button>
       {%- endif -%}
