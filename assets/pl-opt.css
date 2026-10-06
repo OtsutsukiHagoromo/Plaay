@@ -1332,3 +1332,19 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
 .plo-buy__dw.is-open .plo-buy__d--clamp { display: block; -webkit-line-clamp: unset; }
 .plo-buy__more { position: absolute; right: 0; bottom: 0; padding: 0 0 0 28px; border: 0; background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff 26px); color: var(--pl-navy); font-family: var(--pl-font); font-size: 15px; font-weight: 800; line-height: 1.5; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .plo-buy__dw.is-open .plo-buy__more { position: static; padding: 4px 0 0; background: none; }
+/* Subscribe page, mobile: compact hero so products start in the first screen. */
+.pl-skin-b main:has(.plo-sub) { padding-top: 0; }
+.plo-sub__tag { margin: 0; }
+@media (max-width: 1023.98px) {
+  .plo-sub__hero .plo-hero__in { padding-top: 18px; padding-bottom: 16px; gap: 10px; }
+  .plo-sub__hero .plo-hero__t { font-size: 30px; }
+  .plo-sub__hero .plo-hero__n { font-size: 13px; font-weight: 600; }
+  .plo-sub__hero .plo-hero__usps { gap: 6px 10px; margin-top: 4px; }
+  .plo-sub__hero .plo-hero__usps li { font-size: 11.5px; gap: 6px; }
+  .plo-sub__hero .plo-hero__ic { width: 24px; height: 24px; }
+  .plo-sub__badge { width: 78px; height: 78px; border-width: 2.5px; box-shadow: 0 3px 0 var(--pl-navy); margin-top: 26px; }
+  .plo-sub__badge b { font-size: 24px; }
+  .plo-sub__badge span { font-size: 8.5px; max-width: 58px; }
+  .plo-sub__bar { padding-top: 10px; padding-bottom: 10px; gap: 8px; }
+  .plo-sub__chips button { height: 34px; padding: 0 13px; font-size: 13px; }
+}

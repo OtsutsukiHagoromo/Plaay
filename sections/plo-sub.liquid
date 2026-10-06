@@ -30,7 +30,7 @@
   <header class="plo-hero plo-sub__hero" style="--tint: {{ s.tint }}; --ink: {{ s.ink }};">
     <div class="plo-wrap plo-hero__in">
       <div class="plo-hero__copy">
-        {%- if s.eyebrow != blank -%}<p class="plo-sub__tag">{%- render 'pl-icon', name: 'refresh', size: 14, stroke: 2.6 -%}{{ s.eyebrow }}</p>{%- endif -%}
+        {%- if s.eyebrow != blank -%}<div><span class="plo-sub__tag">{%- render 'pl-icon', name: 'refresh', size: 14, stroke: 2.6 -%}{{ s.eyebrow }}</span></div>{%- endif -%}
         <h1 class="plo-hero__t">{{ s.heading | replace: '|', '<br>' }}</h1>
         {%- if s.line != blank -%}<p class="plo-hero__n">{{ s.line }}</p>{%- endif -%}
         <ul class="plo-hero__usps">
@@ -67,6 +67,11 @@
     </div>
 
     <div class="plo-grid plo-sub__grid">
+      {%- comment -%} Cards run range by range (chip order), anything unmatched last. {%- endcomment -%}
+      {%- assign order = '' -%}
+      {%- for r in ranges -%}{%- assign rp = r | strip | split: '|' -%}{%- if rp[0] != blank -%}{%- assign order = order | append: rp[0] | strip | append: ',' -%}{%- endif -%}{%- endfor -%}
+      {%- assign order = order | append: 'other' | split: ',' -%}
+      {%- for pass in order -%}
       {%- for p in src.products -%}
         {%- unless p.selling_plan_groups.size > 0 and p.available -%}{%- continue -%}{%- endunless -%}
         {%- liquid
@@ -82,6 +87,9 @@
               endfor
             endif
           endfor
+          if range != pass
+            continue
+          endif
           assign pv = p.selected_or_first_available_variant
           for x in p.variants
             assign xt = x.title | downcase | remove: ' '
@@ -91,6 +99,7 @@
           endfor
         -%}
         {%- render 'plo-card', product: p, variant: pv, sub_mode: true, range: range, eager: false, view: 'option-b' -%}
+      {%- endfor -%}
       {%- endfor -%}
     </div>
     <p class="plo-sub__empty" hidden data-plo-sub-empty>Nothing on subscription in this range yet.</p>
