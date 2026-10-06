@@ -168,7 +168,7 @@
       {%- endif -%}
       {%- if desc != blank -%}<p class="plo-buy__d">{{ desc }}</p>{%- endif -%}
 
-      {%- form 'product', product, class: 'plo-form', data-plo-form: '' -%}
+      {%- form 'product', product, class: 'plo-form', data-plo-form: '', autocomplete: 'off' -%}
         <input type="hidden" name="id" value="{{ v.id }}" data-plo-variant>
         {%- if has_sub -%}<input type="hidden" name="selling_plan" value="{{ plan_id }}" data-plo-plan>{%- endif -%}
 

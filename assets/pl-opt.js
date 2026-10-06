@@ -128,7 +128,12 @@
     var qty = form.querySelector('[data-plo-qty]');
     var addBtn = form.querySelector('[data-plo-add]');
     var main = root.querySelector('.plo-gal__img');
+    /* Browsers (Safari, Firefox) restore the last-tapped radio on reload, which would open
+       the page on a pack size other than the default and out of step with the hidden variant
+       id. Put every choice back to what the page was served with. */
+    Array.prototype.forEach.call(form.querySelectorAll('[data-plo-size], [data-plo-mode]'), function (r) { r.checked = r.defaultChecked; });
     var checked = form.querySelector('[data-plo-size]:checked');
+    if (checked && variantInput) variantInput.value = checked.value;
     var price = checked ? Number(checked.getAttribute('data-price')) : 0;
 
     function isSub() {
