@@ -1377,3 +1377,9 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
   .plo-buy__kick { font-size: 14px; }
   .plo-buy__size { height: 32px; font-size: 15px; }
 }
+
+/* Hero: finished banner artwork (plo-banners style "image") */
+.plo-bn--image { background: var(--bn-bg); }
+.plo-bn__full { display: block; }
+.plo-bn__full img { display: block; width: 100%; height: auto; aspect-ratio: var(--ar, 1280 / 533); object-fit: cover; }
+@media (max-width: 767px) { .plo-bn__full.has-mob img { aspect-ratio: auto; } }

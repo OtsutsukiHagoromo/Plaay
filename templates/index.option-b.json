@@ -16,54 +16,30 @@
         "interval": 6
       },
       "blocks": {
-        "slide_1": {
+        "banner_clean": {
           "type": "slide",
           "settings": {
-            "style": "collage",
-            "bg": "#FFB600",
-            "image_asset": "plo-truffle-spill.jpg",
-            "image_2_asset": "plo-truffle-hand.jpg",
-            "eyebrow": "Made in the UAE by a nutritionist",
-            "heading": "No guilt.|All Plaay.",
-            "heading_mark": "All Plaay.",
-            "body": "Truffles, bars and slabs that taste like a treat and skip the refined sugar.",
-            "btn_label": "Shop all",
-            "btn_url": "/collections/shop-all",
-            "btn_arrow": true,
-            "btn_navy": true,
-            "show_rating": true,
-            "chips": "",
-            "sticker_big": "0%",
-            "sticker_small": "refined sugar",
-            "link_label": "",
-            "link_url": ""
+            "style": "image",
+            "bg": "#D8182D",
+            "image_asset": "plo-hero-clean.jpg",
+            "image_alt": "100% clean, 0% refined sugar. Taste freedom.",
+            "btn_url": "shopify://collections/shop-all"
           }
         },
-        "slide_2": {
+        "banner_everyday": {
           "type": "slide",
           "settings": {
-            "style": "photo",
-            "bg": "#FDF3E6",
-            "image_asset": "plo-slabs-banner.webp",
-            "image_alt": "70% dark chocolate hazelnut and sea salt slabs",
-            "eyebrow": "New · 80 g slabs",
-            "heading": "Very good|chocolate.",
-            "heading_mark": "good",
-            "body": "Rich, snappable slabs with 100% clean ingredients and 0% refined sugar.",
-            "btn_label": "Shop the slabs",
-            "btn_url": "/collections/new-chocolate-slabs",
-            "btn_arrow": true,
-            "btn_navy": false,
-            "link_label": "",
-            "link_url": "",
-            "show_rating": true,
-            "chips": ""
+            "style": "image",
+            "bg": "#013E39",
+            "image_asset": "plo-hero-everyday.jpg",
+            "image_alt": "Your everyday chocolate. Subscribe now and save 15%.",
+            "btn_url": "shopify://pages/subscribe-save"
           }
         }
       },
       "block_order": [
-        "slide_1",
-        "slide_2"
+        "banner_clean",
+        "banner_everyday"
       ]
     },
     "claims": {
@@ -108,7 +84,12 @@
         "eyebrow": "Bestsellers",
         "heading": "Our",
         "heading_light": "bestsellers",
-        "products": ["triple-chocolate-truffle", "peanut-butter-truffle", "pistachio-chocolate-bar-x-12", "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g"],
+        "products": [
+          "triple-chocolate-truffle",
+          "peanut-butter-truffle",
+          "pistachio-chocolate-bar-x-12",
+          "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g"
+        ],
         "link_label": "Shop all",
         "link_url": "/collections/shop-all",
         "limit": 4,

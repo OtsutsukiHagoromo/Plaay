@@ -5,6 +5,8 @@
     photo   – product photo with the copy on a panel matching the photo backdrop (slabs banner)
     navy    – flat-lay photo on navy with a skewed edge and a round sticker (Mix Pack)
     collage – two tilted photos and a sticker on a solid colour (brand banner)
+    image   – a finished banner artwork (copy baked in), shown whole and linked; optional
+              separate mobile artwork
   Photos: an image_picker wins; otherwise the *_asset file name from /assets is used.
 {%- endcomment -%}
 {%- liquid
@@ -49,6 +51,32 @@
         -%}
         <section class="plo-bn plo-bn--{{ b.style }}" style="--bn-bg: {{ b.bg }};" data-bg="{{ b.bg }}" data-dark="{{ dark }}" aria-roledescription="slide" aria-label="{{ forloop.index }} of {{ n }}" {{ block.shopify_attributes }}>
           {%- case b.style -%}
+            {%- when 'image' -%}
+              {%- liquid
+                assign img_src = b.image_asset | asset_url
+                if b.image != blank
+                  assign img_src = b.image | image_url: width: 2560
+                endif
+                assign mob_src = ''
+                if b.image_mobile != blank
+                  assign mob_src = b.image_mobile | image_url: width: 1200
+                elsif b.image_mobile_asset != blank
+                  assign mob_src = b.image_mobile_asset | asset_url
+                endif
+                assign w = 1280
+                assign h = 533
+                if b.image != blank
+                  assign w = b.image.width
+                  assign h = b.image.height
+                endif
+              -%}
+              <a class="plo-bn__full{% if mob_src != blank %} has-mob{% endif %}" href="{{ b.btn_url | default: '/collections/shop-all' }}" style="--ar: {{ w }} / {{ h }};">
+                <picture>
+                  {%- if mob_src != blank -%}<source media="(max-width: 767px)" srcset="{{ mob_src }}">{%- endif -%}
+                  <img src="{{ img_src }}" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+                </picture>
+              </a>
+              {%- if forloop.first and s.promo == false -%}<h1 class="pl-vh">{{ b.image_alt | default: shop.name }}</h1>{%- endif -%}
             {%- when 'collage' -%}
               <div class="plo-bn__art" aria-hidden="true">
                 <div class="plo-bn__photo plo-bn__photo--1">{%- render 'plo-img', image: b.image, asset: b.image_asset, width: 900, eager: forloop.first -%}</div>
@@ -62,6 +90,7 @@
               {%- endif -%}
           {%- endcase -%}
 
+          {%- unless b.style == 'image' -%}
           <div class="plo-bn__body">
             {%- if b.eyebrow != blank -%}
               <span class="plo-bn__eyebrow{% if b.style == 'photo' %} plo-bn__pill{% endif %}">{{ b.eyebrow }}</span>
@@ -91,6 +120,7 @@
               </div>
             {%- endif -%}
           </div>
+          {%- endunless -%}
         </section>
       {%- endfor -%}
     </div>
@@ -120,12 +150,15 @@
         { "type": "select", "id": "style", "label": "Style", "default": "photo", "options": [
           { "value": "photo", "label": "Photo + copy panel" },
           { "value": "navy", "label": "Navy + flat-lay" },
-          { "value": "collage", "label": "Colour + photo collage" }
+          { "value": "collage", "label": "Colour + photo collage" },
+          { "value": "image", "label": "Finished banner image" }
         ] },
         { "type": "color", "id": "bg", "label": "Background", "default": "#FDF3E6" },
         { "type": "image_picker", "id": "image", "label": "Photo" },
         { "type": "text", "id": "image_asset", "label": "Photo fallback (theme asset file)" },
         { "type": "text", "id": "image_alt", "label": "Photo alt text" },
+        { "type": "image_picker", "id": "image_mobile", "label": "Mobile banner (finished banner)" },
+        { "type": "text", "id": "image_mobile_asset", "label": "Mobile banner fallback (theme asset file)" },
         { "type": "image_picker", "id": "image_2", "label": "Second photo (collage)" },
         { "type": "text", "id": "image_2_asset", "label": "Second photo fallback (theme asset file)" },
         { "type": "text", "id": "eyebrow", "label": "Label" },
