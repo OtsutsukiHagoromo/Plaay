@@ -163,7 +163,56 @@
 
     <div class="plo-buy">
       {%- if eyebrow != blank -%}<p class="plo-eyebrow plo-eyebrow--sec">{{ eyebrow }}</p>{%- endif -%}
-      <h1 class="plo-buy__t">{{ product.title }}</h1>
+      {%- liquid
+        comment
+          Title in three parts so it reads smaller: the range ("70% Dark Chocolate") as a kicker,
+          the name ("Hazelnut Slab") as the headline, and the pack size ("6 × 80g") as a tag.
+          Titles without a range prefix or an "N x Ng" size just show as the headline.
+        endcomment
+        assign t_name = product.title | strip
+        assign t_kick = ''
+        assign t_size = ''
+        assign kicks = '70% Dark Chocolate |Milk Chocolate |Dark Chocolate ' | split: '|'
+        for k in kicks
+          assign kl = k | size
+          assign head = t_name | slice: 0, kl
+          if t_kick == '' and head == k
+            assign t_kick = k | strip
+            assign t_name = t_name | slice: kl, 200 | strip
+          endif
+        endfor
+        assign words = t_name | split: ' '
+        assign cut = words.size
+        for w in words reversed
+          assign wl = w | downcase | remove: '0' | remove: '1' | remove: '2' | remove: '3' | remove: '4' | remove: '5' | remove: '6' | remove: '7' | remove: '8' | remove: '9' | remove: '.' | remove: 'gm' | remove: 'g' | remove: 'x'
+          if wl == ''
+            assign cut = cut | minus: 1
+          else
+            break
+          endif
+        endfor
+        if cut < words.size and cut > 0
+          assign tail = ''
+          assign front = ''
+          for w in words
+            if forloop.index0 < cut
+              assign front = front | append: w | append: ' '
+            else
+              assign tail = tail | append: w | append: ' '
+            endif
+          endfor
+          assign tl = tail | downcase
+          if tl contains 'x '
+            assign t_name = front | strip
+            assign t_size = tail | strip | replace: ' x ', ' × ' | replace: ' X ', ' × ' | replace: 'Gm', 'g' | replace: 'G', 'g' | replace: ' g', 'g'
+          endif
+        endif
+      -%}
+      <h1 class="plo-buy__t">
+        {%- if t_kick != blank -%}<span class="plo-buy__kick">{{ t_kick }}</span>{%- endif -%}
+        <span class="plo-buy__name">{{ t_name }}</span>
+        {%- if t_size != blank -%}<span class="plo-buy__size">{{ t_size }}</span>{%- endif -%}
+      </h1>
       {%- if rating > 0 -%}
         <a class="plo-buy__rate" href="#plo-reviews">{%- render 'plo-stars', size: 14 -%}<span>{{ rating }} · {{ count }} reviews</span></a>
       {%- endif -%}
