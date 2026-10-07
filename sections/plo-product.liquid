@@ -207,6 +207,11 @@
             assign t_size = tail | strip | replace: ' x ', ' × ' | replace: ' X ', ' × ' | replace: 'Gm', 'g' | replace: 'G', 'g' | replace: ' g', 'g'
           endif
         endif
+        assign name_words = t_name | split: ' '
+        if t_kick != '' and name_words.size < 2
+          assign t_name = t_kick | append: ' ' | append: t_name
+          assign t_kick = ''
+        endif
       -%}
       <h1 class="plo-buy__t">
         {%- if t_kick != blank -%}<span class="plo-buy__kick">{{ t_kick }}</span>{%- endif -%}

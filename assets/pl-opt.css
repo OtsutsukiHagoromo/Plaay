@@ -1369,7 +1369,7 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
 
 /* PDP title: kicker (range) + name + pack-size tag, smaller than before. */
 .pl-skin-b .plo-buy__t { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font-size: 26px; line-height: 1.02; }
-.plo-buy__kick { flex: 0 0 100%; font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--pl-pink, #FF3EB5); line-height: 1.3; }
+.plo-buy__kick { flex: 0 0 100%; font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--pl-purple); line-height: 1.3; }
 .plo-buy__name { min-width: 0; }
 .plo-buy__size { display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; border: 2px solid var(--pl-navy); font-size: 13px; font-weight: 800; letter-spacing: 0; text-transform: none; white-space: nowrap; }
 @media (min-width: 1024px) {
