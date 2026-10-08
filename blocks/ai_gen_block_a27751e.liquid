@@ -491,7 +491,26 @@
             <a href="{{ card_url }}" class="ai-collection-cards__card-{{ ai_gen_id }}" aria-label="{{ display_title | escape }}">
               <div class="ai-collection-cards__image-shell-{{ ai_gen_id }}">
                 <div class="ai-collection-cards__image-wrapper-{{ ai_gen_id }}">
-                  {% if card_image %}
+                  {%- comment -%} Theme-asset image for this card ("Card images from theme files"), wins over the picker. {%- endcomment -%}
+                  {%- assign card_asset = '' -%}
+                  {%- assign asset_lines = block.settings.card_asset_images | newline_to_br | split: '<br />' -%}
+                  {%- for al in asset_lines -%}
+                    {%- assign ap = al | strip | split: '|' -%}
+                    {%- assign an = ap[0] | strip | plus: 0 -%}
+                    {%- if an == i and ap[1] != blank -%}{%- assign card_asset = ap[1] | strip -%}{%- endif -%}
+                  {%- endfor -%}
+                  {% if card_asset != blank %}
+                    <img
+                      src="{{ card_asset | asset_img_url: '560x' }}"
+                      srcset="{{ card_asset | asset_img_url: '250x' }} 250w, {{ card_asset | asset_img_url: '400x' }} 400w, {{ card_asset | asset_img_url: '560x' }} 560w"
+                      sizes="(min-width: 990px) 280px, 45vw"
+                      alt="{{ display_title | escape }}"
+                      class="ai-collection-cards__image-{{ ai_gen_id }}"
+                      loading="lazy"
+                      width="900"
+                      height="900"
+                    >
+                  {% elsif card_image %}
                     <img
                       src="{{ card_image | image_url: width: 560 }}"
                       srcset="{{ card_image | image_url: width: 250 }} 250w, {{ card_image | image_url: width: 400 }} 400w, {{ card_image | image_url: width: 560 }} 560w"
@@ -708,6 +727,12 @@
         }
       ],
       "default": "left"
+    },
+    {
+      "type": "textarea",
+      "id": "card_asset_images",
+      "label": "Card images from theme files",
+      "info": "One per line: card number|file name"
     },
     {
       "type": "range",
