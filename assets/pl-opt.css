@@ -1412,3 +1412,29 @@ body.pl-skin-b { --pl-gutter: var(--o-side); }
 /* Section head spacing the same for both heading styles. */
 .pl-skin-b .plo-px__head { margin-bottom: 20px; }
 @media (min-width: 1024px) { .pl-skin-b .plo-px__head { margin-bottom: 28px; } }
+
+/* ---------- Perks, compact (sections/plo-perks) ---------- */
+.plo-perks .plo-perks__grid { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.plo-perks .plo-perks__grid::-webkit-scrollbar { display: none; }
+.plo-perks .plo-perk { flex: 0 0 86%; scroll-snap-align: start; gap: 8px; padding: 16px 18px; border-radius: 22px; min-height: 0; }
+.plo-perks .plo-perk__tag { padding: 4px 10px; font-size: 10px; gap: 5px; }
+.plo-perks .plo-perk__t { display: block; font-size: 22px; font-weight: 900; line-height: 1; text-transform: uppercase; }
+.plo-perk--sub { flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; text-decoration: none; }
+.plo-perk__body { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; }
+.plo-perk__line { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.plo-perk__arrow { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--pl-navy); color: #fff; transition: transform .2s ease; }
+.plo-perk__arrow svg { stroke: currentColor; }
+.plo-perk--sub:hover .plo-perk__arrow { transform: translateX(3px); }
+.plo-rail { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 6px 0 0; padding: 14px 0 0; list-style: none; }
+.plo-rail::before { content: ""; position: absolute; left: 6px; right: 6px; top: 4px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--pl-yellow), var(--pl-purple)); }
+.plo-rail li { position: relative; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.plo-rail li::before { content: ""; position: absolute; left: 0; top: -15px; width: 11px; height: 11px; border-radius: 50%; background: #fff; border: 2.5px solid var(--pl-navy); box-sizing: border-box; }
+.plo-rail b { font-size: 11px; font-weight: 800; opacity: .7; }
+.plo-rail span { font-size: 12px; font-weight: 800; line-height: 1.2; }
+@media (min-width: 768px) {
+  .plo-perks .plo-perks__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; overflow: visible; }
+  .plo-perks .plo-perk { padding: 24px 28px; }
+  .plo-perks .plo-perk__t { font-size: 30px; }
+  .plo-perk__line { font-size: 15px; }
+  .plo-rail b { font-size: 13px; } .plo-rail span { font-size: 14px; }
+}

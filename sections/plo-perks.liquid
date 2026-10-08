@@ -1,5 +1,5 @@
 {%- comment -%}
-  Option B homepage: the two reasons to buy more from Plaay, side by side.
+  Option B homepage: the two reasons to buy more from Plaay, as two slim cards.
   Left: Subscribe & Save (saving, three steps, link). Right: the rewards ladder from the cart
   tier settings (same numbers as the bag), so the homepage, the announcement and the bag agree.
 {%- endcomment -%}
@@ -13,28 +13,35 @@
   assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift'
   assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift'
 -%}
+{%- liquid
+  comment
+    Short labels for the compact rail: "10% off + Mystery Gift" -> "10% + gift".
+  endcomment
+  assign sl1 = l1 | replace: ' off + Mystery Gift', ' + gift' | replace: ' + Mystery Gift', ' + gift'
+  assign sl2 = l2 | replace: ' off + Mystery Gift', ' + gift' | replace: ' + Mystery Gift', ' + gift'
+  assign sl3 = l3 | replace: ' off + Mystery Gift', ' + gift' | replace: ' + Mystery Gift', ' + gift'
+-%}
 <div class="pl plo plo-sec plo-perks">
+  {%- comment -%} Compact: two slim cards; on mobile one swipe row so it takes a single card's height. {%- endcomment -%}
   <div class="plo-wrap plo-perks__grid">
     <a class="plo-perk plo-perk--sub" href="{{ s.sub_url | default: '/pages/subscribe-save' }}">
-      <span class="plo-perk__tag">{%- render 'pl-icon', name: 'refresh', size: 14, stroke: 2.4 -%}Subscribe &amp; save</span>
-      <h2 class="plo-perk__t">{{ s.sub_heading }}</h2>
-      <ol class="plo-perk__steps">
-        <li><b>1</b><span>Pick your favourites</span></li>
-        <li><b>2</b><span>We deliver every 2 or 4 weeks, free</span></li>
-        <li><b>3</b><span>Skip, swap or cancel any time</span></li>
-      </ol>
-      <span class="plo-perk__go">{{ s.sub_link }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.4 %}</span>
+      <span class="plo-perk__body">
+        <span class="plo-perk__tag">{%- render 'pl-icon', name: 'refresh', size: 12, stroke: 2.6 -%}Subscribe &amp; save</span>
+        <span class="plo-perk__t">{{ s.sub_heading }}</span>
+        <span class="plo-perk__line">Every 2 or 4 weeks, free delivery. Skip or cancel any time.</span>
+      </span>
+      <span class="plo-perk__arrow" aria-hidden="true">{% render 'pl-icon', name: 'arrow-right', size: 18, stroke: 2.6 %}</span>
+      <span class="pl-vh">{{ s.sub_link }}</span>
     </a>
     <div class="plo-perk plo-perk--ladder">
-      <span class="plo-perk__tag">{%- render 'pl-icon', name: 'gift', size: 14, stroke: 2.4 -%}Bag rewards</span>
-      <h2 class="plo-perk__t">{{ s.ladder_heading }}</h2>
-      <ol class="plo-ladder">
+      <span class="plo-perk__tag">{%- render 'pl-icon', name: 'gift', size: 12, stroke: 2.6 -%}Bag rewards</span>
+      <span class="plo-perk__t">{{ s.ladder_heading }}</span>
+      <ol class="plo-rail" aria-label="Rewards, applied automatically in your bag">
         <li><b>AED {{ ship }}</b><span>Free delivery</span></li>
-        <li><b>AED {{ a1 }}</b><span>{{ l1 }}</span></li>
-        <li><b>AED {{ a2 }}</b><span>{{ l2 }}</span></li>
-        <li><b>AED {{ a3 }}</b><span>{{ l3 }}</span></li>
+        <li><b>AED {{ a1 }}</b><span>{{ sl1 }}</span></li>
+        <li><b>AED {{ a2 }}</b><span>{{ sl2 }}</span></li>
+        <li><b>AED {{ a3 }}</b><span>{{ sl3 }}</span></li>
       </ol>
-      <p class="plo-perk__fine">Applied automatically in your bag.</p>
     </div>
   </div>
 </div>
