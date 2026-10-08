@@ -500,13 +500,12 @@
             "card_1_title": "Chocolate Slabs",
             "card_1_button_text": "",
             "card_2_enabled": true,
-            "card_2_collection": "chocolate-bars",
-            "card_2_title": "Chocolate Bars",
+            "card_2_collection": "chocolate-truffles",
+            "card_2_title": "Chocolate Truffles",
             "card_2_button_text": "",
             "card_3_enabled": true,
-            "card_3_image": "shopify://shop_images/Triple_Chocolate.jpg_1.jpg",
-            "card_3_collection": "chocolate-truffles",
-            "card_3_title": "Chocolate Truffles",
+            "card_3_collection": "chocolate-bars",
+            "card_3_title": "Chocolate Bars",
             "card_3_button_text": "",
             "card_4_enabled": true,
             "card_4_image": "shopify://shop_images/2._DSC00491.png",
@@ -547,7 +546,8 @@
             "card_12_title": "",
             "card_12_button_text": "",
             "card_6_image": "shopify://shop_images/1.BarBunch_74ede1f6-8f11-4c27-9103-e40a3593fb7d.png",
-            "card_asset_images": "1|plo-home-cat-slabs.jpg\n2|plo-home-cat-bars.jpg"
+            "card_asset_images": "1|plo-home-cat-slabs.jpg\n3|plo-home-cat-bars.jpg",
+            "card_2_image": "shopify://shop_images/Triple_Chocolate.jpg_1.jpg"
           },
           "blocks": {}
         }
