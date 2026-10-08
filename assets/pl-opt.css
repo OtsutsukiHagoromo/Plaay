@@ -1383,3 +1383,32 @@ body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
 .plo-bn__full { display: block; }
 .plo-bn__full img { display: block; width: 100%; height: auto; aspect-ratio: var(--ar, 1280 / 533); object-fit: cover; }
 @media (max-width: 767px) { .plo-bn__full.has-mob img { aspect-ratio: auto; } }
+
+/* ---------- Feedback round: cards ---------- */
+/* 1. "+" on product cards: flat, no 3D shadow */
+.pl-skin-b .plo-card__add-b .plo-add, .pl-skin-b .plo-card__add-b .plo-add:active { box-shadow: none; }
+.pl-skin-b .plo-card__add-b .plo-add:active { transform: scale(.92); }
+/* 2. Collection pages: bigger product names on desktop */
+@media (min-width: 1024px) {
+  .plo-coll .plo-card__name, .plo-srch .plo-card__name { font-size: 18px; line-height: 1.25; }
+  .plo-coll .plo-card__price, .plo-srch .plo-card__price { font-size: 18px; }
+}
+/* 3. Size swatches on multi-size cards (truffles) */
+.plo-card__sizes { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; }
+.plo-card__sz { height: 28px; padding: 0 10px; border-radius: 999px; border: 1.5px solid rgba(8, 29, 72, .2); background: #fff; color: var(--pl-navy); font-family: var(--pl-font); font-size: 12px; font-weight: 700; line-height: 1; cursor: pointer; transition: background .15s ease, border-color .15s ease, color .15s ease; }
+.plo-card__sz:hover { border-color: var(--pl-navy); }
+.plo-card__sz.is-on { background: var(--pl-navy); border-color: var(--pl-navy); color: #fff; }
+.plo-card__sz:disabled { opacity: .4; text-decoration: line-through; cursor: default; }
+@media (min-width: 1024px) { .plo-card__sz { height: 30px; font-size: 13px; } }
+
+/* ---------- 7. Consistency: one page width, one heading size, one band rhythm ---------- */
+/* Header/footer (pl-wrap) and sections (plo-wrap) share the same side margin, so every edge lines up. */
+body.pl-skin-b { --pl-gutter: var(--o-side); }
+/* Section titles: product-page / review headings match the home section titles. */
+.pl-skin-b .plo-px__t { font-size: var(--o-title); line-height: 1; }
+/* Coloured bands (navy story, cream reviews, etc.): same padding everywhere. */
+.pl-skin-b .plo-fillb, .pl-skin-b .plo-prev--band { padding-top: 56px; padding-bottom: 56px; }
+@media (min-width: 1024px) { .pl-skin-b .plo-fillb, .pl-skin-b .plo-prev--band { padding-top: 88px; padding-bottom: 88px; } }
+/* Section head spacing the same for both heading styles. */
+.pl-skin-b .plo-px__head { margin-bottom: 20px; }
+@media (min-width: 1024px) { .pl-skin-b .plo-px__head { margin-bottom: 28px; } }

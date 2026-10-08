@@ -336,3 +336,7 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 .pl .pl-gap__add:active { transform: scale(.9); }
 .pl .pl-gap__add.is-busy { opacity: .5; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .pl .pl-gap[open] .pl-gap__i { animation: none; } }
+/* Upsell row headline (hidden while/if no suggestions are loaded) */
+.pl .pl-upsell__h { margin: 0 0 10px; font-size: 14px; font-weight: 800; line-height: 1.3; color: var(--pl-navy); }
+.pl .pl-upsell__h b { font-weight: 900; }
+.pl .pl-upsell:has(.pl-upsell__track:empty) { display: none; }

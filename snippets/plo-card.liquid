@@ -14,6 +14,22 @@
 {%- endcomment -%}
 {%- liquid
   assign v = variant | default: product.selected_or_first_available_variant
+  comment
+    Multi-size products (truffles) open on the 10 x 60g pack unless a variant was passed, and
+    show size swatches that switch the price and what "+" adds.
+  endcomment
+  assign has_sizes = false
+  if product.variants.size > 1
+    assign has_sizes = true
+    if variant == blank
+      for x in product.variants
+        assign xt = x.title | downcase | remove: ' '
+        if xt == '10x60g' and x.available
+          assign v = x
+        endif
+      endfor
+    endif
+  endif
   assign sub_pct = 0
   assign plan2 = ''
   assign plan4 = ''
@@ -81,8 +97,8 @@
   assign meta = ''
   if sub_mode and v.title != 'Default Title'
     assign meta = v.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' | replace: ' g', 'g'
-  elsif product.variants.size > 1
-    assign meta = product.variants.size | append: ' pack sizes'
+  elsif has_sizes
+    assign meta = ''
   elsif v.title != 'Default Title'
     assign meta = v.title
   endif
@@ -101,7 +117,7 @@
     assign load = 'eager'
   endif
 -%}
-<article class="plo-card"{% if range != blank %} data-range="{{ range }}"{% endif %}>
+<article class="plo-card"{% if range != blank %} data-range="{{ range }}"{% endif %}{% if has_sizes %} data-plo-sizes data-pct="{{ sub_pct }}"{% endif %}>
   <div class="plo-card__img">
     <a href="{{ href }}" tabindex="-1" aria-hidden="true">
       {%- if pkey != blank -%}
@@ -122,13 +138,21 @@
     {%- if reason != blank -%}<p class="plo-card__why">{{ reason }}</p>{%- endif -%}
     <h3 class="plo-card__name"><a href="{{ href }}">{{ product.title }}</a></h3>
     {%- if meta != blank -%}<p class="plo-card__meta">{{ meta }}</p>{%- endif -%}
+    {%- if has_sizes -%}
+      <div class="plo-card__sizes" role="radiogroup" aria-label="Pack size">
+        {%- for x in product.variants -%}
+          {%- assign xl = x.title | replace: ' X ', '×' | replace: ' x ', '×' | replace: 'X', '×' | replace: 'G', 'g' | remove: ' ' -%}
+          <button type="button" role="radio" class="plo-card__sz{% if x.id == v.id %} is-on{% endif %}" aria-checked="{% if x.id == v.id %}true{% else %}false{% endif %}" data-plo-sz="{{ x.id }}" data-price="{{ x.price }}"{% unless x.available %} disabled{% endunless %}>{{ xl }}</button>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
     <div class="plo-card__foot">
       <div>
         {%- if sub_mode and sub_price > 0 -%}
-          <div class="plo-card__price plo-card__price--sub">{%- render 'plaay-aed', fils: sub_price -%} <s>{%- render 'plaay-aed', fils: v.price -%}</s></div>
+          <div class="plo-card__price plo-card__price--sub"><span data-plo-cp-sub>{%- render 'plaay-aed', fils: sub_price -%}</span> <s data-plo-cp>{%- render 'plaay-aed', fils: v.price -%}</s></div>
           <div class="plo-card__sub" data-plo-freq-l>every 4 weeks</div>
         {%- else -%}
-        <div class="plo-card__price">{%- if product.variants.size > 1 -%}From {% endif -%}{%- render 'plaay-aed', fils: v.price -%}</div>
+        <div class="plo-card__price"><span data-plo-cp>{%- render 'plaay-aed', fils: v.price -%}</span></div>
         {%- endif -%}
         {%- if show_sub and sub_price > 0 and sub_mode == blank -%}<div class="plo-card__sub">{%- render 'plaay-aed', fils: sub_price -%} on repeat</div>{%- endif -%}
       </div>

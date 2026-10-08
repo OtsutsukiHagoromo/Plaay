@@ -25,6 +25,7 @@
       data-remaining="{{ remaining_fils | default: 0 }}"
       data-next-label="{{ next_label | escape }}"
       data-all-done="{% if all_done %}true{% else %}false{% endif %}">
+      <p class="pl-upsell__h">{% if all_done %}You might also like{% else %}Add one more, unlock <b>{{ next_label }}</b>{% endif %}</p>
       <div class="pl-upsell__track" data-recommendations></div>
     </div>
   </cart-recommendations>

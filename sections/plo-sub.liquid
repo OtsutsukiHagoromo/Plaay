@@ -2,7 +2,7 @@
   Option B: Subscribe & Save page. A short hero (headline, one line, three perks), then straight
   into the products: every product in the source collection that has a subscription plan, so
   new subscription products (e.g. the slabs) appear here without editing the page.
-  Range chips filter the grid in place; the 2 / 4 week toggle sets which plan every "+" adds.
+  Range chips filter the grid in place; "+" adds on the 4-week plan (changeable in the bag).
   Cards lead with the subscribe price (snippets/plo-card, sub_mode).
   Multi-size products show the "Default pack size" variant (truffles: 10 x 60g).
 {%- endcomment -%}
@@ -58,11 +58,6 @@
           {%- for p in collections[rh].products -%}{%- if p.selling_plan_groups.size > 0 and p.available -%}{%- assign n = n | plus: 1 -%}{%- endif -%}{%- endfor -%}
           {%- if n > 0 -%}<button type="button" role="tab" aria-selected="false" data-plo-range="{{ rh }}">{{ rp[1] | strip }} <small>{{ n }}</small></button>{%- endif -%}
         {%- endfor -%}
-      </div>
-      <div class="plo-sub__freq" role="radiogroup" aria-label="Delivery every">
-        <span>Deliver every</span>
-        <button type="button" role="radio" aria-checked="false" data-plo-freq="2">2 weeks</button>
-        <button type="button" role="radio" aria-checked="true" class="is-on" data-plo-freq="4">4 weeks</button>
       </div>
     </div>
 

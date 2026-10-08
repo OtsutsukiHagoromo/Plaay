@@ -330,6 +330,20 @@
     Array.prototype.forEach.call(root.querySelectorAll('[data-plo-tabpan]'), function (pnl) { var on = pnl.getAttribute('data-plo-tabpan') === i; pnl.hidden = !on; if (on) { pnl.classList.remove('is-in'); void pnl.offsetWidth; pnl.classList.add('is-in'); } });
   });
 
+  /* ---------- product cards: size swatches ---------- */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-plo-sz]');
+    if (!b) return;
+    var card = b.closest('[data-plo-sizes]');
+    if (!card) return;
+    e.preventDefault();
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-sz]'), function (x) { var on = x === b; x.classList.toggle('is-on', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); });
+    var id = b.getAttribute('data-plo-sz'), price = Number(b.getAttribute('data-price')), pct = Number(card.getAttribute('data-pct')) || 0;
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-quick]'), function (q) { q.setAttribute('data-plo-quick', id); });
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp]'), function (el) { el.textContent = aed(price); });
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sub]'), function (el) { el.textContent = aed(Math.floor(price * (100 - pct) / 100)); });
+  });
+
   /* ---------- Subscribe & Save page: range filter + delivery frequency ---------- */
   document.addEventListener('click', function (e) {
     var t = e.target.closest && e.target.closest('[data-plo-range], [data-plo-freq]');
