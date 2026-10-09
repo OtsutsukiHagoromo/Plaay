@@ -11,7 +11,7 @@
     Tiles with a full-bleed photo use it as the whole tile (colour = the photo's backdrop).
     Only rows with a photo are shown, so the set always matches.
   endcomment
-  assign rows = 'Truffles|chocolate-truffles|#FED8B4|triple||plo-cat-truffles.jpg|96% 50%,Bars|chocolate-bars|#FED8B4|pistbar||plo-cat-bars.jpg|78% 50%,Slabs|new-chocolate-slabs|#FED8B4|hazel|New|plo-cat-slabs.jpg|94% 50%,Variety packs|variety-packs|#FED8B4||Gifting|plo-cat-packs.jpg|96% 50%,Limited editions|limited-editions|#FFF0C4|||||' | split: ','
+  assign rows = 'Truffles|chocolate-truffles|#FED8B4|triple||plo-cat-truffles.jpg|96% 50%,Bars|chocolate-bars|#FED8B4|pistbar||plo-cat-bars.jpg|78% 50%,Slabs|new-chocolate-slabs|#FED8B4|hazel||plo-cat-slabs.jpg|94% 50%,Variety packs|variety-packs|#FED8B4||Gifting|plo-cat-packs.jpg|96% 50%,Limited editions|limited-editions|#FFF0C4|||||' | split: ','
   assign n = 0
 -%}
 {%- for row in rows -%}

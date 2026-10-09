@@ -99,7 +99,9 @@
         when 'badge:bestseller'
           assign badge_text = 'Best seller'
         when 'badge:new-launch', 'badge:new'
-          assign badge_text = 'New'
+          comment
+            "New" badges are switched off sitewide.
+          endcomment
         when 'badge:limited', 'limited edition'
           assign badge_text = 'Limited'
       endcase

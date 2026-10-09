@@ -95,7 +95,7 @@
             <li class="pl-header__item{% if is_mega %} has-mega{% endif %}"{% if is_mega %} data-pl-mega-parent{% endif %}{% if link_blocks.size > 0 %} {{ link_blocks[i].shopify_attributes }}{% endif %}>
               <a class="pl-header__link" href="{{ url }}"{% if is_mega %} aria-haspopup="true" aria-expanded="false"{% endif %}>
                 {{- label | escape -}}
-                {%- if url contains 'new-chocolate-slabs' %}<em class="pl-header__new">New</em>{% endif -%}
+                
                 {%- if is_mega %} {% render 'pl-icon', name: 'chev-down', size: 16, stroke: 2.2 %}{% endif -%}
               </a>
               {%- if is_mega -%}
@@ -177,7 +177,7 @@
         </div>
         <p class="pl-label pl-search__lbl2">Shop by range</p>
         <div class="pl-search__ranges">
-          {%- assign rr = 'Truffles|chocolate-truffles|plo-cat-truffles.jpg|#FED8B5,Bars|chocolate-bars|plo-cat-bars.jpg|#A9FAE8,Slabs|new-chocolate-slabs|plo-cat-slabs.jpg|#F8C5EB,Variety|variety-packs|plo-cat-packs.jpg|#FCD730' | split: ',' -%}
+          {%- assign rr = 'Truffles|chocolate-truffles|plo-cat-truffles.jpg|#FED8B4,Bars|chocolate-bars|plo-cat-bars.jpg|#FED8B4,Slabs|new-chocolate-slabs|plo-cat-slabs.jpg|#FED8B4,Variety|variety-packs|plo-cat-packs.jpg|#FED8B4' | split: ',' -%}
           {%- for r in rr -%}
             {%- assign f = r | split: '|' -%}
             <a class="pl-search__range" href="{{ routes.collections_url }}/{{ f[1] }}{% if template.suffix == 'option-b' %}?view=option-b{% endif %}" style="--tile: {{ f[3] }}">
