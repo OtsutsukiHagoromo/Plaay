@@ -1575,33 +1575,46 @@ body.pl-skin-b :is(.plo-buy__t, .plo-hero__t, .plo-px__t, .plo-why2__h, .plo-bn_
 .pl-skin-b .plo-coll .plo-chips a[aria-current="page"] { background: none; box-shadow: none; color: var(--pl-navy); font-weight: 800; border-bottom-color: var(--pl-navy); }
 .pl-skin-b .plo-coll .plo-chips a small { margin-left: 4px; font-size: 11px; opacity: .55; }
 
-/* ---------- Collection banner, "art" layout (photo in its own backdrop colour) ---------- */
+/* ---------- Collection banner, "art" layout (photo in its own backdrop colour) ----------
+   Compact at every size: copy left, photo right (fading into the panel colour). */
 .plo-hero--art { background: none; padding-top: 12px; }
-.plo-hero--art .plo-hero__in { position: relative; display: flex; flex-direction: column; gap: 0; width: calc(100% - var(--o-side) * 2); max-width: 1280px; margin: 0 auto; padding: 0; border-radius: 28px; background: var(--tint); overflow: hidden; min-height: 0; }
-.plo-hero--art .plo-hero__copy { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 10px; padding: 28px 22px 0; }
-.plo-hero--art .plo-hero__t { font-size: 40px; line-height: .98; color: var(--ink); }
-.plo-hero--art .plo-hero__usps { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 0; }
-.plo-hero--art .plo-hero__usps li { padding: 6px 12px; border-radius: 999px; background: #fff; color: var(--pl-navy); font-size: 12px; font-weight: 700; animation: none; }
-.plo-hero--art .plo-hero__art { position: relative; height: 330px; margin-top: -10px; }
-.plo-hero--art .plo-hero__art img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 42%); -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%); mask-image: linear-gradient(to bottom, transparent 0, #000 22%); }
+.plo-hero--art .plo-hero__in { position: relative; display: flex; align-items: center; width: calc(100% - var(--o-side) * 2); max-width: 1280px; min-height: 220px; margin: 0 auto; padding: 0; border-radius: 24px; background: var(--tint); overflow: hidden; }
+.plo-hero--art .plo-hero__copy { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 12px; max-width: 60%; padding: 22px 0 22px 20px; }
+.plo-hero--art .plo-hero__t { margin: 0; font-size: 30px; line-height: 1; color: var(--ink); }
+.plo-hero--art .plo-hero__usps { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.plo-hero--art .plo-hero__usps li { padding: 5px 9px; border-radius: 999px; background: rgba(255, 255, 255, .92); color: var(--pl-navy); font-size: 11px; font-weight: 700; line-height: 1.2; white-space: nowrap; animation: none; }
+.plo-hero--art .plo-hero__art { position: absolute; right: 0; top: 0; bottom: 0; width: 50%; }
+.plo-hero--art .plo-hero__art img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 40%); -webkit-mask-image: linear-gradient(to right, transparent 0, #000 30%); mask-image: linear-gradient(to right, transparent 0, #000 30%); }
 @media (min-width: 768px) {
-  .plo-hero--art .plo-hero__in { flex-direction: row; align-items: center; min-height: 380px; }
-  .plo-hero--art .plo-hero__copy { flex: 1 1 52%; padding: 48px 0 48px 48px; gap: 14px; }
-  .plo-hero--art .plo-hero__art { position: absolute; right: 0; top: 0; bottom: 0; width: 52%; height: auto; margin: 0; }
-  .plo-hero--art .plo-hero__art img { -webkit-mask-image: linear-gradient(to right, transparent 0, #000 28%); mask-image: linear-gradient(to right, transparent 0, #000 28%); object-position: var(--pos, 50% 42%); }
+  .plo-hero--art .plo-hero__in { min-height: 260px; border-radius: 28px; }
+  .plo-hero--art .plo-hero__copy { max-width: 55%; padding: 36px 0 36px 40px; gap: 16px; }
+  .plo-hero--art .plo-hero__t { font-size: 44px; }
+  .plo-hero--art .plo-hero__usps { gap: 8px; }
+  .plo-hero--art .plo-hero__usps li { font-size: 13px; padding: 6px 12px; }
+  .plo-hero--art .plo-hero__art { width: 46%; }
 }
 @media (min-width: 1024px) {
   .plo-hero--art { padding-top: 20px; }
-  .plo-hero--art .plo-hero__in { min-height: 440px; }
-  .plo-hero--art .plo-hero__copy { padding: 64px 0 64px 64px; }
-  .plo-hero--art .plo-hero__t { font-size: 72px; }
-  .plo-hero--art .plo-hero__usps li { font-size: 14px; padding: 8px 14px; }
+  .plo-hero--art .plo-hero__in { min-height: 300px; }
+  .plo-hero--art .plo-hero__copy { padding: 44px 0 44px 56px; }
+  .plo-hero--art .plo-hero__t { font-size: 56px; }
+  .plo-hero--art .plo-hero__usps li { font-size: 14px; padding: 7px 14px; }
 }
-.plo-hero--art .plo-hero__in { align-items: stretch; }
-.plo-hero--art .plo-hero__art { width: 100%; align-self: stretch; height: 360px; }
+@media (max-width: 767px) {
+  .plo-hero--art .plo-hero__in { align-items: stretch; min-height: 0; }
+  .plo-hero--art .plo-hero__copy { max-width: none; width: 100%; padding: 22px 18px 18px; gap: 70px; }
+  .plo-hero--art .plo-hero__t { max-width: 55%; }
+  .plo-hero--art .plo-hero__usps { position: relative; z-index: 2; }
+  .plo-hero--art .plo-hero__art { width: 52%; }
+}
 @media (min-width: 768px) {
-  .plo-hero--art .plo-hero__in { align-items: center; }
-  .plo-hero--art .plo-hero__art { width: 52%; height: auto; }
-  .plo-hero--art .plo-hero__copy { max-width: 50%; }
+  .plo-hero--art .plo-hero__art { width: 44%; right: 24px; }
+  .plo-hero--art .plo-hero__art img { object-fit: contain; object-position: 100% 50%; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 18%); mask-image: linear-gradient(to right, transparent 0, #000 18%); }
 }
-@media (max-width: 767px) { .plo-hero--art .plo-hero__art { height: 300px; } .plo-hero--art .plo-hero__t { font-size: 36px; } }
+@media (min-width: 1024px) { .plo-hero--art .plo-hero__in { min-height: 320px; } .plo-hero--art .plo-hero__art { right: 48px; } }
+.plo-hero--art .plo-hero__copy { display: flex; align-items: flex-start; }
+@media (min-width: 768px) {
+  .plo-hero--art .plo-hero__art { width: 46%; right: 0; overflow: hidden; }
+  .plo-hero--art .plo-hero__art img { position: absolute; right: 4%; top: 50%; width: auto; height: 165%; max-width: none; transform: translateY(-50%); object-fit: initial; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 22%); mask-image: linear-gradient(to right, transparent 0, #000 22%); }
+}
+.plo-hero--art .plo-hero__t { align-self: flex-start; grid-column: auto; }
