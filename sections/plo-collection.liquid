@@ -28,6 +28,7 @@
   assign b_tint = '#FFF6DE'
   assign b_pos = '85% 50%'
   assign b_facts = ''
+  assign b_layout = ''
   assign b_lines = s.banners | newline_to_br | split: '<br />'
   for l in b_lines
     assign f = l | strip | split: '|'
@@ -42,6 +43,13 @@
       assign b_facts = f[4] | split: ';'
       if f[5] != blank
         assign b_ink = f[5] | strip
+      endif
+      comment
+        7th field "art": the photo fills the right of a rounded panel in its own backdrop colour
+        (no tilted card); on phones it sits under the title.
+      endcomment
+      if f[6] != blank
+        assign b_layout = f[6] | strip
       endif
     endif
   endfor
@@ -74,7 +82,7 @@
 -%}
 <div class="pl plo plo-coll">
   {%- paginate collection.products by s.per_page -%}
-    <header class="plo-hero{% if has_photo %} plo-hero--photo{% endif %}{% if is_all %} plo-hero--all{% endif %}" style="--tint: {{ b_tint }}; --ink: {{ b_ink }}; --pos: {{ b_pos }};">
+    <header class="plo-hero{% if has_photo %} plo-hero--photo{% endif %}{% if is_all %} plo-hero--all{% endif %}{% if b_layout == 'art' and has_photo %} plo-hero--art{% endif %}" style="--tint: {{ b_tint }}; --ink: {{ b_ink }}; --pos: {{ b_pos }};">
       <div class="plo-wrap plo-hero__in">
         <div class="plo-hero__copy">
           <h1 class="plo-hero__t">{{ collection.title }}</h1>
@@ -90,7 +98,15 @@
             </ul>
           {%- endif -%}
         </div>
-        {%- if has_photo -%}
+        {%- if has_photo and b_layout == 'art' -%}
+          <div class="plo-hero__art" aria-hidden="true">
+            {%- if banner_d != blank -%}
+              {{ banner_d | image_url: width: 1400 | image_tag: class: 'plo-hero__img', loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 640px, 100vw', widths: '600, 900, 1400', alt: '' }}
+            {%- else -%}
+              <img class="plo-hero__img" src="{{ b_asset | asset_url }}" srcset="{{ b_asset | asset_img_url: '600x' }} 600w, {{ b_asset | asset_img_url: '900x' }} 900w, {{ b_asset | asset_url }} 1055w" sizes="(min-width: 1024px) 640px, 100vw" alt="" width="1055" height="1491" loading="eager" fetchpriority="high">
+            {%- endif -%}
+          </div>
+        {%- elsif has_photo -%}
           <div class="plo-hero__card">
             {%- if banner_d != blank -%}
               <picture>
