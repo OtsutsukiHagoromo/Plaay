@@ -1,0 +1,54 @@
+{%- comment -%}
+  Option B homepage: one looping brand video next to a short line and a button.
+  Mobile: the video card with the copy over a soft gradient at the bottom.
+  Desktop: copy panel on the left, the video card on the right (same height).
+  The clip is muted, loops, plays only while on screen (assets/pl-opt.js initReelBand) and stays
+  on its poster for visitors who prefer reduced motion. Video: a Shopify-hosted video setting wins,
+  otherwise the theme asset file.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign src = s.video_asset | asset_url
+  if s.video != blank
+    assign mp4 = s.video.sources | where: 'format', 'mp4' | first
+    if mp4
+      assign src = mp4.url
+    endif
+  endif
+  assign poster = s.poster_asset | asset_url
+  if s.video != blank and s.video.preview_image
+    assign poster = s.video.preview_image | image_url: width: 900
+  endif
+-%}
+<div class="pl plo plo-sec plo-rband" style="--panel: {{ s.panel }};">
+  <div class="plo-wrap plo-rband__grid">
+    <div class="plo-rband__copy">
+      {%- if s.eyebrow != blank -%}<span class="plo-rband__tag">{{ s.eyebrow }}</span>{%- endif -%}
+      <h2 class="plo-rband__t">{{ s.heading }}</h2>
+      {%- if s.text != blank -%}<p class="plo-rband__p">{{ s.text }}</p>{%- endif -%}
+      {%- if s.btn_label != blank -%}<a class="plo-btn plo-rband__btn" href="{{ s.btn_url | default: '/collections/shop-all' }}">{{ s.btn_label }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.6 %}</a>{%- endif -%}
+    </div>
+    <div class="plo-rband__media">
+      <video class="plo-rband__v" src="{{ src }}" poster="{{ poster }}" muted loop playsinline preload="metadata" aria-hidden="true" data-plo-rband></video>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: video band",
+  "tag": "section",
+  "settings": [
+    { "type": "video", "id": "video", "label": "Video (Shopify)" },
+    { "type": "text", "id": "video_asset", "label": "Video fallback (theme asset file)", "default": "plo-home-reel.mp4" },
+    { "type": "text", "id": "poster_asset", "label": "Poster (theme asset file)", "default": "plo-home-reel-poster.jpg" },
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Behind the shoot" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Plaay All Day" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Sun out, guilt out. Clean chocolate for every kind of day." },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Shop now" },
+    { "type": "url", "id": "btn_url", "label": "Button link" },
+    { "type": "color", "id": "panel", "label": "Panel colour (desktop)", "default": "#FED8B4" }
+  ],
+  "presets": [{ "name": "Preview: video band" }]
+}
+{% endschema %}

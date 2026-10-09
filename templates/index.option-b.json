@@ -161,7 +161,7 @@
             "sub": "6 flavours",
             "url": "/collections/new-chocolate-slabs",
             "product": "new-chocolate-bars-mix-pack-of-5",
-            "tint": "#F8A7D6",
+            "tint": "#FED8B4",
             "photo_asset": "plo-cat-slabs.jpg",
             "photo_pos": "92% 50%"
           }
@@ -197,7 +197,7 @@
             "sub": "Try everything",
             "url": "/collections/variety-packs",
             "product": "og-plaayer-pack",
-            "tint": "#F8A7D6",
+            "tint": "#FED8B4",
             "photo_asset": "plo-cat-packs.jpg",
             "photo_pos": "95% 50%"
           }
@@ -369,6 +369,10 @@
         "reel_3",
         "reel_4"
       ]
+    },
+    "reel_band": {
+      "type": "plo-reel-band",
+      "settings": {}
     }
   },
   "order": [
@@ -376,6 +380,7 @@
     "claims",
     "bestsellers",
     "categories",
+    "reel_band",
     "reviews",
     "videos",
     "why"
