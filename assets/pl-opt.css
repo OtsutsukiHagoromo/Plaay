@@ -1541,3 +1541,9 @@ body.template-index .plo-title, body.template-index .plo-px__t, body.template-in
 .plo-rband--solo .plo-rband__grid { display: block; }
 .plo-rband--solo .plo-rband__media { display: block; aspect-ratio: 4 / 5; max-height: none; }
 @media (min-width: 768px) { .plo-rband--solo .plo-rband__media { aspect-ratio: 16 / 9; max-height: 720px; } .plo-rband--solo .plo-rband__v { object-position: 50% 30%; } }
+
+/* Reviews band: boxed inside the page width (rounded cream panel), aligned with other sections. */
+.pl-skin-b .plo-prev--band { background: none; padding-top: var(--o-gap); padding-bottom: 0; }
+.pl-skin-b .plo-prev--band > .plo-wrap { width: calc(100% - var(--o-side) * 2); max-width: 1280px; margin: 0 auto; padding: 28px var(--o-side); border-radius: 28px; background: var(--pl-cream); overflow: hidden; }
+@media (min-width: 1024px) { .pl-skin-b .plo-prev--band > .plo-wrap { padding: 56px; } }
+@media (max-width: 767px) { .pl-skin-b .plo-prev--band .plo-px__head { flex-direction: column; align-items: flex-start; gap: 6px; } }
