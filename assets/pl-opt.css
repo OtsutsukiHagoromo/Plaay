@@ -1438,3 +1438,21 @@ body.pl-skin-b { --pl-gutter: var(--o-side); }
   .plo-perk__line { font-size: 15px; }
   .plo-rail b { font-size: 13px; } .plo-rail span { font-size: 14px; }
 }
+
+/* ---------- Home feedback round 2 ---------- */
+/* Title case headlines on the home page (copy is written in Title Case; no forced caps). */
+body.template-index .plo-title, body.template-index .plo-px__t, body.template-index .plo-why2__h { text-transform: none; letter-spacing: -.02em; line-height: 1.02; }
+/* Bestseller range tabs: simple text tabs with an underline, no pill boxes. */
+.pl-skin-b .plo-tabsel { gap: 22px; margin-bottom: 18px; border-bottom: 1px solid rgba(8, 29, 72, .1); }
+.pl-skin-b .plo-tabsel button { height: auto; padding: 8px 0 10px; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; box-shadow: none; font-size: 15px; font-weight: 600; color: var(--pl-mute); transition: color .15s ease, border-color .15s ease; }
+.pl-skin-b .plo-tabsel button:hover { color: var(--pl-navy); }
+.pl-skin-b .plo-tabsel button.is-on { background: none; box-shadow: none; color: var(--pl-navy); font-weight: 800; border-bottom-color: var(--pl-navy); }
+/* "+" on cards: quiet white button, navy on hover. */
+.pl-skin-b .plo-card__add-b .plo-add { background: #fff; border: 1px solid rgba(8, 29, 72, .14); box-shadow: 0 2px 8px rgba(8, 29, 72, .12); transition: background .15s ease, transform .12s ease; }
+.pl-skin-b .plo-card__add-b .plo-add svg { stroke: var(--pl-navy); width: 16px; height: 16px; }
+@media (hover: hover) {
+  .pl-skin-b .plo-card__add-b .plo-add:hover { background: var(--pl-navy); }
+  .pl-skin-b .plo-card__add-b .plo-add:hover svg { stroke: #fff; }
+}
+/* Hero artwork: mobile banner keeps its own proportions */
+@media (max-width: 767px) { .plo-bn__full.has-mob img { aspect-ratio: var(--ar-m, auto); } }

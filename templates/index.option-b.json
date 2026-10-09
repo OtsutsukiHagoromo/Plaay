@@ -16,30 +16,44 @@
         "interval": 6
       },
       "blocks": {
-        "banner_clean": {
+        "banner_offers": {
           "type": "slide",
           "settings": {
             "style": "image",
-            "bg": "#D8182D",
-            "image_asset": "plo-hero-clean.jpg",
-            "image_alt": "100% clean, 0% refined sugar. Taste freedom.",
+            "bg": "#FFFFFF",
+            "image": "shopify://shop_images/Plaay_offers_banner_desktop_1_1.jpg",
+            "image_mobile": "shopify://shop_images/Plaay_offers_banner_mobile_2_1.jpg",
+            "image_alt": "Plaay offers",
             "btn_url": "shopify://collections/shop-all"
           }
         },
-        "banner_everyday": {
+        "banner_main": {
           "type": "slide",
           "settings": {
             "style": "image",
-            "bg": "#013E39",
-            "image_asset": "plo-hero-everyday.jpg",
-            "image_alt": "Your everyday chocolate. Subscribe now and save 15%.",
+            "bg": "#FFFFFF",
+            "image": "shopify://shop_images/Website_Banner_Desktop_Version__jpg.jpg",
+            "image_mobile": "shopify://shop_images/Website_Banner_Mobile_Version_jpg.jpg",
+            "image_alt": "Plaay: clean chocolate, zero refined sugar",
+            "btn_url": "shopify://collections/shop-all"
+          }
+        },
+        "banner_sub": {
+          "type": "slide",
+          "settings": {
+            "style": "image",
+            "bg": "#FFFFFF",
+            "image": "shopify://shop_images/Website_Banner_Desktop_Version_030ce88d-7628-4cb2-b3b8-c83fcc8e70a1.jpg",
+            "image_mobile": "shopify://shop_images/Website_Banner_Mobile_Version_d46bbf7d-1e91-4697-865b-ead68fad74ee.jpg",
+            "image_alt": "Subscribe and save 15%",
             "btn_url": "shopify://pages/subscribe-save"
           }
         }
       },
       "block_order": [
-        "banner_clean",
-        "banner_everyday"
+        "banner_offers",
+        "banner_main",
+        "banner_sub"
       ]
     },
     "claims": {
@@ -83,7 +97,7 @@
       "settings": {
         "eyebrow": "Bestsellers",
         "heading": "Our",
-        "heading_light": "bestsellers",
+        "heading_light": "Bestsellers",
         "products": [
           "triple-chocolate-truffle",
           "peanut-butter-truffle",
@@ -136,8 +150,8 @@
       "type": "plo-categories",
       "settings": {
         "eyebrow": "Shop",
-        "heading": "Find your",
-        "heading_light": "favourite"
+        "heading": "Shop by",
+        "heading_light": "Category"
       },
       "blocks": {
         "cat_1": {
@@ -147,7 +161,7 @@
             "sub": "6 flavours",
             "url": "/collections/new-chocolate-slabs",
             "product": "new-chocolate-bars-mix-pack-of-5",
-            "tint": "#F8C5EB",
+            "tint": "#F8A7D6",
             "photo_asset": "plo-cat-slabs.jpg",
             "photo_pos": "92% 50%"
           }
@@ -159,7 +173,7 @@
             "sub": "8 flavours",
             "url": "/collections/chocolate-truffles",
             "product": "truffle-mix",
-            "tint": "#FED8B5",
+            "tint": "#F8A7D6",
             "photo_asset": "plo-cat-truffles.jpg",
             "photo_pos": "95% 50%"
           }
@@ -171,7 +185,7 @@
             "sub": "5 flavours",
             "url": "/collections/chocolate-bars",
             "product": "salted-caramel-bar-x12",
-            "tint": "#A9FAE8",
+            "tint": "#F8A7D6",
             "photo_asset": "plo-cat-bars.jpg",
             "photo_pos": "80% 50%"
           }
@@ -183,7 +197,7 @@
             "sub": "Try everything",
             "url": "/collections/variety-packs",
             "product": "og-plaayer-pack",
-            "tint": "#FCD730",
+            "tint": "#F8A7D6",
             "photo_asset": "plo-cat-packs.jpg",
             "photo_pos": "95% 50%"
           }
@@ -200,7 +214,7 @@
       "type": "plo-why",
       "settings": {
         "heading": "Made by a",
-        "heading_light": "nutritionist",
+        "heading_light": "Nutritionist",
         "image_asset": "plo-rashi.jpg",
         "quote": "“You don’t need to earn chocolate.”",
         "byline": "Rashi Chowdhary, nutritionist and founder",
@@ -301,7 +315,7 @@
       ],
       "settings": {
         "eyebrow": "Reviews",
-        "heading": "Loved by [count] Plaayers",
+        "heading": "Loved by 10k+ Plaayers",
         "breakdown": "104,5,5,1,7",
         "rows": 4,
         "all_label": "",
@@ -316,8 +330,8 @@
         "link_label": "Instagram",
         "link_url": "https://www.instagram.com/shopplaay",
         "eyebrow": "On camera",
-        "heading": "See it in",
-        "heading_light": "real life"
+        "heading": "See It in",
+        "heading_light": "Real Life"
       },
       "blocks": {
         "reel_1": {
@@ -355,15 +369,6 @@
         "reel_3",
         "reel_4"
       ]
-    },
-    "perks": {
-      "type": "plo-perks",
-      "settings": {
-        "sub_heading": "15% off every box",
-        "sub_link": "How it works",
-        "sub_url": "/pages/subscribe-save",
-        "ladder_heading": "The more you plaay"
-      }
     }
   },
   "order": [
@@ -371,9 +376,8 @@
     "claims",
     "bestsellers",
     "categories",
-    "perks",
-    "why",
     "reviews",
-    "videos"
+    "videos",
+    "why"
   ]
 }

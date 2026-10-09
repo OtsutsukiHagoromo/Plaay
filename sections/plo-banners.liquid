@@ -53,27 +53,30 @@
           {%- case b.style -%}
             {%- when 'image' -%}
               {%- liquid
-                assign img_src = b.image_asset | asset_url
-                if b.image != blank
-                  assign img_src = b.image | image_url: width: 2560
-                endif
-                assign mob_src = ''
-                if b.image_mobile != blank
-                  assign mob_src = b.image_mobile | image_url: width: 1200
-                elsif b.image_mobile_asset != blank
-                  assign mob_src = b.image_mobile_asset | asset_url
-                endif
+                comment
+                  Desktop and mobile artwork, each served at the right size (srcset). Width/height on
+                  both so the space is reserved before the image arrives (no layout jump).
+                endcomment
                 assign w = 1280
                 assign h = 533
                 if b.image != blank
                   assign w = b.image.width
                   assign h = b.image.height
                 endif
+                assign mob = b.image_mobile
               -%}
-              <a class="plo-bn__full{% if mob_src != blank %} has-mob{% endif %}" href="{{ b.btn_url | default: '/collections/shop-all' }}" style="--ar: {{ w }} / {{ h }};">
+              <a class="plo-bn__full{% if mob != blank or b.image_mobile_asset != blank %} has-mob{% endif %}" href="{{ b.btn_url | default: '/collections/shop-all' }}" style="--ar: {{ w }} / {{ h }};{% if mob != blank %} --ar-m: {{ mob.width }} / {{ mob.height }};{% endif %}">
                 <picture>
-                  {%- if mob_src != blank -%}<source media="(max-width: 767px)" srcset="{{ mob_src }}">{%- endif -%}
-                  <img src="{{ img_src }}" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+                  {%- if mob != blank -%}
+                    <source media="(max-width: 767px)" srcset="{{ mob | image_url: width: 480 }} 480w, {{ mob | image_url: width: 750 }} 750w, {{ mob | image_url: width: 1080 }} 1080w" sizes="100vw" width="{{ mob.width }}" height="{{ mob.height }}">
+                  {%- elsif b.image_mobile_asset != blank -%}
+                    <source media="(max-width: 767px)" srcset="{{ b.image_mobile_asset | asset_url }}">
+                  {%- endif -%}
+                  {%- if b.image != blank -%}
+                    <img src="{{ b.image | image_url: width: 1920 }}" srcset="{{ b.image | image_url: width: 1024 }} 1024w, {{ b.image | image_url: width: 1440 }} 1440w, {{ b.image | image_url: width: 1920 }} 1920w, {{ b.image | image_url: width: 2560 }} 2560w" sizes="100vw" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+                  {%- else -%}
+                    <img src="{{ b.image_asset | asset_url }}" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+                  {%- endif -%}
                 </picture>
               </a>
               {%- if forloop.first and s.promo == false -%}<h1 class="pl-vh">{{ b.image_alt | default: shop.name }}</h1>{%- endif -%}
