@@ -1547,3 +1547,14 @@ body.template-index .plo-title, body.template-index .plo-px__t, body.template-in
 .pl-skin-b .plo-prev--band > .plo-wrap { width: calc(100% - var(--o-side) * 2); max-width: 1280px; margin: 0 auto; padding: 28px var(--o-side); border-radius: 28px; background: var(--pl-cream); overflow: hidden; }
 @media (min-width: 1024px) { .pl-skin-b .plo-prev--band > .plo-wrap { padding: 56px; } }
 @media (max-width: 767px) { .pl-skin-b .plo-prev--band .plo-px__head { flex-direction: column; align-items: flex-start; gap: 6px; } }
+
+/* "See It in Real Life": stays inside the page width (no edge-to-edge row). */
+.pl-skin-b .plo-reels .plo-vids { margin: 0; padding: 0 0 4px; border-radius: 20px; }
+@media (min-width: 1024px) {
+  .pl-skin-b .plo-reels .plo-vids { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; overflow: visible; }
+  .pl-skin-b .plo-reels .plo-vid { width: auto; max-width: none; }
+}
+/* Rashi / nutritionist section: boxed navy panel inside the page width, with space before the footer. */
+.pl-skin-b .plo-whysec.plo-fillb { background: none; padding: 0; margin: var(--o-gap) 0; }
+.pl-skin-b .plo-whysec > .plo-wrap { width: calc(100% - var(--o-side) * 2); max-width: 1280px; margin: 0 auto; padding: 40px var(--o-side); border-radius: 28px; background: var(--fill, var(--pl-navy)); }
+@media (min-width: 1024px) { .pl-skin-b .plo-whysec > .plo-wrap { padding: 64px 56px; } }
