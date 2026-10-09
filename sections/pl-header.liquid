@@ -36,9 +36,9 @@
     assign nav_urls = urls_s | split: '|'
     assign nav_megas = megas_s | split: '|'
   else
-    assign nav_labels = 'Shop|Truffles|Bars|Slabs|Subscribe & Save|Our Story' | split: '|'
-    assign nav_urls = '/collections/shop-all|/collections/chocolate-truffles|/collections/chocolate-bars|/collections/new-chocolate-slabs|/pages/subscribe-save|/pages/for-the-geeks-1' | split: '|'
-    assign nav_megas = '1|0|0|0|0|0' | split: '|'
+    assign nav_labels = 'Shop|Truffles|Bars|Slabs|Limited Edition|Subscribe & Save|Our Story' | split: '|'
+    assign nav_urls = '/collections/shop-all|/collections/chocolate-truffles|/collections/chocolate-bars|/collections/new-chocolate-slabs|/collections/limited-editions|/pages/subscribe-save|/pages/for-the-geeks-1' | split: '|'
+    assign nav_megas = '1|0|0|0|0|0|0' | split: '|'
   endif
 
   assign type_labels = 'Bars|Truffles|Slabs|Variety packs|Limited editions|Shop all' | split: '|'
@@ -219,6 +219,7 @@
         <div class="pl-menu__tiles">{%- render 'pl-menu-tiles', size: 'sm' -%}</div>
       </div>
       <ul class="pl-menu__list">
+        <li><a href="{{ routes.collections_url }}/limited-editions"><span>Limited Edition</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
         <li><a href="/pages/subscribe-save"><span>Subscribe &amp; Save</span><em class="pl-menu__tag">15% off</em>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
         <li><a href="/pages/for-the-geeks-1"><span>Our Story</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
         <li><a href="{{ account_url }}"><span>{% if customer %}My Account{% else %}Sign In{% endif %}</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>

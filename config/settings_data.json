@@ -389,6 +389,14 @@
               "url": "/pages/for-the-geeks-1",
               "mega": false
             }
+          },
+          "link_7": {
+            "type": "link",
+            "settings": {
+              "label": "Limited Edition",
+              "url": "/collections/limited-editions",
+              "mega": false
+            }
           }
         },
         "block_order": [
@@ -396,6 +404,7 @@
           "link_2",
           "link_3",
           "link_4",
+          "link_7",
           "link_5",
           "link_6"
         ],
