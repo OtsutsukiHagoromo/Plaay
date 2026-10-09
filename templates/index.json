@@ -372,7 +372,12 @@
     },
     "reel_band": {
       "type": "plo-reel-band",
-      "settings": {}
+      "settings": {
+        "eyebrow": "",
+        "heading": "Plaay All Day",
+        "text": "Sun out, guilt out. Clean chocolate for every kind of day.",
+        "btn_label": "Shop now"
+      }
     }
   },
   "order": [
