@@ -1618,3 +1618,4 @@ body.pl-skin-b :is(.plo-buy__t, .plo-hero__t, .plo-px__t, .plo-why2__h, .plo-bn_
   .plo-hero--art .plo-hero__art img { position: absolute; right: 4%; top: 50%; width: auto; height: 165%; max-width: none; transform: translateY(-50%); object-fit: initial; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 22%); mask-image: linear-gradient(to right, transparent 0, #000 22%); }
 }
 .plo-hero--art .plo-hero__t { align-self: flex-start; grid-column: auto; }
+.plo-hero--art .plo-hero__usps { display: grid; grid-template-columns: repeat(2, max-content); justify-content: start; }
