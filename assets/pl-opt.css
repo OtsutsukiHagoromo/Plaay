@@ -1622,3 +1622,6 @@ body.pl-skin-b :is(.plo-buy__t, .plo-hero__t, .plo-px__t, .plo-why2__h, .plo-bn_
 /* Flavour names under the swatches: a little larger. */
 .pl-skin-b .plo-flav__n { font-size: 13px; }
 @media (min-width: 1024px) { .pl-skin-b .plo-flav__n { font-size: 14px; } }
+/* Add to bag (product form + sticky bar): flat, no 3D drop shadow. */
+.pl-skin-b .plo-buy__add, .pl-skin-b .plo-buy__add:active, .pl-skin-b .plo-sticky .plo-btn, .pl-skin-b .plo-sticky .plo-btn:active { box-shadow: none; }
+.pl-skin-b .plo-buy__add:active, .pl-skin-b .plo-sticky .plo-btn:active { transform: scale(.98); }
