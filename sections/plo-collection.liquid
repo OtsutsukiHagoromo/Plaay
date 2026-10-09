@@ -78,7 +78,6 @@
       <div class="plo-wrap plo-hero__in">
         <div class="plo-hero__copy">
           <h1 class="plo-hero__t">{{ collection.title }}</h1>
-          <p class="plo-hero__n">{{ collection.products_count }} products{% if min_price > 0 %} · from {% render 'plaay-aed', fils: min_price %}{% endif %}</p>
           {%- if b_facts.size > 0 -%}
             <ul class="plo-hero__usps">
               {%- for x in b_facts -%}
@@ -86,7 +85,7 @@
                 {%- if x == blank -%}{%- continue -%}{%- endif -%}
                 {%- assign ux = x | split: ':' -%}
                 {%- if ux.size > 1 -%}{%- assign ic = ux[0] -%}{%- assign lb = ux[1] -%}{%- else -%}{%- assign ic = 'check' -%}{%- assign lb = x -%}{%- endif -%}
-                <li style="--i: {{ forloop.index }}"><span class="plo-hero__ic">{%- render 'pl-icon', name: ic, size: 16, stroke: 2.4 -%}</span>{{ lb }}</li>
+                <li style="--i: {{ forloop.index }}">{{ lb }}</li>
               {%- endfor -%}
             </ul>
           {%- endif -%}

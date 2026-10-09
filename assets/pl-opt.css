@@ -1563,3 +1563,14 @@ body.template-index .plo-title, body.template-index .plo-px__t, body.template-in
 /* ---------- Title Case headlines sitewide (no forced capitals). Small labels/tags stay in caps. ---------- */
 body.pl-skin-b :is(.plo-title, .plo-bn__h, .plo-cat__n, .plo-buy__t, .plo-px__t, .plo-hero__t, .plo-range__t, .plo-srch__h, .plo-perk__t, .plo-why2__h, .plo-why2__usp b, .pl-mega__promo-body b, .pl-menu__list a, .pl-search__range span, .pl-acc__t, .pl-footer__news-t, .pl-h) { text-transform: none; letter-spacing: -.02em; }
 body.pl-skin-b :is(.plo-buy__t, .plo-hero__t, .plo-px__t, .plo-why2__h, .plo-bn__h, .plo-srch__h, .pl-footer__news-t, .pl-acc__t) { line-height: 1.02; }
+
+/* Collection banner: claims as small white pills (no icons). */
+.plo-coll .plo-hero__usps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.plo-coll .plo-hero__usps li { padding: 6px 12px; border-radius: 999px; background: rgba(255, 255, 255, .85); color: var(--pl-navy); font-size: 12px; font-weight: 700; }
+@media (min-width: 1024px) { .plo-coll .plo-hero__usps li { font-size: 14px; padding: 7px 14px; } }
+/* Collection range selector: same simple text tabs as the home bestsellers. */
+.pl-skin-b .plo-coll .plo-chips { gap: 22px; padding-top: 20px; border-bottom: 1px solid rgba(8, 29, 72, .1); }
+.pl-skin-b .plo-coll .plo-chips a { height: auto; padding: 8px 0 10px; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; box-shadow: none; font-size: 15px; font-weight: 600; color: var(--pl-mute); text-transform: none; letter-spacing: 0; }
+.pl-skin-b .plo-coll .plo-chips a:hover { color: var(--pl-navy); }
+.pl-skin-b .plo-coll .plo-chips a[aria-current="page"] { background: none; box-shadow: none; color: var(--pl-navy); font-weight: 800; border-bottom-color: var(--pl-navy); }
+.pl-skin-b .plo-coll .plo-chips a small { margin-left: 4px; font-size: 11px; opacity: .55; }
