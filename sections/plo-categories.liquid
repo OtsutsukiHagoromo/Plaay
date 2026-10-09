@@ -22,8 +22,7 @@
           {%- if b.photo_asset != blank -%}
             <img class="plo-cat__photo" src="{{ b.photo_asset | asset_url }}" alt="" loading="lazy" width="1448" height="1086">
           {%- elsif pic != blank -%}{{ pic | image_url: width: 300 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
-          <span><span class="plo-cat__n">{{ b.title }}</span><span class="plo-cat__c">{{ b.sub }}</span></span>
-          <span class="plo-cat__go" aria-hidden="true">{%- render 'pl-icon', name: 'arrow-right', size: 14, stroke: 2.4 -%}</span>
+          <span><span class="plo-cat__n">{{ b.title }}</span></span>
         </a>
       {%- endfor -%}
     </div>

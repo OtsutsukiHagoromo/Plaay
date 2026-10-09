@@ -117,47 +117,60 @@
     assign load = 'eager'
   endif
 -%}
-<article class="plo-card"{% if range != blank %} data-range="{{ range }}"{% endif %}{% if has_sizes %} data-plo-sizes data-pct="{{ sub_pct }}"{% endif %}>
-  <div class="plo-card__img">
-    <a href="{{ href }}" tabindex="-1" aria-hidden="true">
-      {%- if pkey != blank -%}
-        {%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}
-        <img src="{{ ph | asset_url }}" alt="{{ product.title | escape }}" loading="{{ load }}" width="800" height="1000" class="is-photo">
-      {%- elsif product.featured_image -%}
-        {{ product.featured_image | image_url: width: 600 | image_tag: loading: load, sizes: '(min-width: 1024px) 300px, 46vw', widths: '240, 360, 480, 600', alt: product.title }}
-      {%- else -%}
-        {{ 'product-1' | placeholder_svg_tag }}
-      {%- endif -%}
-    </a>
-    {%- if badge_text != blank -%}<span class="plo-badge{% if badge_mod != blank %} plo-badge--{{ badge_mod }}{% endif %}">{{ badge_text }}</span>{%- endif -%}
-    {%- if v.available -%}
-      <span class="plo-card__add-b"><button type="button" class="plo-add" data-plo-quick="{{ v.id }}"{% if sub_mode and plan4 != '' %} data-plo-plan="{{ plan4 }}" data-plo-plan2="{{ plan2 }}" data-plo-plan4="{{ plan4 }}"{% endif %} aria-label="{% if sub_mode %}Subscribe to{% else %}Add{% endif %} {{ product.title | escape }}{% unless sub_mode %} to bag{% endunless %}">{%- render 'pl-icon', name: 'plus', size: 18, stroke: 2.4 -%}</button></span>
+{%- capture ns -%}{%- render 'plo-name-split', title: product.title -%}{%- endcapture -%}
+{%- assign ns = ns | split: '|' -%}
+{%- assign c_name = ns[0] | default: product.title -%}
+{%- assign c_size = ns[1] -%}
+{%- if c_size == blank and has_sizes == false and v.title != 'Default Title' -%}{%- assign c_size = v.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' -%}{%- endif -%}
+{%- comment -%}
+  Card v3: one cream tile with the product centred (never cropped), then the name, one quiet
+  detail line (pack size, or a size picker for multi-size products), and a price row with the
+  add button. Every card has the same four rows, so a grid reads in clean lines.
+{%- endcomment -%}
+<article class="plo-card plo-c3"{% if range != blank %} data-range="{{ range }}"{% endif %}{% if has_sizes %} data-plo-sizes data-pct="{{ sub_pct }}"{% endif %}>
+  <a class="plo-card__img" href="{{ href }}" tabindex="-1" aria-hidden="true">
+    {%- if pkey != blank -%}
+      {%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}
+      <img src="{{ ph | asset_url }}" alt="{{ product.title | escape }}" loading="{{ load }}" width="800" height="1000" class="is-photo">
+    {%- elsif product.featured_image -%}
+      {{ product.featured_image | image_url: width: 600 | image_tag: loading: load, sizes: '(min-width: 1024px) 300px, 46vw', widths: '240, 360, 480, 600', alt: product.title }}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag }}
     {%- endif -%}
-  </div>
+    {%- if badge_text != blank -%}<span class="plo-badge{% if badge_mod != blank %} plo-badge--{{ badge_mod }}{% endif %}">{{ badge_text }}</span>{%- endif -%}
+  </a>
   <div class="plo-card__body">
     {%- if reason != blank -%}<p class="plo-card__why">{{ reason }}</p>{%- endif -%}
-    <h3 class="plo-card__name"><a href="{{ href }}">{{ product.title }}</a></h3>
-    {%- if meta != blank -%}<p class="plo-card__meta">{{ meta }}</p>{%- endif -%}
-    {%- if has_sizes -%}
-      <div class="plo-card__sizes" role="radiogroup" aria-label="Pack size" style="--n: {{ product.variants.size }};">
-        {%- for x in product.variants -%}
-          {%- assign xl = x.title | replace: ' X ', '×' | replace: ' x ', '×' | replace: 'X', '×' | replace: 'G', 'g' | remove: ' ' -%}
-          <button type="button" role="radio" class="plo-card__sz{% if x.id == v.id %} is-on{% endif %}" aria-checked="{% if x.id == v.id %}true{% else %}false{% endif %}" data-plo-sz="{{ x.id }}" data-price="{{ x.price }}"{% unless x.available %} disabled{% endunless %}>{{ xl }}</button>
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
+    <h3 class="plo-card__name"><a href="{{ href }}">{{ c_name }}</a></h3>
+    <div class="plo-card__detail">
+      {%- if has_sizes -%}
+        <label class="plo-card__sel">
+          <span class="pl-vh">Pack size</span>
+          <select data-plo-szsel>
+            {%- for x in product.variants -%}
+              {%- assign xl = x.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' | replace: ' g', 'g' -%}
+              <option value="{{ x.id }}" data-price="{{ x.price }}"{% if x.id == v.id %} selected{% endif %}{% unless x.available %} disabled{% endunless %}>{{ xl }}</option>
+            {%- endfor -%}
+          </select>
+          {%- render 'pl-icon', name: 'chev-down', size: 12, stroke: 2.6 -%}
+        </label>
+      {%- elsif c_size != blank -%}
+        <span>{{ c_size }}</span>
+      {%- elsif meta != blank -%}
+        <span>{{ meta }}</span>
+      {%- endif -%}
+    </div>
     <div class="plo-card__foot">
-      <div>
+      <div class="plo-card__prices">
         {%- if sub_mode and sub_price > 0 -%}
-          <div class="plo-card__price plo-card__price--sub"><span data-plo-cp-sub>{%- render 'plaay-aed', fils: sub_price -%}</span> <s data-plo-cp>{%- render 'plaay-aed', fils: v.price -%}</s></div>
-          <div class="plo-card__sub" data-plo-freq-l>every 4 weeks</div>
+          <span class="plo-card__price"><span data-plo-cp-sub>{%- render 'plaay-aed', fils: sub_price -%}</span></span>
+          <s class="plo-card__was" data-plo-cp>{%- render 'plaay-aed', fils: v.price -%}</s>
         {%- else -%}
-        <div class="plo-card__price"><span data-plo-cp>{%- render 'plaay-aed', fils: v.price -%}</span></div>
+          <span class="plo-card__price"><span data-plo-cp>{%- render 'plaay-aed', fils: v.price -%}</span></span>
         {%- endif -%}
-        {%- if show_sub and sub_price > 0 and sub_mode == blank -%}<div class="plo-card__sub">{%- render 'plaay-aed', fils: sub_price -%} on repeat</div>{%- endif -%}
       </div>
       {%- if v.available -%}
-        <span class="plo-card__add-a"><button type="button" class="plo-add" data-plo-quick="{{ v.id }}"{% if sub_mode and plan4 != '' %} data-plo-plan="{{ plan4 }}" data-plo-plan2="{{ plan2 }}" data-plo-plan4="{{ plan4 }}"{% endif %} aria-label="{% if sub_mode %}Subscribe to{% else %}Add{% endif %} {{ product.title | escape }}{% unless sub_mode %} to bag{% endunless %}">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</button></span>
+        <button type="button" class="plo-add plo-c3__add" data-plo-quick="{{ v.id }}"{% if sub_mode and plan4 != '' %} data-plo-plan="{{ plan4 }}" data-plo-plan2="{{ plan2 }}" data-plo-plan4="{{ plan4 }}"{% endif %} aria-label="{% if sub_mode %}Subscribe to{% else %}Add{% endif %} {{ product.title | escape }}{% unless sub_mode %} to bag{% endunless %}">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.6 -%}</button>
       {%- else -%}
         <span class="plo-card__soldout">Sold out</span>
       {%- endif -%}

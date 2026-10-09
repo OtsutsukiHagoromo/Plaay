@@ -344,6 +344,19 @@
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sub]'), function (el) { el.textContent = aed(Math.floor(price * (100 - pct) / 100)); });
   });
 
+  /* Card size picker (select): same effect as the swatches. */
+  document.addEventListener('change', function (e) {
+    var sel = e.target;
+    if (!sel.matches || !sel.matches('[data-plo-szsel]')) return;
+    var card = sel.closest('[data-plo-sizes]');
+    if (!card) return;
+    var opt = sel.options[sel.selectedIndex];
+    var price = Number(opt.getAttribute('data-price')), pct = Number(card.getAttribute('data-pct')) || 0;
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-quick]'), function (q) { q.setAttribute('data-plo-quick', sel.value); });
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp]'), function (el) { el.textContent = aed(price); });
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sub]'), function (el) { el.textContent = aed(Math.floor(price * (100 - pct) / 100)); });
+  });
+
   /* ---------- Subscribe & Save page: range filter + delivery frequency ---------- */
   document.addEventListener('click', function (e) {
     var t = e.target.closest && e.target.closest('[data-plo-range], [data-plo-freq]');

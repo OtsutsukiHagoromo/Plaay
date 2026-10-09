@@ -1476,3 +1476,44 @@ body.template-index .plo-title, body.template-index .plo-px__t, body.template-in
 /* Photos fill the tile (no visible inner box); one soft surface per card. */
 .pl-skin-b .plo-card__img img.is-photo { object-fit: cover; width: 100%; height: 100%; }
 .pl-skin-b .plo-card__img { box-shadow: none; }
+
+/* ==========================================================================
+   Product card v3 (snippets/plo-card, .plo-c3). Overrides the earlier card rules.
+   Cream tile, product centred and never cropped; name / detail / price + add.
+   ========================================================================== */
+.pl-skin-b .plo-c3 { gap: 0; }
+.pl-skin-b .plo-c3 .plo-card__img { position: relative; display: flex; align-items: center; justify-content: center; aspect-ratio: 1; padding: 8%; border-radius: 20px; background: #F6F1EA; box-shadow: none; overflow: hidden; }
+.pl-skin-b .plo-c3 .plo-card__img img, .pl-skin-b .plo-c3 .plo-card__img img.is-photo { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; transform: none; }
+@media (hover: hover) {
+  .pl-skin-b .plo-c3 .plo-card__img img { transition: transform .45s cubic-bezier(.2, .7, .2, 1); }
+  .pl-skin-b .plo-c3:hover .plo-card__img img { transform: scale(1.04); }
+}
+.pl-skin-b .plo-c3 .plo-badge { position: absolute; left: 10px; top: 10px; }
+.pl-skin-b .plo-c3 .plo-card__body { display: flex; flex-direction: column; gap: 4px; padding: 12px 2px 0; }
+.pl-skin-b .plo-c3 .plo-card__name { margin: 0; min-height: 2.5em; font-size: 14px; font-weight: 800; line-height: 1.25; -webkit-line-clamp: 2; }
+.pl-skin-b .plo-c3 .plo-card__name a { color: var(--pl-navy); }
+.pl-skin-b .plo-c3 .plo-card__detail { min-height: 20px; font-size: 12px; font-weight: 500; color: var(--pl-mute); display: flex; align-items: center; }
+.plo-card__sel { position: relative; display: inline-flex; align-items: center; gap: 4px; color: var(--pl-navy); }
+.plo-card__sel select { -webkit-appearance: none; appearance: none; margin: 0; padding: 0 16px 0 0; border: 0; background: none; font-family: var(--pl-font); font-size: 12px; font-weight: 700; color: var(--pl-navy); text-decoration: underline; text-decoration-color: rgba(8, 29, 72, .3); text-underline-offset: 3px; cursor: pointer; }
+.plo-card__sel .pl-ic { position: absolute; right: 0; pointer-events: none; }
+.pl-skin-b .plo-c3 .plo-card__foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; padding: 0; }
+.plo-card__prices { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+.pl-skin-b .plo-c3 .plo-card__price { font-size: 15px; font-weight: 900; color: var(--pl-navy); line-height: 1.2; }
+.plo-card__was { font-size: 12px; font-weight: 600; color: var(--pl-mute); }
+.pl-skin-b .plo-c3 .plo-c3__add { flex: 0 0 auto; width: 34px; height: 34px; border: 0; border-radius: 50%; background: var(--pl-navy); box-shadow: none; transition: transform .12s ease, background .15s ease; }
+.pl-skin-b .plo-c3 .plo-c3__add svg { stroke: #fff; width: 16px; height: 16px; }
+.pl-skin-b .plo-c3 .plo-c3__add:active { transform: scale(.9); }
+@media (hover: hover) { .pl-skin-b .plo-c3 .plo-c3__add:hover { background: var(--pl-purple); } }
+.pl-skin-b .plo-c3 .plo-card__soldout { font-size: 12px; font-weight: 700; color: var(--pl-mute); }
+@media (min-width: 1024px) {
+  .pl-skin-b .plo-c3 .plo-card__img { border-radius: 24px; }
+  .pl-skin-b .plo-c3 .plo-card__body { padding-top: 14px; gap: 6px; }
+  .pl-skin-b .plo-c3 .plo-card__name { font-size: 16px; }
+  .pl-skin-b .plo-c3 .plo-card__detail, .plo-card__sel select { font-size: 13px; }
+  .pl-skin-b .plo-c3 .plo-card__price { font-size: 17px; }
+  .pl-skin-b .plo-c3 .plo-c3__add { width: 40px; height: 40px; }
+  .pl-skin-b .plo-coll .plo-c3 .plo-card__name, .pl-skin-b .plo-srch .plo-c3 .plo-card__name { font-size: 18px; }
+}
+/* Shoot photos have a light-grey backdrop: lift it to white so multiply blends it into the cream tile. */
+.pl-skin-b .plo-c3 .plo-card__img img.is-photo { filter: brightness(1.075) contrast(1.02); }
+.pl-skin-b .plo-c3 .plo-card__img:has(img.is-photo) { padding: 3%; }

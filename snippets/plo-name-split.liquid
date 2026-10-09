@@ -1,0 +1,37 @@
+{%- comment -%}
+  Splits a product title into name and pack size: "Pistachio Bar 12 x 35g" -> "Pistachio Bar|12 × 35g".
+  Only a trailing "N x Ng" style size is moved; anything else is returned whole with an empty size.
+  Usage: {%- capture ns -%}{%- render 'plo-name-split', title: product.title -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign words = title | strip | split: ' '
+  assign cut = words.size
+  for w in words reversed
+    assign wl = w | downcase | remove: '0' | remove: '1' | remove: '2' | remove: '3' | remove: '4' | remove: '5' | remove: '6' | remove: '7' | remove: '8' | remove: '9' | remove: '.' | remove: 'gm' | remove: 'g' | remove: 'x'
+    if wl == ''
+      assign cut = cut | minus: 1
+    else
+      break
+    endif
+  endfor
+  assign front = ''
+  assign tail = ''
+  for w in words
+    if forloop.index0 < cut
+      assign front = front | append: w | append: ' '
+    else
+      assign tail = tail | append: w | append: ' '
+    endif
+  endfor
+  assign tl = tail | downcase
+  if cut > 0 and cut < words.size and tl contains 'x'
+    assign sz = tail | strip | replace: ' x ', ' × ' | replace: ' X ', ' × ' | replace: 'Gm', 'g' | replace: 'G', 'g' | replace: ' g', 'g'
+    assign first = sz | slice: 0
+    if first == '×' or first == 'x'
+      assign sz = sz | remove_first: '×' | remove_first: 'x' | strip | append: ' pack'
+    endif
+    echo front | strip | append: '|' | append: sz
+  else
+    echo title | strip | append: '|'
+  endif
+-%}
