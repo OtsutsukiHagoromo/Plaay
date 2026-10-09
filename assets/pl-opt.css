@@ -1537,3 +1537,7 @@ body.template-index .plo-title, body.template-index .plo-px__t, body.template-in
   .plo-rband__media { border-radius: 28px; aspect-ratio: 4 / 5; max-height: 640px; }
 }
 @media (min-width: 1024px) { .plo-rband__t { font-size: 60px; } }
+/* Video only: full page width, 4:5 on phones, wide on desktop. */
+.plo-rband--solo .plo-rband__grid { display: block; }
+.plo-rband--solo .plo-rband__media { display: block; aspect-ratio: 4 / 5; max-height: none; }
+@media (min-width: 768px) { .plo-rband--solo .plo-rband__media { aspect-ratio: 16 / 9; max-height: 720px; } .plo-rband--solo .plo-rband__v { object-position: 50% 30%; } }

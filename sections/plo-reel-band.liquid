@@ -1,5 +1,6 @@
 {%- comment -%}
-  Option B homepage: one looping brand video next to a short line and a button.
+  Option B homepage: one looping brand video. Video only by default; adding a heading shows a
+  short copy panel beside it (desktop) / over it (mobile).
   Mobile: the video card with the copy over a soft gradient at the bottom.
   Desktop: copy panel on the left, the video card on the right (same height).
   The clip is muted, loops, plays only while on screen (assets/pl-opt.js initReelBand) and stays
@@ -20,17 +21,19 @@
     assign poster = s.video.preview_image | image_url: width: 900
   endif
 -%}
-<div class="pl plo plo-sec plo-rband" style="--panel: {{ s.panel }};">
+<div class="pl plo plo-sec plo-rband{% if s.heading == blank %} plo-rband--solo{% endif %}" style="--panel: {{ s.panel }};">
   <div class="plo-wrap plo-rband__grid">
-    <div class="plo-rband__copy">
-      {%- if s.eyebrow != blank -%}<span class="plo-rband__tag">{{ s.eyebrow }}</span>{%- endif -%}
-      <h2 class="plo-rband__t">{{ s.heading }}</h2>
-      {%- if s.text != blank -%}<p class="plo-rband__p">{{ s.text }}</p>{%- endif -%}
-      {%- if s.btn_label != blank -%}<a class="plo-btn plo-rband__btn" href="{{ s.btn_url | default: '/collections/shop-all' }}">{{ s.btn_label }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.6 %}</a>{%- endif -%}
-    </div>
-    <div class="plo-rband__media">
+    {%- if s.heading != blank -%}
+      <div class="plo-rband__copy">
+        {%- if s.eyebrow != blank -%}<span class="plo-rband__tag">{{ s.eyebrow }}</span>{%- endif -%}
+        <h2 class="plo-rband__t">{{ s.heading }}</h2>
+        {%- if s.text != blank -%}<p class="plo-rband__p">{{ s.text }}</p>{%- endif -%}
+        {%- if s.btn_label != blank -%}<a class="plo-btn plo-rband__btn" href="{{ s.btn_url | default: '/collections/shop-all' }}">{{ s.btn_label }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.6 %}</a>{%- endif -%}
+      </div>
+    {%- endif -%}
+    {%- if s.btn_url != blank and s.heading == blank -%}<a class="plo-rband__media" href="{{ s.btn_url }}" aria-label="{{ s.btn_label | default: 'Shop now' | escape }}">{%- else -%}<div class="plo-rband__media">{%- endif -%}
       <video class="plo-rband__v" src="{{ src }}" poster="{{ poster }}" muted loop playsinline preload="metadata" aria-hidden="true" data-plo-rband></video>
-    </div>
+    {%- if s.btn_url != blank and s.heading == blank -%}</a>{%- else -%}</div>{%- endif -%}
   </div>
 </div>
 
@@ -42,10 +45,10 @@
     { "type": "video", "id": "video", "label": "Video (Shopify)" },
     { "type": "text", "id": "video_asset", "label": "Video fallback (theme asset file)", "default": "plo-home-reel.mp4" },
     { "type": "text", "id": "poster_asset", "label": "Poster (theme asset file)", "default": "plo-home-reel-poster.jpg" },
-    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Behind the shoot" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Plaay All Day" },
-    { "type": "textarea", "id": "text", "label": "Text", "default": "Sun out, guilt out. Clean chocolate for every kind of day." },
-    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Shop now" },
+    { "type": "text", "id": "eyebrow", "label": "Tag" },
+    { "type": "text", "id": "heading", "label": "Heading (blank = video only)" },
+    { "type": "textarea", "id": "text", "label": "Text" },
+    { "type": "text", "id": "btn_label", "label": "Button label" },
     { "type": "url", "id": "btn_url", "label": "Button link" },
     { "type": "color", "id": "panel", "label": "Panel colour (desktop)", "default": "#FED8B4" }
   ],
