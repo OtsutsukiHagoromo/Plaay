@@ -1558,3 +1558,11 @@ body.template-index .plo-title, body.template-index .plo-px__t, body.template-in
 .pl-skin-b .plo-whysec.plo-fillb { background: none; padding: 0; margin: var(--o-gap) 0; }
 .pl-skin-b .plo-whysec > .plo-wrap { width: calc(100% - var(--o-side) * 2); max-width: 1280px; margin: 0 auto; padding: 40px var(--o-side); border-radius: 28px; background: var(--fill, var(--pl-navy)); }
 @media (min-width: 1024px) { .pl-skin-b .plo-whysec > .plo-wrap { padding: 64px 56px; } }
+
+/* Nutritionist claims: no icons, small clean 2x2 list with hairlines. */
+.pl-skin-b .plo-why2__usps { gap: 0 20px; margin-top: 8px; }
+.pl-skin-b .plo-why2__usp { gap: 3px; padding: 14px 0; border: 0; border-top: 1px solid rgba(255, 255, 255, .16); border-radius: 0; background: none; transform: none; }
+.pl-skin-b .plo-why2__usp b { font-size: 15px; font-weight: 800; line-height: 1.2; text-transform: none; letter-spacing: 0; color: #fff; }
+.pl-skin-b .plo-why2__usp span { font-size: 12px; line-height: 1.4; color: rgba(255, 255, 255, .68); }
+.pl-skin-b .plo-why2__usp:hover { transform: none; background: none; }
+@media (min-width: 1024px) { .pl-skin-b .plo-why2__usp { padding: 18px 0; } .pl-skin-b .plo-why2__usp b { font-size: 17px; } .pl-skin-b .plo-why2__usp span { font-size: 13px; } }

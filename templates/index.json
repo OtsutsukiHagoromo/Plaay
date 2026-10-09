@@ -227,7 +227,7 @@
           "type": "usp",
           "settings": {
             "icon": "sparkle",
-            "big": "0 g refined sugar",
+            "big": "Zero Refined Sugar",
             "small": "Sweetened with dates and coconut sugar",
             "color": "#FFB600"
           }
@@ -236,7 +236,7 @@
           "type": "usp",
           "settings": {
             "icon": "leaf",
-            "big": "No palm oil",
+            "big": "No Palm Oil",
             "small": "Real cocoa butter and nuts instead",
             "color": "#46A140"
           }
@@ -245,7 +245,7 @@
           "type": "usp",
           "settings": {
             "icon": "heart",
-            "big": "Gut friendly",
+            "big": "Gut Friendly",
             "small": "Prebiotic fibre in our truffles and bars",
             "color": "#FF3EB5"
           }
@@ -254,7 +254,7 @@
           "type": "usp",
           "settings": {
             "icon": "check",
-            "big": "100% clean",
+            "big": "100% Clean",
             "small": "No gluten, no soy, real ingredients",
             "color": "#00BCB4"
           }
@@ -330,8 +330,8 @@
         "link_label": "Instagram",
         "link_url": "https://www.instagram.com/shopplaay",
         "eyebrow": "On camera",
-        "heading": "See It in",
-        "heading_light": "Real Life"
+        "heading": "Look Who’s",
+        "heading_light": "Plaaying"
       },
       "blocks": {
         "reel_1": {

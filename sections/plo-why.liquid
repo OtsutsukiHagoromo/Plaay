@@ -21,7 +21,6 @@
       {%- for block in section.blocks -%}
         {%- assign b = block.settings -%}
         <li class="plo-why2__usp" style="--c: {{ b.color }}; --i: {{ forloop.index }}" {{ block.shopify_attributes }}>
-          <span class="plo-why2__ic">{%- render 'pl-icon', name: b.icon, size: 22, stroke: 2.2 -%}</span>
           <b>{{ b.big }}</b>
           <span>{{ b.small }}</span>
         </li>
