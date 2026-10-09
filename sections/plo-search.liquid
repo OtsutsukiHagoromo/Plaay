@@ -86,7 +86,7 @@
       assign others_h = others | split: ','
     -%}
     {%- if has_terms and m_count > 0 -%}
-      <h1 class="plo-srch__h"><span>{{ m_count }} {% if m_count == 1 %}result{% else %}results{% endif %} for</span> “{{ search.terms | escape }}”</h1>
+      <h1 class="plo-srch__h"><span>{{ m_count }} {% if m_count == 1 %}Result{% else %}Results{% endif %} for</span> “{{ search.terms | escape }}”</h1>
       {%- assign range_list = ranges | split: ',' -%}
       {%- if range_list.size > 1 -%}
         <div class="plo-chips plo-srch__chips" role="group" aria-label="Filter results">
@@ -121,7 +121,7 @@
       </div>
       {%- if others_h.size > 0 -%}
         <div class="plo-srch__best">
-          {%- render 'plo-head', bold: 'You might', light: 'also like' -%}
+          {%- render 'plo-head', bold: 'You Might', light: 'Also Like' -%}
           <div class="plo-rel__row">
             {%- for h in others_h limit: 8 -%}{%- render 'plo-card', product: all_products[h], eager: false, view: view -%}{%- endfor -%}
           </div>
@@ -131,10 +131,10 @@
     {%- else -%}
       <div class="plo-srch__none">
         {%- if has_terms -%}
-          <h1 class="plo-srch__h"><span>No match for</span> “{{ search.terms | escape }}”</h1>
+          <h1 class="plo-srch__h"><span>No Match for</span> “{{ search.terms | escape }}”</h1>
           <p class="plo-srch__p">Check the spelling, or try one of these.</p>
         {%- else -%}
-          <h1 class="plo-srch__h"><span>What are you</span> craving?</h1>
+          <h1 class="plo-srch__h"><span>What Are You</span> Craving?</h1>
         {%- endif -%}
         <div class="plo-srch__pop">
           {%- for t in pop -%}<a href="{{ routes.search_url }}?q={{ t | url_encode }}{% if view != blank %}&view={{ view }}{% endif %}">{%- render 'pl-icon', name: 'search', size: 14, stroke: 2.4 -%}{{ t }}</a>{%- endfor -%}
@@ -142,7 +142,7 @@
       </div>
       {%- if others_h.size > 0 -%}
         <div class="plo-srch__best">
-          {%- render 'plo-head', bold: 'Closest', light: 'we have' -%}
+          {%- render 'plo-head', bold: 'Closest', light: 'We Have' -%}
           <div class="plo-rel__row">
             {%- for h in others_h limit: 8 -%}{%- render 'plo-card', product: all_products[h], eager: false, view: view -%}{%- endfor -%}
           </div>

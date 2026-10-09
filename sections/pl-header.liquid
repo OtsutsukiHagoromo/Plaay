@@ -36,7 +36,7 @@
     assign nav_urls = urls_s | split: '|'
     assign nav_megas = megas_s | split: '|'
   else
-    assign nav_labels = 'Shop|Truffles|Bars|Slabs|Subscribe & Save|Our story' | split: '|'
+    assign nav_labels = 'Shop|Truffles|Bars|Slabs|Subscribe & Save|Our Story' | split: '|'
     assign nav_urls = '/collections/shop-all|/collections/chocolate-truffles|/collections/chocolate-bars|/collections/new-chocolate-slabs|/pages/subscribe-save|/pages/for-the-geeks-1' | split: '|'
     assign nav_megas = '1|0|0|0|0|0' | split: '|'
   endif
@@ -48,7 +48,7 @@
   if promo_img == blank
     assign promo_img = images['plaay26-green-tubes.jpg']
   endif
-  assign promo_title = section.settings.mega_title | default: 'Subscribe & save 15%'
+  assign promo_title = section.settings.mega_title | default: 'Subscribe & Save 15%'
   assign promo_text = section.settings.mega_text | default: 'Your favourites every 4 weeks with free delivery. Skip or cancel any time.'
   assign promo_btn = section.settings.mega_btn_label | default: 'How it works'
   assign promo_url = section.settings.mega_btn_url | default: '/pages/subscribe-save'
@@ -58,7 +58,7 @@
   if promo_url contains 'build-your-box' or promo_title == 'Build your box'
     assign promo_url = '/pages/subscribe-save'
     assign promo_text = 'Your favourites every 4 weeks with free delivery. Skip or cancel any time.'
-    assign promo_title = 'Subscribe & save 15%'
+    assign promo_title = 'Subscribe & Save 15%'
     assign promo_btn = 'How it works'
   endif
 
@@ -220,8 +220,8 @@
       </div>
       <ul class="pl-menu__list">
         <li><a href="/pages/subscribe-save"><span>Subscribe &amp; Save</span><em class="pl-menu__tag">15% off</em>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
-        <li><a href="/pages/for-the-geeks-1"><span>Our story</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
-        <li><a href="{{ account_url }}"><span>{% if customer %}My account{% else %}Sign in{% endif %}</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
+        <li><a href="/pages/for-the-geeks-1"><span>Our Story</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
+        <li><a href="{{ account_url }}"><span>{% if customer %}My Account{% else %}Sign In{% endif %}</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
       </ul>
       <a class="pl-menu__rewards" href="/pages/subscribe-save">
         {%- render 'pl-icon', name: 'gift', size: 20, stroke: 2 -%}
@@ -350,7 +350,7 @@
       {
         "type": "link",
         "settings": {
-          "label": "Our story",
+          "label": "Our Story",
           "url": "/pages/for-the-geeks-1"
         }
       }

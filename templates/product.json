@@ -83,8 +83,8 @@
       "type": "plo-pdp-related",
       "settings": {
         "eyebrow": "More from Plaay",
-        "heading": "You might",
-        "heading_light": "also like",
+        "heading": "You Might",
+        "heading_light": "Also Like",
         "limit": 4,
         "pack_truffles": "truffle-mix",
         "pack_bars": "bar-bunch",
@@ -155,7 +155,7 @@
       ],
       "settings": {
         "eyebrow": "Inside every Plaay",
-        "heading": "What’s in. What’s not.",
+        "heading": "What’s In. What’s Not.",
         "image": "shopify://shop_images/plaay26-cross-section.jpg",
         "photo_n": 5,
         "in_label": "In",
@@ -272,7 +272,7 @@
       ],
       "settings": {
         "eyebrow": "FAQ",
-        "heading": "Good to know",
+        "heading": "Good to Know",
         "intro": "Storage, delivery and subscriptions in a nutshell. Anything else is in our full FAQ.",
         "all_label": "See all FAQs",
         "all_url": "/pages/faqs",

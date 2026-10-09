@@ -15,7 +15,7 @@
     <div class="pl-acc__hi">
       <span class="pl-acc__av" aria-hidden="true">{{ customer.first_name | default: customer.email | slice: 0 | upcase }}</span>
       <div>
-        <p class="pl-acc__t">Hi {{ customer.first_name | default: 'there' }}</p>
+        <p class="pl-acc__t">Hi {{ customer.first_name | default: 'There' }}</p>
         <p class="pl-acc__s">{{ customer.email }}</p>
       </div>
     </div>
@@ -26,7 +26,7 @@
     </ul>
     <a class="pl-acc__out" href="{{ routes.account_logout_url }}">Sign out</a>
   {%- else -%}
-    <p class="pl-acc__t">Your Plaay account</p>
+    <p class="pl-acc__t">Your Plaay Account</p>
     <p class="pl-acc__s">Sign in with your email, no password needed. New here? The same step creates your account.</p>
     <ul class="pl-acc__perks">
       <li>{%- render 'pl-icon', name: 'truck', size: 18, stroke: 2.2 -%}<span>Track every order, reorder in one tap</span></li>

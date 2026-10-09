@@ -1559,3 +1559,7 @@ body.template-index .plo-title, body.template-index .plo-px__t, body.template-in
 .pl-skin-b .plo-whysec > .plo-wrap { width: calc(100% - var(--o-side) * 2); max-width: 1280px; margin: 0 auto; padding: 40px var(--o-side); border-radius: 28px; background: var(--fill, var(--pl-navy)); }
 @media (min-width: 1024px) { .pl-skin-b .plo-whysec > .plo-wrap { padding: 64px 56px; } }
 
+
+/* ---------- Title Case headlines sitewide (no forced capitals). Small labels/tags stay in caps. ---------- */
+body.pl-skin-b :is(.plo-title, .plo-bn__h, .plo-cat__n, .plo-buy__t, .plo-px__t, .plo-hero__t, .plo-range__t, .plo-srch__h, .plo-perk__t, .plo-why2__h, .plo-why2__usp b, .pl-mega__promo-body b, .pl-menu__list a, .pl-search__range span, .pl-acc__t, .pl-footer__news-t, .pl-h) { text-transform: none; letter-spacing: -.02em; }
+body.pl-skin-b :is(.plo-buy__t, .plo-hero__t, .plo-px__t, .plo-why2__h, .plo-bn__h, .plo-srch__h, .pl-footer__news-t, .pl-acc__t) { line-height: 1.02; }

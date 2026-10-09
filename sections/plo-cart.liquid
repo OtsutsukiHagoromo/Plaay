@@ -177,7 +177,7 @@
 {%- endcapture -%}
 {%- capture top -%}
   <div class="plo-cart__top">
-    <h1 class="plo-title"><b>Your bag</b>{% if cart.item_count > 0 %} <span>({{ cart.item_count }})</span>{% endif %}</h1>
+    <h1 class="plo-title"><b>Your Bag</b>{% if cart.item_count > 0 %} <span>({{ cart.item_count }})</span>{% endif %}</h1>
     <a class="plo-cart__close" href="{{ routes.collections_url }}/shop-all{{ view_q }}" aria-label="Keep shopping">{%- render 'pl-icon', name: 'close', size: 20 -%}</a>
   </div>
 {%- endcapture -%}
@@ -223,7 +223,7 @@
           </div>
           {%- if upsell != blank -%}
             <div class="plo-cart__upband">
-              <h2 class="plo-title"><b>Add one,</b> <span>{% if next_label contains 'Gift' %}get a gift{% else %}for the road{% endif %}</span></h2>
+              <h2 class="plo-title"><b>Add One,</b> <span>{% if next_label contains 'Gift' %}Get a Gift{% else %}for the Road{% endif %}</span></h2>
               {{ upsell }}
             </div>
           {%- endif -%}
