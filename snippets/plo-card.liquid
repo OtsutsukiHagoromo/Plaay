@@ -139,7 +139,7 @@
     <h3 class="plo-card__name"><a href="{{ href }}">{{ product.title }}</a></h3>
     {%- if meta != blank -%}<p class="plo-card__meta">{{ meta }}</p>{%- endif -%}
     {%- if has_sizes -%}
-      <div class="plo-card__sizes" role="radiogroup" aria-label="Pack size">
+      <div class="plo-card__sizes" role="radiogroup" aria-label="Pack size" style="--n: {{ product.variants.size }};">
         {%- for x in product.variants -%}
           {%- assign xl = x.title | replace: ' X ', '×' | replace: ' x ', '×' | replace: 'X', '×' | replace: 'G', 'g' | remove: ' ' -%}
           <button type="button" role="radio" class="plo-card__sz{% if x.id == v.id %} is-on{% endif %}" aria-checked="{% if x.id == v.id %}true{% else %}false{% endif %}" data-plo-sz="{{ x.id }}" data-price="{{ x.price }}"{% unless x.available %} disabled{% endunless %}>{{ xl }}</button>
