@@ -1,0 +1,166 @@
+{%- comment -%}
+  Option B "Our Story" page (templates/page.about.json).
+  1. Hero: the headline with real truffles orbiting it. Each truffle is a two-sided coin (whole on
+     one face, cut open on the other) that flips as it goes round; front ones pass over the text,
+     back ones behind it, smaller and softer.
+  2. Rashi: photo, quote and her story.
+  3. What's in it: tap / hover cards that flip to the detail.
+  4. How we make it: a truffle rolls down the line as you scroll past the steps.
+  5. Numbers band, then a closing call to action.
+  Motion runs from assets/pl-opt.js (initStory); with reduced motion everything sits still.
+  Claims are the ones already used across the site.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign whole = 'plo-truffle-whole.webp' | asset_url
+  assign cut = 'plo-truffle-cut.webp' | asset_url
+-%}
+<div class="pl plo plo-story" data-plo-story>
+  <section class="plo-story__hero" style="--tint: {{ s.hero_tint }};">
+    <div class="plo-wrap">
+      <div class="plo-story__stage" data-plo-orbit>
+        <div class="plo-story__copy">
+          {%- if s.eyebrow != blank -%}<p class="plo-story__tag">{{ s.eyebrow }}</p>{%- endif -%}
+          <h1 class="plo-story__t">{{ s.heading | replace: '|', '<br>' }}</h1>
+          {%- if s.intro != blank -%}<p class="plo-story__lead">{{ s.intro }}</p>{%- endif -%}
+        </div>
+        {%- for i in (1..7) -%}
+          <span class="plo-story__orb" style="--i: {{ forloop.index0 }};" aria-hidden="true">
+            <span class="plo-story__coin">
+              <img src="{{ whole }}" alt="" width="150" height="150" loading="eager">
+              <img src="{{ cut }}" alt="" width="150" height="150" loading="eager">
+            </span>
+          </span>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+
+  <section class="plo-story__founder">
+    <div class="plo-wrap plo-story__fgrid">
+      <figure class="plo-story__pic">
+        {%- render 'plo-img', image: s.founder_image, asset: 'plo-rashi.jpg', width: 600, h: 750, alt: s.founder_name, class: 'plo-story__photo' -%}
+        <img class="plo-story__peek" src="{{ cut }}" alt="" width="150" height="150" loading="lazy" aria-hidden="true">
+      </figure>
+      <div class="plo-story__ftext">
+        <h2 class="plo-title">{{ s.founder_heading }} <span>{{ s.founder_heading_light }}</span></h2>
+        {%- if s.quote != blank -%}<blockquote class="plo-story__q">{{ s.quote }}</blockquote>{%- endif -%}
+        <div class="plo-story__rte">{{ s.founder_text }}</div>
+        <p class="plo-story__by"><b>{{ s.founder_name }}</b>{{ s.founder_role }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="plo-story__flips">
+    <div class="plo-wrap">
+      <h2 class="plo-title">{{ s.flips_heading }} <span>{{ s.flips_heading_light }}</span></h2>
+      <p class="plo-story__hint">Tap a card to flip it</p>
+      <ul class="plo-story__fl">
+        {%- for block in section.blocks -%}
+          {%- if block.type != 'flip' -%}{%- continue -%}{%- endif -%}
+          {%- assign b = block.settings -%}
+          <li style="--c: {{ b.color }}; --i: {{ forloop.index0 }};" {{ block.shopify_attributes }}>
+            <button type="button" class="plo-story__card" aria-pressed="false" data-plo-flip>
+              <span class="plo-story__face plo-story__face--f"><b>{{ b.front }}</b><small>Flip</small></span>
+              <span class="plo-story__face plo-story__face--b">{{ b.back }}</span>
+            </button>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </section>
+
+  <section class="plo-story__how">
+    <div class="plo-wrap">
+      <h2 class="plo-title">{{ s.steps_heading }} <span>{{ s.steps_heading_light }}</span></h2>
+      <div class="plo-story__track" data-plo-roll>
+        <span class="plo-story__rail" aria-hidden="true"><i></i></span>
+        <img class="plo-story__ball" src="{{ whole }}" alt="" width="150" height="150" loading="lazy" aria-hidden="true">
+        <ol class="plo-story__steps">
+          {%- assign sn = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type != 'step' -%}{%- continue -%}{%- endif -%}
+            {%- assign sn = sn | plus: 1 -%}
+            <li {{ block.shopify_attributes }}>
+              <span class="plo-story__n">{{ sn | prepend: '0' | slice: -2, 2 }}</span>
+              <h3>{{ block.settings.title }}</h3>
+              <p>{{ block.settings.text }}</p>
+            </li>
+          {%- endfor -%}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  {%- assign stats = s.stats | newline_to_br | split: '<br />' -%}
+  {%- if s.stats != blank -%}
+    <section class="plo-story__nums">
+      <div class="plo-wrap">
+        <ul class="plo-story__nl">
+          {%- for row in stats -%}
+            {%- assign p = row | strip | split: '|' -%}
+            {%- if p.size < 2 -%}{%- continue -%}{%- endif -%}
+            <li style="--i: {{ forloop.index0 }};"><b>{{ p[0] | strip }}</b><span>{{ p[1] | strip }}</span></li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </section>
+  {%- endif -%}
+
+  {%- if s.cta_heading != blank -%}
+    <section class="plo-story__cta">
+      <div class="plo-wrap">
+        <div class="plo-story__ctabox">
+          <img class="plo-story__ctaball" src="{{ cut }}" alt="" width="150" height="150" loading="lazy" aria-hidden="true">
+          <h2 class="plo-story__ctat">{{ s.cta_heading }}</h2>
+          {%- if s.cta_text != blank -%}<p>{{ s.cta_text }}</p>{%- endif -%}
+          <a class="plo-btn plo-btn--navy" href="{{ s.cta_url | default: '/collections/shop-all' }}">{{ s.cta_label | default: 'Shop now' }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.6 %}</a>
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Preview: our story",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Our Story" },
+    { "type": "text", "id": "heading", "label": "Heading (| = new line)", "default": "Chocolate,|Made to Plaay" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "Clean chocolate made by a nutritionist. Zero refined sugar, no palm oil, all the fun." },
+    { "type": "color", "id": "hero_tint", "label": "Hero colour", "default": "#FED8B4" },
+    { "type": "header", "content": "Founder" },
+    { "type": "text", "id": "founder_heading", "label": "Heading, bold part", "default": "Hi, I’m" },
+    { "type": "text", "id": "founder_heading_light", "label": "Heading, light part", "default": "Rashi" },
+    { "type": "image_picker", "id": "founder_image", "label": "Photo (blank = plo-rashi.jpg)" },
+    { "type": "text", "id": "quote", "label": "Quote", "default": "“You don’t need to earn chocolate.”" },
+    { "type": "richtext", "id": "founder_text", "label": "Story", "default": "<p>I’ve been a nutritionist for over 14 years, and I specialise in gut health. Your gut is your superpower: your immunity, your happy hormones and your appetite all start there.</p><p>As adults we often miss the everyday joy life gives us so freely. Plaay is here to bring it back, with that first delicious bite and real ingredients that do good things for your body.</p>" },
+    { "type": "text", "id": "founder_name", "label": "Name", "default": "Rashi Chowdhary" },
+    { "type": "text", "id": "founder_role", "label": "Role", "default": "Nutritionist and founder" },
+    { "type": "header", "content": "Flip cards" },
+    { "type": "text", "id": "flips_heading", "label": "Heading, bold part", "default": "What’s In." },
+    { "type": "text", "id": "flips_heading_light", "label": "Heading, light part", "default": "What’s Not." },
+    { "type": "header", "content": "Steps" },
+    { "type": "text", "id": "steps_heading", "label": "Heading, bold part", "default": "How We" },
+    { "type": "text", "id": "steps_heading_light", "label": "Heading, light part", "default": "Make It" },
+    { "type": "header", "content": "Numbers and call to action" },
+    { "type": "textarea", "id": "stats", "label": "Numbers (big|small per line)", "default": "10k+|Happy Plaayers\n14 Years|In Nutrition\nZero|Refined Sugar\n100%|Clean Ingredients" },
+    { "type": "text", "id": "cta_heading", "label": "Closing heading", "default": "Ready to Plaay?" },
+    { "type": "text", "id": "cta_text", "label": "Closing line", "default": "Truffles, bars and slabs for every kind of day." },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Shop now" },
+    { "type": "url", "id": "cta_url", "label": "Button link" }
+  ],
+  "blocks": [
+    { "type": "flip", "name": "Flip card", "settings": [
+      { "type": "text", "id": "front", "label": "Front" },
+      { "type": "textarea", "id": "back", "label": "Back" },
+      { "type": "color", "id": "color", "label": "Colour", "default": "#FFB600" } ] },
+    { "type": "step", "name": "Step", "settings": [
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "textarea", "id": "text", "label": "Text" } ] }
+  ],
+  "presets": [{ "name": "Preview: our story" }]
+}
+{% endschema %}
