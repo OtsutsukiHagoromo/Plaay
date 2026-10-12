@@ -1625,3 +1625,23 @@ body.pl-skin-b :is(.plo-buy__t, .plo-hero__t, .plo-px__t, .plo-why2__h, .plo-bn_
 /* Add to bag (product form + sticky bar): flat, no 3D drop shadow. */
 .pl-skin-b .plo-buy__add, .pl-skin-b .plo-buy__add:active, .pl-skin-b .plo-sticky .plo-btn, .pl-skin-b .plo-sticky .plo-btn:active { box-shadow: none; }
 .pl-skin-b .plo-buy__add:active, .pl-skin-b .plo-sticky .plo-btn:active { transform: scale(.98); }
+
+/* ==========================================================================
+   Consistency pass: flat buttons + selected states (no 3D drop shadows),
+   one text-tab style for every range/filter selector, boxed page heroes.
+   ========================================================================== */
+.pl-skin-b .plo-btn, .pl-skin-b .plo-btn:active { box-shadow: none; }
+.pl-skin-b .plo-btn:active { transform: scale(.98); }
+.pl-skin-b .plo-flav__i.is-on .plo-flav__pic { box-shadow: none; }
+.pl-skin-b .plo-size input:checked + span, .pl-skin-b .plo-sizes--units .plo-size input:checked + span { box-shadow: none; }
+.pl-skin-b .plo-unit__pic, .pl-skin-b .plo-fact, .pl-skin-b .plo-how__n, .pl-skin-b .plo-line__switch em { box-shadow: none; }
+/* Text tabs everywhere (search filters, Subscribe & Save ranges) — same as Home and Collections. */
+.pl-skin-b :is(.plo-srch__chips, .plo-sub__chips) { gap: 22px; border-bottom: 1px solid rgba(8, 29, 72, .1); }
+.pl-skin-b :is(.plo-srch__chips, .plo-sub__chips) button { height: auto; padding: 8px 0 10px; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; box-shadow: none; font-size: 15px; font-weight: 600; color: var(--pl-mute); }
+.pl-skin-b :is(.plo-srch__chips, .plo-sub__chips) button:hover { color: var(--pl-navy); }
+.pl-skin-b :is(.plo-srch__chips, .plo-sub__chips) button.is-on { background: none; box-shadow: none; color: var(--pl-navy); font-weight: 800; border-bottom-color: var(--pl-navy); }
+/* Subscribe & Save hero: rounded panel inside the page width, like the collection banners. */
+.pl-skin-b .plo-sub__hero { background: none; padding-top: 12px; }
+.pl-skin-b .plo-sub__hero > .plo-hero__in { width: calc(100% - var(--o-side) * 2); max-width: 1280px; margin: 0 auto; padding-left: 22px; padding-right: 22px; border-radius: 24px; background: var(--tint); }
+@media (min-width: 1024px) { .pl-skin-b .plo-sub__hero { padding-top: 20px; } .pl-skin-b .plo-sub__hero > .plo-hero__in { padding-left: 56px; padding-right: 56px; border-radius: 28px; } }
+.pl-skin-b .plo-sub__badge { box-shadow: none; }
