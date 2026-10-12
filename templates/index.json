@@ -14,6 +14,7 @@
       "blocks": {
         "slide_plaayDay": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "hide_section_one_mobile": true,
             "hide_section_two_mobile": false,
@@ -49,8 +50,7 @@
             "link_two_text": "",
             "section_one_video": "",
             "section_two_video": ""
-          },
-          "disabled": true
+          }
         },
         "slide_earVyE": {
           "type": "slide",
@@ -330,7 +330,7 @@
         "product_pwwYqY": {
           "type": "product",
           "settings": {
-            "product": "new-chocolate-bars-mix-pack-of-5"
+            "product": "new-chocolate-slabs-mix-pack-of-6"
           }
         },
         "product_ExgAbw": {
@@ -475,6 +475,7 @@
           "type": "ai_gen_block_a27751e",
           "settings": {
             "content_alignment": "center",
+            "card_asset_images": "1|plo-home-cat-slabs.jpg\n3|plo-home-cat-bars.jpg",
             "cards_per_row": 5,
             "mobile_layout": "grid",
             "card_spacing": 40,
@@ -500,6 +501,7 @@
             "card_1_title": "Chocolate Slabs",
             "card_1_button_text": "",
             "card_2_enabled": true,
+            "card_2_image": "shopify://shop_images/Triple_Chocolate.jpg_1.jpg",
             "card_2_collection": "chocolate-truffles",
             "card_2_title": "Chocolate Truffles",
             "card_2_button_text": "",
@@ -518,6 +520,7 @@
             "card_5_title": "Limited Edition",
             "card_5_button_text": "",
             "card_6_enabled": false,
+            "card_6_image": "shopify://shop_images/1.BarBunch_74ede1f6-8f11-4c27-9103-e40a3593fb7d.png",
             "card_6_collection": "variety-packs",
             "card_6_title": "Energy Bars",
             "card_6_button_text": "",
@@ -544,10 +547,7 @@
             "card_12_enabled": false,
             "card_12_collection": "",
             "card_12_title": "",
-            "card_12_button_text": "",
-            "card_6_image": "shopify://shop_images/1.BarBunch_74ede1f6-8f11-4c27-9103-e40a3593fb7d.png",
-            "card_asset_images": "1|plo-home-cat-slabs.jpg\n3|plo-home-cat-bars.jpg",
-            "card_2_image": "shopify://shop_images/Triple_Chocolate.jpg_1.jpg"
+            "card_12_button_text": ""
           },
           "blocks": {}
         }
@@ -640,13 +640,13 @@
     },
     "cu_countdown_timer_jJqyWW": {
       "type": "cu-countdown-timer",
+      "disabled": true,
       "name": "Countdown Timer",
       "settings": {
         "title": "PLAAY DAY SALE ENDS IN:",
         "end_time": "2026-09-30T23:59:59",
         "start_time": "2026-09-27T00:00:00"
-      },
-      "disabled": true
+      }
     },
     "scrolling_content_U784BN": {
       "type": "scrolling-content",
