@@ -12,6 +12,9 @@
     "main": {
       "type": "plo-product",
       "settings": {
+        "desc_words": 20,
+        "sub_note": "Every 4 weeks · free delivery · skip or cancel any time",
+        "trust": "1–2 day delivery & free shipping above AED 75",
         "flavours_1": [
           "salted-caramel-bar-x12",
           "cookies-and-cream-bar-x12",
@@ -34,18 +37,14 @@
           "plaay-milk-chocolate-toffee-almond-bar-6-x-80g",
           "plaay-milk-chocolate-cheesecake-bar-6-x-80g"
         ],
-        "tints": "og-plaayer-pack:#FFF1CC\nsalted-caramel-bar-x12:#FFE6CC\ncookies-and-cream-bar-x12:#D6F1EF\nmocha-almond-bar-x12:#DCE3F5\nsalty-peanut-bar-x12:#FFF1CC\npistachio-chocolate-bar-x-12:#DDEFD9\ntriple-chocolate-truffle:#EBDDF5\npeanut-butter-truffle:#FFF1CC\nalmond-brownie-truffle:#F3E3D6\ncashew-caramel-truffle:#FDE3E2\npistachio-truffle:#DDEFD9\nnew-chocolate-bars-mix-pack-of-5:#F6D9F0",
-        "desc_words": 20,
-        "sub_note": "Every 4 weeks · free delivery · skip or cancel any time",
-        "trust": "1–2 day delivery & free shipping above AED 75",
         "strip_words": " Bar 12 x 35g| Bar x 12| Chocolate Truffles| Truffles| Slab 6 x 80g| Slab 6 x 35g|70% Dark Chocolate |Milk Chocolate |70% Dark Chocolate| Mousse",
+        "flavour_fallback": "70% Dark",
         "tint_default": "#FFF7DD",
-        "flavour_fallback": "70% Dark"
+        "tints": "og-plaayer-pack:#FFF1CC\nsalted-caramel-bar-x12:#FFE6CC\ncookies-and-cream-bar-x12:#D6F1EF\nmocha-almond-bar-x12:#DCE3F5\nsalty-peanut-bar-x12:#FFF1CC\npistachio-chocolate-bar-x-12:#DDEFD9\ntriple-chocolate-truffle:#EBDDF5\npeanut-butter-truffle:#FFF1CC\nalmond-brownie-truffle:#F3E3D6\ncashew-caramel-truffle:#FDE3E2\npistachio-truffle:#DDEFD9\nnew-chocolate-bars-mix-pack-of-5:#F6D9F0"
       }
     },
     "claims": {
       "type": "plo-claims",
-      "settings": {},
       "blocks": {
         "claim_1": {
           "type": "claim",
@@ -77,7 +76,8 @@
         "claim_2",
         "claim_3",
         "claim_4"
-      ]
+      ],
+      "settings": {}
     },
     "related": {
       "type": "plo-pdp-related",
@@ -88,7 +88,7 @@
         "limit": 4,
         "pack_truffles": "truffle-mix",
         "pack_bars": "bar-bunch",
-        "pack_slabs": "new-chocolate-bars-mix-pack-of-5",
+        "pack_slabs": "new-chocolate-slabs-mix-pack-of-6",
         "hero_truffles": "triple-chocolate-truffle",
         "hero_bars": "salted-caramel-bar-x12",
         "hero_slabs": "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g",
