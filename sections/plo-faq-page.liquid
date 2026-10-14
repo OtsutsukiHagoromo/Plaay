@@ -5,7 +5,7 @@
   have questions?" card sits beside the list; mobile: it follows the list.
   Search and tabs filter in place (assets/pl-opt.js initFaqPage). Categories come from the
   questions' "Category" field, in the order they first appear; blank = "General".
-  Any text in the page's own content (Shopify admin) shows under the questions.
+  The page's own content in Shopify admin (an old FAQ copy) is deliberately not shown.
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
@@ -60,7 +60,6 @@
           </section>
         {%- endfor -%}
         <p class="plo-faqp__none" hidden data-plo-faqp-none>No questions match that. Try another word, or <a href="{{ s.contact_url | default: '/pages/contact' }}">ask us directly</a>.</p>
-        {%- if page.content != blank -%}<div class="plo-faqp__content">{{ page.content }}</div>{%- endif -%}
       </div>
 
       <aside class="plo-faqp__help">

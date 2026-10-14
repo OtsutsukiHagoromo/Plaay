@@ -3,7 +3,6 @@
   Same building blocks as the Contact and FAQ pages: a rounded hero (.plo-cnt__box), three
   highlight cards, numbered "How It Works" steps, the shipping questions (product page FAQ
   accordion, .plo-pfaq__*) and a navy strip to the Contact page (.plo-cnt__faq).
-  Any text in the page's own content (Shopify admin) shows under the questions.
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
@@ -62,7 +61,6 @@
             </details>
           {%- endfor -%}
         </div>
-        {%- if page.content != blank -%}<div class="plo-shp__content">{{ page.content }}</div>{%- endif -%}
       </section>
     {%- endif -%}
 

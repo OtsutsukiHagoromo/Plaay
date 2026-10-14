@@ -3,7 +3,6 @@
   Same building blocks as the Shipping / Contact pages: rounded hero (.plo-cnt__box), the
   policy statement, "when we can help" cards (.plo-cnt__way), numbered claim steps
   (.plo-shp__steps), "important to know" notes, then a navy contact box.
-  Any text in the page's own content (Shopify admin) shows under the notes.
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
@@ -71,7 +70,6 @@
             <li {{ block.shopify_attributes }}><b>{{ block.settings.title }}</b><span>{{ block.settings.text }}</span></li>
           {%- endfor -%}
         </ul>
-        {%- if page.content != blank -%}<div class="plo-shp__content">{{ page.content }}</div>{%- endif -%}
       </section>
     {%- endif -%}
 

@@ -3,7 +3,6 @@
   A rounded hero (.plo-cnt__box), then each policy as a readable document card. Desktop: a
   sticky contents list on the left; mobile: the contents as text tabs (jump links) above.
   Ends with links to the Shipping, Returns and Contact pages.
-  Any text in the page's own content (Shopify admin) shows as the first card.
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
@@ -28,7 +27,6 @@
       </ul>
     </nav>
     <div class="plo-terms__docs">
-      {%- if page.content != blank -%}<article class="plo-terms__doc"><div class="plo-terms__rte">{{ page.content }}</div></article>{%- endif -%}
       {%- for block in docs -%}
         <article class="plo-terms__doc" id="policy-{{ block.settings.title | handleize }}" {{ block.shopify_attributes }}>
           <h2>{{ block.settings.title }}</h2>

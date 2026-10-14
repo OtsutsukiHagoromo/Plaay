@@ -3,7 +3,6 @@
   A rounded hero, then the ways to reach us (email, call / WhatsApp, hours) beside the
   message form (Shopify contact form: name, email, phone, topic, message). After sending, the
   form is replaced by a thank-you note. A strip at the end points to the FAQ page.
-  Any text in the page's own content (Shopify admin) shows under the hero.
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
@@ -22,7 +21,6 @@
   </header>
 
   <div class="plo-wrap plo-cnt__body">
-    {%- if page.content != blank -%}<div class="plo-cnt__content">{{ page.content }}</div>{%- endif -%}
     <div class="plo-cnt__grid">
       <ul class="plo-cnt__ways">
         {%- if s.email != blank -%}

@@ -1,407 +1,382 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "hero": {
-      "type": "retailers-hero",
+    "main": {
+      "type": "plo-retailers",
       "settings": {
-        "bg_color": "#f9c61d",
-        "text_color": "#021d49",
-        "eyebrow": "Find us near you",
-        "headline": "Where we're Plaayin'",
-        "subheadline": "Find Plaay at your favourite stores, delivery platforms, cafes, and hotels across the UAE.",
+        "eyebrow": "Find Us Near You",
+        "heading": "Where We’re Plaayin’",
+        "intro": "Find Plaay at your favourite stores, delivery platforms, cafes, and hotels across the UAE.",
+        "tint": "#FFB600",
         "cta_label": "Become a Retailer",
         "cta_url": "/pages/contact",
-        "cta_bg": "#021d49",
-        "cta_color": "#f9c61d",
-        "stat_1_num": "25+",
-        "stat_1_label": "Retail partners",
-        "stat_2_num": "5",
-        "stat_2_label": "Delivery platforms",
-        "stat_3_num": "UAE",
-        "stat_3_label": "Nationwide"
-      }
-    },
-    "delivery": {
-      "type": "retailer-logos",
+        "stats": "25+|Retail partners\n5|Delivery platforms\nUAE|Nationwide",
+        "join_heading": "Want Plaay on Your Shelves?",
+        "join_text": "Stores, cafes, gyms and hotels: let’s talk."
+      },
       "blocks": {
-        "gallery_3nQFWr": {
-          "type": "gallery",
+        "g_delivery": {
+          "type": "group",
           "settings": {
-            "img": "shopify://shop_images/noon_c17fc7aa-a9ab-4156-8854-ecb90eadfd14.png",
-            "retailer_name": "Noon",
-            "btn_url": "https://xsne.adj.st/minutes.noon.com/page/plaay?utm_source=C1000184L&utm_campaign=nm_plaay&adj_t=exfgbx"
+            "eyebrow": "Order from your couch",
+            "heading": "Delivered to Your Doorstep",
+            "tab": "Delivery Apps",
+            "text": "Order Plaay through your favourite delivery apps and online grocery platforms.",
+            "color": "#8DF0DE"
           }
         },
-        "gallery_JAHyLq": {
-          "type": "gallery",
+        "del_3nQFWr": {
+          "type": "retailer",
           "settings": {
-            "img": "shopify://shop_images/tmart.png",
-            "retailer_name": "Talabat Mart",
-            "btn_url": "https://www.talabat.com/uae/talabat-mart?utm_campaign=other_other_web_gro_ma_ae_display_Plaay&utm_source=Social&utm_medium=other"
+            "logo": "shopify://shop_images/noon_c17fc7aa-a9ab-4156-8854-ecb90eadfd14.png",
+            "name": "Noon",
+            "url": "https://xsne.adj.st/minutes.noon.com/page/plaay?utm_source=C1000184L&utm_campaign=nm_plaay&adj_t=exfgbx"
           }
         },
-        "gallery_4epBhU": {
-          "type": "gallery",
+        "del_JAHyLq": {
+          "type": "retailer",
           "settings": {
-            "img": "shopify://shop_images/careem_f7267597-bafe-447a-b477-c8947731987a.png",
-            "retailer_name": "Careem",
-            "btn_url": ""
+            "logo": "shopify://shop_images/tmart.png",
+            "name": "Talabat Mart",
+            "url": "https://www.talabat.com/uae/talabat-mart?utm_campaign=other_other_web_gro_ma_ae_display_Plaay&utm_source=Social&utm_medium=other"
           }
         },
-        "gallery_ERHMYi": {
-          "type": "gallery",
+        "del_4epBhU": {
+          "type": "retailer",
           "settings": {
-            "img": "shopify://shop_images/deliveroo_fcfa4527-9435-4226-8df4-a5f40bb2aa61.png",
-            "retailer_name": "Deliveroo",
-            "btn_url": "https://deliveroo.ae/menu/dubai/dubai-investment-park-2/plaay-cocoa-and-chocolate-candies-dip?utm_campaign=organic&utm_medium=referrer&utm_source=menu_share"
+            "logo": "shopify://shop_images/careem_f7267597-bafe-447a-b477-c8947731987a.png",
+            "name": "Careem",
+            "url": ""
           }
         },
-        "gallery_qCQdrN": {
-          "type": "gallery",
+        "del_ERHMYi": {
+          "type": "retailer",
           "settings": {
-            "img": "shopify://shop_images/kibson.png",
-            "retailer_name": "Kibsons",
-            "btn_url": "https://www.kibsons.com/en/origin/plaay"
+            "logo": "shopify://shop_images/deliveroo_fcfa4527-9435-4226-8df4-a5f40bb2aa61.png",
+            "name": "Deliveroo",
+            "url": "https://deliveroo.ae/menu/dubai/dubai-investment-park-2/plaay-cocoa-and-chocolate-candies-dip?utm_campaign=organic&utm_medium=referrer&utm_source=menu_share"
           }
         },
-        "gallery_bE9t7g": {
-          "type": "gallery",
+        "del_qCQdrN": {
+          "type": "retailer",
           "settings": {
-            "img": "shopify://shop_images/amazon_31c6a1c2-92d5-4112-87ec-e4c7e24a9875.png",
-            "retailer_name": "Amazon",
-            "btn_url": "https://www.amazon.ae/s/ref=bl_dp_s_web_0?ie=UTF8&search-alias=aps&field-keywords=Plaay"
+            "logo": "shopify://shop_images/kibson.png",
+            "name": "Kibsons",
+            "url": "https://www.kibsons.com/en/origin/plaay"
           }
         },
-        "gallery_aCRbzP": {
-          "type": "gallery",
+        "del_bE9t7g": {
+          "type": "retailer",
           "settings": {
-            "img": "shopify://shop_images/logo_SmilesMarket_EN.jpg",
-            "retailer_name": "Smiles Market",
-            "btn_url": ""
+            "logo": "shopify://shop_images/amazon_31c6a1c2-92d5-4112-87ec-e4c7e24a9875.png",
+            "name": "Amazon",
+            "url": "https://www.amazon.ae/s/ref=bl_dp_s_web_0?ie=UTF8&search-alias=aps&field-keywords=Plaay"
           }
         },
-        "gallery_U499Wy": {
-          "type": "gallery",
+        "del_aCRbzP": {
+          "type": "retailer",
           "settings": {
-            "img": "shopify://shop_images/Localy-Logo_EN_1200x1200_bfc36d3d-3019-4107-9014-d2d850c6f4d6.png",
-            "retailer_name": "Localy",
-            "btn_url": ""
+            "logo": "shopify://shop_images/logo_SmilesMarket_EN.jpg",
+            "name": "Smiles Market",
+            "url": ""
+          }
+        },
+        "del_U499Wy": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Localy-Logo_EN_1200x1200_bfc36d3d-3019-4107-9014-d2d850c6f4d6.png",
+            "name": "Localy",
+            "url": ""
+          }
+        },
+        "g_instore": {
+          "type": "group",
+          "settings": {
+            "eyebrow": "Grab it on the go",
+            "heading": "Now in Store",
+            "tab": "In Store",
+            "text": "Pick up Plaay at supermarkets and convenience stores near you across the UAE.",
+            "color": "#FED8B4"
+          }
+        },
+        "ins_8Lddfq": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/carrefour-logo.png",
+            "name": "Carrefour",
+            "url": ""
+          }
+        },
+        "ins_3nQFWr": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Spinneys-Logo-Vector_svg.png",
+            "name": "Spinneys",
+            "url": ""
+          }
+        },
+        "ins_JAHyLq": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Waitrose_Logo_svg.png",
+            "name": "Waitrose",
+            "url": ""
+          }
+        },
+        "ins_UwqhBi": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/choitrams.png",
+            "name": "Choithrams",
+            "url": ""
+          }
+        },
+        "ins_ERHMYi": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/grandiose.png",
+            "name": "Grandiose",
+            "url": ""
+          }
+        },
+        "ins_Kbxpa6": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/emrat.png",
+            "name": "Emarat",
+            "url": ""
+          }
+        },
+        "ins_mw9Hqe": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/zoom_4fae3570-38da-4e2f-bc6c-b3c4000fe285.png",
+            "name": "Zoom",
+            "url": ""
+          }
+        },
+        "ins_aCRbzP": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/almaya_208a3af1-6501-46e2-8e9b-65f336ad0829.png",
+            "name": "Al Maya",
+            "url": ""
+          }
+        },
+        "ins_cD7MQf": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Union-coop_logo.png",
+            "name": "Union Coop",
+            "url": ""
+          }
+        },
+        "ins_QUc8QR": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Coop.png",
+            "name": "Coop",
+            "url": ""
+          }
+        },
+        "ins_Kj6Drb": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/allday.png",
+            "name": "Allday",
+            "url": ""
+          }
+        },
+        "ins_jEtTEi": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/scuzi_a72cf9bf-58e8-487f-bf24-0655523f5a73.png",
+            "name": "Scuzi",
+            "url": ""
+          }
+        },
+        "ins_teGcTi": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/logo_293x128_png.png",
+            "name": "BiOrganic",
+            "url": ""
+          }
+        },
+        "g_lifestyle": {
+          "type": "group",
+          "settings": {
+            "eyebrow": "Cafes, hotels & wellness",
+            "heading": "Where Life Happens",
+            "tab": "Cafes & Hotels",
+            "text": "Enjoy Plaay at some of the UAE's best hotels, cafes, and fitness studios.",
+            "color": "#F8A7D6"
+          }
+        },
+        "lif_En4gbq": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Caribou1_svg.png",
+            "name": "Caribou Coffee",
+            "url": ""
+          }
+        },
+        "lif_7wNjVk": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Pauls_4bbfffd9-08a5-4d98-ae4f-47b728f1c7f4.svg",
+            "name": "Paul's",
+            "url": ""
+          }
+        },
+        "lif_nbdbEK": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/IHG-Logo.png",
+            "name": "IHG Hotels",
+            "url": ""
+          }
+        },
+        "lif_iMWe6M": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/AVANI_Hotels___Resorts_Corporate_Logo.png",
+            "name": "AVANI Hotels & Resorts",
+            "url": ""
+          }
+        },
+        "lif_WDFwnH": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/25H_Dubai_Logo.png",
+            "name": "25hours Hotel",
+            "url": ""
+          }
+        },
+        "lif_NVNDLU": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Media_One_Hotel_Logo.png",
+            "name": "Media One Hotel",
+            "url": ""
+          }
+        },
+        "lif_HFcF68": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Comptoir_102_png.png",
+            "name": "Comptoir 102",
+            "url": ""
+          }
+        },
+        "lif_8bb3Qd": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Wild_The_Moon_Logo.jpg",
+            "name": "Wild & The Moon",
+            "url": ""
+          }
+        },
+        "lif_ztn74L": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Ivy_s-Secret-Garden-Logo_f02fb062-fba3-4029-8710-c74429940c06.png",
+            "name": "Ivy's Secret Garden",
+            "url": ""
+          }
+        },
+        "lif_gR8wxg": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Motion_Cycling.png",
+            "name": "Motion Cycling",
+            "url": ""
+          }
+        },
+        "lif_8JbnVm": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Cycle_Souq.svg",
+            "name": "Cycle Souq",
+            "url": ""
+          }
+        },
+        "lif_aCRbzP": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/pilates.png",
+            "name": "Pilates Academy",
+            "url": ""
+          }
+        },
+        "lif_yEQ6py": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/Colored.svg",
+            "name": "Top Padel",
+            "url": ""
+          }
+        },
+        "lif_UU7Ua8": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/grip.png",
+            "name": "Grip",
+            "url": ""
+          }
+        },
+        "lif_TEFBAR": {
+          "type": "retailer",
+          "settings": {
+            "logo": "shopify://shop_images/black-sheep-coffee-color-400x400.png",
+            "name": "Black Sheep Coffee",
+            "url": ""
           }
         }
       },
       "block_order": [
-        "gallery_3nQFWr",
-        "gallery_JAHyLq",
-        "gallery_4epBhU",
-        "gallery_ERHMYi",
-        "gallery_qCQdrN",
-        "gallery_bE9t7g",
-        "gallery_aCRbzP",
-        "gallery_U499Wy"
-      ],
-      "settings": {
-        "bg_color": "#021d49",
-        "h_color": "#f9c61d",
-        "eyebrow": "Order from your couch",
-        "head": "Delivered to your doorstep",
-        "subtitle": "Order Plaay through your favourite delivery apps and online grocery platforms."
-      }
-    },
-    "instore": {
-      "type": "retailer-logos",
-      "blocks": {
-        "gallery_8Lddfq": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/carrefour-logo.png",
-            "retailer_name": "Carrefour",
-            "btn_url": ""
-          }
-        },
-        "gallery_3nQFWr": {
-          "type": "gallery",
-          "disabled": true,
-          "settings": {
-            "img": "shopify://shop_images/Spinneys-Logo-Vector_svg.png",
-            "retailer_name": "Spinneys",
-            "btn_url": ""
-          }
-        },
-        "gallery_JAHyLq": {
-          "type": "gallery",
-          "disabled": true,
-          "settings": {
-            "img": "shopify://shop_images/Waitrose_Logo_svg.png",
-            "retailer_name": "Waitrose",
-            "btn_url": ""
-          }
-        },
-        "gallery_UwqhBi": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/choitrams.png",
-            "retailer_name": "Choithrams",
-            "btn_url": ""
-          }
-        },
-        "gallery_ERHMYi": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/grandiose.png",
-            "retailer_name": "Grandiose",
-            "btn_url": ""
-          }
-        },
-        "gallery_Kbxpa6": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/emrat.png",
-            "retailer_name": "Emarat",
-            "btn_url": ""
-          }
-        },
-        "gallery_mw9Hqe": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/zoom_4fae3570-38da-4e2f-bc6c-b3c4000fe285.png",
-            "retailer_name": "Zoom",
-            "btn_url": ""
-          }
-        },
-        "gallery_aCRbzP": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/almaya_208a3af1-6501-46e2-8e9b-65f336ad0829.png",
-            "retailer_name": "Al Maya",
-            "btn_url": ""
-          }
-        },
-        "gallery_cD7MQf": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Union-coop_logo.png",
-            "retailer_name": "Union Coop",
-            "btn_url": ""
-          }
-        },
-        "gallery_QUc8QR": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Coop.png",
-            "retailer_name": "Coop",
-            "btn_url": ""
-          }
-        },
-        "gallery_Kj6Drb": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/allday.png",
-            "retailer_name": "Allday",
-            "btn_url": ""
-          }
-        },
-        "gallery_jEtTEi": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/scuzi_a72cf9bf-58e8-487f-bf24-0655523f5a73.png",
-            "retailer_name": "Scuzi",
-            "btn_url": ""
-          }
-        },
-        "gallery_teGcTi": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/logo_293x128_png.png",
-            "retailer_name": "Retailer",
-            "btn_url": ""
-          }
-        }
-      },
-      "block_order": [
-        "gallery_8Lddfq",
-        "gallery_3nQFWr",
-        "gallery_JAHyLq",
-        "gallery_UwqhBi",
-        "gallery_ERHMYi",
-        "gallery_Kbxpa6",
-        "gallery_mw9Hqe",
-        "gallery_aCRbzP",
-        "gallery_cD7MQf",
-        "gallery_QUc8QR",
-        "gallery_Kj6Drb",
-        "gallery_jEtTEi",
-        "gallery_teGcTi"
-      ],
-      "settings": {
-        "bg_color": "#f9c61d",
-        "h_color": "#021d49",
-        "eyebrow": "Grab it on the go",
-        "head": "Now in store",
-        "subtitle": "Pick up Plaay at supermarkets and convenience stores near you across the UAE."
-      }
-    },
-    "lifestyle": {
-      "type": "retailer-logos",
-      "blocks": {
-        "gallery_En4gbq": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Caribou1_svg.png",
-            "retailer_name": "Black Sheep Coffee",
-            "btn_url": ""
-          }
-        },
-        "gallery_7wNjVk": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Pauls_4bbfffd9-08a5-4d98-ae4f-47b728f1c7f4.svg",
-            "retailer_name": "Paul's",
-            "btn_url": ""
-          }
-        },
-        "gallery_nbdbEK": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/IHG-Logo.png",
-            "retailer_name": "IHG Hotels",
-            "btn_url": ""
-          }
-        },
-        "gallery_iMWe6M": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/AVANI_Hotels___Resorts_Corporate_Logo.png",
-            "retailer_name": "AVANI Hotels & Resorts",
-            "btn_url": ""
-          }
-        },
-        "gallery_WDFwnH": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/25H_Dubai_Logo.png",
-            "retailer_name": "25hours Hotel",
-            "btn_url": ""
-          }
-        },
-        "gallery_NVNDLU": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Media_One_Hotel_Logo.png",
-            "retailer_name": "Media One Hotel",
-            "btn_url": ""
-          }
-        },
-        "gallery_HFcF68": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Comptoir_102_png.png",
-            "retailer_name": "Comptoir 102",
-            "btn_url": ""
-          }
-        },
-        "gallery_8bb3Qd": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Wild_The_Moon_Logo.jpg",
-            "retailer_name": "Wild & The Moon",
-            "btn_url": ""
-          }
-        },
-        "gallery_ztn74L": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Ivy_s-Secret-Garden-Logo_f02fb062-fba3-4029-8710-c74429940c06.png",
-            "retailer_name": "Ivy's Secret Garden",
-            "btn_url": ""
-          }
-        },
-        "gallery_gR8wxg": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Motion_Cycling.png",
-            "retailer_name": "Motion Cycling",
-            "btn_url": ""
-          }
-        },
-        "gallery_8JbnVm": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Cycle_Souq.svg",
-            "retailer_name": "Cycle Souq",
-            "btn_url": ""
-          }
-        },
-        "gallery_aCRbzP": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/pilates.png",
-            "retailer_name": "Pilates Studio",
-            "btn_url": ""
-          }
-        },
-        "gallery_yEQ6py": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/Colored.svg",
-            "retailer_name": "Retailer",
-            "btn_url": ""
-          }
-        },
-        "gallery_UU7Ua8": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/grip.png",
-            "retailer_name": "Grip",
-            "btn_url": ""
-          }
-        },
-        "gallery_TEFBAR": {
-          "type": "gallery",
-          "settings": {
-            "img": "shopify://shop_images/black-sheep-coffee-color-400x400.png",
-            "retailer_name": "Black Sheep Coffee",
-            "btn_url": ""
-          }
-        }
-      },
-      "block_order": [
-        "gallery_En4gbq",
-        "gallery_7wNjVk",
-        "gallery_nbdbEK",
-        "gallery_iMWe6M",
-        "gallery_WDFwnH",
-        "gallery_NVNDLU",
-        "gallery_HFcF68",
-        "gallery_8bb3Qd",
-        "gallery_ztn74L",
-        "gallery_gR8wxg",
-        "gallery_8JbnVm",
-        "gallery_aCRbzP",
-        "gallery_yEQ6py",
-        "gallery_UU7Ua8",
-        "gallery_TEFBAR"
-      ],
-      "settings": {
-        "bg_color": "#021d49",
-        "h_color": "#f9c61d",
-        "eyebrow": "Cafes, hotels & wellness",
-        "head": "Where life happens",
-        "subtitle": "Enjoy Plaay at some of the UAE's best hotels, cafes, and fitness studios."
-      }
+        "g_delivery",
+        "del_3nQFWr",
+        "del_JAHyLq",
+        "del_4epBhU",
+        "del_ERHMYi",
+        "del_qCQdrN",
+        "del_bE9t7g",
+        "del_aCRbzP",
+        "del_U499Wy",
+        "g_instore",
+        "ins_8Lddfq",
+        "ins_3nQFWr",
+        "ins_JAHyLq",
+        "ins_UwqhBi",
+        "ins_ERHMYi",
+        "ins_Kbxpa6",
+        "ins_mw9Hqe",
+        "ins_aCRbzP",
+        "ins_cD7MQf",
+        "ins_QUc8QR",
+        "ins_Kj6Drb",
+        "ins_jEtTEi",
+        "ins_teGcTi",
+        "g_lifestyle",
+        "lif_En4gbq",
+        "lif_7wNjVk",
+        "lif_nbdbEK",
+        "lif_iMWe6M",
+        "lif_WDFwnH",
+        "lif_NVNDLU",
+        "lif_HFcF68",
+        "lif_8bb3Qd",
+        "lif_ztn74L",
+        "lif_gR8wxg",
+        "lif_8JbnVm",
+        "lif_aCRbzP",
+        "lif_yEQ6py",
+        "lif_UU7Ua8",
+        "lif_TEFBAR"
+      ]
     }
   },
   "order": [
-    "hero",
-    "delivery",
-    "instore",
-    "lifestyle"
+    "main"
   ]
 }

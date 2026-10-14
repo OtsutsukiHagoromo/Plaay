@@ -101,13 +101,13 @@
     {%- comment -%}
       Option B is now the default look on this theme: home, product, collection, search and cart
       templates (and their alternates, except Build your box) are the Option B layouts, and the
-      Subscribe & Save, FAQ (page.faq), Contact (page.contact), Shipping (page.shipping), Returns (page.returns) and Terms (page.terms) pages are built from the same sections.
+      Subscribe & Save, FAQ (page.faq), Contact (page.contact), Shipping (page.shipping), Returns (page.returns), Terms (page.terms) and Retailers (page.retailers) pages are built from the same sections.
       ?view=option-b still works.
     {%- endcomment -%}
     {%- liquid
       assign plo_b_names = 'index,product,collection,search,cart' | split: ','
       assign plo_b = false
-      if template.suffix == 'option-b' or template.suffix == 'subscribe-save' or template.suffix == 'faq' or template.suffix == 'contact' or template.suffix == 'shipping' or template.suffix == 'returns' or template.suffix == 'terms'
+      if template.suffix == 'option-b' or template.suffix == 'subscribe-save' or template.suffix == 'faq' or template.suffix == 'contact' or template.suffix == 'shipping' or template.suffix == 'returns' or template.suffix == 'terms' or template.suffix == 'retailers'
         assign plo_b = true
       elsif plo_b_names contains template.name
         assign plo_b = true

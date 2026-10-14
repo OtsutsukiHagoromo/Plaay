@@ -1,0 +1,109 @@
+{%- comment -%}
+  Option B Retailers page (templates/page.retailers.json, /pages/retailers).
+  A rounded hero with the headline, "Become a Retailer" button and three stats, jump tabs for
+  the groups, then each group (delivery apps, in store, cafes & hotels) as a grid of logo tiles.
+  Blocks: a "Group" block starts a group; the "Retailer" blocks after it belong to that group.
+  A retailer with a link shows "Order now". Ends with the "Become a Retailer" strip
+  (.plo-cnt__faq from the Contact page).
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign groups = section.blocks | where: 'type', 'group'
+-%}
+<div class="pl plo plo-rtl">
+  <header class="plo-cnt__hero" style="--tint: {{ s.tint }};">
+    <div class="plo-wrap">
+      <div class="plo-cnt__box plo-rtl__box">
+        <div class="plo-rtl__copy">
+          {%- if s.eyebrow != blank -%}<span class="plo-cnt__tag">{{ s.eyebrow }}</span>{%- endif -%}
+          <h1 class="plo-cnt__t">{{ s.heading | default: page.title }}</h1>
+          {%- if s.intro != blank -%}<p class="plo-cnt__p">{{ s.intro }}</p>{%- endif -%}
+          {%- if s.cta_label != blank -%}<a class="plo-btn plo-btn--navy plo-rtl__cta" href="{{ s.cta_url | default: '/pages/contact' }}">{{ s.cta_label }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.6 %}</a>{%- endif -%}
+        </div>
+        {%- assign stats = s.stats | newline_to_br | split: '<br />' -%}
+        {%- if s.stats != blank -%}
+          <ul class="plo-rtl__stats">
+            {%- for row in stats -%}
+              {%- assign p = row | strip | split: '|' -%}
+              {%- if p.size < 2 -%}{%- continue -%}{%- endif -%}
+              <li><b>{{ p[0] | strip }}</b><span>{{ p[1] | strip }}</span></li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </header>
+
+  <div class="plo-wrap plo-rtl__body">
+    {%- if groups.size > 1 -%}
+      <nav class="plo-terms__nav plo-rtl__nav" aria-label="Where to find us">
+        <ul>
+          {%- for g in groups -%}<li><a href="#rtl-{{ g.settings.heading | handleize }}">{{ g.settings.tab | default: g.settings.heading }}</a></li>{%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
+
+    {%- assign open = false -%}
+    {%- for block in section.blocks -%}
+      {%- assign b = block.settings -%}
+      {%- if block.type == 'group' -%}
+        {%- if open -%}</ul></section>{%- endif -%}
+        <section class="plo-rtl__group" id="rtl-{{ b.heading | handleize }}" style="--c: {{ b.color }};" {{ block.shopify_attributes }}>
+          {%- if b.eyebrow != blank -%}<span class="plo-rtl__k">{{ b.eyebrow }}</span>{%- endif -%}
+          <h2 class="plo-shp__h">{{ b.heading }}</h2>
+          {%- if b.text != blank -%}<p class="plo-rtl__lead">{{ b.text }}</p>{%- endif -%}
+          <ul class="plo-rtl__grid">
+        {%- assign open = true -%}
+      {%- elsif open -%}
+        <li {{ block.shopify_attributes }}>
+          {%- if b.url != blank -%}<a class="plo-rtl__tile" href="{{ b.url }}" target="_blank" rel="noopener">{%- else -%}<div class="plo-rtl__tile">{%- endif -%}
+            <span class="plo-rtl__logo">
+              {%- if b.logo != blank -%}{{ b.logo | image_url: width: 400 | image_tag: loading: 'lazy', alt: b.name, sizes: '(min-width: 1024px) 200px, 33vw' }}{%- else -%}<em>{{ b.name }}</em>{%- endif -%}
+            </span>
+            <span class="plo-rtl__name">{{ b.name }}</span>
+            {%- if b.url != blank -%}<span class="plo-rtl__go">Order now {% render 'pl-icon', name: 'arrow-right', size: 13, stroke: 2.6 %}</span>{%- endif -%}
+          {%- if b.url != blank -%}</a>{%- else -%}</div>{%- endif -%}
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if open -%}</ul></section>{%- endif -%}
+
+    {%- if s.join_heading != blank -%}
+      <a class="plo-cnt__faq plo-rtl__join" href="{{ s.cta_url | default: '/pages/contact' }}">
+        <span><b>{{ s.join_heading }}</b>{%- if s.join_text != blank -%}<small>{{ s.join_text }}</small>{%- endif -%}</span>
+        <i aria-hidden="true">{%- render 'pl-icon', name: 'arrow-right', size: 18, stroke: 2.6 -%}</i>
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: retailers page",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Find Us Near You" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Where We’re Plaayin’" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "Find Plaay at your favourite stores, delivery apps, cafes and hotels across the UAE." },
+    { "type": "color", "id": "tint", "label": "Hero colour", "default": "#FFB600" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Become a Retailer" },
+    { "type": "url", "id": "cta_url", "label": "Button link" },
+    { "type": "textarea", "id": "stats", "label": "Stats (big|small per line)", "default": "25+|Retail partners\n5|Delivery platforms\nUAE|Nationwide" },
+    { "type": "text", "id": "join_heading", "label": "Bottom strip heading", "default": "Want Plaay on Your Shelves?" },
+    { "type": "text", "id": "join_text", "label": "Bottom strip line", "default": "Stores, cafes, gyms and hotels: let’s talk." }
+  ],
+  "blocks": [
+    { "type": "group", "name": "Group", "settings": [
+      { "type": "text", "id": "eyebrow", "label": "Small label" },
+      { "type": "text", "id": "heading", "label": "Heading" },
+      { "type": "text", "id": "tab", "label": "Tab label (blank = heading)" },
+      { "type": "textarea", "id": "text", "label": "Line" },
+      { "type": "color", "id": "color", "label": "Accent colour", "default": "#FED8B4" } ] },
+    { "type": "retailer", "name": "Retailer", "settings": [
+      { "type": "image_picker", "id": "logo", "label": "Logo" },
+      { "type": "text", "id": "name", "label": "Name" },
+      { "type": "url", "id": "url", "label": "Link (optional)" } ] }
+  ],
+  "presets": [{ "name": "Preview: retailers page" }]
+}
+{% endschema %}
