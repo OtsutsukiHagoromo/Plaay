@@ -97,9 +97,7 @@
           <img src="{{ b_asset | asset_img_url: '1400x' }}" srcset="{{ b_asset | asset_img_url: '800x' }} 800w, {{ b_asset | asset_img_url: '1200x' }} 1200w, {{ b_asset | asset_img_url: '1600x' }} 1600w, {{ b_asset | asset_url }} 1942w" sizes="(min-width: 1360px) 1280px, calc(100vw - 32px)" alt="{{ collection.title | escape }}" width="1942" height="809" loading="eager" fetchpriority="high">
         </picture>
       </div>
-      {%- if is_all -%}
-        <div class="plo-wrap plo-hero__tiles">{%- render 'pl-menu-tiles', size: 'lg' -%}</div>
-      {%- endif -%}
+      {%- comment -%} No range tiles under an artwork banner: the range tabs below do that job. {%- endcomment -%}
     </header>
     {%- else -%}
     <header class="plo-hero{% if has_photo %} plo-hero--photo{% endif %}{% if is_all %} plo-hero--all{% endif %}{% if b_layout == 'art' and has_photo %} plo-hero--art{% endif %}" style="--tint: {{ b_tint }}; --ink: {{ b_ink }}; --pos: {{ b_pos }};">
