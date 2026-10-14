@@ -114,7 +114,7 @@
               {%- if b.image != blank -%}
                 {{ b.image | image_url: width: 120 | image_tag: loading: 'lazy', class: 'plo-prev__av', alt: '' }}
               {%- elsif b.image_asset != blank -%}
-                <img class="plo-prev__av" src="{{ b.image_asset | asset_url }}" alt="" loading="lazy" width="48" height="48">
+                <img class="plo-prev__av" src="{{ b.image_asset | asset_img_url: '96x' }}" alt="" loading="lazy" width="48" height="48">
               {%- else -%}
                 <span class="plo-prev__av plo-prev__av--i" aria-hidden="true">{{ b.name | slice: 0 }}</span>
               {%- endif -%}

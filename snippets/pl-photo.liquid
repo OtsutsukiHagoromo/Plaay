@@ -1,6 +1,8 @@
 {%- comment -%}
   One refreshed product photo (theme asset plo-ph-<key>-<n>.jpg, see snippets/plo-photo-key).
   Usage: {%- render 'pl-photo', key: pkey, n: 1, alt: product.title, class: 'pl-tile__pic', eager: false -%}
+  size: optional pixel width for small fixed spots (e.g. 200 for bag thumbnails); otherwise a
+  responsive srcset (Shopify CDN resizes the theme asset).
 {%- endcomment -%}
 {%- liquid
   assign f = 'plo-ph-' | append: key | append: '-' | append: n | append: '.jpg'
@@ -9,4 +11,9 @@
     assign load = 'eager'
   endif
 -%}
-<img src="{{ f | asset_url }}" alt="{{ alt | escape }}"{% if class != blank %} class="{{ class }}"{% endif %} loading="{{ load }}" decoding="async" width="800" height="1000">
+{%- if size != blank -%}
+  {%- assign sz = size | append: 'x' -%}
+  <img src="{{ f | asset_img_url: sz }}" alt="{{ alt | escape }}"{% if class != blank %} class="{{ class }}"{% endif %} loading="{{ load }}" decoding="async" width="800" height="1000">
+{%- else -%}
+  <img src="{{ f | asset_img_url: '600x' }}" srcset="{{ f | asset_img_url: '300x' }} 300w, {{ f | asset_img_url: '450x' }} 450w, {{ f | asset_img_url: '600x' }} 600w, {{ f | asset_url }} 800w" sizes="{{ sizes | default: '(min-width: 1024px) 300px, 46vw' }}" alt="{{ alt | escape }}"{% if class != blank %} class="{{ class }}"{% endif %} loading="{{ load }}" decoding="async" width="800" height="1000">
+{%- endif -%}

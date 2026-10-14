@@ -146,7 +146,7 @@
   <a class="plo-card__img" href="{{ href }}" tabindex="-1" aria-hidden="true">
     {%- if pkey != blank -%}
       {%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}
-      <img src="{{ ph | asset_url }}" alt="{{ product.title | escape }}" loading="{{ load }}" width="800" height="1000" class="is-photo">
+      <img src="{{ ph | asset_img_url: '600x' }}" srcset="{{ ph | asset_img_url: '300x' }} 300w, {{ ph | asset_img_url: '450x' }} 450w, {{ ph | asset_img_url: '600x' }} 600w, {{ ph | asset_url }} 800w" sizes="(min-width: 1024px) 300px, 46vw" alt="{{ product.title | escape }}" loading="{{ load }}" width="800" height="1000" class="is-photo">
     {%- elsif product.featured_image -%}
       {{ product.featured_image | image_url: width: 600 | image_tag: loading: load, sizes: '(min-width: 1024px) 300px, 46vw', widths: '240, 360, 480, 600', alt: product.title }}
     {%- else -%}

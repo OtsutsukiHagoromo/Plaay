@@ -114,7 +114,7 @@
                 {{ banner_d | image_url: width: 1600 | image_tag: class: 'plo-hero__img', loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 50vw, 40vw', widths: '600, 1000, 1600', alt: '' }}
               </picture>
             {%- else -%}
-              <img class="plo-hero__img" src="{{ b_asset | asset_url }}" alt="" width="1448" height="1086" loading="eager" fetchpriority="high">
+              <img class="plo-hero__img" src="{{ b_asset | asset_img_url: '900x' }}" srcset="{{ b_asset | asset_img_url: '600x' }} 600w, {{ b_asset | asset_img_url: '900x' }} 900w, {{ b_asset | asset_url }} 1448w" sizes="(min-width: 1024px) 50vw, 100vw" alt="" width="1448" height="1086" loading="eager" fetchpriority="high">
             {%- endif -%}
           </div>
         {%- endif -%}

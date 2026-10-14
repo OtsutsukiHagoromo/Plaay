@@ -27,3 +27,11 @@
 
 <link rel="preload" href="{{ font_regular }}" as="font" type="font/woff2" crossorigin="anonymous">
 <link rel="preload" href="{{ font_bold }}" as="font" type="font/woff2" crossorigin="anonymous">
+{%- comment -%}
+  New-design pages set their headlines in the black weight (900), usually the largest text on
+  screen, so it is preloaded there too (no fallback-font swap on the headline).
+{%- endcomment -%}
+{%- if plo_b -%}
+  {%- assign font_black = 'walsheim-black.static.woff2' | asset_url | split: '?' | first -%}
+  <link rel="preload" href="{{ font_black }}" as="font" type="font/woff2" crossorigin="anonymous">
+{%- endif -%}

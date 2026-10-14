@@ -89,7 +89,7 @@
             {%- assign open = true -%}
           {%- else -%}
             {%- unless open -%}<div class="plo-good__grp"><ul class="plo-good__units">{%- assign open = true -%}{%- endunless -%}
-            <li><span class="plo-good__u"><img src="{{ p[0] | asset_url }}" alt="" loading="lazy" width="160" height="160"></span>{{ p[1] }}</li>
+            <li><span class="plo-good__u"><img src="{{ p[0] | asset_img_url: '160x' }}" alt="" loading="lazy" width="160" height="160"></span>{{ p[1] }}</li>
           {%- endif -%}
         {%- endfor -%}
         {%- if open -%}</ul></div>{%- endif -%}
@@ -107,7 +107,7 @@
 
         {%- if s.by_name != blank -%}
           <a class="plo-good__by" href="{{ s.by_url | default: '/pages/for-the-geeks-1' }}">
-            {%- if s.by_asset != blank -%}<img src="{{ s.by_asset | asset_url }}" alt="" loading="lazy" width="48" height="48">{%- endif -%}
+            {%- if s.by_asset != blank -%}<img src="{{ s.by_asset | asset_img_url: '96x' }}" alt="" loading="lazy" width="48" height="48">{%- endif -%}
             <span>{{ s.by_lead }} <b>{{ s.by_name }}</b></span>
             <span class="plo-good__go">{{ s.by_link }}{%- render 'pl-icon', name: 'chev-right', size: 14, stroke: 2.4 -%}</span>
           </a>

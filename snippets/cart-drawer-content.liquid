@@ -138,7 +138,7 @@
               <li class="pl-gap__i" style="--i: {{ forloop.index }}">
                 <a class="pl-gap__pic" href="{{ pr.url }}" tabindex="-1" aria-hidden="true">
                   {%- if gk != blank -%}
-                    {%- render 'pl-photo', key: gk, n: 1, alt: '' -%}
+                    {%- render 'pl-photo', key: gk, n: 1, alt: '', size: 200 -%}
                   {%- elsif pr.featured_image -%}
                     {{ pr.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
                   {%- endif -%}

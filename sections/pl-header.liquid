@@ -200,7 +200,7 @@
           {%- for r in rr -%}
             {%- assign f = r | split: '|' -%}
             <a class="pl-search__range" href="{{ routes.collections_url }}/{{ f[1] }}{% if template.suffix == 'option-b' %}?view=option-b{% endif %}" style="--tile: {{ f[3] }}">
-              <img src="{{ f[2] | asset_url }}" alt="" loading="lazy" width="1448" height="1086">
+              <img src="{{ f[2] | asset_img_url: '400x' }}" alt="" loading="lazy" width="1448" height="1086">
               <span>{{ f[0] }}</span>
             </a>
           {%- endfor -%}

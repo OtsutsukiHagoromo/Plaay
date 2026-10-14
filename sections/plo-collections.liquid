@@ -34,7 +34,7 @@
         {%- assign photo = p[2] | strip -%}
         {%- assign tint = p[4] | strip | default: s.tile_tint -%}
         <a class="plo-cat plo-box{% if photo != blank %} plo-cat--photo{% endif %}" href="{{ routes.collections_url }}/{{ h }}" style="--tint: {{ tint }};{% if p[3] != blank %} --pos: {{ p[3] | strip }};{% endif %}">
-          {%- if photo != blank -%}<img class="plo-cat__photo" src="{{ photo | asset_url }}" alt="" loading="{% if forloop.index < 3 %}eager{% else %}lazy{% endif %}" width="1448" height="1086">{%- endif -%}
+          {%- if photo != blank -%}<img class="plo-cat__photo" src="{{ photo | asset_img_url: '600x' }}" srcset="{{ photo | asset_img_url: '400x' }} 400w, {{ photo | asset_img_url: '600x' }} 600w, {{ photo | asset_img_url: '900x' }} 900w" sizes="(min-width: 1024px) 25vw, 50vw" alt="" loading="{% if forloop.index < 3 %}eager{% else %}lazy{% endif %}" width="1448" height="1086">{%- endif -%}
           <span>
             <span class="plo-cat__n">{{ p[0] | strip }}</span>
             {%- if c.products_count > 0 -%}<small class="plo-cols__count">{{ c.products_count }} product{% if c.products_count != 1 %}s{% endif %}</small>{%- endif -%}

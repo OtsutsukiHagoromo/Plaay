@@ -166,7 +166,7 @@
         <div class="plo-gal__track" data-plo-phtrack>
           {%- for i in (1..8) -%}
             {%- assign ph = 'plo-ph-' | append: pkey | append: '-' | append: i | append: '.jpg' -%}
-            <img src="{{ ph | asset_url }}" alt="{{ product.title | escape }}, photo {{ i }}" width="800" height="1000"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %}>
+            <img src="{{ ph | asset_img_url: '600x' }}" srcset="{{ ph | asset_img_url: '400x' }} 400w, {{ ph | asset_img_url: '600x' }} 600w, {{ ph | asset_url }} 800w" sizes="(min-width: 1024px) 45vw, 100vw" alt="{{ product.title | escape }}, photo {{ i }}" width="800" height="1000"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %}>
           {%- endfor -%}
         </div>
         {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge">{{ badge_text }}</span>{%- endif -%}
@@ -175,7 +175,7 @@
         <div class="plo-gal__thumbs" data-plo-thumbrow>
           {%- for i in (1..8) -%}
             {%- assign ph = 'plo-ph-' | append: pkey | append: '-' | append: i | append: '.jpg' -%}
-            <button type="button" class="plo-gal__th{% if forloop.first %} is-on{% endif %}" data-plo-go="{{ forloop.index0 }}" aria-label="Photo {{ i }}"><img src="{{ ph | asset_url }}" alt="" loading="lazy" width="80" height="100"></button>
+            <button type="button" class="plo-gal__th{% if forloop.first %} is-on{% endif %}" data-plo-go="{{ forloop.index0 }}" aria-label="Photo {{ i }}"><img src="{{ ph | asset_img_url: '160x' }}" alt="" loading="lazy" width="80" height="100"></button>
           {%- endfor -%}
         </div>
       </div>
@@ -286,7 +286,7 @@
                 {%- capture fname -%}{%- render 'plo-flavour-name', title: f.title, strip: s.strip_words, fallback: s.flavour_fallback -%}{%- endcapture -%}
                 <a class="plo-flav__i{% if f.id == product.id %} is-on{% endif %}" href="{{ f.url }}{% if view != blank %}?view={{ view }}{% endif %}"{% if f.id == product.id %} aria-current="true"{% endif %}>
                   {%- capture fkey -%}{%- render 'plo-photo-key', handle: f.handle -%}{%- endcapture -%}{%- assign fkey = fkey | strip -%}
-                  <span class="plo-flav__pic">{%- if fkey != blank -%}{%- assign ph = 'plo-ph-' | append: fkey | append: '-1.jpg' -%}<img src="{{ ph | asset_url }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif f.featured_image -%}{{ f.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
+                  <span class="plo-flav__pic">{%- if fkey != blank -%}{%- assign ph = 'plo-ph-' | append: fkey | append: '-1.jpg' -%}<img src="{{ ph | asset_img_url: '160x' }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif f.featured_image -%}{{ f.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
                   <span class="plo-flav__n">{{ fname }}</span>
                 </a>
               {%- endfor -%}
@@ -524,7 +524,7 @@
 
   {%- if v.available -%}
     <div class="plo-sticky" data-plo-sticky>
-      <span class="plo-sticky__pic" style="--tint: {{ tint }};">{%- if pkey != blank -%}{%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}<img src="{{ ph | asset_url }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif product.featured_image -%}{{ product.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
+      <span class="plo-sticky__pic" style="--tint: {{ tint }};">{%- if pkey != blank -%}{%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}<img src="{{ ph | asset_img_url: '160x' }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif product.featured_image -%}{{ product.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
       <span class="plo-sticky__t"><b>{{ product.title }}</b><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}{% if has_sub %} · {{ plan_every | default: 'every 4 weeks' }}{% endif %}</span></span>
       <button type="button" class="plo-btn" data-plo-sticky-add>Add to bag</button>
     </div>

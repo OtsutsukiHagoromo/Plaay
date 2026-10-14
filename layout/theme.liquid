@@ -14,9 +14,6 @@
       Shopify caps resource hints at two per template, so only the origins that actually
       serve render-path assets get one. Hotjar and BugHerd hints removed with their scripts.
     {%- endcomment -%}
-    {% if template contains 'collection' or template contains 'search' %}
-      <link rel="dns-prefetch" href="https://gravity-apps.com">
-    {% endif %}
     <link
       rel="preload"
       href="{{ 'bundle.theme.css' | asset_url }}"
@@ -88,10 +85,6 @@
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
 
-    {{ 'bundle.theme.css' | asset_url | stylesheet_tag }}
-    {{ 'custom.css' | asset_url | stylesheet_tag }}
-    {{ 'plaay-ui.css' | asset_url | stylesheet_tag }}
-    {{ 'pl-shell.css' | asset_url | stylesheet_tag }}
     {%- comment -%}
       The new design ("Option B", body class pl-skin-b, assets/pl-opt.css + pl-opt.js): home,
       product, collection, all-collections, search, cart and 404 templates (and their alternates,
@@ -112,11 +105,15 @@
         endif
       endif
     -%}
+    {{ 'bundle.theme.css' | asset_url | stylesheet_tag }}
+    {{ 'custom.css' | asset_url | stylesheet_tag }}
+    {{ 'plaay-ui.css' | asset_url | stylesheet_tag }}
+    {{ 'pl-shell.css' | asset_url | stylesheet_tag }}
     {%- if plo_b -%}
       {%- assign plo_skin = 'b' -%}
       {{ 'pl-opt.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
-    {% render 'head.fonts' %}
+    {% render 'head.fonts', plo_b: plo_b %}
 
     {%- if pl_bundle != blank -%}
       {{ pl_bundle | prepend: 'bundle.' | append: '.css' | asset_url | stylesheet_tag }}
@@ -186,10 +183,16 @@
     </main>
     {% render 'cookie-banner' %}
     {%- render 'gift-js' -%}
-    {%- render 'plaay-eid-countdown-js' -%}
-    {%- render 'plaay-fd-countdown-js' -%}
-    {%- render 'plaay-summer-countdown-js' -%}
-    {%- render 'plaay-bts-countdown-js' -%}
+    {%- comment -%}
+      Sale countdown timers: only while their sale can show (the banners gate themselves the
+      same way), so ended campaigns no longer run a timer on every page.
+    {%- endcomment -%}
+    {%- if settings.eid_sale_enabled -%}{%- render 'plaay-eid-countdown-js' -%}{%- endif -%}
+    {%- liquid
+      assign cd_now = 'now' | date: '%s' | times: 1
+      assign cd_summer_end = '2026-08-01T00:00:00+04:00' | date: '%s' | times: 1
+    -%}
+    {%- if settings.summer_sale_enabled and cd_now < cd_summer_end -%}{%- render 'plaay-summer-countdown-js' -%}{%- endif -%}
     {%- render 'drawers' -%}
     {% section 'pl-footer' %}
 
@@ -201,9 +204,10 @@
     {%- if plo_skin == blank -%}
     <script defer src="{{ 'glide.static.min.js' | asset_url }}"></script>
     {%- endif -%}
-    {% if template contains 'collection' or template contains 'search' %}
-      <script defer src="https://gravity-apps.com/shopify/js/shopify/infinitescroll7349.js?v=a55687c0bba538cfea254c604eb054a4"></script>
-    {% endif %}
+    {%- comment -%}
+      Removed: the Gravity infinite-scroll script (collection/search). Every collection and
+      search template is on the new design, which has its own "Load more".
+    {%- endcomment -%}
     {%- comment -%}
       Estimated-delivery scripts (pull in jQuery 1.9, render-blocking). The Option B product
       page does not show the EDD message, so it skips them.
