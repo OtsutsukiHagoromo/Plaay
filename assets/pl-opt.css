@@ -647,7 +647,7 @@ body.pl-skin-b { background: var(--o-ground); }
 .plo-sticky__p s { display: none; }
 .plo-sticky__freq svg { right: 9px; }
 }
-.plo-sticky.is-one .plo-sticky__freq { opacity: .4; }
+.plo-sticky.is-one .plo-sticky__freq { display: none; }
 .plo-sticky--sub { row-gap: 10px; }
 /* Buy box: delivery frequency chips under the Subscribe option. */
 .plo-freq { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 0 16px 16px 44px; background: var(--pl-cream); }
