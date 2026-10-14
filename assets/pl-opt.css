@@ -1926,3 +1926,42 @@ a.plo-rtl__tile:hover { border-color: var(--pl-navy); transform: translateY(-2px
 }
 .plo-rtl__logo { overflow: hidden; }
 .plo-rtl__logo img { width: 100%; height: 100%; max-height: none; object-fit: contain; }
+
+/* ==========================================================================
+   Wishlist page (sections/plo-wishlist.liquid; cards built by pl-opt.js initWishlist) and
+   404 page (sections/plo-404.liquid). Heroes reuse the Contact page (.plo-cnt__*).
+   ========================================================================== */
+.plo-wl__body { padding-top: 24px; }
+.plo-wl__card { position: relative; transition: opacity .2s ease, transform .2s ease; }
+.plo-wl__card.is-out { opacity: 0; transform: scale(.96); }
+.plo-wl__x { position: absolute; top: 8px; right: 8px; z-index: 2; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; padding: 0; border: 0; border-radius: 50%; background: #fff; color: var(--pl-navy); cursor: pointer; box-shadow: 0 1px 4px rgba(8, 29, 72, .12); }
+.plo-wl__x:hover { background: var(--pl-navy); color: #fff; }
+.plo-wl__loading { display: flex; justify-content: center; gap: 8px; padding: 48px 0; }
+.plo-wl__loading[hidden] { display: none; }
+.plo-wl__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--pl-navy); opacity: .25; animation: ploDot 1s ease-in-out infinite; }
+.plo-wl__dot:nth-child(2) { animation-delay: .15s; }
+.plo-wl__dot:nth-child(3) { animation-delay: .3s; }
+@keyframes ploDot { 50% { opacity: 1; transform: translateY(-4px); } }
+.plo-wl__empty { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 40px 22px; border-radius: 24px; background: #F6F1EA; text-align: center; }
+.plo-wl__empty[hidden] { display: none; }
+.plo-wl__empty > i { display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 50%; background: #F8A7D6; }
+.plo-wl__empty h2 { margin: 6px 0 0; font-size: 26px; font-weight: 900; letter-spacing: -.02em; }
+.plo-wl__empty p { margin: 0 0 8px; max-width: 36ch; font-size: 15px; line-height: 1.5; color: var(--pl-mute); }
+.plo-wl__more { padding-top: var(--o-gap); padding-bottom: var(--o-gap); }
+.plo-404__box { position: relative; overflow: hidden; padding-top: 36px; padding-bottom: 32px; }
+.plo-404__big { font-size: 96px; font-weight: 900; line-height: .85; letter-spacing: -.05em; color: var(--pl-navy); }
+.plo-404__search { margin-top: 10px; }
+.plo-404__btns { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; margin-top: 6px; }
+.plo-404__btns .plo-btn { height: 48px; padding: 0 22px; gap: 8px; font-size: 15px; border: 0; }
+.plo-404__home { font-size: 15px; font-weight: 700; color: var(--pl-navy); text-decoration: underline; text-underline-offset: 3px; }
+.plo-404__more { padding-top: 40px; padding-bottom: var(--o-gap); }
+@media (min-width: 1024px) {
+  .plo-wl__body { padding-top: 32px; }
+  .plo-wl__x { top: 12px; right: 12px; width: 36px; height: 36px; }
+  .plo-wl__empty { padding: 64px 40px; border-radius: 28px; }
+  .plo-wl__empty h2 { font-size: 34px; }
+  .plo-404__box { padding-top: 64px; padding-bottom: 56px; }
+  .plo-404__big { font-size: 180px; }
+  .plo-404__more { padding-top: 64px; }
+}
+@media (prefers-reduced-motion: reduce) { .plo-wl__dot { animation: none; opacity: .5; } }

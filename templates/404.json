@@ -1,24 +1,17 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "main-404",
+      "type": "plo-404",
       "settings": {
-        "image": "shopify://shop_images/Screenshot_2023-02-01_at_16.21_1_2_1.png",
-        "title": "Oops..",
-        "copy": "We can't seem to find the page you were looking for",
-        "background_color": "#ffffff",
-        "menu_title": "Get Back Into The Action",
-        "menu": "404-menu",
-        "menu_background_color": "#f6f5f3"
+        "heading": "This Page Wandered Off",
+        "text": "Probably went looking for a snack. Search below or jump back into the good stuff.",
+        "tint": "#FFB600",
+        "search_placeholder": "Search truffles, bars, slabs",
+        "btn_label": "Shop all",
+        "btn_url": "/collections/shop-all",
+        "tiles_heading": "Get Back Into the Good Stuff",
+        "tile_tint": "#FED8B4",
+        "tiles": "Slabs|/collections/new-chocolate-slabs|plo-cat-slabs.jpg|92% 50%\nTruffles|/collections/chocolate-truffles|plo-cat-truffles.jpg|95% 50%\nBars|/collections/chocolate-bars|plo-cat-bars.jpg|80% 50%\nVariety|/collections/variety-packs|plo-cat-packs.jpg|95% 50%"
       }
     }
   },

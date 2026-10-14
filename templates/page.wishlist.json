@@ -1,46 +1,28 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "blocks_V6PbFJ": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_900bb11_Czxh9j": {
-          "type": "ai_gen_block_900bb11",
-          "settings": {
-            "spacing_desktop": 70,
-            "spacing_mobile": 60,
-            "background_color": "#ffffff"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_900bb11_Czxh9j"
-      ],
-      "name": "Spacer",
-      "settings": {}
-    },
-    "plaay_wishlist": {
-      "type": "plaay-wishlist-page",
+    "main": {
+      "type": "plo-wishlist",
       "settings": {
-        "bg_color": "#f4f1ec",
+        "eyebrow": "Saved",
         "heading": "My Wishlist",
-        "empty_text": "Your wishlist is empty. Start adding your favourites!",
-        "empty_cta_url": "/collections/all",
-        "empty_cta_text": "Shop All"
+        "intro": "Your saved favourites, all in one place.",
+        "tint": "#F8A7D6",
+        "empty_heading": "Nothing Saved Yet",
+        "empty_text": "Tap the heart on any product to save it here for later.",
+        "empty_label": "Shop all",
+        "empty_url": "/collections/shop-all",
+        "more_heading": "Our",
+        "more_heading_light": "Bestsellers",
+        "products": [
+          "triple-chocolate-truffle",
+          "peanut-butter-truffle",
+          "pistachio-chocolate-bar-x-12",
+          "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g"
+        ]
       }
     }
   },
   "order": [
-    "blocks_V6PbFJ",
-    "plaay_wishlist"
+    "main"
   ]
 }

@@ -708,7 +708,103 @@
     if (q) q.addEventListener('input', apply);
   }
 
+  /* Wishlist page: product handles from localStorage "plaay_wishlist" (written by the product
+     page heart), each fetched as /products/{handle}.js and drawn as a card v3 with a remove
+     button. "+" is the sitewide quick add ([data-plo-quick]). */
+  function initWishlist(root) {
+    var KEY = 'plaay_wishlist';
+    var grid = root.querySelector('[data-plo-wl-grid]');
+    var empty = root.querySelector('[data-plo-wl-empty]');
+    var loading = root.querySelector('[data-plo-wl-loading]');
+    var count = root.querySelector('[data-plo-wl-count]');
+    var intro = count ? count.textContent : '';
+    var read = function () { try { return JSON.parse(localStorage.getItem(KEY) || '[]') || []; } catch (e) { return []; } };
+    var write = function (l) {
+      try { localStorage.setItem(KEY, JSON.stringify(l)); } catch (e) {}
+      window.dispatchEvent(new CustomEvent('plaay:wishlist:change'));
+    };
+    var esc = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+    var aed = function (f) { var w = Math.floor(f / 100), r = f % 100; return 'AED ' + w + (r ? '.' + (r < 10 ? '0' : '') + r : ''); };
+    var split = function (title) {
+      var m = title.match(/^(.*?)\s+(\d+)\s*[xX×]\s*(\d+)\s*g$/);
+      if (m) return [m[1], m[2] + ' × ' + m[3] + 'g'];
+      m = title.match(/^(.*?)\s+[xX]\s*(\d+)$/);
+      if (m) return [m[1], m[2] + ' pack'];
+      return [title, ''];
+    };
+    var card = function (p) {
+      var v = null;
+      p.variants.forEach(function (x) { if (!v && x.available && x.title.replace(/\s/g, '').toLowerCase() === '10x60g') v = x; });
+      p.variants.forEach(function (x) { if (!v && x.available) v = x; });
+      v = v || p.variants[0];
+      var ns = split(p.title);
+      var size = ns[1] || (v.title !== 'Default Title' ? v.title.replace(/ [xX] /, ' × ').replace(/G$/, 'g') : '');
+      var img = p.featured_image ? p.featured_image.replace(/^\/\//, 'https://') : '';
+      if (img) img += (img.indexOf('?') > -1 ? '&' : '?') + 'width=600';
+      var url = '/products/' + p.handle;
+      return '<article class="plo-card plo-c3 plo-wl__card" data-handle="' + esc(p.handle) + '">' +
+        '<a class="plo-card__img" href="' + url + '" tabindex="-1" aria-hidden="true">' +
+          (img ? '<img src="' + esc(img) + '" alt="' + esc(p.title) + '" loading="lazy" width="600" height="600">' : '') +
+        '</a>' +
+        '<button type="button" class="plo-wl__x" data-plo-wl-x="' + esc(p.handle) + '" aria-label="Remove ' + esc(p.title) + ' from wishlist">' +
+          '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+        '</button>' +
+        '<div class="plo-card__body">' +
+          '<h3 class="plo-card__name"><a href="' + url + '">' + esc(ns[0]) + '</a></h3>' +
+          '<div class="plo-card__detail">' + (size ? '<span>' + esc(size) + '</span>' : '') + '</div>' +
+          '<div class="plo-card__foot">' +
+            '<div class="plo-card__prices"><span class="plo-card__price"><span>' + aed(v.price) + '</span></span>' +
+              (v.compare_at_price > v.price ? '<s class="plo-card__was">' + aed(v.compare_at_price) + '</s>' : '') + '</div>' +
+            (v.available
+              ? '<button type="button" class="plo-add plo-c3__add" data-plo-quick="' + v.id + '" aria-label="Add ' + esc(p.title) + ' to bag"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'
+              : '<span class="plo-card__soldout">Sold out</span>') +
+          '</div>' +
+        '</div>' +
+      '</article>';
+    };
+    var setCount = function (n) {
+      if (!count) return;
+      count.textContent = n ? n + (n === 1 ? ' saved favourite' : ' saved favourites') + ', ready when you are.' : intro;
+    };
+    var render = function () {
+      var list = read();
+      if (!list.length) {
+        grid.innerHTML = '';
+        loading.hidden = true;
+        empty.hidden = false;
+        setCount(0);
+        return;
+      }
+      empty.hidden = true;
+      Promise.all(list.map(function (h) {
+        return fetch('/products/' + encodeURIComponent(h) + '.js').then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+      })).then(function (ps) {
+        ps = ps.filter(Boolean);
+        loading.hidden = true;
+        grid.innerHTML = ps.map(card).join('');
+        empty.hidden = ps.length > 0;
+        setCount(ps.length);
+      });
+    };
+    grid.addEventListener('click', function (e) {
+      var x = e.target.closest('[data-plo-wl-x]');
+      if (!x) return;
+      var h = x.getAttribute('data-plo-wl-x');
+      var c = x.closest('.plo-wl__card');
+      if (c) c.classList.add('is-out');
+      setTimeout(function () {
+        write(read().filter(function (k) { return k !== h; }));
+        if (c) c.remove();
+        var n = grid.children.length;
+        setCount(n);
+        if (!n) empty.hidden = false;
+      }, 220);
+    });
+    render();
+  }
+
   function init() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-wl]'), initWishlist);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-faqp]'), initFaqPage);
     initReelBand();
     initMore();

@@ -1,0 +1,65 @@
+{%- comment -%}
+  Option B 404 page (templates/404.json). A rounded hero with a big "404", a friendly line,
+  a search box (same pill as the FAQ page) and two buttons, then the home page category
+  tiles (.plo-cat) so visitors can get straight back to shopping.
+  Tiles: "Title|url|photo asset|photo position" per line.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<div class="pl plo plo-404">
+  <header class="plo-cnt__hero" style="--tint: {{ s.tint }};">
+    <div class="plo-wrap">
+      <div class="plo-cnt__box plo-404__box">
+        <span class="plo-404__big" aria-hidden="true">404</span>
+        <h1 class="plo-cnt__t">{{ s.heading }}</h1>
+        {%- if s.text != blank -%}<p class="plo-cnt__p">{{ s.text }}</p>{%- endif -%}
+        <form action="{{ routes.search_url }}" method="get" role="search" class="plo-faqp__search plo-404__search">
+          {%- render 'pl-icon', name: 'search', size: 18, stroke: 2.4 -%}
+          <label class="plo-faqp__sr" for="Plo404Q">Search Plaay</label>
+          <input id="Plo404Q" type="search" name="q" placeholder="{{ s.search_placeholder | escape }}" autocomplete="off">
+          <input type="hidden" name="type" value="product">
+        </form>
+        <div class="plo-404__btns">
+          <a class="plo-btn plo-btn--navy" href="{{ s.btn_url | default: '/collections/shop-all' }}">{{ s.btn_label }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.6 %}</a>
+          <a class="plo-404__home" href="{{ routes.root_url }}">Back to home</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {%- if s.tiles != blank -%}
+    <div class="plo-wrap plo-404__more">
+      <h2 class="plo-shp__h">{{ s.tiles_heading }}</h2>
+      <div class="plo-cats">
+        {%- assign rows = s.tiles | newline_to_br | split: '<br />' -%}
+        {%- for row in rows -%}
+          {%- assign p = row | strip | split: '|' -%}
+          {%- if p.size < 2 -%}{%- continue -%}{%- endif -%}
+          {%- assign photo = p[2] | strip -%}
+          <a class="plo-cat plo-box{% if photo != blank %} plo-cat--photo{% endif %}" href="{{ p[1] | strip }}" style="--tint: {{ s.tile_tint }};{% if p[3] != blank %} --pos: {{ p[3] | strip }};{% endif %}">
+            {%- if photo != blank -%}<img class="plo-cat__photo" src="{{ photo | asset_url }}" alt="" loading="lazy" width="1448" height="1086">{%- endif -%}
+            <span><span class="plo-cat__n">{{ p[0] | strip }}</span></span>
+          </a>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Preview: 404 page",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "This Page Wandered Off" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Probably went looking for a snack. Search below or jump back into the good stuff." },
+    { "type": "color", "id": "tint", "label": "Hero colour", "default": "#FFB600" },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search truffles, bars, slabs" },
+    { "type": "text", "id": "btn_label", "label": "Button label", "default": "Shop all" },
+    { "type": "url", "id": "btn_url", "label": "Button link" },
+    { "type": "text", "id": "tiles_heading", "label": "Tiles heading", "default": "Get Back Into the Good Stuff" },
+    { "type": "color", "id": "tile_tint", "label": "Tile colour", "default": "#FED8B4" },
+    { "type": "textarea", "id": "tiles", "label": "Tiles (title|url|photo asset|photo position per line)", "default": "Slabs|/collections/new-chocolate-slabs|plo-cat-slabs.jpg|92% 50%\nTruffles|/collections/chocolate-truffles|plo-cat-truffles.jpg|95% 50%\nBars|/collections/chocolate-bars|plo-cat-bars.jpg|80% 50%\nVariety|/collections/variety-packs|plo-cat-packs.jpg|95% 50%" }
+  ],
+  "presets": [{ "name": "Preview: 404 page" }]
+}
+{% endschema %}
