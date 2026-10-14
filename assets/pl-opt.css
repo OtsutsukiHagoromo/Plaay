@@ -1833,3 +1833,43 @@ a.plo-cnt__way:hover b { color: var(--pl-purple); }
   .plo-ret__contact h2 { font-size: 34px; }
   .plo-ret__ways { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; }
 }
+
+/* ==========================================================================
+   Terms / policies page (sections/plo-terms.liquid). Hero from the Contact page (.plo-cnt__*).
+   ========================================================================== */
+.plo-terms__body { display: grid; gap: 20px; padding-top: 20px; }
+.plo-terms__k { display: none; }
+.plo-terms__nav ul { display: flex; gap: 22px; overflow-x: auto; scrollbar-width: none; margin: 0; padding: 0; list-style: none; border-bottom: 1px solid rgba(8, 29, 72, .1); }
+.plo-terms__nav ul::-webkit-scrollbar { display: none; }
+.plo-terms__nav a { display: block; padding: 8px 0 10px; font-size: 15px; font-weight: 700; white-space: nowrap; color: var(--pl-mute); text-decoration: none; }
+.plo-terms__nav a:hover { color: var(--pl-navy); }
+.plo-terms__docs { display: grid; gap: 16px; }
+.plo-terms__doc { scroll-margin-top: 120px; padding: 24px 20px; border: 1px solid rgba(8, 29, 72, .12); border-radius: 24px; background: #fff; }
+.plo-terms__doc h2 { margin: 0 0 14px; font-size: 26px; font-weight: 900; line-height: 1.05; letter-spacing: -.02em; }
+.plo-terms__rte { font-size: 15px; line-height: 1.7; color: var(--pl-navy); }
+.plo-terms__rte p { margin: 0 0 12px; }
+.plo-terms__rte p:empty { display: none; }
+.plo-terms__rte p:last-child { margin-bottom: 0; }
+.plo-terms__rte strong { font-weight: 800; }
+.plo-terms__rte a { color: var(--pl-navy); text-decoration: underline; text-underline-offset: 3px; }
+.plo-terms__more { padding-top: 40px; padding-bottom: var(--o-gap); }
+.plo-terms__links { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.plo-terms__links a { display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 100%; padding: 18px; border-radius: 20px; background: #F6F1EA; color: var(--pl-navy); font-size: 15px; font-weight: 800; line-height: 1.2; text-decoration: none; }
+.plo-terms__links a svg { flex: 0 0 auto; transition: transform .2s ease; }
+.plo-terms__links a:hover { background: #FED8B4; }
+.plo-terms__links a:hover svg { transform: translateX(3px); }
+@media (min-width: 1024px) {
+  .plo-terms__body { grid-template-columns: 240px minmax(0, 1fr); gap: 56px; padding-top: 32px; }
+  .plo-terms__nav { position: sticky; top: 120px; align-self: start; }
+  .plo-terms__k { display: block; margin-bottom: 10px; font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--pl-purple); }
+  .plo-terms__nav ul { flex-direction: column; gap: 2px; border: 0; }
+  .plo-terms__nav a { padding: 10px 14px; border-radius: 12px; font-size: 16px; white-space: normal; }
+  .plo-terms__nav a:hover { background: #F6F1EA; }
+  .plo-terms__docs { gap: 24px; }
+  .plo-terms__doc { padding: 40px 48px; border-radius: 28px; }
+  .plo-terms__doc h2 { margin-bottom: 18px; font-size: 34px; }
+  .plo-terms__rte { max-width: 72ch; font-size: 16px; }
+  .plo-terms__more { padding-top: 64px; }
+  .plo-terms__links { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .plo-terms__links a { padding: 24px; border-radius: 24px; font-size: 17px; }
+}
