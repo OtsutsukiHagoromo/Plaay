@@ -177,6 +177,10 @@
     render 'plo-photo-key', handle: product.handle
   endcapture
   assign pkey = pkey | strip
+  capture factkey
+    render 'plo-photo-key', handle: product.handle, for: 'facts'
+  endcapture
+  assign factkey = factkey | strip
 -%}
 <div class="pl plo plo-pdp" data-plo-pdp data-view="{{ view }}" data-pct="{{ sub_pct }}" data-plans="{%- render 'plo-vplans', variant: v, freq_ids: freq_ids, fallback: plan_id -%}" data-freq="{{ freq_def }}">
   <div class="plo-pdp__cols">
@@ -472,14 +476,14 @@
           echo product.metafields.custom.shipping_policy | metafield_tag
         endcapture
         assign d_nutrition = d_nutrition | strip
-        if d_nutrition == blank and pkey != blank
+        if d_nutrition == blank and factkey != blank
           capture d_nutrition
-            render 'plo-photo-facts', key: pkey, want: 'nutrition'
+            render 'plo-photo-facts', key: factkey, want: 'nutrition'
           endcapture
         endif
-        if d_allergens == blank and pkey != blank
+        if d_allergens == blank and factkey != blank
           capture d_allergens
-            render 'plo-photo-facts', key: pkey, want: 'allergens'
+            render 'plo-photo-facts', key: factkey, want: 'allergens'
           endcapture
           if d_allergens != blank
             assign d_allergens = '<p>' | append: d_allergens | append: '</p>'

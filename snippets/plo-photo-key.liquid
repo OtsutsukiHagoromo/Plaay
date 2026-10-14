@@ -4,7 +4,11 @@
   Usage: {%- capture pkey -%}{%- render 'plo-photo-key', handle: product.handle -%}{%- endcapture -%}
   Photo 1 is the clean pack shot used on cards and in the cart; 2–8 fill the product gallery.
   Only the preview templates read this, so live product media is untouched.
+  Launch: product photos now come from each product's own Shopify media, so the key is only
+  returned when asked for the label facts (for: 'facts', see snippets/plo-photo-facts).
+  Remove the `if` below to bring the shoot photos back.
 {%- endcomment -%}
+{%- if for == 'facts' -%}
 {%- case handle -%}
   {%- when 'plaay-70-dark-chocolate-hazelnut-bar-6-x-80g' -%}hazel
   {%- when 'plaay-70-dark-chocolate-sea-salt-bar-6-x-80g' -%}seasalt
@@ -16,3 +20,4 @@
   {%- when 'triple-chocolate-truffle' -%}triple
   {%- when 'peanut-butter-truffle' -%}pb
 {%- endcase -%}
+{%- endif -%}
