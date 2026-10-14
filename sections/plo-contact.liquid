@@ -1,0 +1,139 @@
+{%- comment -%}
+  Option B Contact page (templates/page.contact.json, /pages/contact).
+  A rounded hero, then the ways to reach us (email, call / WhatsApp, hours) beside the
+  message form (Shopify contact form: name, email, phone, topic, message). After sending, the
+  form is replaced by a thank-you note. A strip at the end points to the FAQ page.
+  Any text in the page's own content (Shopify admin) shows under the hero.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign phone_digits = s.phone | remove: ' ' | remove: '-' | remove: '+' | remove: '(' | remove: ')'
+  assign topics = s.topics | newline_to_br | split: '<br />'
+-%}
+<div class="pl plo plo-cnt">
+  <header class="plo-cnt__hero" style="--tint: {{ s.tint }};">
+    <div class="plo-wrap">
+      <div class="plo-cnt__box">
+        {%- if s.eyebrow != blank -%}<span class="plo-cnt__tag">{{ s.eyebrow }}</span>{%- endif -%}
+        <h1 class="plo-cnt__t">{{ s.heading | default: page.title }}</h1>
+        {%- if s.intro != blank -%}<p class="plo-cnt__p">{{ s.intro }}</p>{%- endif -%}
+      </div>
+    </div>
+  </header>
+
+  <div class="plo-wrap plo-cnt__body">
+    {%- if page.content != blank -%}<div class="plo-cnt__content">{{ page.content }}</div>{%- endif -%}
+    <div class="plo-cnt__grid">
+      <ul class="plo-cnt__ways">
+        {%- if s.email != blank -%}
+          <li>
+            <a class="plo-cnt__way" href="mailto:{{ s.email }}" style="--c: #FFB600;">
+              <i aria-hidden="true">{%- render 'pl-icon', name: 'mail', size: 20, stroke: 2.2 -%}</i>
+              <span><small>Email us</small><b>{{ s.email }}</b></span>
+            </a>
+          </li>
+        {%- endif -%}
+        {%- if s.phone != blank -%}
+          <li>
+            <div class="plo-cnt__way" style="--c: #8DF0DE;">
+              <i aria-hidden="true">{%- render 'pl-icon', name: 'phone', size: 20, stroke: 2.2 -%}</i>
+              <span><small>Call or WhatsApp</small><b>{{ s.phone }}</b>
+                <em class="plo-cnt__links"><a href="tel:+{{ phone_digits }}">Call</a><a href="https://wa.me/{{ phone_digits }}" target="_blank" rel="noopener">WhatsApp</a></em>
+              </span>
+            </div>
+          </li>
+        {%- endif -%}
+        {%- if s.hours != blank -%}
+          <li>
+            <div class="plo-cnt__way" style="--c: #F8A7D6;">
+              <i aria-hidden="true">{%- render 'pl-icon', name: 'clock', size: 20, stroke: 2.2 -%}</i>
+              <span><small>Support hours</small><b>{{ s.hours }}</b></span>
+            </div>
+          </li>
+        {%- endif -%}
+      </ul>
+
+      <div class="plo-cnt__form">
+        {%- form 'contact', id: 'PloContactForm' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="plo-cnt__done" role="status">
+              <i aria-hidden="true">{%- render 'pl-icon', name: 'check', size: 26, stroke: 2.8 -%}</i>
+              <h2>{{ s.done_heading }}</h2>
+              <p>{{ s.done_text }}</p>
+              <a class="plo-btn" href="{{ routes.collections_url }}/shop-all">Keep shopping</a>
+            </div>
+          {%- else -%}
+            <h2 class="plo-cnt__ft">{{ s.form_heading }}</h2>
+            {%- if s.form_text != blank -%}<p class="plo-cnt__fp">{{ s.form_text }}</p>{%- endif -%}
+            {%- if form.errors -%}
+              <div class="plo-cnt__err" role="alert">{{ form.errors | default_errors }}</div>
+            {%- endif -%}
+            <div class="plo-cnt__row">
+              <label class="plo-cnt__f">
+                <span>Name</span>
+                <input type="text" name="contact[name]" value="{{ form.name }}" autocomplete="name" required>
+              </label>
+              <label class="plo-cnt__f">
+                <span>Email</span>
+                <input type="email" name="contact[email]" value="{{ form.email }}" autocomplete="email" required>
+              </label>
+            </div>
+            <div class="plo-cnt__row">
+              <label class="plo-cnt__f">
+                <span>Phone <em>(optional)</em></span>
+                <input type="tel" name="contact[phone]" value="{{ form.phone }}" autocomplete="tel">
+              </label>
+              {%- if s.topics != blank -%}
+                <label class="plo-cnt__f plo-cnt__f--sel">
+                  <span>Topic</span>
+                  <select name="contact[topic]">
+                    {%- for t in topics -%}{%- assign tt = t | strip -%}{%- if tt != blank -%}<option value="{{ tt | escape }}">{{ tt }}</option>{%- endif -%}{%- endfor -%}
+                  </select>
+                  {%- render 'pl-icon', name: 'chev-down', size: 16, stroke: 2.4 -%}
+                </label>
+              {%- endif -%}
+            </div>
+            <label class="plo-cnt__f">
+              <span>Message</span>
+              <textarea name="contact[body]" rows="6" required>{{ form.body }}</textarea>
+            </label>
+            <button type="submit" class="plo-btn plo-btn--navy plo-cnt__send">{{ s.send_label }} {% render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.6 %}</button>
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </div>
+
+    {%- if s.faq_heading != blank -%}
+      <a class="plo-cnt__faq" href="{{ s.faq_url | default: '/pages/faqs' }}">
+        <span><b>{{ s.faq_heading }}</b>{%- if s.faq_text != blank -%}<small>{{ s.faq_text }}</small>{%- endif -%}</span>
+        <i aria-hidden="true">{%- render 'pl-icon', name: 'arrow-right', size: 18, stroke: 2.6 -%}</i>
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: contact page",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Contact" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Got Questions? We’ve Got Chocolate!" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "We get it: 100% clean and indulgent sounds too good to be true. But it’s real, and we’re here to talk all about it." },
+    { "type": "color", "id": "tint", "label": "Hero colour", "default": "#FED8B4" },
+    { "type": "text", "id": "email", "label": "Email", "default": "hello@shopplaay.com" },
+    { "type": "text", "id": "phone", "label": "Phone / WhatsApp (with country code)", "default": "+971 56 996 9522" },
+    { "type": "text", "id": "hours", "label": "Support hours", "default": "Mon to Sat, 9 AM to 5 PM" },
+    { "type": "text", "id": "form_heading", "label": "Form heading", "default": "Send Us a Message" },
+    { "type": "text", "id": "form_text", "label": "Form line", "default": "Orders, delivery, ingredients, gifting or collabs: we’ll point you in the right direction." },
+    { "type": "textarea", "id": "topics", "label": "Topics (one per line)", "default": "Order help\nDelivery\nProducts and ingredients\nSubscriptions\nGifting and corporate orders\nCollabs and wholesale\nSomething else" },
+    { "type": "text", "id": "send_label", "label": "Send button", "default": "Send message" },
+    { "type": "text", "id": "done_heading", "label": "Thank-you heading", "default": "Message Sent!" },
+    { "type": "text", "id": "done_text", "label": "Thank-you line", "default": "Thanks for reaching out. We’ll get back to you soon, Monday to Saturday." },
+    { "type": "text", "id": "faq_heading", "label": "FAQ strip heading", "default": "Looking for a Quick Answer?" },
+    { "type": "text", "id": "faq_text", "label": "FAQ strip line", "default": "Delivery, storage, payments and more in our FAQ." },
+    { "type": "url", "id": "faq_url", "label": "FAQ link" }
+  ],
+  "presets": [{ "name": "Preview: contact page" }]
+}
+{% endschema %}
