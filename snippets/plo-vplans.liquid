@@ -1,0 +1,22 @@
+{%- comment -%}
+  Product page: the subscription plan id this variant uses for each delivery frequency, comma
+  separated in the order of freq_ids (see sections/plo-product.liquid). A frequency the variant
+  has no plan for falls back to `fallback`, so the hidden selling_plan input is always valid.
+{%- endcomment -%}
+{%- liquid
+  assign out = ''
+  for fid in freq_ids
+    assign got = fallback
+    for alloc in variant.selling_plan_allocations
+      assign aid = alloc.selling_plan.id | append: ''
+      if aid == fid
+        assign got = fid
+      endif
+    endfor
+    if forloop.first == false
+      assign out = out | append: ','
+    endif
+    assign out = out | append: got
+  endfor
+  echo out
+-%}

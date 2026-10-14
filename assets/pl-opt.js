@@ -100,11 +100,35 @@
     /* Browsers (Safari, Firefox) restore the last-tapped radio on reload, which would open
        the page on a pack size other than the default and out of step with the hidden variant
        id. Put every choice back to what the page was served with. */
-    Array.prototype.forEach.call(form.querySelectorAll('[data-plo-size], [data-plo-mode]'), function (r) { r.checked = r.defaultChecked; });
+    var sticky = root.querySelector('[data-plo-sticky]');
+    var sfreq = sticky && sticky.querySelector('[data-plo-sfreq]');
+    Array.prototype.forEach.call(root.querySelectorAll('[data-plo-size], [data-plo-mode], [data-plo-freq], [data-plo-smode]'), function (r) { r.checked = r.defaultChecked; });
+    if (sfreq) Array.prototype.forEach.call(sfreq.options, function (o) { o.selected = o.defaultSelected; });
     var checked = form.querySelector('[data-plo-size]:checked');
     if (checked && variantInput) variantInput.value = checked.value;
-    if (checked && planInput && checked.getAttribute('data-plan')) planInput.value = checked.getAttribute('data-plan');
     var price = checked ? Number(checked.getAttribute('data-price')) : 0;
+
+    /* Delivery frequency: index into the plans each pack carries (data-plans, one per frequency).
+       The buy box chips and the sticky bar's select both drive it. */
+    function freq() {
+      var f = form.querySelector('[data-plo-freq]:checked');
+      return f ? Number(f.value) : Number(root.getAttribute('data-freq') || 0);
+    }
+    function syncPlan() {
+      if (!planInput) return;
+      var src = form.querySelector('[data-plo-size]:checked') || root;
+      var plans = (src.getAttribute('data-plans') || root.getAttribute('data-plans') || '').split(',');
+      if (plans[freq()]) planInput.value = plans[freq()];
+      planInput.disabled = !isSub();
+    }
+    /* Mirror the buy box into the sticky bar (mode toggle + frequency select). */
+    function syncSticky() {
+      if (!sticky) return;
+      var m = form.querySelector('[data-plo-mode]:checked');
+      Array.prototype.forEach.call(sticky.querySelectorAll('[data-plo-smode]'), function (r) { r.checked = !!m && r.value === m.value; });
+      if (sfreq) { sfreq.value = String(freq()); sfreq.disabled = !isSub(); }
+      sticky.classList.toggle('is-one', !isSub());
+    }
 
     function isSub() {
       var m = form.querySelector('[data-plo-mode]:checked');
@@ -119,7 +143,8 @@
       set('[data-plo-save]', 'save ' + aed(price - sub));
       set('[data-plo-one]', aed(price));
       set('[data-plo-cta]', aed(isSub() ? sub : price));
-      set('[data-plo-sticky-p]', aed(isSub() ? sub : price) + (isSub() ? ' · ' + (root.getAttribute('data-every') || 'every 4 weeks') : ''));
+      set('[data-plo-sticky-p]', aed(isSub() ? sub : price));
+      set('[data-plo-sticky-was]', aed(price));
       /* Pack chips: price per truffle at the price the shopper is about to pay. */
       Array.prototype.forEach.call(form.querySelectorAll('[data-plo-size][data-pcs]'), function (r) {
         var out = r.parentNode.querySelector('[data-plo-per]');
@@ -133,12 +158,13 @@
       if (e.target.matches('[data-plo-size]')) {
         variantInput.value = e.target.value;
         price = Number(e.target.getAttribute('data-price'));
-        /* Each pack carries the subscription plan it can use. */
-        if (planInput && e.target.getAttribute('data-plan')) planInput.value = e.target.getAttribute('data-plan');
       }
-      if (planInput) planInput.disabled = !isSub();
+      syncPlan();
+      syncSticky();
       paint();
     });
+    syncPlan();
+    syncSticky();
     paint();
     Array.prototype.forEach.call(form.querySelectorAll('[data-plo-q]'), function (b) {
       b.addEventListener('click', function () {
@@ -165,8 +191,16 @@
         .catch(function (err) { fail(addBtn, err); });
     });
 
-    var sticky = root.querySelector('[data-plo-sticky]');
     if (sticky) {
+      /* Sticky controls just flip the matching buy box input and let its change handler run. */
+      sticky.addEventListener('change', function (e) {
+        var target = null;
+        if (e.target.matches('[data-plo-smode]')) target = form.querySelector('[data-plo-mode][value="' + e.target.value + '"]');
+        if (e.target.matches('[data-plo-sfreq]')) target = form.querySelector('[data-plo-freq][value="' + e.target.value + '"]');
+        if (!target) return;
+        target.checked = true;
+        form.dispatchEvent(new Event('change', { bubbles: true }));
+      });
       sticky.querySelector('[data-plo-sticky-add]').addEventListener('click', function () {
         if (form.requestSubmit) form.requestSubmit(); else addBtn.click();
       });
