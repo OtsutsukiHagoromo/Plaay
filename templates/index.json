@@ -23,46 +23,10 @@
             "image_alt": "Taste freedom: Plaay clean chocolate",
             "btn_url": "shopify://collections/shop-all"
           }
-        },
-        "banner_offers": {
-          "type": "slide",
-          "settings": {
-            "style": "image",
-            "bg": "#FFFFFF",
-            "image": "shopify://shop_images/Plaay_offers_banner_desktop_1_1.jpg",
-            "image_alt": "Plaay offers",
-            "image_mobile": "shopify://shop_images/Plaay_offers_banner_mobile_2_1.jpg",
-            "btn_url": "shopify://collections/shop-all"
-          }
-        },
-        "banner_main": {
-          "type": "slide",
-          "settings": {
-            "style": "image",
-            "bg": "#FFFFFF",
-            "image": "shopify://shop_images/Website_Banner_Desktop_Version__jpg.jpg",
-            "image_alt": "Plaay: clean chocolate, zero refined sugar",
-            "image_mobile": "shopify://shop_images/Website_Banner_Mobile_Version_jpg.jpg",
-            "btn_url": "shopify://collections/shop-all"
-          }
-        },
-        "banner_sub": {
-          "type": "slide",
-          "settings": {
-            "style": "image",
-            "bg": "#FFFFFF",
-            "image": "shopify://shop_images/Website_Banner_Desktop_Version_030ce88d-7628-4cb2-b3b8-c83fcc8e70a1.jpg",
-            "image_alt": "Subscribe and save 15%",
-            "image_mobile": "shopify://shop_images/Website_Banner_Mobile_Version_d46bbf7d-1e91-4697-865b-ead68fad74ee.jpg",
-            "btn_url": "shopify://pages/subscribe-save"
-          }
         }
       },
       "block_order": [
-        "banner_freedom",
-        "banner_offers",
-        "banner_main",
-        "banner_sub"
+        "banner_freedom"
       ],
       "settings": {
         "promo": false,
