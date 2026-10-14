@@ -2042,3 +2042,13 @@ a.plo-rtl__tile:hover { border-color: var(--pl-navy); transform: translateY(-2px
 .plo-cols__count { font-size: 13px; }
 .plo-cols__all .plo-sub__chips { margin-bottom: 32px; }
 }
+
+/* Collection banner, "image" layout (sections/plo-collection.liquid): a finished banner with the
+   headline in the artwork, shown whole in a rounded frame. */
+.pl-skin-b .plo-hero--image { padding: 12px 0 0; background: none; }
+.plo-hero--image .plo-hero__banner { display: block; overflow: hidden; border-radius: 20px; background: #081D48; }
+.plo-hero--image .plo-hero__banner img { display: block; width: 100%; height: auto; }
+@media (min-width: 1024px) {
+  .pl-skin-b .plo-hero--image { padding-top: 20px; }
+  .plo-hero--image .plo-hero__banner { border-radius: 28px; }
+}

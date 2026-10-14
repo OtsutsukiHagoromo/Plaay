@@ -29,6 +29,7 @@
   assign b_pos = '85% 50%'
   assign b_facts = ''
   assign b_layout = ''
+  assign b_mobile = ''
   assign b_lines = s.banners | newline_to_br | split: '<br />'
   for l in b_lines
     assign f = l | strip | split: '|'
@@ -51,6 +52,11 @@
       if f[6] != blank
         assign b_layout = f[6] | strip
       endif
+      comment
+        "image": a finished banner (headline in the artwork) shown whole, in a rounded frame;
+        the 8th field is an optional mobile version of the artwork.
+      endcomment
+      assign b_mobile = f[7] | strip
     endif
   endfor
   assign min_price = collection.products | map: 'price' | sort | first
@@ -82,6 +88,20 @@
 -%}
 <div class="pl plo plo-coll">
   {%- paginate collection.products by s.per_page -%}
+    {%- if b_layout == 'image' and b_asset != blank -%}
+    <header class="plo-hero plo-hero--image{% if is_all %} plo-hero--all{% endif %}">
+      <div class="plo-wrap">
+        <h1 class="pl-vh">{{ collection.title }}</h1>
+        <picture class="plo-hero__banner">
+          {%- if b_mobile != blank -%}<source media="(max-width: 767px)" srcset="{{ b_mobile | asset_img_url: '600x' }} 600w, {{ b_mobile | asset_img_url: '900x' }} 900w, {{ b_mobile | asset_url }} 1200w" sizes="100vw">{%- endif -%}
+          <img src="{{ b_asset | asset_img_url: '1400x' }}" srcset="{{ b_asset | asset_img_url: '800x' }} 800w, {{ b_asset | asset_img_url: '1200x' }} 1200w, {{ b_asset | asset_img_url: '1600x' }} 1600w, {{ b_asset | asset_url }} 1942w" sizes="(min-width: 1360px) 1280px, calc(100vw - 32px)" alt="{{ collection.title | escape }}" width="1942" height="809" loading="eager" fetchpriority="high">
+        </picture>
+      </div>
+      {%- if is_all -%}
+        <div class="plo-wrap plo-hero__tiles">{%- render 'pl-menu-tiles', size: 'lg' -%}</div>
+      {%- endif -%}
+    </header>
+    {%- else -%}
     <header class="plo-hero{% if has_photo %} plo-hero--photo{% endif %}{% if is_all %} plo-hero--all{% endif %}{% if b_layout == 'art' and has_photo %} plo-hero--art{% endif %}" style="--tint: {{ b_tint }}; --ink: {{ b_ink }}; --pos: {{ b_pos }};">
       <div class="plo-wrap plo-hero__in">
         <div class="plo-hero__copy">
@@ -123,6 +143,7 @@
         <div class="plo-wrap plo-hero__tiles">{%- render 'pl-menu-tiles', size: 'lg' -%}</div>
       {%- endif -%}
     </header>
+    {%- endif -%}
 
     <div class="plo-wrap">
       <nav class="plo-chips" aria-label="Shop by type">

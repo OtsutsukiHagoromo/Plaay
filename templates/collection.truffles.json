@@ -21,7 +21,7 @@
         "promo_heading": "Subscribe & save 15%",
         "promo_body": "on every order, with free delivery. Skip or cancel any time.",
         "promo_btn": "How it works",
-        "banners": "chocolate-truffles|plo-banner-truffles.jpg|#00C0D8|50% 42%|sparkle:Zero refined sugar;leaf:No palm oil;heart:Prebiotic + probiotic;check:Keto friendly|#081D48|art\nchocolate-bars|plo-banner-bars.jpg|#8DF0DE|50% 42%|sparkle:Zero refined sugar;leaf:No palm oil;heart:Prebiotic + probiotic;check:Sweetened with dates|#081D48|art\nnew-chocolate-slabs|plo-banner-slabs.jpg|#F3B9E2|50% 42%|sparkle:Zero refined sugar;leaf:No palm oil;check:Real cocoa butter;heart:100% clean ingredients|#081D48|art\nvariety-packs|plo-banner-variety.jpg|#FED8B4|50% 42%|gift:Every flavour in one box;sparkle:Zero refined sugar;heart:Made for gifting|#081D48|art\nlimited-editions|plo-banner-limited.jpg|#EADCF6|50% 42%|clock:Small batches;sparkle:Zero refined sugar;heart:While they last|#081D48|art\nshop-all||#081D48||sparkle:Zero refined sugar;leaf:No palm oil;heart:100% clean ingredients|#FFFFFF",
+        "banners": "chocolate-truffles|plo-cbanner-truffles.jpg|#E30A2A||||image\nchocolate-bars|plo-cbanner-bars.jpg|#1636A0||||image\nnew-chocolate-slabs|plo-cbanner-slabs.jpg|#F2077C||||image\nvariety-packs|plo-banner-variety.jpg|#FED8B4|50% 42%|gift:Every flavour in one box;sparkle:Zero refined sugar;heart:Made for gifting|#081D48|art\nlimited-editions|plo-cbanner-limited.jpg|#081D48||||image\nshop-all|plo-cbanner-all.jpg|#FFC51C||||image",
         "all_handle": "shop-all",
         "group_all": true
       }
