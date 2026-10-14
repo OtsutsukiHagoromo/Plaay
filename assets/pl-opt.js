@@ -670,7 +670,46 @@
     Array.prototype.forEach.call(vids, function (v) { io.observe(v); });
   }
 
+  /* FAQ page: topic tabs and the search box filter the questions in place. A search opens
+     the matching answers; empty groups hide; a note shows when nothing matches. */
+  function initFaqPage(root) {
+    var q = root.querySelector('[data-plo-faqp-q]');
+    var tabs = root.querySelectorAll('[data-plo-faqp-cat]');
+    var groups = root.querySelectorAll('[data-plo-faqp-group]');
+    var none = root.querySelector('[data-plo-faqp-none]');
+    var cat = '';
+    var apply = function () {
+      var term = q ? q.value.trim().toLowerCase() : '';
+      var shown = 0;
+      Array.prototype.forEach.call(groups, function (g) {
+        var n = 0;
+        var inCat = !cat || g.getAttribute('data-plo-faqp-group') === cat;
+        Array.prototype.forEach.call(g.querySelectorAll('.plo-pfaq__i'), function (d) {
+          var hit = inCat && (!term || d.textContent.toLowerCase().indexOf(term) > -1);
+          d.hidden = !hit;
+          if (term) d.open = hit;
+          if (hit) n++;
+        });
+        g.hidden = n === 0;
+        shown += n;
+      });
+      if (none) none.hidden = shown > 0;
+    };
+    Array.prototype.forEach.call(tabs, function (t) {
+      t.addEventListener('click', function () {
+        cat = t.getAttribute('data-plo-faqp-cat');
+        Array.prototype.forEach.call(tabs, function (x) {
+          x.classList.toggle('is-on', x === t);
+          x.setAttribute('aria-selected', x === t ? 'true' : 'false');
+        });
+        apply();
+      });
+    });
+    if (q) q.addEventListener('input', apply);
+  }
+
   function init() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-faqp]'), initFaqPage);
     initReelBand();
     initMore();
     initFades();

@@ -1,0 +1,104 @@
+{%- comment -%}
+  Option B FAQ page (templates/page.faq.json, /pages/faqs).
+  A rounded hero with the heading and a search box, text tabs for the categories, then the
+  questions grouped by category (same accordion as the product page FAQ). Desktop: a "Still
+  have questions?" card sits beside the list; mobile: it follows the list.
+  Search and tabs filter in place (assets/pl-opt.js initFaqPage). Categories come from the
+  questions' "Category" field, in the order they first appear; blank = "General".
+  Any text in the page's own content (Shopify admin) shows under the questions.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign cats = ''
+  for block in section.blocks
+    assign c = block.settings.category | strip | default: 'General'
+    assign key = '|' | append: c | append: '|'
+    unless cats contains key
+      assign cats = cats | append: key
+    endunless
+  endfor
+  assign cat_len = cats.size | minus: 2
+  assign cat_list = cats | slice: 1, cat_len | split: '||'
+-%}
+<div class="pl plo plo-faqp" data-plo-faqp>
+  <header class="plo-faqp__hero" style="--tint: {{ s.tint }};">
+    <div class="plo-wrap">
+      <div class="plo-faqp__box">
+        {%- if s.eyebrow != blank -%}<span class="plo-faqp__tag">{{ s.eyebrow }}</span>{%- endif -%}
+        <h1 class="plo-faqp__t">{{ s.heading }}</h1>
+        {%- if s.intro != blank -%}<p class="plo-faqp__p">{{ s.intro }}</p>{%- endif -%}
+        <label class="plo-faqp__search">
+          {%- render 'pl-icon', name: 'search', size: 18, stroke: 2.4 -%}
+          <span class="plo-faqp__sr">Search questions</span>
+          <input type="search" placeholder="{{ s.search_placeholder | escape }}" autocomplete="off" data-plo-faqp-q>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <div class="plo-wrap plo-faqp__body">
+    <div class="plo-chips plo-faqp__chips" role="tablist" aria-label="Topics">
+      <button type="button" role="tab" class="is-on" aria-selected="true" data-plo-faqp-cat="">All</button>
+      {%- for c in cat_list -%}<button type="button" role="tab" aria-selected="false" data-plo-faqp-cat="{{ c | handleize }}">{{ c }}</button>{%- endfor -%}
+    </div>
+
+    <div class="plo-faqp__grid">
+      <div class="plo-faqp__list">
+        {%- for c in cat_list -%}
+          <section class="plo-faqp__group" data-plo-faqp-group="{{ c | handleize }}">
+            <h2 class="plo-faqp__h">{{ c }}</h2>
+            <div class="plo-pfaq__list">
+              {%- for block in section.blocks -%}
+                {%- assign bc = block.settings.category | strip | default: 'General' -%}
+                {%- if bc != c -%}{%- continue -%}{%- endif -%}
+                <details class="plo-pfaq__i" {{ block.shopify_attributes }}>
+                  <summary><span>{{ block.settings.title }}</span><i aria-hidden="true">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</i></summary>
+                  <div class="plo-pfaq__a">{{ block.settings.answer }}</div>
+                </details>
+              {%- endfor -%}
+            </div>
+          </section>
+        {%- endfor -%}
+        <p class="plo-faqp__none" hidden data-plo-faqp-none>No questions match that. Try another word, or <a href="{{ s.contact_url | default: '/pages/contact' }}">ask us directly</a>.</p>
+        {%- if page.content != blank -%}<div class="plo-faqp__content">{{ page.content }}</div>{%- endif -%}
+      </div>
+
+      <aside class="plo-faqp__help">
+        <h2 class="plo-faqp__ht">{{ s.help_heading }}</h2>
+        {%- if s.help_text != blank -%}<p>{{ s.help_text }}</p>{%- endif -%}
+        <div class="plo-faqp__ways">
+          {%- if s.email != blank -%}<a class="plo-btn" href="mailto:{{ s.email }}">{%- render 'pl-icon', name: 'mail', size: 18, stroke: 2.2 -%}{{ s.email }}</a>{%- endif -%}
+          {%- if s.phone != blank -%}<a class="plo-btn plo-btn--sec" href="tel:{{ s.phone | remove: ' ' | remove: '-' }}">{%- render 'pl-icon', name: 'phone', size: 18, stroke: 2.2 -%}{{ s.phone }}</a>{%- endif -%}
+        </div>
+        {%- if s.contact_label != blank -%}<a class="plo-faqp__more" href="{{ s.contact_url | default: '/pages/contact' }}">{{ s.contact_label }} {% render 'pl-icon', name: 'arrow-right', size: 14, stroke: 2.4 %}</a>{%- endif -%}
+      </aside>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: FAQ page",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Help" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions, Answered" },
+    { "type": "text", "id": "intro", "label": "Intro", "default": "Everything you need to know about Plaay." },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search questions" },
+    { "type": "color", "id": "tint", "label": "Hero colour", "default": "#FFB600" },
+    { "type": "text", "id": "help_heading", "label": "Help card heading", "default": "Still Have Questions?" },
+    { "type": "textarea", "id": "help_text", "label": "Help card text", "default": "We’re here Monday to Saturday, 9 AM to 5 PM (excluding holidays)." },
+    { "type": "text", "id": "email", "label": "Email", "default": "hello@shopplaay.com" },
+    { "type": "text", "id": "phone", "label": "Phone", "default": "+971 56 996 9522" },
+    { "type": "text", "id": "contact_label", "label": "Contact link label", "default": "Contact us" },
+    { "type": "url", "id": "contact_url", "label": "Contact link" }
+  ],
+  "blocks": [
+    { "type": "faq", "name": "Question", "settings": [
+      { "type": "text", "id": "title", "label": "Question" },
+      { "type": "richtext", "id": "answer", "label": "Answer" },
+      { "type": "text", "id": "category", "label": "Category (e.g. Orders, Shipping)" } ] }
+  ],
+  "presets": [{ "name": "Preview: FAQ page" }]
+}
+{% endschema %}
