@@ -12,6 +12,18 @@
     "hero": {
       "type": "plo-banners",
       "blocks": {
+        "banner_freedom": {
+          "type": "slide",
+          "settings": {
+            "style": "image",
+            "bg": "#FFFFFF",
+            "image_asset": "plo-hero-freedom.jpg",
+            "image_mobile_asset": "plo-hero-freedom-m.jpg",
+            "image_mobile_ratio": "610 / 1006",
+            "image_alt": "Taste freedom: Plaay clean chocolate",
+            "btn_url": "shopify://collections/shop-all"
+          }
+        },
         "banner_offers": {
           "type": "slide",
           "settings": {
@@ -47,6 +59,7 @@
         }
       },
       "block_order": [
+        "banner_freedom",
         "banner_offers",
         "banner_main",
         "banner_sub"

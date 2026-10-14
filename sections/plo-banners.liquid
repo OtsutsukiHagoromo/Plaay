@@ -65,7 +65,7 @@
                 endif
                 assign mob = b.image_mobile
               -%}
-              <a class="plo-bn__full{% if mob != blank or b.image_mobile_asset != blank %} has-mob{% endif %}" href="{{ b.btn_url | default: '/collections/shop-all' }}" style="--ar: {{ w }} / {{ h }};{% if mob != blank %} --ar-m: {{ mob.width }} / {{ mob.height }};{% endif %}">
+              <a class="plo-bn__full{% if mob != blank or b.image_mobile_asset != blank %} has-mob{% endif %}" href="{{ b.btn_url | default: '/collections/shop-all' }}" style="--ar: {{ w }} / {{ h }};{% if mob != blank %} --ar-m: {{ mob.width }} / {{ mob.height }};{% elsif b.image_mobile_ratio != blank %} --ar-m: {{ b.image_mobile_ratio }};{% endif %}">
                 <picture>
                   {%- if mob != blank -%}
                     <source media="(max-width: 767px)" srcset="{{ mob | image_url: width: 480 }} 480w, {{ mob | image_url: width: 750 }} 750w, {{ mob | image_url: width: 1080 }} 1080w" sizes="100vw" width="{{ mob.width }}" height="{{ mob.height }}">
@@ -75,7 +75,7 @@
                   {%- if b.image != blank -%}
                     <img src="{{ b.image | image_url: width: 1920 }}" srcset="{{ b.image | image_url: width: 1024 }} 1024w, {{ b.image | image_url: width: 1440 }} 1440w, {{ b.image | image_url: width: 1920 }} 1920w, {{ b.image | image_url: width: 2560 }} 2560w" sizes="100vw" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
                   {%- else -%}
-                    <img src="{{ b.image_asset | asset_url }}" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+                    <img src="{{ b.image_asset | asset_img_url: '1440x' }}" srcset="{{ b.image_asset | asset_img_url: '1024x' }} 1024w, {{ b.image_asset | asset_img_url: '1440x' }} 1440w, {{ b.image_asset | asset_url }} 1920w" sizes="100vw" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
                   {%- endif -%}
                 </picture>
               </a>
@@ -162,6 +162,7 @@
         { "type": "text", "id": "image_alt", "label": "Photo alt text" },
         { "type": "image_picker", "id": "image_mobile", "label": "Mobile banner (finished banner)" },
         { "type": "text", "id": "image_mobile_asset", "label": "Mobile banner fallback (theme asset file)" },
+        { "type": "text", "id": "image_mobile_ratio", "label": "Mobile fallback shape (width / height)", "info": "Only for the theme asset file, e.g. 610 / 1006. Reserves the space so the page does not jump." },
         { "type": "image_picker", "id": "image_2", "label": "Second photo (collage)" },
         { "type": "text", "id": "image_2_asset", "label": "Second photo fallback (theme asset file)" },
         { "type": "text", "id": "eyebrow", "label": "Label" },
