@@ -1,16 +1,18 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "main-shipping",
+      "type": "plo-shipping",
+      "settings": {
+        "eyebrow": "Delivery",
+        "heading": "Shipping & Delivery",
+        "intro": "Fresh, clean chocolate delivered across the UAE, right to your door.",
+        "tint": "#8DF0DE",
+        "steps_heading": "How It Works",
+        "faq_heading": "Shipping Questions",
+        "cta_heading": "Still Have Questions?",
+        "cta_text": "Our team is here to help. Reach out and we'll get back to you quickly.",
+        "cta_url": "/pages/contact"
+      },
       "blocks": {
         "hl_truck": {
           "type": "highlight",
@@ -23,7 +25,7 @@
         "hl_free": {
           "type": "highlight",
           "settings": {
-            "icon": "tag",
+            "icon": "gift",
             "title": "Free Shipping",
             "description": "Free delivery on orders over AED 75. Flat AED 15 fee below that."
           }
@@ -121,25 +123,10 @@
         "faq_track",
         "faq_failed",
         "faq_intl"
-      ],
-      "settings": {
-        "hero_bg": "#F9C61D",
-        "steps_bg": "#F5F3EE",
-        "eyebrow": "Delivery Information",
-        "headline": "Shipping & Delivery",
-        "subheadline": "Fresh, clean chocolate — delivered across the UAE to your door.",
-        "highlights_heading": "What to expect",
-        "steps_heading": "How it works",
-        "zones_heading": "",
-        "zones_subheading": "",
-        "zones_note": "",
-        "faq_heading": "Shipping FAQs",
-        "cta_heading": "Still have questions?",
-        "cta_text": "Our team is here to help. Reach out and we'll get back to you quickly.",
-        "cta_button_label": "Contact Us",
-        "cta_button_url": "/pages/contact"
-      }
+      ]
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

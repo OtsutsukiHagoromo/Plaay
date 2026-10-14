@@ -1,0 +1,109 @@
+{%- comment -%}
+  Option B Shipping page (templates/page.shipping.json, /pages/shipping).
+  Same building blocks as the Contact and FAQ pages: a rounded hero (.plo-cnt__box), three
+  highlight cards, numbered "How It Works" steps, the shipping questions (product page FAQ
+  accordion, .plo-pfaq__*) and a navy strip to the Contact page (.plo-cnt__faq).
+  Any text in the page's own content (Shopify admin) shows under the questions.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign highlights = section.blocks | where: 'type', 'highlight'
+  assign steps = section.blocks | where: 'type', 'step'
+  assign faqs = section.blocks | where: 'type', 'faq'
+  assign tints = '#FFB600,#8DF0DE,#F8A7D6,#FED8B4' | split: ','
+-%}
+<div class="pl plo plo-shp">
+  <header class="plo-cnt__hero" style="--tint: {{ s.tint }};">
+    <div class="plo-wrap">
+      <div class="plo-cnt__box">
+        {%- if s.eyebrow != blank -%}<span class="plo-cnt__tag">{{ s.eyebrow }}</span>{%- endif -%}
+        <h1 class="plo-cnt__t">{{ s.heading | default: page.title }}</h1>
+        {%- if s.intro != blank -%}<p class="plo-cnt__p">{{ s.intro }}</p>{%- endif -%}
+      </div>
+    </div>
+  </header>
+
+  <div class="plo-wrap plo-shp__body">
+    {%- if highlights.size > 0 -%}
+      <ul class="plo-shp__hl">
+        {%- for block in highlights -%}
+          {%- assign ti = forloop.index0 | modulo: 4 -%}
+          <li class="plo-cnt__way" style="--c: {{ tints[ti] }};" {{ block.shopify_attributes }}>
+            <i aria-hidden="true">{%- render 'pl-icon', name: block.settings.icon, size: 20, stroke: 2.2 -%}</i>
+            <span><b>{{ block.settings.title }}</b><em>{{ block.settings.description }}</em></span>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if steps.size > 0 -%}
+      <section class="plo-shp__sec">
+        <h2 class="plo-shp__h">{{ s.steps_heading }}</h2>
+        <ol class="plo-shp__steps">
+          {%- for block in steps -%}
+            <li {{ block.shopify_attributes }}>
+              <span class="plo-shp__n">{{ forloop.index }}</span>
+              <b>{{ block.settings.title }}</b>
+              <p>{{ block.settings.description }}</p>
+            </li>
+          {%- endfor -%}
+        </ol>
+      </section>
+    {%- endif -%}
+
+    {%- if faqs.size > 0 -%}
+      <section class="plo-shp__sec plo-shp__faq">
+        <h2 class="plo-shp__h">{{ s.faq_heading }}</h2>
+        <div class="plo-pfaq__list">
+          {%- for block in faqs -%}
+            <details class="plo-pfaq__i"{% if forloop.first %} open{% endif %} {{ block.shopify_attributes }}>
+              <summary><span>{{ block.settings.question }}</span><i aria-hidden="true">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.4 -%}</i></summary>
+              <div class="plo-pfaq__a">{{ block.settings.answer }}</div>
+            </details>
+          {%- endfor -%}
+        </div>
+        {%- if page.content != blank -%}<div class="plo-shp__content">{{ page.content }}</div>{%- endif -%}
+      </section>
+    {%- endif -%}
+
+    {%- if s.cta_heading != blank -%}
+      <a class="plo-cnt__faq" href="{{ s.cta_url | default: '/pages/contact' }}">
+        <span><b>{{ s.cta_heading }}</b>{%- if s.cta_text != blank -%}<small>{{ s.cta_text }}</small>{%- endif -%}</span>
+        <i aria-hidden="true">{%- render 'pl-icon', name: 'arrow-right', size: 18, stroke: 2.6 -%}</i>
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: shipping page",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Delivery" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shipping & Delivery" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "Fresh, clean chocolate delivered across the UAE, right to your door." },
+    { "type": "color", "id": "tint", "label": "Hero colour", "default": "#8DF0DE" },
+    { "type": "text", "id": "steps_heading", "label": "Steps heading", "default": "How It Works" },
+    { "type": "text", "id": "faq_heading", "label": "Questions heading", "default": "Shipping Questions" },
+    { "type": "text", "id": "cta_heading", "label": "Bottom strip heading", "default": "Still Have Questions?" },
+    { "type": "text", "id": "cta_text", "label": "Bottom strip line", "default": "Our team is here to help. Reach out and we’ll get back to you quickly." },
+    { "type": "url", "id": "cta_url", "label": "Bottom strip link" }
+  ],
+  "blocks": [
+    { "type": "highlight", "name": "Highlight", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "truck", "options": [
+        { "value": "truck", "label": "Truck" }, { "value": "gift", "label": "Gift" }, { "value": "clock", "label": "Clock" },
+        { "value": "pin", "label": "Pin" }, { "value": "check", "label": "Check" }, { "value": "sparkle", "label": "Sparkle" } ] },
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "textarea", "id": "description", "label": "Text" } ] },
+    { "type": "step", "name": "Step", "settings": [
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "textarea", "id": "description", "label": "Text" } ] },
+    { "type": "faq", "name": "Question", "settings": [
+      { "type": "text", "id": "question", "label": "Question" },
+      { "type": "richtext", "id": "answer", "label": "Answer" } ] }
+  ],
+  "presets": [{ "name": "Preview: shipping page" }]
+}
+{% endschema %}
