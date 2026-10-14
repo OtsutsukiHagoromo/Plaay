@@ -1,22 +1,17 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "pl-collection",
+      "type": "plo-collections",
       "settings": {
+        "eyebrow": "Shop",
+        "heading": "All Collections",
+        "intro": "Truffles, bars, slabs and packs. All clean, all Plaay.",
+        "tint": "#FED8B4",
+        "tile_tint": "#FED8B4",
+        "tiles": "Slabs|new-chocolate-slabs|plo-cat-slabs.jpg|92% 50%\nTruffles|chocolate-truffles|plo-cat-truffles.jpg|95% 50%\nBars|chocolate-bars|plo-cat-bars.jpg|80% 50%\nVariety Packs|variety-packs|plo-cat-packs.jpg|95% 50%\nLimited Edition|limited-editions|plo-banner-limited.jpg|80% 50%|#EADCF6",
         "collection": "shop-all",
-        "intro": "",
-        "show_type_chips": true,
-        "show_sub_card": true,
-        "per_page": 24
+        "grid_heading": "Shop",
+        "grid_heading_light": "Everything"
       }
     },
     "apps_8GntjU": {

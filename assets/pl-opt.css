@@ -1987,3 +1987,25 @@ a.plo-rtl__tile:hover { border-color: var(--pl-navy); transform: translateY(-2px
   .plo-gal--photos .plo-gal__count { right: 66px; top: 24px; }
 }
 @media (prefers-reduced-motion: reduce) { .plo-heart.is-pop { animation: none; } }
+
+/* ==========================================================================
+   All collections page (sections/plo-collections.liquid). Hero from the Contact page,
+   tiles from the home page (.plo-cat), tabs + grid from the Subscribe page.
+   ========================================================================== */
+.plo-cols__tiles { padding-top: 20px; }
+.plo-cols__cats .plo-cat:last-child:nth-child(odd) { grid-column: 1 / -1; }
+/* Soft wash of the tile colour behind the title so it reads over any photo. */
+.pl-skin-b .plo-cols__cats .plo-cat--photo::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, var(--tint) 0, color-mix(in srgb, var(--tint) 70%, transparent) 26%, transparent 52%); pointer-events: none; }
+.plo-cols__count { display: block; margin-top: 6px; font-size: 12px; font-weight: 700; color: var(--pl-navy); opacity: .7; }
+.plo-cols__all { padding-top: var(--o-gap); padding-bottom: var(--o-gap); scroll-margin-top: 90px; }
+.plo-cols__all .plo-sub__chips { margin-bottom: 24px; }
+.plo-cols__grid .plo-card[hidden] { display: none; }
+@media (min-width: 1024px) {
+  .plo-cols__tiles { padding-top: 28px; }
+  .plo-cols__cats { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+  .plo-cols__cats .plo-cat:last-child:nth-child(odd) { grid-column: auto; }
+  .pl-skin-b .plo-cols__cats .plo-cat { height: 240px; }
+  .pl-skin-b .plo-cols__cats .plo-cat__n { font-size: 22px; }
+  .plo-cols__count { font-size: 13px; }
+  .plo-cols__all .plo-sub__chips { margin-bottom: 32px; }
+}

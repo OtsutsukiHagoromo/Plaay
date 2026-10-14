@@ -99,13 +99,13 @@
     {%- assign plo_skin = '' -%}
     {%- comment -%} The Subscribe & Save page is built from the Option B sections. {%- endcomment -%}
     {%- comment -%}
-      Option B is now the default look on this theme: home, product, collection, search, cart and
-      404 templates (and their alternates, except Build your box) are the Option B layouts, and
+      Option B is now the default look on this theme: home, product, collection, all-collections, search,
+      cart and 404 templates (and their alternates, except Build your box) are the Option B layouts, and
       the pages in plo_b_pages (by template suffix: page.faq, page.contact, ...) are built from
       the same sections. ?view=option-b still works.
     {%- endcomment -%}
     {%- liquid
-      assign plo_b_names = 'index,product,collection,search,cart,404' | split: ','
+      assign plo_b_names = 'index,product,collection,list-collections,search,cart,404' | split: ','
       assign plo_b_pages = 'option-b,subscribe-save,faq,contact,shipping,returns,terms,retailers,wishlist' | split: ','
       assign plo_b = false
       if template.suffix != blank and plo_b_pages contains template.suffix

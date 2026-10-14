@@ -1,0 +1,107 @@
+{%- comment -%}
+  Option B "All collections" page (templates/list-collections.json, /collections).
+  A rounded navy hero, one big photo tile per range (with its product count), then every product
+  in the source collection as card v3 with text tabs that filter the grid by range in place
+  (same markup and script as the Subscribe & Save page: data-plo-sub / data-plo-range).
+  Tiles: "Title|collection handle|photo asset|photo position|tile colour (optional)" per line.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign src = s.collection | default: collections['shop-all']
+  if src == blank or src.products.size == 0
+    assign src = collections.all
+  endif
+  assign rows = s.tiles | newline_to_br | split: '<br />'
+-%}
+<div class="pl plo plo-cols">
+  <header class="plo-cnt__hero" style="--tint: {{ s.tint }};">
+    <div class="plo-wrap">
+      <div class="plo-cnt__box plo-cols__box">
+        {%- if s.eyebrow != blank -%}<span class="plo-cnt__tag">{{ s.eyebrow }}</span>{%- endif -%}
+        <h1 class="plo-cnt__t">{{ s.heading }}</h1>
+        {%- if s.intro != blank -%}<p class="plo-cnt__p">{{ s.intro }}</p>{%- endif -%}
+      </div>
+    </div>
+  </header>
+
+  <div class="plo-wrap plo-cols__tiles">
+    <div class="plo-cats plo-cols__cats">
+      {%- for row in rows -%}
+        {%- assign p = row | strip | split: '|' -%}
+        {%- if p.size < 2 -%}{%- continue -%}{%- endif -%}
+        {%- assign h = p[1] | strip -%}
+        {%- assign c = collections[h] -%}
+        {%- assign photo = p[2] | strip -%}
+        {%- assign tint = p[4] | strip | default: s.tile_tint -%}
+        <a class="plo-cat plo-box{% if photo != blank %} plo-cat--photo{% endif %}" href="{{ routes.collections_url }}/{{ h }}" style="--tint: {{ tint }};{% if p[3] != blank %} --pos: {{ p[3] | strip }};{% endif %}">
+          {%- if photo != blank -%}<img class="plo-cat__photo" src="{{ photo | asset_url }}" alt="" loading="{% if forloop.index < 3 %}eager{% else %}lazy{% endif %}" width="1448" height="1086">{%- endif -%}
+          <span>
+            <span class="plo-cat__n">{{ p[0] | strip }}</span>
+            {%- if c.products_count > 0 -%}<small class="plo-cols__count">{{ c.products_count }} product{% if c.products_count != 1 %}s{% endif %}</small>{%- endif -%}
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="plo-wrap plo-cols__all" id="plo-cols-all" data-plo-sub>
+    {%- render 'plo-head', bold: s.grid_heading, light: s.grid_heading_light -%}
+    <div class="plo-chips plo-sub__chips" role="tablist" aria-label="Filter by range">
+      <button type="button" role="tab" class="is-on" aria-selected="true" data-plo-range="">All</button>
+      {%- for row in rows -%}
+        {%- assign p = row | strip | split: '|' -%}
+        {%- if p.size < 2 -%}{%- continue -%}{%- endif -%}
+        {%- assign h = p[1] | strip -%}
+        {%- if collections[h].products_count > 0 -%}<button type="button" role="tab" aria-selected="false" data-plo-range="{{ h }}">{{ p[0] | strip }}</button>{%- endif -%}
+      {%- endfor -%}
+    </div>
+    <div class="plo-grid plo-cols__grid">
+      {%- comment -%} Cards run range by range (tile order), anything unmatched last. {%- endcomment -%}
+      {%- assign order = '' -%}
+      {%- for row in rows -%}{%- assign p = row | strip | split: '|' -%}{%- if p.size > 1 -%}{%- assign order = order | append: p[1] | strip | append: ',' -%}{%- endif -%}{%- endfor -%}
+      {%- assign order = order | append: 'other' | split: ',' -%}
+      {%- for pass in order -%}
+        {%- for prod in src.products limit: 100 -%}
+          {%- liquid
+            assign range = 'other'
+            for row in rows
+              assign p = row | strip | split: '|'
+              assign rh = p[1] | strip
+              if range == 'other' and rh != blank
+                for col in prod.collections
+                  if col.handle == rh
+                    assign range = rh
+                  endif
+                endfor
+              endif
+            endfor
+            if range != pass
+              continue
+            endif
+          -%}
+          {%- render 'plo-card', product: prod, range: range, eager: false, view: '' -%}
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+    <p class="plo-sub__empty" hidden data-plo-sub-empty>Nothing in this range right now.</p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: all collections",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Shop" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "All Collections" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "Truffles, bars, slabs and packs. All clean, all Plaay." },
+    { "type": "color", "id": "tint", "label": "Hero colour", "default": "#FED8B4" },
+    { "type": "color", "id": "tile_tint", "label": "Tile colour", "default": "#FED8B4" },
+    { "type": "textarea", "id": "tiles", "label": "Range tiles (title|handle|photo|position|colour)", "default": "Slabs|new-chocolate-slabs|plo-cat-slabs.jpg|92% 50%\nTruffles|chocolate-truffles|plo-cat-truffles.jpg|95% 50%\nBars|chocolate-bars|plo-cat-bars.jpg|80% 50%\nVariety Packs|variety-packs|plo-cat-packs.jpg|95% 50%\nLimited Edition|limited-editions|plo-banner-limited.jpg|80% 50%|#EADCF6" },
+    { "type": "collection", "id": "collection", "label": "Products from (blank = Shop all)" },
+    { "type": "text", "id": "grid_heading", "label": "Products heading, bold part", "default": "Shop" },
+    { "type": "text", "id": "grid_heading_light", "label": "Products heading, light part", "default": "Everything" }
+  ],
+  "presets": [{ "name": "Preview: all collections" }]
+}
+{% endschema %}
