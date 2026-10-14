@@ -93,18 +93,13 @@
     {{ 'plaay-ui.css' | asset_url | stylesheet_tag }}
     {{ 'pl-shell.css' | asset_url | stylesheet_tag }}
     {%- comment -%}
-      Redesign preview: templates with the suffix option-a / option-b (opened with ?view=option-a
-      or ?view=option-b) get the Option A / Option B skin. Nothing else loads this.
-    {%- endcomment -%}
-    {%- assign plo_skin = '' -%}
-    {%- comment -%} The Subscribe & Save page is built from the Option B sections. {%- endcomment -%}
-    {%- comment -%}
-      Option B is now the default look on this theme: home, product, collection, all-collections, search,
-      cart and 404 templates (and their alternates, except Build your box) are the Option B layouts, and
-      the pages in plo_b_pages (by template suffix: page.faq, page.contact, ...) are built from
-      the same sections. ?view=option-b still works.
+      The new design ("Option B", body class pl-skin-b, assets/pl-opt.css + pl-opt.js): home,
+      product, collection, all-collections, search, cart and 404 templates (and their alternates,
+      except Build your box / Shogun / BSS), plus the pages in plo_b_pages by template suffix
+      (page.faq, page.contact, ...). Everything else keeps the legacy look.
     {%- endcomment -%}
     {%- liquid
+      assign plo_skin = ''
       assign plo_b_names = 'index,product,collection,list-collections,search,cart,404' | split: ','
       assign plo_b_pages = 'option-b,subscribe-save,faq,contact,shipping,returns,terms,retailers,wishlist' | split: ','
       assign plo_b = false
@@ -117,9 +112,8 @@
         endif
       endif
     -%}
-    {%- if template.suffix == 'option-a' or plo_b -%}
+    {%- if plo_b -%}
       {%- assign plo_skin = 'b' -%}
-      {%- if template.suffix == 'option-a' -%}{%- assign plo_skin = 'a' -%}{%- endif -%}
       {{ 'pl-opt.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
     {% render 'head.fonts' %}

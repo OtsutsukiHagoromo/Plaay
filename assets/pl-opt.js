@@ -69,41 +69,10 @@
       });
     });
   }
-  function reload() { window.location.reload(); }
   function fail(el, err) {
     if (el) el.classList.remove('is-busy');
     window.alert(err && err.message ? err.message : 'Something went wrong. Please try again.');
   }
-
-  document.addEventListener('click', function (e) {
-    var btn = e.target.closest && e.target.closest('[data-plo-cart]');
-    if (!btn) return;
-    e.preventDefault();
-    var action = btn.getAttribute('data-plo-cart');
-    var line = btn.closest('[data-plo-line]');
-    if (line) line.classList.add('is-busy');
-    btn.classList.add('is-busy');
-    var root = window.routes || {};
-    var changeUrl = (root.cart_change_url || '/cart/change') + '.js';
-    var addUrl = (root.cart_add_url || '/cart/add') + '.js';
-    var key = line && line.getAttribute('data-key');
-    var qty = line ? Number(line.getAttribute('data-qty')) : 0;
-    var req;
-
-    if (action === 'inc') req = post(changeUrl, { id: key, quantity: qty + 1 });
-    else if (action === 'dec') req = post(changeUrl, { id: key, quantity: Math.max(0, qty - 1) });
-    else if (action === 'remove') req = post(changeUrl, { id: key, quantity: 0 });
-    else if (action === 'subscribe') {
-      req = post(changeUrl, { id: key, quantity: qty, selling_plan: Number(btn.getAttribute('data-plan')) });
-    } else if (action === 'add') {
-      req = post(addUrl, { items: [{ id: Number(btn.getAttribute('data-variant')), quantity: 1 }] });
-    }
-    if (!req) return;
-    req.then(reload).catch(function (err) {
-      if (line) line.classList.remove('is-busy');
-      fail(btn, err);
-    });
-  });
 
 
   /* ---------- product page ---------- */
@@ -362,30 +331,23 @@
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sub]'), function (el) { el.textContent = aed(Math.floor(price * (100 - pct) / 100)); });
   });
 
-  /* ---------- Subscribe & Save page: range filter + delivery frequency ---------- */
+  /* ---------- range tabs (Subscribe & Save, All collections): filter the cards in place ---------- */
   document.addEventListener('click', function (e) {
-    var t = e.target.closest && e.target.closest('[data-plo-range], [data-plo-freq]');
+    var t = e.target.closest && e.target.closest('[data-plo-range]');
     if (!t) return;
     var box = t.closest('[data-plo-sub]');
     if (!box) return;
-    if (t.hasAttribute('data-plo-range')) {
-      var r = t.getAttribute('data-plo-range'), shown = 0;
-      Array.prototype.forEach.call(box.querySelectorAll('[data-plo-range]'), function (x) { var on = x === t; x.classList.toggle('is-on', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
-      Array.prototype.forEach.call(box.querySelectorAll('.plo-card[data-range]'), function (c) {
-        var on = !r || c.getAttribute('data-range') === r;
-        c.hidden = !on;
-        if (on) shown++;
-      });
-      var empty = box.querySelector('[data-plo-sub-empty]');
-      if (empty) empty.hidden = shown > 0;
-      /* Filtering while scrolled down: bring the top of the grid back into view. */
-      if (box.getBoundingClientRect().top < 0) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      var w = t.getAttribute('data-plo-freq');
-      Array.prototype.forEach.call(box.querySelectorAll('[data-plo-freq]'), function (x) { var on = x === t; x.classList.toggle('is-on', on); x.setAttribute('aria-checked', on ? 'true' : 'false'); });
-      Array.prototype.forEach.call(box.querySelectorAll('[data-plo-plan' + w + ']'), function (b) { b.setAttribute('data-plo-plan', b.getAttribute('data-plo-plan' + w)); });
-      Array.prototype.forEach.call(box.querySelectorAll('[data-plo-freq-l]'), function (l) { l.textContent = 'every ' + w + ' weeks'; });
-    }
+    var r = t.getAttribute('data-plo-range'), shown = 0;
+    Array.prototype.forEach.call(box.querySelectorAll('[data-plo-range]'), function (x) { var on = x === t; x.classList.toggle('is-on', on); x.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    Array.prototype.forEach.call(box.querySelectorAll('.plo-card[data-range]'), function (c) {
+      var on = !r || c.getAttribute('data-range') === r;
+      c.hidden = !on;
+      if (on) shown++;
+    });
+    var empty = box.querySelector('[data-plo-sub-empty]');
+    if (empty) empty.hidden = shown > 0;
+    /* Filtering while scrolled down: bring the top of the grid back into view. */
+    if (box.getBoundingClientRect().top < 0) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
   /* ---------- product details tabs ---------- */

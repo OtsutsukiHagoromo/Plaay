@@ -1,16 +1,14 @@
 {%- comment -%}
-  Product card for the Option A / Option B preview templates.
-  Usage: {% render 'plo-card', product: product, eager: false, show_sub: false, skip_new: false, view: template.suffix, reason: '' %}
+  Product card (card v3) used by every product grid on the new design.
+  Usage: {% render 'plo-card', product: product, eager: false, view: template.suffix, reason: '' %}
   reason: optional small line above the name (why the card is suggested).
-  variant: optional variant to show/add instead of the first available one.
-  sub_mode: subscription listing - the subscribe price leads (one-time struck through) and the
-    "+" adds on a selling plan (data-plo-plan; data-plo-plan2 / data-plo-plan4 let the page's
-    2 / 4 week toggle swap it).
-  One markup, two looks: A is a white outlined box with the add button in the footer,
-  B is a lifted image tile with a sticker add button on the image. show_sub adds the
-  subscribe price under the price (off by default: listings stay one price per card). The "+" buttons carry
-  data-plo-quick (first available variant id) and are handled by assets/pl-opt.js rather than the
-  theme's <quick-add> module, which opens the live cart drawer and leaves the preview.
+  variant: optional variant to show/add instead of the default one (multi-size products open on
+    10 x 60g).
+  sub_mode: subscription listing (Subscribe & Save) - the subscribe price leads, one-time struck
+    through, and "+" adds on the 4-week plan (data-plo-plan).
+  range: collection handle the card belongs to, for the in-page range tabs (data-range).
+  "+" carries data-plo-quick (variant id) and is handled by assets/pl-opt.js (quick add, then the
+  cart drawer opens). The heart (snippets/plo-heart) saves the product to the wishlist.
 {%- endcomment -%}
 {%- liquid
   assign v = variant | default: product.selected_or_first_available_variant
@@ -125,7 +123,7 @@
   endcapture
   assign pkey = pkey | strip
   assign href = product.url
-  if view == 'option-a' or view == 'option-b'
+  if view == 'option-b'
     assign href = product.url | append: '?view=' | append: view
   endif
 
@@ -188,7 +186,7 @@
         {%- endif -%}
       </div>
       {%- if v.available -%}
-        <button type="button" class="plo-add plo-c3__add" data-plo-quick="{{ v.id }}"{% if sub_mode and plan4 != '' %} data-plo-plan="{{ plan4 }}" data-plo-plan2="{{ plan2 }}" data-plo-plan4="{{ plan4 }}"{% endif %} aria-label="{% if sub_mode %}Subscribe to{% else %}Add{% endif %} {{ product.title | escape }}{% unless sub_mode %} to bag{% endunless %}">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.6 -%}</button>
+        <button type="button" class="plo-add plo-c3__add" data-plo-quick="{{ v.id }}"{% if sub_mode and plan4 != '' %} data-plo-plan="{{ plan4 }}"{% endif %} aria-label="{% if sub_mode %}Subscribe to{% else %}Add{% endif %} {{ product.title | escape }}{% unless sub_mode %} to bag{% endunless %}">{%- render 'pl-icon', name: 'plus', size: 16, stroke: 2.6 -%}</button>
       {%- else -%}
         <span class="plo-card__soldout">Sold out</span>
       {%- endif -%}
