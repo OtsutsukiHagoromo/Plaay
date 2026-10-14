@@ -1,0 +1,129 @@
+{%- comment -%}
+  Option B Returns page (templates/page.returns.json, /pages/returns).
+  Same building blocks as the Shipping / Contact pages: rounded hero (.plo-cnt__box), the
+  policy statement, "when we can help" cards (.plo-cnt__way), numbered claim steps
+  (.plo-shp__steps), "important to know" notes, then a navy contact box.
+  Any text in the page's own content (Shopify admin) shows under the notes.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign helps = section.blocks | where: 'type', 'help'
+  assign steps = section.blocks | where: 'type', 'step'
+  assign notes = section.blocks | where: 'type', 'note'
+  assign tints = '#FFB600,#8DF0DE,#F8A7D6,#FED8B4' | split: ','
+-%}
+<div class="pl plo plo-shp plo-ret">
+  <header class="plo-cnt__hero" style="--tint: {{ s.tint }};">
+    <div class="plo-wrap">
+      <div class="plo-cnt__box">
+        {%- if s.eyebrow != blank -%}<span class="plo-cnt__tag">{{ s.eyebrow }}</span>{%- endif -%}
+        <h1 class="plo-cnt__t">{{ s.heading | default: page.title }}</h1>
+        {%- if s.intro != blank -%}<p class="plo-cnt__p">{{ s.intro }}</p>{%- endif -%}
+      </div>
+    </div>
+  </header>
+
+  <div class="plo-wrap plo-shp__body">
+    {%- if s.policy_heading != blank -%}
+      <div class="plo-ret__policy">
+        <span class="plo-ret__k">Our Policy</span>
+        <h2>{{ s.policy_heading }}</h2>
+        <p>{{ s.policy_text }}</p>
+      </div>
+    {%- endif -%}
+
+    {%- if helps.size > 0 -%}
+      <section class="plo-shp__sec">
+        <h2 class="plo-shp__h">{{ s.help_heading }}</h2>
+        {%- if s.help_text != blank -%}<p class="plo-ret__lead">{{ s.help_text }}</p>{%- endif -%}
+        <ul class="plo-shp__hl plo-ret__help">
+          {%- for block in helps -%}
+            {%- assign ti = forloop.index0 | modulo: 4 -%}
+            <li class="plo-cnt__way" style="--c: {{ tints[ti] }};" {{ block.shopify_attributes }}>
+              <i aria-hidden="true">{%- render 'pl-icon', name: block.settings.icon, size: 20, stroke: 2.2 -%}</i>
+              <span><b>{{ block.settings.title }}</b><em>{{ block.settings.text }}</em></span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </section>
+    {%- endif -%}
+
+    {%- if steps.size > 0 -%}
+      <section class="plo-shp__sec">
+        <h2 class="plo-shp__h">{{ s.steps_heading }}</h2>
+        <ol class="plo-shp__steps">
+          {%- for block in steps -%}
+            <li {{ block.shopify_attributes }}>
+              <span class="plo-shp__n">{{ forloop.index }}</span>
+              <b>{{ block.settings.title }}</b>
+              <p>{{ block.settings.text }}</p>
+            </li>
+          {%- endfor -%}
+        </ol>
+      </section>
+    {%- endif -%}
+
+    {%- if notes.size > 0 -%}
+      <section class="plo-shp__sec">
+        <h2 class="plo-shp__h">{{ s.notes_heading }}</h2>
+        <ul class="plo-ret__notes">
+          {%- for block in notes -%}
+            <li {{ block.shopify_attributes }}><b>{{ block.settings.title }}</b><span>{{ block.settings.text }}</span></li>
+          {%- endfor -%}
+        </ul>
+        {%- if page.content != blank -%}<div class="plo-shp__content">{{ page.content }}</div>{%- endif -%}
+      </section>
+    {%- endif -%}
+
+    {%- if s.contact_heading != blank -%}
+      <div class="plo-ret__contact">
+        <div>
+          <h2>{{ s.contact_heading }}</h2>
+          {%- if s.contact_hours != blank -%}<p>{{ s.contact_hours }}</p>{%- endif -%}
+        </div>
+        <div class="plo-ret__ways">
+          {%- if s.contact_email != blank -%}<a class="plo-btn" href="mailto:{{ s.contact_email }}">{%- render 'pl-icon', name: 'mail', size: 18, stroke: 2.2 -%}{{ s.contact_email }}</a>{%- endif -%}
+          {%- if s.contact_phone != blank -%}<a class="plo-btn plo-btn--sec" href="tel:{{ s.contact_phone | remove: ' ' | remove: '-' }}">{%- render 'pl-icon', name: 'phone', size: 18, stroke: 2.2 -%}{{ s.contact_phone }}</a>{%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Preview: returns page",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Policy" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Returns & Refunds" },
+    { "type": "textarea", "id": "intro", "label": "Intro", "default": "We want every order to be perfect. Here’s what to do if something isn’t right." },
+    { "type": "color", "id": "tint", "label": "Hero colour", "default": "#F8A7D6" },
+    { "type": "text", "id": "policy_heading", "label": "Policy heading", "default": "No Return, No Refund Policy" },
+    { "type": "textarea", "id": "policy_text", "label": "Policy text" },
+    { "type": "text", "id": "help_heading", "label": "Help heading", "default": "When We Can Help" },
+    { "type": "text", "id": "help_text", "label": "Help line" },
+    { "type": "text", "id": "steps_heading", "label": "Steps heading", "default": "How to Make a Claim" },
+    { "type": "text", "id": "notes_heading", "label": "Notes heading", "default": "Important to Know" },
+    { "type": "text", "id": "contact_heading", "label": "Contact heading", "default": "Need to Make a Claim?" },
+    { "type": "textarea", "id": "contact_hours", "label": "Contact hours" },
+    { "type": "text", "id": "contact_email", "label": "Email", "default": "hello@shopplaay.com" },
+    { "type": "text", "id": "contact_phone", "label": "Phone", "default": "+971 56 996 9522" }
+  ],
+  "blocks": [
+    { "type": "help", "name": "When we can help", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "truck", "options": [
+        { "value": "truck", "label": "Truck" }, { "value": "check", "label": "Check" }, { "value": "gift", "label": "Gift" },
+        { "value": "refresh", "label": "Refresh" }, { "value": "heart", "label": "Heart" } ] },
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "textarea", "id": "text", "label": "Text" } ] },
+    { "type": "step", "name": "Claim step", "settings": [
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "textarea", "id": "text", "label": "Text" } ] },
+    { "type": "note", "name": "Note", "settings": [
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "textarea", "id": "text", "label": "Text" } ] }
+  ],
+  "presets": [{ "name": "Preview: returns page" }]
+}
+{% endschema %}

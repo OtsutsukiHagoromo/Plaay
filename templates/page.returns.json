@@ -1,31 +1,104 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "main-returns",
+      "type": "plo-returns",
       "settings": {
-        "headline": "Returns & Refunds",
-        "subheadline": "We want every order to be perfect. Here's what to do if something isn't right.",
-        "policy_headline": "No Return, No Refund Policy",
-        "policy_body": "As our products are perishable, we follow a No Return, No Refund Policy. However, if your order arrives damaged or you receive the wrong items, just reach out to us — we'll make it right.",
-        "exceptions_heading": "When we can help",
-        "exceptions_sub": "You may request a refund or replacement under the following conditions.",
-        "steps_heading": "How to make a claim",
-        "notes_heading": "Important to know",
-        "contact_heading": "Need to make a claim?",
+        "eyebrow": "Policy",
+        "heading": "Returns & Refunds",
+        "intro": "We want every order to be perfect. Here's what to do if something isn't right.",
+        "tint": "#F8A7D6",
+        "policy_heading": "No Return, No Refund Policy",
+        "policy_text": "As our products are perishable, we follow a No Return, No Refund Policy. However, if your order arrives damaged or you receive the wrong items, just reach out to us — we'll make it right.",
+        "help_heading": "When We Can Help",
+        "help_text": "You may request a refund or replacement under the following conditions.",
+        "steps_heading": "How to Make a Claim",
+        "notes_heading": "Important to Know",
+        "contact_heading": "Need to Make a Claim?",
         "contact_hours": "Monday–Saturday, 9:00 AM to 1:00 PM, excluding public holidays.",
         "contact_email": "hello@shopplaay.com",
         "contact_phone": "+971-56-996-9522"
-      }
+      },
+      "blocks": {
+        "h1": {
+          "type": "help",
+          "settings": {
+            "icon": "truck",
+            "title": "Damaged in Delivery",
+            "text": "If your order arrives damaged, contact us and we'll make it right."
+          }
+        },
+        "h2": {
+          "type": "help",
+          "settings": {
+            "icon": "check",
+            "title": "Wrong Items Received",
+            "text": "If we packed the wrong products, reach out immediately and we'll fix it."
+          }
+        },
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Contact Us Within 48 Hours",
+            "text": "Email hello@shopplaay.com or call +971-56-996-9522."
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Send Photos & Description",
+            "text": "Include clear photographs and a description of the issue."
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "We Resolve Within 1–2 Days",
+            "text": "Replacements and refunds are processed within 1–2 business days."
+          }
+        },
+        "n1": {
+          "type": "note",
+          "settings": {
+            "title": "48-Hour Window",
+            "text": "All claims must be submitted within 48 hours of receiving your order."
+          }
+        },
+        "n2": {
+          "type": "note",
+          "settings": {
+            "title": "Documentation Required",
+            "text": "Claims must include a description and photograph(s) of the issue."
+          }
+        },
+        "n3": {
+          "type": "note",
+          "settings": {
+            "title": "1–2 Business Days",
+            "text": "Replacements and refunds are processed within 1–2 business days once approved."
+          }
+        },
+        "n4": {
+          "type": "note",
+          "settings": {
+            "title": "Right to Limit",
+            "text": "Plaay reserves the right to limit or restrict replacements and refunds."
+          }
+        }
+      },
+      "block_order": [
+        "h1",
+        "h2",
+        "s1",
+        "s2",
+        "s3",
+        "n1",
+        "n2",
+        "n3",
+        "n4"
+      ]
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

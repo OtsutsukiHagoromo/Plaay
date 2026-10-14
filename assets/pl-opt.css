@@ -1796,3 +1796,40 @@ a.plo-cnt__way:hover b { color: var(--pl-purple); }
   .plo-shp__faq .plo-pfaq__list { max-width: 880px; }
   .plo-shp .plo-cnt__faq { margin-top: 64px; }
 }
+
+/* ==========================================================================
+   Returns page (sections/plo-returns.liquid). Builds on the Shipping page (.plo-shp__*)
+   and Contact page (.plo-cnt__*) styles.
+   ========================================================================== */
+.plo-ret__policy { padding: 24px 22px; border-radius: 24px; background: #F6F1EA; border-left: 6px solid var(--pl-purple); }
+.plo-ret__k { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--pl-purple); }
+.plo-ret__policy h2 { margin: 6px 0 8px; font-size: 24px; font-weight: 900; line-height: 1.1; letter-spacing: -.02em; }
+.plo-ret__policy p { margin: 0; max-width: 70ch; font-size: 15px; line-height: 1.6; }
+.plo-ret__lead { margin: -6px 0 16px; font-size: 15px; line-height: 1.5; color: var(--pl-mute); }
+.plo-ret__notes { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.plo-ret__notes li { display: flex; flex-direction: column; gap: 4px; padding: 18px; border: 1px solid rgba(8, 29, 72, .12); border-radius: 20px; }
+.plo-ret__notes b { font-size: 16px; font-weight: 800; }
+.plo-ret__notes span { font-size: 14px; line-height: 1.5; color: var(--pl-mute); }
+.plo-ret__contact { display: flex; flex-direction: column; gap: 18px; margin-top: 40px; padding: 26px 22px; border-radius: 24px; background: var(--pl-navy); color: #fff; }
+.plo-ret__contact h2 { margin: 0 0 6px; font-size: 26px; font-weight: 900; line-height: 1.05; letter-spacing: -.02em; color: #fff; }
+.plo-ret__contact p { margin: 0; font-size: 14px; line-height: 1.5; opacity: .85; }
+.plo-ret__ways { display: flex; flex-direction: column; gap: 10px; }
+.plo-ret__ways .plo-btn { height: 48px; justify-content: flex-start; gap: 10px; padding: 0 18px; font-size: 15px; border: 0; }
+.plo-ret__ways .plo-btn--sec { background: rgba(255, 255, 255, .12); color: #fff; }
+.plo-ret__ways .plo-btn--sec:hover { color: #fff; }
+@media (min-width: 768px) {
+  .plo-ret__help { grid-template-columns: repeat(2, 1fr); }
+  .plo-ret__notes { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+}
+@media (min-width: 1024px) {
+  .plo-ret__policy { padding: 40px 48px; border-radius: 28px; }
+  .plo-ret__policy h2 { font-size: 34px; }
+  .plo-ret__policy p { font-size: 17px; }
+  .plo-ret__notes { grid-template-columns: repeat(4, 1fr); }
+  .plo-ret__notes li { padding: 24px; border-radius: 24px; }
+  .plo-ret__notes b { font-size: 18px; }
+  .plo-ret__notes span { font-size: 15px; }
+  .plo-ret__contact { flex-direction: row; align-items: center; justify-content: space-between; gap: 32px; margin-top: 64px; padding: 40px 48px; border-radius: 28px; }
+  .plo-ret__contact h2 { font-size: 34px; }
+  .plo-ret__ways { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; }
+}
