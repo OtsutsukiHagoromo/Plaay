@@ -2,7 +2,8 @@
   Option B Retailers page (templates/page.retailers.json, /pages/retailers).
   A rounded hero with the headline, "Become a Retailer" button and three stats, jump tabs for
   the groups, then each group (delivery apps, in store, cafes & hotels) as a grid of logo tiles.
-  Blocks: a "Group" block starts a group; the "Retailer" blocks after it belong to that group.
+  Blocks: a "Group" block starts a group; the "Retailer" blocks after it (until the next Group)
+  belong to that group.
   A retailer with a link shows "Order now". Ends with the "Become a Retailer" strip
   (.plo-cnt__faq from the Contact page).
 {%- endcomment -%}
@@ -43,30 +44,35 @@
       </nav>
     {%- endif -%}
 
-    {%- assign open = false -%}
-    {%- for block in section.blocks -%}
-      {%- assign b = block.settings -%}
-      {%- if block.type == 'group' -%}
-        {%- if open -%}</ul></section>{%- endif -%}
-        <section class="plo-rtl__group" id="rtl-{{ b.heading | handleize }}" style="--c: {{ b.color }};" {{ block.shopify_attributes }}>
-          {%- if b.eyebrow != blank -%}<span class="plo-rtl__k">{{ b.eyebrow }}</span>{%- endif -%}
-          <h2 class="plo-shp__h">{{ b.heading }}</h2>
-          {%- if b.text != blank -%}<p class="plo-rtl__lead">{{ b.text }}</p>{%- endif -%}
-          <ul class="plo-rtl__grid">
-        {%- assign open = true -%}
-      {%- elsif open -%}
-        <li {{ block.shopify_attributes }}>
-          {%- if b.url != blank -%}<a class="plo-rtl__tile" href="{{ b.url }}" target="_blank" rel="noopener">{%- else -%}<div class="plo-rtl__tile">{%- endif -%}
-            <span class="plo-rtl__logo">
-              {%- if b.logo != blank -%}{{ b.logo | image_url: width: 400 | image_tag: loading: 'lazy', alt: b.name, sizes: '(min-width: 1024px) 200px, 33vw' }}{%- else -%}<em>{{ b.name }}</em>{%- endif -%}
-            </span>
-            <span class="plo-rtl__name">{{ b.name }}</span>
-            {%- if b.url != blank -%}<span class="plo-rtl__go">Order now {% render 'pl-icon', name: 'arrow-right', size: 13, stroke: 2.6 %}</span>{%- endif -%}
-          {%- if b.url != blank -%}</a>{%- else -%}</div>{%- endif -%}
-        </li>
-      {%- endif -%}
+    {%- for g in groups -%}
+      {%- assign gs = g.settings -%}
+      <section class="plo-rtl__group" id="rtl-{{ gs.heading | handleize }}" style="--c: {{ gs.color }};" {{ g.shopify_attributes }}>
+        {%- if gs.eyebrow != blank -%}<span class="plo-rtl__k">{{ gs.eyebrow }}</span>{%- endif -%}
+        <h2 class="plo-shp__h">{{ gs.heading }}</h2>
+        {%- if gs.text != blank -%}<p class="plo-rtl__lead">{{ gs.text }}</p>{%- endif -%}
+        <ul class="plo-rtl__grid">
+          {%- assign cur = '' -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'group' -%}{%- assign cur = block.id -%}{%- continue -%}{%- endif -%}
+            {%- if cur != g.id -%}{%- continue -%}{%- endif -%}
+            {%- assign b = block.settings -%}
+            <li {{ block.shopify_attributes }}>
+              {%- capture tile -%}
+                <span class="plo-rtl__logo">
+                  {%- if b.logo != blank -%}{{ b.logo | image_url: width: 400 | image_tag: loading: 'lazy', alt: b.name, sizes: '(min-width: 1024px) 200px, 33vw' }}{%- else -%}<em>{{ b.name }}</em>{%- endif -%}
+                </span>
+                <span class="plo-rtl__name">{{ b.name }}</span>
+              {%- endcapture -%}
+              {%- if b.url != blank -%}
+                <a class="plo-rtl__tile" href="{{ b.url }}" target="_blank" rel="noopener">{{ tile }}<span class="plo-rtl__go">Order now {% render 'pl-icon', name: 'arrow-right', size: 13, stroke: 2.6 %}</span></a>
+              {%- else -%}
+                <div class="plo-rtl__tile">{{ tile }}</div>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </section>
     {%- endfor -%}
-    {%- if open -%}</ul></section>{%- endif -%}
 
     {%- if s.join_heading != blank -%}
       <a class="plo-cnt__faq plo-rtl__join" href="{{ s.cta_url | default: '/pages/contact' }}">
