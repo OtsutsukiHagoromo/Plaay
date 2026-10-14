@@ -57,6 +57,22 @@
   if plan2 == ''
     assign plan2 = plan4
   endif
+  comment
+    The subscribe price shown is the one the "+" plan (plan4) gives, so card and bag agree.
+  endcomment
+  if plan4 != ''
+    for grp in product.selling_plan_groups
+      for plan in grp.selling_plans
+        if plan.id == plan4
+          for adj in plan.price_adjustments
+            if adj.value_type == 'percentage'
+              assign sub_pct = adj.value
+            endif
+          endfor
+        endif
+      endfor
+    endfor
+  endif
   assign sub_price = 0
   if sub_pct > 0
     assign keep = 100 | minus: sub_pct
@@ -148,7 +164,7 @@
       {%- if has_sizes -%}
         <label class="plo-card__sel">
           <span class="pl-vh">Pack size</span>
-          <select data-plo-szsel>
+          <select data-plo-szsel autocomplete="off">
             {%- for x in product.variants -%}
               {%- assign xl = x.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' | replace: ' g', 'g' -%}
               <option value="{{ x.id }}" data-price="{{ x.price }}"{% if x.id == v.id %} selected{% endif %}{% unless x.available %} disabled{% endunless %}>{{ xl }}</option>

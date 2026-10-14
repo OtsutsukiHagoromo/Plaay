@@ -7,11 +7,13 @@
 {{ 'pl-cart.css' | asset_url | stylesheet_tag }}
 
 <quick-add data-module="quick-add" hidden></quick-add>
+{%- comment -%} bundle.cart-items.js reads .promotion_message when it starts (same stub as the drawer); without it the cart page logged an error. {%- endcomment -%}
+<div class="promotion_message" data-total="{{ cart.total_price }}" data-threshold="999999999" hidden></div>
 
 <div class="pl pl-cartpage" data-cart-page-root>
   <div class="pl-wrap">
     <header class="pl-cartpage__head">
-      <h1 class="pl-h pl-h--2">Your bag{% if cart.item_count > 0 %} <span class="pl-cartpage__count">({{ cart.item_count }})</span>{% endif %}</h1>
+      <h1 class="pl-h pl-h--2">Your Bag{% if cart.item_count > 0 %} <span class="pl-cartpage__count">({{ cart.item_count }})</span>{% endif %}</h1>
     </header>
     {%- render 'cart-drawer-content', page: true -%}
   </div>

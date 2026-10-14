@@ -134,6 +134,7 @@
     Array.prototype.forEach.call(form.querySelectorAll('[data-plo-size], [data-plo-mode]'), function (r) { r.checked = r.defaultChecked; });
     var checked = form.querySelector('[data-plo-size]:checked');
     if (checked && variantInput) variantInput.value = checked.value;
+    if (checked && planInput && checked.getAttribute('data-plan')) planInput.value = checked.getAttribute('data-plan');
     var price = checked ? Number(checked.getAttribute('data-price')) : 0;
 
     function isSub() {
@@ -149,7 +150,7 @@
       set('[data-plo-save]', 'save ' + aed(price - sub));
       set('[data-plo-one]', aed(price));
       set('[data-plo-cta]', aed(isSub() ? sub : price));
-      set('[data-plo-sticky-p]', aed(isSub() ? sub : price) + (isSub() ? ' · every 4 weeks' : ''));
+      set('[data-plo-sticky-p]', aed(isSub() ? sub : price) + (isSub() ? ' · ' + (root.getAttribute('data-every') || 'every 4 weeks') : ''));
       /* Pack chips: price per truffle at the price the shopper is about to pay. */
       Array.prototype.forEach.call(form.querySelectorAll('[data-plo-size][data-pcs]'), function (r) {
         var out = r.parentNode.querySelector('[data-plo-per]');
@@ -163,6 +164,8 @@
       if (e.target.matches('[data-plo-size]')) {
         variantInput.value = e.target.value;
         price = Number(e.target.getAttribute('data-price'));
+        /* Each pack carries the subscription plan it can use. */
+        if (planInput && e.target.getAttribute('data-plan')) planInput.value = e.target.getAttribute('data-plan');
       }
       if (planInput) planInput.disabled = !isSub();
       paint();
@@ -182,6 +185,8 @@
     });
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      /* One add at a time: the sticky bar and Enter in the quantity box also submit. */
+      if (addBtn.classList.contains('is-busy')) return;
       var item = { id: Number(variantInput.value), quantity: Number(qty.value) || 1 };
       if (isSub()) item.selling_plan = Number(planInput.value);
       addBtn.classList.add('is-busy');
@@ -786,6 +791,9 @@
         setCount(ps.length);
       });
     };
+    var removing = false;
+    /* A heart tapped elsewhere on this page (e.g. the suggestions) updates the list. */
+    window.addEventListener('plaay:wishlist:change', function () { if (!removing) render(); });
     grid.addEventListener('click', function (e) {
       var x = e.target.closest('[data-plo-wl-x]');
       if (!x) return;
@@ -793,7 +801,9 @@
       var c = x.closest('.plo-wl__card');
       if (c) c.classList.add('is-out');
       setTimeout(function () {
+        removing = true;
         write(read().filter(function (k) { return k !== h; }));
+        removing = false;
         if (c) c.remove();
         var n = grid.children.length;
         setCount(n);
@@ -832,8 +842,18 @@
     paint();
   }
 
+  /* Card size pickers: browsers can restore a different choice on back/forward or reload
+     while the card's price and "+" still hold the served pack. Put them back to the served one. */
+  function resetCardSizes() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-szsel]'), function (sel) {
+      Array.prototype.forEach.call(sel.options, function (o) { o.selected = o.defaultSelected; });
+    });
+  }
+  window.addEventListener('pageshow', function (e) { if (e.persisted) resetCardSizes(); });
+
   function init() {
     initHearts();
+    resetCardSizes();
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-wl]'), initWishlist);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-faqp]'), initFaqPage);
     initReelBand();

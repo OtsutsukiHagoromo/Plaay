@@ -23,6 +23,21 @@
       endif
     endfor
   endif
+  comment
+    A link to a sold-out pack (e.g. ?variant= from an ad) opens on the first pack in stock instead,
+    so the page never loads stuck on "Sold out" while other sizes are available.
+  endcomment
+  if v.available == false
+    if product.available
+      for variant in product.variants
+        if variant.available
+          if v.available == false
+            assign v = variant
+          endif
+        endif
+      endfor
+    endif
+  endif
   assign view = template.suffix
   assign sub_pct = 0
   assign plan_id = ''
@@ -48,6 +63,26 @@
             assign plan_id = plan.id
           endif
         endfor
+      endif
+    endfor
+  endfor
+  comment
+    How often the chosen plan delivers, for the sticky bar ("every 4 weeks").
+  endcomment
+  assign plan_every = ''
+  for grp in product.selling_plan_groups
+    for plan in grp.selling_plans
+      if plan.id == plan_id
+        assign pname = plan.name | downcase
+        if pname contains '4 week'
+          assign plan_every = 'every 4 weeks'
+        elsif pname contains '2 week'
+          assign plan_every = 'every 2 weeks'
+        elsif pname contains 'month'
+          assign plan_every = 'every month'
+        else
+          assign plan_every = plan.name | downcase
+        endif
       endif
     endfor
   endfor
@@ -124,7 +159,7 @@
   endcapture
   assign pkey = pkey | strip
 -%}
-<div class="pl plo plo-pdp" data-plo-pdp data-view="{{ view }}" data-pct="{{ sub_pct }}">
+<div class="pl plo plo-pdp" data-plo-pdp data-view="{{ view }}" data-pct="{{ sub_pct }}" data-every="{{ plan_every | default: 'every 4 weeks' }}">
   <div class="plo-pdp__cols">
     {%- if pkey != blank -%}
       <div class="plo-gal plo-gal--photos" style="--tint: {{ tint }};" data-plo-photos>
@@ -305,8 +340,23 @@
                     endif
                   endif
                 -%}
+                {%- liquid
+                  comment
+                    The subscription plan this pack can use: the page's plan when it covers this pack,
+                    otherwise the first plan that does.
+                  endcomment
+                  assign vplan = ''
+                  for alloc in variant.selling_plan_allocations
+                    if alloc.selling_plan.id == plan_id
+                      assign vplan = plan_id
+                    endif
+                  endfor
+                  if vplan == '' and variant.selling_plan_allocations.size > 0
+                    assign vplan = variant.selling_plan_allocations.first.selling_plan.id
+                  endif
+                -%}
                 <label class="plo-size{% if variant.id == best_id %} is-best{% endif %}">
-                  <input type="radio" name="plo-size-{{ section.id }}" value="{{ variant.id }}" data-price="{{ variant.price }}"{% if pcs > 0 %} data-pcs="{{ pcs }}"{% endif %}{% if variant.id == v.id %} checked{% endif %}{% unless variant.available %} disabled{% endunless %} data-plo-size>
+                  <input type="radio" name="plo-size-{{ section.id }}" value="{{ variant.id }}" data-price="{{ variant.price }}"{% if vplan != '' %} data-plan="{{ vplan }}"{% endif %}{% if pcs > 0 %} data-pcs="{{ pcs }}"{% endif %}{% if variant.id == v.id %} checked{% endif %}{% unless variant.available %} disabled{% endunless %} data-plo-size>
                   <span>
                     {%- if variant.id == best_id -%}<em class="plo-size__tag">Best value</em>{%- endif -%}
                     <b>{{ label }}</b>
@@ -475,7 +525,7 @@
   {%- if v.available -%}
     <div class="plo-sticky" data-plo-sticky>
       <span class="plo-sticky__pic" style="--tint: {{ tint }};">{%- if pkey != blank -%}{%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}<img src="{{ ph | asset_url }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif product.featured_image -%}{{ product.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
-      <span class="plo-sticky__t"><b>{{ product.title }}</b><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}{% if has_sub %} · every 4 weeks{% endif %}</span></span>
+      <span class="plo-sticky__t"><b>{{ product.title }}</b><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}{% if has_sub %} · {{ plan_every | default: 'every 4 weeks' }}{% endif %}</span></span>
       <button type="button" class="plo-btn" data-plo-sticky-add>Add to bag</button>
     </div>
   {%- endif -%}

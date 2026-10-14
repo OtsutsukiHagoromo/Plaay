@@ -271,7 +271,7 @@
                     <ul
                       class="discounts list-unstyled"
                       role="list"
-                      aria-label="{{ 'customer.order.discount' | t }}">
+                      aria-label="Discounts">
                       {%- for discount in cart.cart_level_discount_applications -%}
                         <li class="discounts__discount discounts__discount--position font-walsheim-bold">
                           {{ discount.total_allocated_amount | money }}
