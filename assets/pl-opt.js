@@ -803,7 +803,37 @@
     render();
   }
 
+  /* Wishlist hearts (snippets/plo-heart): toggle the product handle in localStorage
+     "plaay_wishlist" (the list the Wishlist page and the product page heart share). Delegated,
+     so hearts in cards added later work too; every heart for the same product stays in sync. */
+  function initHearts() {
+    var KEY = 'plaay_wishlist';
+    var read = function () { try { return JSON.parse(localStorage.getItem(KEY) || '[]') || []; } catch (e) { return []; } };
+    var paint = function () {
+      var list = read();
+      Array.prototype.forEach.call(document.querySelectorAll('[data-plo-heart]'), function (b) {
+        var on = list.indexOf(b.getAttribute('data-plo-heart')) > -1;
+        b.classList.toggle('is-on', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+    };
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('[data-plo-heart]');
+      if (!b) return;
+      e.preventDefault();
+      var h = b.getAttribute('data-plo-heart'), list = read(), i = list.indexOf(h);
+      if (i > -1) list.splice(i, 1); else { list.push(h); b.classList.add('is-pop'); setTimeout(function () { b.classList.remove('is-pop'); }, 400); }
+      try { localStorage.setItem(KEY, JSON.stringify(list)); } catch (err) {}
+      window.dispatchEvent(new CustomEvent('plaay:wishlist:change'));
+    });
+    window.addEventListener('plaay:wishlist:change', paint);
+    window.addEventListener('storage', function (e) { if (e.key === KEY) paint(); });
+    window.addEventListener('pageshow', paint);
+    paint();
+  }
+
   function init() {
+    initHearts();
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-wl]'), initWishlist);
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-faqp]'), initFaqPage);
     initReelBand();

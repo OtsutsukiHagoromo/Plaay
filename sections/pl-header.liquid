@@ -36,8 +36,8 @@
     assign nav_urls = urls_s | split: '|'
     assign nav_megas = megas_s | split: '|'
   else
-    assign nav_labels = 'Shop|Truffles|Bars|Slabs|Limited Edition|Subscribe & Save|Our Story' | split: '|'
-    assign nav_urls = '/collections/shop-all|/collections/chocolate-truffles|/collections/chocolate-bars|/collections/new-chocolate-slabs|/collections/limited-editions|/pages/subscribe-save|/pages/for-the-geeks-1' | split: '|'
+    assign nav_labels = 'Shop|Truffles|Bars|Slabs|Variety Packs|Limited Edition|Subscribe & Save|Our Story' | split: '|'
+    assign nav_urls = '/collections/shop-all|/collections/chocolate-truffles|/collections/chocolate-bars|/collections/new-chocolate-slabs|/collections/variety-packs|/collections/limited-editions|/pages/subscribe-save|/pages/for-the-geeks-1' | split: '|'
     assign nav_megas = '1|0|0|0|0|0|0' | split: '|'
   endif
 
@@ -138,6 +138,10 @@
         <a class="pl-iconbtn pl-iconbtn--ghost pl-header__account{% if customer %} is-in{% endif %}" href="{{ account_url }}" aria-label="Account" data-pl-open-account>
           {%- render 'pl-icon', name: 'user', size: 22, stroke: 2 -%}
         </a>
+        <a class="pl-iconbtn pl-iconbtn--ghost pl-header__wl" href="/pages/wishlist" aria-label="Wishlist">
+          {%- render 'pl-icon', name: 'heart', size: 22, stroke: 2 -%}
+          <span class="pl-count" data-plo-wl-badge hidden></span>
+        </a>
         <button type="button" class="pl-iconbtn pl-iconbtn--ghost header__icon--cart" data-drawer-trigger="cart" aria-label="Bag">
           {%- render 'pl-icon', name: 'bag', size: 22, stroke: 2 -%}
           <span class="pl-count" data-cart-count{% if cart.item_count == 0 %} hidden{% endif %}>{{ cart.item_count }}</span>
@@ -145,6 +149,21 @@
       </div>
     </div>
   </header>
+
+  {%- comment -%} Wishlist count on the header heart (localStorage "plaay_wishlist"; any page). {%- endcomment -%}
+  <script>
+    (function () {
+      function n() { try { return (JSON.parse(localStorage.getItem('plaay_wishlist') || '[]') || []).length; } catch (e) { return 0; } }
+      function paint() {
+        var c = n();
+        document.querySelectorAll('[data-plo-wl-badge]').forEach(function (b) { b.textContent = c; b.hidden = !c; });
+      }
+      paint();
+      window.addEventListener('plaay:wishlist:change', paint);
+      window.addEventListener('storage', paint);
+      window.addEventListener('pageshow', paint);
+    })();
+  </script>
 
   <div class="pl-sheet-overlay" data-pl-overlay aria-hidden="true"></div>
 
@@ -221,6 +240,7 @@
       <ul class="pl-menu__list">
         <li><a href="{{ routes.collections_url }}/limited-editions"><span>Limited Edition</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
         <li><a href="/pages/subscribe-save"><span>Subscribe &amp; Save</span><em class="pl-menu__tag">15% off</em>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
+        <li><a href="/pages/wishlist"><span>Wishlist</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
         <li><a href="/pages/for-the-geeks-1"><span>Our Story</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
         <li><a href="{{ account_url }}"><span>{% if customer %}My Account{% else %}Sign In{% endif %}</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
       </ul>

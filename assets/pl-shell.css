@@ -509,7 +509,7 @@ body.pl-scrolled .pl-header__logo img { transform: scale(.92); }
   .pl-footer .pl-footer__mark { margin: 12px 0 0; padding-bottom: 20px; line-height: .9; font-size: 30vw; }
   .pl-footer__col:last-child { border-bottom: 0; }
 }
-/* Seven nav links: keep them on one line on smaller desktops. */
+/* Eight nav links: keep them on one line on smaller desktops. */
 @media (min-width: 1024px) { .pl-header__link { white-space: nowrap; } }
 @media (min-width: 1024px) and (max-width: 1439.98px) {
   .pl-header__nav { margin-left: 28px; }
@@ -518,3 +518,30 @@ body.pl-scrolled .pl-header__logo img { transform: scale(.92); }
   .pl-header__search { width: 190px; }
 }
 @media (min-width: 1024px) and (max-width: 1199.98px) { .pl-header__list { gap: 16px; } .pl-header__link { font-size: 14px; } .pl-header__search { width: 150px; } }
+
+/* Wishlist heart in the header (next to the bag), with a count like the bag's. */
+.pl-header__wl { position: relative; }
+.pl-header__wl .pl-count[hidden] { display: none; }
+/* Desktop: one search (the pill); the separate search icon only where the pill is hidden. */
+@media (min-width: 1024px) { .pl .pl-header .pl-header__search-btn { display: none; } }
+@media (min-width: 1024px) and (max-width: 1439.98px) {
+  .pl-header__list { gap: 14px; }
+  .pl-header__link { font-size: 14.5px; }
+  .pl-header__search { width: 160px; margin-left: 14px; }
+}
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  .pl-header__nav { margin-left: 20px; }
+  .pl-header__list { gap: 12px; }
+  .pl-header__link { font-size: 13.5px; }
+  .pl-header__search { display: none; }
+  .pl .pl-header .pl-header__search-btn { display: inline-flex; }
+}
+@media (min-width: 1440px) and (max-width: 1679.98px) {
+  .pl-header__nav { margin-left: 32px; }
+  .pl-header__list { gap: 22px; }
+  .pl-header__search { width: 210px; }
+}
+@media (min-width: 1680px) {
+  .pl-header__list { gap: 28px; }
+  .pl-header__search { margin-left: 20px; }
+}

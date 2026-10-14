@@ -136,6 +136,7 @@
         </div>
         {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge">{{ badge_text }}</span>{%- endif -%}
         <span class="plo-gal__count" aria-hidden="true"><b data-plo-count>1</b> / 8</span>
+        {%- render 'plo-heart', product: product, class: 'plo-gal__heart' -%}
         <div class="plo-gal__thumbs" data-plo-thumbrow>
           {%- for i in (1..8) -%}
             {%- assign ph = 'plo-ph-' | append: pkey | append: '-' | append: i | append: '.jpg' -%}
@@ -150,6 +151,7 @@
           {{ product.featured_image | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 50vw, 100vw', widths: '500, 750, 1000', alt: product.title, class: 'plo-gal__img' }}
         {%- endif -%}
         {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge">{{ badge_text }}</span>{%- endif -%}
+        {%- render 'plo-heart', product: product, class: 'plo-gal__heart' -%}
       </div>
       {%- if product.images.size > 1 -%}
         <div class="plo-gal__thumbs">

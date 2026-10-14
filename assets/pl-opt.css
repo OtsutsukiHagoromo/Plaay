@@ -1965,3 +1965,25 @@ a.plo-rtl__tile:hover { border-color: var(--pl-navy); transform: translateY(-2px
   .plo-404__more { padding-top: 64px; }
 }
 @media (prefers-reduced-motion: reduce) { .plo-wl__dot { animation: none; opacity: .5; } }
+
+/* ---------- Wishlist hearts (snippets/plo-heart; pl-opt.js initHearts) ---------- */
+.plo-heart { position: absolute; z-index: 3; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: var(--pl-navy); cursor: pointer; box-shadow: 0 1px 4px rgba(8, 29, 72, .12); transition: transform .15s ease, color .15s ease; }
+.plo-heart:hover { transform: scale(1.06); }
+.plo-heart .plo-heart__f { display: none; }
+.plo-heart.is-on { color: #FF3EB5; }
+.plo-heart.is-on .plo-heart__o { display: none; }
+.plo-heart.is-on .plo-heart__f { display: flex; }
+.plo-heart > span { display: flex; }
+.plo-heart.is-pop { animation: ploHeartPop .4s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes ploHeartPop { 40% { transform: scale(1.25); } }
+.plo-card__heart { top: 8px; right: 8px; }
+.plo-gal__heart { top: 14px; right: 14px; width: 40px; height: 40px; }
+.plo-gal__heart svg { width: 20px; height: 20px; }
+.plo-gal--photos .plo-gal__count { right: 64px; top: 22px; }
+.plo-gal__main { position: relative; }
+@media (min-width: 1024px) {
+  .plo-card__heart { top: 12px; right: 12px; width: 36px; height: 36px; }
+  .plo-gal__heart { top: 16px; right: 16px; }
+  .plo-gal--photos .plo-gal__count { right: 66px; top: 24px; }
+}
+@media (prefers-reduced-motion: reduce) { .plo-heart.is-pop { animation: none; } }

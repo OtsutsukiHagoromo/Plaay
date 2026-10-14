@@ -390,6 +390,14 @@
               "mega": false
             }
           },
+          "link_8": {
+            "type": "link",
+            "settings": {
+              "label": "Variety Packs",
+              "url": "/collections/variety-packs",
+              "mega": false
+            }
+          },
           "link_7": {
             "type": "link",
             "settings": {
@@ -404,6 +412,7 @@
           "link_2",
           "link_3",
           "link_4",
+          "link_8",
           "link_7",
           "link_5",
           "link_6"

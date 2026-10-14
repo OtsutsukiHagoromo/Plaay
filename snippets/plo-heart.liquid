@@ -1,0 +1,9 @@
+{%- comment -%}
+  Wishlist heart (product cards, product page photo). Saves the product handle in localStorage
+  "plaay_wishlist", the list the Wishlist page reads. State and clicks: assets/pl-opt.js
+  (initHearts). Usage: {% render 'plo-heart', product: product, class: 'plo-card__heart' %}
+{%- endcomment -%}
+<button type="button" class="plo-heart {{ class }}" data-plo-heart="{{ product.handle }}" aria-pressed="false" aria-label="Save {{ product.title | escape }} to wishlist">
+  <span class="plo-heart__o">{%- render 'pl-icon', name: 'heart', size: 18, stroke: 2.2 -%}</span>
+  <span class="plo-heart__f">{%- render 'pl-icon', name: 'heart-fill', size: 18, stroke: 2.2 -%}</span>
+</button>

@@ -140,6 +140,7 @@
     {%- endif -%}
     {%- if badge_text != blank -%}<span class="plo-badge{% if badge_mod != blank %} plo-badge--{{ badge_mod }}{% endif %}">{{ badge_text }}</span>{%- endif -%}
   </a>
+  {%- unless sub_mode -%}{%- render 'plo-heart', product: product, class: 'plo-card__heart' -%}{%- endunless -%}
   <div class="plo-card__body">
     {%- if reason != blank -%}<p class="plo-card__why">{{ reason }}</p>{%- endif -%}
     <h3 class="plo-card__name"><a href="{{ href }}">{{ c_name }}</a></h3>
