@@ -869,8 +869,10 @@
 
   /* Collection filters, run in the page over the cards (data-f-prices "id:price,", data-f-sub,
      data-f-tags "|tag|"). Options in one group widen the match (OR); groups narrow it (AND).
-     A price band can match a smaller pack: the card then switches to the cheapest pack in the band.
-     The choice is kept in the address (?filter=) so back/forward and shared links keep it. */
+     Price is a two-handle slider over the prices on the page, with a small bar chart of where the
+     products sit. A pack inside the range counts: the card switches to the cheapest such pack.
+     The choice is kept in the address (?filter=sub,t:vegan,p:6000-15000) so back/forward and
+     shared links keep it. */
   function initCollFilter(tools) {
     var scope = tools.closest('.plo') || document;
     var cards = Array.prototype.slice.call(scope.querySelectorAll('.plo-card[data-f-prices]'));
@@ -883,84 +885,129 @@
     var active = tools.querySelector('[data-plo-factive]');
     var empty = scope.querySelector('[data-plo-fempty]');
     var fbtn = tools.querySelector('.plo-pop--filter');
-    if (!cards.length || !opts.length) { if (fbtn) fbtn.hidden = true; return; }
+    var fp = tools.querySelector('[data-plo-fprice]');
+    if (!cards.length) { if (fbtn) fbtn.hidden = true; return; }
 
     function prices(card) {
       return (card.getAttribute('data-f-prices') || '').split(',').filter(Boolean).map(function (x) { var p = x.split(':'); return { id: p[0], price: Number(p[1]) }; });
-    }
-    function band(v) { var r = v.slice(2).split('-'); return [Number(r[0]) || 0, r[1] === '' ? Infinity : Number(r[1])]; }
-    function test(card, v) {
-      if (v === 'sub') return card.hasAttribute('data-f-sub');
-      if (v.indexOf('t:') === 0) return (card.getAttribute('data-f-tags') || '').indexOf('|' + v.slice(2) + '|') > -1;
-      var b = band(v);
-      return prices(card).some(function (p) { return p.price >= b[0] && p.price < b[1]; });
-    }
-    function group(v) { return v === 'sub' ? 'sub' : v.slice(0, 2); }
-    function matches(card, on) {
-      var groups = {};
-      on.forEach(function (v) { (groups[group(v)] = groups[group(v)] || []).push(v); });
-      return Object.keys(groups).every(function (g) { return groups[g].some(function (v) { return test(card, v); }); });
-    }
-    /* Show the pack that fits the chosen price bands (or put the served pack back). */
-    function fitSize(card, on) {
-      var sel = card.querySelector('[data-plo-szsel]');
-      if (!sel) return;
-      var bands = on.filter(function (v) { return v.indexOf('p:') === 0; }).map(band);
-      var want = null;
-      var served = Array.prototype.filter.call(sel.options, function (o) { return o.defaultSelected; })[0] || sel.options[0];
-      var inBand = function (price) { return bands.some(function (b) { return price >= b[0] && price < b[1]; }); };
-      if (bands.length && !inBand(Number(served.getAttribute('data-price')))) {
-        var fit = prices(card).filter(function (p) { return inBand(p.price); }).sort(function (a, b) { return a.price - b.price; })[0];
-        if (fit) want = fit.id;
-      }
-      var target = want || served.value;
-      if (sel.value !== target) { sel.value = target; sel.dispatchEvent(new Event('change', { bubbles: true })); }
     }
     function plural(n) { return n + ' product' + (n === 1 ? '' : 's'); }
     /* Shop all rows can hold the same product twice (e.g. Truffles and Limited): count products. */
     function key(c) { var a = c.querySelector('.plo-card__name a'); return a ? a.getAttribute('href') : c; }
     function unique(list) { var seen = []; list.forEach(function (c) { var k = key(c); if (seen.indexOf(k) < 0) seen.push(k); }); return seen.length; }
+
+    /* ---- price slider (whole AED) ---- */
+    var all = [];
+    cards.forEach(function (c) { prices(c).forEach(function (p) { all.push(p.price); }); });
+    var pMin = Math.floor(Math.min.apply(null, all) / 100), pMax = Math.ceil(Math.max.apply(null, all) / 100);
+    var lo = pMin, hi = pMax;
+    var smin = fp && fp.querySelector('[data-plo-pmin]'), smax = fp && fp.querySelector('[data-plo-pmax]');
+    var hasPrice = !!(fp && smin && smax && pMax - pMin >= 10);
+    function priceOn() { return hasPrice && (lo > pMin || hi < pMax); }
+    function priceLabel() { return 'AED ' + lo + '–' + hi; }
+    function inRange(fils) { return fils >= lo * 100 && fils <= hi * 100; }
+
+    function test(card, v) {
+      if (v === 'sub') return card.hasAttribute('data-f-sub');
+      if (v.indexOf('t:') === 0) return (card.getAttribute('data-f-tags') || '').indexOf('|' + v.slice(2) + '|') > -1;
+      return true;
+    }
+    function group(v) { return v === 'sub' ? 'sub' : v.slice(0, 2); }
+    function matches(card, on, usePrice) {
+      var groups = {};
+      on.forEach(function (v) { (groups[group(v)] = groups[group(v)] || []).push(v); });
+      var ok = Object.keys(groups).every(function (g) { return groups[g].some(function (v) { return test(card, v); }); });
+      if (ok && usePrice && priceOn()) ok = prices(card).some(function (p) { return inRange(p.price); });
+      return ok;
+    }
+    /* Show the pack that fits the price range (or put the served pack back). */
+    function fitSize(card) {
+      var sel = card.querySelector('[data-plo-szsel]');
+      if (!sel) return;
+      var served = Array.prototype.filter.call(sel.options, function (o) { return o.defaultSelected; })[0] || sel.options[0];
+      var target = served.value;
+      if (priceOn() && !inRange(Number(served.getAttribute('data-price')))) {
+        var fit = prices(card).filter(function (p) { return inRange(p.price); }).sort(function (a, b) { return a.price - b.price; })[0];
+        if (fit) target = fit.id;
+      }
+      if (sel.value !== target) { sel.value = target; sel.dispatchEvent(new Event('change', { bubbles: true })); }
+    }
+    /* Bar chart: how many products have a pack in each slice of the price range. */
+    var BINS = 18, hist = fp && fp.querySelector('[data-plo-hist]');
+    function drawHist(on) {
+      if (!hist) return;
+      var span = (pMax - pMin) / BINS, bins = [];
+      for (var i = 0; i < BINS; i++) bins.push([]);
+      cards.filter(function (c) { return matches(c, on, false); }).forEach(function (c) {
+        prices(c).forEach(function (p) {
+          var i = Math.min(BINS - 1, Math.floor((p.price / 100 - pMin) / span));
+          if (bins[i].indexOf(key(c)) < 0) bins[i].push(key(c));
+        });
+      });
+      var top = Math.max.apply(null, bins.map(function (b) { return b.length; })) || 1;
+      hist.innerHTML = bins.map(function (b, i) {
+        var a = pMin + i * span, z = a + span;
+        var inside = z >= lo && a <= hi;
+        return '<i style="height:' + (b.length ? Math.max(8, Math.round(b.length / top * 100)) : 0) + '%"' + (inside ? ' class="is-on"' : '') + '></i>';
+      }).join('');
+    }
+    function paintSlider() {
+      if (!hasPrice) return;
+      smin.value = lo; smax.value = hi;
+      var w = pMax - pMin;
+      fp.style.setProperty('--a', String((lo - pMin) / w));
+      fp.style.setProperty('--b', String((hi - pMin) / w));
+      fp.querySelector('[data-plo-pminv]').textContent = 'AED ' + lo;
+      fp.querySelector('[data-plo-pmaxv]').textContent = 'AED ' + hi + (hi === pMax ? '+' : '');
+    }
+
     function apply(push) {
       var on = opts.filter(function (o) { return o.checked; }).map(function (o) { return o.value; });
       var shown = [];
       cards.forEach(function (c) {
-        var ok = !on.length || matches(c, on);
+        var ok = matches(c, on, true);
         c.hidden = !ok;
-        if (ok) { shown.push(c); fitSize(c, on); }
+        if (ok) { shown.push(c); fitSize(c); }
       });
       var n = unique(shown);
       if (grouped) total = unique(cards);
-      /* Shop all rows: hide a row with nothing left in it. */
       Array.prototype.forEach.call(scope.querySelectorAll('.plo-range'), function (row) {
         row.hidden = !row.querySelector('.plo-card:not([hidden])');
       });
-      count.textContent = on.length ? n + ' of ' + plural(total) : plural(total);
+      var nOn = on.length + (priceOn() ? 1 : 0);
+      count.textContent = nOn ? n + ' of ' + plural(total) : plural(total);
       if (show) show.textContent = n;
-      if (badge) { badge.hidden = !on.length; badge.textContent = on.length; }
+      if (badge) { badge.hidden = !nOn; badge.textContent = nOn; }
       if (empty) empty.hidden = n > 0;
-      /* Option counts: how many cards each option would show with the other choices kept. */
+      /* Option counts: how many products each option would show with the other choices kept. */
       opts.forEach(function (o) {
         var rest = on.filter(function (v) { return group(v) !== group(o.value); }).concat([o.value]);
-        var k = unique(cards.filter(function (c) { return matches(c, rest); }));
+        var k = unique(cards.filter(function (c) { return matches(c, rest, true); }));
         var lab = o.closest('.plo-fopt');
         var out = lab.querySelector('[data-plo-fn]');
         if (out) out.textContent = k;
         lab.classList.toggle('is-none', k === 0 && !o.checked);
       });
+      paintSlider();
+      drawHist(on);
       if (active) {
         active.innerHTML = '';
-        on.forEach(function (v) {
-          var o = opts.filter(function (x) { return x.value === v; })[0];
+        var chip = function (label, undo) {
           var b = document.createElement('button');
           b.type = 'button';
           b.className = 'plo-tools__chip';
-          b.setAttribute('aria-label', 'Remove filter ' + o.getAttribute('data-label'));
+          b.setAttribute('aria-label', 'Remove filter ' + label);
           b.innerHTML = '<span></span><i aria-hidden="true">&times;</i>';
-          b.firstChild.textContent = o.getAttribute('data-label');
-          b.addEventListener('click', function () { o.checked = false; apply(true); });
+          b.firstChild.textContent = label;
+          b.addEventListener('click', function () { undo(); apply(true); });
           active.appendChild(b);
+        };
+        on.forEach(function (v) {
+          var o = opts.filter(function (x) { return x.value === v; })[0];
+          chip(o.getAttribute('data-label'), function () { o.checked = false; });
         });
-        if (on.length > 1) {
+        if (priceOn()) chip(priceLabel(), function () { lo = pMin; hi = pMax; });
+        if (nOn > 1) {
           var c = document.createElement('button');
           c.type = 'button';
           c.className = 'plo-tools__clear';
@@ -968,30 +1015,43 @@
           c.addEventListener('click', clear);
           active.appendChild(c);
         }
-        active.hidden = !on.length;
+        active.hidden = !nOn;
       }
       if (push && window.history && history.replaceState) {
+        var vals = on.slice();
+        if (priceOn()) vals.push('p:' + lo * 100 + '-' + hi * 100);
         var u = new URL(window.location.href);
-        if (on.length) u.searchParams.set('filter', on.join(',')); else u.searchParams.delete('filter');
+        if (vals.length) u.searchParams.set('filter', vals.join(',')); else u.searchParams.delete('filter');
         history.replaceState(history.state, '', u.toString());
       }
     }
-    function clear() { opts.forEach(function (o) { o.checked = false; }); apply(true); }
+    function clear() { opts.forEach(function (o) { o.checked = false; }); lo = pMin; hi = pMax; apply(true); }
 
-    /* Groups with nothing to offer in this collection go; the button too if nothing is left. */
-    Array.prototype.forEach.call(tools.querySelectorAll('.plo-fgroup'), function (g) {
-      var live = Array.prototype.filter.call(g.querySelectorAll('[data-plo-fopt]'), function (o) {
-        var ok = cards.some(function (c) { return test(c, o.value); });
-        if (!ok) o.closest('.plo-fopt').remove();
-        return ok;
-      });
-      if (!live.length || (g.getAttribute('data-group') === 'price' && live.length < 2)) g.remove();
+    /* Options that match nothing here go, then empty groups, then the button if nothing is left. */
+    opts.forEach(function (o) { if (!cards.some(function (c) { return test(c, o.value); })) o.closest('.plo-fopt').remove(); });
+    Array.prototype.forEach.call(tools.querySelectorAll('.plo-fgroup:not([data-plo-fprice])'), function (g) {
+      if (!g.querySelector('[data-plo-fopt]')) g.remove();
     });
     opts = Array.prototype.slice.call(tools.querySelectorAll('[data-plo-fopt]'));
-    if (!opts.length) { if (fbtn) fbtn.hidden = true; return; }
+    if (hasPrice) {
+      fp.hidden = false;
+      [smin, smax].forEach(function (r) { r.min = pMin; r.max = pMax; });
+      var GAP = 5;
+      smin.addEventListener('input', function () { lo = Math.min(Number(smin.value), hi - GAP); apply(false); });
+      smax.addEventListener('input', function () { hi = Math.max(Number(smax.value), lo + GAP); apply(false); });
+      [smin, smax].forEach(function (r) { r.addEventListener('change', function () { apply(true); }); });
+    } else if (fp) fp.remove();
+    if (!opts.length && !hasPrice) { if (fbtn) fbtn.hidden = true; return; }
 
     var start = (new URL(window.location.href).searchParams.get('filter') || '').split(',');
     opts.forEach(function (o) { o.checked = start.indexOf(o.value) > -1; });
+    start.forEach(function (v) {
+      var m = /^p:(\d+)-(\d+)$/.exec(v);
+      if (m && hasPrice) {
+        lo = Math.max(pMin, Math.min(pMax, Math.round(Number(m[1]) / 100)));
+        hi = Math.max(lo, Math.min(pMax, Math.round(Number(m[2]) / 100)));
+      }
+    });
     opts.forEach(function (o) { o.addEventListener('change', function () { apply(true); }); });
     Array.prototype.forEach.call(scope.querySelectorAll('[data-plo-fclear]'), function (b) { b.addEventListener('click', clear); });
     apply(false);

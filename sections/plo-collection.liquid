@@ -155,7 +155,7 @@
         comment
           Toolbar: product count, Filter (filters run in the page, assets/pl-opt.js initCollFilter)
           and Sort (a short list of the sorts shoppers use; each is a plain link).
-          Filter groups: Subscribe & save, price bands (from "Price bands"), and optional tags
+          Filter groups: Subscribe & save, a price range slider, and optional tags
           (from "Filter tags"). Options that match nothing in this collection are hidden by the
           script, and so is the Filter button when nothing is left.
         endcomment
@@ -167,7 +167,6 @@
             assign sort_label = sort_names[forloop.index0]
           endif
         endfor
-        assign bands = s.price_bands | remove: ' ' | split: ','
         assign ftags = s.filter_tags | split: '|'
         assign sort_base = collection.url | append: '?'
         if view_q != blank
@@ -186,19 +185,15 @@
                   <legend>Save more</legend>
                   <label class="plo-fopt"><input type="checkbox" value="sub" data-plo-fopt data-label="Subscribe &amp; save"><span>Subscribe &amp; save<small data-plo-fn></small></span></label>
                 </fieldset>
-                {%- if bands.size > 0 -%}
-                  <fieldset class="plo-fgroup" data-group="price">
-                    <legend>Price</legend>
-                    {%- assign lo = 0 -%}
-                    {%- for b in bands -%}
-                      {%- assign hi = b | plus: 0 -%}
-                      {%- if lo == 0 -%}{%- assign lbl = 'Under AED ' | append: hi -%}{%- else -%}{%- assign lbl = 'AED ' | append: lo | append: '–' | append: hi -%}{%- endif -%}
-                      <label class="plo-fopt"><input type="checkbox" value="p:{{ lo | times: 100 }}-{{ hi | times: 100 }}" data-plo-fopt data-label="{{ lbl }}"><span>{{ lbl }}<small data-plo-fn></small></span></label>
-                      {%- assign lo = hi -%}
-                    {%- endfor -%}
-                    <label class="plo-fopt"><input type="checkbox" value="p:{{ lo | times: 100 }}-" data-plo-fopt data-label="AED {{ lo }}+"><span>AED {{ lo }}+<small data-plo-fn></small></span></label>
-                  </fieldset>
-                {%- endif -%}
+                <fieldset class="plo-fgroup plo-fprice" data-plo-fprice hidden>
+                  <legend>Price</legend>
+                  <div class="plo-fprice__hist" data-plo-hist aria-hidden="true"></div>
+                  <div class="plo-fprice__track">
+                    <input type="range" step="1" data-plo-pmin aria-label="Lowest price (AED)">
+                    <input type="range" step="1" data-plo-pmax aria-label="Highest price (AED)">
+                  </div>
+                  <div class="plo-fprice__vals"><span data-plo-pminv></span><span data-plo-pmaxv></span></div>
+                </fieldset>
                 {%- if s.filter_tags != blank -%}
                   <fieldset class="plo-fgroup" data-group="tag">
                     <legend>{{ s.filter_tags_label | default: 'Dietary' }}</legend>
@@ -352,13 +347,6 @@
       "id": "bars_handle",
       "label": "Collection that shows the bar-pack row",
       "default": "chocolate-bars"
-    },
-    {
-      "type": "text",
-      "id": "price_bands",
-      "label": "Filter: price bands (AED, comma separated)",
-      "info": "100,150 gives Under AED 100, AED 100–150 and AED 150+.",
-      "default": "100,150"
     },
     {
       "type": "text",
