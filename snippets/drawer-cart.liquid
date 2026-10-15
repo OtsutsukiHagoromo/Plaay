@@ -10,7 +10,14 @@
   Module stubs at the end make bundle.theme.js (an init-only loader) import every cart module even
   when the cart is empty on first paint, so re-rendered content upgrades correctly.
 {%- endcomment -%}
-{{ 'pl-cart.css' | asset_url | stylesheet_tag }}
+{%- comment -%}
+  The drawer is closed on load, so its stylesheet loads without blocking the first paint. Until it
+  arrives the drawer is kept out of view (custom.css forces its display, so this hides it another
+  way); the onload adds .pl-cart-css to <html>, which lifts the rule.
+{%- endcomment -%}
+<style>html:not(.pl-cart-css) cart-drawer{position:fixed;left:0;top:0;width:0;height:0;overflow:hidden;visibility:hidden}</style>
+<link rel="stylesheet" href="{{ 'pl-cart.css' | asset_url }}" media="print" onload="this.media='all';document.documentElement.classList.add('pl-cart-css')">
+<noscript>{{ 'pl-cart.css' | asset_url | stylesheet_tag }}</noscript>
 
 <cart-drawer data-module="drawer-cart" data-drawer="cart">
   <div class="pl pl-drawer" data-drawer role="dialog" aria-modal="true" aria-label="Your bag" tabindex="-1">

@@ -9,7 +9,7 @@
     <div class="plo-why2__founder">
       <h2 class="plo-why2__h">{{ s.heading }} <span>{{ s.heading_light }}</span></h2>
       <figure class="plo-why2__card">
-        {%- render 'plo-img', image: s.image, asset: s.image_asset, width: 600, alt: s.byline, class: 'plo-why2__pic' -%}
+        {%- render 'plo-img', image: s.image, asset: s.image_asset, width: 600, alt: s.byline, class: 'plo-why2__pic', sizes: '(min-width: 1024px) 360px, 200px' -%}
         <figcaption>
           <blockquote>{{ s.quote }}</blockquote>
           <p class="plo-why2__by">{{ s.byline }}</p>

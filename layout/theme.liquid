@@ -6,11 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
 
-    <link
-      rel="preconnect"
-      href="https://cdn.shopify.com"
-      crossorigin>
     {%- comment -%}
+      No cdn.shopify.com preconnect here: Shopify already sends one in the response headers, and
+      a second copy only adds to the preconnect count Lighthouse warns about.
       Shopify caps resource hints at two per template, so only the origins that actually
       serve render-path assets get one. Hotjar and BugHerd hints removed with their scripts.
     {%- endcomment -%}

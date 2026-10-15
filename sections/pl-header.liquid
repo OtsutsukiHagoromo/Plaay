@@ -79,7 +79,7 @@
 
       <a class="pl-header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home" data-pl-logo>
         {%- if logo != blank -%}
-          {{ logo | image_url: width: 300 | image_tag: width: logo_w, height: 22, loading: 'eager', alt: shop.name, class: 'pl-header__logo-img' }}
+          {{ logo | image_url: width: 300 | image_tag: width: logo_w, height: 22, widths: '100, 150, 200, 300', sizes: '88px', loading: 'eager', alt: shop.name, class: 'pl-header__logo-img' }}
         {%- else -%}
           <span class="pl-h pl-h--3">plaay</span>
         {%- endif -%}
@@ -223,7 +223,7 @@
     <div class="pl-menu__head">
       <a href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }} home">
         {%- if logo != blank -%}
-          {{ logo | image_url: width: 300 | image_tag: width: logo_w, height: 22, loading: 'lazy', alt: shop.name }}
+          {{ logo | image_url: width: 300 | image_tag: width: logo_w, height: 22, widths: '100, 150, 200, 300', sizes: '88px', loading: 'lazy', alt: shop.name }}
         {%- else -%}
           <span class="pl-h pl-h--3">plaay</span>
         {%- endif -%}

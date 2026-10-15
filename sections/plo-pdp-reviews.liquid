@@ -93,7 +93,26 @@
             <blockquote>“{{ body | truncatewords: 34 }}”</blockquote>
             <figcaption>
               {%- if r.product_pictures_url != blank and r.is_shop_review != true -%}
-                <img class="plo-prev__av" src="{{ r.product_pictures_url }}" alt="" loading="lazy" width="48" height="48">
+                {%- liquid
+                  comment
+                    Judge.me hands over the full-size product photo (1000px+); ask the Shopify CDN for
+                    an avatar-sized copy instead.
+                  endcomment
+                  assign av = r.product_pictures_url
+                  assign sep = '?'
+                  if av contains '?'
+                    assign sep = '&'
+                  endif
+                  assign av1 = av | append: sep | append: 'width=96'
+                  assign av2 = av | append: sep | append: 'width=160'
+                  if av contains 'cdn.shopify.com' or av contains '/cdn/shop/'
+                    assign avs = av1 | append: ' 1x, ' | append: av2 | append: ' 2x'
+                  else
+                    assign av1 = av
+                    assign avs = ''
+                  endif
+                -%}
+                <img class="plo-prev__av" src="{{ av1 }}"{% if avs != '' %} srcset="{{ avs }}"{% endif %} alt="" loading="lazy" width="48" height="48">
               {%- else -%}
                 <span class="plo-prev__av plo-prev__av--i" aria-hidden="true">{{ r.reviewer_initial | default: 'P' }}</span>
               {%- endif -%}
