@@ -142,7 +142,24 @@
   detail line (pack size, or a size picker for multi-size products), and a price row with the
   add button. Every card has the same four rows, so a grid reads in clean lines.
 {%- endcomment -%}
-<article class="plo-card plo-c3"{% if range != blank %} data-range="{{ range }}"{% endif %}{% if has_sizes %} data-plo-sizes data-pct="{{ sub_pct }}"{% endif %}>
+{%- liquid
+  comment
+    For the collection filters (assets/pl-opt.js initCollFilter): the prices of the packs in stock,
+    whether it can be subscribed to, and its tags.
+  endcomment
+  assign f_prices = ''
+  for x in product.variants
+    if x.available
+      assign f_prices = f_prices | append: x.id | append: ':' | append: x.price | append: ','
+    endif
+  endfor
+  assign f_tags = ''
+  for t in product.tags
+    assign th = t | handleize
+    assign f_tags = f_tags | append: '|' | append: th
+  endfor
+-%}
+<article class="plo-card plo-c3" data-f-prices="{{ f_prices }}" data-f-tags="{{ f_tags }}|"{% if sub_pct > 0 %} data-f-sub{% endif %}{% if range != blank %} data-range="{{ range }}"{% endif %}{% if has_sizes %} data-plo-sizes data-pct="{{ sub_pct }}"{% endif %}>
   <a class="plo-card__img" href="{{ href }}" tabindex="-1" aria-hidden="true">
     {%- if pkey != blank -%}
       {%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}
