@@ -1,0 +1,92 @@
+{% comment %}
+IMPORTANT: This file is required for Fudge Landing Pages to work properly. Do NOT delete.
+
+Displays an image or video from the Fudge media library.
+Note that the media may be either an image or a video, but you won't know which one, since the user could switch the media at any point.
+This snippet renders an img or video tag depending on the type, and makes sure the styling is rendered consistently.
+Even though this may render an image or video, the intended use for this snippet is where an image would normally display (i.e. even if a video is displayed, it will be displayed without controls).
+
+Primary input variables (you must provide *one* of the following variables):
+Option 1: `shopify_file` - display media from Shopify CDN.
+Option 2: `fudge_file` - display media from Fudge CDN.
+Option 3: `url` - display media from an external URL.
+
+Other required input variables:
+- `type` - the type of the media. Must be 'image' or 'video'. Required.
+
+Optional input variables:
+- `videoBehavior` - whether the video should autoplay and loop, or whether only the first frame should be shown. Must be 'playVideo' or 'firstFrame'. Optional.
+- `sizes` - the sizes attribute value to pass to the img to enable responsive images. Optional but recommended.
+- `style` - the style attribute value to pass to the img or video. Optional.
+- `class` - the class attribute value to pass to the img or video. Optional.
+- `background` - pass `true` to use the element as a background. Will set the style to `position: absolute; inset: 0; width: 100%; height: 100%;`. Make sure to place it in a non-statically positioned parent, where the parent is the target element you want to add a background to. Optional.
+- `muted` - whether to mute the video. Defaults to `true`. Optional.
+- `attributes` - a string of additional properties to pass to the rendered img/video element. Optional.
+{% endcomment %}
+
+{% capture settings %}{"id":{{id|json}},"shopify_file":{{shopify_file|json}},"fudge_file":{{fudge_file|json}},"url":{{url|json}},"type":{{type|json}},"videoBehavior":{{videoBehavior|json}},"sizes":{{sizes|json}},"style":{{style|json}},"class":{{class|json}},"background":{{background|json}},"muted":{{muted|json}},"attributes":{{attributes|json}}}{% endcapture %}
+
+{% if background == true %}
+    {% assign bg_style = 'position: absolute; inset: 0; width: 100%; height: 100%;' %}
+{% endif %}
+
+{% if type == 'video' %}
+    {% if shopify_file %}
+        {% assign src = shopify_file | file_url %}
+    {% elsif fudge_file %}
+        {% assign src = "https://static.fudge.cloud/" | append: fudge_file %}
+    {% elsif url %}
+        {% assign src = url %}
+    {% endif %}
+
+    {% if src %}
+    <video
+        src="{{src}}"
+        {% if videoBehavior == 'playVideo' %}
+            autoplay
+            loop
+        {% endif %}
+        {% if muted != false %}
+        muted
+        {% endif %}
+        playsInline
+        style="{{bg_style}} {{style}}"
+        class="{{class}}"
+        {{ attributes }}
+        data-media-settings="{{ settings | escape }}"
+    ></video>
+    {% endif %}
+{% else %}
+    {% if shopify_file %}
+        {% assign src = shopify_file | file_url %}
+        {% assign sizes_list = '320,480,640,1024,1366,1600,1920' | split: ',' %}
+        {% assign srcset = '' %}
+        {% for size in sizes_list %}
+            {% assign size_arg = size | append: 'x' %}
+            {% assign size_src = shopify_file | file_img_url: size_arg %}
+            {% assign srcset = srcset | append: size_src | append: ' ' | append: size | append: 'w' %}
+            {% unless forloop.last %}
+                {% assign srcset = srcset | append: ',' %}
+            {% endunless %}
+        {% endfor %}
+        {% if srcset contains "no-image" %}
+        {% assign srcset = '' %}
+        {% endif %}
+    {% elsif fudge_file %}
+        {% assign src = "https://static.fudge.cloud/" | append: fudge_file %}
+    {% elsif url %}
+        {% assign src = url %}
+    {% endif %}
+
+    <img
+        src="{{ src }}"
+        {% if srcset %}
+        srcset="{{ srcset }}"
+        {% endif %}
+        style="{{bg_style}} {{style}}"
+        class="{{class}}"
+        sizes="{{sizes | default: '100vw'}}"
+        {{ attributes }}
+        data-media-settings="{{ settings | escape }}"
+    />
+{% endif %}

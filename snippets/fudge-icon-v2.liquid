@@ -1,0 +1,102 @@
+{% comment %}
+IMPORTANT: This file is required for Fudge Landing Pages to work properly. Do NOT delete.
+
+Displays an icon from the Fudge icon library.
+
+Primary input variables (you must provide *one* of the following variables):
+Option 1: `fudge_file` - display an icon image from Fudge CDN. Required.
+Option 2: `shopify_file` - display an icon image from Shopify CDN. Required.
+Option 3: `svg_id` - the id of the icon SVG. Required.
+Option 4: `emoji` - the emoji character to display. Required.
+
+Other required input variables:
+- `size` - the size in pixels that the icon should be. Required. Note, you can also pass "full", which will make the icon 100% width. Only do this if you are sure this will give you the layout you expect.
+- `color` - the color that the icon should be. Can be any valid CSS color value. Required. Note, you can also pass "currentColor", which will make the icon inherit the parent element's text color. Only do this if the color on the parent is set and you want to use this color for the icon.
+
+Optional input variables:
+- `style` - the style attribute value to pass to the icon.
+- `class` - the class attribute value to pass to the icon.
+- `attributes` - a string of additional HTML properties to pass to the rendered icon.
+{% endcomment %}
+
+{% assign props = 'fudge_file,shopify_file,svg_id,emoji,id,size,color,style,class,attributes' | split: ',' %}
+{% capture settings %}{"fudge_file":{{fudge_file|json}},"shopify_file":{{shopify_file|json}},"svg_id":{{svg_id|json}},"emoji":{{emoji|json}},"id":{{id|json}},"size":{{size|json}},"color":{{color|json}},"style":{{style|json}},"class":{{class|json}},"attributes":{{attributes|json}}}{% endcapture %}
+
+{% assign size_str = size | append: '' %}
+{% if size_str != 'full' %}
+    {% assign size = size_str | remove: 'px' %}
+{% endif %}
+
+{% if size == "full" %}
+    {% assign css_width = "100%" %}
+    {% assign css_height = "auto" %}
+{% else %}
+    {% assign css_width = size | append: "px" %}
+    {% assign css_height = size | append: "px" %}
+{% endif %}
+
+{% assign base_style = "display: inline-block; aspect-ratio: 1; flex-shrink: 0; color: " | append: color | append: "; width:" | append: css_width | append: "; height:" | append: css_height | append: ";" %}
+
+{% if fudge_file or shopify_file %}
+    {% if size == "full" %}
+        {% assign base_size = 200 %}
+    {% else %}
+        {% assign base_size = size %}
+    {% endif %}
+
+    <img
+        {% if fudge_file %}
+        src="https://static.fudge.cloud/cdn-cgi/image/width={{ base_size | times: 2 }},format=auto,quality=90/{{fudge_file}}"
+        srcset="
+            https://static.fudge.cloud/cdn-cgi/image/width={{ base_size }},format=auto,quality=90/{{fudge_file}} 1x,
+            https://static.fudge.cloud/cdn-cgi/image/width={{ base_size | times: 2 }},format=auto,quality=90/{{fudge_file}} 2x,
+            https://static.fudge.cloud/cdn-cgi/image/width={{ base_size | times: 3 }},format=auto,quality=90/{{fudge_file}} 3x
+        "
+        {% else %}
+        {% assign size_1x = base_size | append: 'x' %}
+        
+        {% assign size_2x = base_size | times: 2 %}
+        {% assign size_2x = size_2x | append: 'x' %}
+        
+        {% assign size_3x = base_size | times: 3 %}
+        {% assign size_3x = size_3x | append: 'x' %}
+
+        src="{{ shopify_file | file_img_url: size_2x }}"
+        srcset="
+            {{ shopify_file | file_img_url: size_1x }} 1x,
+            {{ shopify_file | file_img_url: size_2x }} 2x,
+            {{ shopify_file | file_img_url: size_3x }} 3x
+        "
+        {% endif %}
+        style="{{ base_style }} {{ style }}"
+        class="{{ class }}"
+        {{ attributes }}
+        data-icon-settings="{{ settings | escape }}"
+    />
+{% elsif svg_id %}
+    {% assign icon = shop.metafields.fudge[svg_id].value %}
+
+    {% if icon %}
+        <svg
+            viewBox="{{ icon.viewBox }}"
+            fill="{{ icon.fill | default: 'none' }}"
+            style="fill: {{ icon.fill | default: 'none' }}; stroke: initial; {{ base_style }} {{ style }}"
+            class="{{ class }}"
+            {{ attributes }}
+            data-icon-settings="{{ settings | escape }}"
+        >
+            {{ icon.svg }}
+        </svg>
+    {% endif %}
+{% elsif emoji %}
+    <svg
+        viewBox="0 0 100 100"
+        preserveAspectRatio="xMidYMid meet"
+        style="fill: initial; stroke: initial; {{ base_style }} {{ style }}"
+        class="{{ class }}"
+        {{ attributes }}
+        data-icon-settings="{{ settings | escape }}"
+    >
+        <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-size="100" style="width: 100%; height: auto; display: block;">{{ emoji }}</text>
+    </svg>
+{% endif %}
