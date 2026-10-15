@@ -99,23 +99,31 @@
             "label": "Variety",
             "collection": "variety-packs"
           }
+        },
+        "t_li": {
+          "type": "tab",
+          "settings": {
+            "label": "Limited",
+            "collection": "limited-editions"
+          }
         }
       },
       "block_order": [
+        "t_sl",
         "t_tr",
         "t_ba",
-        "t_sl",
-        "t_va"
+        "t_va",
+        "t_li"
       ],
       "settings": {
         "eyebrow": "Bestsellers",
         "heading": "Our",
         "heading_light": "Bestsellers",
         "products": [
+          "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g",
           "triple-chocolate-truffle",
           "peanut-butter-truffle",
-          "pistachio-chocolate-bar-x-12",
-          "plaay-70-dark-chocolate-hazelnut-bar-6-x-80g"
+          "pistachio-chocolate-bar-x-12"
         ],
         "limit": 4,
         "link_label": "Shop all",

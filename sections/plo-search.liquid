@@ -91,7 +91,7 @@
       {%- if range_list.size > 1 -%}
         <div class="plo-chips plo-srch__chips" role="group" aria-label="Filter results">
           <button type="button" class="is-on" data-plo-srch-f="all" aria-pressed="true">All<small>{{ m_count }}</small></button>
-          {%- assign labels = 'truffles:Truffles,bars:Bars,slabs:Slabs,packs:Variety' | split: ',' -%}
+          {%- assign labels = 'slabs:Slabs,truffles:Truffles,bars:Bars,packs:Variety' | split: ',' -%}
           {%- for l in labels -%}
             {%- assign kv = l | split: ':' -%}
             {%- if ranges contains kv[0] -%}<button type="button" data-plo-srch-f="{{ kv[0] }}" aria-pressed="false">{{ kv[1] }}</button>{%- endif -%}

@@ -63,14 +63,24 @@
       {%- for pass in order -%}
         {%- for prod in src.products limit: 100 -%}
           {%- liquid
+            comment
+              First range in tile order, but the last tile (Limited) wins, so limited editions
+              show under Limited and sit at the end.
+            endcomment
             assign range = 'other'
             for row in rows
               assign p = row | strip | split: '|'
               assign rh = p[1] | strip
-              if range == 'other' and rh != blank
+              assign is_last = forloop.last
+              if rh != blank
                 for col in prod.collections
                   if col.handle == rh
-                    assign range = rh
+                    if range == 'other'
+                      assign range = rh
+                    endif
+                    if is_last
+                      assign range = rh
+                    endif
                   endif
                 endfor
               endif

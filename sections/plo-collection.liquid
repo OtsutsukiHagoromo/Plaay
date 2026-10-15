@@ -251,14 +251,60 @@
       {%- elsif collection.products.size > 0 -%}
         <div class="plo-lgrid">
           <div class="plo-grid">
-            {%- for product in collection.products -%}
-              {%- liquid
-                assign eager = false
-                if forloop.index <= 4
-                  assign eager = true
-                endif
-              -%}
-              {%- render 'plo-card', product: product, eager: eager, skip_new: true, view: template.suffix -%}
+            {%- liquid
+              comment
+                Shop all on "Featured": cards run range by range in tab order (Slabs, Truffles, Bars,
+                Variety, Limited), anything in no range last. Other sorts keep Shopify's order.
+              endcomment
+              assign passes = 'all'
+              if is_all and current_sort == 'manual'
+                assign passes = chip_handles | join: ',' | remove_first: s.all_handle | append: ',other' | remove_first: ','
+              endif
+              assign passes = passes | split: ','
+              assign last_range = passes.size | minus: 1
+              assign placed = ','
+              assign n = 0
+            -%}
+            {%- for pass in passes -%}
+              {%- for product in collection.products -%}
+                {%- liquid
+                  assign key = ',' | append: product.id | append: ','
+                  if placed contains key
+                    continue
+                  endif
+                  if pass != 'all'
+                    comment
+                      The product's range: its first range in tab order, but Limited (the last tab)
+                      wins, so limited editions sit together at the end.
+                    endcomment
+                    assign prange = 'other'
+                    assign hi = 0
+                    for h in passes
+                      assign hi = hi | plus: 1
+                      for col in product.collections
+                        if col.handle == h
+                          if prange == 'other'
+                            assign prange = h
+                          endif
+                          if hi == last_range
+                            assign prange = h
+                          endif
+                        endif
+                      endfor
+                    endfor
+                    if prange != pass
+                      continue
+                    endif
+                  endif
+                  assign placed = placed | append: product.id | append: ','
+                  assign n = n | plus: 1
+                  assign eager = false
+                  if n <= 4
+                    assign eager = true
+                  endif
+                -%}
+                {%- render 'plo-card', product: product, eager: eager, skip_new: true, view: template.suffix -%}
+              {%- endfor -%}
             {%- endfor -%}
           </div>
         </div>
