@@ -345,16 +345,8 @@
         "heading_light": "Plaaying",
         "link_label": "Instagram",
         "link_url": "https://www.instagram.com/shopplaay"
-      }
-    },
-    "reel_band": {
-      "type": "plo-reel-band",
-      "settings": {
-        "eyebrow": "",
-        "heading": "Plaay All Day",
-        "text": "Sun out, guilt out. Clean chocolate for every kind of day.",
-        "btn_label": "Shop now"
-      }
+      },
+      "disabled": true
     }
   },
   "order": [
@@ -362,7 +354,6 @@
     "claims",
     "bestsellers",
     "categories",
-    "reel_band",
     "reviews",
     "videos",
     "why"
