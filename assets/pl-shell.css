@@ -513,13 +513,13 @@ body.pl-scrolled .pl-header__logo img { transform: scale(.92); }
 .pl-footer__top { grid-template-columns: 1fr 2fr; }
 .pl-footer__cols { padding-top: 0; }
 .pl-footer__bottom { flex-direction: row; align-items: center; margin-top: 48px; }
-.pl-footer .pl-footer__mark { font-size: 22vw; margin-top: 16px; }
+.pl-footer .pl-footer__mark { font-size: min(22vw, 320px); margin: 24px 0 0; padding-bottom: .2em; line-height: .9; }
 }
 .pl-footer .pl-footer__legal { align-items: center; }
 .pl-footer .pl-footer__legal a { min-height: 0; }
 /* Phones: show the whole wordmark above the tab bar (no crop), one divider above the facts */
 @media (max-width: 1023.98px) {
-.pl-footer .pl-footer__mark { margin: 12px 0 0; padding-bottom: 20px; line-height: .9; font-size: 30vw; }
+.pl-footer .pl-footer__mark { margin: 12px 0 0; padding-bottom: calc(.12em + 16px); line-height: .9; font-size: 30vw; }
 .pl-footer__col:last-child { border-bottom: 0; }
 }
 /* Eight nav links: keep them on one line on smaller desktops. */
