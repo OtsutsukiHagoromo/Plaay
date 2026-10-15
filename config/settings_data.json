@@ -12,10 +12,6 @@
     "favicon": "shopify://shop_images/Blue_logo_on_Yellow_Choco_Snack_Hack_Zoomed.jpg",
     "global_recharge_point_two": "15% Off Regular Price",
     "ingredients_icons_link_list": "ingredients-icons",
-    "eid_sale_enabled": false,
-    "fathers_day_sale_enabled": false,
-    "summer_sale_enabled": false,
-    "bts_sale_enabled": false,
     "cart_tier_ship": 75,
     "cart_tier_1_spend": 250,
     "cart_tier_1_label": "7% off",
@@ -23,6 +19,10 @@
     "cart_tier_2_label": "10% off + Mystery Gift",
     "cart_tier_3_spend": 500,
     "cart_tier_3_label": "15% off + Mystery Gift",
+    "eid_sale_enabled": false,
+    "fathers_day_sale_enabled": false,
+    "summer_sale_enabled": false,
+    "bts_sale_enabled": false,
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",
@@ -307,21 +307,11 @@
       },
       "login_template": {
         "type": "login_template",
-        "settings": {
-          "background_color": "#021d49",
-          "text_color": "#ffffff",
-          "title": "Login to your plaay account",
-          "background_color_main": "#f4f4f4"
-        }
+        "settings": {}
       },
       "account_template": {
         "type": "account_template",
-        "settings": {
-          "title": "My Account",
-          "background_color": "#f5c08d",
-          "show_users_name": true,
-          "background_color_main": "#f4f4f4"
-        }
+        "settings": {}
       },
       "infinite-scroll-slider-text": {
         "type": "infinite-scroll-slider-text",

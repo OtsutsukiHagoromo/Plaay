@@ -16,12 +16,26 @@
           "type": "slide",
           "settings": {
             "style": "image",
-            "bg": "#FFFFFF",
+            "bg": "#ffffff",
             "image_asset": "plo-hero-freedom.jpg",
+            "image_alt": "Taste freedom: Plaay clean chocolate",
             "image_mobile_asset": "plo-hero-freedom-m.jpg",
             "image_mobile_ratio": "610 / 1006",
-            "image_alt": "Taste freedom: Plaay clean chocolate",
-            "btn_url": "shopify://collections/shop-all"
+            "image_2_asset": "",
+            "eyebrow": "",
+            "heading": "",
+            "heading_mark": "",
+            "body": "",
+            "btn_label": "",
+            "btn_url": "shopify://collections/shop-all",
+            "btn_arrow": true,
+            "btn_navy": false,
+            "link_label": "",
+            "link_url": "",
+            "show_rating": true,
+            "chips": "",
+            "sticker_big": "",
+            "sticker_small": ""
           }
         }
       },
@@ -72,6 +86,13 @@
     "bestsellers": {
       "type": "plo-products",
       "blocks": {
+        "t_sl": {
+          "type": "tab",
+          "settings": {
+            "label": "Slabs",
+            "collection": "new-chocolate-slabs"
+          }
+        },
         "t_tr": {
           "type": "tab",
           "settings": {
@@ -84,13 +105,6 @@
           "settings": {
             "label": "Bars",
             "collection": "chocolate-bars"
-          }
-        },
-        "t_sl": {
-          "type": "tab",
-          "settings": {
-            "label": "Slabs",
-            "collection": "new-chocolate-slabs"
           }
         },
         "t_va": {
@@ -128,6 +142,7 @@
         "limit": 4,
         "link_label": "Shop all",
         "link_url": "/collections/shop-all",
+        "pad_bottom": false,
         "tab_label": "Bestsellers"
       }
     },
@@ -141,7 +156,7 @@
             "sub": "6 flavours",
             "url": "/collections/new-chocolate-slabs",
             "product": "new-chocolate-slabs-mix-pack-of-6",
-            "tint": "#FED8B4",
+            "tint": "#fed8b4",
             "photo_asset": "plo-cat-slabs.jpg",
             "photo_pos": "92% 50%"
           }
@@ -153,7 +168,7 @@
             "sub": "8 flavours",
             "url": "/collections/chocolate-truffles",
             "product": "truffle-mix",
-            "tint": "#FED8B4",
+            "tint": "#fed8b4",
             "photo_asset": "plo-cat-truffles.jpg",
             "photo_pos": "95% 50%"
           }
@@ -165,7 +180,7 @@
             "sub": "5 flavours",
             "url": "/collections/chocolate-bars",
             "product": "salted-caramel-bar-x12",
-            "tint": "#FED8B4",
+            "tint": "#fed8b4",
             "photo_asset": "plo-cat-bars.jpg",
             "photo_pos": "80% 50%"
           }
@@ -177,7 +192,7 @@
             "sub": "Try everything",
             "url": "/collections/variety-packs",
             "product": "og-plaayer-pack",
-            "tint": "#FED8B4",
+            "tint": "#fed8b4",
             "photo_asset": "plo-cat-packs.jpg",
             "photo_pos": "95% 50%"
           }
@@ -193,63 +208,6 @@
         "eyebrow": "Shop",
         "heading": "Shop by",
         "heading_light": "Category"
-      }
-    },
-    "why": {
-      "type": "plo-why",
-      "blocks": {
-        "u1": {
-          "type": "usp",
-          "settings": {
-            "icon": "sparkle",
-            "big": "Zero Refined Sugar",
-            "small": "Sweetened with dates and coconut sugar",
-            "color": "#FFB600"
-          }
-        },
-        "u2": {
-          "type": "usp",
-          "settings": {
-            "icon": "leaf",
-            "big": "No Palm Oil",
-            "small": "Real cocoa butter and nuts instead",
-            "color": "#46A140"
-          }
-        },
-        "u3": {
-          "type": "usp",
-          "settings": {
-            "icon": "heart",
-            "big": "Gut Friendly",
-            "small": "Prebiotic fibre in our truffles and bars",
-            "color": "#FF3EB5"
-          }
-        },
-        "u4": {
-          "type": "usp",
-          "settings": {
-            "icon": "check",
-            "big": "100% Clean",
-            "small": "No gluten, no soy, real ingredients",
-            "color": "#00BCB4"
-          }
-        }
-      },
-      "block_order": [
-        "u1",
-        "u2",
-        "u3",
-        "u4"
-      ],
-      "settings": {
-        "heading": "Made by a",
-        "heading_light": "Nutritionist",
-        "image_asset": "plo-rashi.jpg",
-        "quote": "“You don’t need to earn chocolate.”",
-        "byline": "Rashi Chowdhary, nutritionist and founder",
-        "link_label": "Read our story",
-        "link_url": "/pages/for-the-geeks-1",
-        "touch_prev": false
       }
     },
     "reviews": {
@@ -316,28 +274,40 @@
           "type": "reel",
           "settings": {
             "image": "shopify://shop_images/plaay26-stack-pour.jpg",
-            "caption": "How the pour happens"
+            "image_asset": "",
+            "caption": "How the pour happens",
+            "video_url": "",
+            "url": ""
           }
         },
         "reel_2": {
           "type": "reel",
           "settings": {
             "image": "shopify://shop_images/plaay26-apartment.jpg",
-            "caption": "The 3:30 pm reset"
+            "image_asset": "",
+            "caption": "The 3:30 pm reset",
+            "video_url": "",
+            "url": ""
           }
         },
         "reel_3": {
           "type": "reel",
           "settings": {
             "image": "shopify://shop_images/plaay26-card-game.jpg",
-            "caption": "Game night, Plaay style"
+            "image_asset": "",
+            "caption": "Game night, Plaay style",
+            "video_url": "",
+            "url": ""
           }
         },
         "reel_4": {
           "type": "reel",
           "settings": {
             "image": "shopify://shop_images/plaay26-truffle-spill.jpg",
-            "caption": "Truffle mix, unboxed"
+            "image_asset": "",
+            "caption": "Truffle mix, unboxed",
+            "video_url": "",
+            "url": ""
           }
         }
       },
@@ -347,14 +317,98 @@
         "reel_3",
         "reel_4"
       ],
+      "disabled": true,
       "settings": {
         "eyebrow": "On camera",
         "heading": "Look Who’s",
         "heading_light": "Plaaying",
         "link_label": "Instagram",
         "link_url": "https://www.instagram.com/shopplaay"
+      }
+    },
+    "why": {
+      "type": "plo-why",
+      "blocks": {
+        "u1": {
+          "type": "usp",
+          "settings": {
+            "icon": "sparkle",
+            "big": "Zero Refined Sugar",
+            "small": "Sweetened with dates and coconut sugar",
+            "color": "#ffb600"
+          }
+        },
+        "u2": {
+          "type": "usp",
+          "settings": {
+            "icon": "leaf",
+            "big": "No Palm Oil",
+            "small": "Real cocoa butter and nuts instead",
+            "color": "#46a140"
+          }
+        },
+        "u3": {
+          "type": "usp",
+          "settings": {
+            "icon": "heart",
+            "big": "Gut Friendly",
+            "small": "Prebiotic fibre in our truffles and bars",
+            "color": "#ff3eb5"
+          }
+        },
+        "u4": {
+          "type": "usp",
+          "settings": {
+            "icon": "check",
+            "big": "100% Clean",
+            "small": "No gluten, no soy, real ingredients",
+            "color": "#00bcb4"
+          }
+        }
       },
-      "disabled": true
+      "block_order": [
+        "u1",
+        "u2",
+        "u3",
+        "u4"
+      ],
+      "settings": {
+        "heading": "Made by a",
+        "heading_light": "Nutritionist",
+        "image_asset": "plo-rashi.jpg",
+        "quote": "“You don’t need to earn chocolate.”",
+        "byline": "Rashi Chowdhary, nutritionist and founder",
+        "link_label": "Read our story",
+        "link_url": "/pages/for-the-geeks-1",
+        "touch_prev": false
+      }
+    },
+    "179205310246d6abeb": {
+      "type": "apps",
+      "blocks": {
+        "instafeed_app_block_akyUpA": {
+          "type": "shopify://apps/instafeed/blocks/app-block/c447db20-095d-4a10-9725-b5977662c9d5",
+          "settings": {
+            "title": "",
+            "title_color": "",
+            "title_size_v2": 0,
+            "alignment": "center",
+            "instafeed_margin_top": 0,
+            "instafeed_margin_bottom": 0,
+            "instafeed_margin_sides": 0,
+            "show_instagram_link": false,
+            "link_alignment": "left",
+            "link_color": "#000000",
+            "background_color": "",
+            "feed_id": "",
+            "html_area": ""
+          }
+        }
+      },
+      "block_order": [
+        "instafeed_app_block_akyUpA"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -364,6 +418,7 @@
     "categories",
     "reviews",
     "videos",
-    "why"
+    "why",
+    "179205310246d6abeb"
   ]
 }
