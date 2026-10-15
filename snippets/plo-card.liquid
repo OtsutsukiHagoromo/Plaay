@@ -165,7 +165,9 @@
       {%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}
       <img src="{{ ph | asset_img_url: '600x' }}" srcset="{{ ph | asset_img_url: '300x' }} 300w, {{ ph | asset_img_url: '450x' }} 450w, {{ ph | asset_img_url: '600x' }} 600w, {{ ph | asset_url }} 800w" sizes="(min-width: 1024px) 300px, 46vw" alt="{{ product.title | escape }}" loading="{{ load }}" width="800" height="1000" class="is-photo">
     {%- elsif product.featured_image -%}
-      {{ product.featured_image | image_url: width: 600 | image_tag: loading: load, sizes: '(min-width: 1024px) 300px, 46vw', widths: '240, 360, 480, 600', alt: product.title }}
+      {%- comment -%} The shown pack's own photo when it has one (truffle sizes), so the picture matches the size picker. {%- endcomment -%}
+      {%- assign c_img = v.featured_image | default: product.featured_image -%}
+      {{ c_img | image_url: width: 600 | image_tag: loading: load, sizes: '(min-width: 1024px) 300px, 46vw', widths: '240, 360, 480, 600', alt: product.title, data-plo-cimg: '' }}
     {%- else -%}
       {{ 'product-1' | placeholder_svg_tag }}
     {%- endif -%}
@@ -182,7 +184,7 @@
           <select data-plo-szsel autocomplete="off">
             {%- for x in product.variants -%}
               {%- assign xl = x.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' | replace: ' g', 'g' -%}
-              <option value="{{ x.id }}" data-price="{{ x.price }}"{% if x.id == v.id %} selected{% endif %}{% unless x.available %} disabled{% endunless %}>{{ xl }}</option>
+              <option value="{{ x.id }}" data-price="{{ x.price }}"{% if x.featured_image %} data-img="{{ x.featured_image | image_url: width: 600 }}" data-srcset="{{ x.featured_image | image_url: width: 240 }} 240w, {{ x.featured_image | image_url: width: 360 }} 360w, {{ x.featured_image | image_url: width: 480 }} 480w, {{ x.featured_image | image_url: width: 600 }} 600w"{% endif %}{% if x.id == v.id %} selected{% endif %}{% unless x.available %} disabled{% endunless %}>{{ xl }}</option>
             {%- endfor -%}
           </select>
           {%- render 'pl-icon', name: 'chev-down', size: 12, stroke: 2.6 -%}

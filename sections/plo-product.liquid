@@ -184,6 +184,20 @@
 -%}
 <div class="pl plo plo-pdp" data-plo-pdp data-view="{{ view }}" data-pct="{{ sub_pct }}" data-plans="{%- render 'plo-vplans', variant: v, freq_ids: freq_ids, fallback: plan_id -%}" data-freq="{{ freq_def }}">
   <div class="plo-pdp__cols">
+    {%- liquid
+      comment
+        Sizes with their own photo (truffles: 10 x 30g / 10 x 60g / 2 x 60g boxes) open on the
+        chosen size's photo; it is also the first thumbnail, and the other sizes' box shots are left
+        out of the row. Picking another size swaps both (assets/pl-opt.js initPdp, data-img).
+      endcomment
+      assign main_img = v.featured_image | default: product.featured_image
+      assign v_imgs = ','
+      for x in product.variants
+        if x.featured_image
+          assign v_imgs = v_imgs | append: x.featured_image.id | append: ','
+        endif
+      endfor
+    -%}
     {%- if pkey != blank -%}
       <div class="plo-gal plo-gal--photos" style="--tint: {{ tint }};" data-plo-photos>
         <div class="plo-gal__track" data-plo-phtrack>
@@ -205,16 +219,25 @@
     {%- else -%}
     <div class="plo-gal" style="--tint: {{ tint }};">
       <div class="plo-gal__main">
-        {%- if product.featured_image -%}
-          {{ product.featured_image | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 50vw, 100vw', widths: '500, 750, 1000', alt: product.title, class: 'plo-gal__img' }}
+        {%- if main_img -%}
+          {{ main_img | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 50vw, 100vw', widths: '500, 750, 1000', alt: product.title, class: 'plo-gal__img' }}
         {%- endif -%}
         {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge">{{ badge_text }}</span>{%- endif -%}
         {%- render 'plo-heart', product: product, class: 'plo-gal__heart' -%}
       </div>
       {%- if product.images.size > 1 -%}
         <div class="plo-gal__thumbs">
-          {%- for img in product.images limit: 5 -%}
-            <button type="button" class="plo-gal__th{% if forloop.first %} is-on{% endif %}" data-plo-thumb data-src="{{ img | image_url: width: 1000 }}" aria-label="Image {{ forloop.index }}">
+          {%- if main_img -%}
+            <button type="button" class="plo-gal__th is-on" data-plo-thumb data-plo-vthumb data-src="{{ main_img | image_url: width: 1000 }}" aria-label="Image 1">
+              {{ main_img | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+            </button>
+          {%- endif -%}
+          {%- assign th_n = 1 -%}
+          {%- for img in product.images -%}
+            {%- assign iid = ',' | append: img.id | append: ',' -%}
+            {%- if img.id == main_img.id or v_imgs contains iid or th_n >= 5 -%}{%- continue -%}{%- endif -%}
+            {%- assign th_n = th_n | plus: 1 -%}
+            <button type="button" class="plo-gal__th" data-plo-thumb data-src="{{ img | image_url: width: 1000 }}" aria-label="Image {{ th_n }}">
               {{ img | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
             </button>
           {%- endfor -%}
@@ -379,7 +402,7 @@
                   endif
                 -%}
                 <label class="plo-size{% if variant.id == best_id %} is-best{% endif %}">
-                  <input type="radio" name="plo-size-{{ section.id }}" value="{{ variant.id }}" data-price="{{ variant.price }}"{% if vplan != '' %} data-plans="{%- render 'plo-vplans', variant: variant, freq_ids: freq_ids, fallback: vplan -%}"{% endif %}{% if pcs > 0 %} data-pcs="{{ pcs }}"{% endif %}{% if variant.id == v.id %} checked{% endif %}{% unless variant.available %} disabled{% endunless %} data-plo-size>
+                  <input type="radio" name="plo-size-{{ section.id }}" value="{{ variant.id }}" data-price="{{ variant.price }}"{% if vplan != '' %} data-plans="{%- render 'plo-vplans', variant: variant, freq_ids: freq_ids, fallback: vplan -%}"{% endif %}{% if pcs > 0 %} data-pcs="{{ pcs }}"{% endif %}{% if variant.featured_image %} data-img="{{ variant.featured_image | image_url: width: 1000 }}" data-thumb="{{ variant.featured_image | image_url: width: 160 }}"{% endif %}{% if variant.id == v.id %} checked{% endif %}{% unless variant.available %} disabled{% endunless %} data-plo-size>
                   <span>
                     {%- if variant.id == best_id -%}<em class="plo-size__tag">Best value</em>{%- endif -%}
                     <b>{{ label }}</b>
@@ -591,7 +614,7 @@
           {%- endif -%}
         </div>
       {%- endif -%}
-      <span class="plo-sticky__pic" style="--tint: {{ tint }};">{%- if pkey != blank -%}{%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}<img src="{{ ph | asset_img_url: '160x' }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif product.featured_image -%}{{ product.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
+      <span class="plo-sticky__pic" style="--tint: {{ tint }};">{%- if pkey != blank -%}{%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}<img src="{{ ph | asset_img_url: '160x' }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif main_img -%}{{ main_img | image_url: width: 120 | image_tag: loading: 'lazy', alt: '', data-plo-sticky-img: '' }}{%- endif -%}</span>
       <span class="plo-sticky__t"><b>{{ product.title }}</b><span class="plo-sticky__p"><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- if has_sub -%} <s data-plo-sticky-was>{%- render 'plaay-aed', fils: v.price -%}</s>{%- endif -%}</span></span>
       <button type="button" class="plo-btn" data-plo-sticky-add>Add to bag</button>
     </div>

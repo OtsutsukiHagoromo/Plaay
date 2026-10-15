@@ -130,6 +130,22 @@
       sticky.classList.toggle('is-one', !isSub());
     }
 
+    /* Sizes with their own photo (data-img): show it in the gallery, the first thumbnail and the
+       sticky bar. */
+    function showSizePhoto(r) {
+      var img = r.getAttribute('data-img'), th = r.getAttribute('data-thumb');
+      if (!img) return;
+      if (main) { main.removeAttribute('srcset'); main.src = img; }
+      var vt = root.querySelector('[data-plo-vthumb]');
+      if (vt) {
+        vt.setAttribute('data-src', img);
+        var ti = vt.querySelector('img');
+        if (ti && th) { ti.removeAttribute('srcset'); ti.src = th; }
+        Array.prototype.forEach.call(root.querySelectorAll('[data-plo-thumb]'), function (x) { x.classList.toggle('is-on', x === vt); });
+      }
+      var si = root.querySelector('[data-plo-sticky-img]');
+      if (si && th) { si.removeAttribute('srcset'); si.src = th; }
+    }
     function isSub() {
       var m = form.querySelector('[data-plo-mode]:checked');
       return !!(m && m.value === 'sub' && planInput);
@@ -158,6 +174,7 @@
       if (e.target.matches('[data-plo-size]')) {
         variantInput.value = e.target.value;
         price = Number(e.target.getAttribute('data-price'));
+        showSizePhoto(e.target);
       }
       syncPlan();
       syncSticky();
@@ -361,6 +378,9 @@
     var opt = sel.options[sel.selectedIndex];
     var price = Number(opt.getAttribute('data-price')), pct = Number(card.getAttribute('data-pct')) || 0;
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-quick]'), function (q) { q.setAttribute('data-plo-quick', sel.value); });
+    /* The pack's own photo, when it has one. */
+    var cimg = card.querySelector('[data-plo-cimg]');
+    if (cimg && opt.getAttribute('data-img')) { cimg.srcset = opt.getAttribute('data-srcset') || ''; cimg.src = opt.getAttribute('data-img'); }
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp]'), function (el) { el.textContent = aed(price); });
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sub]'), function (el) { el.textContent = aed(Math.floor(price * (100 - pct) / 100)); });
   });
@@ -740,7 +760,8 @@
       v = v || p.variants[0];
       var ns = split(p.title);
       var size = ns[1] || (v.title !== 'Default Title' ? v.title.replace(/ [xX] /, ' × ').replace(/G$/, 'g') : '');
-      var img = p.featured_image ? p.featured_image.replace(/^\/\//, 'https://') : '';
+      var src = (v.featured_image && v.featured_image.src) || p.featured_image;
+      var img = src ? src.replace(/^\/\//, 'https://') : '';
       if (img) img += (img.indexOf('?') > -1 ? '&' : '?') + 'width=600';
       var url = '/products/' + p.handle;
       return '<article class="plo-card plo-c3 plo-wl__card" data-handle="' + esc(p.handle) + '">' +
