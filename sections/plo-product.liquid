@@ -169,10 +169,11 @@
   if sub_pct > 0 and plan_id != ''
     assign has_sub = true
   endif
+  comment
+    One-time is the default purchase option; Subscribe & save sits right under it with its price
+    and savings, one tap away.
+  endcomment
   assign cta_price = v.price
-  if has_sub
-    assign cta_price = sub_price
-  endif
   capture pkey
     render 'plo-photo-key', handle: product.handle
   endcapture
@@ -322,7 +323,7 @@
 
       {%- form 'product', product, class: 'plo-form', data-plo-form: '', autocomplete: 'off' -%}
         <input type="hidden" name="id" value="{{ v.id }}" data-plo-variant>
-        {%- if has_sub -%}<input type="hidden" name="selling_plan" value="{{ plan_id }}" data-plo-plan>{%- endif -%}
+        {%- if has_sub -%}<input type="hidden" name="selling_plan" value="{{ plan_id }}" data-plo-plan disabled>{%- endif -%}
 
         {%- if flavours != nil and flavours.size > 1 -%}
           <div class="plo-opt">
@@ -409,9 +410,6 @@
                     {%- if pcs > 0 -%}
                       {%- liquid
                         assign eff = variant.price
-                        if has_sub
-                          assign eff = variant.price | times: keep | divided_by: 100
-                        endif
                         assign per = eff | times: 1.0 | divided_by: pcs | round | times: 1
                       -%}
                       <small data-plo-per>{%- render 'plaay-aed', fils: per -%} / truffle</small>
@@ -425,8 +423,13 @@
 
         {%- if has_sub -%}
           <div class="plo-modes">
+            <label class="plo-mode plo-mode--one">
+              <input type="radio" name="plo-mode-{{ section.id }}" value="one" checked data-plo-mode>
+              <span class="plo-mode__r" aria-hidden="true"></span>
+              <span class="plo-mode__b"><span class="plo-mode__h"><b>One-time purchase</b><span data-plo-one>{%- render 'plaay-aed', fils: v.price -%}</span></span></span>
+            </label>
             <label class="plo-mode plo-mode--sub">
-              <input type="radio" name="plo-mode-{{ section.id }}" value="sub" checked data-plo-mode>
+              <input type="radio" name="plo-mode-{{ section.id }}" value="sub" data-plo-mode>
               <span class="plo-mode__r" aria-hidden="true"></span>
               <span class="plo-mode__b">
                 <span class="plo-mode__h"><b>Subscribe &amp; save {{ sub_pct }}%</b><span class="plo-mode__tag">Most popular</span></span>
@@ -460,11 +463,6 @@
                 {%- endfor -%}
               </div>
             {%- endif -%}
-            <label class="plo-mode">
-              <input type="radio" name="plo-mode-{{ section.id }}" value="one" data-plo-mode>
-              <span class="plo-mode__r" aria-hidden="true"></span>
-              <span class="plo-mode__b"><span class="plo-mode__h"><b>One-time</b><span data-plo-one>{%- render 'plaay-aed', fils: v.price -%}</span></span></span>
-            </label>
           </div>
         {%- else -%}
           <p class="plo-buy__price" data-plo-one>{%- render 'plaay-aed', fils: v.price -%}</p>
@@ -595,12 +593,12 @@
   </div>
 
   {%- if v.available -%}
-    <div class="plo-sticky{% if has_sub %} plo-sticky--sub{% endif %}" data-plo-sticky>
+    <div class="plo-sticky{% if has_sub %} plo-sticky--sub is-one{% endif %}" data-plo-sticky>
       {%- if has_sub -%}
         <div class="plo-sticky__opts">
           <div class="plo-seg" role="radiogroup" aria-label="Purchase option">
-            <label><input type="radio" name="plo-smode-{{ section.id }}" value="sub" checked data-plo-smode><span>Subscribe <em>&minus;{{ sub_pct }}%</em></span></label>
-            <label><input type="radio" name="plo-smode-{{ section.id }}" value="one" data-plo-smode><span>One-time</span></label>
+            <label><input type="radio" name="plo-smode-{{ section.id }}" value="one" checked data-plo-smode><span>One-time</span></label>
+            <label><input type="radio" name="plo-smode-{{ section.id }}" value="sub" data-plo-smode><span>Subscribe <em>&minus;{{ sub_pct }}%</em></span></label>
           </div>
           {%- if freq_n > 1 -%}
             <label class="plo-sticky__freq">
