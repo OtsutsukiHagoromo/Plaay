@@ -340,6 +340,14 @@
               "mega": true
             }
           },
+          "link_4": {
+            "type": "link",
+            "settings": {
+              "label": "Slabs",
+              "url": "/collections/new-chocolate-slabs",
+              "mega": false
+            }
+          },
           "link_2": {
             "type": "link",
             "settings": {
@@ -353,30 +361,6 @@
             "settings": {
               "label": "Bars",
               "url": "/collections/chocolate-bars",
-              "mega": false
-            }
-          },
-          "link_4": {
-            "type": "link",
-            "settings": {
-              "label": "Slabs",
-              "url": "/collections/new-chocolate-slabs",
-              "mega": false
-            }
-          },
-          "link_5": {
-            "type": "link",
-            "settings": {
-              "label": "Subscribe & Save",
-              "url": "/pages/subscribe-save",
-              "mega": false
-            }
-          },
-          "link_6": {
-            "type": "link",
-            "settings": {
-              "label": "Our Story",
-              "url": "/pages/for-the-geeks-1",
               "mega": false
             }
           },
@@ -395,6 +379,22 @@
               "url": "/collections/limited-editions",
               "mega": false
             }
+          },
+          "link_5": {
+            "type": "link",
+            "settings": {
+              "label": "Subscribe & Save",
+              "url": "/pages/subscribe-save",
+              "mega": false
+            }
+          },
+          "link_6": {
+            "type": "link",
+            "settings": {
+              "label": "Our Story",
+              "url": "/pages/for-the-geeks-1",
+              "mega": false
+            }
           }
         },
         "block_order": [
@@ -407,7 +407,32 @@
           "link_5",
           "link_6"
         ],
-        "settings": {}
+        "settings": {
+          "mega_title": "Subscribe & save 15%",
+          "mega_text": "Your favourites every 4 weeks with free delivery. Skip or cancel any time.",
+          "mega_btn_label": "How it works",
+          "mega_btn_url": ""
+        }
+      },
+      "pl-announcement": {
+        "type": "pl-announcement",
+        "settings": {
+          "hide_mobile": false
+        }
+      },
+      "pl-footer": {
+        "type": "pl-footer",
+        "settings": {
+          "news_title": "Get the Good Stuff First",
+          "about": "Clean chocolate snacks with zero refined sugar. Made in the UAE by a nutritionist.",
+          "mail_heading": "Plaay mail",
+          "mail_text": "Fresh drops, flavour votes and a code for your first order.",
+          "delivery_line": "Free delivery AED 75+ · 1–2 day UAE-wide · GCC 3–5 days",
+          "halal_line": "Halal certified",
+          "payment_line": "Visa · Mastercard · Apple Pay",
+          "instagram_url": "https://www.instagram.com/shopplaay",
+          "tiktok_url": ""
+        }
       }
     },
     "content_for_index": [],
@@ -445,6 +470,11 @@
       "10641372206048101839": {
         "type": "shopify://apps/rebuy-personalization-engine/blocks/rebuy-global-embed/a26ae9b9-933b-40bf-bbc6-bf1220bbc4dc",
         "disabled": true,
+        "settings": {}
+      },
+      "855628211100114053": {
+        "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/klaviyo-onsite-embed/2632fe16-c075-4321-a88b-50b567f42507",
+        "disabled": false,
         "settings": {}
       }
     }
