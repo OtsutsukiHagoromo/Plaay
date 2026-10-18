@@ -609,7 +609,7 @@ html.pl-app .pl-sheet, html.pl-app cart-drawer .pl-drawer__scroll { overscroll-b
 .pl-ptr.is-loading svg { animation: pl-ptr-spin .7s linear infinite; }
 @keyframes pl-ptr-spin { to { transform: rotate(360deg); } }
 
-/* Menu row "Get the Plaay app" (a button styled like the links around it). */
+/* Menu row "Get the Plaay app" (a button styled like the links around it; assets/pl-app.js unhides it). */
 .pl-menu__list .pl-menu__btn { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 54px; padding: 0; border: 0; border-bottom: 1px solid var(--pl-line-2); background: none; font: inherit; font-size: var(--pl-t5); font-weight: 900; text-transform: uppercase; line-height: 1; color: inherit; text-align: left; cursor: pointer; }
 .pl-menu__list .pl-menu__btn span { flex: 1; }
 .pl-menu__list .pl-menu__btn .pl-ic { color: var(--pl-mute-2); }
