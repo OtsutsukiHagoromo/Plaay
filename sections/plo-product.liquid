@@ -539,7 +539,7 @@
           if d_shipping != blank
             echo d_shipping
           else
-            echo '<p>Free delivery on orders over AED ' | append: settings.cart_tier_ship | append: '. 1–2 days across the UAE, 3–5 days to the GCC.</p>'
+            echo '<p>Free delivery on orders over AED ' | append: settings.cart_tier_ship | append: '. 1–2 day delivery across the UAE.</p>'
           endif
         endcapture
         assign t_names = 'Description|Ingredients|Allergens|Nutrition|Storage|Suitable for|Shipping' | split: '|'

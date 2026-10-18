@@ -238,7 +238,7 @@
           "type": "qa",
           "settings": {
             "q": "How fast is delivery?",
-            "a": "<p>1–2 days across the UAE and 3–5 days to the GCC. Delivery is free on orders over AED 99.</p>"
+            "a": "<p>1–2 days across the UAE. Delivery is free on orders over AED 99.</p>"
           }
         },
         "q2": {
