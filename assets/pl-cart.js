@@ -592,6 +592,7 @@
         setTimeout(function () { btn.classList.remove('is-added'); }, 1400);
       }
       if (window.plHaptic) window.plHaptic('success');
+      document.dispatchEvent(new CustomEvent('pl:cart:added'));
       if (opts.open !== false) openOrGo();
       return r[0];
     }, function (err) {

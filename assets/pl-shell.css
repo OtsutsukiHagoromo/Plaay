@@ -608,3 +608,32 @@ html.pl-app .pl-sheet, html.pl-app cart-drawer .pl-drawer__scroll { overscroll-b
 .pl-ptr.is-armed { background: var(--pl-yellow, #FFB600); }
 .pl-ptr.is-loading svg { animation: pl-ptr-spin .7s linear infinite; }
 @keyframes pl-ptr-spin { to { transform: rotate(360deg); } }
+
+/* Menu row "Get the Plaay app" (a button styled like the links around it). */
+.pl-menu__list .pl-menu__btn { display: flex; align-items: center; gap: 10px; width: 100%; min-height: 54px; padding: 0; border: 0; border-bottom: 1px solid var(--pl-line-2); background: none; font: inherit; font-size: var(--pl-t5); font-weight: 900; text-transform: uppercase; line-height: 1; color: inherit; text-align: left; cursor: pointer; }
+.pl-menu__list .pl-menu__btn span { flex: 1; }
+.pl-menu__list .pl-menu__btn .pl-ic { color: var(--pl-mute-2); }
+
+/* Invite to save the app (assets/pl-app.js): a bottom sheet. */
+body.pl-inv-open { overflow: hidden; }
+.pl-inv { position: fixed; inset: 0; z-index: 2147482000; display: flex; align-items: flex-end; justify-content: center; font-family: var(--pl-font, inherit); color: var(--pl-navy, #081D48); }
+.pl-inv__scrim { position: absolute; inset: 0; background: rgba(8, 29, 72, .45); opacity: 0; transition: opacity .25s ease; }
+.pl-inv.is-open .pl-inv__scrim { opacity: 1; }
+.pl-inv__card { position: relative; display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 480px; padding: 24px 20px calc(18px + env(safe-area-inset-bottom)); border-radius: 24px 24px 0 0; background: var(--pl-ground, #FFFDF7); box-shadow: 0 -12px 40px rgba(8, 29, 72, .25); transform: translateY(100%); transition: transform .32s cubic-bezier(.2, .8, .2, 1); outline: 0; }
+.pl-inv.is-open .pl-inv__card { transform: none; }
+.pl-inv__x { position: absolute; top: 12px; right: 12px; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(8, 29, 72, .06); color: inherit; cursor: pointer; }
+.pl-inv__head { display: flex; align-items: center; gap: 14px; padding-right: 40px; }
+.pl-inv__head img { flex: 0 0 auto; width: 60px; height: 60px; border-radius: 15px; box-shadow: 0 4px 14px rgba(8, 29, 72, .18); }
+.pl-inv__head h2 { margin: 0 0 3px; font-size: 20px; font-weight: 900; line-height: 1.15; }
+.pl-inv__head p { margin: 0; font-size: 13.5px; line-height: 1.4; color: var(--pl-mute, #5B6782); }
+.pl-inv__body { display: flex; flex-direction: column; gap: 10px; }
+.pl-inv__steps { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.pl-inv__steps li { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; background: #fff; box-shadow: inset 0 0 0 1px rgba(8, 29, 72, .08); font-size: 14px; line-height: 1.35; }
+.pl-inv__steps i { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: var(--pl-cream, #FFF7DD); color: var(--pl-navy, #081D48); }
+.pl-inv__steps b { font-weight: 800; }
+.pl-inv__go { height: 52px; border: 0; border-radius: 999px; background: var(--pl-yellow, #FFB600); color: var(--pl-navy, #081D48); font: inherit; font-size: 16px; font-weight: 900; cursor: pointer; box-shadow: 0 3px 0 var(--pl-navy, #081D48); }
+.pl-inv__later { align-self: center; padding: 6px 14px; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 700; color: var(--pl-mute, #5B6782); cursor: pointer; }
+.pl-inv button:focus-visible { outline: 2px solid var(--pl-yellow, #FFB600); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+.pl-inv__card, .pl-inv__scrim { transition: none; }
+}

@@ -243,6 +243,8 @@
         <li><a href="/pages/wishlist"><span>Wishlist</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
         <li><a href="/pages/for-the-geeks-1"><span>Our Story</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
         <li><a href="{{ account_url }}"><span>{% if customer %}My Account{% else %}Sign In{% endif %}</span>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</a></li>
+        {%- comment -%} Shown on phones outside the home screen app by assets/pl-app.js. {%- endcomment -%}
+        <li data-pl-get-app-row hidden><button type="button" class="pl-menu__btn" data-pl-get-app><span>Get the Plaay app</span><em class="pl-menu__tag">Home screen</em>{% render 'pl-icon', name: 'chev-right', size: 18, stroke: 2 %}</button></li>
       </ul>
       <a class="pl-menu__rewards" href="/pages/subscribe-save">
         {%- render 'pl-icon', name: 'gift', size: 20, stroke: 2 -%}

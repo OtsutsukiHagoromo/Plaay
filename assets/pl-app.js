@@ -11,6 +11,7 @@
      product card that was tapped is named so it morphs into the product page gallery; the new
      page names its gallery photo from the inline listener in snippets/pl-app-head.liquid.
    - Bag sheet (phones): drag the bag down by its top bar, or from the top of its list, to close.
+   - Invite to save the app (see the block below), outside the app only.
    - Home screen app only (html.pl-app, set by snippets/pl-app-head.liquid): a back arrow in the
      header (saved apps have no browser back button), pull to refresh (saved apps lose
      Safari's), and app visits tagged in Microsoft Clarity. */
@@ -124,6 +125,149 @@
     }
     drawer.addEventListener('touchend', end);
     drawer.addEventListener('touchcancel', end);
+  })();
+
+  /* ---------- invite to save the app ----------
+     A bottom sheet with how to add Plaay to the home screen: Android / Chrome get the browser's
+     own install prompt behind our button; iPhone gets the Share steps (Apple has no prompt);
+     in-app browsers (Instagram, TikTok...) are told to open Safari first.
+     Shown by itself at most once a session, only on phones, never inside the app:
+       - when the bag closes after an add to bag, from the second visit on;
+       - on the account page, from the second visit on.
+     Also opened any time from "Get the Plaay app" in the menu ([data-pl-get-app]).
+     Closing it keeps it away for 30 days; once installed it never shows again.
+     Events: Clarity "app_invite_<action>", Shopify.analytics "pl_app_invite". */
+  (function () {
+    function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+    function sget(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+    function sset(k) { try { sessionStorage.setItem(k, '1'); } catch (e) {} }
+    var DAY = 864e5;
+    var deferred = null, sheet = null, lastFocus = null, source = '';
+    var ua = navigator.userAgent;
+    var inAppBrowser = /FBAN|FBAV|Instagram|Line\/|TikTok|musical_ly|Bytedance|Snapchat|Pinterest/i.test(ua);
+
+    function track(action) {
+      try { if (window.clarity) window.clarity('event', 'app_invite_' + action); } catch (e) {}
+      try { if (window.Shopify && Shopify.analytics && Shopify.analytics.publish) Shopify.analytics.publish('pl_app_invite', { action: action, source: source }); } catch (e) {}
+    }
+
+    window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; });
+    window.addEventListener('appinstalled', function () { set('pl-app-installed', '1'); track('installed'); close(0); });
+
+    if (isApp) return;
+
+    var visits = Number(get('pl-visits')) || 0;
+    if (!sget('pl-visit')) { sset('pl-visit'); visits += 1; set('pl-visits', String(visits)); }
+
+    function due() {
+      return touch && !get('pl-app-installed') && !sget('pl-inv-shown') && visits >= 2 && Date.now() > (Number(get('pl-inv-snooze')) || 0);
+    }
+
+    var ICON = {
+      share: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7.5 7.5L12 3l4.5 4.5"/><path d="M6 11H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-1"/></svg>',
+      add: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>',
+      check: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>',
+      menu: '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>',
+      safari: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>',
+      close: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>'
+    };
+    function step(icon, html) { return '<li><i aria-hidden="true">' + ICON[icon] + '</i><span>' + html + '</span></li>'; }
+
+    function body() {
+      if (deferred) {
+        return '<button type="button" class="pl-inv__go" data-inv-install>Add to home screen</button>' +
+          '<button type="button" class="pl-inv__later" data-inv-close>Not now</button>';
+      }
+      var steps;
+      if (ios && inAppBrowser) {
+        steps = step('safari', 'Open this page in <b>Safari</b>: tap <b>•••</b> or the share icon in this app, then <b>Open in browser</b>.') +
+          step('share', 'In Safari, tap <b>Share</b>. On iOS 26, tap <b>•••</b> first.') +
+          step('add', 'Choose <b>Add to Home Screen</b>, then <b>Add</b>.');
+      } else if (ios) {
+        steps = step('share', 'Tap <b>Share</b> in the browser toolbar. On iOS 26, tap <b>•••</b> first.') +
+          step('add', 'Choose <b>Add to Home Screen</b>. You may need to scroll down.') +
+          step('check', 'Tap <b>Add</b>. Plaay is now on your home screen.');
+      } else {
+        steps = step('menu', 'Open your browser menu (<b>⋮</b>).') +
+          step('add', 'Tap <b>Add to Home screen</b> or <b>Install app</b>.') +
+          step('check', 'Confirm. Plaay is now on your home screen.');
+      }
+      return '<ol class="pl-inv__steps">' + steps + '</ol><button type="button" class="pl-inv__later" data-inv-close>Got it</button>';
+    }
+
+    function build() {
+      var icon = doc.querySelector('link[rel="apple-touch-icon"]');
+      sheet = doc.createElement('div');
+      sheet.className = 'pl-inv';
+      sheet.hidden = true;
+      sheet.innerHTML = '<div class="pl-inv__scrim" data-inv-close></div>' +
+        '<div class="pl-inv__card" role="dialog" aria-modal="true" aria-labelledby="pl-inv-t" tabindex="-1">' +
+        '<button type="button" class="pl-inv__x" data-inv-close aria-label="Close">' + ICON.close + '</button>' +
+        '<div class="pl-inv__head">' + (icon ? '<img src="' + icon.href + '" width="60" height="60" alt="">' : '') +
+        '<div><h2 id="pl-inv-t">Get the Plaay app</h2><p>Add Plaay to your home screen. It opens full screen, with your bag one tap away.</p></div></div>' +
+        '<div class="pl-inv__body" data-inv-body></div></div>';
+      doc.body.appendChild(sheet);
+      sheet.addEventListener('click', function (e) {
+        if (e.target.closest('[data-inv-close]')) { track('dismissed'); close(30); return; }
+        if (e.target.closest('[data-inv-install]') && deferred) {
+          var d = deferred;
+          deferred = null;
+          d.prompt();
+          d.userChoice.then(function (c) {
+            if (c && c.outcome === 'accepted') { set('pl-app-installed', '1'); track('accepted'); close(0); }
+            else { track('declined'); close(30); }
+          }, function () { close(30); });
+        }
+      });
+      doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sheet && !sheet.hidden) close(30); });
+    }
+
+    function open(from) {
+      if (!sheet) build();
+      source = from;
+      sset('pl-inv-shown');
+      if (window.plCloseSheets) window.plCloseSheets();
+      sheet.querySelector('[data-inv-body]').innerHTML = body();
+      lastFocus = doc.activeElement;
+      sheet.hidden = false;
+      doc.body.classList.add('pl-inv-open');
+      void sheet.offsetWidth;
+      sheet.classList.add('is-open');
+      sheet.querySelector('.pl-inv__card').focus({ preventScroll: true });
+      track('shown');
+    }
+
+    function close(days) {
+      if (!sheet || sheet.hidden) return;
+      if (days) set('pl-inv-snooze', String(Date.now() + days * DAY));
+      sheet.classList.remove('is-open');
+      doc.body.classList.remove('pl-inv-open');
+      setTimeout(function () { sheet.hidden = true; }, calm ? 0 : 320);
+      if (lastFocus && lastFocus.focus) try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
+    }
+
+    window.plOpenAppInvite = open;
+
+    /* Menu row: on phones, outside the app. */
+    if (touch) Array.prototype.forEach.call(doc.querySelectorAll('[data-pl-get-app-row]'), function (r) { r.hidden = false; });
+    doc.addEventListener('click', function (e) {
+      if (e.target.closest && e.target.closest('[data-pl-get-app]')) { e.preventDefault(); open('menu'); }
+    });
+
+    /* After an add to bag: wait for the bag to close. */
+    var afterBag = false, bagSeen = false;
+    doc.addEventListener('pl:cart:added', function () { if (due()) { afterBag = true; bagSeen = false; } });
+    new MutationObserver(function () {
+      if (!afterBag) return;
+      if (doc.body.classList.contains('pl-drawer-open')) { bagSeen = true; return; }
+      if (!bagSeen) return;
+      afterBag = false;
+      setTimeout(function () { if (due()) open('after_add'); }, 700);
+    }).observe(doc.body, { attributes: true, attributeFilter: ['class'] });
+
+    /* Account page. */
+    if (/^\/account\/?$/.test(location.pathname)) setTimeout(function () { if (due()) open('account'); }, 2500);
   })();
 
   if (!isApp) return;
