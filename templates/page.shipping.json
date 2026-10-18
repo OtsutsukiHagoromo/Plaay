@@ -27,7 +27,7 @@
           "settings": {
             "icon": "gift",
             "title": "Free Shipping",
-            "description": "Free delivery on orders over AED 75. Flat AED 15 fee below that."
+            "description": "Free delivery on orders over AED 99. Flat AED 15 fee below that."
           }
         },
         "hl_fast": {
@@ -63,7 +63,7 @@
           "type": "faq",
           "settings": {
             "question": "How much does shipping cost?",
-            "answer": "<p>Shipping is free on all orders over AED 75. For smaller orders, we charge a flat delivery fee of AED 15.</p>"
+            "answer": "<p>Shipping is free on all orders over AED 99. For smaller orders, we charge a flat delivery fee of AED 15.</p>"
           }
         },
         "faq_eta": {

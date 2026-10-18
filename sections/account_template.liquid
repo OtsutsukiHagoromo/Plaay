@@ -23,8 +23,14 @@
   assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift'
   assign a3 = settings.cart_tier_3_spend | default: 500
   assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift'
-  assign ladder_amounts = ship_aed | append: ',' | append: a1 | append: ',' | append: a2 | append: ',' | append: a3 | split: ','
-  assign ladder_labels = 'Free delivery|' | append: l1 | append: '|' | append: l2 | append: '|' | append: l3 | split: '|'
+  assign ladder_amounts = ship_aed | append: ',' | append: a1 | append: ',' | append: a2
+  assign ladder_labels = 'Free delivery|' | append: l1 | append: '|' | append: l2
+  if a3 > 0
+    assign ladder_amounts = ladder_amounts | append: ',' | append: a3
+    assign ladder_labels = ladder_labels | append: '|' | append: l3
+  endif
+  assign ladder_amounts = ladder_amounts | split: ','
+  assign ladder_labels = ladder_labels | split: '|'
   assign cart_total = cart.original_total_price
   assign reached = -1
   for amt in ladder_amounts

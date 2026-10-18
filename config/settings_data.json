@@ -12,13 +12,13 @@
     "favicon": "shopify://shop_images/Blue_logo_on_Yellow_Choco_Snack_Hack_Zoomed.jpg",
     "global_recharge_point_two": "15% Off Regular Price",
     "ingredients_icons_link_list": "ingredients-icons",
-    "cart_tier_ship": 75,
-    "cart_tier_1_spend": 250,
-    "cart_tier_1_label": "7% off",
-    "cart_tier_2_spend": 350,
-    "cart_tier_2_label": "10% off + Mystery Gift",
-    "cart_tier_3_spend": 500,
-    "cart_tier_3_label": "15% off + Mystery Gift",
+    "cart_tier_ship": 99,
+    "cart_tier_1_spend": 299,
+    "cart_tier_1_label": "10% off",
+    "cart_tier_2_spend": 500,
+    "cart_tier_2_label": "18% off",
+    "cart_tier_3_spend": 0,
+    "cart_tier_3_label": "",
     "eid_sale_enabled": false,
     "fathers_day_sale_enabled": false,
     "summer_sale_enabled": false,
@@ -40,7 +40,7 @@
           "announcement_text_qzKxiQ": {
             "type": "announcement_text",
             "settings": {
-              "text": "Free delivery AED 75+ · 7% off AED 250+ · 10% off + Mystery Gift AED 350+ · 15% off AED 500+",
+              "text": "Free delivery AED 99+ · 10% off AED 299+ · 18% off AED 500+",
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"
@@ -68,7 +68,7 @@
           "announcement_text_yXwBXG": {
             "type": "announcement_text",
             "settings": {
-              "text": "Free delivery on orders above AED 75",
+              "text": "Free delivery on orders above AED 99",
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"
@@ -427,7 +427,7 @@
           "about": "Clean chocolate snacks with zero refined sugar. Made in the UAE by a nutritionist.",
           "mail_heading": "Plaay mail",
           "mail_text": "Fresh drops, flavour votes and a code for your first order.",
-          "delivery_line": "Free delivery AED 75+ · 1–2 day UAE-wide · GCC 3–5 days",
+          "delivery_line": "Free delivery AED 99+ · 1–2 day UAE-wide · GCC 3–5 days",
           "halal_line": "Halal certified",
           "payment_line": "Visa · Mastercard · Apple Pay",
           "instagram_url": "https://www.instagram.com/shopplaay",

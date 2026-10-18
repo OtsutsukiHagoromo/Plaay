@@ -89,44 +89,45 @@
         "type": "number",
         "id": "cart_tier_ship",
         "label": "Free delivery threshold (AED)",
-        "default": 75
+        "default": 99
       },
       {
         "type": "number",
         "id": "cart_tier_1_spend",
         "label": "Tier 1 spend threshold (AED)",
-        "default": 250
+        "default": 299
       },
       {
         "type": "text",
         "id": "cart_tier_1_label",
         "label": "Tier 1 reward label",
-        "default": "7% off"
+        "default": "10% off"
       },
       {
         "type": "number",
         "id": "cart_tier_2_spend",
         "label": "Tier 2 spend threshold (AED)",
-        "info": "Also the Mystery Gift threshold — the gift is auto-added at this amount.",
-        "default": 350
+        "info": "Top tier while tier 3 is 0. A Mystery Gift is auto-added only at a tier whose label mentions \"Mystery Gift\".",
+        "default": 500
       },
       {
         "type": "text",
         "id": "cart_tier_2_label",
         "label": "Tier 2 reward label",
-        "default": "10% off + Mystery Gift"
+        "default": "18% off"
       },
       {
         "type": "number",
         "id": "cart_tier_3_spend",
         "label": "Tier 3 spend threshold (AED)",
-        "default": 500
+        "default": 0,
+        "info": "0 = no third tier."
       },
       {
         "type": "text",
         "id": "cart_tier_3_label",
         "label": "Tier 3 reward label",
-        "default": "15% off + Mystery Gift"
+        "default": ""
       },
       {
         "type": "header",

@@ -19,7 +19,21 @@
   if settings.eid_sale_enabled
     assign gift_threshold = settings.eid_tier_1_spend | default: 250 | times: 100
   elsif rewards_live
-    assign gift_threshold = settings.cart_tier_2_spend | default: 350 | times: 100
+    comment
+      The gift goes with the first live tier whose label mentions it. No such tier (Oct 2026
+      ladder: 10% / 18%, no gift) puts the threshold out of reach, which also takes any gift
+      left in a cart back out.
+    endcomment
+    assign gift_threshold = 999999900
+    assign g_spends = settings.cart_tier_3_spend | append: ',' | append: settings.cart_tier_2_spend | append: ',' | append: settings.cart_tier_1_spend | split: ','
+    assign g_labels = settings.cart_tier_3_label | append: '|' | append: settings.cart_tier_2_label | append: '|' | append: settings.cart_tier_1_label | split: '|'
+    for gs in g_spends
+      assign gsn = gs | plus: 0
+      assign gl = g_labels[forloop.index0] | downcase
+      if gsn > 0 and gl contains 'gift'
+        assign gift_threshold = gsn | times: 100
+      endif
+    endfor
   else
     assign gift_threshold = 25000
   endif

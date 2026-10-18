@@ -27,9 +27,15 @@
   assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift' | replace: '+ Mystery Gift', '+ a Mystery Gift'
   capture fb
     echo 'Free delivery on orders over <b>AED ' | append: ship | append: '</b>'
-    echo '|<b>' | append: l1 | append: '</b> on orders over AED ' | append: a1
-    echo '|<b>' | append: l2 | append: '</b> over AED ' | append: a2
-    echo '|<b>' | append: l3 | append: '</b> over AED ' | append: a3
+    if a1 > 0
+      echo '|<b>' | append: l1 | append: '</b> on orders over AED ' | append: a1
+    endif
+    if a2 > 0
+      echo '|<b>' | append: l2 | append: '</b> on orders over AED ' | append: a2
+    endif
+    if a3 > 0
+      echo '|<b>' | append: l3 | append: '</b> over AED ' | append: a3
+    endif
   endcapture
   assign fallback = fb | strip | split: '|'
   assign count = shown
@@ -115,7 +121,7 @@
           "type": "text",
           "id": "text",
           "label": "Text",
-          "default": "Free delivery on orders over AED 75"
+          "default": "Free delivery on orders over AED 99"
         },
         {
           "type": "url",

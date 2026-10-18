@@ -47,8 +47,19 @@
     assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift'
     assign a3 = settings.cart_tier_3_spend | default: 500
     assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift'
-    assign amounts = amounts | append: ',' | append: a1 | append: ',' | append: a2 | append: ',' | append: a3
-    assign labels = labels | append: '|' | append: l1 | append: '|' | append: l2 | append: '|' | append: l3
+    # A tier whose spend is 0 is switched off (the Oct 2026 ladder has two tiers).
+    if a1 > 0
+      assign amounts = amounts | append: ',' | append: a1
+      assign labels = labels | append: '|' | append: l1
+    endif
+    if a2 > 0
+      assign amounts = amounts | append: ',' | append: a2
+      assign labels = labels | append: '|' | append: l2
+    endif
+    if a3 > 0
+      assign amounts = amounts | append: ',' | append: a3
+      assign labels = labels | append: '|' | append: l3
+    endif
   else
     assign amounts = amounts | append: ',250'
     assign labels = labels | append: '|Mystery Gift'

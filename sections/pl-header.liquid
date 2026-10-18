@@ -246,7 +246,12 @@
       </ul>
       <a class="pl-menu__rewards" href="/pages/subscribe-save">
         {%- render 'pl-icon', name: 'gift', size: 20, stroke: 2 -%}
-        <span><b>Free delivery over AED {{ settings.cart_tier_ship | default: 75 }}</b><small>Up to 15% off + a Mystery Gift as your bag grows</small></span>
+        {%- liquid
+          assign top_tier = settings.cart_tier_2_label
+          if settings.cart_tier_3_spend > 0
+            assign top_tier = settings.cart_tier_3_label
+          endif
+        -%}<span><b>Free delivery over AED {{ settings.cart_tier_ship | default: 99 }}</b><small>Up to {{ top_tier | default: '18% off' }} as your bag grows</small></span>
       </a>
       <ul class="pl-menu__small">
         <li><a href="/pages/shipping-policy">Delivery</a></li>

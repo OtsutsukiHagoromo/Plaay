@@ -37,8 +37,10 @@
   if total >= t2_fils
     assign reached = 2
   endif
-  if total >= t3_fils
-    assign reached = 3
+  if t3_fils > 0
+    if total >= t3_fils
+      assign reached = 3
+    endif
   endif
 
   assign next_fils = 0
@@ -55,9 +57,11 @@
     assign next_fils = t2_fils
     assign next_label = l2
     assign done_label = l1
-  elsif reached == 2
+  elsif reached == 2 and t3_fils > 0
     assign next_fils = t3_fils
     assign next_label = l3
+    assign done_label = l2
+  elsif reached == 2
     assign done_label = l2
   else
     assign done_label = l3

@@ -128,7 +128,7 @@
 
     <div class="pl-footer__bottom">
       <div class="pl-footer__facts">
-        <span class="pl-footer__fact">{% render 'pl-icon', name: 'truck', size: 18 %}{{ section.settings.delivery_line | default: 'Free delivery AED 75+ · 1–2 day UAE-wide · GCC 3–5 days' }}</span>
+        <span class="pl-footer__fact">{% render 'pl-icon', name: 'truck', size: 18 %}{{ section.settings.delivery_line | default: 'Free delivery AED 99+ · 1–2 day UAE-wide · GCC 3–5 days' }}</span>
         <span class="pl-footer__fact">{% render 'pl-icon', name: 'check', size: 18, stroke: 2.2 %}{{ section.settings.halal_line | default: 'Halal certified' }}</span>
       </div>
       {%- if shop.enabled_payment_types.size > 0 -%}
@@ -206,7 +206,7 @@
       "type": "text",
       "id": "delivery_line",
       "label": "Delivery line",
-      "default": "Free delivery AED 75+ · 1–2 day UAE-wide · GCC 3–5 days"
+      "default": "Free delivery AED 99+ · 1–2 day UAE-wide · GCC 3–5 days"
     },
     {
       "type": "text",
