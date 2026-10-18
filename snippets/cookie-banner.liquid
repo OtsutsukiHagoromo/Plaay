@@ -1,197 +1,55 @@
+{%- comment -%}
+  Cookie notice: a small strip at the bottom, never a dialog. One short line, "OK" and a large ✕.
+  It does not cover the page or stop scrolling, and it only shows once: tapping OK or ✕ hides it,
+  and if the visitor simply carries on to another page it counts as seen and stays away.
+  It is a notice only. Tracking is not gated by it (it never was: the old Accept and Dismiss
+  both just stored the same cookie); consent itself is handled by Shopify's Customer Privacy settings.
+  Phones: sits just above the tab bar. Desktop: a small card at the bottom left.
+{%- endcomment -%}
 <style>
-  [data-module="cookie-banner"] {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: max(16px, env(safe-area-inset-bottom));
-    z-index: 9400;
-    display: flex;
-    justify-content: center;
-    padding: 0 12px;
-    pointer-events: none;
-  }
-
-  [data-module="cookie-banner"].hidden {
-    display: none;
-  }
-
-  .plaay-cookie-banner {
-    width: min(440px, 100%);
-    background: var(--plaay-navy);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 22px;
-    box-shadow: 0 20px 48px rgb(var(--plaay-navy-rgb) / 0.32);
-    padding: 18px 18px 16px;
-    pointer-events: auto;
-  }
-
-  .plaay-cookie-banner__top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .plaay-cookie-banner__title {
-    margin: 0;
-    color: #fff;
-    font-family: var(--font-walsheim-black, "walsheim-black", sans-serif);
-    font-size: 1.2rem;
-    line-height: 1;
-    letter-spacing: -0.02em;
-  }
-
-  .plaay-cookie-banner__close {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 34px;
-    height: 34px;
-    border: none;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-
-  .plaay-cookie-banner__copy {
-    margin: 10px 0 0;
-    color: rgba(255, 255, 255, 0.82);
-    font-size: 0.95rem;
-    line-height: 1.55;
-  }
-
-  .plaay-cookie-banner__actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 16px;
-  }
-
-  .plaay-cookie-banner__btn {
-    flex: 1 1 0;
-    min-height: 46px;
-    border-radius: 999px;
-    padding: 0 18px;
-    font-family: var(--font-walsheim-bold, "walsheim-bold", sans-serif);
-    font-size: 0.76rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
-  }
-
-  .plaay-cookie-banner__btn:hover {
-    transform: translateY(-1px);
-  }
-
-  .plaay-cookie-banner__btn--primary {
-    background: var(--plaay-yellow);
-    color: var(--plaay-navy);
-    border: 1px solid var(--plaay-yellow);
-  }
-
-  .plaay-cookie-banner__btn--secondary {
-    background: transparent;
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-  }
-
-  body[class*="template-product"] [data-module="cookie-banner"] {
-    bottom: calc(env(safe-area-inset-bottom) + 92px);
-  }
-
-  /* While a consent choice is still pending, the sticky ATC stands down so the two
-     bottom-anchored bars cannot stack on top of each other. Same pattern the bottom-nav
-     sheet already uses (body.pbn-menu-open). */
-  body:has([data-module="cookie-banner"]:not(.hidden)) #plaay-sticky-mobile {
-    display: none !important;
-  }
-
-  @media (max-width: 767px) {
-    [data-module="cookie-banner"] {
-      bottom: calc(env(safe-area-inset-bottom) + 80px);
-      padding: 0 10px;
-    }
-
-    /* Product pages used to move the banner to top: 16px because the sticky ATC bar owns
-       the bottom of the screen. That put a consent card over the announcement bar, the
-       logo and the search icon - the first thing a new visitor saw, covering the hero.
-       Keep it bottom-anchored like every other template, clear of the bottom nav, and
-       hold the sticky ATC back until a choice has been made. */
-    body[class*="template-product"] [data-module="cookie-banner"] {
-      top: auto;
-      bottom: calc(env(safe-area-inset-bottom) + 72px);
-    }
-
-    .plaay-cookie-banner {
-      border-radius: 18px;
-      padding: 16px 14px 14px;
-    }
-
-    .plaay-cookie-banner__title {
-      font-size: 1.05rem;
-    }
-
-    .plaay-cookie-banner__copy {
-      font-size: 0.88rem;
-    }
-
-    .plaay-cookie-banner__actions {
-      flex-direction: row;
-    }
-
-    .plaay-cookie-banner__btn {
-      width: 100%;
-    }
+  .pl-cookie { position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(var(--pl-tab-offset, var(--pl-tabbar-h, 64px)) + 10px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; border-radius: 14px; background: var(--pl-navy, #081D48); color: #fff; box-shadow: 0 8px 24px rgba(8, 29, 72, .28); font-size: 12.5px; line-height: 1.35; transform: translateY(0); opacity: 1; transition: transform .25s ease, opacity .25s ease; }
+  .pl-cookie[hidden] { display: none; }
+  .pl-cookie.is-out { transform: translateY(12px); opacity: 0; pointer-events: none; }
+  .pl-cookie p { flex: 1; margin: 0; min-width: 0; }
+  .pl-cookie a { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
+  .pl-cookie__ok { flex: 0 0 auto; height: 32px; padding: 0 14px; border: 0; border-radius: 999px; background: var(--pl-yellow, #FFB600); color: var(--pl-navy, #081D48); font: inherit; font-size: 12.5px; font-weight: 800; cursor: pointer; }
+  .pl-cookie__x { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; margin-left: -2px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .12); color: #fff; cursor: pointer; }
+  .pl-cookie button:focus-visible { outline: 2px solid var(--pl-yellow, #FFB600); outline-offset: 2px; }
+  @media (min-width: 1024px) {
+    .pl-cookie { left: 20px; right: auto; bottom: 20px; max-width: 420px; }
   }
 </style>
 
-<div class="hidden" data-module="cookie-banner">
-  <div class="plaay-cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie preferences">
-    <div class="plaay-cookie-banner__top">
-      <h3 class="plaay-cookie-banner__title">Cookie Preferences</h3>
-      <button type="button" class="plaay-cookie-banner__close" data-btn aria-label="Dismiss cookie notice">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
-          <path d="M18 6 6 18"></path>
-          <path d="m6 6 12 12"></path>
-        </svg>
-      </button>
-    </div>
-    <p class="plaay-cookie-banner__copy">
-      We use cookies to keep the site smooth, remember your choices, and improve the Plaay experience.
-    </p>
-    <div class="plaay-cookie-banner__actions">
-      <button class="plaay-cookie-banner__btn plaay-cookie-banner__btn--primary" type="button" data-btn>Accept</button>
-      <button class="plaay-cookie-banner__btn plaay-cookie-banner__btn--secondary" type="button" data-btn>Dismiss</button>
-    </div>
-  </div>
+<div class="pl-cookie" role="region" aria-label="Cookie notice" data-pl-cookie hidden>
+  <p>We use cookies to keep Plaay running smoothly. <a href="{{ routes.root_url | append: 'policies/privacy-policy' | replace: '//', '/' }}">Privacy</a></p>
+  <button type="button" class="pl-cookie__ok" data-pl-cookie-close>OK</button>
+  <button type="button" class="pl-cookie__x" data-pl-cookie-close aria-label="Close cookie notice">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+  </button>
 </div>
 
 <script>
   (function () {
-    var cookieName = 'HL-cookie';
-    var storageKey = 'plaay-cookie-consent';
-
-    function persistConsent() {
-      try {
-        localStorage.setItem(storageKey, 'true');
-      } catch (e) {}
-
-      document.cookie = cookieName + '=true; max-age=315360000; path=/; SameSite=Lax';
+    var KEY = 'plaay-cookie-consent', SEEN = 'plaay-cookie-seen';
+    var box = document.querySelector('[data-pl-cookie]');
+    if (!box) return;
+    function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function set(k) { try { localStorage.setItem(k, 'true'); } catch (e) {} }
+    function done() {
+      set(KEY);
+      document.cookie = 'HL-cookie=true; max-age=315360000; path=/; SameSite=Lax';
     }
-
-    try {
-      if (localStorage.getItem(storageKey) === 'true') {
-        persistConsent();
-      }
-    } catch (e) {}
-
-    document.addEventListener('click', function (event) {
-      if (event.target.closest('[data-module="cookie-banner"] [data-btn]')) {
-        persistConsent();
-      }
+    var hasCookie = document.cookie.indexOf('HL-cookie=true') > -1;
+    if (get(KEY) === 'true' || hasCookie) { done(); return; }
+    /* Shown on an earlier page and left alone: treat it as seen. */
+    if (get(SEEN) === 'true') { done(); return; }
+    set(SEEN);
+    box.hidden = false;
+    box.addEventListener('click', function (e) {
+      if (!e.target.closest('[data-pl-cookie-close]')) return;
+      done();
+      box.classList.add('is-out');
+      setTimeout(function () { box.hidden = true; }, 260);
     });
   })();
 </script>
