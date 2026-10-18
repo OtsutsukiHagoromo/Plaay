@@ -370,3 +370,11 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 @media (prefers-reduced-motion: reduce) {
 .is-added { animation: none; }
 }
+
+/* ---------- phones: the bag is a bottom sheet (swipe down to close: assets/pl-app.js) ---------- */
+@media (max-width: 1023px) {
+cart-drawer .pl-drawer { top: auto; height: calc(100% - 40px - var(--pl-sat, 0px)); border-radius: 22px 22px 0 0; overflow: hidden; transform: translateY(100%); opacity: 1; box-shadow: 0 -12px 40px rgba(8, 29, 72, .25); }
+cart-drawer.active .pl-drawer { transform: translateY(0); }
+cart-drawer .pl-drawer .pl-drawer__head { position: relative; padding-top: 22px; touch-action: none; }
+cart-drawer .pl-drawer .pl-drawer__head::before { content: ""; position: absolute; left: 50%; top: 8px; width: 40px; height: 5px; margin-left: -20px; border-radius: 999px; background: rgba(8, 29, 72, .2); }
+}

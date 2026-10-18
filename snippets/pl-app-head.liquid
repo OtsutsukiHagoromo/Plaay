@@ -1,0 +1,45 @@
+{%- comment -%}
+  Home screen app: manifest, icons, iPhone launch screens, and the app-mode switch.
+  Rendered in <head> from layout/theme.liquid.
+
+  App mode (opened from the home screen): <html> gets .pl-app and the viewport extends under the
+  status bar and home indicator (viewport-fit=cover); assets/pl-shell.css pads the header and
+  sheets for it and paints a navy band behind the status bar (status bar style
+  black-translucent = white clock). In the browser nothing here changes the page.
+  Launch screens: one per iPhone screen size (portrait), made from the brand wordmark.
+{%- endcomment -%}
+<link rel="manifest" href="{{ routes.root_url }}?view=manifest">
+<meta name="theme-color" content="#FFFDF7">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Plaay">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="{{ 'pl-app-icon-180.png' | asset_url }}">
+{%- assign screens = '430x932x3,393x852x3,402x874x3,440x956x3,420x912x3,390x844x3,428x926x3,375x812x3,414x896x2,414x896x3,375x667x2,414x736x3' | split: ',' -%}
+{%- for sc in screens -%}
+  {%- assign d = sc | split: 'x' -%}
+  {%- assign pw = d[0] | times: d[2] -%}
+  {%- assign ph = d[1] | times: d[2] -%}
+  {%- assign img = 'pl-app-splash-' | append: pw | append: 'x' | append: ph | append: '.png' -%}
+  <link rel="apple-touch-startup-image" media="screen and (device-width: {{ d[0] }}px) and (device-height: {{ d[1] }}px) and (-webkit-device-pixel-ratio: {{ d[2] }}) and (orientation: portrait)" href="{{ img | asset_url }}">
+{%- endfor %}
+<script>
+  (function () {
+    /* Product page reached through a page transition: its gallery photo takes the name the tapped
+       card photo had (assets/pl-app.js), so the photo grows into place. Must listen before the
+       first paint, hence inline. */
+    window.addEventListener('pagereveal', function (e) {
+      if (!e.viewTransition || location.pathname.indexOf('/products/') < 0) return;
+      var img = document.querySelector('[data-plo-phtrack] img, .plo-gal__img');
+      if (!img) return;
+      img.style.viewTransitionName = 'pl-photo';
+      e.viewTransition.finished.then(function () { img.style.viewTransitionName = ''; }, function () { img.style.viewTransitionName = ''; });
+    });
+    var app = window.navigator.standalone === true || (window.matchMedia && matchMedia('(display-mode: standalone)').matches);
+    if (!app) return;
+    document.documentElement.classList.add('pl-app');
+    var vp = document.querySelector('meta[name="viewport"]');
+    if (vp && vp.content.indexOf('viewport-fit') < 0) vp.content += ',viewport-fit=cover';
+  })();
+</script>
+<script src="{{ 'pl-app.js' | asset_url }}" defer></script>

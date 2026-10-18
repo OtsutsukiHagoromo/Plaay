@@ -566,3 +566,45 @@ body.pl-scrolled .pl-header__logo img { transform: scale(.92); }
 .pl-header__list { gap: 28px; }
 .pl-header__search { margin-left: 20px; }
 }
+
+/* ---------- app feel (assets/pl-app.js, snippets/pl-app-head.liquid) ---------- */
+html { -webkit-tap-highlight-color: transparent; }
+
+/* Page transitions (Chrome 126+, Safari 18.2+; others just navigate). The header and tab bar
+   hold still; the page underneath fades and rises a little. A tapped product photo morphs into
+   the product page gallery (view-transition-name pl-photo). */
+@view-transition { navigation: auto; }
+.pl-header { view-transition-name: pl-header; }
+.pl-tabbar { view-transition-name: pl-tabbar; }
+::view-transition-old(root) { animation: pl-vt-out .16s ease both; }
+::view-transition-new(root) { animation: pl-vt-in .28s cubic-bezier(.2, .7, .2, 1) both; }
+::view-transition-group(pl-header), ::view-transition-group(pl-tabbar) { animation-duration: .12s; }
+::view-transition-group(pl-photo) { animation-duration: .38s; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
+::view-transition-image-pair(pl-photo) { border-radius: 16px; overflow: hidden; }
+@keyframes pl-vt-out { to { opacity: 0; } }
+@keyframes pl-vt-in { from { opacity: 0; transform: translateY(10px); } }
+@media (prefers-reduced-motion: reduce) {
+@view-transition { navigation: none; }
+}
+
+/* Press states on touch screens: everything tappable gives a little under the finger. */
+@media (hover: none) and (pointer: coarse) {
+.plo-btn, .pl-btn, .plo-add, .pl-plus, .pl-iconbtn, .plo-tab, .plo-chip, .pl-tabbar__tab, .plo-size, .pl-stepper button, .plo-step button { transition: transform .12s ease; }
+.plo-btn:active, .pl-btn:active, .plo-add:active, .pl-plus:active, .pl-iconbtn:active, .plo-tab:active, .plo-chip:active, .pl-tabbar__tab:active, .plo-size:active, .pl-stepper button:active, .plo-step button:active { transform: scale(.95); }
+.plo-card:active, .pl-tile:active { transform: scale(.985); transition: transform .15s ease; }
+}
+
+/* Home screen app. The page runs under the status bar (black-translucent, white clock): a navy
+   band sits behind it, the page starts below it and the sticky header sticks under it. */
+html.pl-app { --pl-sat: env(safe-area-inset-top, 0px); }
+html.pl-app body { padding-top: var(--pl-sat); }
+html.pl-app body::before { content: ""; position: fixed; inset: 0 0 auto; height: var(--pl-sat); background: var(--pl-navy, #081D48); z-index: 2147483000; pointer-events: none; }
+html.pl-app .pl-header { top: var(--pl-sat); }
+html.pl-app button, html.pl-app .pl-tabbar, html.pl-app .pl-header { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+html.pl-app .pl-sheet, html.pl-app cart-drawer .pl-drawer__scroll { overscroll-behavior: contain; }
+.pl-header__back { margin-right: -6px; }
+/* Pull to refresh marker (app only; Safari's own is missing in saved apps). */
+.pl-ptr { position: fixed; left: 50%; top: calc(var(--pl-sat, 0px) + var(--pl-header-h) - 34px); z-index: 50; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #fff; color: var(--pl-navy, #081D48); box-shadow: 0 4px 14px rgba(8, 29, 72, .18); opacity: 0; transform: translate(-50%, 0); pointer-events: none; }
+.pl-ptr.is-armed { background: var(--pl-yellow, #FFB600); }
+.pl-ptr.is-loading svg { animation: pl-ptr-spin .7s linear infinite; }
+@keyframes pl-ptr-spin { to { transform: rotate(360deg); } }

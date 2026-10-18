@@ -160,6 +160,7 @@
       var top = done - 1;
       var label = bar.getAttribute('data-stop-' + (top + 1) + '-label') || '';
       setTimeout(function () { confetti(dots[top]); }, 380);
+      if (window.plHaptic) window.plHaptic('unlock');
       pill(bar.closest('.pl-ladder'), (top === 0 ? '🚚 ' : '🎉 ') + label + ' unlocked!');
     }
 
@@ -590,6 +591,7 @@
         btn.classList.add('is-added');
         setTimeout(function () { btn.classList.remove('is-added'); }, 1400);
       }
+      if (window.plHaptic) window.plHaptic('success');
       if (opts.open !== false) openOrGo();
       return r[0];
     }, function (err) {
