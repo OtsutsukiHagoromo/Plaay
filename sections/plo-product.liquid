@@ -230,7 +230,7 @@
         <div class="plo-gal__thumbs">
           {%- if main_img -%}
             <button type="button" class="plo-gal__th is-on" data-plo-thumb data-plo-vthumb data-src="{{ main_img | image_url: width: 1000 }}" aria-label="Image 1">
-              {{ main_img | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+              {{ main_img | image_url: width: 120 | image_tag: loading: 'lazy', alt: '', widths: '120', sizes: '60px' }}
             </button>
           {%- endif -%}
           {%- assign th_n = 1 -%}
@@ -239,7 +239,7 @@
             {%- if img.id == main_img.id or v_imgs contains iid or th_n >= 5 -%}{%- continue -%}{%- endif -%}
             {%- assign th_n = th_n | plus: 1 -%}
             <button type="button" class="plo-gal__th" data-plo-thumb data-src="{{ img | image_url: width: 1000 }}" aria-label="Image {{ th_n }}">
-              {{ img | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}
+              {{ img | image_url: width: 120 | image_tag: loading: 'lazy', alt: '', widths: '120', sizes: '60px' }}
             </button>
           {%- endfor -%}
         </div>
@@ -333,7 +333,7 @@
                 {%- capture fname -%}{%- render 'plo-flavour-name', title: f.title, strip: s.strip_words, fallback: s.flavour_fallback -%}{%- endcapture -%}
                 <a class="plo-flav__i{% if f.id == product.id %} is-on{% endif %}" href="{{ f.url }}{% if view != blank %}?view={{ view }}{% endif %}"{% if f.id == product.id %} aria-current="true"{% endif %}>
                   {%- capture fkey -%}{%- render 'plo-photo-key', handle: f.handle -%}{%- endcapture -%}{%- assign fkey = fkey | strip -%}
-                  <span class="plo-flav__pic">{%- if fkey != blank -%}{%- assign ph = 'plo-ph-' | append: fkey | append: '-1.jpg' -%}<img src="{{ ph | asset_img_url: '160x' }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif f.featured_image -%}{{ f.featured_image | image_url: width: 160 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}</span>
+                  <span class="plo-flav__pic">{%- if fkey != blank -%}{%- assign ph = 'plo-ph-' | append: fkey | append: '-1.jpg' -%}<img src="{{ ph | asset_img_url: '160x' }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif f.featured_image -%}{{ f.featured_image | image_url: width: 120 | image_tag: loading: 'lazy', alt: '', widths: '120', sizes: '60px' }}{%- endif -%}</span>
                   <span class="plo-flav__n">{{ fname }}</span>
                 </a>
               {%- endfor -%}

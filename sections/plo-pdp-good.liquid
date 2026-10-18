@@ -58,7 +58,7 @@
         {%- if pkey != blank -%}
           {%- render 'pl-photo', key: pkey, n: s.photo_n, alt: product.title -%}
         {%- elsif s.image != blank -%}
-          {{ s.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '480, 720, 1000', sizes: '(min-width: 1024px) 520px, 100vw', alt: product.title }}
+          {{ s.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '400, 600, 720, 1000', sizes: '(min-width: 1024px) 520px, calc(100vw - 40px)', alt: product.title }}
         {%- endif -%}
       </div>
       <div class="plo-good__body">
