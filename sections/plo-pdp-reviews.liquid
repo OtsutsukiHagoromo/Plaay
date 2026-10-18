@@ -55,12 +55,12 @@
           {%- if jm.histogram != blank -%}
             {%- assign hist = jm.histogram | sort: 'rating' | reverse -%}
             {%- for row in hist limit: s.rows -%}
-              {%- if row.rating < 4 -%}{%- continue -%}{%- endif -%}
+              {%- if row.rating < 2 -%}{%- continue -%}{%- endif -%}
               {%- assign pct = row.percentage | round -%}
               <div class="plo-prev__bar"><span>{{ row.rating }} star</span><i><u style="width: {{ pct }}%"></u></i><span>{% if pct == 0 and row.frequency > 0 %}&lt;1{% else %}{{ pct }}{% endif %}%</span></div>
             {%- endfor -%}
           {%- else -%}
-          {%- for c in counts limit: 2 -%}
+          {%- for c in counts limit: s.rows -%}
             {%- liquid
               assign star = 6 | minus: forloop.index
               assign cn = c | plus: 0
