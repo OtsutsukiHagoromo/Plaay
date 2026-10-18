@@ -108,8 +108,12 @@
                   : (input && input.url) ? input.url : '';
 
         var promise = _origFetch.apply(this, arguments);
+        /* Requests tagged X-Pl-Cart (assets/pl-cart.js and the bag buttons) render the bag from
+           their own response, so they skip the extra drawer + /cart.js refresh. */
+        var h = init && init.headers;
+        var tagged = h && (h['X-Pl-Cart'] || (typeof h.get === 'function' && h.get('X-Pl-Cart')));
 
-        if (CART_MUTATION.test(url)) {
+        if (CART_MUTATION.test(url) && !tagged) {
           promise.then(function() {
             if (window.plaayRefreshCartDrawer) {
               window.plaayRefreshCartDrawer().catch(function() {});

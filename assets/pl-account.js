@@ -44,7 +44,7 @@
 
     fetch('/cart/add.js', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Pl-Cart': '1' },
       body: JSON.stringify({ items: items, sections: ['cart-drawer-content'] })
     })
       .then(function (r) {

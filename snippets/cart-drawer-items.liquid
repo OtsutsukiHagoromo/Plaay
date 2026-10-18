@@ -143,6 +143,7 @@
         data-variant-id="{{ item.variant_id }}"
         data-product-id="{{ item.product_id }}"
         data-quantity="{{ item.quantity }}"
+        data-unit="{{ line_price | divided_by: item.quantity }}"
         {%- if has_plans %} data-plan-id="{{ plan_id }}" data-plan-name="{{ plan_name | escape }}" data-sub-saving="{{ offer_saving }}"{% endif %}
         data-properties="{{ item.properties | json | escape }}">
         <div class="pl-item__top">

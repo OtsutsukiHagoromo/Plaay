@@ -13,6 +13,10 @@
   var GIFT_VARIANT_ID = 48526560592089;
   var CONFIG = window.plaayGiftConfig || {};
   var GIFT_THRESHOLD = CONFIG.threshold;
+  /* No live tier carries a gift (threshold out of reach): the load-time sync still clears any
+     leftover gift, but cart changes no longer trigger a sync. assets/pl-cart.js reads this. */
+  var GIFT_ACTIVE = Number(GIFT_THRESHOLD) > 0 && Number(GIFT_THRESHOLD) < 999999900;
+  window.plaayGiftActive = GIFT_ACTIVE;
   var SYNC_DELAY = 350;
   var syncTimer = null;
   var syncing = false;
@@ -242,7 +246,9 @@
     window.fetch = function(input, init) {
       var url = typeof input === 'string' ? input : (input && input.url ? input.url : '');
       var req = originalFetch.apply(this, arguments);
-      if (isCartMutation(url)) { req.then(function() { scheduleSync(); }).catch(function() {}); }
+      var h = init && init.headers;
+      var tagged = h && (h['X-Pl-Cart'] || (typeof h.get === 'function' && h.get('X-Pl-Cart')));
+      if (GIFT_ACTIVE && !tagged && isCartMutation(url)) { req.then(function() { scheduleSync(); }).catch(function() {}); }
       return req;
     };
   }

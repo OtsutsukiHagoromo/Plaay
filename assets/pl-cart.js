@@ -15,8 +15,9 @@
 (function () {
   if (window.plCart) return;
 
-  var CHANGE_URL = (window.routes && window.routes.cart_change_url) || '/cart/change.js';
-  var ADD_URL = (window.routes && window.routes.cart_add_url) || '/cart/add.js';
+  /* Always the .js endpoints: Shopify's add-to-cart tracking (web pixels) watches those. */
+  var CHANGE_URL = ((window.routes && window.routes.cart_change_url) || '/cart/change').replace(/\.js$/, '') + '.js';
+  var ADD_URL = ((window.routes && window.routes.cart_add_url) || '/cart/add').replace(/\.js$/, '') + '.js';
   var CART_URL = (window.routes && window.routes.cart_url) || '/cart';
   var SECTIONS = ['cart-drawer-content'];
 
@@ -275,7 +276,7 @@
   function post(url, body) {
     return fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-Pl-Cart': '1' },
       body: JSON.stringify(body)
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (json) {
@@ -453,14 +454,8 @@
     var btn = e.target.closest && e.target.closest('[data-pl-gap-add]');
     if (!btn || btn.classList.contains('is-busy')) return;
     e.preventDefault();
-    btn.classList.add('is-busy');
     gapOpen = false;
-    post(ADD_URL, { items: [{ id: Number(btn.getAttribute('data-pl-gap-add')), quantity: 1 }], sections: SECTIONS })
-      .then(function (res) {
-        if (!res.ok) throw new Error('add failed');
-        return render(res.json);
-      })
-      .catch(function () { btn.classList.remove('is-busy'); refreshAll(); });
+    add([{ id: Number(btn.getAttribute('data-pl-gap-add')), quantity: 1 }], { button: btn, open: false });
   });
 
   /* Frequency picker: move the line to the chosen plan. */
@@ -471,6 +466,284 @@
     e.stopImmediatePropagation();
     var line = t.closest('[data-cart-item]');
     if (line) subscribe(line, null, t.value);
+  }, true);
+
+  /* ---------- fast lane: add, quantity, remove ----------
+     Every bag action is one request, tagged X-Pl-Cart so the fetch watchers in
+     plaay-cart-gift-prompt.js and plaay-gift.js leave it alone, and asking for the re-rendered
+     drawer / cart page in the same response (Section Rendering API), so nothing is fetched twice.
+
+     - add(items, opts): the fly-to-bag animation runs while the request is in flight; the drawer
+       opens as soon as both are done. Used by the product page, cards, tiles, the drawer picks.
+     - Quantity steppers, typed quantities and remove buttons are taken over in the capture
+       phase (the legacy cart-items module would grey the whole bag out on every tap). The line
+       updates on the spot: new quantity, line price, bag count; a removed line folds away.
+       Taps are batched per line (280 ms) and only the newest answer re-renders the bag, once
+       every request has settled, so fast tapping never flickers.
+     - Errors (sold out, stock limits) show a short toast and the bag reloads from the server. */
+  function send(url, body) {
+    return post(url, body).then(function (res) {
+      if (!res.ok) {
+        var err = new Error((res.json && (res.json.description || res.json.message)) || 'Something went wrong. Please try again.');
+        err.status = res.status;
+        throw err;
+      }
+      return res.json;
+    });
+  }
+
+  function wanted() {
+    var list = [];
+    if (q('[data-cart-drawer-content]')) list.push('cart-drawer-content');
+    if (q('[data-cart-page-root]')) list.push('main-cart');
+    return list;
+  }
+
+  function settled() {
+    qa('[data-cart-drawer-content].is-syncing, [data-cart-page-root].is-syncing').forEach(function (el) { el.classList.remove('is-syncing'); });
+  }
+
+  function paint(sections) {
+    if (sections && sections['cart-drawer-content']) renderDrawerSections(sections);
+    if (sections && sections['main-cart']) {
+      var root = q('[data-cart-page-root]');
+      var next = new DOMParser().parseFromString(sections['main-cart'], 'text/html').querySelector('[data-cart-page-root]');
+      if (root && next) root.innerHTML = next.innerHTML;
+    }
+    settled();
+    if (window.plaayGiftActive && window.plaaySyncMysteryGift) window.plaaySyncMysteryGift();
+  }
+
+  function toast(msg) {
+    var t = q('.pl-cart-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.className = 'pl-cart-toast';
+      t.setAttribute('role', 'status');
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.add('is-on');
+    clearTimeout(t._h);
+    t._h = setTimeout(function () { t.classList.remove('is-on'); }, 3200);
+  }
+
+  function bagIcon() {
+    var list = qa('.header__icon--cart, [data-pl-tab="bag"]');
+    for (var i = 0; i < list.length; i += 1) {
+      var r = list[i].getBoundingClientRect();
+      if (r.width && r.bottom > 0 && r.top < window.innerHeight) return list[i];
+    }
+    return null;
+  }
+
+  /* A small round copy of the product photo arcs into the bag icon. It starts on the photo when
+     that is on screen, otherwise on `fallback` (the button that was pressed). */
+  function fly(from, fallback) {
+    var img = from && (from.tagName === 'IMG' ? from : from.querySelector && from.querySelector('img'));
+    var bag = bagIcon();
+    if (calm || !img || !bag || !img.animate) return Promise.resolve();
+    var a = img.getBoundingClientRect(), b = bag.getBoundingClientRect();
+    var onScreen = a.width && a.bottom > 0 && a.top < window.innerHeight;
+    var start = onScreen ? a : fallback && fallback.getBoundingClientRect();
+    if (!start || !start.width) return Promise.resolve();
+    var size = onScreen ? Math.min(a.width, a.height, 110) : 56;
+    var cx = start.left + start.width / 2, cy = start.top + start.height / 2;
+    var ghost = document.createElement('img');
+    ghost.src = img.currentSrc || img.src;
+    ghost.alt = '';
+    ghost.className = 'plo-fly';
+    ghost.style.cssText = 'left:' + (cx - size / 2) + 'px;top:' + (cy - size / 2) + 'px;width:' + size + 'px;height:' + size + 'px';
+    document.body.appendChild(ghost);
+    var dx = b.left + b.width / 2 - cx, dy = b.top + b.height / 2 - cy;
+    var anim = ghost.animate([
+      { transform: 'translate(0,0) scale(1)', opacity: 1 },
+      { transform: 'translate(' + dx * .45 + 'px,' + (dy * .45 - 50) + 'px) scale(.6)', opacity: 1, offset: .5 },
+      { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(.14)', opacity: .5 }
+    ], { duration: 460, easing: 'cubic-bezier(.5,0,.6,1)' });
+    return anim.finished.then(function () {
+      ghost.remove();
+      if (bag.animate) bag.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.25)' }, { transform: 'scale(1)' }], { duration: 280, easing: 'ease-out' });
+    }, function () { ghost.remove(); });
+  }
+
+  function openOrGo() {
+    if (q('cart-drawer')) { window.plCart.open(); return; }
+    if (!q('[data-cart-page-root]')) window.location.href = CART_URL;
+  }
+
+  function add(items, opts) {
+    opts = opts || {};
+    var btn = opts.button;
+    if (btn) {
+      if (btn.classList.contains('is-busy')) return Promise.resolve(null);
+      btn.classList.add('is-busy');
+      btn.setAttribute('aria-busy', 'true');
+    }
+    var flight = opts.from ? fly(opts.from, opts.fallback || btn) : Promise.resolve();
+    var request = send(ADD_URL, { items: items, sections: wanted() });
+    return Promise.all([request, flight]).then(function (r) {
+      paint(r[0].sections);
+      if (btn) {
+        btn.classList.remove('is-busy');
+        btn.removeAttribute('aria-busy');
+        btn.classList.add('is-added');
+        setTimeout(function () { btn.classList.remove('is-added'); }, 1400);
+      }
+      if (opts.open !== false) openOrGo();
+      return r[0];
+    }, function (err) {
+      if (btn) { btn.classList.remove('is-busy'); btn.removeAttribute('aria-busy'); }
+      toast(err.status === 422 ? err.message : 'Could not add to your bag. Please try again.');
+      return null;
+    });
+  }
+
+  /* ---------- quantity + remove ---------- */
+  var timers = {}, pending = {}, seq = 0, inflight = 0, newest = { seq: 0, json: null };
+
+  function lineOf(el) {
+    var line = el.closest && el.closest('[data-cart-item]');
+    return line && line.closest('cart-drawer, [data-cart-page-root]') ? line : null;
+  }
+
+  function unitOf(line) {
+    var u = Number(line.getAttribute('data-unit'));
+    if (!u) {
+      var now = parsePriceFils((q('.pl-item__now', line) || {}).textContent);
+      u = now ? Math.round(now / (Number(line.getAttribute('data-quantity')) || 1)) : 0;
+      line.setAttribute('data-unit', String(u));
+    }
+    return u;
+  }
+
+  function fold(line) {
+    if (calm) { line.style.display = 'none'; return; }
+    line.style.height = line.offsetHeight + 'px';
+    line.style.overflow = 'hidden';
+    void line.offsetHeight;
+    line.style.transition = 'height .26s ease, opacity .18s ease, padding .26s ease, margin .26s ease';
+    line.style.height = '0px';
+    line.style.opacity = '0';
+    line.style.paddingTop = line.style.paddingBottom = '0px';
+    line.style.marginTop = line.style.marginBottom = '0px';
+    line.style.pointerEvents = 'none';
+  }
+
+  function setQty(line, n) {
+    n = Math.max(0, Math.min(99, n | 0));
+    var key = line.getAttribute('data-key');
+    if (!idents[key]) idents[key] = line.getAttribute('data-variant-id') + '|' + (line.classList.contains('is-sub') ? 's' : 'o');
+    var unit = unitOf(line);
+    line.setAttribute('data-quantity', String(n));
+    var input = q('input[name="quantity"]', line);
+    if (input) input.value = n;
+    var now = q('.pl-item__now', line);
+    if (now && unit && n) now.textContent = fmtAED(unit * n);
+    var was = q('.pl-item__was', line);
+    if (was) was.style.visibility = 'hidden';
+    if (n === 0) fold(line);
+    var root = line.closest('[data-cart-drawer-content], [data-cart-page-root]');
+    if (root) {
+      root.classList.add('is-syncing');
+      var total = 0;
+      qa('[data-cart-item]', root).forEach(function (l) { total += Number(l.getAttribute('data-quantity')) || 0; });
+      syncCount(total);
+      var dc = q('[data-cart-drawer-count]');
+      if (dc && root.matches('[data-cart-drawer-content]')) dc.textContent = String(total);
+    }
+    pending[key] = n;
+    clearTimeout(timers[key]);
+    timers[key] = setTimeout(function () { flush(key); }, n === 0 ? 0 : 280);
+  }
+
+  /* Shopify re-keys lines when the bag's discounts change (crossing a reward tier does), so
+     changes run one after another and each finds its line again in the latest bag by variant
+     and one-time / subscription before it is sent; a stale key gets one retry. */
+  var chain = Promise.resolve(), lastCart = null, idents = {};
+
+  function identOf(item) { return item.variant_id + '|' + (item.selling_plan_allocation ? 's' : 'o'); }
+
+  function freshKey(key) {
+    if (!lastCart || !lastCart.items) return key;
+    var items = lastCart.items;
+    for (var i = 0; i < items.length; i += 1) if (items[i].key === key) return key;
+    for (var j = 0; j < items.length; j += 1) if (identOf(items[j]) === idents[key]) return items[j].key;
+    return key;
+  }
+
+  function change(key, n) {
+    var body = function () { return { id: freshKey(key), quantity: n, sections: wanted() }; };
+    return send(CHANGE_URL, body()).catch(function (err) {
+      if (err.status !== 400) throw err;
+      return fetch(CART_URL + '.js', { headers: { Accept: 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (cart) { lastCart = cart; return send(CHANGE_URL, body()); });
+    });
+  }
+
+  function flush(key) {
+    delete timers[key];
+    var n = pending[key];
+    delete pending[key];
+    var mine = ++seq;
+    inflight += 1;
+    chain = chain.then(function () { return change(key, n); })
+      .then(function (json) {
+        lastCart = json;
+        if (mine > newest.seq) newest = { seq: mine, json: json };
+      }, function (err) {
+        toast(err.status === 422 ? err.message : 'Could not update your bag. Please try again.');
+        newest = { seq: mine, json: null };
+      })
+      .then(function () {
+        inflight -= 1;
+        if (inflight || Object.keys(timers).length) return;
+        if (newest.json) paint(newest.json.sections);
+        else refreshAll().then(settled);
+        newest = { seq: seq, json: null };
+      });
+  }
+
+  /* Capture phase: these never reach quantity-adjuster / cart-remove-button / cart-items. */
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-cart-item] [data-minus], [data-cart-item] [data-plus], [data-cart-item] .pl-item__remove');
+    if (!t) return;
+    var line = lineOf(t);
+    if (!line) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var cur = Number(line.getAttribute('data-quantity')) || 0;
+    if (t.matches('.pl-item__remove')) setQty(line, 0);
+    else setQty(line, cur + (t.hasAttribute('data-plus') ? 1 : -1));
+  }, true);
+
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (!t || !t.matches || !t.matches('[data-cart-item] input[name="quantity"]')) return;
+    var line = lineOf(t);
+    if (!line) return;
+    e.stopImmediatePropagation();
+    setQty(line, parseInt(t.value, 10) || 0);
+  }, true);
+
+  /* Legacy quick-add buttons (tiles, the drawer's "You might also like"). Inside the open drawer
+     there is nothing to fly to and nothing to open. */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('quick-add [data-add]');
+    if (!b) return;
+    var host = b.closest('quick-add');
+    var id = Number(host.getAttribute('data-id'));
+    if (!id) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    var qty = Number((q('input[name="quantity"]', host) || {}).value) || 1;
+    var inDrawer = !!b.closest('cart-drawer, [data-cart-page-root]');
+    add([{ id: id, quantity: qty }], {
+      button: b,
+      from: inDrawer ? null : b.closest('.pl-tile, .plaay-upsell-card, article'),
+      open: !inDrawer
+    });
   }, true);
 
   /* ---------- boot ---------- */
@@ -489,6 +762,9 @@
   }
 
   window.plCart = {
+    add: add,
+    fly: fly,
+    toast: toast,
     syncCount: syncCount,
     refresh: refreshAll,
     closeDrawer: closeDrawer,

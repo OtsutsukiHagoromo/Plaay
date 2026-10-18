@@ -203,6 +203,16 @@
       if (addBtn.classList.contains('is-busy')) return;
       var item = { id: Number(variantInput.value), quantity: Number(qty.value) || 1 };
       if (isSub()) item.selling_plan = Number(planInput.value);
+      if (window.plCart && window.plCart.add) {
+        /* Fly from the photo in view, else from the button pressed (sticky bar or buy box). */
+        var stickyOn = sticky && sticky.classList.contains('is-on');
+        window.plCart.add([item], {
+          button: addBtn,
+          from: visiblePhoto(root) || main,
+          fallback: stickyOn ? sticky.querySelector('[data-plo-sticky-add]') : addBtn
+        });
+        return;
+      }
       addBtn.classList.add('is-busy');
       post(((window.routes || {}).cart_add_url || '/cart/add') + '.js', { items: [item] })
         .then(function () { addBtn.classList.remove('is-busy'); return flyToBag(root.querySelector('[data-plo-phtrack]') ? { querySelector: function () { return visiblePhoto(root); } } : null); })
@@ -292,6 +302,10 @@
     if (!add) return;
     e.preventDefault();
     e.stopImmediatePropagation();
+    if (window.plCart && window.plCart.add) {
+      window.plCart.add([quickItem(add)], { button: add, from: add.closest('.plo-card, .plo-tile, .plo-prev__card') });
+      return;
+    }
     add.classList.add('is-busy');
     post(((window.routes || {}).cart_add_url || '/cart/add') + '.js', { items: [quickItem(add)] })
       .then(function () { add.classList.remove('is-busy'); return flyToBag(add.closest('.plo-card, .plo-tile, .plo-prev__card') || null); })

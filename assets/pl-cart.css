@@ -19,12 +19,12 @@ cart-drawer .pl-drawer {
   width: 100vw; max-width: 100%;
   z-index: 17500; /* above the legacy [data-overlay] at 15000 */
   transform: translateX(100%); opacity: 0; visibility: hidden;
-  transition: transform .38s cubic-bezier(.22, .8, .26, 1), opacity .25s ease, visibility 0s linear .38s;
+  transition: transform .3s cubic-bezier(.22, .8, .26, 1), opacity .2s ease, visibility 0s linear .3s;
   outline: 0;
 }
 cart-drawer.active .pl-drawer {
   transform: translateX(0); opacity: 1; visibility: visible;
-  transition: transform .38s cubic-bezier(.22, .8, .26, 1), opacity .2s ease, visibility 0s;
+  transition: transform .3s cubic-bezier(.22, .8, .26, 1), opacity .15s ease, visibility 0s;
 }
 @media (min-width: 1024px) {
 cart-drawer .pl-drawer { width: 440px; }
@@ -349,3 +349,24 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 .pl .pl-upsell__h { margin: 0 0 10px; font-size: 14px; font-weight: 800; line-height: 1.3; color: var(--pl-navy); }
 .pl .pl-upsell__h b { font-weight: 900; }
 .pl .pl-upsell:has(.pl-upsell__track:empty) { display: none; }
+
+/* ---------- fast lane (assets/pl-cart.js) ---------- */
+/* While a quantity change is on its way, the figures it will change (totals, rewards) dim. */
+.pl [data-cart-drawer-content].is-syncing .pl-ladder,
+.pl [data-cart-drawer-content].is-syncing [data-cart-drawer-footer],
+.pl [data-cart-drawer-content].is-syncing .pl-drawer__total,
+.pl [data-cart-page-root].is-syncing .pl-ladder,
+.pl [data-cart-page-root].is-syncing [data-cart-drawer-footer] { opacity: .45; transition: opacity .15s ease; }
+.pl [data-cart-drawer-content].is-syncing .pl-drawer__checkout,
+.pl [data-cart-page-root].is-syncing [data-checkout-url] { opacity: .7; }
+/* Added: the button pops green for a moment. */
+.is-added { background: #2F8A3B !important; color: #fff !important; animation: pl-added-pop .35s ease; }
+@keyframes pl-added-pop { 40% { transform: scale(1.12); } }
+/* Fly-to-bag ghost (also defined in pl-opt.css for the Option B pages). */
+.plo-fly { position: fixed; z-index: 20000; border-radius: 50%; object-fit: cover; background: #F2F4F3; box-shadow: 0 8px 22px rgba(8, 29, 72, .25); pointer-events: none; will-change: transform; }
+/* Toast for bag errors (sold out, stock limits). */
+.pl-cart-toast { position: fixed; z-index: 20001; left: 50%; bottom: calc(var(--pl-tab-offset, var(--pl-tabbar-h, 64px)) + 16px + env(safe-area-inset-bottom)); max-width: calc(100% - 32px); padding: 10px 16px; border-radius: 12px; background: #081D48; color: #fff; font-size: 13px; font-weight: 700; line-height: 1.35; text-align: center; box-shadow: 0 8px 24px rgba(8, 29, 72, .3); transform: translate(-50%, 16px); opacity: 0; pointer-events: none; transition: transform .2s ease, opacity .2s ease; }
+.pl-cart-toast.is-on { transform: translate(-50%, 0); opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+.is-added { animation: none; }
+}
