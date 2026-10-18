@@ -591,7 +591,6 @@
         btn.classList.add('is-added');
         setTimeout(function () { btn.classList.remove('is-added'); }, 1400);
       }
-      if (window.plHaptic) window.plHaptic('success');
       document.dispatchEvent(new CustomEvent('pl:cart:added'));
       if (opts.open !== false) openOrGo();
       return r[0];
@@ -748,6 +747,40 @@
       open: !inDrawer
     });
   }, true);
+
+  /* ---------- bag footer: tap the total for the summary ----------
+     Copies the summary rows from the bag (without the promo code controls) into a panel above
+     the footer. Tapping anywhere else closes it; a re-render of the bag replaces it closed. */
+  function closeSum(foot) {
+    var panel = foot && q('[data-pl-sum]', foot);
+    var btn = foot && q('[data-pl-sum-toggle]', foot);
+    if (!panel || panel.hidden) return;
+    panel.classList.remove('is-open');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+    setTimeout(function () { if (!panel.classList.contains('is-open')) panel.hidden = true; }, calm ? 0 : 200);
+  }
+  document.addEventListener('click', function (e) {
+    var openFoot = q('cart-drawer [data-pl-sum].is-open');
+    var btn = e.target.closest && e.target.closest('[data-pl-sum-toggle]');
+    if (!btn) {
+      if (openFoot && !openFoot.contains(e.target)) closeSum(openFoot.closest('.pl-drawer__foot'));
+      return;
+    }
+    var foot = btn.closest('.pl-drawer__foot');
+    var panel = q('[data-pl-sum]', foot);
+    if (!panel) return;
+    if (!panel.hidden) { closeSum(foot); return; }
+    var src = q('cart-drawer .pl-drawer__scroll .pl-summary');
+    if (!src) return;
+    var copy = src.cloneNode(true);
+    qa('button, [data-plaay-discount-remove]', copy).forEach(function (b) { b.remove(); });
+    panel.innerHTML = '';
+    panel.appendChild(copy);
+    panel.hidden = false;
+    void panel.offsetWidth;
+    panel.classList.add('is-open');
+    btn.setAttribute('aria-expanded', 'true');
+  });
 
   /* ---------- boot ---------- */
   function init() {

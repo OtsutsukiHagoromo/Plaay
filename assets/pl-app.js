@@ -5,8 +5,7 @@
 
    - window.plHaptic(kind): 'tap' on every key control (delegated below). Android vibrates;
      iPhone (iOS 18+) has no vibration API, so a hidden system switch is toggled, which plays the
-     switch tick. That only works inside a tap, so 'success' / 'unlock' (after a request) are
-     Android only.
+     switch tick. That only works inside a tap, so 'unlock' (after a request) is Android only.
    - Page transitions are CSS (@view-transition in assets/pl-shell.css). Here: the photo of the
      product card that was tapped is named so it morphs into the product page gallery; the new
      page names its gallery photo from the inline listener in snippets/pl-app-head.liquid.
@@ -23,31 +22,44 @@
   var touch = window.matchMedia && matchMedia('(hover: none) and (pointer: coarse)').matches;
   var ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (/Mac/.test(navigator.userAgent) && 'ontouchend' in doc);
 
-  /* ---------- haptics ---------- */
-  var tick = null;
+  /* ---------- haptics ----------
+     One haptic per action, at the moment of the tap: the bag opening after an add is its own
+     confirmation, so there is no second "success" buzz. The reward unlock buzz (Android) is
+     skipped when a tap buzz played in the last 1.5 s, so two never land together. */
+  var tick = null, lastTap = 0;
+  function makeTick() {
+    if (tick || !ios || !doc.body) return;
+    tick = doc.createElement('label');
+    tick.setAttribute('aria-hidden', 'true');
+    tick.style.cssText = 'position:fixed;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;clip-path:inset(50%)';
+    var input = doc.createElement('input');
+    input.type = 'checkbox';
+    input.setAttribute('switch', '');
+    input.tabIndex = -1;
+    tick.appendChild(input);
+    /* Keep the synthetic click to itself (outside-click handlers must not see it). */
+    tick.addEventListener('click', function (e) { e.stopPropagation(); });
+    input.addEventListener('click', function (e) { e.stopPropagation(); });
+    doc.body.appendChild(tick);
+  }
+  /* Ready before the first tap, so the tick plays on the tap itself. */
+  if (touch && ios) {
+    if (window.requestIdleCallback) requestIdleCallback(makeTick, { timeout: 1500 });
+    else setTimeout(makeTick, 300);
+  }
   function haptic(kind) {
     if (!touch) return;
     kind = kind || 'tap';
+    var now = Date.now();
+    if (kind === 'tap') lastTap = now;
+    else if (now - lastTap < 1500) return;
     if (navigator.vibrate) {
-      try { navigator.vibrate(kind === 'success' ? [12, 70, 18] : kind === 'unlock' ? [14, 60, 14, 60, 24] : 8); } catch (e) {}
+      try { navigator.vibrate(kind === 'unlock' ? [14, 60, 14, 60, 24] : 12); } catch (e) {}
       return;
     }
     if (!ios || kind !== 'tap') return;
-    if (!tick) {
-      tick = doc.createElement('label');
-      tick.setAttribute('aria-hidden', 'true');
-      tick.style.cssText = 'position:fixed;left:-100px;top:0;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden';
-      var input = doc.createElement('input');
-      input.type = 'checkbox';
-      input.setAttribute('switch', '');
-      input.tabIndex = -1;
-      tick.appendChild(input);
-      /* Keep the synthetic click to itself (outside-click handlers must not see it). */
-      tick.addEventListener('click', function (e) { e.stopPropagation(); });
-      input.addEventListener('click', function (e) { e.stopPropagation(); });
-      doc.body.appendChild(tick);
-    }
-    tick.click();
+    makeTick();
+    if (tick) tick.click();
   }
   window.plHaptic = haptic;
 
@@ -58,7 +70,9 @@
     '.pl-tabbar__tab', '.plo-tab', '.plo-chip', '.plo-chips a', '.plo-chips button', '.pl-drawer__checkout',
     '[data-plo-mode]', '[data-pl-cookie-close]'
   ].join(',');
-  doc.addEventListener('click', function (e) {
+  /* On window, capture phase, registered before the other scripts: some add buttons stop the
+     click early (assets/pl-opt.js card "+"), and the tick must play on the tap itself. */
+  window.addEventListener('click', function (e) {
     var t = e.target.closest && e.target.closest(TAPS);
     if (t) haptic('tap');
   }, true);

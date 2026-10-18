@@ -378,3 +378,45 @@ cart-drawer.active .pl-drawer { transform: translateY(0); }
 cart-drawer .pl-drawer .pl-drawer__head { position: relative; padding-top: 22px; touch-action: none; }
 cart-drawer .pl-drawer .pl-drawer__head::before { content: ""; position: absolute; left: 50%; top: 8px; width: 40px; height: 5px; margin-left: -20px; border-radius: 999px; background: rgba(8, 29, 72, .2); }
 }
+
+/* ---------- bag, compact (Oct 2026) ---------- */
+/* Header: smaller title and close button, less padding. */
+cart-drawer .pl-drawer .pl-drawer__head { padding: 10px var(--pl-s4) 6px; }
+cart-drawer .pl-drawer .pl-drawer__title { font-size: 20px; line-height: 1.1; }
+cart-drawer .pl-drawer .pl-drawer__close { width: 36px; height: 36px; min-width: 36px; min-height: 36px; background: rgba(8, 29, 72, .06); }
+@media (max-width: 1023px) {
+cart-drawer .pl-drawer .pl-drawer__head { padding-top: 20px; }
+}
+
+/* Rewards: a flat strip like the product page (no card): one line, a slim bar, each stop
+   labelled with its reward over its spend; "See picks" sits at the end of the line. */
+.pl .pl-card.pl-ladder { position: relative; gap: 8px; padding: 2px 2px 4px; background: none; border: 0; box-shadow: none; border-radius: 0; }
+.pl .pl-ladder__msg { padding-right: 92px; font-size: 13.5px; }
+.pl .pl-ladder__msg .pl-ic { flex: 0 0 auto; }
+.pl .pl-ladder .plaay-tier-bar__rail { height: 16px; margin: 0 8px; }
+.pl .pl-ladder .plaay-tier-bar__track { top: 5px; }
+.pl .pl-ladder .plaay-tier-bar__dot { width: 16px; height: 16px; top: 0; }
+.pl .pl-ladder .plaay-tier-bar__stops { height: 30px; margin: 4px 8px 0; }
+.pl .pl-ladder .plaay-tier-bar__stop { flex-direction: column-reverse; gap: 1px; font-size: 11.5px; font-weight: 800; color: var(--pl-mute); }
+.pl .pl-ladder .plaay-tier-bar__stop b { font-size: 10.5px; font-weight: 600; color: var(--pl-mute); }
+.pl .pl-ladder .plaay-tier-bar__stop b::after { content: "+"; }
+.pl .pl-ladder .plaay-tier-bar__stop.is-done { color: var(--pl-navy); }
+.pl .pl-ladder .pl-gap { margin: 0; border-top: 0; }
+.pl .pl-ladder .pl-gap summary { position: absolute; top: 0; right: 0; padding: 0; }
+.pl .pl-ladder .pl-gap summary > span:first-child { display: none; }
+.pl .pl-ladder .pl-gap__cta { padding: 5px 9px; font-size: 11.5px; }
+.pl .pl-ladder .pl-gap__list { margin-top: 4px; }
+
+/* Footer: the total is a button that opens the summary above the bar. */
+.pl .pl-drawer__foot { position: relative; z-index: 2; }
+.pl .pl-drawer__total { display: grid; grid-template-columns: auto; justify-items: start; gap: 2px; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.pl .pl-drawer__total-k { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--pl-mute); }
+.pl .pl-drawer__total-k .pl-ic { transform: rotate(180deg); transition: transform .2s ease; }
+.pl .pl-drawer__total[aria-expanded="true"] .pl-drawer__total-k .pl-ic { transform: none; }
+.pl .pl-drawer__saved { font-size: 11px; font-weight: 700; color: #2F8A3B; }
+.pl .pl-drawer__sum { position: absolute; left: 0; right: 0; bottom: 100%; padding: 14px var(--pl-s4) 12px; border-radius: 18px 18px 0 0; background: var(--pl-ground); box-shadow: 0 -10px 24px -12px rgba(8, 29, 72, .3); border-top: 1px solid var(--pl-line); opacity: 0; transform: translateY(8px); transition: opacity .18s ease, transform .2s ease; }
+.pl .pl-drawer__sum.is-open { opacity: 1; transform: none; }
+.pl .pl-drawer__sum .pl-summary { margin: 0; }
+@media (prefers-reduced-motion: reduce) {
+.pl .pl-drawer__sum { transition: none; }
+}

@@ -222,10 +222,17 @@
 
     <div class="pl-drawer__foot">
       {%- if cart.item_count > 0 -%}
-        <div class="pl-drawer__total">
-          <span class="pl-tiny pl-mute">Total</span>
+        {%- comment -%}
+          The total opens a short summary above the bar (a copy of the summary rows further up,
+          made by assets/pl-cart.js on tap: [data-pl-sum-toggle] / [data-pl-sum]).
+        {%- endcomment -%}
+        {%- assign saved = cart.original_total_price | minus: cart.total_price -%}
+        <button type="button" class="pl-drawer__total" data-pl-sum-toggle aria-expanded="false" aria-label="Show order summary">
+          <span class="pl-drawer__total-k">Total {% render 'pl-icon', name: 'chev-down', size: 14, stroke: 2.6 %}</span>
           <span class="pl-drawer__total-v" data-pl-sticky-total>{% render 'plaay-aed', fils: cart.total_price %}</span>
-        </div>
+          {%- if saved > 0 -%}<span class="pl-drawer__saved">You save {% render 'plaay-aed', fils: saved %}</span>{%- endif -%}
+        </button>
+        <div class="pl-drawer__sum" data-pl-sum hidden></div>
         <a href="/checkout" class="pl-btn pl-drawer__checkout" data-checkout-url="/checkout">Checkout</a>
       {%- else -%}
         <button type="button" class="pl-btn pl-btn--full" data-close>Continue shopping</button>
