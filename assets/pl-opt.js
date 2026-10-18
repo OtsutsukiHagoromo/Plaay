@@ -1183,28 +1183,38 @@
     });
     if (!stops.length) return;
     var cart = Number(box.getAttribute('data-cart')) || 0;
-    var msg = box.querySelector('[data-plo-offer-msg] span');
+    var ship = box.querySelector('[data-plo-offer-ship] span');
+    var pill = box.querySelector('[data-plo-offer-next]');
+    var fill = box.querySelector('[data-plo-offer-fill]');
     var steps = box.querySelectorAll('[data-plo-offer-step]');
-    var low = function (t) { return t.charAt(0).toLowerCase() + t.slice(1); };
+    var hasShip = stops[0].label === 'Free delivery';
+    var max = stops[stops.length - 1].at;
+    var short = function (t) { return t === 'Free delivery' ? 'free delivery' : t; };
     function line() {
       var cta = pdp.querySelector('[data-plo-cta]');
       var each = cta ? Math.round(parseFloat(cta.textContent.replace(/[^0-9.]/g, '')) * 100) : Number(box.getAttribute('data-price')) || 0;
       var qty = pdp.querySelector('[data-plo-qty]');
       return each * (qty ? Math.max(1, Number(qty.value) || 1) : 1);
     }
+    var last = -2;
     function paint() {
       var total = cart + line();
       var got = -1;
       stops.forEach(function (st, i) { if (total >= st.at) got = i; });
       Array.prototype.forEach.call(steps, function (li, i) { li.classList.toggle('is-on', i <= got); });
+      if (fill) fill.style.width = Math.min(100, total / max * 100) + '%';
+      var free = hasShip ? got >= 0 : false;
+      if (ship) ship.textContent = free ? 'Free 1–2 day delivery' : '1–2 day UAE delivery';
+      box.classList.toggle('is-free', free);
       var next = stops[got + 1];
-      var have = got >= 0 ? stops[got].label : '';
-      var text;
-      if (!next) text = (have === 'Free delivery' ? 'Free delivery' : have + ' and free delivery') + ' with this order';
-      else if (got < 0) text = 'Add ' + aed(next.at - total) + ' more for ' + low(next.label);
-      else text = have + ' with this order · ' + aed(next.at - total) + ' more for ' + low(next.label);
-      if (msg) msg.textContent = text;
+      if (pill) {
+        pill.hidden = false;
+        pill.textContent = next ? aed(next.at - total) + ' → ' + short(next.label) : stops[got].label + ' unlocked 🎉';
+      }
       box.classList.toggle('is-top', !next);
+      /* A little pop when this change crossed a new stop. */
+      if (last > -2 && got > last) { box.classList.remove('is-pop'); void box.offsetWidth; box.classList.add('is-pop'); }
+      last = got;
     }
     function refresh() {
       if (!window.fetch) return;

@@ -478,8 +478,9 @@
             {%- if v.available -%}<span class="plo-buy__lbl">Add to bag</span><span class="plo-buy__p" data-plo-cta>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- else -%}Sold out{%- endif -%}
           </button>
         </div>
-        {%- if v.available -%}{%- render 'plo-offer-ladder', price: cta_price -%}{%- endif -%}
-        {%- if s.trust != blank -%}<p class="plo-buy__trust">{{ s.trust }}</p>{%- endif -%}
+        {%- comment -%} The rewards strip carries the delivery promise; the plain line is the fallback. {%- endcomment -%}
+        {%- if v.available and settings.cart_tier_ship > 0 -%}{%- render 'plo-offer-ladder', price: cta_price -%}
+        {%- elsif s.trust != blank -%}<p class="plo-buy__trust">{{ s.trust }}</p>{%- endif -%}
       {%- endform -%}
       {%- liquid
         capture d_ingredients

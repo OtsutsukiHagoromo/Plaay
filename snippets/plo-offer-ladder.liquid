@@ -1,8 +1,8 @@
 {%- comment -%}
-  Product page: the spend rewards (free delivery, then the cart tiers) as one compact card under
-  "Add to bag". The message counts the bag plus this product at the price shown, so it reads
-  "Free delivery with this order" or "Add AED 145 more for 10% off". Below it, the stops as small
-  labelled dots on one line.
+  Product page: delivery promise and spend rewards as one flat strip under "Add to bag".
+  Top line: the delivery promise ("1–2 day UAE delivery", "Free 1–2 day delivery" once the bag
+  plus this product reaches the free delivery spend) and a small pill with the next reward
+  ("AED 145 → 10% off"). Under it, a slim bar with a dot at each stop, placed by spend.
   Tiers come from the theme settings the cart uses (cart_tier_ship, cart_tier_1/2/3; a tier with
   spend 0 is off). assets/pl-opt.js (initOfferLadder) keeps it current as the bag, pack size,
   quantity or purchase option change.
@@ -16,6 +16,7 @@
   endif
   assign t_spends = settings.cart_tier_1_spend | append: ',' | append: settings.cart_tier_2_spend | append: ',' | append: settings.cart_tier_3_spend | split: ','
   assign t_labels = settings.cart_tier_1_label | append: '|' | append: settings.cart_tier_2_label | append: '|' | append: settings.cart_tier_3_label | split: '|'
+  assign top = ship
   for sp in t_spends
     assign spn = sp | plus: 0
     if spn > 0
@@ -23,21 +24,33 @@
         assign stops = stops | append: ','
       endif
       assign stops = stops | append: spn | append: ':' | append: t_labels[forloop.index0]
+      if spn > top
+        assign top = spn
+      endif
     endif
   endfor
   assign stop_list = stops | split: ','
 -%}
 {%- if stop_list.size > 0 -%}
   <div class="plo-offer" data-plo-offer data-stops="{{ stops | escape }}" data-cart="{{ cart.original_total_price }}" data-price="{{ price }}">
-    <p class="plo-offer__msg" data-plo-offer-msg>
-      {%- render 'pl-icon', name: 'gift', size: 16, stroke: 2.2 -%}
-      <span>Spend more, save more on your whole bag</span>
+    <p class="plo-offer__top">
+      <span class="plo-offer__ship" data-plo-offer-ship>
+        {%- render 'pl-icon', name: 'truck', size: 16, stroke: 2 -%}
+        <span>1–2 day UAE delivery</span>
+      </span>
+      <span class="plo-offer__next" data-plo-offer-next hidden></span>
     </p>
-    <ol class="plo-offer__steps" style="--n: {{ stop_list.size }};">
+    <div class="plo-offer__bar">
+      <span class="plo-offer__fill" data-plo-offer-fill></span>
       {%- for st in stop_list -%}
         {%- assign kv = st | split: ':' -%}
-        <li data-plo-offer-step data-at="{{ kv[0] }}"><i aria-hidden="true"></i><b>{{ kv[1] }}</b><small>AED {{ kv[0] }}+</small></li>
+        {%- assign at = kv[0] | times: 100 | divided_by: top -%}
+        {%- assign short = kv[1] | replace: 'Free delivery', 'Free ship' -%}
+        <span class="plo-offer__stop{% if forloop.last %} is-end{% endif %}" style="--at: {{ at }}%;" data-plo-offer-step>
+          <i aria-hidden="true">{%- render 'pl-icon', name: 'check', size: 9, stroke: 3.4 -%}</i>
+          <small><b>{{ short }}</b> {{ kv[0] }}</small>
+        </span>
       {%- endfor -%}
-    </ol>
+    </div>
   </div>
 {%- endif -%}
