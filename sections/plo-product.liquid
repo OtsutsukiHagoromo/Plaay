@@ -221,7 +221,7 @@
     <div class="plo-gal" style="--tint: {{ tint }};">
       <div class="plo-gal__main">
         {%- if main_img -%}
-          {{ main_img | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 50vw, 100vw', widths: '500, 750, 1000', alt: product.title, class: 'plo-gal__img' }}
+          {{ main_img | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 45vw, 80vw', widths: '400, 600, 800, 1000', alt: product.title, class: 'plo-gal__img' }}
         {%- endif -%}
         {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge">{{ badge_text }}</span>{%- endif -%}
         {%- render 'plo-heart', product: product, class: 'plo-gal__heart' -%}

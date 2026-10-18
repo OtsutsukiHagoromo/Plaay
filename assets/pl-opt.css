@@ -2172,3 +2172,17 @@ a.plo-rtl__tile:hover { border-color: var(--pl-navy); transform: translateY(-2px
   .pl-skin-b .plo-hero--image { padding-top: 20px; }
   .plo-hero--image .plo-hero__banner { border-radius: 28px; }
 }
+
+/* Speed: sections below the first screen skip layout and paint until they come near the viewport.
+   Product page: everything after the buy box and claims strip; home: everything after the
+   bestsellers. The size hint keeps the scrollbar steady. */
+body.pl-skin-b.template-product #main > .shopify-section:nth-child(n+4),
+body.pl-skin-b.template-index #main > .shopify-section:nth-child(n+5) { content-visibility: auto; contain-intrinsic-size: auto 700px; }
+body.pl-skin-b.pl-body.pl-body #main > .shopify-section:has(.plo-prev) { contain-intrinsic-size: auto 640px; }
+body.pl-skin-b.pl-body.pl-body #main > .shopify-section:has(.plo-pfaq) { contain-intrinsic-size: auto 690px; }
+body.pl-skin-b.pl-body.pl-body #main > .shopify-section:has(.plo-good) { contain-intrinsic-size: auto 975px; }
+body.pl-skin-b.pl-body.pl-body #main > .shopify-section:has(.plo-rel) { contain-intrinsic-size: auto 560px; }
+@media (min-width: 1024px) {
+body.pl-skin-b.template-product #main > .shopify-section:nth-child(n+4),
+body.pl-skin-b.template-index #main > .shopify-section:nth-child(n+5) { contain-intrinsic-size: auto 600px; }
+}
