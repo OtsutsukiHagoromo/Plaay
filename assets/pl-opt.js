@@ -1080,7 +1080,94 @@
     apply(false);
   }
 
+  /* Reviews row: "See more reviews" loads further 4-5 star reviews (with some text) from Judge.me's
+     public review feed, six at a time, as cards in the same style. Reviews already shown are
+     skipped; the button goes when the feed runs out. Scrolling the row to the end loads too. */
+  function initPrevMore(row) {
+    var btn = row.querySelector('[data-plo-prev-more]');
+    var shop = row.getAttribute('data-shop');
+    var model = row.querySelector('.plo-prev__card');
+    if (!btn || !shop || !model || !window.fetch || !window.DOMParser) { if (btn) btn.remove(); return; }
+    var page = 0, busy = false, done = false, queue = [];
+    var seen = Array.prototype.map.call(row.querySelectorAll('.plo-prev__card blockquote'), function (q) { return norm(q.textContent); });
+    var stars = model.querySelector('.plo-prev__top > :first-child');
+    var badge = model.querySelector('.plo-prev__ver');
+    function norm(t) { return String(t || '').replace(/[“”"\s.…]+/g, ' ').trim().toLowerCase().slice(0, 60); }
+    function words(t, n) { var w = t.split(/\s+/); return w.length > n ? w.slice(0, n).join(' ') + '…' : t; }
+    function fetchPage() {
+      page++;
+      var u = 'https://api.judge.me/reviews/all_reviews_js_based?url=' + encodeURIComponent(shop) + '&shop_domain=' + encodeURIComponent(shop) + '&platform=shopify&per_page=20&page=' + page;
+      return fetch(u).then(function (r) { return r.json(); }).then(function (d) {
+        var doc = new DOMParser().parseFromString(d.html || '', 'text/html');
+        var revs = doc.querySelectorAll('.jdgm-rev');
+        if (!revs.length) done = true;
+        Array.prototype.forEach.call(revs, function (el) {
+          var score = Number((el.querySelector('[data-score]') || {}).getAttribute ? el.querySelector('[data-score]').getAttribute('data-score') : 0);
+          var body = ((el.querySelector('.jdgm-rev__body') || {}).textContent || '').replace(/\s+/g, ' ').trim();
+          if (score < 4 || body.length < 25) return;
+          var key = norm(body);
+          if (seen.indexOf(key) > -1) return;
+          seen.push(key);
+          var a = el.querySelector('.jdgm-rev__prod-link');
+          var pic = el.querySelector('.jdgm-rev__pics img');
+          queue.push({
+            body: body,
+            name: ((el.querySelector('.jdgm-rev__author') || {}).textContent || '').trim(),
+            verified: el.getAttribute('data-verified-buyer') === 'true',
+            product: a ? a.textContent.trim() : '',
+            url: a ? a.getAttribute('href') : '',
+            pic: pic ? (pic.getAttribute('data-src') || pic.getAttribute('src')) : ''
+          });
+        });
+      });
+    }
+    function card(r) {
+      var name = !r.name || /^anonymous$/i.test(r.name) ? 'A Plaayer' : r.name;
+      var f = document.createElement('figure');
+      f.className = 'plo-prev__card';
+      var top = document.createElement('div');
+      top.className = 'plo-prev__top';
+      if (stars) top.appendChild(stars.cloneNode(true));
+      if (r.verified && badge) top.appendChild(badge.cloneNode(true));
+      f.appendChild(top);
+      if (r.pic) { var im = document.createElement('img'); im.className = 'plo-prev__shot'; im.src = r.pic; im.alt = 'Photo from ' + name; im.loading = 'lazy'; im.width = 160; im.height = 160; f.appendChild(im); }
+      var q = document.createElement('blockquote');
+      q.textContent = '“' + words(r.body, 34) + '”';
+      f.appendChild(q);
+      var cap = document.createElement('figcaption');
+      var av = document.createElement('span');
+      av.className = 'plo-prev__av plo-prev__av--i';
+      av.setAttribute('aria-hidden', 'true');
+      av.textContent = name.charAt(0).toUpperCase();
+      var who = document.createElement('span');
+      var b = document.createElement('b'); b.textContent = name; who.appendChild(b);
+      if (r.product) { var sm = document.createElement('small'); var l = document.createElement('a'); l.href = r.url; l.textContent = r.product; sm.appendChild(l); who.appendChild(sm); }
+      cap.appendChild(av); cap.appendChild(who);
+      f.appendChild(cap);
+      return f;
+    }
+    function more() {
+      if (busy) return;
+      busy = true;
+      btn.classList.add('is-busy');
+      var fill = function () {
+        if (queue.length >= 6 || done || page >= 15) return Promise.resolve();
+        return fetchPage().then(fill);
+      };
+      fill().then(function () {
+        queue.splice(0, 6).forEach(function (r) { row.insertBefore(card(r), btn); });
+        if (done && !queue.length) btn.remove();
+      }).catch(function () { btn.remove(); }).then(function () { busy = false; btn.classList.remove('is-busy'); });
+    }
+    btn.addEventListener('click', more);
+    /* Phones: swiping to the end of the row loads the next six without a tap. */
+    if ('IntersectionObserver' in window && window.matchMedia('(max-width: 1023px)').matches) {
+      new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) more(); }); }, { root: row, rootMargin: '0px 200px 0px 0px' }).observe(btn);
+    }
+  }
+
   function init() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-prev]'), initPrevMore);
     initPops();
     initHearts();
     resetCardSizes();

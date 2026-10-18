@@ -51,16 +51,16 @@
         <div class="plo-prev__score"><b>{{ rating }}</b><span>/5</span></div>
         {%- capture lbl -%}{{ rating }} out of 5 stars{%- endcapture -%}
         {%- render 'plo-stars', size: 16, label: lbl -%}
-        <p class="plo-prev__c">Based on <b>{{ count }}</b> reviews across all Plaay products</p>
         <div class="plo-prev__bars">
           {%- if jm.histogram != blank -%}
             {%- assign hist = jm.histogram | sort: 'rating' | reverse -%}
             {%- for row in hist limit: s.rows -%}
+              {%- if row.rating < 4 -%}{%- continue -%}{%- endif -%}
               {%- assign pct = row.percentage | round -%}
               <div class="plo-prev__bar"><span>{{ row.rating }} star</span><i><u style="width: {{ pct }}%"></u></i><span>{% if pct == 0 and row.frequency > 0 %}&lt;1{% else %}{{ pct }}{% endif %}%</span></div>
             {%- endfor -%}
           {%- else -%}
-          {%- for c in counts limit: s.rows -%}
+          {%- for c in counts limit: 2 -%}
             {%- liquid
               assign star = 6 | minus: forloop.index
               assign cn = c | plus: 0
@@ -75,7 +75,11 @@
           {%- endif -%}
         </div>
       </div>
-      <div class="plo-prev__cards">
+      {%- comment -%}
+        Cards: the latest 4-5 star reviews from the Judge.me data, then "See more reviews" pulls
+        further 4-5 star reviews from Judge.me's public review feed (assets/pl-opt.js initPrevMore).
+      {%- endcomment -%}
+      <div class="plo-prev__cards" data-plo-prev data-shop="{{ shop.permanent_domain }}">
         {%- assign shown = 0 -%}
         {%- for r in jm.all_reviews -%}
           {%- if shown >= s.live_count -%}{%- break -%}{%- endif -%}
@@ -142,6 +146,11 @@
           </figure>
         {%- endfor -%}
         {%- endif -%}
+        {%- if shown > 0 -%}
+          <button type="button" class="plo-prev__more" data-plo-prev-more>
+            <span>See more reviews</span>{%- render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.6 -%}
+          </button>
+        {%- endif -%}
       </div>
     </div>
   </div>
@@ -158,7 +167,7 @@
     { "type": "range", "id": "rows", "label": "Star rows to show", "min": 3, "max": 5, "step": 1, "default": 4 },
     { "type": "text", "id": "all_label", "label": "All reviews link label", "default": "Read all reviews" },
     { "type": "url", "id": "all_url", "label": "All reviews page" },
-    { "type": "range", "id": "live_count", "label": "Live reviews to show (Judge.me)", "min": 2, "max": 8, "step": 1, "default": 4 },
+    { "type": "range", "id": "live_count", "label": "Live reviews to show first (Judge.me)", "min": 2, "max": 12, "step": 1, "default": 6 },
     { "type": "checkbox", "id": "band", "label": "Cream band background", "default": false }
   ],
   "blocks": [
