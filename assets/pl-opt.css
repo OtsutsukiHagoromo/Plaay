@@ -1043,7 +1043,7 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 }
 
 @media (min-width: 1024px) {
-.plo-tabs { margin: 0; padding: 2px 0 4px; flex-wrap: wrap; }
+.plo-tabs { margin: 0; padding: 2px 22px 0; flex-wrap: wrap; }
 .plo-pan { max-height: 320px; }
 }
 
