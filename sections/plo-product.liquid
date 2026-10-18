@@ -544,8 +544,8 @@
             echo '<p>Free delivery on orders over AED ' | append: settings.cart_tier_ship | append: '. 1–2 day delivery across the UAE.</p>'
           endif
         endcapture
-        assign t_names = 'Description|Ingredients|Allergens|Nutrition|Storage|Suitable for|Shipping' | split: '|'
-        assign t_kinds = 'desc|ingredients|allergens|nutrition|storage|suitable|shipping' | split: '|'
+        assign t_names = 'Description|Ingredients|Nutrition|Allergens|Shipping|Storage|Suitable for' | split: '|'
+        assign t_kinds = 'desc|ingredients|nutrition|allergens|shipping|storage|suitable' | split: '|'
       -%}
       <div class="plo-details" id="plo-details" data-plo-tabs>
         <div class="plo-tabs" role="tablist" aria-label="Product details">
@@ -558,15 +558,15 @@
                 when 2
                   assign body = d_ingredients
                 when 3
-                  assign body = d_allergens
-                when 4
                   assign body = p_nutrition
+                when 4
+                  assign body = d_allergens
                 when 5
-                  assign body = p_storage
-                when 6
-                  assign body = d_suitable
-                when 7
                   assign body = p_shipping
+                when 6
+                  assign body = p_storage
+                when 7
+                  assign body = d_suitable
               endcase
             -%}
             {%- if body != blank -%}
@@ -584,15 +584,15 @@
               when 2
                 assign body = d_ingredients
               when 3
-                assign body = d_allergens
-              when 4
                 assign body = p_nutrition
+              when 4
+                assign body = d_allergens
               when 5
-                assign body = p_storage
-              when 6
-                assign body = d_suitable
-              when 7
                 assign body = p_shipping
+              when 6
+                assign body = p_storage
+              when 7
+                assign body = d_suitable
             endcase
           -%}
           {%- if body != blank -%}
