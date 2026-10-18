@@ -1,0 +1,51 @@
+{%- comment -%}
+  Speed: hold the heavy app scripts until the visitor first scrolls, taps or types, or 3.5s after the
+  page has loaded, whichever comes first, so they don't compete with the first paint.
+  Must sit at the top of <head>, before content_for_header and the app embeds.
+
+  How: app loaders add their scripts with appendChild / insertBefore / append. Script elements whose
+  src matches LATER are queued and inserted, in order, on release. Nothing else is touched: the
+  app embeds' own inline code (Klaviyo "Viewed Product", Clarity consent, Triple Whale, Judge.me) still
+  runs at once and queues its calls until the libraries arrive.
+  Held: Clarity, Klaviyo's onsite bundles (its small klaviyo.js loader itself still loads),
+  Recharge widget, EasyStock, Storeview, Staq Grow and the Vue files it pulls from jsDelivr.
+  window.plLater(fn) runs fn at the same moment (or now, if already released).
+{%- endcomment -%}
+<script>
+(function () {
+  var LATER = /clarity\.ms\/|static(-tracking)?\.klaviyo\.com\/onsite\/js\/(?!.*\/klaviyo\.js)|rechargecdn\.com\/|easystock|storeview|staq-cdn\.com\/|cdn\.jsdelivr\.net\/npm\/vue/;
+  var queue = [], released = false;
+  function release() {
+    if (released) return;
+    released = true;
+    var q = queue; queue = [];
+    for (var i = 0; i < q.length; i++) { try { q[i](); } catch (e) {} }
+  }
+  ['pointerdown', 'keydown', 'touchstart', 'scroll', 'wheel'].forEach(function (ev) {
+    window.addEventListener(ev, release, { once: true, passive: true });
+  });
+  window.addEventListener('load', function () { setTimeout(release, 3500); });
+  function held(n) { return n && n.tagName === 'SCRIPT' && n.src && LATER.test(n.src); }
+  function wrap(proto, name) {
+    var orig = proto[name];
+    if (!orig) return;
+    proto[name] = function () {
+      if (!released) {
+        for (var i = 0; i < arguments.length; i++) {
+          if (held(arguments[i])) {
+            var self = this, args = arguments;
+            queue.push(function () { orig.apply(self, args); });
+            return arguments[0];
+          }
+        }
+      }
+      return orig.apply(this, arguments);
+    };
+  }
+  wrap(Node.prototype, 'appendChild');
+  wrap(Node.prototype, 'insertBefore');
+  wrap(Element.prototype, 'append');
+  wrap(Element.prototype, 'prepend');
+  window.plLater = function (fn) { if (released) fn(); else queue.push(fn); };
+})();
+</script>

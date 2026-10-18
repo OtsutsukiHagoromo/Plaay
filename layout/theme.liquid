@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    {% render 'pl-apps-later' %}
 
     {%- comment -%}
       No cdn.shopify.com preconnect here: Shopify already sends one in the response headers, and
@@ -12,14 +13,6 @@
       Shopify caps resource hints at two per template, so only the origins that actually
       serve render-path assets get one. Hotjar and BugHerd hints removed with their scripts.
     {%- endcomment -%}
-    <link
-      rel="preload"
-      href="{{ 'bundle.theme.css' | asset_url }}"
-      as="style">
-    <link
-      rel="preload"
-      href="{{ 'custom.css' | asset_url }}"
-      as="style">
     <link
       rel="preload"
       href="{{ 'bundle.theme.js' | asset_url }}"
@@ -104,8 +97,16 @@
         endif
       endif
     -%}
-    {{ 'bundle.theme.css' | asset_url | stylesheet_tag }}
-    {{ 'custom.css' | asset_url | stylesheet_tag }}
+    {%- comment -%}
+      New-design pages load only the old-theme rules they still use (pl-legacy.css, ~5 KB gzip,
+      generated and screenshot-checked against the full files); legacy templates keep both files.
+    {%- endcomment -%}
+    {%- if plo_b -%}
+      {{ 'pl-legacy.css' | asset_url | stylesheet_tag }}
+    {%- else -%}
+      {{ 'bundle.theme.css' | asset_url | stylesheet_tag }}
+      {{ 'custom.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
     {{ 'plaay-ui.css' | asset_url | stylesheet_tag }}
     {{ 'pl-shell.css' | asset_url | stylesheet_tag }}
     {%- if plo_b -%}
