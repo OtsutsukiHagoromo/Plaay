@@ -1022,14 +1022,12 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 
 /* Product details under Add to bag (B product page): a card with underline tabs and one panel */
 .plo-details { margin-top: 24px; border: 1px solid rgba(8, 29, 72, .12); border-radius: 20px; background: #fff; overflow: hidden; }
-.plo-tabs { position: relative; display: flex; gap: 22px; overflow-x: auto; scrollbar-width: none; padding: 0 18px; border-bottom: 1px solid rgba(8, 29, 72, .1); -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 28px), transparent); }
-.plo-tabs::-webkit-scrollbar { display: none; }
+.plo-tabs { position: relative; display: flex; flex-wrap: wrap; gap: 0 22px; margin: 0; padding: 2px 18px 0; border-bottom: 1px solid rgba(8, 29, 72, .1); }
 .plo-tab { position: relative; flex: 0 0 auto; padding: 15px 0 13px; border: 0; background: none; font: inherit; font-size: 14px; font-weight: 700; color: var(--pl-mute); cursor: pointer; white-space: nowrap; }
 .plo-tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 2px; background: var(--pl-navy); transform: scaleX(0); transition: transform .25s ease; }
 .plo-tab:hover { color: var(--pl-navy); }
 .plo-tab.is-on { color: var(--pl-navy); }
 .plo-tab.is-on::after { transform: scaleX(1); }
-.plo-tab:last-child { margin-right: 24px; }
 .plo-pan { padding: 16px 18px 18px; font-size: 14px; line-height: 1.6; color: rgba(8, 29, 72, .8); max-height: 280px; overflow-y: auto; animation: plo-pan-in .25s ease; }
 @keyframes plo-pan-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .plo-pan p { margin: 0 0 10px; }
@@ -1038,12 +1036,11 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 .plo-pan ul { margin: 0 0 10px; padding-left: 18px; }
 .plo-pan img { max-width: 100%; height: auto; border-radius: 12px; }
 @media (min-width: 1024px) {
-.plo-tabs { -webkit-mask-image: none; mask-image: none; flex-wrap: wrap; gap: 4px 24px; padding: 0 22px; }
+.plo-tabs { gap: 4px 24px; padding: 2px 22px 0; }
 .plo-pan { padding: 18px 22px 22px; max-height: 340px; }
 }
 
 @media (min-width: 1024px) {
-.plo-tabs { margin: 0; padding: 2px 22px 0; flex-wrap: wrap; }
 .plo-pan { max-height: 320px; }
 }
 
