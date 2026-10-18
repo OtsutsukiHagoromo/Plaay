@@ -1028,6 +1028,14 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 .plo-tab:hover { color: var(--pl-navy); }
 .plo-tab.is-on { color: var(--pl-navy); }
 .plo-tab.is-on::after { transform: scaleX(1); }
+/* Phones: every tab visible as a 3-across grid of chips on a soft tray; the active one is navy. */
+@media (max-width: 1023px) {
+.plo-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; padding: 10px; background: #FBF7EC; border-bottom: 1px solid rgba(8, 29, 72, .08); }
+.plo-tab { padding: 9px 4px; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px rgba(8, 29, 72, .1); font-size: 13px; text-align: center; overflow: hidden; text-overflow: ellipsis; transition: background .2s ease, color .2s ease, box-shadow .2s ease, transform .15s ease; }
+.plo-tab::after { display: none; }
+.plo-tab:active { transform: scale(.97); }
+.plo-tab.is-on { background: var(--pl-navy); color: #fff; box-shadow: 0 2px 0 var(--pl-yellow); }
+}
 .plo-pan { padding: 16px 18px 18px; font-size: 14px; line-height: 1.6; color: rgba(8, 29, 72, .8); max-height: 280px; overflow-y: auto; animation: plo-pan-in .25s ease; }
 @keyframes plo-pan-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .plo-pan p { margin: 0 0 10px; }
