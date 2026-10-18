@@ -1,0 +1,43 @@
+{%- comment -%}
+  Product page: the spend rewards (free delivery, then the cart tiers) as one compact card under
+  "Add to bag". The message counts the bag plus this product at the price shown, so it reads
+  "Free delivery with this order" or "Add AED 145 more for 10% off". Below it, the stops as small
+  labelled dots on one line.
+  Tiers come from the theme settings the cart uses (cart_tier_ship, cart_tier_1/2/3; a tier with
+  spend 0 is off). assets/pl-opt.js (initOfferLadder) keeps it current as the bag, pack size,
+  quantity or purchase option change.
+  Usage: {% render 'plo-offer-ladder', price: cta_price %}
+{%- endcomment -%}
+{%- liquid
+  assign ship = settings.cart_tier_ship | default: 0
+  assign stops = ''
+  if ship > 0
+    assign stops = ship | append: ':Free delivery'
+  endif
+  assign t_spends = settings.cart_tier_1_spend | append: ',' | append: settings.cart_tier_2_spend | append: ',' | append: settings.cart_tier_3_spend | split: ','
+  assign t_labels = settings.cart_tier_1_label | append: '|' | append: settings.cart_tier_2_label | append: '|' | append: settings.cart_tier_3_label | split: '|'
+  for sp in t_spends
+    assign spn = sp | plus: 0
+    if spn > 0
+      if stops != ''
+        assign stops = stops | append: ','
+      endif
+      assign stops = stops | append: spn | append: ':' | append: t_labels[forloop.index0]
+    endif
+  endfor
+  assign stop_list = stops | split: ','
+-%}
+{%- if stop_list.size > 0 -%}
+  <div class="plo-offer" data-plo-offer data-stops="{{ stops | escape }}" data-cart="{{ cart.original_total_price }}" data-price="{{ price }}">
+    <p class="plo-offer__msg" data-plo-offer-msg>
+      {%- render 'pl-icon', name: 'gift', size: 16, stroke: 2.2 -%}
+      <span>Spend more, save more on your whole bag</span>
+    </p>
+    <ol class="plo-offer__steps" style="--n: {{ stop_list.size }};">
+      {%- for st in stop_list -%}
+        {%- assign kv = st | split: ':' -%}
+        <li data-plo-offer-step data-at="{{ kv[0] }}"><i aria-hidden="true"></i><b>{{ kv[1] }}</b><small>AED {{ kv[0] }}+</small></li>
+      {%- endfor -%}
+    </ol>
+  </div>
+{%- endif -%}

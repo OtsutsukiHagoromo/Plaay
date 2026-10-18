@@ -27,7 +27,7 @@
           "settings": {
             "icon": "gift",
             "title": "Free Shipping",
-            "description": "Free delivery on orders over AED 99. Flat AED 15 fee below that."
+            "description": "Free delivery over AED 99, plus 10% off over AED 299 and 18% off over AED 500."
           }
         },
         "hl_fast": {
@@ -107,6 +107,13 @@
             "question": "Do you deliver outside the UAE?",
             "answer": "<p>We currently deliver across UAE. We are also available in KSA via third-party online platforms. As for the rest of the world? Not yet… but we're on our way!</p>"
           }
+        },
+        "faq_offers": {
+          "type": "faq",
+          "settings": {
+            "question": "Do bigger orders get a discount?",
+            "answer": "<p>Yes. Orders over AED 299 get 10% off and orders over AED 500 get 18% off, applied automatically at checkout. Delivery is free on every order over AED 99.</p>"
+          }
         }
       },
       "block_order": [
@@ -117,6 +124,7 @@
         "step_2",
         "step_3",
         "faq_cost",
+        "faq_offers",
         "faq_eta",
         "faq_change",
         "faq_reschedule",

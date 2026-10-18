@@ -1173,8 +1173,57 @@
     }
   }
 
+  /* Product page rewards card (snippets/plo-offer-ladder): bag total + this product at the price
+     and quantity shown -> which stops are reached and what the next one needs. Follows the pack size,
+     quantity and purchase option, and the bag after every change (plaay:cart:updated). */
+  function initOfferLadder(box) {
+    var pdp = box.closest('[data-plo-pdp]') || document;
+    var stops = (box.getAttribute('data-stops') || '').split(',').filter(Boolean).map(function (x) {
+      var i = x.indexOf(':'); return { at: Number(x.slice(0, i)) * 100, label: x.slice(i + 1) };
+    });
+    if (!stops.length) return;
+    var cart = Number(box.getAttribute('data-cart')) || 0;
+    var msg = box.querySelector('[data-plo-offer-msg] span');
+    var steps = box.querySelectorAll('[data-plo-offer-step]');
+    var low = function (t) { return t.charAt(0).toLowerCase() + t.slice(1); };
+    function line() {
+      var cta = pdp.querySelector('[data-plo-cta]');
+      var each = cta ? Math.round(parseFloat(cta.textContent.replace(/[^0-9.]/g, '')) * 100) : Number(box.getAttribute('data-price')) || 0;
+      var qty = pdp.querySelector('[data-plo-qty]');
+      return each * (qty ? Math.max(1, Number(qty.value) || 1) : 1);
+    }
+    function paint() {
+      var total = cart + line();
+      var got = -1;
+      stops.forEach(function (st, i) { if (total >= st.at) got = i; });
+      Array.prototype.forEach.call(steps, function (li, i) { li.classList.toggle('is-on', i <= got); });
+      var next = stops[got + 1];
+      var have = got >= 0 ? stops[got].label : '';
+      var text;
+      if (!next) text = (have === 'Free delivery' ? 'Free delivery' : have + ' and free delivery') + ' with this order';
+      else if (got < 0) text = 'Add ' + aed(next.at - total) + ' more for ' + low(next.label);
+      else text = have + ' with this order · ' + aed(next.at - total) + ' more for ' + low(next.label);
+      if (msg) msg.textContent = text;
+      box.classList.toggle('is-top', !next);
+    }
+    function refresh() {
+      if (!window.fetch) return;
+      fetch(((window.routes || {}).cart_url || '/cart') + '.js', { headers: { Accept: 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (c) { cart = Number(c.original_total_price) || 0; paint(); })
+        .catch(function () {});
+    }
+    pdp.addEventListener('change', function () { setTimeout(paint, 0); });
+    pdp.addEventListener('input', function (e) { if (e.target.matches && e.target.matches('[data-plo-qty]')) paint(); });
+    pdp.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('[data-plo-q]')) setTimeout(paint, 0); });
+    document.addEventListener('plaay:cart:updated', refresh);
+    window.addEventListener('pageshow', function (e) { if (e.persisted) refresh(); });
+    paint();
+  }
+
   function init() {
     Array.prototype.forEach.call(document.querySelectorAll('[data-plo-prev]'), initPrevMore);
+    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-offer]'), initOfferLadder);
     initPops();
     initHearts();
     resetCardSizes();
