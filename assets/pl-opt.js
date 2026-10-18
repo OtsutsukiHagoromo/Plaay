@@ -175,6 +175,8 @@
         variantInput.value = e.target.value;
         price = Number(e.target.getAttribute('data-price'));
         showSizePhoto(e.target);
+        var sz = root.querySelector('[data-plo-sticky-size]'), lb = e.target.parentNode.querySelector('b');
+        if (sz && lb) sz.textContent = lb.textContent.trim();
       }
       syncPlan();
       syncSticky();

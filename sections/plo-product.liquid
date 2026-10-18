@@ -613,7 +613,17 @@
         </div>
       {%- endif -%}
       <span class="plo-sticky__pic" style="--tint: {{ tint }};">{%- if pkey != blank -%}{%- assign ph = 'plo-ph-' | append: pkey | append: '-1.jpg' -%}<img src="{{ ph | asset_img_url: '160x' }}" alt="" loading="lazy" width="80" height="100" class="is-photo">{%- elsif main_img -%}{{ main_img | image_url: width: 120 | image_tag: loading: 'lazy', alt: '', data-plo-sticky-img: '' }}{%- endif -%}</span>
-      <span class="plo-sticky__t"><b>{{ product.title }}</b><span class="plo-sticky__p"><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- if has_sub -%} <s data-plo-sticky-was>{%- render 'plaay-aed', fils: v.price -%}</s>{%- endif -%}</span></span>
+      {%- liquid
+        comment
+          Short name (the headline above, without the "70% Dark Chocolate" kicker or the pack size)
+          on up to two lines; the pack size sits with the price and follows the size picker.
+        endcomment
+        assign st_size = t_size
+        if product.has_only_default_variant == false
+          assign st_size = v.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' | replace: ' g', 'g'
+        endif
+      -%}
+      <span class="plo-sticky__t"><b title="{{ product.title | escape }}">{{ t_name }}</b><span class="plo-sticky__p"><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- if has_sub -%} <s data-plo-sticky-was>{%- render 'plaay-aed', fils: v.price -%}</s>{%- endif -%}{%- if st_size != blank -%}<i class="plo-sticky__sz" data-plo-sticky-size>{{ st_size }}</i>{%- endif -%}</span></span>
       <button type="button" class="plo-btn" data-plo-sticky-add>Add to bag</button>
     </div>
   {%- endif -%}
