@@ -228,41 +228,32 @@
         {%- endcomment -%}
         {%- liquid
           comment
-            Rewards strip above the total: what the shopper has earned, always visible.
-            Tier reached -> "10% off + free delivery" and "You save AED x"; free delivery only ->
-            "Free delivery unlocked"; a promo code with no tier -> the code's title.
+            Footer: the total (tap for the summary) and a big Checkout. What was earned sits in
+            the total itself: a chip with the tier ("18% off"), the pre-discount total struck
+            through, and "You save AED x"; with no discount yet, "Free delivery" once unlocked.
           endcomment
           assign saved = cart.original_total_price | minus: cart.total_price
-          assign deal = ''
+          assign chip = ''
           if reached >= 1
-            assign deal = done_label
-            if ship_fils > 0
-              assign deal = deal | append: ' + free delivery'
-            endif
+            assign chip = done_label
           elsif saved > 0
-            assign deal = cart.discount_applications.first.title | default: 'Discount'
-            if reached == 0
-              assign deal = deal | append: ' + free delivery'
-            endif
-          elsif reached == 0
-            assign deal = 'Free delivery'
+            assign chip = 'Promo'
           endif
         -%}
-        {%- if deal != '' -%}
-          <div class="pl-drawer__deal{% if saved > 0 %} is-save{% endif %}">
-            <span class="pl-drawer__deal-k">{% if saved > 0 %}{% render 'pl-icon', name: 'gift', size: 15, stroke: 2.2 %}{% else %}{% render 'pl-icon', name: 'truck', size: 15, stroke: 2.2 %}{% endif %}<b>{{ deal }}</b>{% if saved > 0 %} applied{% else %} unlocked{% endif %}</span>
-            {%- if saved > 0 -%}<span class="pl-drawer__deal-v">You save <b>{% render 'plaay-aed', fils: saved %}</b></span>{%- endif -%}
-          </div>
-        {%- endif -%}
         <button type="button" class="pl-drawer__total" data-pl-sum-toggle aria-expanded="false" aria-label="Show order summary">
-          <span class="pl-drawer__total-k">Total {% render 'pl-icon', name: 'chev-down', size: 14, stroke: 2.6 %}</span>
+          <span class="pl-drawer__total-k">Total {% render 'pl-icon', name: 'chev-down', size: 13, stroke: 2.6 %}{% if chip != '' %}<em class="pl-drawer__chip">{{ chip }}</em>{% endif %}</span>
           <span class="pl-drawer__total-row">
             <span class="pl-drawer__total-v" data-pl-sticky-total>{% render 'plaay-aed', fils: cart.total_price %}</span>
             {%- if saved > 0 -%}<s class="pl-drawer__was">{% render 'plaay-aed', fils: cart.original_total_price %}</s>{%- endif -%}
           </span>
+          {%- if saved > 0 -%}
+            <span class="pl-drawer__perk is-save">You save {% render 'plaay-aed', fils: saved %}</span>
+          {%- elsif reached >= 0 -%}
+            <span class="pl-drawer__perk">{% render 'pl-icon', name: 'truck', size: 13, stroke: 2.2 %}Free delivery</span>
+          {%- endif -%}
         </button>
         <div class="pl-drawer__sum" data-pl-sum hidden></div>
-        <a href="/checkout" class="pl-btn pl-drawer__checkout" data-checkout-url="/checkout">Checkout</a>
+        <a href="/checkout" class="pl-btn pl-drawer__checkout" data-checkout-url="/checkout">{% render 'pl-icon', name: 'lock', size: 17, stroke: 2.4 %}<span>Checkout</span></a>
       {%- else -%}
         <button type="button" class="pl-btn pl-btn--full" data-close>Continue shopping</button>
       {%- endif -%}

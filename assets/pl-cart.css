@@ -413,16 +413,19 @@ cart-drawer .pl-drawer .pl-drawer__head { padding-top: 20px; }
 .pl .pl-drawer__total-k { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--pl-mute); }
 .pl .pl-drawer__total-k .pl-ic { transform: rotate(180deg); transition: transform .2s ease; }
 .pl .pl-drawer__total[aria-expanded="true"] .pl-drawer__total-k .pl-ic { transform: none; }
-/* Rewards strip above the total (always visible when something is earned). */
-.pl .pl-drawer__foot { flex-wrap: wrap; row-gap: 10px; }
-.pl .pl-drawer__deal { flex: 1 0 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px; border-radius: 12px; background: var(--pl-cream); color: var(--pl-navy); font-size: 12.5px; line-height: 1.25; }
-.pl .pl-drawer__deal.is-save { background: #E6F4E7; color: #1E6B2A; }
-.pl .pl-drawer__deal-k { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
-.pl .pl-drawer__deal-k .pl-ic { flex: 0 0 auto; }
-.pl .pl-drawer__deal b { font-weight: 900; }
-.pl .pl-drawer__deal-v { flex: 0 0 auto; white-space: nowrap; }
-.pl .pl-drawer__total-row { display: inline-flex; align-items: baseline; gap: 8px; }
-.pl .pl-drawer__was { font-size: 13px; font-weight: 600; color: var(--pl-mute); }
+/* Footer, one row: the total with what was earned (chip, struck total, savings) and a big
+   Checkout that takes the rest of the width. */
+.pl .pl-drawer__foot { gap: 14px; padding-top: 12px; }
+.pl .pl-drawer__total { flex: 0 1 auto; min-width: 0; gap: 1px; }
+.pl .pl-drawer__total-k { gap: 3px; font-size: 12px; }
+.pl .pl-drawer__chip { margin-left: 4px; padding: 2px 7px; border-radius: 999px; background: #E6F4E7; color: #1E6B2A; font-size: 10.5px; font-style: normal; font-weight: 900; letter-spacing: .02em; white-space: nowrap; }
+.pl .pl-drawer__total-row { display: inline-flex; align-items: baseline; gap: 7px; white-space: nowrap; }
+.pl .pl-drawer__total-row .pl-drawer__total-v { font-size: 22px; }
+.pl .pl-drawer__was { font-size: 12.5px; font-weight: 600; color: var(--pl-mute); }
+.pl .pl-drawer__perk { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--pl-mute); white-space: nowrap; }
+.pl .pl-drawer__perk.is-save { color: #2F8A3B; font-weight: 800; }
+.pl.pl-drawer .pl-drawer__checkout { flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 0; height: 56px; padding: 0 20px; border-radius: 999px; background: var(--pl-yellow); color: var(--pl-navy); font-size: 18px; font-weight: 900; box-shadow: 0 3px 0 var(--pl-navy); transition: transform .12s ease, box-shadow .12s ease; }
+.pl.pl-drawer .pl-drawer__checkout:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--pl-navy); }
 .pl .pl-drawer__sum { position: absolute; left: 0; right: 0; bottom: 100%; padding: 14px var(--pl-s4) 12px; border-radius: 18px 18px 0 0; background: var(--pl-ground); box-shadow: 0 -10px 24px -12px rgba(8, 29, 72, .3); border-top: 1px solid var(--pl-line); opacity: 0; transform: translateY(8px); transition: opacity .18s ease, transform .2s ease; }
 .pl .pl-drawer__sum.is-open { opacity: 1; transform: none; }
 .pl .pl-drawer__sum .pl-summary { margin: 0; }
