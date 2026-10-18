@@ -933,6 +933,8 @@
     function test(card, v) {
       if (v === 'sub') return card.hasAttribute('data-f-sub');
       if (v.indexOf('t:') === 0) return (card.getAttribute('data-f-tags') || '').indexOf('|' + v.slice(2) + '|') > -1;
+      /* Catalogue facts (snippets/plo-catalog): c:dark -> |c-dark| and so on. */
+      if (/^[cfd]:/.test(v)) return (card.getAttribute('data-f-tags') || '').indexOf('|' + v.replace(':', '-') + '|') > -1;
       return true;
     }
     function group(v) { return v === 'sub' ? 'sub' : v.slice(0, 2); }
@@ -1051,7 +1053,12 @@
     function clear() { opts.forEach(function (o) { o.checked = false; }); lo = pMin; hi = pMax; apply(true); }
 
     /* Options that match nothing here go, then empty groups, then the button if nothing is left. */
-    opts.forEach(function (o) { if (!cards.some(function (c) { return test(c, o.value); })) o.closest('.plo-fopt').remove(); });
+    /* An option that matches nothing here, or everything here (all truffles are dark), filters
+       nothing: leave it out. */
+    opts.forEach(function (o) {
+      var n = unique(cards.filter(function (c) { return test(c, o.value); }));
+      if (!n || n === unique(cards)) o.closest('.plo-fopt').remove();
+    });
     Array.prototype.forEach.call(tools.querySelectorAll('.plo-fgroup:not([data-plo-fprice])'), function (g) {
       if (!g.querySelector('[data-plo-fopt]')) g.remove();
     });

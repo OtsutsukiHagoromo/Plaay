@@ -194,6 +194,25 @@
                   </div>
                   <div class="plo-fprice__vals"><span data-plo-pminv></span><span data-plo-pmaxv></span></div>
                 </fieldset>
+                <fieldset class="plo-fgroup">
+                  <legend>Chocolate</legend>
+                  <label class="plo-fopt"><input type="checkbox" value="c:dark" data-plo-fopt data-label="Dark chocolate"><span>Dark<small data-plo-fn></small></span></label>
+                  <label class="plo-fopt"><input type="checkbox" value="c:milk" data-plo-fopt data-label="Milk chocolate"><span>Milk<small data-plo-fn></small></span></label>
+                  <label class="plo-fopt"><input type="checkbox" value="c:mixed" data-plo-fopt data-label="Mixed packs"><span>Mixed<small data-plo-fn></small></span></label>
+                </fieldset>
+                <fieldset class="plo-fgroup">
+                  <legend>Flavour</legend>
+                  {%- assign fams = 'classic-chocolate:Classic chocolate,nutty:Nutty,caramel-toffee:Caramel & toffee,coffee-spice:Coffee & spice,dessert:Dessert,mixed:Mixed' | split: ',' -%}
+                  {%- for f in fams -%}
+                    {%- assign kv = f | split: ':' -%}
+                    <label class="plo-fopt"><input type="checkbox" value="f:{{ kv[0] }}" data-plo-fopt data-label="{{ kv[1] | escape }}"><span>{{ kv[1] }}<small data-plo-fn></small></span></label>
+                  {%- endfor -%}
+                </fieldset>
+                <fieldset class="plo-fgroup">
+                  <legend>Dietary</legend>
+                  <label class="plo-fopt"><input type="checkbox" value="d:vegan" data-plo-fopt data-label="Vegan"><span>Vegan<small data-plo-fn></small></span></label>
+                  <label class="plo-fopt"><input type="checkbox" value="d:keto" data-plo-fopt data-label="Keto-friendly"><span>Keto-friendly<small data-plo-fn></small></span></label>
+                </fieldset>
                 {%- if s.filter_tags != blank -%}
                   <fieldset class="plo-fgroup" data-group="tag">
                     <legend>{{ s.filter_tags_label | default: 'Dietary' }}</legend>

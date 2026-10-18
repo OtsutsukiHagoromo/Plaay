@@ -493,6 +493,16 @@
         capture d_suitable
           render 'pl-mf-text', mf: product.metafields.custom.suitable_for
         endcapture
+        comment
+          The shared "Suitable for" text promises keto; leave it off products the catalogue sheet
+          confirms are not keto (snippets/plo-catalog) until that text is rewritten.
+        endcomment
+        capture p_facts
+          render 'plo-catalog', handle: product.handle
+        endcapture
+        if p_facts contains 'keto-no'
+          assign d_suitable = ''
+        endif
         capture d_shipping
           echo product.metafields.custom.shipping_policy | metafield_tag
         endcapture

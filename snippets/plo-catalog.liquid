@@ -1,0 +1,43 @@
+{%- comment -%}
+  Product facts from the catalogue clean-up sheet (team-checked, Oct 2026), by product handle.
+  Output: pipe-separated keys used by the collection filters (via snippets/plo-card data-f-tags)
+  and the product page:
+    c-dark / c-milk / c-mixed          chocolate
+    f-<flavour family>                 flavour family (classic-chocolate, nutty, caramel-toffee,
+                                       coffee-spice, dessert, mixed)
+    d-vegan / d-keto                   dietary (only when confirmed Yes)
+    keto-no                            confirmed NOT keto: the product page hides the "Suitable for"
+                                       tab, whose shared text still promises keto
+  Update this list when products change, until these facts live in Shopify metafields.
+  Usage: {%- capture facts -%}{%- render 'plo-catalog', handle: product.handle -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- case handle -%}
+  {%- when 'plaay-70-dark-chocolate-hazelnut-bar-6-x-80g' -%}c-dark|f-nutty|keto-no
+  {%- when 'plaay-70-dark-chocolate-caramel-crunch-mousse-bar-6-x-80g' -%}c-dark|f-caramel-toffee|keto-no
+  {%- when 'plaay-70-dark-chocolate-sea-salt-bar-6-x-80g' -%}c-dark|f-classic-chocolate|keto-no
+  {%- when 'plaay-70-dark-chocolate-bar-6-x-35g' -%}c-dark|f-classic-chocolate|d-keto
+  {%- when 'plaay-70-dark-chocolate-bar-6-x-80g' -%}c-dark|f-classic-chocolate|d-keto
+  {%- when 'plaay-milk-chocolate-cheesecake-bar-6-x-80g' -%}c-milk|f-dessert|keto-no
+  {%- when 'plaay-milk-chocolate-toffee-almond-bar-6-x-35g' -%}c-milk|f-caramel-toffee|keto-no
+  {%- when 'plaay-milk-chocolate-toffee-almond-bar-6-x-80g' -%}c-milk|f-caramel-toffee|keto-no
+  {%- when 'new-chocolate-slabs-mix-pack-of-6' -%}c-mixed|f-mixed|keto-no
+  {%- when 'almond-brownie-truffle' -%}c-dark|f-dessert|d-vegan|keto-no
+  {%- when 'cashew-caramel-truffle' -%}c-dark|f-caramel-toffee|d-vegan|keto-no
+  {%- when 'coffee-date-chocolate-truffles-60g-copy' -%}c-dark|f-coffee-spice|keto-no
+  {%- when 'plaay-karak-chocolate-truffles-2-x-60g' -%}c-dark|f-coffee-spice|keto-no
+  {%- when 'mexican-chilli-chocolate-truffles-2-x-60g' -%}c-dark|f-coffee-spice|keto-no
+  {%- when 'peanut-butter-truffle' -%}c-dark|f-nutty|keto-no
+  {%- when 'pistachio-truffle' -%}c-dark|f-nutty|keto-no
+  {%- when 'pistachio-chocolate-truffles-150g' -%}c-dark|f-nutty|d-vegan|keto-no
+  {%- when 'triple-chocolate-truffle' -%}c-dark|f-classic-chocolate|keto-no
+  {%- when 'triple-chocolate-truffles-150g' -%}c-dark|f-classic-chocolate|keto-no
+  {%- when 'cookies-and-cream-bar-x12' -%}c-dark|f-dessert|keto-no
+  {%- when 'mocha-almond-bar-x12' -%}c-dark|f-coffee-spice|d-vegan|keto-no
+  {%- when 'pistachio-chocolate-bar-x-12' -%}c-dark|f-nutty|keto-no
+  {%- when 'salted-caramel-bar-x12' -%}c-dark|f-caramel-toffee|d-vegan|keto-no
+  {%- when 'salty-peanut-bar-x12' -%}c-dark|f-nutty|keto-no
+  {%- when 'bar-bunch' -%}c-mixed|f-mixed|keto-no
+  {%- when 'og-plaayer-pack' -%}c-mixed|f-mixed|keto-no
+  {%- when 'plaayer-pack' -%}c-mixed|f-mixed|keto-no
+  {%- when 'truffle-mix' -%}c-mixed|f-mixed|keto-no
+{%- endcase -%}
