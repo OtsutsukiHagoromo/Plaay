@@ -2,7 +2,8 @@
   Product page: delivery promise and spend rewards as one flat strip under "Add to bag".
   Top line: the delivery promise ("1–2 day UAE delivery", "Free 1–2 day delivery" once the bag
   plus this product reaches the free delivery spend) and a small pill with the next reward
-  ("AED 145 → 10% off"). Under it, a slim bar with a dot at each stop, placed by spend.
+  ("AED 145 → 10% off"). Under it, a slim bar with a dot at each stop, placed by spend and
+  labelled on two lines ("10% off" over "AED 299+").
   Tiers come from the theme settings the cart uses (cart_tier_ship, cart_tier_1/2/3; a tier with
   spend 0 is off). assets/pl-opt.js (initOfferLadder) keeps it current as the bag, pack size,
   quantity or purchase option change.
@@ -45,10 +46,9 @@
       {%- for st in stop_list -%}
         {%- assign kv = st | split: ':' -%}
         {%- assign at = kv[0] | times: 100 | divided_by: top -%}
-        {%- assign short = kv[1] | replace: 'Free delivery', 'Free ship' -%}
         <span class="plo-offer__stop{% if forloop.last %} is-end{% endif %}" style="--at: {{ at }}%;" data-plo-offer-step>
           <i aria-hidden="true">{%- render 'pl-icon', name: 'check', size: 9, stroke: 3.4 -%}</i>
-          <small><b>{{ short }}</b> {{ kv[0] }}</small>
+          <small><b>{{ kv[1] }}</b>AED {{ kv[0] }}+</small>
         </span>
       {%- endfor -%}
     </div>

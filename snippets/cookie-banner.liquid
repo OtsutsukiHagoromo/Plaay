@@ -4,10 +4,11 @@
   and if the visitor simply carries on to another page it counts as seen and stays away.
   It is a notice only. Tracking is not gated by it (it never was: the old Accept and Dismiss
   both just stored the same cookie); consent itself is handled by Shopify's Customer Privacy settings.
-  Phones: sits just above the tab bar. Desktop: a small card at the bottom left.
+  Phones: sits just above the tab bar. Desktop: a small card at the bottom left. On product pages it
+  lifts above the sticky add-to-bag bar while that bar is showing.
 {%- endcomment -%}
 <style>
-  .pl-cookie { position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(var(--pl-tab-offset, var(--pl-tabbar-h, 64px)) + 10px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; border-radius: 14px; background: var(--pl-navy, #081D48); color: #fff; box-shadow: 0 8px 24px rgba(8, 29, 72, .28); font-size: 12.5px; line-height: 1.35; transform: translateY(0); opacity: 1; transition: transform .25s ease, opacity .25s ease; }
+  .pl-cookie { position: fixed; z-index: 60; left: 12px; right: 12px; bottom: calc(var(--pl-tab-offset, var(--pl-tabbar-h, 64px)) + 10px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 14px; border-radius: 14px; background: var(--pl-navy, #081D48); color: #fff; box-shadow: 0 8px 24px rgba(8, 29, 72, .28); font-size: 12.5px; line-height: 1.35; transform: translateY(0); opacity: 1; transition: transform .25s ease, opacity .25s ease, bottom .25s ease; }
   .pl-cookie[hidden] { display: none; }
   .pl-cookie.is-out { transform: translateY(12px); opacity: 0; pointer-events: none; }
   .pl-cookie p { flex: 1; margin: 0; min-width: 0; }
@@ -45,6 +46,21 @@
     if (get(SEEN) === 'true') { done(); return; }
     set(SEEN);
     box.hidden = false;
+    /* Keep clear of the product page's sticky add-to-bag bar. */
+    var sticky = document.querySelector('[data-plo-sticky]');
+    function lift() {
+      if (box.hidden) return;
+      if (sticky && sticky.offsetHeight && sticky.classList.contains('is-on')) {
+        box.style.bottom = (parseFloat(getComputedStyle(sticky).bottom) || 0) + sticky.offsetHeight + 10 + 'px';
+      } else {
+        box.style.bottom = '';
+      }
+    }
+    if (sticky && window.MutationObserver) {
+      new MutationObserver(lift).observe(sticky, { attributes: true, attributeFilter: ['class'] });
+      window.addEventListener('resize', lift);
+      lift();
+    }
     box.addEventListener('click', function (e) {
       if (!e.target.closest('[data-pl-cookie-close]')) return;
       done();

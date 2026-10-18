@@ -2195,15 +2195,15 @@ body.pl-skin-b.template-index #main > .shopify-section:nth-child(n+5) { contain-
 .plo-offer.is-free .plo-offer__ship svg { color: #2F8A3B; }
 .plo-offer__next { padding: 4px 10px; border-radius: 999px; background: var(--pl-cream, #FFF4D6); box-shadow: inset 0 0 0 1.5px rgba(255, 182, 0, .55); color: var(--pl-navy); font-size: 12px; font-weight: 800; white-space: nowrap; transform: rotate(-1.5deg); }
 .plo-offer.is-top .plo-offer__next { background: #DFF3E1; color: #1E6B2A; transform: none; }
-.plo-offer__bar { position: relative; height: 6px; margin: 0 6px 22px; border-radius: 999px; background: rgba(8, 29, 72, .1); }
+.plo-offer__bar { position: relative; height: 6px; margin: 0 6px 36px; border-radius: 999px; background: rgba(8, 29, 72, .1); }
 .plo-offer__fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--pl-yellow), #FF8A00); transition: width .5s cubic-bezier(.3, 1.4, .5, 1); }
 .plo-offer__stop { position: absolute; top: 50%; left: var(--at); transform: translate(-50%, -50%); }
 .plo-offer__stop i { display: flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 2px solid rgba(8, 29, 72, .22); color: transparent; transition: background .25s ease, border-color .25s ease, transform .25s ease; }
 .plo-offer__stop.is-on i { background: var(--pl-navy); border-color: var(--pl-navy); color: var(--pl-yellow); }
-.plo-offer__stop small { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); font-size: 10.5px; font-weight: 600; line-height: 1.2; color: var(--pl-mute); white-space: nowrap; }
-.plo-offer__stop small b { font-weight: 800; }
+.plo-offer__stop small { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; font-size: 10.5px; font-weight: 600; line-height: 1.25; color: var(--pl-mute); white-space: nowrap; }
+.plo-offer__stop small b { font-size: 11.5px; font-weight: 800; }
 .plo-offer__stop.is-on small { color: var(--pl-navy); }
-.plo-offer__stop.is-end small { left: auto; right: -6px; transform: none; }
+.plo-offer__stop.is-end small { left: auto; right: -6px; transform: none; align-items: flex-end; }
 .plo-offer.is-pop .plo-offer__stop.is-on i { animation: plo-offer-pop .5s ease; }
 .plo-offer.is-pop .plo-offer__ship svg { animation: plo-offer-drive .6s ease; }
 @keyframes plo-offer-pop { 40% { transform: scale(1.45); } }
