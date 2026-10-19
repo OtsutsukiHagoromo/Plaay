@@ -1,4 +1,4 @@
-/* Plaay app feel: haptics, photo morph between pages, bag sheet swipe, and the home screen
+/* Plaay app feel: haptics, photo morph between pages, bag swipe to close, and the home screen
    app extras (back button, pull to refresh).
 
    Loaded (defer) from layout/theme.liquid on every page. Dependency-free.
@@ -9,7 +9,7 @@
    - Page transitions are CSS (@view-transition in assets/pl-shell.css). Here: the photo of the
      product card that was tapped is named so it morphs into the product page gallery; the new
      page names its gallery photo from the inline listener in snippets/pl-app-head.liquid.
-   - Bag sheet (phones): drag the bag down by its top bar, or from the top of its list, to close.
+   - Bag (phones): swipe it to the right to close.
    - Invite to save the app (see the block below), outside the app only.
    - Home screen app only (html.pl-app, set by snippets/pl-app-head.liquid): a back arrow in the
      header (saved apps have no browser back button), pull to refresh (saved apps lose
@@ -96,46 +96,43 @@
     if (lastPhoto) { lastPhoto.style.viewTransitionName = ''; lastPhoto = null; }
   });
 
-  /* ---------- bag sheet: swipe down to close (phones) ---------- */
+  /* ---------- bag drawer: swipe right to close (phones) ----------
+     The bag slides in from the right; a sideways drag to the right follows the finger and
+     closes it past a quarter of the width (or on a quick flick). Vertical scrolling and
+     sideways scrollers inside the bag (product picks) are left alone. */
   (function () {
     var drawer = doc.querySelector('cart-drawer');
     if (!drawer || !touch) return;
-    var sheet = drawer.querySelector('.pl-drawer');
-    var startY = 0, dy = 0, dragging = false, from = null, t0 = 0;
-    function scroller() { return drawer.querySelector('.pl-drawer__scroll'); }
+    var panel = drawer.querySelector('.pl-drawer');
+    var x0 = 0, y0 = 0, dx = 0, t0 = 0, state = null;
+    function sideScroller(el) {
+      for (; el && el !== drawer; el = el.parentElement) if (el.scrollWidth > el.clientWidth + 2 && /auto|scroll/.test(getComputedStyle(el).overflowX)) return true;
+      return false;
+    }
     drawer.addEventListener('touchstart', function (e) {
-      if (!drawer.classList.contains('active') || window.innerWidth >= 1024) return;
-      var head = e.target.closest('.pl-drawer__head');
-      var sc = scroller();
-      var inList = sc && sc.contains(e.target) && sc.scrollTop <= 0;
-      if (!head && !inList) return;
-      from = head ? 'head' : 'list';
-      startY = e.touches[0].clientY; dy = 0; dragging = false; t0 = Date.now();
+      state = null;
+      if (!drawer.classList.contains('active') || window.innerWidth >= 1024 || e.touches.length !== 1 || sideScroller(e.target)) return;
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; t0 = Date.now(); state = 'maybe';
     }, { passive: true });
     drawer.addEventListener('touchmove', function (e) {
-      if (!from) return;
-      dy = e.touches[0].clientY - startY;
-      if (!dragging) {
-        if (dy < 6) { if (dy < -4) from = null; return; }
-        dragging = true;
-        sheet.style.transition = 'none';
+      if (!state) return;
+      dx = e.touches[0].clientX - x0;
+      var dy = e.touches[0].clientY - y0;
+      if (state === 'maybe') {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        if (dx > 0 && Math.abs(dx) > Math.abs(dy) * 1.3) { state = 'drag'; panel.style.transition = 'none'; }
+        else { state = null; return; }
       }
       if (e.cancelable) e.preventDefault();
-      sheet.style.transform = 'translateY(' + Math.max(0, dy) + 'px)';
+      panel.style.transform = 'translateX(' + Math.max(0, dx) + 'px)';
     }, { passive: false });
     function end() {
-      if (!from) return;
-      from = null;
-      if (!dragging) return;
-      dragging = false;
-      sheet.style.transition = '';
-      var fast = dy / Math.max(1, Date.now() - t0) > .6;
-      if (dy > sheet.offsetHeight * .25 || (fast && dy > 40)) {
-        sheet.style.transform = '';
-        if (window.plCart) window.plCart.closeDrawer();
-      } else {
-        sheet.style.transform = '';
-      }
+      if (state !== 'drag') { state = null; return; }
+      state = null;
+      panel.style.transition = '';
+      panel.style.transform = '';
+      var fast = dx / Math.max(1, Date.now() - t0) > .6;
+      if (dx > panel.offsetWidth * .25 || (fast && dx > 40)) { if (window.plCart) window.plCart.closeDrawer(); }
     }
     drawer.addEventListener('touchend', end);
     drawer.addEventListener('touchcancel', end);

@@ -10,7 +10,7 @@
   {%- liquid
     assign rec_id = cart.items.first.product_id
     assign all_done = false
-    if reached >= 3
+    if reached >= 3 or next_label == blank
       assign all_done = true
     endif
   -%}

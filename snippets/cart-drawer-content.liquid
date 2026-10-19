@@ -79,13 +79,13 @@
 
 {%- capture ladder_html -%}
   <div class="pl-card pl-ladder">
-    {%- if reached < 3 -%}
+    {%- if next_label != '' -%}
       <p class="pl-ladder__msg"><b>{% render 'plaay-aed', fils: remaining_fils %}</b> away from <b>{{ next_label }}</b></p>
     {%- else -%}
       <p class="pl-ladder__msg pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}All rewards unlocked</p>
     {%- endif -%}
     {%- render 'cart-tier-bar' -%}
-    {%- if reached < 3 and cart.item_count > 0 -%}
+    {%- if next_label != '' and cart.item_count > 0 -%}
       {%- liquid
         comment
           Next-reward preview: up to 3 products that close the gap on their own (cheapest first,
@@ -228,9 +228,10 @@
         {%- endcomment -%}
         {%- liquid
           comment
-            Footer: the total (tap for the summary) and a big Checkout. What was earned sits in
-            the total itself: a chip with the tier ("18% off"), the pre-discount total struck
-            through, and "You save AED x"; with no discount yet, "Free delivery" once unlocked.
+            Footer, two rows: the total line (tap for the summary), then one full-width Checkout.
+            The total line carries what was earned: a chip with the tier ("18% off") and "You
+            save AED x" on the left, the pre-discount total struck through beside the total on
+            the right; with no discount yet, "Free delivery" once unlocked.
           endcomment
           assign saved = cart.original_total_price | minus: cart.total_price
           assign chip = ''
@@ -241,16 +242,18 @@
           endif
         -%}
         <button type="button" class="pl-drawer__total" data-pl-sum-toggle aria-expanded="false" aria-label="Show order summary">
-          <span class="pl-drawer__total-k">Total {% render 'pl-icon', name: 'chev-down', size: 13, stroke: 2.6 %}{% if chip != '' %}<em class="pl-drawer__chip">{{ chip }}</em>{% endif %}</span>
-          <span class="pl-drawer__total-row">
-            <span class="pl-drawer__total-v" data-pl-sticky-total>{% render 'plaay-aed', fils: cart.total_price %}</span>
-            {%- if saved > 0 -%}<s class="pl-drawer__was">{% render 'plaay-aed', fils: cart.original_total_price %}</s>{%- endif -%}
+          <span class="pl-drawer__total-l">
+            <span class="pl-drawer__total-k">Total {% render 'pl-icon', name: 'chev-down', size: 13, stroke: 2.6 %}{% if chip != '' %}<em class="pl-drawer__chip">{{ chip }}</em>{% endif %}</span>
+            {%- if saved > 0 -%}
+              <span class="pl-drawer__perk is-save">You save {% render 'plaay-aed', fils: saved %}</span>
+            {%- elsif reached >= 0 -%}
+              <span class="pl-drawer__perk">{% render 'pl-icon', name: 'truck', size: 13, stroke: 2.2 %}Free delivery</span>
+            {%- endif -%}
           </span>
-          {%- if saved > 0 -%}
-            <span class="pl-drawer__perk is-save">You save {% render 'plaay-aed', fils: saved %}</span>
-          {%- elsif reached >= 0 -%}
-            <span class="pl-drawer__perk">{% render 'pl-icon', name: 'truck', size: 13, stroke: 2.2 %}Free delivery</span>
-          {%- endif -%}
+          <span class="pl-drawer__total-row">
+            {%- if saved > 0 -%}<s class="pl-drawer__was">{% render 'plaay-aed', fils: cart.original_total_price %}</s>{%- endif -%}
+            <span class="pl-drawer__total-v" data-pl-sticky-total>{% render 'plaay-aed', fils: cart.total_price %}</span>
+          </span>
         </button>
         <div class="pl-drawer__sum" data-pl-sum hidden></div>
         <a href="/checkout" class="pl-btn pl-drawer__checkout" data-checkout-url="/checkout">{% render 'pl-icon', name: 'lock', size: 17, stroke: 2.4 %}<span>Checkout</span></a>

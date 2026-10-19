@@ -371,12 +371,6 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 .is-added { animation: none; }
 }
 
-/* ---------- phones: the bag is a bottom sheet (swipe down to close: assets/pl-app.js) ---------- */
-@media (max-width: 1023px) {
-cart-drawer .pl-drawer { top: auto; height: calc(100% - 40px - var(--pl-sat, 0px)); border-radius: 22px 22px 0 0; overflow: hidden; transform: translateY(100%); opacity: 1; box-shadow: 0 -12px 40px rgba(8, 29, 72, .25); }
-cart-drawer.active .pl-drawer { transform: translateY(0); }
-cart-drawer .pl-drawer .pl-drawer__head { position: relative; padding-top: 22px; touch-action: none; }
-cart-drawer .pl-drawer .pl-drawer__head::before { content: ""; position: absolute; left: 50%; top: 8px; width: 40px; height: 5px; margin-left: -20px; border-radius: 999px; background: rgba(8, 29, 72, .2); }
 }
 
 /* ---------- bag, compact (Oct 2026) ---------- */
@@ -384,9 +378,8 @@ cart-drawer .pl-drawer .pl-drawer__head::before { content: ""; position: absolut
 cart-drawer .pl-drawer .pl-drawer__head { padding: 10px var(--pl-s4) 6px; }
 cart-drawer .pl-drawer .pl-drawer__title { font-size: 20px; line-height: 1.1; }
 cart-drawer .pl-drawer .pl-drawer__close { width: 36px; height: 36px; min-width: 36px; min-height: 36px; background: rgba(8, 29, 72, .06); }
-@media (max-width: 1023px) {
-cart-drawer .pl-drawer .pl-drawer__head { padding-top: 20px; }
-}
+/* Home screen app: the bag runs under the status bar, so its header starts below it. */
+html.pl-app cart-drawer .pl-drawer .pl-drawer__head { padding-top: calc(var(--pl-sat, 0px) + 10px); }
 
 /* Rewards: a flat strip like the product page (no card): one line, a slim bar, each stop
    labelled with its reward over its spend; "See picks" sits at the end of the line. */
@@ -413,18 +406,19 @@ cart-drawer .pl-drawer .pl-drawer__head { padding-top: 20px; }
 .pl .pl-drawer__total-k { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: var(--pl-mute); }
 .pl .pl-drawer__total-k .pl-ic { transform: rotate(180deg); transition: transform .2s ease; }
 .pl .pl-drawer__total[aria-expanded="true"] .pl-drawer__total-k .pl-ic { transform: none; }
-/* Footer, one row: the total with what was earned (chip, struck total, savings) and a big
-   Checkout that takes the rest of the width. */
-.pl .pl-drawer__foot { gap: 14px; padding-top: 12px; }
-.pl .pl-drawer__total { flex: 0 1 auto; min-width: 0; gap: 1px; }
-.pl .pl-drawer__total-k { gap: 3px; font-size: 12px; }
+/* Footer, two rows: the total line (what was earned on the left, the total on the right; tap
+   for the summary), then one full-width Checkout. */
+.pl .pl-drawer__foot { flex-direction: column; align-items: stretch; gap: 10px; padding-top: 10px; }
+.pl .pl-drawer__total { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: 12px; width: 100%; text-align: left; }
+.pl .pl-drawer__total-l { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; }
+.pl .pl-drawer__total-k { gap: 3px; font-size: 12.5px; }
 .pl .pl-drawer__chip { margin-left: 4px; padding: 2px 7px; border-radius: 999px; background: #E6F4E7; color: #1E6B2A; font-size: 10.5px; font-style: normal; font-weight: 900; letter-spacing: .02em; white-space: nowrap; }
 .pl .pl-drawer__total-row { display: inline-flex; align-items: baseline; gap: 7px; white-space: nowrap; }
 .pl .pl-drawer__total-row .pl-drawer__total-v { font-size: 22px; }
-.pl .pl-drawer__was { font-size: 12.5px; font-weight: 600; color: var(--pl-mute); }
+.pl .pl-drawer__was { font-size: 13px; font-weight: 600; color: var(--pl-mute); }
 .pl .pl-drawer__perk { display: inline-flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 700; color: var(--pl-mute); white-space: nowrap; }
 .pl .pl-drawer__perk.is-save { color: #2F8A3B; font-weight: 800; }
-.pl.pl-drawer .pl-drawer__checkout { flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-width: 0; height: 56px; padding: 0 20px; border-radius: 999px; background: var(--pl-yellow); color: var(--pl-navy); font-size: 18px; font-weight: 900; box-shadow: 0 3px 0 var(--pl-navy); transition: transform .12s ease, box-shadow .12s ease; }
+.pl.pl-drawer .pl-drawer__checkout { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-width: 0; height: 54px; padding: 0 20px; border-radius: 999px; background: var(--pl-yellow); color: var(--pl-navy); font-size: 18px; font-weight: 900; box-shadow: 0 3px 0 var(--pl-navy); transition: transform .12s ease, box-shadow .12s ease; }
 .pl.pl-drawer .pl-drawer__checkout:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--pl-navy); }
 .pl .pl-drawer__sum { position: absolute; left: 0; right: 0; bottom: 100%; padding: 14px var(--pl-s4) 12px; border-radius: 18px 18px 0 0; background: var(--pl-ground); box-shadow: 0 -10px 24px -12px rgba(8, 29, 72, .3); border-top: 1px solid var(--pl-line); opacity: 0; transform: translateY(8px); transition: opacity .18s ease, transform .2s ease; }
 .pl .pl-drawer__sum.is-open { opacity: 1; transform: none; }
