@@ -142,17 +142,16 @@
      A bottom sheet with how to add Plaay to the home screen: Android / Chrome get the browser's
      own install prompt behind our button; iPhone gets the Share steps (Apple has no prompt);
      in-app browsers (Instagram, TikTok...) are told to open Safari first.
-     Shown by itself at most once a session, only on phones, never inside the app:
-       - when the bag closes after an add to bag, from the second visit on;
-       - on the account page, from the second visit on.
+     Shown by itself at most once a visit (a visit ends after 30 minutes away; iPhone users keep
+     one Safari tab for days, so tabs are not visits), only on phones, never inside the app:
+       - when the bag closes after an add to bag;
+       - on the account page.
      Also opened any time from "Get the Plaay app" in the menu ([data-pl-get-app]).
      Closing it keeps it away for 30 days; once installed it never shows again.
      Events: Clarity "app_invite_<action>", Shopify.analytics "pl_app_invite". */
   (function () {
     function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
     function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
-    function sget(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
-    function sset(k) { try { sessionStorage.setItem(k, '1'); } catch (e) {} }
     var DAY = 864e5;
     var deferred = null, sheet = null, lastFocus = null, source = '';
     var ua = navigator.userAgent;
@@ -169,10 +168,11 @@
     if (isApp) return;
 
     var visits = Number(get('pl-visits')) || 0;
-    if (!sget('pl-visit')) { sset('pl-visit'); visits += 1; set('pl-visits', String(visits)); }
+    if (Date.now() - (Number(get('pl-last')) || 0) > 30 * 60 * 1000) { visits += 1; set('pl-visits', String(visits)); }
+    set('pl-last', String(Date.now()));
 
     function due() {
-      return touch && !get('pl-app-installed') && !sget('pl-inv-shown') && visits >= 2 && Date.now() > (Number(get('pl-inv-snooze')) || 0);
+      return touch && !get('pl-app-installed') && get('pl-inv-visit') !== String(visits) && Date.now() > (Number(get('pl-inv-snooze')) || 0);
     }
 
     var ICON = {
@@ -237,7 +237,7 @@
     function open(from) {
       if (!sheet) build();
       source = from;
-      sset('pl-inv-shown');
+      set('pl-inv-visit', String(visits));
       if (window.plCloseSheets) window.plCloseSheets();
       sheet.querySelector('[data-inv-body]').innerHTML = body();
       lastFocus = doc.activeElement;

@@ -1,5 +1,7 @@
 {%- comment -%}
   Home screen app: manifest, icons, iPhone launch screens, and the app-mode switch.
+  The manifest is assets/manifest.json (served as application/json on shopplaay.com; its icon
+  paths are relative to it, so they resolve to the assets next to it).
   Rendered in <head> from layout/theme.liquid.
 
   App mode (opened from the home screen): <html> gets .pl-app and the viewport extends under the
@@ -8,7 +10,7 @@
   black-translucent = white clock). In the browser nothing here changes the page.
   Launch screens: one per iPhone screen size (portrait), made from the brand wordmark.
 {%- endcomment -%}
-<link rel="manifest" href="{{ routes.root_url }}?view=manifest">
+<link rel="manifest" href="{{ 'manifest.json' | asset_url }}">
 <meta name="theme-color" content="#FFFDF7">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">

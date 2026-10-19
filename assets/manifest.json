@@ -1,0 +1,24 @@
+{
+  "id": "/",
+  "name": "Plaay",
+  "short_name": "Plaay",
+  "description": "Clean, nutritionist-founded chocolate. Order in a tap.",
+  "lang": "en",
+  "start_url": "/?utm_source=homescreen&utm_medium=app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFB600",
+  "theme_color": "#081D48",
+  "categories": ["food", "shopping"],
+  "icons": [
+    { "src": "pl-app-icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "pl-app-icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "pl-app-icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Shop all", "url": "/collections/shop-all?utm_source=homescreen&utm_medium=app" },
+    { "name": "Your bag", "url": "/cart?utm_source=homescreen&utm_medium=app" },
+    { "name": "Orders", "url": "/account?utm_source=homescreen&utm_medium=app" }
+  ]
+}
