@@ -197,6 +197,50 @@
         Array.prototype.forEach.call(root.querySelectorAll('[data-plo-thumb]'), function (x) { x.classList.toggle('is-on', x === t); });
       });
     });
+    /* Swipe on the big photo (galleries without the photo strip): left for the next image, right
+       for the previous, by tapping the thumb next to the current one. The photo follows the
+       finger a little and slides in from the side it came from. Vertical swipes scroll the page. */
+    (function () {
+      var stage = root.querySelector('.plo-gal__main');
+      if (!stage || !main) return;
+      var x0 = 0, y0 = 0, dx = 0, state = null;
+      var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function thumbs() { return Array.prototype.slice.call(root.querySelectorAll('[data-plo-thumb]')); }
+      function step(dir) {
+        var list = thumbs();
+        if (list.length < 2) return false;
+        var i = list.findIndex(function (x) { return x.classList.contains('is-on'); });
+        var next = list[(Math.max(0, i) + dir + list.length) % list.length];
+        next.click();
+        if (!calm && main.animate) main.animate([{ transform: 'translateX(' + (dir * 40) + 'px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 260, easing: 'cubic-bezier(.2, .7, .2, 1)' });
+        return true;
+      }
+      stage.addEventListener('touchstart', function (e) {
+        if (e.touches.length !== 1 || thumbs().length < 2) { state = null; return; }
+        x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dx = 0; state = 'maybe';
+      }, { passive: true });
+      stage.addEventListener('touchmove', function (e) {
+        if (!state) return;
+        dx = e.touches[0].clientX - x0;
+        var dy = e.touches[0].clientY - y0;
+        if (state === 'maybe') {
+          if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+          if (Math.abs(dx) > Math.abs(dy)) state = 'drag'; else { state = null; return; }
+        }
+        if (e.cancelable) e.preventDefault();
+        main.style.transition = 'none';
+        main.style.transform = 'translateX(' + dx * .35 + 'px)';
+      }, { passive: false });
+      function end() {
+        if (state !== 'drag') { state = null; return; }
+        state = null;
+        main.style.transition = 'transform .2s ease';
+        main.style.transform = '';
+        if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1);
+      }
+      stage.addEventListener('touchend', end);
+      stage.addEventListener('touchcancel', end);
+    })();
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       /* One add at a time: the sticky bar and Enter in the quantity box also submit. */
