@@ -73,6 +73,7 @@
       <meta name="description" content="{{ page_description | escape }}">
     {% endif %}
     <link rel="canonical" href="{{ canonical_url }}">
+    {%- comment -%} Share previews (Open Graph, Twitter) and JSON-LD structured data. {%- endcomment -%}
     {%- render 'pl-seo' -%}
 
     {%- comment -%}
