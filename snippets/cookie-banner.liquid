@@ -51,13 +51,16 @@
     function lift() {
       if (box.hidden) return;
       if (sticky && sticky.offsetHeight && sticky.classList.contains('is-on')) {
-        box.style.bottom = (parseFloat(getComputedStyle(sticky).bottom) || 0) + sticky.offsetHeight + 10 + 'px';
+        /* Measured on screen: the bar slides with the tab bar (translate), so its CSS bottom is not where it is. */
+        box.style.bottom = Math.max(0, window.innerHeight - sticky.getBoundingClientRect().top) + 10 + 'px';
       } else {
         box.style.bottom = '';
       }
     }
+    function liftSoon() { lift(); setTimeout(lift, 400); }
     if (sticky && window.MutationObserver) {
-      new MutationObserver(lift).observe(sticky, { attributes: true, attributeFilter: ['class'] });
+      new MutationObserver(liftSoon).observe(sticky, { attributes: true, attributeFilter: ['class'] });
+      new MutationObserver(liftSoon).observe(document.body, { attributes: true, attributeFilter: ['class'] });
       window.addEventListener('resize', lift);
       lift();
     }

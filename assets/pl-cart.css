@@ -99,7 +99,7 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 /* Rail: track + milestone dots. Side margin keeps the end dots inside the card. */
 .pl .plaay-tier-bar__rail { position: relative; height: 20px; margin: 0 10px; }
 .pl .plaay-tier-bar__track { position: absolute; left: 0; right: 0; top: 7px; height: 6px; margin: 0; background: var(--pl-line-2); border-radius: 999px; overflow: hidden; }
-.pl .plaay-tier-bar__fill { height: 100%; background: var(--pl-yellow); border-radius: 999px; transition: width .4s ease; min-width: 4px; }
+.pl .plaay-tier-bar__fill { height: 100%; background: var(--pl-yellow); border-radius: 999px; min-width: 4px; }
 .pl .plaay-tier-bar__dot {
   position: absolute; top: 0; width: 20px; height: 20px; transform: translateX(-50%); border-radius: 50%;
   background: var(--pl-white); border: 2px solid var(--pl-line-2); display: flex; align-items: center; justify-content: center; box-sizing: border-box;
@@ -360,15 +360,16 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 .pl [data-cart-drawer-content].is-syncing .pl-drawer__checkout,
 .pl [data-cart-page-root].is-syncing [data-checkout-url] { opacity: .7; }
 /* Added: the button pops green for a moment. */
-.is-added { background: #2F8A3B !important; color: #fff !important; animation: pl-added-pop .35s ease; }
+/* Scoped to the add buttons that use it (it used to match any element with the class). */
+:is(.plo-btn, .plo-add, .pl-plus, .pl-btn, .pl-gap__add, .plaay-upsell-card__btn).is-added { background: #2F8A3B !important; color: #fff !important; animation: pl-added-pop .35s ease; }
 @keyframes pl-added-pop { 40% { transform: scale(1.12); } }
-/* Fly-to-bag ghost (also defined in pl-opt.css for the Option B pages). */
+/* Fly-to-bag ghost (assets/pl-cart.js fly). */
 .plo-fly { position: fixed; z-index: 20000; border-radius: 50%; object-fit: cover; background: #F2F4F3; box-shadow: 0 8px 22px rgba(8, 29, 72, .25); pointer-events: none; will-change: transform; }
 /* Toast for bag errors (sold out, stock limits). */
 .pl-cart-toast { position: fixed; z-index: 20001; left: 50%; bottom: calc(var(--pl-tab-offset, var(--pl-tabbar-h, 64px)) + 16px + env(safe-area-inset-bottom)); max-width: calc(100% - 32px); padding: 10px 16px; border-radius: 12px; background: #081D48; color: #fff; font-size: 13px; font-weight: 700; line-height: 1.35; text-align: center; box-shadow: 0 8px 24px rgba(8, 29, 72, .3); transform: translate(-50%, 16px); opacity: 0; pointer-events: none; transition: transform .2s ease, opacity .2s ease; }
 .pl-cart-toast.is-on { transform: translate(-50%, 0); opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
-.is-added { animation: none; }
+:is(.plo-btn, .plo-add, .pl-plus, .pl-btn, .pl-gap__add, .plaay-upsell-card__btn).is-added { animation: none; }
 }
 
 }

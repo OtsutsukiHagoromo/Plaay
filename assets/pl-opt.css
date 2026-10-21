@@ -587,7 +587,7 @@ html.plo-sheet-open { overflow: hidden; }
 
 
 
-.pl-skin-b .plaay-wa-float { bottom: calc(var(--pl-tab-offset, var(--pl-tabbar-h)) + 64px); transition: bottom .35s ease; }
+.pl-skin-b .plaay-wa-float { bottom: calc(var(--pl-tabbar-h) + 64px); translate: 0 calc(var(--pl-tabbar-h) - var(--pl-tab-offset, var(--pl-tabbar-h))); transition: translate .35s cubic-bezier(.2, .7, .2, 1), transform .15s ease, box-shadow .15s ease; }
 
 /* Section that is a plain gap-separated section in A and a full-bleed colour band in B. */
 
@@ -684,7 +684,7 @@ html.plo-sheet-open { overflow: hidden; }
 .plo-step input::-webkit-outer-spin-button, .plo-step input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .plo-buy__add { flex: 1; min-width: 0; font-weight: 900; }
 .plo-buy__trust { margin: 0; text-align: center; font-size: 12px; color: var(--pl-mute); }
-.plo-sticky { position: fixed; left: 0; right: 0; bottom: calc(var(--pl-tab-offset, var(--pl-tabbar-h)) + env(safe-area-inset-bottom)); z-index: 30; transition: bottom .35s cubic-bezier(.2, .7, .2, 1), transform .25s ease; display: grid; grid-template-columns: 48px 1fr auto; gap: 12px; align-items: center; padding: 10px var(--o-side); background: #fff; border-top: 1px solid var(--pl-line); transform: translateY(120%); transition: transform .25s ease; }
+.plo-sticky { position: fixed; left: 0; right: 0; bottom: calc(var(--pl-tabbar-h) + env(safe-area-inset-bottom)); translate: 0 calc(var(--pl-tabbar-h) - var(--pl-tab-offset, var(--pl-tabbar-h))); z-index: 30; display: grid; grid-template-columns: 48px 1fr auto; gap: 12px; align-items: center; padding: 10px var(--o-side); background: #fff; border-top: 1px solid var(--pl-line); transform: translateY(120%); transition: transform .25s ease, translate .35s cubic-bezier(.2, .7, .2, 1); }
 .plo-sticky.is-on { transform: none; }
 .plo-sticky__pic { width: 48px; height: 48px; border-radius: 10px; border: 1px solid var(--pl-line); display: flex; align-items: center; justify-content: center; overflow: hidden; background: #fff; }
 .plo-sticky__pic img { width: 84%; height: 84%; object-fit: contain; }
@@ -1128,7 +1128,7 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 /* Category tiles with a full-bleed photo (backdrop = tile colour) */
 .pl-skin-b .plo-cat--photo { padding: 14px; isolation: isolate; }
 .pl-skin-b .plo-cat--photo .plo-cat__photo { position: absolute; inset: 0; right: auto; bottom: auto; z-index: -1; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 85% 50%); mix-blend-mode: normal; transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
-.pl-skin-b .plo-cat--photo:hover .plo-cat__photo { transform: scale(1.05); }
+@media (hover: hover) { .pl-skin-b .plo-cat--photo:hover .plo-cat__photo { transform: scale(1.05); } }
 .pl-skin-b .plo-cat--photo .plo-cat__n { position: relative; }
 .plo-cat--photo .plo-cat__photo { width: 100%; height: 100%; }
 
@@ -1147,7 +1147,6 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 .plo-hero__card { width: 128px; aspect-ratio: 1; border-radius: 20px; overflow: hidden; border: 4px solid #fff; box-shadow: 0 4px 0 var(--pl-navy), 0 12px 24px -12px rgba(8, 29, 72, .5); transform: rotate(4deg); margin: 4px 2px 0 0; animation: plo-card-in .7s cubic-bezier(.3, 1.4, .5, 1) both; }
 .plo-hero__card img, .plo-hero__card picture { display: block; width: 100%; height: 100%; }
 .plo-hero__img { width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 60% 50%); }
-@keyframes plo-card-in { from { opacity: 0; transform: rotate(12deg) scale(.85); } to { opacity: 1; transform: rotate(4deg); } }
 .plo-hero__usps li { animation: plo-usp-in .45s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(.15s + var(--i, 1) * 60ms); }
 @keyframes plo-usp-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .plo-hero--all .plo-hero__copy { grid-column: 1 / -1; }
@@ -1303,7 +1302,7 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 .plo-why2__card blockquote { margin: 0; font-size: 22px; font-weight: 900; line-height: 1.1; color: #fff; }
 .plo-why2__by { margin: 8px 0 0; font-size: 12px; color: rgba(255, 255, 255, .7); }
 .plo-why2__link { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 9px 16px; border-radius: 999px; background: var(--pl-yellow); color: var(--pl-navy); font-size: 14px; font-weight: 800; box-shadow: 0 3px 0 rgba(0, 0, 0, .3); transition: transform .15s ease; }
-.plo-why2__link:hover { transform: translateY(-1px); color: var(--pl-navy); }
+@media (hover: hover) { .plo-why2__link:hover { transform: translateY(-1px); color: var(--pl-navy); } }
 .plo-why2__usps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
 .plo-why2__usp { display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 20px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .1); color: #fff; }
 
@@ -1321,7 +1320,7 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 .plo-why2__usp span:last-child { font-size: 13px; }
 }
 .plo-why2__usp { transition: transform .2s ease, background .2s ease; }
-.plo-why2__usp:hover { transform: translateY(-3px); background: rgba(255, 255, 255, .12); }
+@media (hover: hover) { .plo-why2__usp:hover { transform: translateY(-3px); background: rgba(255, 255, 255, .12); } }
 
 /* ---------- reels: inline video + pop-up ---------- */
 .plo-vid { border: 0; padding: 0; font: inherit; text-align: left; cursor: pointer; background: var(--pl-navy); }
@@ -1340,27 +1339,17 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 .plo-lb__x { position: absolute; top: -14px; right: -6px; z-index: 2; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 2px solid var(--pl-navy); border-radius: 50%; background: var(--pl-yellow); color: var(--pl-navy); box-shadow: 0 3px 0 var(--pl-navy); cursor: pointer; }
 .plo-lb__ig { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; background: #fff; color: var(--pl-navy); font-size: 14px; font-weight: 800; }
 
-/* ---------- Motion: page transitions + scroll reveal ---------- */
-@view-transition { navigation: auto; }
-::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
-::view-transition-group(plo-photo) { animation-duration: .35s; animation-timing-function: cubic-bezier(.2,.8,.2,1); }
-::view-transition-old(plo-photo), ::view-transition-new(plo-photo) { height: 100%; object-fit: cover; }
-/* Header and tab bar stay put while the page changes underneath. */
-.pl-header { view-transition-name: pl-header; }
-.pl-tabbar { view-transition-name: pl-tabbar; }
-::view-transition-group(pl-header), ::view-transition-group(pl-tabbar) { animation: none; }
+/* ---------- Motion: scroll reveal (page transitions live in assets/pl-shell.css) ---------- */
 
 body.pl-body .plo-rv { opacity: 0; transform: translateY(18px); transition: opacity .5s ease, transform .6s cubic-bezier(.2,.8,.2,1); }
 body.pl-body .plo-rv.is-in { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
-@view-transition { navigation: none; }
 body.pl-body .plo-rv { opacity: 1; transform: none; transition: none; }
 }
 
 /* ---------- Micro-interactions ---------- */
 /* Fly-to-bag ghost (pl-opt.js flyToBag) */
-.plo-fly { position: fixed; z-index: 200; border-radius: 50%; object-fit: cover; background: #F2F4F3; box-shadow: 0 8px 22px rgba(8, 29, 72, .25); pointer-events: none; will-change: transform; }
 /* Photos fade in as they arrive instead of popping (class added by pl-opt.js, never on
    above-the-fold or cached images). */
 .plo-fade { opacity: 0; }
@@ -1368,7 +1357,7 @@ body.pl-body .plo-rv { opacity: 1; transform: none; transition: none; }
 /* Card photo zooms gently on hover (pointer devices only). */
 @media (hover: hover) {
 .plo-card__img img { transition: transform .45s cubic-bezier(.2, .7, .2, 1); }
-.plo-card:hover .plo-card__img img { transform: scale(1.04); }
+@media (hover: hover) { .plo-card:hover .plo-card__img img { transform: scale(1.04); } }
 .plo-marquee:hover .plo-marquee__track { animation-play-state: paused; }
 }
 /* "+" press feedback and a spin while adding. */
@@ -1415,7 +1404,7 @@ body.pl-body .plo-rv { opacity: 1; transform: none; transition: none; }
 .plo-sub__badge span { max-width: 70px; font-size: 10px; font-weight: 800; line-height: 1.1; text-transform: uppercase; letter-spacing: .04em; }
 .plo-sub__shop { padding-top: 4px; }
 /* Filter + frequency bar sticks under the header while browsing. */
-.plo-sub__bar { position: sticky; top: var(--pl-header-h, 64px); z-index: 5; display: flex; flex-direction: column; gap: 10px; margin: 0 calc(var(--o-side) * -1) 16px; padding: 12px var(--o-side); background: rgba(255, 255, 255, .94); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(8, 29, 72, .08); }
+.plo-sub__bar { position: sticky; top: var(--pl-header-h, 64px); z-index: 5; display: flex; flex-direction: column; gap: 10px; margin: 0 calc(var(--o-side) * -1) 16px; padding: 12px var(--o-side); background: #fff; border-bottom: 1px solid rgba(8, 29, 72, .08); }
 .plo-sub__chips { padding-top: 0; }
 .plo-sub__chips button { flex: 0 0 auto; height: 38px; padding: 0 16px; border-radius: 999px; border: 2px solid var(--pl-navy); background: #fff; color: var(--pl-navy); font-family: var(--pl-font); font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s ease, box-shadow .15s ease; }
 .plo-sub__chips button.is-on { background: var(--pl-yellow); box-shadow: 0 2px 0 var(--pl-navy); }
@@ -1617,7 +1606,7 @@ body.template-index .plo-title, body.template-index .plo-px__t, body.template-in
 .pl-skin-b .plo-c3 .plo-card__img img, .pl-skin-b .plo-c3 .plo-card__img img.is-photo { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; transform: none; }
 @media (hover: hover) {
 .pl-skin-b .plo-c3 .plo-card__img img { transition: transform .45s cubic-bezier(.2, .7, .2, 1); }
-.pl-skin-b .plo-c3:hover .plo-card__img img { transform: scale(1.04); }
+@media (hover: hover) { .pl-skin-b .plo-c3:hover .plo-card__img img { transform: scale(1.04); } }
 }
 .pl-skin-b .plo-c3 .plo-badge { position: absolute; left: 10px; top: 10px; }
 .pl-skin-b .plo-c3 .plo-card__body { display: flex; flex-direction: column; gap: 4px; padding: 12px 2px 0; }
@@ -1896,7 +1885,7 @@ a.plo-cnt__way:hover b { color: var(--pl-purple); }
 .plo-cnt__faq small { font-size: 14px; opacity: .85; }
 .plo-cnt__faq i { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--pl-yellow); color: var(--pl-navy); transition: transform .2s ease; }
 .plo-cnt__faq:hover { color: #fff; }
-.plo-cnt__faq:hover i { transform: translateX(4px); }
+@media (hover: hover) { .plo-cnt__faq:hover i { transform: translateX(4px); } }
 @media (min-width: 768px) {
 .plo-cnt__row { grid-template-columns: 1fr 1fr; }
 .plo-cnt__send { align-self: flex-start; padding: 0 32px; }
@@ -2011,7 +2000,7 @@ a.plo-cnt__way:hover b { color: var(--pl-purple); }
 .plo-terms__links a { display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 100%; padding: 18px; border-radius: 20px; background: #F6F1EA; color: var(--pl-navy); font-size: 15px; font-weight: 800; line-height: 1.2; text-decoration: none; }
 .plo-terms__links a svg { flex: 0 0 auto; transition: transform .2s ease; }
 .plo-terms__links a:hover { background: #FED8B4; }
-.plo-terms__links a:hover svg { transform: translateX(3px); }
+@media (hover: hover) { .plo-terms__links a:hover svg { transform: translateX(3px); } }
 @media (min-width: 1024px) {
 .plo-terms__body { grid-template-columns: 240px minmax(0, 1fr); gap: 56px; padding-top: 32px; }
 .plo-terms__nav { position: sticky; top: 120px; align-self: start; }
@@ -2047,7 +2036,7 @@ a.plo-cnt__way:hover b { color: var(--pl-purple); }
 .plo-rtl__lead { margin: 0 0 18px; font-size: 15px; line-height: 1.5; color: var(--pl-mute); }
 .plo-rtl__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
 .plo-rtl__tile { display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; padding: 10px 10px 12px; border: 1px solid rgba(8, 29, 72, .1); border-radius: 18px; background: #fff; color: var(--pl-navy); text-align: center; text-decoration: none; transition: border-color .15s ease, transform .15s ease; }
-a.plo-rtl__tile:hover { border-color: var(--pl-navy); transform: translateY(-2px); color: var(--pl-navy); }
+@media (hover: hover) { a.plo-rtl__tile:hover { border-color: var(--pl-navy); transform: translateY(-2px); color: var(--pl-navy); } }
 .plo-rtl__logo { display: flex; align-items: center; justify-content: center; width: 100%; aspect-ratio: 3 / 2; padding: 6px; border-radius: 12px; background: #F6F1EA; }
 .plo-rtl__logo img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; mix-blend-mode: multiply; }
 .plo-rtl__logo em { font-style: normal; font-size: 13px; font-weight: 800; }
@@ -2124,7 +2113,7 @@ a.plo-rtl__tile:hover { border-color: var(--pl-navy); transform: translateY(-2px
 
 /* ---------- Wishlist hearts (snippets/plo-heart; pl-opt.js initHearts) ---------- */
 .plo-heart { position: absolute; z-index: 3; display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: var(--pl-navy); cursor: pointer; box-shadow: 0 1px 4px rgba(8, 29, 72, .12); transition: transform .15s ease, color .15s ease; }
-.plo-heart:hover { transform: scale(1.06); }
+@media (hover: hover) { .plo-heart:hover { transform: scale(1.06); } }
 .plo-heart .plo-heart__f { display: none; }
 .plo-heart.is-on { color: #FF3EB5; }
 .plo-heart.is-on .plo-heart__o { display: none; }
