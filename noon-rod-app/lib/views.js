@@ -158,7 +158,8 @@ ${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><inpu
   .tab .n { font-size: 12px; min-width: 22px; text-align: center; padding: 1px 6px; border-radius: 99px; background: rgba(var(--navy-rgb) / .08); }
   .tab.on { background: var(--navy); color: #fff; border-color: var(--navy); } .tab.on .n { background: var(--yellow); color: var(--navy); }
   .tab.alert:not(.on) .n { background: var(--bad); color: #fff; }
-  .search input { font: inherit; width: min(360px, 100%); padding: 8px 14px; border-radius: 99px; border: 1.5px solid var(--line); background: var(--card); color: var(--navy); }
+  .search { display: block; flex: 0 1 360px; }
+  .search input { font: inherit; width: 100%; padding: 8px 14px; border-radius: 99px; border: 1.5px solid var(--line); background: var(--card); color: var(--navy); }
   .search input:focus { outline: 2px solid var(--yellow); border-color: var(--navy); }
   table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; overflow: hidden; }
   th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
