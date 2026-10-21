@@ -1,0 +1,132 @@
+/* Plaay Option B styles for the home templates only (split from assets/pl-opt.css, which holds the shared core).
+   Loaded after pl-opt.css by layout/theme.liquid. Rules here keep their original order. */
+.plo-sticker > span { display: block; }
+.plo-car { position: relative; }
+.plo-car__track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.plo-car__track::-webkit-scrollbar { display: none; }
+.plo-car__track > .plo-bn { flex: 0 0 100%; scroll-snap-align: start; scroll-snap-stop: always; }
+.plo-car__dots { display: flex; justify-content: center; gap: 6px; padding: 14px 0 20px; background: var(--dots-bg, transparent); transition: background .3s ease; }
+.plo-car__dot { width: 7px; height: 7px; border-radius: 4px; background: var(--pl-navy); opacity: .25; border: 0; padding: 0; cursor: pointer; transition: width .25s ease, opacity .25s ease; }
+.plo-car__dot[aria-current="true"] { width: 22px; opacity: 1; }
+.plo-car__dots.is-dark .plo-car__dot { background: #fff; }
+@media (min-width: 1024px) {
+.plo-car__dots { position: absolute; left: 0; right: 0; bottom: 18px; padding: 0; background: transparent !important; }
+}
+
+.plo-bn { position: relative; overflow: hidden; background: var(--bn-bg); color: var(--pl-navy); }
+.plo-bn__pill { background: var(--pl-purple); color: #fff; border-radius: 999px; padding: 6px 12px; }
+.plo-bn__mark { background: linear-gradient(transparent 58%, var(--pl-yellow) 58%, var(--pl-yellow) 92%, transparent 92%); padding: 0 3px; margin: 0 -3px; }
+.plo-bn__accent { color: var(--pl-yellow); }
+.plo-bn__cta { display: flex; flex-direction: column; align-items: stretch; gap: 14px; width: 100%; }
+.plo-bn__link { font-size: 13px; font-weight: 700; border-bottom: 2px solid currentColor; padding-bottom: 1px; white-space: nowrap; }
+.plo-bn__meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; font-size: 13px; font-weight: 500; }
+.plo-bn__proof { display: inline-flex; align-items: center; gap: 8px; }
+.plo-bn__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.plo-bn__photo { position: absolute; border-radius: 22px; border: 3px solid var(--pl-navy); box-shadow: 0 5px 0 var(--pl-navy); overflow: hidden; background: #fff; }
+.plo-bn__photo img { width: 100%; height: 100%; object-fit: cover; }
+
+@media (min-width: 1024px) {
+.plo-bn { min-height: 540px; }
+.plo-bn__eyebrow { font-size: 13px; }
+.plo-bn__pill { padding: 7px 14px; }
+.plo-bn__p { font-size: 19px; }
+.plo-bn__cta { flex-direction: row; align-items: center; gap: 22px; width: auto; }
+.plo-bn__meta { width: auto; justify-content: flex-start; gap: 22px; font-size: 14px; }
+.plo-bn__link { font-size: 15px; }
+}
+.plo-promo { margin-top: var(--o-gap); }
+.pl-skin-b .plo-whysec { --fill: var(--pl-navy); }
+.plo-vids { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(var(--o-side) * -1); padding: 0 var(--o-side) 8px; scroll-snap-type: x mandatory; }
+.plo-vids::-webkit-scrollbar { display: none; }
+.plo-vid__play svg { width: 20px; height: 20px; fill: var(--pl-navy); }
+.plo-vid__c { position: absolute; z-index: 2; left: 12px; right: 12px; bottom: 12px; font-size: 14px; font-weight: 700; line-height: 1.25; }
+.pl-skin-b .plo-vid__play svg { width: 12px; height: 12px; }
+.pl-skin-b .plo-vid__c { font-size: 13px; }
+@media (min-width: 1024px) {
+.plo-vids { margin: 0; padding: 0 0 8px; }
+}
+.plo-bn__meta { justify-content: flex-start; }
+.plo-bn__meta .plo-bn__link { margin-left: auto; }
+@media (min-width: 1024px) {
+.plo-bn__meta .plo-bn__link { margin-left: 0; }
+}
+@media (max-width: 1023.98px) {
+.plo-car__track > .plo-bn { display: flex; flex-direction: column; }
+.plo-car__track > .plo-bn > .plo-bn__body { flex: 1; justify-content: center; }
+}
+.plo-tabsel { padding-top: 0; margin-bottom: 20px; }
+.plo-tabsel button { flex: 0 0 auto; height: 38px; padding: 0 16px; border-radius: 999px; border: 2px solid var(--pl-navy); background: #fff; font: inherit; font-size: 14px; font-weight: 700; color: var(--pl-navy); cursor: pointer; }
+.plo-tabpan.is-in > * { animation: plo-usp-in .4s cubic-bezier(.2, .7, .2, 1) both; }
+.plo-tabpan.is-in > :nth-child(2) { animation-delay: .05s; } .plo-tabpan.is-in > :nth-child(3) { animation-delay: .1s; } .plo-tabpan.is-in > :nth-child(4) { animation-delay: .15s; }
+@media (max-width: 1023.98px) {
+.plo-car__dots { position: absolute; left: 0; right: 0; bottom: 10px; padding: 0; background: transparent !important; }
+}
+.plo-bn__proof { white-space: nowrap; }
+.plo-why2__grid { display: grid; gap: 28px; }
+.plo-why2__h span { color: var(--pl-yellow); }
+.plo-why2__card { margin: 0; display: grid; grid-template-columns: 112px 1fr; gap: 16px; align-items: center; }
+.plo-why2__pic { width: 112px; height: 140px; border-radius: 20px; object-fit: cover; object-position: 50% 20%; border: 3px solid var(--pl-yellow); transform: rotate(-3deg); box-shadow: 0 4px 0 rgba(0, 0, 0, .25); }
+.plo-why2__card blockquote { margin: 0; font-size: 22px; font-weight: 900; line-height: 1.1; color: #fff; }
+.plo-why2__by { margin: 8px 0 0; font-size: 12px; color: rgba(255, 255, 255, .7); }
+.plo-why2__link { display: inline-flex; align-items: center; gap: 6px; margin-top: 12px; padding: 9px 16px; border-radius: 999px; background: var(--pl-yellow); color: var(--pl-navy); font-size: 14px; font-weight: 800; box-shadow: 0 3px 0 rgba(0, 0, 0, .3); transition: transform .15s ease; }
+@media (hover: hover) { .plo-why2__link:hover { transform: translateY(-1px); color: var(--pl-navy); } }
+.plo-why2__usps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
+@media (min-width: 1024px) {
+.plo-why2__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; align-items: center; }
+.plo-why2__card { grid-template-columns: 200px 1fr; gap: 28px; }
+.plo-why2__pic { width: 200px; height: 250px; border-radius: 28px; }
+.plo-why2__card blockquote { font-size: 34px; }
+.plo-why2__usps { gap: 14px; }
+}
+.plo-vid__c { z-index: 2; }
+.plo-lb { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(8, 29, 72, .82); }
+.plo-lb[hidden] { display: none; }
+.plo-lb__box { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; width: min(420px, 100%); animation: plo-lb-in .3s cubic-bezier(.2, .7, .2, 1); }
+.plo-lb__x { position: absolute; top: -14px; right: -6px; z-index: 2; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border: 2px solid var(--pl-navy); border-radius: 50%; background: var(--pl-yellow); color: var(--pl-navy); box-shadow: 0 3px 0 var(--pl-navy); cursor: pointer; }
+.plo-lb__ig { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; background: #fff; color: var(--pl-navy); font-size: 14px; font-weight: 800; }
+.plo-bn--image { background: var(--bn-bg); }
+.plo-bn__full { display: block; }
+.plo-bn__full img { display: block; width: 100%; height: auto; aspect-ratio: var(--ar, 1280 / 533); object-fit: cover; }
+@media (max-width: 767px) {
+.plo-bn__full.has-mob img { aspect-ratio: auto; }
+}
+.pl-skin-b .plo-tabsel { gap: 22px; margin-bottom: 18px; border-bottom: 1px solid rgba(8, 29, 72, .1); }
+.pl-skin-b .plo-tabsel button { height: auto; padding: 8px 0 10px; margin-bottom: -1px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; box-shadow: none; font-size: 15px; font-weight: 600; color: var(--pl-mute); transition: color .15s ease, border-color .15s ease; }
+.pl-skin-b .plo-tabsel button:hover { color: var(--pl-navy); }
+@media (max-width: 767px) {
+.plo-bn__full.has-mob img { aspect-ratio: var(--ar-m, auto); }
+}
+.plo-rband__grid { position: relative; }
+.plo-rband__media { position: relative; overflow: hidden; border-radius: 24px; aspect-ratio: 4 / 5; background: var(--panel, #FED8B4); }
+.plo-rband__v { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%; }
+.plo-rband__copy { position: absolute; left: var(--o-side); right: var(--o-side); bottom: 0; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 80px 20px 22px; border-radius: 0 0 24px 24px; background: linear-gradient(rgba(8, 29, 72, 0), rgba(8, 29, 72, .72)); color: #fff; }
+.plo-rband__tag { padding: 4px 10px; border-radius: 999px; background: #fff; color: var(--pl-navy); font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.plo-rband__t { margin: 0; font-size: 30px; font-weight: 900; line-height: 1; letter-spacing: -.02em; color: inherit; }
+.plo-rband__p { margin: 0; max-width: 34ch; font-size: 14px; line-height: 1.45; opacity: .92; }
+.plo-rband__btn { margin-top: 6px; height: 46px; padding: 0 20px; gap: 8px; font-size: 15px; }
+@media (min-width: 768px) {
+.plo-rband__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+.plo-rband__copy { position: static; justify-content: center; gap: 14px; padding: 48px; border-radius: 28px; background: var(--panel, #FED8B4); color: var(--pl-navy); }
+.plo-rband__tag { background: var(--pl-navy); color: #fff; }
+.plo-rband__t { font-size: 48px; }
+.plo-rband__p { font-size: 17px; opacity: 1; }
+.plo-rband__media { border-radius: 28px; aspect-ratio: 4 / 5; max-height: 640px; }
+}
+@media (min-width: 1024px) {
+.plo-rband__t { font-size: 60px; }
+}
+.plo-rband--solo .plo-rband__grid { display: block; }
+.plo-rband--solo .plo-rband__media { display: block; aspect-ratio: 4 / 5; max-height: none; }
+@media (min-width: 768px) {
+.plo-rband--solo .plo-rband__media { aspect-ratio: 16 / 9; max-height: 720px; }
+.plo-rband--solo .plo-rband__v { object-position: 50% 30%; }
+}
+.pl-skin-b .plo-reels .plo-vids { margin: 0; padding: 0 0 4px; border-radius: 20px; }
+@media (min-width: 1024px) {
+.pl-skin-b .plo-reels .plo-vids { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; overflow: visible; }
+}
+.pl-skin-b .plo-whysec.plo-fillb { background: none; padding: 0; margin: var(--o-gap) 0; }
+.pl-skin-b .plo-whysec > .plo-wrap { width: calc(100% - var(--o-side) * 2); max-width: 1280px; margin: 0 auto; padding: 40px var(--o-side); border-radius: 28px; background: var(--fill, var(--pl-navy)); }
+@media (min-width: 1024px) {
+.pl-skin-b .plo-whysec > .plo-wrap { padding: 64px 56px; }
+}
