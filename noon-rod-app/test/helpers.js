@@ -56,6 +56,20 @@ export function fakeShopify(initial) {
   return {
     calls,
     order,
+    webhooks: [],
+    scopes: ['write_orders', 'write_merchant_managed_fulfillment_orders'],
+    async graphql(query, vars) {
+      rec('graphql', vars);
+      if (query.includes('webhookSubscriptionCreate')) {
+        this.webhooks.push({ topic: vars.topic, uri: vars.sub.uri });
+        return { webhookSubscriptionCreate: { userErrors: [] } };
+      }
+      return {
+        shop: { name: 'Plaay', myshopifyDomain: 'plaay-store.myshopify.com' },
+        currentAppInstallation: { app: { title: 'TMS' }, accessScopes: this.scopes.map((handle) => ({ handle })) },
+        webhookSubscriptions: { nodes: this.webhooks },
+      };
+    },
     async getOrder() {
       return order ? structuredClone(order) : null;
     },

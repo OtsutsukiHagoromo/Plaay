@@ -4,6 +4,7 @@ import crypto from 'node:crypto';
 import { TAGS } from './config.js';
 import { cancelDispatch, dispatchOrder } from './dispatch.js';
 import { isExpressOrder } from './mapping.js';
+import { connectWebhooks, getConnection } from './setup.js';
 import { verifyWebhookHmac } from './shopify.js';
 import { handleStatusUpdate, STATUS_LABELS, toDegrees } from './status.js';
 import { verifyTrackingToken } from './tracking.js';
@@ -101,14 +102,20 @@ export async function handleDashboard(request, d) {
     const form = await request.formData();
     const orderId = String(form.get('order') || '');
     const action = String(form.get('action') || '');
-    if (!/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
+    if (action !== 'connect' && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
 
     let result;
     try {
-      if (action === 'dispatch') result = await dispatchOrder(d, orderId);
+      if (action === 'connect') {
+        const results = await connectWebhooks(d.shopify, d.cfg);
+        const failed = results.filter((r) => !r.ok);
+        result = failed.length
+          ? { ok: false, reason: failed.map((r) => `${r.topic}: ${r.error}`).join('; ') }
+          : { ok: true, message: results.length ? 'Shopify connected' : 'Shopify was already connected' };
+      } else if (action === 'dispatch') result = await dispatchOrder(d, orderId);
       else if (action === 'cancel') result = await cancelDispatch(d, orderId);
       else return new Response('Unknown action', { status: 400 });
-      flash = result.ok ? `${action === 'dispatch' ? 'Rider booked' : 'Rider cancelled'}${result.taskNr ? ` (${result.taskNr})` : ''}` : `Failed: ${result.reason}`;
+      flash = result.message || (result.ok ? `${action === 'dispatch' ? 'Rider booked' : 'Rider cancelled'}${result.taskNr ? ` (${result.taskNr})` : ''}` : `Failed: ${result.reason}`);
     } catch (err) {
       d.log.error?.(err);
       flash = `Failed: ${err.message}`;
@@ -118,8 +125,16 @@ export async function handleDashboard(request, d) {
     return Response.redirect(back.toString(), 303);
   }
 
-  const orders = await d.shopify.listOrdersByTag(TAGS.express);
-  return new Response(renderDashboard({ orders, cfg: d.cfg, flash, labels: STATUS_LABELS }), {
+  const connection = await getConnection(d.shopify, d.cfg);
+  let orders = [];
+  if (connection.ok) {
+    try {
+      orders = await d.shopify.listOrdersByTag(TAGS.express);
+    } catch (err) {
+      connection.ordersError = err.message;
+    }
+  }
+  return new Response(renderDashboard({ orders, cfg: d.cfg, flash, labels: STATUS_LABELS, connection }), {
     headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
   });
 }

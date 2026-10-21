@@ -32,7 +32,8 @@ The app has no database. All state lives on the Shopify order as tags and `noon.
 | `lib/mapping.js` | Shopify order → noon payload (coordinates ×10⁷, money in fils, UAE phone normalisation, COD vs prepaid) |
 | `lib/dispatch.js`, `lib/status.js` | Booking/cancelling riders and applying status updates |
 | `scripts/noon-smoke.js` | Checks the noon credentials; with `--create`, books and cancels a test task on staging |
-| `scripts/register-webhooks.js` | Subscribes the app to the Shopify order webhooks |
+| `lib/setup.js` | Shopify connection check and webhook registration (dashboard **Connect Shopify** button) |
+| `scripts/register-webhooks.js` | Same as the button, from the command line |
 
 ## Setup
 
@@ -65,7 +66,7 @@ In **Settings → Shipping and delivery → Local delivery**, enable local deliv
 ### 4. Deploy (Vercel)
 1. Create a Vercel project with **Root Directory = `noon-rod-app`**. No build step is needed.
 2. Add every variable from `.env.example` in the Vercel project settings. Keep `NOON_BASE_URL` on staging until testing is done.
-3. Register the webhooks: `node --env-file=.env scripts/register-webhooks.js`
+3. Open the dashboard and press **Connect Shopify**. The panel at the top shows the connected store and app, any missing permissions, and whether order notifications (webhooks) are set up. `scripts/register-webhooks.js` does the same from the command line.
 
 ### 5. Test on staging
 ```

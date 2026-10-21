@@ -41,7 +41,20 @@ function actions(order) {
   return '';
 }
 
-export function renderDashboard({ orders, cfg, flash, labels }) {
+function connectionPanel(c) {
+  if (!c) return '';
+  const button = `<form method="post"><input type="hidden" name="action" value="connect"><button>Connect Shopify</button></form>`;
+  if (!c.ok) return `<div class="panel bad-b"><strong>Shopify is not connected.</strong><div class="err">${esc(c.error)}</div></div>`;
+  const problems = [];
+  if (c.missingScopes.length) problems.push(`The app is missing permissions: <code>${c.missingScopes.map(esc).join(', ')}</code>. Add them in the Shopify Dev Dashboard and reinstall.`);
+  if (c.ordersError) problems.push(`Could not read orders: ${esc(c.ordersError)}`);
+  if (c.missingWebhooks.length) problems.push(`Not yet receiving order notifications (${c.missingWebhooks.map(esc).join(', ')}). Press Connect Shopify.`);
+  const head = `Connected to <strong>${esc(c.shop)}</strong> (${esc(c.domain)}) via app “${esc(c.app)}”`;
+  if (!problems.length) return `<div class="panel ok-b">${head}</div>`;
+  return `<div class="panel warn-b">${head}<ul>${problems.map((p) => `<li>${p}</li>`).join('')}</ul>${c.missingWebhooks.length ? button : ''}</div>`;
+}
+
+export function renderDashboard({ orders, cfg, flash, labels, connection }) {
   const env = cfg.noon.baseUrl.includes('noonstg') ? 'STAGING' : 'PRODUCTION';
   const rows = orders
     .map((o) => {
@@ -62,6 +75,8 @@ export function renderDashboard({ orders, cfg, flash, labels }) {
 <style>${BASE_CSS}
   header { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
   .env { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 99px; border: 1px solid currentColor; color: ${env === 'STAGING' ? 'var(--warn)' : 'var(--ok)'}; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--muted); padding: 10px 12px; border-radius: 8px; margin-bottom: 16px; }
+  .panel ul { margin: 6px 0 10px; padding-left: 18px; } .ok-b { border-left-color: var(--ok); } .warn-b { border-left-color: var(--warn); } .bad-b { border-left-color: var(--bad); }
   .flash { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--navy); padding: 10px 12px; border-radius: 8px; margin-bottom: 16px; }
   table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
   th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -80,6 +95,7 @@ export function renderDashboard({ orders, cfg, flash, labels }) {
 </style></head><body><main>
 <header><div><h1>Express delivery dispatch</h1><div class="muted">Orders tagged <code>noon-express</code>. Pack first, then press Dispatch: a rider arrives within minutes.</div></div><span class="env">noon ${env}</span></header>
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
+${connectionPanel(connection)}
 <table><thead><tr><th>Order</th><th>Customer</th><th>Payment</th><th>Rider</th><th></th></tr></thead>
 <tbody>${rows || '<tr><td colspan="5" class="muted">No express orders yet.</td></tr>'}</tbody></table>
 <p class="muted">Pickup point <code>${esc(cfg.noon.outletCode || 'not set')}</code> · refreshes every minute</p>
