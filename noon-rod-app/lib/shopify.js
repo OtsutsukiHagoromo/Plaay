@@ -85,7 +85,10 @@ export function createShopifyClient(cfg, fetchImpl = globalThis.fetch) {
       }),
     });
     const data = await res.json().catch(() => ({}));
-    if (!res.ok || !data.access_token) throw new ShopifyError(`Shopify token request failed (${res.status})`, data);
+    if (!res.ok || !data.access_token) {
+      const reason = data.error_description || data.error || data.errors || '';
+      throw new ShopifyError(`Shopify token request failed (${res.status})${reason ? `: ${typeof reason === 'string' ? reason : JSON.stringify(reason)}` : ''}`, data);
+    }
     cachedToken = { value: data.access_token, expiresAt: Date.now() + (data.expires_in || 3600) * 1000 };
     return cachedToken.value;
   }
