@@ -1,14 +1,10 @@
 {%- comment -%}
-  Cart page. [data-cart-page-root] is refreshed wholesale by assets/plaay-cart-gift-prompt.js
-  (window.plaayRefreshCartPage fetches /cart?section_id=main-cart and swaps the root's innerHTML),
-  and the <cart-items> host inside it is re-rendered by bundle.cart-items.js from the `cart-items`
-  section. Both render snippets/cart-drawer-content.liquid with page: true.
+  Cart page. [data-cart-page-root] is re-rendered by assets/pl-cart.js from this section
+  (/cart?section_id=main-cart, or the `sections` of a bag request). It renders
+  snippets/cart-drawer-content.liquid with page: true.
 {%- endcomment -%}
 {{ 'pl-cart.css' | asset_url | stylesheet_tag }}
 
-<quick-add data-module="quick-add" hidden></quick-add>
-{%- comment -%} bundle.cart-items.js reads .promotion_message when it starts (same stub as the drawer); without it the cart page logged an error. {%- endcomment -%}
-<div class="promotion_message" data-total="{{ cart.total_price }}" data-threshold="999999999" hidden></div>
 
 <div class="pl pl-cartpage" data-cart-page-root>
   <div class="pl-wrap">

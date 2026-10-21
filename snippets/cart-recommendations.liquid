@@ -1,7 +1,7 @@
 {%- comment -%}
-  Drawer upsell row. bundle.cart-recommendations.js fetches sections/cart-recommendations.liquid
-  (which renders the legacy cart-recommendations-item cards) into [data-recommendations] when the
-  drawer opens and after every render; assets/pl-cart.css restyles those cards into a single row and
+  Drawer upsell row. assets/pl-cart.js (loadRecs) fetches sections/cart-recommendations.liquid
+  (which renders the cart-recommendations-item cards) into [data-recommendations] when the
+  drawer opens, and refills it from its cache after every render; assets/pl-cart.css restyles those cards into a single row and
   assets/pl-cart.js adds the ladder line ("Takes you to 10% off + a Mystery Gift") per card from the
   data attributes below. Only rendered when the cart has items (the module needs a product id).
   Params: remaining_fils (fils to the next reward), next_label, reached (index of the last unlocked stop).
@@ -15,7 +15,6 @@
     endif
   -%}
   <cart-recommendations
-    data-module="cart-recommendations"
     data-backup-product="{{ settings.backup_recommendations_product.id }}"
     data-url="{{ routes.product_recommendations_url }}"
     data-id="{{ rec_id }}">

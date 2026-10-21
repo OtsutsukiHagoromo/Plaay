@@ -14,10 +14,6 @@
       Shopify caps resource hints at two per template, so only the origins that actually
       serve render-path assets get one. Hotjar and BugHerd hints removed with their scripts.
     {%- endcomment -%}
-    <link
-      rel="preload"
-      href="{{ 'bundle.theme.js' | asset_url }}"
-      as="script">
 
     {%- liquid
       comment
@@ -30,7 +26,7 @@
       assign pl_template = template | remove: 'customers/' | split: '.' | first
       assign pl_bundle_templates = 'blog article page account activate_account addresses login order register reset_password password 404 gift_card' | split: ' '
       assign pl_existing_bundles = 'account blog cart collection index product search checkout' | split: ' '
-      assign pl_legacy_templates = 'blog article page password 404 gift_card' | split: ' '
+      assign pl_legacy_templates = 'blog article page password gift_card' | split: ' '
       assign pl_bundle = ''
       if pl_bundle_templates contains pl_template and pl_existing_bundles contains pl_template
         assign pl_bundle = pl_template
@@ -116,9 +112,7 @@
     {%- endif -%}
     {% render 'head.fonts', plo_b: plo_b %}
 
-    {%- if pl_bundle != blank -%}
-      {{ pl_bundle | prepend: 'bundle.' | append: '.css' | asset_url | stylesheet_tag }}
-    {%- endif -%}
+    {%- comment -%} bundle.blog.css and bundle.account.css are empty builds, so no per-template CSS is requested. {%- endcomment -%}
 
     {{ content_for_header }}
 
@@ -189,21 +183,28 @@
       same way), so ended campaigns no longer run a timer on every page.
     {%- endcomment -%}
     {%- if settings.eid_sale_enabled -%}{%- render 'plaay-eid-countdown-js' -%}{%- endif -%}
-    {%- liquid
-      assign cd_now = 'now' | date: '%s' | times: 1
-      assign cd_summer_end = '2026-08-01T00:00:00+04:00' | date: '%s' | times: 1
-    -%}
-    {%- if settings.summer_sale_enabled and cd_now < cd_summer_end -%}{%- render 'plaay-summer-countdown-js' -%}{%- endif -%}
+    {%- comment -%} Summer sale (ended 1 Aug 2026): countdown removed; snippets/plaay-summer-* kept for next year. {%- endcomment -%}
     {%- render 'drawers' -%}
     {% section 'pl-footer' %}
 
+    {%- comment -%}
+      The old webpack loader (lazysizes plus [data-module] scripts) is only needed by the legacy
+      pages; the redesigned pages run on assets/pl-*.js and no longer carry any data-module.
+    {%- endcomment -%}
+    {%- unless plo_b -%}
     <script defer src="{{ 'bundle.theme.js' | asset_url }}"></script>
+    {%- endunless -%}
     {%- if pl_bundle != blank -%}
       <script defer src="{{ pl_bundle | prepend: 'bundle.' | append: '.js' | asset_url }}"></script>
     {%- endif -%}
-    {%- comment -%} Glide is only used by legacy sections; the Option B pages have their own sliders. {%- endcomment -%}
+    {%- comment -%}
+      Glide is only used by two legacy sections (featured_products, about_us_template_horizontal),
+      which appear on the article, About and Big Bars templates.
+    {%- endcomment -%}
     {%- if plo_skin == blank -%}
+      {%- if template.name == 'article' or template.suffix == 'about' or template.suffix == 'big-bars' -%}
     <script defer src="{{ 'glide.static.min.js' | asset_url }}"></script>
+      {%- endif -%}
     {%- endif -%}
     {%- comment -%}
       Removed: the Gravity infinite-scroll script (collection/search). Every collection and
@@ -249,6 +250,8 @@
 
           /* The cart page renders no drawer (snippets/drawers.liquid), so there is nothing to open. */
           if (document.body.classList.contains('template-cart')) return;
+          /* assets/pl-cart.js owns the drawer; the code below only covers a tap before it loads. */
+          if (window.plCart && window.plCart.open) { window.plCart.open(); return; }
           if (window.plCloseSheets) window.plCloseSheets();
 
           var sd = document.querySelector('site-drawers');

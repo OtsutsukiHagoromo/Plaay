@@ -85,7 +85,7 @@
       {%- endif -%}
     </div>
     {%- unless hide_add or v.available == false -%}
-      <quick-add class="pl-tile__add" data-module="quick-add" data-id="{{ v.id }}">
+      <quick-add class="pl-tile__add" data-id="{{ v.id }}">
         <input type="hidden" name="quantity" value="1">
         <button type="button" class="pl-plus" data-add aria-label="Add {{ product.title | escape }} to bag">
           {%- render 'pl-icon', name: 'plus', size: 18, stroke: 2.4 -%}

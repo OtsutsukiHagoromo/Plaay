@@ -58,6 +58,7 @@
 
   /* ---------- cart drawer ---------- */
   function openDrawer() {
+    if (window.plCart && window.plCart.open) { window.plCart.open(); return; }
     var sd = document.querySelector('site-drawers');
     if (sd && 'activeDrawer' in sd) {
       if (sd.activeDrawer !== 'cart') sd.activeDrawer = 'cart';

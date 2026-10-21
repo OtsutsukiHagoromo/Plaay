@@ -22,6 +22,7 @@
   }
 
   function openCartDrawer() {
+    if (window.plCart && window.plCart.open) { window.plCart.open(); return; }
     var sd = document.querySelector('site-drawers');
     if (sd && sd.activeDrawer !== undefined) { sd.activeDrawer = 'cart'; return; }
     var cd = document.querySelector('cart-drawer');

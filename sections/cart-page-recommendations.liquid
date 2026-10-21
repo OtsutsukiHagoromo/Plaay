@@ -1,7 +1,7 @@
 {%- comment -%}
-  Fetched by bundle.cart-page-recommendations.js:
+  Fetched by assets/pl-cart.js (loadRecs):
   /recommendations/products?section_id=cart-page-recommendations&product_id=<id>&limit=4&intent=related
-  The module copies this section's innerHTML into [data-cart-page-recommendations] on the cart page.
+  pl-cart.js copies this section's innerHTML into [data-cart-page-recommendations] on the cart page.
 {%- endcomment -%}
 {%- if recommendations.performed and recommendations.products_count > 0 -%}
   {%- for product in recommendations.products limit: 4 -%}

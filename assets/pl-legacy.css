@@ -264,7 +264,7 @@ quantity-adjuster button, [data-module="quantity-adjuster"] button { min-width: 
 .header__icon--cart { display: none !important; }
 body { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
 #main { padding-bottom: 0px; }
-.plaay-wa-float { bottom: calc(60px + env(safe-area-inset-bottom) + 12px) !important; }
+.plaay-wa-float { bottom: calc(60px + env(safe-area-inset-bottom) + 12px); }
 }
 .plaay-skip-link { position: absolute; left: 8px; top: -60px; z-index: 99999; padding: 12px 18px; border-radius: var(--plaay-r-sm); background: var(--plaay-navy); color: var(--plaay-yellow); font-family: var(--font-walsheim-bold, "walsheim-bold", sans-serif); font-size: 14px; transition: top var(--plaay-d-2) var(--plaay-ease-out); }
 .plaay-skip-link:focus { top: 8px; }

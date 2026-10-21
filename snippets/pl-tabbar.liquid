@@ -1,8 +1,7 @@
 {%- comment -%}
   Plaay 2026 mobile tab bar (< 1024px). Home / Shop (menu sheet) / Search (search sheet) /
   Account. The bag lives in the header (top right). The bar hides while scrolling down. Rendered last in layout/theme.liquid.
-  Behaviour comes from assets/pl-shell.js (data-pl-tab, data-pl-tab-path); it does not use
-  assets/plaay-bottom-nav.js. Styles: assets/pl-shell.css.
+  Behaviour comes from assets/pl-shell.js (data-pl-tab, data-pl-tab-path). Styles: assets/pl-shell.css.
 {%- endcomment -%}
 {%- liquid
   assign path = request.path

@@ -177,6 +177,7 @@
 
   function afterRender() {
     syncCount();
+    if (isOpen() || q('[data-cart-page-root]')) loadRecs();
     decorateUpsell();
     clearStuckLoading();
     observers.forEach(function (o) { o.takeRecords(); });
@@ -255,15 +256,78 @@
 
   document.addEventListener('plaay:cart:updated', function () { syncCount(); });
 
-  /* ---------- drawer close (delegated, survives re-renders) ---------- */
+  /* ---------- drawer shell ----------
+     The bag drawer is opened and closed here only (the old webpack drawer modules are gone):
+     <cart-drawer> gets `active` (assets/pl-cart.css slides it in), the overlay in
+     snippets/drawers.liquid gets `active`, the page stops scrolling. The overlay, [data-close]
+     buttons and Escape close it, and focus goes back to where it was. On the cart page there is
+     no drawer; elsewhere without one, opening the bag goes to the cart page. */
+  var lastFocus = null;
+  function isOpen() { var cd = q('cart-drawer'); return !!(cd && cd.classList.contains('active')); }
+  function openDrawer() {
+    var cd = q('cart-drawer');
+    if (!cd) { if (!q('[data-cart-page-root]')) window.location.href = CART_URL; return; }
+    if (window.plCloseSheets) window.plCloseSheets();
+    if (!isOpen()) lastFocus = document.activeElement;
+    cd.classList.add('active');
+    var ov = q('site-drawers [data-overlay]');
+    if (ov) ov.classList.add('active');
+    document.body.classList.add('overflow-hidden');
+    loadRecs();
+  }
   function closeDrawer() {
-    var sd = q('site-drawers');
-    if (sd && typeof sd.close === 'function') { sd.close(); return; }
     var cd = q('cart-drawer');
     if (cd) cd.classList.remove('active');
     document.body.classList.remove('overflow-hidden');
     var ov = q('site-drawers [data-overlay]');
     if (ov) ov.classList.remove('active');
+    if (lastFocus && lastFocus.focus && document.contains(lastFocus)) {
+      try { lastFocus.focus({ preventScroll: true }); } catch (e) {}
+    }
+    lastFocus = null;
+  }
+  document.addEventListener('click', function (e) {
+    if (e.target.closest && e.target.closest('site-drawers [data-overlay]') && isOpen()) closeDrawer();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && isOpen()) { e.preventDefault(); closeDrawer(); }
+  });
+
+  /* ---------- "You might also like" rows ----------
+     Bag: <cart-recommendations data-id data-url data-backup-product> with a [data-recommendations]
+     slot; cart page: <cart-page-recommendations> with [data-cart-page-recommendations]. Each slot is
+     filled from Shopify's recommendations for the first product in the bag, rendered by
+     sections/cart-recommendations.liquid / sections/cart-page-recommendations.liquid. Results are
+     kept per product, so a re-render of the bag refills the row without a request. */
+  var recCache = {};
+  function fillRecs(host, slotSel, section, limit) {
+    var slot = host && q(slotSel, host);
+    if (!slot) return;
+    var id = host.getAttribute('data-id');
+    if (!id || id === 'false') id = host.getAttribute('data-backup-product');
+    if (!id || slot.getAttribute('data-for') === id) return;
+    var key = section + ':' + id;
+    function put(html) {
+      slot.setAttribute('data-for', id);
+      slot.innerHTML = html;
+      var any = !!slot.children.length;
+      host.classList.toggle('active', any);
+      var box = q('[cart-recommendations]', host);
+      if (box) box.classList.toggle('hidden', !any);
+      host.hidden = !any;
+      decorateUpsell();
+    }
+    if (recCache[key] != null) { put(recCache[key]); return; }
+    var url = (host.getAttribute('data-url') || '/recommendations/products') + '?section_id=' + section + '&product_id=' + id + '&limit=' + limit + '&intent=related';
+    fetch(url).then(function (r) { return r.text(); }).then(function (html) {
+      var sec = new DOMParser().parseFromString(html, 'text/html').querySelector('.shopify-section');
+      recCache[key] = sec ? sec.innerHTML.trim() : '';
+      if (document.contains(slot)) put(recCache[key]);
+    }).catch(function () {});
+  }
+  function loadRecs() {
+    fillRecs(q('cart-drawer cart-recommendations'), '[data-recommendations]', 'cart-recommendations', 10);
+    fillRecs(q('[data-cart-page-root] cart-page-recommendations'), '[data-cart-page-recommendations]', 'cart-page-recommendations', 4);
   }
 
   document.addEventListener('click', function (e) {
@@ -299,10 +363,6 @@
     var wrap = q('[data-cart-drawer-count-wrapper]');
     if (countEl) countEl.textContent = String(n);
     if (wrap) wrap.classList.toggle('hidden', n === 0);
-    setTimeout(function () {
-      var recs = q('cart-drawer cart-recommendations');
-      if (recs && typeof recs.getRecommendations === 'function') recs.getRecommendations();
-    }, 150);
   }
 
   function refreshPage() {
@@ -650,6 +710,10 @@
       root.classList.add('is-syncing');
       var total = 0;
       qa('[data-cart-item]', root).forEach(function (l) { total += Number(l.getAttribute('data-quantity')) || 0; });
+      /* The count source too, or the next read (badge observers) puts the old count back. */
+      if (root.matches('[data-cart-drawer-content]')) root.setAttribute('data-cart-item-count', String(total));
+      var src = q('[data-pl-cart-count-source]', root);
+      if (src) src.setAttribute('data-cart-item-count', String(total));
       syncCount(total);
       var dc = q('[data-cart-drawer-count]');
       if (dc && root.matches('[data-cart-drawer-content]')) dc.textContent = String(total);
@@ -784,6 +848,7 @@
 
   /* ---------- boot ---------- */
   function init() {
+    if (q('[data-cart-page-root]')) loadRecs();
     rewardMoments();
     measureLines();
     observe();
@@ -804,14 +869,7 @@
     syncCount: syncCount,
     refresh: refreshAll,
     closeDrawer: closeDrawer,
-    open: function () {
-      var sd = q('site-drawers');
-      if (sd && sd.activeDrawer !== undefined) { sd.activeDrawer = 'cart'; return; }
-      var cd = q('cart-drawer');
-      if (cd) cd.classList.add('active');
-      document.body.classList.add('overflow-hidden');
-      var ov = q('site-drawers [data-overlay]');
-      if (ov) ov.classList.add('active');
-    }
+    open: openDrawer,
+    isOpen: isOpen
   };
 })();

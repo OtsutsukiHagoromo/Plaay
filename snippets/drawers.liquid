@@ -1,4 +1,5 @@
-<site-drawers data-module="drawers">
+{%- comment -%} Bag drawer shell: assets/pl-cart.js opens and closes it (no webpack drawer module). {%- endcomment -%}
+<site-drawers>
   {%- unless template.name == 'cart' -%}
     {%- render 'drawer-cart' -%}
   {%- endunless -%}

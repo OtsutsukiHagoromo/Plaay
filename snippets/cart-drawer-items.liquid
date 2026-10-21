@@ -1,16 +1,12 @@
 {%- comment -%}
   Cart line items.
 
-  Default: wraps the list in <cart-drawer-items data-module="cart-drawer-items"> (bundle.cart-drawer-items.js).
-  bare: true renders the list without the wrapper, for the cart page where <cart-items> is the host.
+  Default: wraps the list in <cart-drawer-items>. bare: true renders the list without the wrapper,
+  for the cart page where <cart-items> is the host.
 
-  Hooks the theme JS relies on (keep):
-    - a child with class `loading_dots` on the host element (CartItems.loading dereferences it)
-    - [data-cart-item][data-key] per line; any `change` event inside bubbles to the host and calls
-      updateQuantity(key, e.target.value), so the quantity input is the only form control that may
-      bubble a change event (pl-cart.js stops the subscription switch's change in the capture phase)
-    - <quantity-adjuster> with button[name=minus] / input[name=quantity] / button[name=plus]
-    - <cart-remove-button data-module="cart-remove-button"> closest to [data-cart-item]
+  assets/pl-cart.js runs every line control (no webpack modules any more):
+    - [data-cart-item][data-key][data-unit][data-quantity] per line
+    - button[data-minus] / input[name=quantity] / button[data-plus] for the quantity, .pl-item__remove to remove
   Subscription switch data (read by assets/pl-cart.js): data-plan-id, data-plan-name, data-sub-saving,
   data-quantity, data-variant-id, data-properties.
 {%- endcomment -%}
@@ -21,11 +17,9 @@
   endif
 -%}
 {%- unless is_bare -%}
-<cart-drawer-items class="pl-lines" data-module="cart-drawer-items">
+<cart-drawer-items class="pl-lines">
   <div class="pl-cart__loading loading_dots" aria-hidden="true"><span class="pl-cart__spin"></span></div>
 {%- endunless -%}
-  <cart-remove-button data-module="cart-remove-button" hidden></cart-remove-button>
-  <quantity-adjuster data-module="quantity-adjuster" hidden></quantity-adjuster>
   <div class="pl-items">
     {%- comment -%} Two passes: reward gifts (Mystery Gift) first, then everything else. {%- endcomment -%}
     {%- for pass in (1..2) -%}
@@ -159,7 +153,7 @@
             <div class="pl-item__head">
               <a href="{{ item.url }}" class="pl-item__title">{{ item.product.title }}</a>
               {%- unless is_gift -%}
-                <cart-remove-button data-module="cart-remove-button">
+                <cart-remove-button>
                   <button type="button" class="pl-item__remove" aria-label="Remove {{ item.product.title | escape }}">
                     {%- render 'pl-icon', name: 'close', size: 16, stroke: 2 -%}
                   </button>
@@ -173,7 +167,7 @@
               {%- if is_gift -%}
                 <span class="pl-tag pl-tag--yellow">Mystery Gift</span>
               {%- else -%}
-                <quantity-adjuster data-module="quantity-adjuster">
+                <quantity-adjuster>
                   <div class="pl-stepper pl-stepper--sm">
                     <button type="button" name="minus" data-minus aria-label="Decrease quantity">&minus;</button>
                     <input type="number" name="quantity" value="{{ item.quantity }}" min="0" inputmode="numeric" aria-label="Quantity">

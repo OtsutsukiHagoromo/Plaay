@@ -5,9 +5,8 @@
   window.plaayRenderCartDrawerSections (assets/plaay-cart-gift-prompt.js) / bundle.cart-drawer-items.js
   from the `cart-drawer-content` section after every cart change.
 
-  Page: root is <cart-items data-module="cart-items">. bundle.cart-items.js re-renders its innerHTML
-  from the `cart-items` section (sections/cart-items.liquid renders this same snippet with page: true),
-  and assets/plaay-gift.js refreshes the whole [data-cart-page-root] after its gift sync.
+  Page: root is <cart-items> inside [data-cart-page-root]; assets/pl-cart.js re-renders the root from
+  the `main-cart` section after every change.
 
   Ladder maths use the rewards settings and cart.original_total_price (pre-discount), matching
   snippets/cart-tier-bar.liquid, so a percentage tier can never knock a shopper down a tier.
@@ -172,16 +171,15 @@
 {%- endcapture -%}
 
 {%- if is_page -%}
-  <cart-items data-module="cart-items" class="pl-cartpage__grid{% if cart.item_count == 0 %} is-empty{% endif %}">
+  <cart-items class="pl-cartpage__grid{% if cart.item_count == 0 %} is-empty{% endif %}">
     <span data-pl-cart-count-source data-cart-item-count="{{ cart.item_count }}" hidden></span>
     <div class="pl-cart__loading loading_dots" aria-hidden="true"><span class="pl-cart__spin"></span></div>
     {%- if cart.item_count > 0 -%}
       <div class="pl-cartpage__main">
         {{ ladder_html }}
         {%- render 'plaay-eid-countdown' -%}
-        {%- render 'plaay-summer-cart' -%}
         {%- render 'cart-drawer-items', bare: true -%}
-        <cart-page-recommendations class="pl-cartpage__recs" data-module="cart-page-recommendations" data-id="{{ first_product_id }}" data-url="{{ routes.product_recommendations_url }}">
+        <cart-page-recommendations class="pl-cartpage__recs" data-id="{{ first_product_id }}" data-url="{{ routes.product_recommendations_url }}">
           <h2 class="pl-h pl-h--4" data-recommendations-title>You might also like</h2>
           <div class="pl-grid pl-grid--2" data-cart-page-recommendations data-limit="4"></div>
         </cart-page-recommendations>
@@ -206,7 +204,6 @@
       {%- if cart.item_count > 0 -%}
         {{ ladder_html }}
         {%- render 'plaay-eid-countdown' -%}
-        {%- render 'plaay-summer-cart' -%}
         {%- render 'cart-drawer-items' -%}
         {%- render 'cart-recommendations', remaining_fils: remaining_fils, next_label: next_label, reached: reached -%}
         <div class="pl-card pl-summary-card" data-cart-drawer-footer>

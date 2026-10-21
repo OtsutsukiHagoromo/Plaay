@@ -1,14 +1,10 @@
 {%- comment -%}
   Plaay 2026 cart drawer shell.
 
-  JS contract (bundle.drawers.js / bundle.drawer-cart.js / the inline fallback in layout/theme.liquid):
-    - site-drawers.activeDrawer = 'cart' finds [data-drawer="cart"] (this element) and calls .open()
-    - Drawer.open() toggles the class `active` on <cart-drawer>; assets/pl-cart.css slides the inner
-      [data-drawer] panel in on `cart-drawer.active`. Drawer.loading toggles `loading` the same way.
-    - [data-close] buttons must live inside [data-drawer]; the drawer JS binds them on open and
-      assets/pl-cart.js also delegates so buttons in re-rendered content keep working.
-  Module stubs at the end make bundle.theme.js (an init-only loader) import every cart module even
-  when the cart is empty on first paint, so re-rendered content upgrades correctly.
+  assets/pl-cart.js opens and closes it (plCart.open / plCart.closeDrawer): <cart-drawer> gets the
+  class `active`, and assets/pl-cart.css slides the inner [data-drawer] panel in. [data-close]
+  buttons, the overlay in snippets/drawers.liquid and Escape close it. pl-cart.js also runs every
+  control inside (lines, quantities, picks, "You might also like").
 {%- endcomment -%}
 {%- comment -%}
   The drawer is closed on load, so its stylesheet loads without blocking the first paint. Until it
@@ -19,7 +15,7 @@
 <link rel="stylesheet" href="{{ 'pl-cart.css' | asset_url }}" media="print" onload="this.media='all';document.documentElement.classList.add('pl-cart-css')">
 <noscript>{{ 'pl-cart.css' | asset_url | stylesheet_tag }}</noscript>
 
-<cart-drawer data-module="drawer-cart" data-drawer="cart">
+<cart-drawer data-drawer="cart">
   <div class="pl pl-drawer" data-drawer role="dialog" aria-modal="true" aria-label="Your bag" tabindex="-1">
     <div class="pl-drawer__panel">
       <header class="pl-drawer__head">
@@ -38,13 +34,6 @@
     </div>
   </div>
 
-  {%- comment -%} Module stubs: never visible, only here so the loader imports the bundles. {%- endcomment -%}
-  <div data-module="cart-recommendations" hidden></div>
-  <div data-module="quick-add" hidden></div>
-  <div data-module="cart-remove-button" hidden></div>
-  <div data-module="quantity-adjuster" hidden></div>
-  {%- comment -%} bundle.cart-items.js reads .promotion_message in its constructor (legacy free-shipping confetti); threshold never reached. {%- endcomment -%}
-  <div class="promotion_message" data-total="{{ cart.total_price }}" data-threshold="999999999" hidden></div>
 </cart-drawer>
 
 <script defer src="{{ 'plaay-cart-gift-prompt.js' | asset_url }}"></script>

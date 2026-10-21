@@ -274,7 +274,8 @@
         target.checked = true;
         form.dispatchEvent(new Event('change', { bubbles: true }));
       });
-      sticky.querySelector('[data-plo-sticky-add]').addEventListener('click', function () {
+      var stickyAdd = sticky.querySelector('[data-plo-sticky-add]');
+      if (stickyAdd) stickyAdd.addEventListener('click', function () {
         if (form.requestSubmit) form.requestSubmit(); else addBtn.click();
       });
       if ('IntersectionObserver' in window) {
@@ -1289,24 +1290,32 @@
     paint();
   }
 
+  /* Each feature starts on its own: an error in one (missing markup, an app changing the page)
+     is logged and the others still start. */
+  function safe(fn, arg) {
+    try { fn(arg); } catch (e) { if (window.console) console.error('[pl-opt] ' + (fn.name || 'init'), e); }
+  }
+  function each(sel, fn) {
+    Array.prototype.forEach.call(document.querySelectorAll(sel), function (el) { safe(fn, el); });
+  }
   function init() {
-    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-prev]'), initPrevMore);
-    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-offer]'), initOfferLadder);
-    initPops();
-    initHearts();
-    resetCardSizes();
-    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-filter]'), initCollFilter);
-    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-wl]'), initWishlist);
-    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-faqp]'), initFaqPage);
-    initReelBand();
-    initMore();
-    initFades();
-    initReveal();
-    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-carousel]'), initCarousel);
-    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-pdp]'), initPdp);
-    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-photos]'), initPhotos);
-    initDetailWidgets();
-    Array.prototype.forEach.call(document.querySelectorAll('[data-plo-reels]'), initReels);
+    each('[data-plo-prev]', initPrevMore);
+    each('[data-plo-offer]', initOfferLadder);
+    safe(initPops);
+    safe(initHearts);
+    safe(resetCardSizes);
+    each('[data-plo-filter]', initCollFilter);
+    each('[data-plo-wl]', initWishlist);
+    each('[data-plo-faqp]', initFaqPage);
+    safe(initReelBand);
+    safe(initMore);
+    safe(initFades);
+    safe(initReveal);
+    each('[data-plo-carousel]', initCarousel);
+    each('[data-plo-pdp]', initPdp);
+    each('[data-plo-photos]', initPhotos);
+    safe(initDetailWidgets);
+    each('[data-plo-reels]', initReels);
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();

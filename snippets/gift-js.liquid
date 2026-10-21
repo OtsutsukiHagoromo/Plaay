@@ -38,6 +38,21 @@
     assign gift_threshold = 25000
   endif
 -%}
-{% comment %} Mystery-gift cart logic - moved to assets/plaay-gift.js {% endcomment %}
+{%- liquid
+  comment
+    Mystery-gift cart logic (assets/plaay-gift.js) loads only when a live tier carries a gift, or
+    when a gift is still in the bag and has to be taken out. Otherwise it would check the bag
+    and re-draw it on every page view for nothing.
+  endcomment
+  assign gift_in_bag = false
+  for it in cart.items
+    if it.variant_id == 48526560592089
+      assign gift_in_bag = true
+      break
+    endif
+  endfor
+-%}
+{%- if gift_threshold < 999999900 or gift_in_bag -%}
 <script>window.plaayGiftConfig = { threshold: {{ gift_threshold }} };</script>
 <script defer src="{{ 'plaay-gift.js' | asset_url }}"></script>
+{%- endif -%}

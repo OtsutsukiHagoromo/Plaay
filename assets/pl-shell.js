@@ -95,6 +95,7 @@
   function openBag() {
     closeSheets();
     if (body.classList.contains('template-cart')) return;
+    if (window.plCart && window.plCart.open) { window.plCart.open(); return; }
     var sd = q('site-drawers');
     if (sd && sd.activeDrawer !== undefined && sd.querySelector('[data-drawer="cart"]')) {
       sd.activeDrawer = 'cart';
