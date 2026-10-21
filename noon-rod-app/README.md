@@ -56,12 +56,19 @@ In **Settings → Shipping and delivery → Local delivery**, enable local deliv
 - Set the delivery hours to when the team can pack.
 
 ### 3. Shopify app (API access)
-1. Create an app in the **Shopify Dev Dashboard** and install it on the Plaay store. This is a custom app for our store only.
-2. Give it these Admin API scopes:
-   - `read_orders`, `write_orders`
-   - `read_merchant_managed_fulfillment_orders`, `write_merchant_managed_fulfillment_orders`
-3. Request **protected customer data** access for name, address and phone. Without it, orders come back without the fields noon needs.
-4. Copy the client ID and secret into `SHOPIFY_CLIENT_ID` / `SHOPIFY_CLIENT_SECRET`. A static `SHOPIFY_ADMIN_TOKEN` also works if you have one.
+**Current setup:** the app connects through **TMS DataMonitorPlaay**, The Marketing Samurai's partner app, which is installed on `plaay-store.myshopify.com`.
+- **Access token:** that app's offline access token (`shpca_…`) is stored in Vercel as `SHOPIFY_ADMIN_TOKEN`.
+- **Webhook secret:** its client secret is stored as `SHOPIFY_CLIENT_SECRET`, because Shopify signs the order webhooks with it.
+- **Dependency:** if that app is uninstalled from Plaay or its secret is rotated, update these two values.
+
+A partner-owned app can't use the client-credentials grant on a client's store, so it needs the token. An app created from the Plaay store's own Dev Dashboard can instead use just `SHOPIFY_CLIENT_ID` + `SHOPIFY_CLIENT_SECRET`.
+
+Required Admin API scopes:
+- `read_orders`, `write_orders`
+- `read_merchant_managed_fulfillment_orders`, `write_merchant_managed_fulfillment_orders`
+- protected customer data: name, address and phone
+
+The dashboard panel flags any that are missing.
 
 ### 4. Deploy (Vercel)
 1. Create a Vercel project with **Root Directory = `noon-rod-app`**. No build step is needed.
