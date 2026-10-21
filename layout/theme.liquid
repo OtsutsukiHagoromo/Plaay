@@ -111,6 +111,22 @@
     {%- if plo_b -%}
       {%- assign plo_skin = 'b' -%}
       {{ 'pl-opt.css' | asset_url | stylesheet_tag }}
+      {%- liquid
+        comment
+          Page-type styles, split out of pl-opt.css so each page blocks on its own rules only.
+        endcomment
+        case template.name
+          when 'index'
+            assign plo_part = 'home'
+          when 'product'
+            assign plo_part = 'pdp'
+          when 'collection', 'list-collections', 'search'
+            assign plo_part = 'list'
+          else
+            assign plo_part = 'pages'
+        endcase
+      -%}
+      {{ 'pl-opt-' | append: plo_part | append: '.css' | asset_url | stylesheet_tag }}
     {%- endif -%}
     {% render 'head.fonts', plo_b: plo_b %}
 
