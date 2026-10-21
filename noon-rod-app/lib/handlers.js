@@ -166,7 +166,8 @@ export async function handleTrackData(request, d) {
     lat: toDegrees(order.shippingAddress.latitude),
     lng: toDegrees(order.shippingAddress.longitude),
   };
-  const body = { order: order.name, status: order.noon.status || 'not_dispatched', rider: null, drop };
+  const items = (order.lineItems?.nodes || []).map((li) => ({ title: li.title, quantity: li.quantity }));
+  const body = { order: order.name, status: order.noon.status || 'not_dispatched', rider: null, drop, items };
 
   if (order.noon.taskNr) {
     const task = await d.noon.getTask(order.noon.taskNr).catch(() => null);
@@ -175,7 +176,8 @@ export async function handleTrackData(request, d) {
       const da = task.da_details;
       if (da) {
         body.rider = {
-          name: da.first_name || da.name || 'Your rider',
+          // First name only on the customer page.
+          name: (da.first_name || String(da.name || '').split(' ')[0] || 'Your rider').trim(),
           lat: toDegrees(da.location?.latitude),
           lng: toDegrees(da.location?.longitude),
           // Only share the rider's number while they are on the way to the customer.

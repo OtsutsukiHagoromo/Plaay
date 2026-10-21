@@ -32,6 +32,7 @@ export const ORDER_FIELDS = `
     name firstName lastName company address1 address2 city province countryCodeV2 phone latitude longitude
   }
   billingAddress { phone }
+  lineItems(first: 30) { nodes { title quantity } }
   taskNr: metafield(namespace: "${METAFIELD_NAMESPACE}", key: "task_nr") { value }
   noonStatus: metafield(namespace: "${METAFIELD_NAMESPACE}", key: "status") { value }
   noonError: metafield(namespace: "${METAFIELD_NAMESPACE}", key: "error") { value }
@@ -198,7 +199,7 @@ export function createShopifyClient(cfg, fetchImpl = globalThis.fetch) {
           f: {
             lineItemsByFulfillmentOrder: open.map((fo) => ({ fulfillmentOrderId: fo.id })),
             notifyCustomer,
-            trackingInfo: { company: 'noon', number: taskNr, ...(trackingUrl ? { url: trackingUrl } : {}) },
+            trackingInfo: { company: 'Plaay Express', number: taskNr, ...(trackingUrl ? { url: trackingUrl } : {}) },
           },
         },
         'fulfillmentCreate',
