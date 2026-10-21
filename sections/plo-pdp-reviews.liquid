@@ -78,9 +78,27 @@
       {%- comment -%}
         Cards: the latest 4-5 star reviews from the Judge.me data, then "See more reviews" pulls
         further 4-5 star reviews from Judge.me's public review feed (assets/pl-opt.js initPrevMore).
-        On a product page (data-product) that product's own 4-5 star reviews are put first.
+        On a product page (data-product) that product's own 4-5 star reviews are put first, then
+        reviews of products from its range (data-cat: the handles in its first range collection, in
+        the Shop All tab order Slabs, Truffles, Bars, Variety, Limited).
       {%- endcomment -%}
-      <div class="plo-prev__cards" data-plo-prev data-shop="{{ shop.permanent_domain }}"{% if product %} data-product="{{ product.id }}"{% endif %}>
+      {%- liquid
+        assign cat_handles = ''
+        if product
+          assign pcols = product.collections | map: 'handle'
+          assign ranges = 'new-chocolate-slabs,chocolate-truffles,chocolate-bars,variety-packs,limited-editions' | split: ','
+          for h in ranges
+            if pcols contains h
+              for cp in collections[h].products limit: 50
+                assign cat_handles = cat_handles | append: ',' | append: cp.handle
+              endfor
+              break
+            endif
+          endfor
+          assign cat_handles = cat_handles | remove_first: ','
+        endif
+      -%}
+      <div class="plo-prev__cards" data-plo-prev data-shop="{{ shop.permanent_domain }}"{% if product %} data-product="{{ product.id }}"{% endif %}{% if cat_handles != '' %} data-cat="{{ cat_handles }}"{% endif %}>
         {%- assign shown = 0 -%}
         {%- for r in jm.all_reviews -%}
           {%- if shown >= s.live_count -%}{%- break -%}{%- endif -%}

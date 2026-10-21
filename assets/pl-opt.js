@@ -1159,6 +1159,7 @@
     var stars = model.querySelector('.plo-prev__top > :first-child');
     var badge = model.querySelector('.plo-prev__ver');
     function norm(t) { return String(t || '').replace(/[“”"\s.…]+/g, ' ').trim().toLowerCase().slice(0, 60); }
+    function handleOf(u) { var m = String(u || '').match(/\/products\/([^/?#]+)/); return m ? m[1] : ''; }
     function words(t, n) { var w = t.split(/\s+/); return w.length > n ? w.slice(0, n).join(' ') + '…' : t; }
     function fetchPage() {
       page++;
@@ -1177,6 +1178,7 @@
           var a = el.querySelector('.jdgm-rev__prod-link');
           var pic = el.querySelector('.jdgm-rev__pics img');
           queue.push({
+            handle: handleOf(a && a.getAttribute('href')),
             body: body,
             name: ((el.querySelector('.jdgm-rev__author') || {}).textContent || '').trim(),
             verified: el.getAttribute('data-verified-buyer') === 'true',
@@ -1221,7 +1223,7 @@
         return fetchPage().then(fill);
       };
       fill().then(function () {
-        queue.splice(0, 6).forEach(function (r) { row.insertBefore(card(r), btn); });
+        queue.splice(0, 6).forEach(function (r) { row.insertBefore(r.nodeType ? r : card(r), btn); });
         if (done && !queue.length) btn.remove();
       }).catch(function () { btn.remove(); }).then(function () { busy = false; btn.classList.remove('is-busy'); });
     }
@@ -1229,7 +1231,10 @@
        store-wide card that repeats one of them is dropped, and "See more" skips them. With none,
        the row stays exactly as rendered. */
     var pid = row.getAttribute('data-product');
+    var cat = (row.getAttribute('data-cat') || '').split(',').filter(Boolean);
     var swiped = false;
+    var server = Array.prototype.slice.call(row.querySelectorAll('.plo-prev__card'));
+    var own = [];
     if (pid) {
       ['pointerdown', 'touchstart', 'wheel'].forEach(function (ev) { row.addEventListener(ev, function () { swiped = true; }, { passive: true, once: true }); });
       fetch('https://api.judge.me/reviews/reviews_for_widget?url=' + encodeURIComponent(shop) + '&shop_domain=' + encodeURIComponent(shop) + '&platform=shopify&page=1&per_page=20&product_id=' + encodeURIComponent(pid))
@@ -1257,13 +1262,42 @@
           mine.forEach(function (r) {
             seen.push(norm(r.body));
             var c = card(r);
+            own.push(c);
             if (first) row.insertBefore(c, first); else row.appendChild(c);
           });
           /* The browser keeps the old first card in view (scroll anchoring); start at the new first one. */
           if (!swiped) row.scrollLeft = 0;
         })
-        .catch(function () {});
+        .catch(function () {})
+        .then(byRange);
     }
+    /* Then reviews of other products in the same range (truffles on a truffle page, bars on a bar
+       page...): the whole store feed is read (a few small pages), range reviews take the places of
+       the store-wide cards, which move to the front of "See more", and the rest follow. The number
+       of cards shown stays the same; with no range reviews the row is left as it is. */
+    function byRange() {
+      if (!cat.length || !btn || busy) return;
+      busy = true;
+      var all = function () { return done || page >= 15 ? Promise.resolve() : fetchPage().then(all); };
+      return all().then(function () {
+        server = server.filter(function (c) { return c.parentNode === row; });
+        var inCat = function (h) { return cat.indexOf(h) > -1; };
+        var srvCat = server.filter(function (c) { var a = c.querySelector('figcaption a'); return a && inCat(handleOf(a.getAttribute('href'))); });
+        var feedCat = queue.filter(function (r) { return inCat(r.handle); });
+        if (!srvCat.length && !feedCat.length) return;
+        queue = queue.filter(function (r) { return !inCat(r.handle); });
+        var others = server.filter(function (c) { return srvCat.indexOf(c) < 0; });
+        var slots = Math.max(0, server.length - srvCat.length);
+        var add = feedCat.splice(0, slots);
+        var held = others.slice(others.length - add.length);
+        held.forEach(function (c) { c.remove(); });
+        var at = others.filter(function (c) { return held.indexOf(c) < 0; })[0] || btn;
+        srvCat.concat(add.map(card)).forEach(function (c) { if (at) row.insertBefore(c, at); else row.appendChild(c); });
+        queue = feedCat.concat(held, queue);
+        if (!swiped) row.scrollLeft = 0;
+      }).catch(function () {}).then(function () { busy = false; });
+    }
+    if (!pid) byRange();
     if (!btn) return;
     btn.addEventListener('click', more);
     /* Phones: swiping to the end of the row loads the next six without a tap. */
