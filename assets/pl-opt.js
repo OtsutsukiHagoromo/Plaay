@@ -1153,7 +1153,7 @@
     var btn = row.querySelector('[data-plo-prev-more]');
     var shop = row.getAttribute('data-shop');
     var model = row.querySelector('.plo-prev__card');
-    if (!btn || !shop || !model || !window.fetch || !window.DOMParser) { if (btn) btn.remove(); return; }
+    if (!shop || !model || !window.fetch || !window.DOMParser) { if (btn) btn.remove(); return; }
     var page = 0, busy = false, done = false, queue = [];
     var seen = Array.prototype.map.call(row.querySelectorAll('.plo-prev__card blockquote'), function (q) { return norm(q.textContent); });
     var stars = model.querySelector('.plo-prev__top > :first-child');
@@ -1225,6 +1225,46 @@
         if (done && !queue.length) btn.remove();
       }).catch(function () { btn.remove(); }).then(function () { busy = false; btn.classList.remove('is-busy'); });
     }
+    /* Product page: this product's own 4-5 star reviews come first, in the same cards; any
+       store-wide card that repeats one of them is dropped, and "See more" skips them. With none,
+       the row stays exactly as rendered. */
+    var pid = row.getAttribute('data-product');
+    var swiped = false;
+    if (pid) {
+      ['pointerdown', 'touchstart', 'wheel'].forEach(function (ev) { row.addEventListener(ev, function () { swiped = true; }, { passive: true, once: true }); });
+      fetch('https://api.judge.me/reviews/reviews_for_widget?url=' + encodeURIComponent(shop) + '&shop_domain=' + encodeURIComponent(shop) + '&platform=shopify&page=1&per_page=20&product_id=' + encodeURIComponent(pid))
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var mine = (d.reviews || []).filter(function (r) { return Number(r.rating) >= 4; }).map(function (r) {
+            var tmp = document.createElement('div');
+            tmp.innerHTML = r.body_html || '';
+            return {
+              body: (tmp.textContent || '').replace(/\s+/g, ' ').trim(),
+              name: r.is_anonymous_reviewer ? '' : (r.reviewer_name || ''),
+              verified: !!r.verified_buyer,
+              product: r.product_title || '',
+              url: r.product_url || '',
+              pic: (r.pictures_urls && r.pictures_urls[0] && (r.pictures_urls[0].compact || r.pictures_urls[0].small || r.pictures_urls[0].original)) || ''
+            };
+          }).filter(function (r) { return r.body; });
+          if (!mine.length) return;
+          var keys = mine.map(function (r) { return norm(r.body); });
+          Array.prototype.forEach.call(row.querySelectorAll('.plo-prev__card'), function (c) {
+            var q = c.querySelector('blockquote');
+            if (q && keys.indexOf(norm(q.textContent)) > -1) c.remove();
+          });
+          var first = row.querySelector('.plo-prev__card') || btn;
+          mine.forEach(function (r) {
+            seen.push(norm(r.body));
+            var c = card(r);
+            if (first) row.insertBefore(c, first); else row.appendChild(c);
+          });
+          /* The browser keeps the old first card in view (scroll anchoring); start at the new first one. */
+          if (!swiped) row.scrollLeft = 0;
+        })
+        .catch(function () {});
+    }
+    if (!btn) return;
     btn.addEventListener('click', more);
     /* Phones: swiping to the end of the row loads the next six without a tap. */
     if ('IntersectionObserver' in window && window.matchMedia('(max-width: 1023px)').matches) {

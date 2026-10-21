@@ -78,8 +78,9 @@
       {%- comment -%}
         Cards: the latest 4-5 star reviews from the Judge.me data, then "See more reviews" pulls
         further 4-5 star reviews from Judge.me's public review feed (assets/pl-opt.js initPrevMore).
+        On a product page (data-product) that product's own 4-5 star reviews are put first.
       {%- endcomment -%}
-      <div class="plo-prev__cards" data-plo-prev data-shop="{{ shop.permanent_domain }}">
+      <div class="plo-prev__cards" data-plo-prev data-shop="{{ shop.permanent_domain }}"{% if product %} data-product="{{ product.id }}"{% endif %}>
         {%- assign shown = 0 -%}
         {%- for r in jm.all_reviews -%}
           {%- if shown >= s.live_count -%}{%- break -%}{%- endif -%}
