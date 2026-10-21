@@ -61,3 +61,36 @@ test('dashboard still renders when Shopify is unreachable', async () => {
   assert.equal(res.status, 200);
   assert.match(await res.text(), /Shopify is not connected[\s\S]*token request failed/);
 });
+
+test('test orders: created on staging, refused on production', async () => {
+  const shopify = fakeShopify(makeOrder());
+  const real = shopify.graphql.bind(shopify);
+  const mutations = [];
+  shopify.graphql = async (query, vars) => {
+    if (query.includes('draftOrderCreate')) {
+      mutations.push(vars.input);
+      return { draftOrderCreate: { draftOrder: { id: 'gid://shopify/DraftOrder/9' }, userErrors: [] } };
+    }
+    if (query.includes('draftOrderComplete')) {
+      return { draftOrderComplete: { draftOrder: { order: { id: 'gid://shopify/Order/1', name: '#9001', legacyResourceId: '1' } }, userErrors: [] } };
+    }
+    return real(query, vars);
+  };
+  const auth = { authorization: `Basic ${Buffer.from('plaay:pw').toString('base64')}` };
+  const post = () =>
+    new Request('https://noon.example.com/api/dashboard', {
+      method: 'POST',
+      headers: { ...auth, origin: 'https://noon.example.com', 'content-type': 'application/x-www-form-urlencoded' },
+      body: 'action=test-order',
+    });
+
+  const res = await handleDashboard(post(), { cfg, shopify, noon: fakeNoon(), log: quietLog });
+  assert.match(new URL(res.headers.get('location')).searchParams.get('msg'), /Test order #9001 created/);
+  assert.match(mutations[0].shippingLine.title, /express/i); // so the app treats it as an express order
+  assert.deepEqual(mutations[0].tags, ['test', 'noon-test']);
+  assert.equal(mutations[0].email, undefined); // no customer emails
+
+  const prodCfg = { ...cfg, noon: { ...cfg.noon, baseUrl: 'https://food-api-team.noon.team' } };
+  assert.equal((await handleDashboard(post(), { cfg: prodCfg, shopify, noon: fakeNoon(), log: quietLog })).status, 403);
+  assert.equal(mutations.length, 1);
+});

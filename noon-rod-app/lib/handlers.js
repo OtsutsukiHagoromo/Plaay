@@ -4,13 +4,15 @@ import crypto from 'node:crypto';
 import { TAGS } from './config.js';
 import { cancelDispatch, dispatchOrder } from './dispatch.js';
 import { isExpressOrder } from './mapping.js';
-import { connectWebhooks, getConnection } from './setup.js';
+import { connectWebhooks, createTestOrder, getConnection } from './setup.js';
 import { verifyWebhookHmac } from './shopify.js';
 import { handleStatusUpdate, STATUS_LABELS, toDegrees } from './status.js';
 import { verifyTrackingToken } from './tracking.js';
 import { renderDashboard, renderTrackingPage } from './views.js';
 
 const json = (body, status = 200) => Response.json(body, { status });
+
+const isStaging = (cfg) => cfg.noon.baseUrl.includes('noonstg');
 
 function safeEqual(a, b) {
   const x = Buffer.from(String(a || ''));
@@ -102,7 +104,7 @@ export async function handleDashboard(request, d) {
     const form = await request.formData();
     const orderId = String(form.get('order') || '');
     const action = String(form.get('action') || '');
-    if (action !== 'connect' && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
+    if (!['connect', 'test-order'].includes(action) && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
 
     let result;
     try {
@@ -112,6 +114,10 @@ export async function handleDashboard(request, d) {
         result = failed.length
           ? { ok: false, reason: failed.map((r) => `${r.topic}: ${r.error}`).join('; ') }
           : { ok: true, message: results.length ? 'Shopify connected' : 'Shopify was already connected' };
+      } else if (action === 'test-order') {
+        if (!isStaging(d.cfg)) return new Response('Test orders are only allowed while noon is on staging', { status: 403 });
+        const order = await createTestOrder(d.shopify);
+        result = { ok: true, message: `Test order ${order.name} created. It appears below once Shopify's order webhook arrives (a few seconds); refresh if needed.` };
       } else if (action === 'dispatch') result = await dispatchOrder(d, orderId);
       else if (action === 'cancel') result = await cancelDispatch(d, orderId);
       else return new Response('Unknown action', { status: 400 });

@@ -77,6 +77,7 @@ export function renderDashboard({ orders, cfg, flash, labels, connection }) {
   .env { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 99px; border: 1px solid currentColor; color: ${env === 'STAGING' ? 'var(--warn)' : 'var(--ok)'}; }
   .panel { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--muted); padding: 10px 12px; border-radius: 8px; margin-bottom: 16px; }
   .panel ul { margin: 6px 0 10px; padding-left: 18px; } .ok-b { border-left-color: var(--ok); } .warn-b { border-left-color: var(--warn); } .bad-b { border-left-color: var(--bad); }
+  .head-r { display: flex; gap: 10px; align-items: center; }
   .flash { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--navy); padding: 10px 12px; border-radius: 8px; margin-bottom: 16px; }
   table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
   th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
@@ -93,7 +94,7 @@ export function renderDashboard({ orders, cfg, flash, labels, connection }) {
     td[data-l]:not([data-l=""])::before { content: attr(data-l); display: block; font-size: 11px; text-transform: uppercase; color: var(--muted); }
   }
 </style></head><body><main>
-<header><div><h1>Express delivery dispatch</h1><div class="muted">Orders tagged <code>noon-express</code>. Pack first, then press Dispatch: a rider arrives within minutes.</div></div><span class="env">noon ${env}</span></header>
+<header><div><h1>Express delivery dispatch</h1><div class="muted">Orders tagged <code>noon-express</code>. Pack first, then press Dispatch: a rider arrives within minutes.</div></div><div class="head-r">${env === 'STAGING' && connection?.ok ? `<form method="post"><input type="hidden" name="action" value="test-order"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the live Shopify store?')">Create test order</button></form>` : ''}<span class="env">noon ${env}</span></div></header>
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 ${connectionPanel(connection)}
 <table><thead><tr><th>Order</th><th>Customer</th><th>Payment</th><th>Rider</th><th></th></tr></thead>

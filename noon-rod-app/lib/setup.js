@@ -54,3 +54,50 @@ export async function connectWebhooks(shopify, cfg) {
   }
   return results;
 }
+
+// Staging-only self test: a paid AED 1 order with a custom item (no inventory, no customer email)
+// and an "Express delivery" shipping line, delivered near noon's staging test outlets in Downtown Dubai.
+export async function createTestOrder(shopify) {
+  const created = await shopify.graphql(
+    `mutation($input: DraftOrderInput!) {
+      draftOrderCreate(input: $input) { draftOrder { id } userErrors { field message } }
+    }`,
+    {
+      input: {
+        lineItems: [
+          {
+            title: 'TEST – noon delivery integration (do not fulfil)',
+            quantity: 1,
+            originalUnitPriceWithCurrency: { amount: '1.00', currencyCode: 'AED' },
+            requiresShipping: true,
+          },
+        ],
+        shippingLine: { title: 'Express delivery (TEST)', priceWithCurrency: { amount: '0.00', currencyCode: 'AED' } },
+        shippingAddress: {
+          firstName: 'Plaay',
+          lastName: 'Test',
+          address1: 'Bay Square Building 5',
+          address2: 'Business Bay',
+          city: 'Dubai',
+          provinceCode: 'DU',
+          countryCode: 'AE',
+          phone: '+971500000000',
+        },
+        note: 'Test order for the noon delivery integration. Safe to cancel and archive.',
+        tags: ['test', 'noon-test'],
+      },
+    },
+  );
+  const draftErrors = created.draftOrderCreate.userErrors;
+  if (draftErrors.length) throw new Error(`draftOrderCreate: ${draftErrors.map((e) => e.message).join('; ')}`);
+
+  const completed = await shopify.graphql(
+    `mutation($id: ID!) {
+      draftOrderComplete(id: $id) { draftOrder { order { id name legacyResourceId } } userErrors { field message } }
+    }`,
+    { id: created.draftOrderCreate.draftOrder.id },
+  );
+  const errors = completed.draftOrderComplete.userErrors;
+  if (errors.length) throw new Error(`draftOrderComplete: ${errors.map((e) => e.message).join('; ')}`);
+  return completed.draftOrderComplete.draftOrder.order;
+}
