@@ -1,107 +1,283 @@
 // Server-rendered HTML for the staff dashboard and the customer tracking page.
 
-import { isCashOnDelivery } from './mapping.js';
+import { isCashOnDelivery, normalizePhone } from './mapping.js';
+import { bucket, CANCELLABLE, countByView, filterOrders, VIEWS } from './orders.js';
 
 const esc = (v) =>
   String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-const BASE_CSS = `
-  :root { --navy: #081D48; --bg: #f7f5f0; --card: #fff; --muted: #5b6478; --line: #e4e0d6; --ok: #1f7a4d; --warn: #b45309; --bad: #b42318; }
-  @media (prefers-color-scheme: dark) {
-    :root { --navy: #c9d4f2; --bg: #0e1424; --card: #172036; --muted: #9aa4bd; --line: #26314d; --ok: #5fd39a; --warn: #f5b25c; --bad: #ff8a80; }
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--navy); }
-  main { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
-  h1 { font-size: 22px; margin: 0 0 4px; }
-  .muted { color: var(--muted); font-size: 13px; }
-`;
+const dubaiTime = (d, opts = { dateStyle: 'medium', timeStyle: 'short' }) =>
+  d ? new Date(d).toLocaleString('en-GB', { timeZone: 'Asia/Dubai', ...opts }) : '';
+
+// "12 min ago" for recent orders, a date otherwise.
+function ago(d) {
+  const mins = Math.round((Date.now() - new Date(d).getTime()) / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins} min ago`;
+  if (mins < 24 * 60) return `${Math.floor(mins / 60)} h ${mins % 60} min ago`;
+  return dubaiTime(d, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
 
 function money(set) {
   const m = set?.shopMoney;
   return m ? `${m.currencyCode} ${Number(m.amount).toFixed(2)}` : '';
 }
 
+const STAFF_CSS = `
+  @font-face { font-family: walsheim; src: url(/fonts/walsheim-regular.static.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: walsheim; src: url(/fonts/walsheim-bold.static.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+  @font-face { font-family: walsheim; src: url(/fonts/walsheim-black.static.woff2) format("woff2"); font-weight: 900; font-display: swap; }
+  :root { --navy: #081D48; --navy-rgb: 8 29 72; --yellow: #FFB600; --cream: #FFF7DD; --bg: #FFFDF7; --card: #fff;
+    --muted: rgba(8, 29, 72, .66); --line: rgba(8, 29, 72, .12); --ok: #2E7D32; --ok-bg: #E7F5E8; --warn: #9A5B00; --warn-bg: #FFF1CC; --bad: #C62828; --bad-bg: #FDECEC; --info: #1D4ED8; --info-bg: #E6EEFF; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 400 15px/1.45 walsheim, system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--navy); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .top { background: var(--navy); color: #fff; }
+  .top-in { max-width: 1180px; margin: 0 auto; padding: 12px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .top img { height: 24px; filter: brightness(0) invert(1); display: block; }
+  .top .badge { background: var(--yellow); color: var(--navy); font-weight: 900; font-size: 11px; letter-spacing: .06em; padding: 3px 9px 2px; border-radius: 99px; text-transform: uppercase; }
+  .top .title { font-weight: 700; opacity: .9; }
+  .top .sp { flex: 1; }
+  .env { font-size: 11px; font-weight: 700; letter-spacing: .05em; padding: 3px 9px; border-radius: 99px; border: 1px solid currentColor; }
+  .env.stg { color: var(--yellow); } .env.prod { color: #7CE38B; }
+  main { max-width: 1180px; margin: 0 auto; padding: 18px 16px 48px; }
+  h1 { font-weight: 900; font-size: 26px; margin: 0; letter-spacing: -.01em; }
+  .muted { color: var(--muted); font-size: 13px; }
+  .flash { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--yellow); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-weight: 700; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--muted); padding: 10px 12px; border-radius: 10px; margin-bottom: 14px; font-size: 14px; }
+  .panel ul { margin: 6px 0 10px; padding-left: 18px; } .ok-b { border-left-color: var(--ok); } .warn-b { border-left-color: var(--yellow); } .bad-b { border-left-color: var(--bad); }
+  .err { color: var(--bad); font-size: 13px; margin-top: 4px; }
+  .b { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 99px; background: rgba(var(--navy-rgb) / .08); white-space: nowrap; }
+  .b.ok { color: var(--ok); background: var(--ok-bg); } .b.warn { color: var(--warn); background: var(--warn-bg); } .b.bad { color: var(--bad); background: var(--bad-bg); } .b.info { color: var(--info); background: var(--info-bg); }
+  button, .btn { font: inherit; font-weight: 700; font-size: 14px; padding: 8px 16px; border-radius: 99px; border: 1.5px solid var(--navy); background: var(--navy); color: #fff; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  button.yellow, .btn.yellow { background: var(--yellow); color: var(--navy); border-color: var(--yellow); }
+  button.ghost, .btn.ghost { background: transparent; color: var(--navy); }
+  button.danger { background: transparent; color: var(--bad); border-color: var(--bad); }
+  form { margin: 0; display: inline; }
+  code { font-size: 12px; background: rgba(var(--navy-rgb) / .06); padding: 1px 5px; border-radius: 5px; }
+`;
+
+function shell({ cfg, title, body, refresh }) {
+  const staging = cfg.noon.baseUrl.includes('noonstg');
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)} · Plaay Express</title><meta name="robots" content="noindex"><link rel="icon" href="/plaay-logo.png">
+<style>${STAFF_CSS}</style></head><body>
+<div class="top"><div class="top-in"><a href="/" aria-label="All orders"><img src="/plaay-logo.png" alt="Plaay" width="64" height="24"></a><span class="badge">Express</span><span class="title">Dispatch</span><span class="sp"></span><span class="env ${staging ? 'stg' : 'prod'}">noon ${staging ? 'STAGING' : 'LIVE'}</span></div></div>
+<main>${body}</main>
+${refresh ? `<script>
+  // Refresh the list every minute unless someone is typing in the search box.
+  setInterval(() => { if (document.activeElement?.tagName !== 'INPUT') location.reload(); }, 60000);
+</script>` : ''}
+</body></html>`;
+}
+
 function statusBadge(order, labels) {
   if (order.cancelledAt) return '<span class="b bad">Order cancelled</span>';
-  if (order.noon.error && !order.noon.taskNr) return '<span class="b bad">Booking failed</span>';
   const s = order.noon.status;
-  if (!s) return '<span class="b">Not dispatched</span>';
-  const tone = s === 'delivered' ? 'ok' : ['undelivered', 'cancelled'].includes(s) ? 'bad' : 'warn';
+  if (order.noon.error && !['delivered', ...CANCELLABLE, 'picked_up', 'arrived_at_delivery'].includes(s)) return '<span class="b bad">Booking failed</span>';
+  if (!s) return order.displayFulfillmentStatus === 'FULFILLED' ? '<span class="b">Fulfilled in Shopify</span>' : '<span class="b">Not dispatched</span>';
+  const tone = s === 'delivered' ? 'ok' : ['undelivered', 'cancelled'].includes(s) ? 'bad' : ['picked_up', 'arrived_at_delivery'].includes(s) ? 'info' : 'warn';
   return `<span class="b ${tone}">${esc(labels[s] || s)}</span>`;
 }
 
-function actions(order) {
+// Dispatch / cancel buttons; `back` is where to return after the action.
+function actions(order, back, size = '') {
   if (order.cancelledAt) return '';
   const s = order.noon.status;
-  const form = (action, label, cls = '') =>
-    `<form method="post"><input type="hidden" name="order" value="${esc(order.legacyResourceId)}"><input type="hidden" name="action" value="${action}"><button class="${cls}" ${action === 'cancel' ? `onclick="return confirm('Cancel the noon rider for ${esc(order.name)}? Cancellations on production are charged.')"` : ''}>${label}</button></form>`;
-  if (!order.noon.taskNr || ['cancelled', 'undelivered'].includes(s)) return form('dispatch', order.noon.taskNr ? 'Book again' : 'Dispatch');
-  if (['created', 'pending_assignment', 'assigned', 'arrived_at_pickup_location'].includes(s)) return form('cancel', 'Cancel rider', 'ghost');
+  const form = (action, label, cls) =>
+    `<form method="post" action="/api/dashboard"><input type="hidden" name="order" value="${esc(order.legacyResourceId)}"><input type="hidden" name="action" value="${action}"><input type="hidden" name="back" value="${esc(back)}"><button class="${cls} ${size}" ${action === 'cancel' ? `onclick="return confirm('Cancel the noon rider for ${esc(order.name)}? On production, noon charges for cancellations.')"` : `onclick="return confirm('Book a noon rider for ${esc(order.name)} now? Make sure it is packed: the rider arrives within minutes.')"`}>${label}</button></form>`;
+  if (s === 'delivered' || ACTIVE_NOT_CANCELLABLE.includes(s)) return '';
+  if (!order.noon.taskNr || ['cancelled', 'undelivered'].includes(s)) return form('dispatch', order.noon.taskNr ? 'Book again' : 'Dispatch rider', 'yellow');
+  if (CANCELLABLE.includes(s)) return form('cancel', 'Cancel rider', 'danger');
   return '';
 }
+const ACTIVE_NOT_CANCELLABLE = ['picked_up', 'arrived_at_delivery'];
 
 function connectionPanel(c) {
   if (!c) return '';
-  const button = `<form method="post"><input type="hidden" name="action" value="connect"><button>Connect Shopify</button></form>`;
+  const button = `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="connect"><button>Connect Shopify</button></form>`;
   if (!c.ok) return `<div class="panel bad-b"><strong>Shopify is not connected.</strong><div class="err">${esc(c.error)}</div></div>`;
   const problems = [];
   if (c.missingScopes.length) problems.push(`The app is missing permissions: <code>${c.missingScopes.map(esc).join(', ')}</code>. Add them in the Shopify Dev Dashboard and reinstall.`);
   if (c.ordersError) problems.push(`Could not read orders: ${esc(c.ordersError)}`);
   if (c.missingWebhooks.length) problems.push(`Not yet receiving order notifications (${c.missingWebhooks.map(esc).join(', ')}). Press Connect Shopify.`);
-  const head = `Connected to <strong>${esc(c.shop)}</strong> (${esc(c.domain)}) via app “${esc(c.app)}”`;
-  if (!problems.length) return `<div class="panel ok-b">${head}</div>`;
-  return `<div class="panel warn-b">${head}<ul>${problems.map((p) => `<li>${p}</li>`).join('')}</ul>${c.missingWebhooks.length ? button : ''}</div>`;
+  if (!problems.length) return '';
+  return `<div class="panel warn-b">Connected to <strong>${esc(c.shop)}</strong> via “${esc(c.app)}”<ul>${problems.map((p) => `<li>${p}</li>`).join('')}</ul>${c.missingWebhooks.length ? button : ''}</div>`;
 }
 
-export function renderDashboard({ orders, cfg, flash, labels, connection }) {
-  const env = cfg.noon.baseUrl.includes('noonstg') ? 'STAGING' : 'PRODUCTION';
-  const rows = orders
+export function renderDashboard({ orders, cfg, flash, labels, connection, view = 'todo', q = '' }) {
+  const counts = countByView(orders);
+  const visible = filterOrders(orders, view, q);
+  const staging = cfg.noon.baseUrl.includes('noonstg');
+  const here = `/?view=${encodeURIComponent(view)}${q ? `&q=${encodeURIComponent(q)}` : ''}`;
+
+  const tabs = VIEWS.map(
+    (v) => `<a class="tab ${v.key === view ? 'on' : ''} ${v.key === 'attention' && counts.attention ? 'alert' : ''}" href="/?view=${v.key}${q ? `&q=${encodeURIComponent(q)}` : ''}">${v.label}<span class="n">${counts[v.key]}</span></a>`,
+  ).join('');
+
+  const rows = visible
     .map((o) => {
       const a = o.shippingAddress || {};
-      const pay = isCashOnDelivery(o, cfg) ? `COD ${money(o.totalOutstandingSet)}` : `Prepaid ${money(o.totalPriceSet)}`;
-      return `<tr>
-        <td data-l="Order"><strong>${esc(o.name)}</strong><div class="muted">${esc(new Date(o.createdAt).toLocaleString('en-GB', { timeZone: 'Asia/Dubai', dateStyle: 'short', timeStyle: 'short' }))}</div></td>
-        <td data-l="Customer">${esc(a.name)}<div class="muted">${esc([a.address1, a.city].filter(Boolean).join(', '))}${a.latitude == null ? ' · <b class="bad-t">no map pin</b>' : ''}</div></td>
-        <td data-l="Payment">${esc(pay)}</td>
-        <td data-l="Rider">${statusBadge(o, labels)}${o.noon.taskNr ? `<div class="muted">Task ${esc(o.noon.taskNr)}</div>` : ''}${o.noon.error ? `<div class="err">${esc(o.noon.error)}</div>` : ''}</td>
-        <td data-l="">${actions(o)}</td>
+      const cod = isCashOnDelivery(o, cfg);
+      const href = `/order/${esc(o.legacyResourceId)}`;
+      const items = (o.lineItems?.nodes || []).reduce((n, li) => n + li.quantity, 0);
+      return `<tr class="row" data-href="${href}">
+        <td data-l="Order"><a class="olink" href="${href}">${esc(o.name)}</a><div class="muted">${esc(ago(o.createdAt))}</div></td>
+        <td data-l="Customer"><strong>${esc(a.name || '—')}</strong><div class="muted">${esc([a.address2 || a.address1, a.city].filter(Boolean).join(', '))}${a.latitude == null ? ' · <b class="bad-t">no map pin</b>' : ''}</div></td>
+        <td data-l="Items">${items} item${items === 1 ? '' : 's'}</td>
+        <td data-l="Payment">${cod ? `<span class="b warn">COD</span> ${esc(money(o.totalOutstandingSet))}` : `<span class="b">Prepaid</span> ${esc(money(o.totalPriceSet))}`}</td>
+        <td data-l="Rider">${statusBadge(o, labels)}${o.noon.error && bucket(o) === 'attention' ? `<div class="err">${esc(o.noon.error)}</div>` : ''}</td>
+        <td class="act" data-l="">${actions(o, here, 'sm')}</td>
       </tr>`;
     })
     .join('');
 
-  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Plaay Express · Dispatch</title><meta http-equiv="refresh" content="60">
-<style>${BASE_CSS}
-  header { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
-  .env { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 99px; border: 1px solid currentColor; color: ${env === 'STAGING' ? 'var(--warn)' : 'var(--ok)'}; }
-  .panel { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--muted); padding: 10px 12px; border-radius: 8px; margin-bottom: 16px; }
-  .panel ul { margin: 6px 0 10px; padding-left: 18px; } .ok-b { border-left-color: var(--ok); } .warn-b { border-left-color: var(--warn); } .bad-b { border-left-color: var(--bad); }
-  .head-r { display: flex; gap: 10px; align-items: center; }
-  .flash { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--navy); padding: 10px 12px; border-radius: 8px; margin-bottom: 16px; }
-  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
-  .b { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: var(--line); }
-  .b.ok { color: var(--ok); } .b.warn { color: var(--warn); } .b.bad { color: var(--bad); } .bad-t { color: var(--bad); }
-  .err { color: var(--bad); font-size: 13px; margin-top: 4px; max-width: 320px; }
-  button { font: inherit; font-weight: 600; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--navy); background: var(--navy); color: var(--bg); cursor: pointer; }
-  button.ghost { background: transparent; color: var(--navy); }
-  form { margin: 0; }
-  @media (max-width: 720px) {
-    thead { display: none; } table, tbody, tr, td { display: block; width: 100%; }
-    tr { border-bottom: 1px solid var(--line); padding: 8px 0; } td { border: 0; padding: 4px 12px; }
-    td[data-l]:not([data-l=""])::before { content: attr(data-l); display: block; font-size: 11px; text-transform: uppercase; color: var(--muted); }
-  }
-</style></head><body><main>
-<header><div><h1>Plaay Express dispatch</h1><div class="muted">Orders tagged <code>noon-express</code>. Pack first, then press Dispatch: a rider arrives within minutes.</div></div><div class="head-r">${env === 'STAGING' && connection?.ok ? `<form method="post"><input type="hidden" name="action" value="test-order"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the live Shopify store?')">Create test order</button></form>` : ''}<span class="env">noon ${env}</span></div></header>
+  const empty = {
+    todo: 'Nothing to dispatch. New express orders appear here.',
+    active: 'No riders out right now.',
+    attention: 'All good. Failed bookings and undelivered orders show up here.',
+    delivered: 'No deliveries yet.',
+    all: 'No express orders yet.',
+  }[view];
+
+  const body = `
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 ${connectionPanel(connection)}
-<table><thead><tr><th>Order</th><th>Customer</th><th>Payment</th><th>Rider</th><th></th></tr></thead>
-<tbody>${rows || '<tr><td colspan="5" class="muted">No express orders yet.</td></tr>'}</tbody></table>
-<p class="muted">Pickup point <code>${esc(cfg.noon.outletCode || 'not set')}</code> · refreshes every minute</p>
-</main></body></html>`;
+<div class="head"><div><h1>Express orders</h1><div class="muted">Pack the order first, then press <strong>Dispatch rider</strong>. The rider arrives within minutes.</div></div>
+${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="test-order"><input type="hidden" name="back" value="/?view=todo"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the live Shopify store?')">+ Test order</button></form>` : ''}</div>
+<div class="bar"><nav class="tabs">${tabs}</nav>
+<form class="search" method="get" action="/"><input type="hidden" name="view" value="${esc(view)}"><input type="search" name="q" value="${esc(q)}" placeholder="Search order #, name, phone, area" aria-label="Search orders"></form></div>
+<table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Payment</th><th>Rider</th><th></th></tr></thead>
+<tbody>${rows || `<tr><td colspan="6" class="empty">${esc(q ? `No orders match “${q}”.` : empty)}</td></tr>`}</tbody></table>
+<p class="muted foot">Showing the latest ${orders.length} express orders · updates every minute · pickup point <code>${esc(cfg.noon.outletCode || 'not set')}</code></p>
+<style>
+  .head { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tab { text-decoration: none; font-weight: 700; font-size: 14px; padding: 7px 12px 7px 14px; border-radius: 99px; border: 1.5px solid var(--line); background: var(--card); display: inline-flex; gap: 8px; align-items: center; }
+  .tab .n { font-size: 12px; min-width: 22px; text-align: center; padding: 1px 6px; border-radius: 99px; background: rgba(var(--navy-rgb) / .08); }
+  .tab.on { background: var(--navy); color: #fff; border-color: var(--navy); } .tab.on .n { background: var(--yellow); color: var(--navy); }
+  .tab.alert:not(.on) .n { background: var(--bad); color: #fff; }
+  .search input { font: inherit; width: min(360px, 100%); padding: 8px 14px; border-radius: 99px; border: 1.5px solid var(--line); background: var(--card); color: var(--navy); }
+  .search input:focus { outline: 2px solid var(--yellow); border-color: var(--navy); }
+  table { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; overflow: hidden; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: 0; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--cream); }
+  .row { cursor: pointer; } .row:hover td { background: #FFFBEB; }
+  .olink { font-weight: 900; font-size: 16px; text-decoration: none; } .olink:hover { text-decoration: underline; }
+  .bad-t { color: var(--bad); }
+  .act { text-align: right; } button.sm { padding: 6px 12px; font-size: 13px; }
+  .empty { text-align: center; color: var(--muted); padding: 36px 14px; }
+  .foot { margin-top: 12px; }
+  @media (max-width: 760px) {
+    thead { display: none; } table, tbody, tr, td { display: block; width: 100%; }
+    tr.row { border-bottom: 1px solid var(--line); padding: 10px 0; } td { border: 0; padding: 3px 14px; }
+    td[data-l="Items"], td[data-l="Payment"] { display: inline-block; width: auto; padding-right: 0; }
+    .act { text-align: left; padding-top: 8px; }
+    .search, .search input { width: 100%; }
+    .bar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .search { order: -1; }
+    .tabs { min-width: 0; flex-wrap: nowrap; overflow-x: auto; margin: 0 -16px; padding: 0 16px 4px; scrollbar-width: none; }
+    .tab { flex: none; }
+  }
+</style>
+<script>
+  // Whole row opens the order, except clicks on buttons and links.
+  document.querySelectorAll('tr.row').forEach((tr) => tr.addEventListener('click', (e) => {
+    if (e.target.closest('a, button, form')) return;
+    location.href = tr.dataset.href;
+  }));
+</script>`;
+  return shell({ cfg, title: 'Express orders', body, refresh: true });
 }
+
+export function renderOrderDetail({ order: o, task, taskError, cfg, flash, labels, links }) {
+  const a = o.shippingAddress || {};
+  const cod = isCashOnDelivery(o, cfg);
+  const phone = normalizePhone(a.phone) || normalizePhone(o.phone) || normalizePhone(o.billingAddress?.phone);
+  const da = task?.da_details;
+  const lat = a.latitude, lng = a.longitude;
+  const back = `/order/${o.legacyResourceId}`;
+
+  const timeline = [{ label: 'Order placed', time: o.createdAt }];
+  for (const u of task?.da_updates || []) {
+    if (u.status && u.time) timeline.push({ label: labels[u.status] || u.status, time: `${u.time.replace(' ', 'T')}Z` });
+  }
+
+  const row = (k, v) => (v ? `<div class="kv"><div class="k">${k}</div><div class="v">${v}</div></div>` : '');
+  const items = (o.lineItems?.nodes || []).map((li) => `<li><span class="q">${li.quantity}×</span>${esc(li.title)}</li>`).join('');
+
+  const body = `
+<a class="backlink" href="/">← All express orders</a>
+${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
+<div class="dhead">
+  <div><h1>${esc(o.name)}</h1><div class="muted">${esc(dubaiTime(o.createdAt))} · ${esc(ago(o.createdAt))}</div></div>
+  <div class="dact">${statusBadge(o, labels)} ${actions(o, back)}</div>
+</div>
+<div class="links">
+  <a class="btn ghost" href="${esc(links.shopify)}" target="_blank" rel="noopener">Open in Shopify ↗</a>
+  ${links.tracking ? `<a class="btn ghost" href="${esc(links.tracking)}" target="_blank" rel="noopener">Customer tracking page ↗</a><button class="ghost" type="button" data-copy="${esc(links.tracking)}">Copy tracking link</button>` : ''}
+  ${lat != null ? `<a class="btn ghost" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" rel="noopener">Delivery pin on Google Maps ↗</a>` : ''}
+</div>
+${o.noon.error && bucket(o) === 'attention' ? `<div class="panel bad-b"><strong>Booking failed:</strong> ${esc(o.noon.error)}</div>` : ''}
+<div class="grid">
+  <section class="card">
+    <h2>Customer</h2>
+    ${row('Name', esc(a.name))}
+    ${row('Phone', phone ? `<a href="tel:${esc(phone)}">${esc(phone)}</a> · <a href="https://wa.me/${esc(phone.replace('+', ''))}" target="_blank" rel="noopener">WhatsApp</a>` : '<span class="bad-t">No usable phone number</span>')}
+    ${row('Address', esc([a.company, a.address1, a.address2, a.city, a.province].filter(Boolean).join(', ')))}
+    ${row('Map pin', lat != null ? `${Number(lat).toFixed(5)}, ${Number(lng).toFixed(5)}` : '<span class="bad-t">Missing: ask the customer for a location pin</span>')}
+    ${row('Note', o.note ? esc(o.note) : '')}
+  </section>
+  <section class="card">
+    <h2>Order</h2>
+    <ul class="items">${items || '<li class="muted">No items</li>'}</ul>
+    ${row('Payment', cod ? `<span class="b warn">Cash on delivery</span> rider collects <strong>${esc(money(o.totalOutstandingSet))}</strong>` : `<span class="b">Prepaid</span> ${esc(money(o.totalPriceSet))}`)}
+    ${row('Shipping', esc(o.shippingLine?.title))}
+    ${row('Shopify status', esc([o.displayFinancialStatus, o.displayFulfillmentStatus].filter(Boolean).join(' · ').toLowerCase().replace(/_/g, ' ')))}
+  </section>
+  <section class="card">
+    <h2>Rider</h2>
+    ${o.noon.taskNr ? '' : '<p class="muted">No rider booked yet. Press <strong>Dispatch rider</strong> once the order is packed.</p>'}
+    ${taskError ? `<div class="err">Could not reach noon: ${esc(taskError)}</div>` : ''}
+    ${row('noon task', o.noon.taskNr ? `<code>${esc(o.noon.taskNr)}</code>` : '')}
+    ${da ? row('Rider', `${esc(da.name || da.first_name || '')}${da.phone_number ? ` · <a href="tel:${esc(da.phone_number)}">${esc(da.phone_number)}</a>` : ''}`) : ''}
+    ${da?.location?.latitude ? row('Rider location', `<a href="https://www.google.com/maps?q=${esc(toDeg(da.location.latitude))},${esc(toDeg(da.location.longitude))}" target="_blank" rel="noopener">See on Google Maps ↗</a>`) : ''}
+    ${task && cod ? row('Cash collected', task.order_cash_collected != null ? esc(`AED ${(task.order_cash_collected / 100).toFixed(2)}`) : 'Not yet') : ''}
+    ${o.noon.taskNr ? `<h3>Timeline</h3><ol class="tl">${timeline.map((t) => `<li><span>${esc(t.label)}</span><span class="muted">${esc(dubaiTime(t.time, { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' }))}</span></li>`).join('')}</ol>` : ''}
+  </section>
+</div>
+<style>
+  .backlink { display: inline-block; margin-bottom: 12px; font-weight: 700; text-decoration: none; color: var(--muted); }
+  .backlink:hover { color: var(--navy); }
+  .dhead { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .dhead h1 { font-size: 34px; }
+  .dact { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .links { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 6px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 12px; }
+  .card { background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; padding: 16px 18px; }
+  h2 { font-weight: 900; font-size: 15px; text-transform: uppercase; letter-spacing: .04em; margin: 0 0 10px; }
+  h3 { font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 16px 0 6px; }
+  .kv { display: grid; grid-template-columns: 110px 1fr; gap: 10px; padding: 7px 0; border-top: 1px dashed var(--line); }
+  .kv:first-of-type { border-top: 0; }
+  .k { color: var(--muted); font-size: 13px; font-weight: 700; } .v { overflow-wrap: anywhere; }
+  .items { list-style: none; margin: 0 0 6px; padding: 0; } .items li { display: flex; gap: 10px; padding: 5px 0; font-weight: 700; }
+  .q { min-width: 32px; height: 24px; border-radius: 99px; background: var(--cream); display: inline-grid; place-items: center; font-size: 12px; }
+  .tl { list-style: none; margin: 0; padding: 0 0 0 14px; border-left: 2px solid var(--yellow); }
+  .tl li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; position: relative; font-weight: 700; font-size: 14px; }
+  .tl li::before { content: ""; position: absolute; left: -20px; top: 11px; width: 10px; height: 10px; border-radius: 50%; background: var(--navy); }
+  .bad-t { color: var(--bad); }
+</style>
+<script>
+  document.querySelectorAll('[data-copy]').forEach((b) => b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied ✓'; } catch { prompt('Copy this link', b.dataset.copy); }
+  }));
+</script>`;
+  return shell({ cfg, title: o.name, body });
+}
+
+const toDeg = (v) => { const n = Number(v); return Math.abs(n) > 180 ? n / 1e7 : n; };
 
 // Customer-facing "Plaay Express" tracking page, styled after shopplaay.com.
 export function renderTrackingPage({ token }) {

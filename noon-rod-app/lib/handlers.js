@@ -7,8 +7,9 @@ import { isExpressOrder } from './mapping.js';
 import { connectWebhooks, createTestOrder, getConnection } from './setup.js';
 import { verifyWebhookHmac } from './shopify.js';
 import { handleStatusUpdate, STATUS_LABELS, toDegrees } from './status.js';
-import { verifyTrackingToken } from './tracking.js';
-import { renderDashboard, renderTrackingPage } from './views.js';
+import { shopifyAdminUrl, VIEWS } from './orders.js';
+import { trackingUrl, verifyTrackingToken } from './tracking.js';
+import { renderDashboard, renderOrderDetail, renderTrackingPage } from './views.js';
 
 const json = (body, status = 200) => Response.json(body, { status });
 
@@ -126,23 +127,45 @@ export async function handleDashboard(request, d) {
       d.log.error?.(err);
       flash = `Failed: ${err.message}`;
     }
-    const back = new URL('/', url.origin);
+    // Only same-site paths, so the redirect can't be pointed elsewhere.
+    const backPath = String(form.get('back') || '/');
+    const back = new URL(/^\/(?!\/)/.test(backPath) ? backPath : '/', url.origin);
     back.searchParams.set('msg', flash);
     return Response.redirect(back.toString(), 303);
   }
 
+  const html = (body) => new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
+
+  const orderParam = url.searchParams.get('order');
+  if (orderParam) {
+    if (!/^\d+$/.test(orderParam)) return new Response('Bad order id', { status: 400 });
+    const order = await d.shopify.getOrder(orderParam);
+    if (!order) return new Response('Order not found', { status: 404 });
+    let task = null;
+    let taskError = '';
+    if (order.noon.taskNr) {
+      try {
+        task = await d.noon.getTask(order.noon.taskNr);
+      } catch (err) {
+        taskError = err.message;
+      }
+    }
+    const links = { shopify: shopifyAdminUrl(d.cfg, order.legacyResourceId), tracking: trackingUrl(d.cfg, order.legacyResourceId) };
+    return html(renderOrderDetail({ order, task, taskError, cfg: d.cfg, flash, labels: STATUS_LABELS, links }));
+  }
+
+  const view = VIEWS.some((v) => v.key === url.searchParams.get('view')) ? url.searchParams.get('view') : 'todo';
+  const q = (url.searchParams.get('q') || '').slice(0, 100);
   const connection = await getConnection(d.shopify, d.cfg);
   let orders = [];
   if (connection.ok) {
     try {
-      orders = await d.shopify.listOrdersByTag(TAGS.express);
+      orders = await d.shopify.listOrdersByTag(TAGS.express, 100);
     } catch (err) {
       connection.ordersError = err.message;
     }
   }
-  return new Response(renderDashboard({ orders, cfg: d.cfg, flash, labels: STATUS_LABELS, connection }), {
-    headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
-  });
+  return html(renderDashboard({ orders, cfg: d.cfg, flash, labels: STATUS_LABELS, connection, view, q }));
 }
 
 // ---- Customer tracking ----

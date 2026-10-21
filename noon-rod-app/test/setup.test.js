@@ -48,8 +48,8 @@ test('dashboard Connect Shopify button registers webhooks', async () => {
   assert.equal(new URL(res.headers.get('location')).searchParams.get('msg'), 'Shopify connected');
 
   const after = await (await handleDashboard(new Request('https://noon.example.com/', { headers: auth }), d)).text();
-  assert.match(after, /Connected to <strong>Plaay<\/strong>/);
-  assert.doesNotMatch(after, /<button>Connect Shopify/);
+  // Fully connected: no setup panel at all.
+  assert.doesNotMatch(after, /Connect Shopify|class="panel/);
 });
 
 test('dashboard still renders when Shopify is unreachable', async () => {
