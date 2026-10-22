@@ -1,0 +1,17 @@
+{%- comment -%}
+  Launch flags for a product, as a comma list: "launch" (shows a New launch badge) and/or
+  "exclusive" (sold only on shopplaay.com). Set by product tags (badge:launch, web-exclusive) or
+  the handles below, for products not tagged yet.
+  Usage: capture flags | render 'plo-flags', product: product | endcapture
+{%- endcomment -%}
+{%- liquid
+  assign launch_handles = 'dense-chocolate-fudge-truffle' | split: ','
+  assign exclusive_handles = 'dense-chocolate-fudge-truffle' | split: ','
+  assign tags = product.tags | join: ',' | downcase | split: ','
+  if launch_handles contains product.handle or tags contains 'badge:launch'
+    echo 'launch,'
+  endif
+  if exclusive_handles contains product.handle or tags contains 'web-exclusive'
+    echo 'exclusive,'
+  endif
+-%}
