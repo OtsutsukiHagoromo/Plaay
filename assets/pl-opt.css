@@ -82,8 +82,18 @@ body.pl-skin-b { background: var(--o-ground); }
 }
 /* Both options use the Option A pill badge (the team preferred it over B's round sticker). */
 .plo-badge--limited { background: #FF3EB5; }
+/* New launch (snippets/plo-flags): yellow so it reads apart from the purple badges; "Online only"
+   sits under it in navy. */
+.plo-badge--launch { background: var(--pl-yellow); color: var(--pl-navy); }
+.plo-badge--excl { background: var(--pl-navy); color: #fff; }
+.plo-badge--2nd { top: 36px; }
+/* Product page: "Only on shopplaay.com" line under the title. */
+.plo-excl { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin: 0; padding: 5px 10px 5px 8px; border-radius: 999px; background: var(--pl-navy); color: #fff; font-size: 12px; line-height: 1.3; }
+.plo-excl svg { color: var(--pl-yellow); flex: none; }
+.plo-excl b { font-weight: 700; }
 @media (min-width: 1024px) {
 .plo-badge { font-size: 11px; padding: 5px 10px; left: 12px; top: 12px; }
+.plo-badge--2nd { top: 40px; }
 }
 
 /* ---------- stickers (banners) ---------- */
@@ -1096,6 +1106,7 @@ body.template-index .plo-title, body.template-index .plo-px__t, body.template-in
 @media (hover: hover) { .pl-skin-b .plo-c3:hover .plo-card__img img { transform: scale(1.04); } }
 }
 .pl-skin-b .plo-c3 .plo-badge { position: absolute; left: 10px; top: 10px; }
+.pl-skin-b .plo-c3 .plo-badge--2nd { top: 36px; }
 .pl-skin-b .plo-c3 .plo-card__body { display: flex; flex-direction: column; gap: 4px; padding: 12px 2px 0; }
 .pl-skin-b .plo-c3 .plo-card__name { margin: 0; min-height: 2.5em; font-size: 14px; font-weight: 900; line-height: 1.25; -webkit-line-clamp: 2; }
 .pl-skin-b .plo-c3 .plo-card__name a { color: var(--pl-navy); }

@@ -99,6 +99,13 @@
       endcase
     endif
   endfor
+  capture flags
+    render 'plo-flags', product: product
+  endcapture
+  if flags contains 'launch'
+    assign badge_text = 'New launch'
+    assign badge_mod = 'launch'
+  endif
   if badge != blank
     assign badge_text = badge
   endif
@@ -179,6 +186,7 @@
       {{ 'product-1' | placeholder_svg_tag }}
     {%- endif -%}
     {%- if badge_text != blank -%}<span class="plo-badge{% if badge_mod != blank %} plo-badge--{{ badge_mod }}{% endif %}">{{ badge_text }}</span>{%- endif -%}
+    {%- if flags contains 'exclusive' -%}<span class="plo-badge plo-badge--excl{% if badge_text != blank %} plo-badge--2nd{% endif %}">Online only</span>{%- endif -%}
   </a>
   {%- unless sub_mode -%}{%- render 'plo-heart', product: product, class: 'plo-card__heart' -%}{%- endunless -%}
   <div class="plo-card__body">

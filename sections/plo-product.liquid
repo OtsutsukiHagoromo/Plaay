@@ -161,6 +161,12 @@
       endcase
     endif
   endfor
+  capture flags
+    render 'plo-flags', product: product
+  endcapture
+  if flags contains 'launch'
+    assign badge_text = 'New launch'
+  endif
   assign eyebrow = badge_text
 
   assign desc = product.description | strip_html | strip | truncatewords: s.desc_words
@@ -207,7 +213,7 @@
             <img src="{{ ph | asset_img_url: '600x' }}" srcset="{{ ph | asset_img_url: '400x' }} 400w, {{ ph | asset_img_url: '600x' }} 600w, {{ ph | asset_url }} 800w" sizes="(min-width: 1024px) 45vw, 100vw" alt="{{ product.title | escape }}, photo {{ i }}" width="800" height="1000"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %}>
           {%- endfor -%}
         </div>
-        {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge">{{ badge_text }}</span>{%- endif -%}
+        {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge{% if flags contains 'launch' %} plo-badge--launch{% endif %}">{{ badge_text }}</span>{%- endif -%}
         <span class="plo-gal__count" aria-hidden="true"><b data-plo-count>1</b> / 8</span>
         {%- render 'plo-heart', product: product, class: 'plo-gal__heart' -%}
         <div class="plo-gal__thumbs" data-plo-thumbrow>
@@ -223,7 +229,7 @@
         {%- if main_img -%}
           {{ main_img | image_url: width: 1000 | image_tag: loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 45vw, 80vw', widths: '400, 600, 800, 1000', alt: product.title, class: 'plo-gal__img' }}
         {%- endif -%}
-        {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge">{{ badge_text }}</span>{%- endif -%}
+        {%- if badge_text != blank -%}<span class="plo-badge plo-gal__badge{% if flags contains 'launch' %} plo-badge--launch{% endif %}">{{ badge_text }}</span>{%- endif -%}
         {%- render 'plo-heart', product: product, class: 'plo-gal__heart' -%}
       </div>
       {%- if product.images.size > 1 -%}
@@ -304,6 +310,9 @@
         <span class="plo-buy__name">{{ t_name }}</span>
         {%- if t_size != blank -%}<span class="plo-buy__size">{{ t_size }}</span>{%- endif -%}
       </h1>
+      {%- if flags contains 'exclusive' -%}
+        <p class="plo-excl">{%- render 'pl-icon', name: 'sparkle', size: 14, stroke: 2.4 -%}<span><b>Only on shopplaay.com</b> · not sold anywhere else</span></p>
+      {%- endif -%}
       {%- if rating > 0 -%}
         <a class="plo-buy__rate" href="#plo-reviews">{%- render 'plo-stars', size: 14 -%}<span>{{ rating }} · {{ count }} reviews</span></a>
       {%- endif -%}
