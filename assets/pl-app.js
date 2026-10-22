@@ -143,9 +143,9 @@
      own install prompt behind our button; iPhone gets the Share steps (Apple has no prompt);
      in-app browsers (Instagram, TikTok...) are told to open Safari first.
      Shown by itself at most once a visit (a visit ends after 30 minutes away; iPhone users keep
-     one Safari tab for days, so tabs are not visits), only on phones, never inside the app:
-       - when the bag closes after an add to bag;
-       - on the account page.
+     one Safari tab for days, so tabs are not visits), only on phones, never inside the app, and
+     only on the account page: never while someone is shopping (it used to open when the bag
+     closed after an add, which interrupted the way to checkout).
      Also opened any time from "Get the Plaay app" in the menu ([data-pl-get-app]).
      Closing it keeps it away for 30 days; once installed it never shows again.
      Events: Clarity "app_invite_<action>", Shopify.analytics "pl_app_invite". */
@@ -265,17 +265,6 @@
     doc.addEventListener('click', function (e) {
       if (e.target.closest && e.target.closest('[data-pl-get-app]')) { e.preventDefault(); open('menu'); }
     });
-
-    /* After an add to bag: wait for the bag to close. */
-    var afterBag = false, bagSeen = false;
-    doc.addEventListener('pl:cart:added', function () { if (due()) { afterBag = true; bagSeen = false; } });
-    new MutationObserver(function () {
-      if (!afterBag) return;
-      if (doc.body.classList.contains('pl-drawer-open')) { bagSeen = true; return; }
-      if (!bagSeen) return;
-      afterBag = false;
-      setTimeout(function () { if (due()) open('after_add'); }, 700);
-    }).observe(doc.body, { attributes: true, attributeFilter: ['class'] });
 
     /* Account page. */
     if (/^\/account\/?$/.test(location.pathname)) setTimeout(function () { if (due()) open('account'); }, 2500);
