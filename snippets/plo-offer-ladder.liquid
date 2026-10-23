@@ -18,6 +18,13 @@
   assign t_spends = settings.cart_tier_1_spend | append: ',' | append: settings.cart_tier_2_spend | append: ',' | append: settings.cart_tier_3_spend | split: ','
   assign t_labels = settings.cart_tier_1_label | append: '|' | append: settings.cart_tier_2_label | append: '|' | append: settings.cart_tier_3_label | split: '|'
   assign top = ship
+  # During a sitewide sale only free delivery is offered here; the % rewards don't apply.
+  capture sale_on
+    render 'sale-active'
+  endcapture
+  if sale_on contains '1'
+    assign t_spends = ''
+  endif
   for sp in t_spends
     assign spn = sp | plus: 0
     if spn > 0

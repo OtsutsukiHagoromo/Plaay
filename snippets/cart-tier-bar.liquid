@@ -31,7 +31,13 @@
   assign amounts = ship_aed | append: ''
   assign labels = 'Free delivery'
 
-  if settings.eid_sale_enabled
+  capture sale_on
+    render 'sale-active'
+  endcapture
+  if sale_on contains '1'
+    # Sitewide sale: free delivery is the only stop (the sale replaces the % rewards).
+    assign sale_ladder = true
+  elsif settings.eid_sale_enabled
     assign a1 = settings.eid_tier_1_spend | default: 250
     assign l1 = settings.eid_tier_1_label | default: '20% Off + Mystery Gift'
     assign a2 = settings.eid_tier_2_spend | default: 400
@@ -93,7 +99,7 @@
     {%- if reached == last_index -%}
       <p class="plaay-tier-bar__msg plaay-tier-bar__msg--done">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-        All rewards unlocked! You're all set.
+        {% if stop_count == 1 %}Free delivery unlocked!{% else %}All rewards unlocked! You're all set.{% endif %}
       </p>
     {%- elsif reached < 0 -%}
       {%- assign remaining_fils = stop_amounts[0] | times: 100 | minus: total -%}

@@ -65,6 +65,18 @@
   else
     assign done_label = l3
   endif
+  # During a sitewide sale (snippets/sale-active) the sale discount replaces the 10% / 18%
+  # rewards (they don't combine and the sale is always bigger), so the ladder stops at free
+  # delivery instead of showing tiers as unlocked that won't apply.
+  capture sale_on
+    render 'sale-active'
+  endcapture
+  if sale_on contains '1' and reached >= 0
+    assign reached = 0
+    assign next_fils = 0
+    assign next_label = ''
+    assign done_label = 'Free delivery'
+  endif
   assign remaining_fils = next_fils | minus: total
   if remaining_fils < 0
     assign remaining_fils = 0
@@ -81,7 +93,7 @@
     {%- if next_label != '' -%}
       <p class="pl-ladder__msg"><b>{% render 'plaay-aed', fils: remaining_fils %}</b> away from <b>{{ next_label }}</b></p>
     {%- else -%}
-      <p class="pl-ladder__msg pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}All rewards unlocked</p>
+      <p class="pl-ladder__msg pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}{% if sale_on contains '1' %}Free delivery unlocked{% else %}All rewards unlocked{% endif %}</p>
     {%- endif -%}
     {%- render 'cart-tier-bar' -%}
     {%- if next_label != '' and cart.item_count > 0 -%}
@@ -236,7 +248,11 @@
           endcomment
           assign saved = cart.original_total_price | minus: cart.total_price
           assign chip = ''
-          if reached >= 1
+          if sale_on contains '1' and saved > 0
+            # Show what the sale actually takes off this bag, e.g. "20% off" or "24% off" for a mix.
+            assign saved_pct = saved | times: 100.0 | divided_by: cart.original_total_price | round
+            assign chip = saved_pct | append: '% off'
+          elsif reached >= 1
             assign chip = done_label
           elsif saved > 0
             assign chip = 'Promo'

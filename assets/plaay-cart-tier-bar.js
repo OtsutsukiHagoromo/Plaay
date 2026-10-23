@@ -70,7 +70,8 @@
 
     if (reached === stops.length - 1) {
       msgDone = true;
-      msg = CHECK + ' All rewards unlocked! You\'re all set.';
+      // A one-stop ladder (free delivery only, e.g. during a sitewide sale) has no "rewards".
+      msg = CHECK + (stops.length === 1 ? ' Free delivery unlocked!' : ' All rewards unlocked! You\'re all set.');
     } else if (reached < 0) {
       msg = 'Add <strong>' + fmtAED(stops[0].fils - total) + '</strong> more for free delivery ' + TRUCK;
     } else {
