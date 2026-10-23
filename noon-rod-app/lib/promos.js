@@ -37,7 +37,8 @@ async function allProducts(shopify) {
   let after = null;
   do {
     const data = await shopify.graphql(
-      `query($after: String) { products(first: 250, after: $after) { nodes { id handle title } pageInfo { hasNextPage endCursor } } }`,
+      // Only products customers can buy; drafts and archived products don't need a discount.
+      `query($after: String) { products(first: 250, after: $after, query: "status:active") { nodes { id handle title } pageInfo { hasNextPage endCursor } } }`,
       { after },
     );
     out.push(...data.products.nodes);
@@ -76,44 +77,75 @@ export async function createPromotion(shopify, key, now = new Date()) {
   const listed = new Set(promo.tiers.flatMap((t) => t.handles || []));
   const results = [];
   for (const tier of promo.tiers) {
-    // Retire earlier versions of a tier (e.g. an overlapping catch-all).
-    for (const old of existing.filter((d) => (tier.replaces || []).includes(d.title))) {
-      await deleteAutomatic(shopify, old.id);
-      results.push({ title: old.title, removed: true });
-    }
-    const current = existing.find((d) => d.title === tier.title);
-    if (current && !tier.allExcept) {
+    const isThisTier = (d) => d.title === tier.title || d.title?.startsWith(`${tier.title} (part `);
+    const current = existing.filter(isThisTier);
+    if (current.length && !tier.allExcept) {
       results.push({ title: tier.title, skipped: 'already exists' });
       continue;
     }
-    // The catch-all is rebuilt on every run so it picks up products added since.
-    if (current) await deleteAutomatic(shopify, current.id);
     const products = tier.allExcept
       ? (await allProducts(shopify)).filter((p) => !listed.has(p.handle))
       : await productIdsByHandle(shopify, tier.handles);
-    const input = {
-      title: tier.title,
-      // Starting in the past is fine; Shopify treats it as active from now.
-      startsAt: new Date(promo.startsAt).toISOString(),
-      endsAt: new Date(promo.endsAt).toISOString(),
-      combinesWith: { productDiscounts: true, orderDiscounts: false, shippingDiscounts: true },
-      customerGets: {
-        value: { percentage: tier.percent / 100 },
-        items: { products: { productsToAdd: products.map((p) => p.id) } },
-      },
-    };
-    const res = await shopify.graphql(
-      `mutation($d: DiscountAutomaticBasicInput!) {
-        discountAutomaticBasicCreate(automaticBasicDiscount: $d) {
-          automaticDiscountNode { id }
-          userErrors { field message code }
-        }
-      }`,
-      { d: input },
-    );
-    const errors = res.discountAutomaticBasicCreate.userErrors;
-    if (errors.length) throw new Error(`${tier.title}: ${errors.map((e) => e.message).join('; ')}`);
-    results.push({ title: tier.title, created: res.discountAutomaticBasicCreate.automaticDiscountNode.id, count: products.length });
+    // Shopify allows at most 100 products per discount, so big tiers are split into parts.
+    const parts = [];
+    for (let i = 0; i < products.length; i += MAX_PRODUCTS) parts.push(products.slice(i, i + MAX_PRODUCTS));
+    // The catch-all is rebuilt on every run so it picks up products added since. Create the new
+    // parts first and only then remove the old ones, so the sale never has a gap.
+    const titles = [];
+    for (const [i, part] of parts.entries()) {
+      const title = parts.length > 1 ? `${tier.title} (part ${i + 1})` : tier.title;
+      titles.push(title);
+      const id = await createTier(shopify, promo, title, tier.percent, part, current.filter((d) => d.title === title));
+      results.push({ title, created: id, count: part.length });
+    }
+    // Then retire anything this tier replaces: earlier versions and parts no longer needed.
+    const retire = existing.filter((d) => (tier.replaces || []).includes(d.title) || (isThisTier(d) && !titles.includes(d.title)));
+    for (const old of retire) {
+      await deleteAutomatic(shopify, old.id);
+      results.push({ title: old.title, removed: true });
+    }
   }
   return results;
+}
+
+const MAX_PRODUCTS = 100;
+
+// Creates one tier part. An existing part with the same title is renamed out of the way first
+// and removed once its replacement exists.
+async function createTier(shopify, promo, title, percent, products, previous) {
+  for (const old of previous) {
+    await shopify.graphql(
+      `mutation($id: ID!, $d: DiscountAutomaticBasicInput!) { discountAutomaticBasicUpdate(id: $id, automaticBasicDiscount: $d) { userErrors { message } } }`,
+      { id: old.id, d: { title: `${title} (replacing)` } },
+    );
+  }
+  const id = await createDiscount(shopify, promo, title, percent, products);
+  for (const old of previous) await deleteAutomatic(shopify, old.id);
+  return id;
+}
+
+async function createDiscount(shopify, promo, title, percent, products) {
+  const input = {
+    title,
+    // Starting in the past is fine; Shopify treats it as active from now.
+    startsAt: new Date(promo.startsAt).toISOString(),
+    endsAt: new Date(promo.endsAt).toISOString(),
+    combinesWith: { productDiscounts: true, orderDiscounts: false, shippingDiscounts: true },
+    customerGets: {
+      value: { percentage: percent / 100 },
+      items: { products: { productsToAdd: products.map((p) => p.id) } },
+    },
+  };
+  const res = await shopify.graphql(
+    `mutation($d: DiscountAutomaticBasicInput!) {
+      discountAutomaticBasicCreate(automaticBasicDiscount: $d) {
+        automaticDiscountNode { id }
+        userErrors { field message code }
+      }
+    }`,
+    { d: input },
+  );
+  const errors = res.discountAutomaticBasicCreate.userErrors;
+  if (errors.length) throw new Error(`${title}: ${errors.map((e) => e.message).join('; ')}`);
+  return res.discountAutomaticBasicCreate.automaticDiscountNode.id;
 }

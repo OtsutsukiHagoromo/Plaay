@@ -12,6 +12,7 @@ function fakeShop({ existing = [], products = CATALOG } = {}) {
     deleted,
     async graphql(query, vars) {
       if (query.includes('automaticDiscountNodes')) return { automaticDiscountNodes: { nodes: [...existing, ...created].filter((d) => !deleted.includes(d.id)).map((d) => ({ id: d.id, automaticDiscount: d })) } };
+      if (query.includes('discountAutomaticBasicUpdate')) return { discountAutomaticBasicUpdate: { userErrors: [] } };
       if (query.includes('discountAutomaticDelete')) {
         deleted.push(vars.id);
         return { discountAutomaticDelete: { deletedAutomaticDiscountId: vars.id, userErrors: [] } };
@@ -77,4 +78,24 @@ test('a missing product stops before creating that tier', async () => {
 test('refuses unknown or finished promotions', async () => {
   await assert.rejects(createPromotion(fakeShop(), 'nope', now), /Unknown promotion/);
   await assert.rejects(createPromotion(fakeShop(), 'halloween-2026', new Date('2026-11-02T00:00:00Z')), /already ended/);
+});
+
+test('splits a tier over 100 products and never leaves a gap', async () => {
+  const many = [...CATALOG, ...Array.from({ length: 150 }, (_, i) => `p${i}`)];
+  const shop = fakeShop({ products: many, existing: [{ id: 'gid://old/20', title: 'Halloween 2026 · 20% off everything else' }] });
+  const order = [];
+  const real = shop.graphql.bind(shop);
+  shop.graphql = async (q, v) => {
+    if (q.includes('discountAutomaticBasicCreate')) order.push(`create ${v.d.title}`);
+    if (q.includes('discountAutomaticDelete')) order.push(`delete ${v.id}`);
+    return real(q, v);
+  };
+  await createPromotion(shop, 'halloween-2026', now);
+  const parts = shop.created.filter((c) => c.title.includes('(part'));
+  assert.deepEqual(parts.map((p) => [p.title, p.input.customerGets.items.products.productsToAdd.length]), [
+    ['Halloween 2026 · 20% off everything else (part 1)', 100],
+    ['Halloween 2026 · 20% off everything else (part 2)', 52],
+  ]);
+  // The old single discount is removed only after both parts exist.
+  assert.ok(order.indexOf('delete gid://old/20') > order.lastIndexOf('create Halloween 2026 · 20% off everything else (part 2)'));
 });
