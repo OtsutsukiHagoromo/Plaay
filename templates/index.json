@@ -37,9 +37,36 @@
             "sticker_big": "",
             "sticker_small": ""
           }
+        },
+        "banner_halloween": {
+          "type": "slide",
+          "settings": {
+            "style": "image",
+            "bg": "#ffffff",
+            "image_asset": "halloween-sale-desktop.jpg",
+            "image_alt": "Halloween Sale: up to 30% off at Plaay, 24–31 October",
+            "image_mobile_asset": "halloween-sale-mobile.jpg",
+            "image_mobile_ratio": "1000 / 1648",
+            "image_2_asset": "",
+            "eyebrow": "",
+            "heading": "",
+            "heading_mark": "",
+            "body": "",
+            "btn_label": "",
+            "btn_url": "shopify://collections/shop-all",
+            "btn_arrow": true,
+            "btn_navy": false,
+            "link_label": "",
+            "link_url": "",
+            "show_rating": true,
+            "chips": "",
+            "sticker_big": "",
+            "sticker_small": ""
+          }
         }
       },
       "block_order": [
+        "banner_halloween",
         "banner_freedom"
       ],
       "settings": {

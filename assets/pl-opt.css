@@ -86,6 +86,8 @@ body.pl-skin-b { background: var(--o-ground); }
    sits under it in navy. */
 .plo-badge--launch { background: var(--pl-yellow); color: var(--pl-navy); }
 .plo-badge--excl { background: var(--pl-navy); color: #fff; }
+/* Sitewide sale % (snippets/sale-pct): pumpkin orange, navy text for contrast. */
+.plo-badge--sale { background: #FF8A1F; color: var(--pl-navy); }
 .plo-badge--2nd { top: 36px; }
 /* Product page: "Only on shopplaay.com" line under the title. */
 .plo-excl { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin: 0; padding: 5px 10px 5px 8px; border-radius: 999px; background: var(--pl-navy); color: #fff; font-size: 12px; line-height: 1.3; }

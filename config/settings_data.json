@@ -418,7 +418,27 @@
         "type": "pl-announcement",
         "settings": {
           "hide_mobile": false
-        }
+        },
+        "blocks": {
+          "msg_halloween_1": {
+            "type": "message",
+            "settings": {
+              "text": "🎃 Halloween Sale · Up to 30% off · Ends 31 Oct",
+              "url": "shopify://collections/shop-all"
+            }
+          },
+          "msg_halloween_2": {
+            "type": "message",
+            "settings": {
+              "text": "30% off variety packs · 25% off mix packs · 20% off everything else",
+              "url": "shopify://collections/variety-packs"
+            }
+          }
+        },
+        "block_order": [
+          "msg_halloween_1",
+          "msg_halloween_2"
+        ]
       },
       "pl-footer": {
         "type": "pl-footer",
@@ -477,7 +497,17 @@
         "disabled": false,
         "settings": {}
       }
-    }
+    },
+    "sale_kit_enabled": true,
+    "sale_name": "Halloween Sale",
+    "sale_starts": "2026-10-24T00:00:00+04:00",
+    "sale_ends": "2026-11-01T00:00:00+04:00",
+    "sale_ends_label": "31 Oct",
+    "sale_tier_a_handles": "og-plaayer-pack,plaayer-pack,bar-bunch",
+    "sale_tier_a_pct": 30,
+    "sale_tier_b_handles": "new-chocolate-slabs-mix-pack-of-6,truffle-mix",
+    "sale_tier_b_pct": 25,
+    "sale_default_pct": 20
   },
   "platform_customizations": {
     "custom_css": [

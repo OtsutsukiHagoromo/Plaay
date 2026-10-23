@@ -635,3 +635,9 @@ body.pl-inv-open { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
 .pl-inv__card, .pl-inv__scrim { transition: none; }
 }
+
+/* Sitewide sale note (product page + cart drawer; snippets/sale-active). Global because the
+   drawer opens on every page. */
+.plo-sale { margin: 10px 0 0; padding: 9px 12px; border-radius: 12px; background: #FF8A1F; color: #081D48; font-size: 13px; line-height: 1.35; }
+.plo-sale b { font-weight: 700; }
+.plo-sale--cart { margin: 0 0 10px; }

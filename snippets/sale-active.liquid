@@ -1,0 +1,16 @@
+{%- comment -%}
+  Prints 1 while the sitewide sale is on: Sale kit switched on in theme settings and the
+  current time inside sale_starts .. sale_ends (ISO times with +04:00, Dubai). Self-reverts at
+  sale_ends, so badges and notes need no teardown.
+  Usage: {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}{%- if sale_on contains '1' -%}
+{%- endcomment -%}
+{%- liquid
+  if settings.sale_kit_enabled and settings.sale_starts != blank and settings.sale_ends != blank
+    assign sale_now = 'now' | date: '%s' | times: 1
+    assign sale_start = settings.sale_starts | date: '%s' | times: 1
+    assign sale_end = settings.sale_ends | date: '%s' | times: 1
+    if sale_now >= sale_start and sale_now < sale_end
+      echo '1'
+    endif
+  endif
+-%}

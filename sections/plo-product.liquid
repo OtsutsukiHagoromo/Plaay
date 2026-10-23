@@ -487,6 +487,11 @@
             {%- if v.available -%}<span class="plo-buy__lbl">Add to bag</span><span class="plo-buy__p" data-plo-cta>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- else -%}Sold out{%- endif -%}
           </button>
         </div>
+        {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
+        {%- if sale_on contains '1' -%}
+          {%- capture sale_pct -%}{%- render 'sale-pct', product: product -%}{%- endcapture -%}
+          <p class="plo-sale">🎃 <b>{{ settings.sale_name }} &middot; {{ sale_pct | strip }}% off</b> this pick, applied at checkout &middot; ends {{ settings.sale_ends_label }}</p>
+        {%- endif -%}
         {%- comment -%} The rewards strip carries the delivery promise; the plain line is the fallback. {%- endcomment -%}
         {%- if v.available and settings.cart_tier_ship > 0 -%}{%- render 'plo-offer-ladder', price: cta_price -%}
         {%- elsif s.trust != blank -%}<p class="plo-buy__trust">{{ s.trust }}</p>{%- endif -%}

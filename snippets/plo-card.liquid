@@ -109,6 +109,17 @@
   if badge != blank
     assign badge_text = badge
   endif
+  # Sitewide sale (snippets/sale-active): the product's own % takes the badge slot.
+  capture sale_on
+    render 'sale-active'
+  endcapture
+  if sale_on contains '1'
+    capture sale_pct
+      render 'sale-pct', product: product
+    endcapture
+    assign badge_text = sale_pct | strip | append: '% Off'
+    assign badge_mod = 'sale'
+  endif
   comment
     Listings pass skip_new: when most of a collection is new, a New badge on every card is noise.
   endcomment

@@ -206,6 +206,72 @@
         "default": false
       },
       {
+        "type": "header",
+        "content": "Sale kit (badges, product page and cart notes)"
+      },
+      {
+        "type": "checkbox",
+        "id": "sale_kit_enabled",
+        "label": "Show the sale kit",
+        "default": false,
+        "info": "Shows only between the start and end times below, then hides itself."
+      },
+      {
+        "type": "text",
+        "id": "sale_name",
+        "label": "Sale name",
+        "default": "Halloween Sale"
+      },
+      {
+        "type": "text",
+        "id": "sale_starts",
+        "label": "Starts (Dubai time, e.g. 2026-10-24T00:00:00+04:00)",
+        "default": "2026-10-24T00:00:00+04:00"
+      },
+      {
+        "type": "text",
+        "id": "sale_ends",
+        "label": "Ends (exclusive, e.g. 2026-11-01T00:00:00+04:00)",
+        "default": "2026-11-01T00:00:00+04:00"
+      },
+      {
+        "type": "text",
+        "id": "sale_ends_label",
+        "label": "End date as shown to customers",
+        "default": "31 Oct"
+      },
+      {
+        "type": "text",
+        "id": "sale_tier_a_handles",
+        "label": "Tier A product handles (comma separated)",
+        "default": "og-plaayer-pack,plaayer-pack,bar-bunch"
+      },
+      {
+        "type": "number",
+        "id": "sale_tier_a_pct",
+        "label": "Tier A % off",
+        "default": 30
+      },
+      {
+        "type": "text",
+        "id": "sale_tier_b_handles",
+        "label": "Tier B product handles (comma separated)",
+        "default": "new-chocolate-slabs-mix-pack-of-6,truffle-mix"
+      },
+      {
+        "type": "number",
+        "id": "sale_tier_b_pct",
+        "label": "Tier B % off",
+        "default": 25
+      },
+      {
+        "type": "number",
+        "id": "sale_default_pct",
+        "label": "% off for every other product",
+        "default": 20,
+        "info": "Badges and copy only. The real discounts are Shopify automatic discounts."
+      },
+      {
         "type": "range",
         "id": "product_recommendations_limit",
         "label": "Product recommendations limit",
