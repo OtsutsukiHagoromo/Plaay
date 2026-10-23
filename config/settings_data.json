@@ -423,14 +423,14 @@
           "msg_halloween_1": {
             "type": "message",
             "settings": {
-              "text": "🎃 Halloween Sale · Up to 30% off · Ends 31 Oct",
+              "text": "🎃 Halloween sale: up to 30% off, this week only",
               "url": "shopify://collections/shop-all"
             }
           },
           "msg_halloween_2": {
             "type": "message",
             "settings": {
-              "text": "30% off variety packs · 25% off mix packs · 20% off everything else",
+              "text": "30% off variety packs. 25% off mix packs. 20% off the rest.",
               "url": "shopify://collections/variety-packs"
             }
           }
