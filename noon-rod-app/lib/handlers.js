@@ -137,7 +137,7 @@ export async function handleDashboard(request, d) {
           mode: form.get('mode') === '4hr_delivery' ? '4hr_delivery' : 'standard',
           test: form.get('test') === 'on',
         };
-        const missing = [!f.name && 'name', !f.phone && 'a valid UAE phone number', f.address1.length < 5 && 'address'].filter(Boolean);
+        const missing = [!f.name && 'name', !f.phone && 'a valid UAE phone number', f.address1.length < 5 && 'address', !(f.amount > 0) && 'an order value above AED 0 (noon requires one)'].filter(Boolean);
         if (missing.length) {
           result = { ok: false, reason: `Please enter ${missing.join(', ')}.` };
         } else {

@@ -98,11 +98,14 @@ export function buildTaskPayload(order, cfg, mode = 'standard') {
     pickup_notes: `Plaay order ${order.name} (${order.currentSubtotalLineItemsQuantity ?? '?'} items)`.slice(0, 1000),
   };
 
-  // noon takes exactly one of cod_value / prepaid_value.
+  // noon takes exactly one of cod_value / prepaid_value, and rejects a value of 0.
   if (isCashOnDelivery(order, cfg)) {
     payload.cod_value = toFils(order.totalOutstandingSet.shopMoney.amount);
   } else {
     payload.prepaid_value = toFils(order.totalPriceSet?.shopMoney?.amount || 0);
+  }
+  if (!payload.cod_value && !payload.prepaid_value) {
+    throw new MappingError(['noon needs an order value above AED 0 (free orders can’t be booked)']);
   }
 
   // noon's default is on-demand; only send delivery_mode for the 4-hour service.

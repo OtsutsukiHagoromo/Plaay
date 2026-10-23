@@ -107,3 +107,8 @@ test('missing outlet code or address is rejected', () => {
   const noOutlet = { ...cfg, noon: { ...cfg.noon, outletCode: '' } };
   assert.throws(() => buildTaskPayload(makeOrder(), noOutlet), /NOON_OUTLET_CODE/);
 });
+
+test('free orders are refused with a clear reason', () => {
+  const free = makeOrder({ totalPriceSet: { shopMoney: { amount: '0.00', currencyCode: 'AED' } } });
+  assert.throws(() => buildTaskPayload(free, cfg), /above AED 0/);
+});

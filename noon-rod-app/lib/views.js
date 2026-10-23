@@ -121,6 +121,14 @@ function connectionPanel(c) {
   return `<div class="panel warn-b">Connected to <strong>${esc(c.shop)}</strong> via “${esc(c.app)}”<ul>${problems.map((p) => `<li>${p}</li>`).join('')}</ul>${c.missingWebhooks.length ? button : ''}</div>`;
 }
 
+// After the team's cutoff (default 5 pm Dubai time), remind staff that new orders go out next day.
+function cutoffBanner(cfg, now = new Date()) {
+  const hour = Number(now.toLocaleString('en-GB', { timeZone: 'Asia/Dubai', hour: '2-digit', hour12: false }));
+  if (hour < cfg.cutoffHour) return '';
+  const label = cfg.cutoffHour > 12 ? `${cfg.cutoffHour - 12} pm` : `${cfg.cutoffHour} am`;
+  return `<div class="panel warn-b"><strong>Past today’s ${label} cutoff.</strong> New express and 4-hour orders go out on the next working day.</div>`;
+}
+
 export function renderDashboard({ orders, cfg, flash, labels, connection, view = 'todo', q = '' }) {
   const counts = countByView(orders);
   const visible = filterOrders(orders, view, q);
@@ -159,6 +167,7 @@ export function renderDashboard({ orders, cfg, flash, labels, connection, view =
   const body = `
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 ${connectionPanel(connection)}
+${cutoffBanner(cfg)}
 <div class="head"><div><h1>Express orders</h1><div class="muted">Pack the order first, then press <strong>Dispatch rider</strong>. The rider arrives within minutes.</div></div>
 <div class="hbtns">${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="test-order"><input type="hidden" name="back" value="/?view=todo"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the Shopify store?')">+ Test order</button></form>` : ''}${connection?.ok ? '<a class="btn" href="/new">+ New order</a>' : ''}</div></div>
 <div class="bar"><nav class="tabs">${tabs}</nav>
@@ -318,7 +327,7 @@ ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
   </div>
   <div class="cols">
     ${field('item', "What's in the box", 'maxlength="200" placeholder="Triple Chocolate Truffles × 2"')}
-    ${field('amount', 'Order value (AED, prepaid)', 'type="number" min="0" step="0.01" value="0"')}
+    ${field('amount', 'Order value (AED, prepaid)', 'type="number" min="0.01" step="0.01" value="1" required', 'noon needs a value above 0.')}
   </div>
   ${field('note', 'Delivery note for the rider', 'maxlength="250" placeholder="Call on arrival"')}
   <fieldset class="modes"><legend>noon service</legend>

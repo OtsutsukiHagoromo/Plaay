@@ -25,6 +25,8 @@ export function loadConfig(env = process.env) {
     fourHourMatch: new RegExp(env.FOUR_HOUR_SHIPPING_MATCH || '4.?h(ou)?r|same.?day', 'i'),
     codMatch: new RegExp(env.COD_GATEWAY_MATCH || 'cash on delivery|\\bcod\\b', 'i'),
     autoDispatch: /^(1|true|yes)$/i.test(env.AUTO_DISPATCH || ''),
+    // Last hour (Dubai time) the team accepts express / 4-hour orders, e.g. 17 = 5 pm.
+    cutoffHour: Number(env.CUTOFF_HOUR_GST || 17),
   };
 }
 
