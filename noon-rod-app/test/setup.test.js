@@ -87,10 +87,59 @@ test('test orders: created on staging, refused on production', async () => {
   const res = await handleDashboard(post(), { cfg, shopify, noon: fakeNoon(), log: quietLog });
   assert.match(new URL(res.headers.get('location')).searchParams.get('msg'), /Test order #9001 created/);
   assert.match(mutations[0].shippingLine.title, /express/i); // so the app treats it as an express order
-  assert.deepEqual(mutations[0].tags, ['test', 'noon-test']);
+  assert.deepEqual(mutations[0].tags, ['noon-express', 'noon-manual', 'test', 'noon-test']);
   assert.equal(mutations[0].email, undefined); // no customer emails
 
   const prodCfg = { ...cfg, noon: { ...cfg.noon, baseUrl: 'https://food-api-team.noon.team' } };
   assert.equal((await handleDashboard(post(), { cfg: prodCfg, shopify, noon: fakeNoon(), log: quietLog })).status, 403);
   assert.equal(mutations.length, 1);
+});
+
+test('New order form: validates, creates a paid order and opens it', async () => {
+  const shopify = fakeShopify(makeOrder());
+  const inputs = [];
+  shopify.graphql = async (query, vars) => {
+    if (query.includes('draftOrderCreate')) {
+      inputs.push(vars.input);
+      return { draftOrderCreate: { draftOrder: { id: 'gid://shopify/DraftOrder/9' }, userErrors: [] } };
+    }
+    return { draftOrderComplete: { draftOrder: { order: { id: 'gid://shopify/Order/77', name: '#20600', legacyResourceId: '77' } }, userErrors: [] } };
+  };
+  const auth = { authorization: `Basic ${Buffer.from('plaay:pw').toString('base64')}` };
+  const post = (fields) =>
+    handleDashboard(
+      new Request('https://noon.example.com/api/dashboard', {
+        method: 'POST',
+        headers: { ...auth, origin: 'https://noon.example.com', 'content-type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ action: 'create-order', back: '/new', ...fields }).toString(),
+      }),
+      { cfg, shopify, noon: fakeNoon(), log: quietLog },
+    );
+
+  const bad = new URL((await post({ name: '', phone: '123', address1: 'x' })).headers.get('location'));
+  assert.equal(bad.pathname, '/new');
+  assert.match(bad.searchParams.get('msg'), /name, a valid UAE phone number, address/);
+  assert.equal(inputs.length, 0);
+
+  const ok = new URL((await post({ name: 'Anam Khan', phone: '0568856365', address1: 'SS Lootah 2, 308, Building 59, 19C Street', area: 'Al Qusais', item: 'Truffles', amount: '238', mode: '4hr_delivery' })).headers.get('location'));
+  assert.equal(ok.pathname, '/order/77');
+  assert.match(ok.searchParams.get('msg'), /Order #20600 created/);
+  const input = inputs[0];
+  assert.equal(input.shippingLine.title, '4-hour delivery');
+  assert.equal(input.shippingAddress.phone, '+971568856365');
+  assert.equal(input.shippingAddress.firstName, 'Anam');
+  assert.equal(input.shippingAddress.lastName, 'Khan');
+  assert.equal(input.shippingAddress.address2, 'Al Qusais');
+  assert.equal(input.lineItems[0].originalUnitPriceWithCurrency.amount, '238.00');
+  assert.ok(input.tags.includes('noon-express'));
+  assert.ok(!input.tags.includes('test'));
+  assert.equal(input.email, undefined);
+});
+
+test('New order page renders and offers both services', async () => {
+  const auth = { authorization: `Basic ${Buffer.from('plaay:pw').toString('base64')}` };
+  const res = await handleDashboard(new Request('https://noon.example.com/api/dashboard?new=1', { headers: auth }), { cfg, shopify: fakeShopify(makeOrder()), noon: fakeNoon(), log: quietLog });
+  const html = await res.text();
+  assert.match(html, /name="mode" value="standard" checked/);
+  assert.match(html, /value="4hr_delivery"/);
 });

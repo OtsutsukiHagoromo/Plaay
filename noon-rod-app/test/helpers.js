@@ -42,7 +42,7 @@ export function makeOrder(overrides = {}) {
     },
     billingAddress: { phone: null },
     fulfillmentOrders: { nodes: [{ id: 'gid://shopify/FulfillmentOrder/1', status: 'OPEN' }] },
-    noon: { taskNr: '', status: '', error: '', fulfillmentId: '' },
+    noon: { taskNr: '', status: '', error: '', fulfillmentId: '', mode: '' },
     ...overrides,
   };
 }
@@ -52,7 +52,7 @@ export function fakeShopify(initial) {
   const order = initial && structuredClone(initial);
   const calls = [];
   const rec = (name, ...args) => calls.push([name, ...args]);
-  const keyMap = { task_nr: 'taskNr', status: 'status', error: 'error', fulfillment_id: 'fulfillmentId' };
+  const keyMap = { task_nr: 'taskNr', status: 'status', error: 'error', fulfillment_id: 'fulfillmentId', mode: 'mode' };
   return {
     calls,
     order,

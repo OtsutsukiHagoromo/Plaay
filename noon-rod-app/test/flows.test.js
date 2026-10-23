@@ -20,11 +20,27 @@ const setup = (orderOverrides, noonOpts) => {
 test('dispatch books a rider and records the task on the order', async () => {
   const { d, shopify, noon } = setup({ tags: ['noon-express', 'noon-dispatch'] });
   const r = await dispatchOrder(d, '5550001');
-  assert.deepEqual(r, { ok: true, taskNr: 'TASK123' });
+  assert.deepEqual(r, { ok: true, taskNr: 'TASK123', mode: 'standard' });
   assert.equal(noon.calls[0][2], 'plaay-5550001-first');
+  assert.equal('delivery_mode' in noon.calls[0][1], false); // on-demand is noon's default
   assert.equal(shopify.order.noon.taskNr, 'TASK123');
   assert.equal(shopify.order.noon.status, 'created');
   assert.deepEqual(shopify.order.tags.sort(), ['noon-dispatched', 'noon-express']);
+});
+
+test('4-hour delivery: from the shipping method, or chosen by staff', async () => {
+  const fourHour = setup({ shippingLine: { title: '4-hour delivery', code: '4hr' } });
+  assert.equal((await dispatchOrder(fourHour.d, '5550001')).mode, '4hr_delivery');
+  assert.equal(fourHour.noon.calls[0][1].delivery_mode, '4hr_delivery');
+  assert.equal(fourHour.shopify.order.noon.mode, '4hr_delivery');
+
+  const picked = setup();
+  await dispatchOrder(picked.d, '5550001', { mode: '4hr_delivery' });
+  assert.equal(picked.noon.calls[0][1].delivery_mode, '4hr_delivery');
+
+  const bogus = setup();
+  await dispatchOrder(bogus.d, '5550001', { mode: 'teleport' });
+  assert.equal('delivery_mode' in bogus.noon.calls[0][1], false);
 });
 
 test('dispatch is a no-op when a rider is already booked', async () => {

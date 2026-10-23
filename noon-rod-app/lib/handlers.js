@@ -3,13 +3,13 @@
 import crypto from 'node:crypto';
 import { TAGS } from './config.js';
 import { cancelDispatch, dispatchOrder } from './dispatch.js';
-import { isExpressOrder } from './mapping.js';
-import { connectWebhooks, createTestOrder, getConnection } from './setup.js';
+import { defaultDeliveryMode, isExpressOrder, normalizePhone } from './mapping.js';
+import { connectWebhooks, createManualOrder, createTestOrder, getConnection } from './setup.js';
 import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
-import { renderDashboard, renderOrderDetail, renderTrackingPage } from './views.js';
+import { renderDashboard, renderNewOrder, renderOrderDetail, renderTrackingPage } from './views.js';
 
 const json = (body, status = 200) => Response.json(body, { status });
 
@@ -110,7 +110,7 @@ export async function handleDashboard(request, d) {
     const form = await request.formData();
     const orderId = String(form.get('order') || '');
     const action = String(form.get('action') || '');
-    if (!['connect', 'test-order'].includes(action) && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
+    if (!['connect', 'test-order', 'create-order'].includes(action) && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
 
     let result;
     try {
@@ -124,7 +124,28 @@ export async function handleDashboard(request, d) {
         if (!isStaging(d.cfg)) return new Response('Test orders are only allowed while noon is on staging', { status: 403 });
         const order = await createTestOrder(d.shopify);
         result = { ok: true, message: `Test order ${order.name} created. It appears below once Shopify's order webhook arrives (a few seconds); refresh if needed.` };
-      } else if (action === 'dispatch') result = await dispatchOrder(d, orderId);
+      } else if (action === 'create-order') {
+        const f = {
+          name: String(form.get('name') || '').trim().slice(0, 100),
+          phone: normalizePhone(form.get('phone')),
+          address1: String(form.get('address1') || '').trim().slice(0, 200),
+          area: String(form.get('area') || '').trim().slice(0, 100),
+          city: String(form.get('city') || 'Dubai').trim().slice(0, 60),
+          item: String(form.get('item') || '').trim().slice(0, 200),
+          amount: Math.max(0, Number(form.get('amount') || 0)) || 0,
+          note: String(form.get('note') || '').trim().slice(0, 250),
+          mode: form.get('mode') === '4hr_delivery' ? '4hr_delivery' : 'standard',
+          test: form.get('test') === 'on',
+        };
+        const missing = [!f.name && 'name', !f.phone && 'a valid UAE phone number', f.address1.length < 5 && 'address'].filter(Boolean);
+        if (missing.length) {
+          result = { ok: false, reason: `Please enter ${missing.join(', ')}.` };
+        } else {
+          const order = await createManualOrder(d.shopify, f);
+          form.set('back', `/order/${order.legacyResourceId}`);
+          result = { ok: true, message: `Order ${order.name} created. Check the map pin, then dispatch when it's packed.` };
+        }
+      } else if (action === 'dispatch') result = await dispatchOrder(d, orderId, { mode: String(form.get('mode') || '') || undefined });
       else if (action === 'cancel') result = await cancelDispatch(d, orderId);
       else return new Response('Unknown action', { status: 400 });
       flash = result.message || (result.ok ? `${action === 'dispatch' ? 'Rider booked' : 'Rider cancelled'}${result.taskNr ? ` (${result.taskNr})` : ''}` : `Failed: ${result.reason}`);
@@ -140,6 +161,8 @@ export async function handleDashboard(request, d) {
   }
 
   const html = (body) => new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
+
+  if (url.searchParams.has('new')) return html(renderNewOrder({ cfg: d.cfg, flash }));
 
   const orderParam = url.searchParams.get('order');
   if (orderParam) {
@@ -200,7 +223,8 @@ export async function handleTrackData(request, d) {
     lng: toDegrees(order.shippingAddress.longitude),
   };
   const items = (order.lineItems?.nodes || []).map((li) => ({ title: li.title, quantity: li.quantity }));
-  const body = { order: order.name, status: order.noon.status || 'not_dispatched', rider: null, drop, items };
+  const mode = order.noon.mode || defaultDeliveryMode(order, d.cfg);
+  const body = { order: order.name, status: order.noon.status || 'not_dispatched', rider: null, drop, items, mode };
 
   if (order.noon.taskNr) {
     const task = await d.noon.getTask(order.noon.taskNr).catch(() => null);

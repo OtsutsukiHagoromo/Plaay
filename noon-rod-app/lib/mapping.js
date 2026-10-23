@@ -31,10 +31,22 @@ export function normalizePhone(raw) {
   return '';
 }
 
+export const DELIVERY_MODES = {
+  standard: { label: 'Express', short: 'Express (on-demand)' },
+  '4hr_delivery': { label: '4-hour', short: '4-hour delivery' },
+};
+
+const shippingText = (order) => `${order.shippingLine?.title || ''} ${order.shippingLine?.code || ''}`;
+
+// Orders for noon: express (on-demand) or 4-hour shipping methods.
 export function isExpressOrder(order, cfg) {
-  const line = order.shippingLine;
-  if (!line) return false;
-  return cfg.expressMatch.test(`${line.title || ''} ${line.code || ''}`);
+  if (!order.shippingLine) return false;
+  return cfg.expressMatch.test(shippingText(order)) || cfg.fourHourMatch.test(shippingText(order));
+}
+
+// The noon delivery mode an order should use unless staff pick another one.
+export function defaultDeliveryMode(order, cfg) {
+  return order.shippingLine && cfg.fourHourMatch.test(shippingText(order)) ? '4hr_delivery' : 'standard';
 }
 
 export function isCashOnDelivery(order, cfg) {
@@ -43,7 +55,7 @@ export function isCashOnDelivery(order, cfg) {
   return outstanding > 0 && gateways.some((g) => cfg.codMatch.test(g));
 }
 
-export function buildTaskPayload(order, cfg) {
+export function buildTaskPayload(order, cfg, mode = 'standard') {
   const problems = [];
   const a = order.shippingAddress;
 
@@ -92,6 +104,9 @@ export function buildTaskPayload(order, cfg) {
   } else {
     payload.prepaid_value = toFils(order.totalPriceSet?.shopMoney?.amount || 0);
   }
+
+  // noon's default is on-demand; only send delivery_mode for the 4-hour service.
+  if (mode === '4hr_delivery') payload.delivery_mode = '4hr_delivery';
 
   const note = (order.note || '').replace(/\s+/g, ' ').trim();
   if (note) payload.delivery_notes = note.slice(0, 250);

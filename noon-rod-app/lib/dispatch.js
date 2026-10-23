@@ -1,13 +1,14 @@
 // Booking and cancelling noon riders for Shopify orders.
 
 import { TAGS } from './config.js';
-import { buildTaskPayload, MappingError } from './mapping.js';
+import { buildTaskPayload, defaultDeliveryMode, DELIVERY_MODES, MappingError } from './mapping.js';
 import { CANCELLABLE_STATUSES, NoonError } from './noon.js';
 
 // A new task may be booked when none exists yet or the previous one ended without delivery.
 const REBOOKABLE_STATUSES = ['', 'cancelled', 'undelivered'];
 
-export async function dispatchOrder({ cfg, shopify, noon, log = console }, orderId) {
+// mode: 'standard' (on-demand express) or '4hr_delivery'; defaults from the shipping method.
+export async function dispatchOrder({ cfg, shopify, noon, log = console }, orderId, { mode } = {}) {
   const order = await shopify.getOrder(orderId);
   if (!order) return { ok: false, reason: 'order not found' };
   if (order.cancelledAt) return { ok: false, reason: `${order.name} is cancelled` };
@@ -15,9 +16,10 @@ export async function dispatchOrder({ cfg, shopify, noon, log = console }, order
     return { ok: true, already: true, taskNr: order.noon.taskNr };
   }
 
+  const deliveryMode = DELIVERY_MODES[mode] ? mode : defaultDeliveryMode(order, cfg);
   let payload;
   try {
-    payload = buildTaskPayload(order, cfg);
+    payload = buildTaskPayload(order, cfg, deliveryMode);
   } catch (err) {
     if (err instanceof MappingError) return fail(shopify, order, err.message, log);
     throw err;
@@ -37,14 +39,15 @@ export async function dispatchOrder({ cfg, shopify, noon, log = console }, order
   await shopify.setNoonState(order.id, {
     task_nr: created.mp_task_nr,
     status: 'created',
+    mode: deliveryMode,
     // Clear leftovers from a previous attempt.
     ...(order.noon.error ? { error: '' } : {}),
     ...(order.noon.fulfillmentId ? { fulfillment_id: '' } : {}),
   });
   await shopify.addTags(order.id, [TAGS.dispatched]);
   await shopify.removeTags(order.id, [TAGS.dispatch, TAGS.error, TAGS.cancelled, TAGS.undelivered]);
-  log.info?.(`noon task ${created.mp_task_nr} booked for ${order.name}`);
-  return { ok: true, taskNr: created.mp_task_nr };
+  log.info?.(`noon ${deliveryMode} task ${created.mp_task_nr} booked for ${order.name}`);
+  return { ok: true, taskNr: created.mp_task_nr, mode: deliveryMode };
 }
 
 async function fail(shopify, order, message, log) {

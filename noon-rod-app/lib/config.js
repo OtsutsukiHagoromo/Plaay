@@ -21,6 +21,8 @@ export function loadConfig(env = process.env) {
     dashboardPassword: env.DASHBOARD_PASSWORD || '',
     trackingSecret: env.TRACKING_SECRET || '',
     expressMatch: new RegExp(env.EXPRESS_SHIPPING_MATCH || 'express|noon', 'i'),
+    // Shipping methods that should go out as noon's 4-hour delivery instead of on-demand.
+    fourHourMatch: new RegExp(env.FOUR_HOUR_SHIPPING_MATCH || '4.?h(ou)?r|same.?day', 'i'),
     codMatch: new RegExp(env.COD_GATEWAY_MATCH || 'cash on delivery|\\bcod\\b', 'i'),
     autoDispatch: /^(1|true|yes)$/i.test(env.AUTO_DISPATCH || ''),
   };

@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/", "destination": "/api/dashboard" },
+    { "source": "/new", "destination": "/api/dashboard?new=1" },
     { "source": "/order/:id", "destination": "/api/dashboard?order=:id" },
     { "source": "/track/:token", "destination": "/api/track?t=:token" }
   ]

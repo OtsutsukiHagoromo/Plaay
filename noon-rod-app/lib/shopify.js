@@ -37,6 +37,7 @@ export const ORDER_FIELDS = `
   noonStatus: metafield(namespace: "${METAFIELD_NAMESPACE}", key: "status") { value }
   noonError: metafield(namespace: "${METAFIELD_NAMESPACE}", key: "error") { value }
   fulfillmentId: metafield(namespace: "${METAFIELD_NAMESPACE}", key: "fulfillment_id") { value }
+  noonMode: metafield(namespace: "${METAFIELD_NAMESPACE}", key: "mode") { value }
   fulfillmentOrders(first: 10) { nodes { id status } }
 `;
 
@@ -47,7 +48,7 @@ export function orderGid(id) {
 // Flatten the aliased metafields into order.noon = { taskNr, status, error, fulfillmentId }.
 export function normalizeOrder(o) {
   if (!o) return null;
-  const { taskNr, noonStatus, noonError, fulfillmentId, ...rest } = o;
+  const { taskNr, noonStatus, noonError, fulfillmentId, noonMode, ...rest } = o;
   return {
     ...rest,
     noon: {
@@ -55,6 +56,7 @@ export function normalizeOrder(o) {
       status: noonStatus?.value || '',
       error: noonError?.value || '',
       fulfillmentId: fulfillmentId?.value || '',
+      mode: noonMode?.value || '',
     },
   };
 }

@@ -1,6 +1,6 @@
 // Server-rendered HTML for the staff dashboard and the customer tracking page.
 
-import { isCashOnDelivery, normalizePhone } from './mapping.js';
+import { defaultDeliveryMode, DELIVERY_MODES, isCashOnDelivery, normalizePhone } from './mapping.js';
 import { bucket, CANCELLABLE, countByView, filterOrders, VIEWS } from './orders.js';
 
 const esc = (v) =>
@@ -81,16 +81,32 @@ function statusBadge(order, labels) {
 }
 
 // Dispatch / cancel buttons; `back` is where to return after the action.
-function actions(order, back, size = '') {
+// `both` offers Express and 4-hour side by side (order page); otherwise the order's default mode.
+function actions(order, back, cfg, { size = '', both = false } = {}) {
   if (order.cancelledAt) return '';
   const s = order.noon.status;
-  const form = (action, label, cls) =>
-    `<form method="post" action="/api/dashboard"><input type="hidden" name="order" value="${esc(order.legacyResourceId)}"><input type="hidden" name="action" value="${action}"><input type="hidden" name="back" value="${esc(back)}"><button class="${cls} ${size}" ${action === 'cancel' ? `onclick="return confirm('Cancel the noon rider for ${esc(order.name)}? On production, noon charges for cancellations.')"` : `onclick="return confirm('Book a noon rider for ${esc(order.name)} now? Make sure it is packed: the rider arrives within minutes.')"`}>${label}</button></form>`;
+  const hidden = (fields) => Object.entries(fields).map(([k, v]) => `<input type="hidden" name="${k}" value="${esc(v)}">`).join('');
+  const form = (action, label, cls, mode = '') =>
+    `<form method="post" action="/api/dashboard">${hidden({ order: order.legacyResourceId, action, back, ...(mode ? { mode } : {}) })}<button class="${cls} ${size}" onclick="return confirm('${
+      action === 'cancel'
+        ? `Cancel the noon rider for ${esc(order.name)}? On production, noon charges for cancellations.`
+        : mode === '4hr_delivery'
+          ? `Book noon 4-hour delivery for ${esc(order.name)}?`
+          : `Book an express noon rider for ${esc(order.name)} now? Make sure it is packed: the rider arrives within minutes.`
+    }')">${label}</button></form>`;
   if (s === 'delivered' || ACTIVE_NOT_CANCELLABLE.includes(s)) return '';
-  if (!order.noon.taskNr || ['cancelled', 'undelivered'].includes(s)) return form('dispatch', order.noon.taskNr ? 'Book again' : 'Dispatch rider', 'yellow');
+  if (!order.noon.taskNr || ['cancelled', 'undelivered'].includes(s)) {
+    const again = order.noon.taskNr ? ' again' : '';
+    if (both) return form('dispatch', `Express rider${again}`, 'yellow', 'standard') + ' ' + form('dispatch', `4-hour delivery${again}`, 'ghost', '4hr_delivery');
+    const mode = defaultDeliveryMode(order, cfg);
+    return form('dispatch', order.noon.taskNr ? 'Book again' : mode === '4hr_delivery' ? 'Book 4-hour' : 'Dispatch rider', 'yellow', mode);
+  }
   if (CANCELLABLE.includes(s)) return form('cancel', 'Cancel rider', 'danger');
   return '';
 }
+
+const modeBadge = (order, cfg) =>
+  (order.noon.mode || defaultDeliveryMode(order, cfg)) === '4hr_delivery' ? ' <span class="b info">4-hour</span>' : '';
 const ACTIVE_NOT_CANCELLABLE = ['picked_up', 'arrived_at_delivery'];
 
 function connectionPanel(c) {
@@ -126,8 +142,8 @@ export function renderDashboard({ orders, cfg, flash, labels, connection, view =
         <td data-l="Customer"><strong>${esc(a.name || '—')}</strong><div class="muted">${esc([a.address2 || a.address1, a.city].filter(Boolean).join(', '))}${a.latitude == null ? ' · <b class="bad-t">no map pin</b>' : ''}</div></td>
         <td data-l="Items">${items} item${items === 1 ? '' : 's'}</td>
         <td data-l="Payment">${cod ? `<span class="b warn">COD</span> ${esc(money(o.totalOutstandingSet))}` : `<span class="b">Prepaid</span> ${esc(money(o.totalPriceSet))}`}</td>
-        <td data-l="Rider">${statusBadge(o, labels)}${o.noon.error && bucket(o) === 'attention' ? `<div class="err">${esc(o.noon.error)}</div>` : ''}</td>
-        <td class="act" data-l="">${actions(o, here, 'sm')}</td>
+        <td data-l="Rider">${statusBadge(o, labels)}${modeBadge(o, cfg)}${o.noon.error && bucket(o) === 'attention' ? `<div class="err">${esc(o.noon.error)}</div>` : ''}</td>
+        <td class="act" data-l="">${actions(o, here, cfg, { size: 'sm' })}</td>
       </tr>`;
     })
     .join('');
@@ -144,7 +160,7 @@ export function renderDashboard({ orders, cfg, flash, labels, connection, view =
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 ${connectionPanel(connection)}
 <div class="head"><div><h1>Express orders</h1><div class="muted">Pack the order first, then press <strong>Dispatch rider</strong>. The rider arrives within minutes.</div></div>
-${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="test-order"><input type="hidden" name="back" value="/?view=todo"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the live Shopify store?')">+ Test order</button></form>` : ''}</div>
+<div class="hbtns">${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="test-order"><input type="hidden" name="back" value="/?view=todo"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the Shopify store?')">+ Test order</button></form>` : ''}${connection?.ok ? '<a class="btn" href="/new">+ New order</a>' : ''}</div></div>
 <div class="bar"><nav class="tabs">${tabs}</nav>
 <form class="search" method="get" action="/"><input type="hidden" name="view" value="${esc(view)}"><input type="search" name="q" value="${esc(q)}" placeholder="Search order #, name, phone, area" aria-label="Search orders"></form></div>
 <table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Payment</th><th>Rider</th><th></th></tr></thead>
@@ -152,6 +168,7 @@ ${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><inpu
 <p class="muted foot">Showing the latest ${orders.length} express orders · updates every minute · pickup point <code>${esc(cfg.noon.outletCode || 'not set')}</code></p>
 <style>
   .head { display: flex; justify-content: space-between; align-items: end; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+  .hbtns { display: flex; gap: 8px; flex-wrap: wrap; }
   .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
   .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
   .tab { text-decoration: none; font-weight: 700; font-size: 14px; padding: 7px 12px 7px 14px; border-radius: 99px; border: 1.5px solid var(--line); background: var(--card); display: inline-flex; gap: 8px; align-items: center; }
@@ -214,7 +231,7 @@ export function renderOrderDetail({ order: o, task, taskError, cfg, flash, label
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 <div class="dhead">
   <div><h1>${esc(o.name)}</h1><div class="muted">${esc(dubaiTime(o.createdAt))} · ${esc(ago(o.createdAt))}</div></div>
-  <div class="dact">${statusBadge(o, labels)} ${actions(o, back)}</div>
+  <div class="dact">${statusBadge(o, labels)}${modeBadge(o, cfg)} ${actions(o, back, cfg, { both: true })}</div>
 </div>
 <div class="links">
   <a class="btn ghost" href="${esc(links.shopify)}" target="_blank" rel="noopener">Open in Shopify ↗</a>
@@ -236,11 +253,12 @@ ${o.noon.error && bucket(o) === 'attention' ? `<div class="panel bad-b"><strong>
     <ul class="items">${items || '<li class="muted">No items</li>'}</ul>
     ${row('Payment', cod ? `<span class="b warn">Cash on delivery</span> rider collects <strong>${esc(money(o.totalOutstandingSet))}</strong>` : `<span class="b">Prepaid</span> ${esc(money(o.totalPriceSet))}`)}
     ${row('Shipping', esc(o.shippingLine?.title))}
+    ${row('noon service', esc(DELIVERY_MODES[o.noon.mode || defaultDeliveryMode(o, cfg)].short) + (o.noon.mode ? '' : ' <span class="muted">(default for this shipping method)</span>'))}
     ${row('Shopify status', esc([o.displayFinancialStatus, o.displayFulfillmentStatus].filter(Boolean).join(' · ').toLowerCase().replace(/_/g, ' ')))}
   </section>
   <section class="card">
     <h2>Rider</h2>
-    ${o.noon.taskNr ? '' : '<p class="muted">No rider booked yet. Press <strong>Dispatch rider</strong> once the order is packed.</p>'}
+    ${o.noon.taskNr ? '' : '<p class="muted">No rider booked yet. Once it's packed, press <strong>Express rider</strong> (within 20 km of the warehouse) or <strong>4-hour delivery</strong> (further out).</p>'}
     ${taskError ? `<div class="err">Could not reach noon: ${esc(taskError)}</div>` : ''}
     ${row('noon task', o.noon.taskNr ? `<code>${esc(o.noon.taskNr)}</code>` : '')}
     ${da ? row('Rider', `${esc(da.name || da.first_name || '')}${da.phone_number ? ` · <a href="tel:${esc(da.phone_number)}">${esc(da.phone_number)}</a>` : ''}`) : ''}
@@ -276,6 +294,53 @@ ${o.noon.error && bucket(o) === 'attention' ? `<div class="panel bad-b"><strong>
   }));
 </script>`;
   return shell({ cfg, title: o.name, body });
+}
+
+export function renderNewOrder({ cfg, flash }) {
+  const staging = cfg.noon.baseUrl.includes('noonstg');
+  const field = (name, label, attrs = '', hint = '') =>
+    `<label class="f"><span>${label}</span><input name="${name}" ${attrs}>${hint ? `<small>${hint}</small>` : ''}</label>`;
+  const body = `
+<a class="backlink" href="/">← All express orders</a>
+${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
+<h1>New delivery order</h1>
+<p class="muted">Creates a paid order in Shopify (no stock change, no customer email) and adds it to the dispatch list. Dispatch it from the order page once it's packed.</p>
+<form class="card nf" method="post" action="/api/dashboard">
+  <input type="hidden" name="action" value="create-order"><input type="hidden" name="back" value="/new">
+  <div class="cols">
+    ${field('name', 'Customer name', 'required maxlength="100" autocomplete="off"')}
+    ${field('phone', 'Phone', 'required inputmode="tel" placeholder="050 123 4567"', 'The rider calls this number.')}
+  </div>
+  ${field('address1', 'Building, flat / villa, street', 'required minlength="5" maxlength="200" placeholder="510, New Bridge Hills 3"')}
+  <div class="cols">
+    ${field('area', 'Area', 'maxlength="100" placeholder="Motor City"', 'Used to place the map pin.')}
+    ${field('city', 'City', 'value="Dubai" maxlength="60"')}
+  </div>
+  <div class="cols">
+    ${field('item', "What's in the box", 'maxlength="200" placeholder="Triple Chocolate Truffles × 2"')}
+    ${field('amount', 'Order value (AED, prepaid)', 'type="number" min="0" step="0.01" value="0"')}
+  </div>
+  ${field('note', 'Delivery note for the rider', 'maxlength="250" placeholder="Call on arrival"')}
+  <fieldset class="modes"><legend>noon service</legend>
+    <label><input type="radio" name="mode" value="standard" checked> <strong>Express</strong> <span class="muted">on-demand rider, within 20 km of the warehouse</span></label>
+    <label><input type="radio" name="mode" value="4hr_delivery"> <strong>4-hour delivery</strong> <span class="muted">for addresses further out</span></label>
+  </fieldset>
+  <label class="chk"><input type="checkbox" name="test" ${staging ? 'checked' : ''}> Mark as a test order <span class="muted">(tagged “test” so it can be filtered out of reports)</span></label>
+  <div><button class="yellow" type="submit">Create order</button></div>
+</form>
+<style>
+  .backlink { display: inline-block; margin-bottom: 12px; font-weight: 700; text-decoration: none; color: var(--muted); }
+  h1 { margin-bottom: 4px; }
+  .nf { background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; padding: 18px; max-width: 720px; margin-top: 14px; display: grid; gap: 14px; }
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; align-items: start; }
+  .f { display: grid; gap: 5px; } .f span { font-weight: 700; font-size: 13px; } .f small { color: var(--muted); font-size: 12px; }
+  .f input { font: inherit; padding: 9px 12px; border-radius: 10px; border: 1.5px solid var(--line); background: #fff; color: var(--navy); }
+  .f input:focus { outline: 2px solid var(--yellow); border-color: var(--navy); }
+  .modes { border: 1.5px solid var(--line); border-radius: 12px; padding: 10px 14px; display: grid; gap: 8px; margin: 0; }
+  .modes legend { font-weight: 700; font-size: 13px; padding: 0 4px; }
+  .chk { font-size: 14px; }
+</style>`;
+  return shell({ cfg, title: 'New order', body });
 }
 
 const toDeg = (v) => { const n = Number(v); return Math.abs(n) > 180 ? n / 1e7 : n; };
@@ -367,7 +432,7 @@ export function renderTrackingPage({ token }) {
   [hidden] { display: none !important; }
 </style></head><body>
 <div class="strip" aria-hidden="true"><span>Plaay Express ✦ Clean chocolate, delivered fast ✦ Zero refined sugar ✦ Nutritionist founded ✦ Plaay Express ✦ Clean chocolate, delivered fast</span></div>
-<header><img src="/plaay-logo.png" alt="Plaay" width="80" height="30"><span class="badge">Express</span></header>
+<header><img src="/plaay-logo.png" alt="Plaay" width="80" height="30"><span class="badge" id="badge">Express</span></header>
 <main>
   <section class="card hero" id="hero" aria-live="polite">
     <div class="order-no" id="orderNo"><span class="skeleton">Order #00000</span></div>
@@ -436,9 +501,13 @@ export function renderTrackingPage({ token }) {
   function icon(html, size) { return L.divIcon({ html, className: '', iconSize: [size, size], iconAnchor: [size / 2, size / 2] }); }
 
   function render(d) {
-    const [title, sub, stage] = COPY[d.status] || COPY.not_dispatched;
+    let [title, sub, stage] = COPY[d.status] || COPY.not_dispatched;
+    if (d.mode === '4hr_delivery' && ['created', 'pending_assignment'].includes(d.status)) {
+      [title, sub] = ['Booked for delivery', 'Your order is packed and booked. It will reach you within 4 hours, and we’ll show your rider here once they’re on the way.'];
+    }
     const name = d.rider ? d.rider.name : 'Your rider';
     $('orderNo').textContent = 'Order ' + d.order;
+    if (d.mode === '4hr_delivery') $('badge').textContent = 'Delivery';
     $('headline').textContent = title;
     $('sub').textContent = sub.replace('{name}', name);
     document.title = 'Plaay Express · ' + title;

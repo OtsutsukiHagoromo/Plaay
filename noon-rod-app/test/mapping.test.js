@@ -27,6 +27,11 @@ test('isExpressOrder matches the shipping line', () => {
   assert.equal(isExpressOrder(makeOrder({ shippingLine: null }), cfg), false);
 });
 
+test('4-hour shipping methods count as noon orders', () => {
+  assert.equal(isExpressOrder(makeOrder({ shippingLine: { title: '4-hour delivery', code: 'x' } }), cfg), true);
+  assert.equal(isExpressOrder(makeOrder({ shippingLine: { title: 'Same-day delivery', code: 'x' } }), cfg), true);
+});
+
 test('prepaid order maps to a noon payload', () => {
   const p = buildTaskPayload(makeOrder(), cfg);
   assert.deepEqual(p, {
