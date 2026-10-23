@@ -258,7 +258,7 @@ ${o.noon.error && bucket(o) === 'attention' ? `<div class="panel bad-b"><strong>
   </section>
   <section class="card">
     <h2>Rider</h2>
-    ${o.noon.taskNr ? '' : '<p class="muted">No rider booked yet. Once it's packed, press <strong>Express rider</strong> (within 20 km of the warehouse) or <strong>4-hour delivery</strong> (further out).</p>'}
+    ${o.noon.taskNr ? '' : '<p class="muted">No rider booked yet. Once it’s packed, press <strong>Express rider</strong> (within 20 km of the warehouse) or <strong>4-hour delivery</strong> (further out).</p>'}
     ${taskError ? `<div class="err">Could not reach noon: ${esc(taskError)}</div>` : ''}
     ${row('noon task', o.noon.taskNr ? `<code>${esc(o.noon.taskNr)}</code>` : '')}
     ${da ? row('Rider', `${esc(da.name || da.first_name || '')}${da.phone_number ? ` · <a href="tel:${esc(da.phone_number)}">${esc(da.phone_number)}</a>` : ''}`) : ''}
