@@ -41,3 +41,34 @@ jobs:
           git add config/settings_data.json templates/index.json
           git diff --cached --quiet || git commit -m "Auto: toggle Halloween sale (24-31 Oct) [skip ci]"
           git push
+
+  # The live theme is published from staging-main, so tear the sale down there too. Scheduled
+  # workflows only run from the default branch (main), hence the second checkout.
+  toggle-sale-live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: tools
+      - uses: actions/checkout@v4
+        with:
+          ref: staging-main
+          path: live
+
+      - name: Toggle Halloween sale on the live theme (staging-main)
+        working-directory: live
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python3 ../tools/.github/scripts/toggle_halloween_live.py ${{ inputs.mode }} --force
+          else
+            python3 ../tools/.github/scripts/toggle_halloween_live.py disable
+          fi
+
+      - name: Commit and push to staging-main
+        working-directory: live
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add config/settings_data.json templates/index.json
+          git diff --cached --quiet || git commit -m "Auto: toggle Halloween sale on the live theme (24-31 Oct) [skip ci]"
+          git push
