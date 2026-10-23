@@ -1,6 +1,7 @@
 // Server-rendered HTML for the staff dashboard and the customer tracking page.
 
 import { defaultDeliveryMode, DELIVERY_MODES, isCashOnDelivery, normalizePhone } from './mapping.js';
+import { buildLive } from './live.js';
 import { bucket, CANCELLABLE, countByView, filterOrders, VIEWS } from './orders.js';
 
 const esc = (v) =>
@@ -121,6 +122,19 @@ function connectionPanel(c) {
   return `<div class="panel warn-b">Connected to <strong>${esc(c.shop)}</strong> via “${esc(c.app)}”<ul>${problems.map((p) => `<li>${p}</li>`).join('')}</ul>${c.missingWebhooks.length ? button : ''}</div>`;
 }
 
+// "ETA 16:42 · out 12 min" for orders with a rider out.
+function liveLine(o, now = new Date()) {
+  const live = buildLive(o, o.liveTask, now);
+  const mins = (from) => Math.max(0, Math.round((now - new Date(from)) / 60000));
+  const bits = [];
+  if (live.etaCustomer) bits.push(`ETA ${dubaiTime(live.etaCustomer.at, { hour: '2-digit', minute: '2-digit' })}`);
+  if (live.stages.picked_up) bits.push(`out ${mins(live.stages.picked_up.at)} min`);
+  else if (live.dispatchedAt) bits.push(`booked ${mins(live.dispatchedAt)} min ago`);
+  const late = Object.values(live.stages).at(-1)?.late;
+  if (late > 60) bits.push(`<b class="bad-t">${Math.round(late / 60)} min late</b>`);
+  return bits.length ? `<div class="muted">${bits.join(' · ')}</div>` : '';
+}
+
 // After the team's cutoff (default 5 pm Dubai time), remind staff that new orders go out next day.
 function cutoffBanner(cfg, now = new Date()) {
   const hour = Number(now.toLocaleString('en-GB', { timeZone: 'Asia/Dubai', hour: '2-digit', hour12: false }));
@@ -150,7 +164,7 @@ export function renderDashboard({ orders, cfg, flash, labels, connection, view =
         <td data-l="Customer"><strong>${esc(a.name || '—')}</strong><div class="muted">${esc([a.address2 || a.address1, a.city].filter(Boolean).join(', '))}${a.latitude == null ? ' · <b class="bad-t">no map pin</b>' : ''}</div></td>
         <td data-l="Items">${items} item${items === 1 ? '' : 's'}</td>
         <td data-l="Payment">${cod ? `<span class="b warn">COD</span> ${esc(money(o.totalOutstandingSet))}` : `<span class="b">Prepaid</span> ${esc(money(o.totalPriceSet))}`}</td>
-        <td data-l="Rider">${statusBadge(o, labels)}${modeBadge(o, cfg)}${o.noon.error && bucket(o) === 'attention' ? `<div class="err">${esc(o.noon.error)}</div>` : ''}</td>
+        <td data-l="Rider">${statusBadge(o, labels)}${modeBadge(o, cfg)}${o.liveTask ? liveLine(o) : ''}${o.noon.error && bucket(o) === 'attention' ? `<div class="err">${esc(o.noon.error)}</div>` : ''}</td>
         <td class="act" data-l="">${actions(o, here, cfg, { size: 'sm' })}</td>
       </tr>`;
     })
@@ -219,7 +233,7 @@ ${cutoffBanner(cfg)}
   return shell({ cfg, title: 'Express orders', body, refresh: true });
 }
 
-export function renderOrderDetail({ order: o, task, taskError, cfg, flash, labels, links }) {
+export function renderOrderDetail({ order: o, task, taskError, cfg, flash, labels, links, live }) {
   const a = o.shippingAddress || {};
   const cod = isCashOnDelivery(o, cfg);
   const phone = normalizePhone(a.phone) || normalizePhone(o.phone) || normalizePhone(o.billingAddress?.phone);
@@ -248,6 +262,7 @@ ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
   ${lat != null ? `<a class="btn ghost" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank" rel="noopener">Delivery pin on Google Maps ↗</a>` : ''}
 </div>
 ${o.noon.error && bucket(o) === 'attention' ? `<div class="panel bad-b"><strong>Booking failed:</strong> ${esc(o.noon.error)}</div>` : ''}
+${o.noon.taskNr && live ? livePanel(o, live) : ''}
 <div class="grid">
   <section class="card">
     <h2>Customer</h2>
@@ -303,6 +318,130 @@ ${o.noon.error && bucket(o) === 'attention' ? `<div class="panel bad-b"><strong>
   }));
 </script>`;
   return shell({ cfg, title: o.name, body });
+}
+
+// Live map + timings on the order page. Server renders the first frame; the script keeps it
+// current from /api/dashboard?order=<id>&live=1 and ticks the timers every second.
+function livePanel(o, live) {
+  const data = JSON.stringify(live).replace(/</g, '\\u003c');
+  return `
+<section class="card live" aria-label="Live delivery">
+  <div class="live-map" id="liveMap"></div>
+  <div class="live-side">
+    <div class="live-head"><h2>Live delivery</h2><span class="muted" id="liveUpdated"></span></div>
+    <div id="liveStatus" class="live-status"></div>
+    <dl class="stats" id="liveStats"></dl>
+    <p class="muted legend"><span>🏭 Warehouse</span><span>🛵 Rider</span><span>🏠 Customer</span></p>
+  </div>
+</section>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  .live { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr); gap: 0; padding: 0; overflow: hidden; margin-top: 14px; }
+  .live-map { min-height: 340px; background: var(--cream); z-index: 0; }
+  .live-side { padding: 16px 18px; border-left: 1.5px solid var(--line); }
+  .live-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .live-status { font-weight: 900; font-size: 22px; margin: 2px 0 10px; }
+  .live-status small { display: block; font-weight: 700; font-size: 13px; }
+  .live-status .ok { color: var(--ok); } .live-status .bad { color: var(--bad); }
+  .stats { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 0; }
+  .stats dt, .stats dd { margin: 0; padding: 7px 0; border-top: 1px dashed var(--line); font-size: 14px; }
+  .stats dt { color: var(--muted); font-weight: 700; } .stats dd { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stats dd small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+  .stats .hl { color: var(--navy); } .stats dd.hl { font-size: 16px; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; margin: 10px 0 0; }
+  .pin { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 17px; border: 2.5px solid var(--navy); box-shadow: 0 3px 10px rgba(8,29,72,.3); background: #fff; }
+  .pin.rider { background: var(--yellow); width: 38px; height: 38px; font-size: 19px; }
+  .pin.wh { background: var(--cream); }
+  @media (max-width: 860px) { .live { grid-template-columns: 1fr; } .live-side { border-left: 0; border-top: 1.5px solid var(--line); } .live-map { min-height: 280px; } }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(() => {
+  let live = ${data};
+  const orderId = ${JSON.stringify(String(o.legacyResourceId))};
+  const $ = (id) => document.getElementById(id);
+  const ms = (iso) => (iso ? new Date(iso).getTime() : null);
+  const clock = (iso) => new Date(iso).toLocaleTimeString('en-GB', { timeZone: 'Asia/Dubai', hour: '2-digit', minute: '2-digit' });
+  const dur = (a, b) => {
+    if (a == null || b == null) return '';
+    const s = Math.max(0, Math.round((b - a) / 1000));
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    return h ? h + ' h ' + m + ' min' : m ? m + ' min ' + String(sec).padStart(2, '0') + ' s' : sec + ' s';
+  };
+  const km = (m) => (m >= 1000 ? (m / 1000).toFixed(1) + ' km' : m + ' m');
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  let skew = 0; // server clock minus browser clock
+  let map, markers = {};
+
+  function row(label, value, sub, hl) {
+    return '<dt' + (hl ? ' class="hl"' : '') + '>' + label + '</dt><dd' + (hl ? ' class="hl"' : '') + '>' + value + (sub ? '<small>' + sub + '</small>' : '') + '</dd>';
+  }
+
+  function render() {
+    const now = Date.now() + skew;
+    const st = live.stages || {};
+    const t = (k) => ms(st[k]?.at);
+    const end = live.finished ? (t('delivered') || t('undelivered') || t('cancelled') || now) : now;
+    const latest = ['delivered', 'arrived_at_delivery', 'picked_up', 'arrived_at_pickup_location', 'assigned'].find((k) => st[k]);
+    const late = latest != null ? st[latest].late : null;
+    let pace = '';
+    if (late != null) pace = late > 60 ? '<small class="bad">' + Math.round(late / 60) + ' min behind noon’s target</small>' : '<small class="ok">On time' + (late < -60 ? ' · ' + Math.round(-late / 60) + ' min ahead' : '') + '</small>';
+    $('liveStatus').innerHTML = esc(live.label) + pace;
+
+    let h = '';
+    if (live.etaPickup) h += row('Rider to warehouse', Math.max(1, Math.round(live.etaPickup.seconds / 60)) + ' min', km(live.etaPickup.meters) + ' · around ' + clock(live.etaPickup.at), true);
+    if (live.etaCustomer) h += row('ETA to customer', clock(live.etaCustomer.at), Math.max(1, Math.round(live.etaCustomer.seconds / 60)) + ' min · ' + km(live.etaCustomer.meters), true);
+    h += row(live.finished ? 'Order to ' + live.status : 'Since order placed', dur(ms(live.placedAt), end), 'placed ' + clock(live.placedAt));
+    if (live.dispatchedAt) h += row(live.finished ? 'Dispatch to ' + live.status : 'Since dispatch', dur(ms(live.dispatchedAt), end), 'booked ' + clock(live.dispatchedAt));
+    if (t('assigned')) h += row('Rider assigned after', dur(ms(live.dispatchedAt), t('assigned')), clock(st.assigned.at));
+    else if (live.dispatchedAt && !live.finished) h += row('Waiting for a rider', dur(ms(live.dispatchedAt), now));
+    if (t('arrived_at_pickup_location')) h += row(t('picked_up') ? 'At warehouse for' : 'Waiting at warehouse', dur(t('arrived_at_pickup_location'), t('picked_up') || end), 'arrived ' + clock(st.arrived_at_pickup_location.at));
+    if (t('picked_up')) h += row(t('delivered') ? 'Out for delivery took' : 'Out for delivery', dur(t('picked_up'), t('delivered') || end), 'picked up ' + clock(st.picked_up.at), !t('delivered'));
+    if (t('delivered')) h += row('Delivered at', clock(st.delivered.at), '', true);
+    $('liveStats').innerHTML = h;
+  }
+
+  function drawMap() {
+    if (!window.L) return;
+    const el = $('liveMap');
+    if (!map) {
+      map = L.map(el, { zoomControl: true, scrollWheelZoom: false });
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap', maxZoom: 19 }).addTo(map);
+    }
+    const pts = [];
+    const put = (key, pos, html, size, title) => {
+      if (!pos) { if (markers[key]) { markers[key].remove(); delete markers[key]; } return; }
+      const ll = [pos.lat, pos.lng]; pts.push(ll);
+      const icon = L.divIcon({ html, className: '', iconSize: [size, size], iconAnchor: [size / 2, size / 2] });
+      if (markers[key]) markers[key].setLatLng(ll); else markers[key] = L.marker(ll, { icon, title, zIndexOffset: key === 'rider' ? 1000 : 0 }).addTo(map);
+    };
+    put('wh', live.warehouse, '<div class="pin wh">🏭</div>', 34, 'Warehouse');
+    put('cust', live.customer, '<div class="pin">🏠</div>', 34, 'Customer');
+    put('rider', live.rider && live.rider.pos, '<div class="pin rider">🛵</div>', 38, live.rider ? live.rider.name : 'Rider');
+    if (pts.length > 1) map.fitBounds(pts, { padding: [40, 40], maxZoom: 15 });
+    else if (pts.length) map.setView(pts[0], 14);
+  }
+
+  async function refresh() {
+    try {
+      const r = await fetch('/api/dashboard?order=' + encodeURIComponent(orderId) + '&live=1', { cache: 'no-store', credentials: 'same-origin' });
+      if (!r.ok) return;
+      const next = await r.json();
+      const wasFinished = live.finished;
+      live = next;
+      skew = ms(live.now) - Date.now();
+      $('liveUpdated').textContent = 'updated ' + clock(live.now);
+      render(); drawMap();
+      if (!wasFinished && live.finished) location.reload(); // refresh the rest of the page once it's done
+    } catch {}
+  }
+
+  skew = ms(live.now) - Date.now();
+  $('liveUpdated').textContent = 'updated ' + clock(live.now);
+  render(); drawMap();
+  if (!live.finished) { setInterval(refresh, 15000); setInterval(render, 1000); }
+})();
+</script>`;
 }
 
 export function renderNewOrder({ cfg, flash }) {

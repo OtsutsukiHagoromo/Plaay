@@ -7,6 +7,7 @@ import { defaultDeliveryMode, isExpressOrder, normalizePhone } from './mapping.j
 import { connectWebhooks, createManualOrder, createTestOrder, getConnection } from './setup.js';
 import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
+import { buildLive } from './live.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
 import { renderDashboard, renderNewOrder, renderOrderDetail, renderTrackingPage } from './views.js';
@@ -182,8 +183,11 @@ export async function handleDashboard(request, d) {
         await applyTaskStatus(d, order, order.noon.taskNr, task.status_code).catch((err) => d.log.warn?.(`sync ${order.name}: ${err.message}`));
       }
     }
+    const live = buildLive(order, task);
+    // The order page polls this to keep its map and timers current.
+    if (url.searchParams.get('live') === '1') return json({ ...live, taskError });
     const links = { shopify: shopifyAdminUrl(d.cfg, order.legacyResourceId), tracking: trackingUrl(d.cfg, order.legacyResourceId) };
-    return html(renderOrderDetail({ order, task, taskError, cfg: d.cfg, flash, labels: STATUS_LABELS, links }));
+    return html(renderOrderDetail({ order, task, taskError, cfg: d.cfg, flash, labels: STATUS_LABELS, links, live }));
   }
 
   const view = VIEWS.some((v) => v.key === url.searchParams.get('view')) ? url.searchParams.get('view') : 'todo';

@@ -145,6 +145,7 @@ export async function syncActiveOrders(d, orders) {
   }
   let changed = 0;
   for (const [i, order] of live.entries()) {
+    order.liveTask = tasks?.[i] || null; // for the list's ETA / elapsed line
     const status = tasks?.[i]?.status_code;
     if (!status || rank(status) <= rank(order.noon.status)) continue;
     try {
