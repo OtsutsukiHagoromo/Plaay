@@ -1,5 +1,5 @@
 {%- comment -%}
-  Plaay - sitewide sale countdown (BTS kit, now Plaay Day Sale: 20% off sitewide, 27-30 September).
+  Plaay - sitewide sale countdown (BTS kit, now Halloween Sale: up to 30% off, 24-31 October).
   Reuses the Eid countdown CSS classes for styling. Multi-instance safe
   (class-based, ticked by plaay-bts-countdown-js). Auto-hides outside the
   27-30 September (Dubai / +04:00) window.
@@ -8,8 +8,8 @@
   assign bts_active = false
   if settings.bts_sale_enabled
     assign bts_now = 'now' | date: '%s' | times: 1
-    assign bts_start = '2026-09-27T00:00:00+04:00' | date: '%s' | times: 1
-    assign bts_end = '2026-10-01T00:00:00+04:00' | date: '%s' | times: 1
+    assign bts_start = '2026-10-24T00:00:00+04:00' | date: '%s' | times: 1
+    assign bts_end = '2026-11-01T00:00:00+04:00' | date: '%s' | times: 1
     if bts_now >= bts_start and bts_now < bts_end
       assign bts_active = true
     endif
@@ -17,7 +17,7 @@
 -%}
 {%- if bts_active -%}
 <div class="plaay-eid-countdown plaay-bts-countdown" data-bts-countdown aria-live="off">
-  <span class="plaay-eid-countdown__label">20% off ends in</span>
+  <span class="plaay-eid-countdown__label">Halloween Sale ends in</span>
   <div class="plaay-eid-countdown__segments">
     <span class="plaay-eid-countdown__seg"><b class="plaay-bts-d">--</b><small>d</small></span>
     <span class="plaay-eid-countdown__sep">:</span>

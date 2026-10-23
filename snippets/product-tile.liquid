@@ -54,15 +54,16 @@
       assign bts_active = false
       if settings.bts_sale_enabled
         assign bts_now = 'now' | date: '%s' | times: 1
-        assign bts_start = '2026-09-27T00:00:00+04:00' | date: '%s' | times: 1
-        assign bts_end = '2026-10-01T00:00:00+04:00' | date: '%s' | times: 1
+        assign bts_start = '2026-10-24T00:00:00+04:00' | date: '%s' | times: 1
+        assign bts_end = '2026-11-01T00:00:00+04:00' | date: '%s' | times: 1
         if bts_now >= bts_start and bts_now < bts_end
           assign bts_active = true
         endif
       endif
     -%}
     {%- if bts_active -%}
-      <span class="plaay-badge plaay-badge--sale">20% Off</span>
+      {%- capture sale_pct -%}{%- render 'sale-pct', product: product -%}{%- endcapture -%}
+      <span class="plaay-badge plaay-badge--sale">{{ sale_pct | strip }}% Off</span>
     {%- elsif summer_active -%}
       <span class="plaay-badge plaay-badge--sale">30% Off</span>
     {%- elsif fd_active -%}

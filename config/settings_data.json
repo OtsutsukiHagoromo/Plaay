@@ -22,7 +22,7 @@
     "eid_sale_enabled": false,
     "fathers_day_sale_enabled": false,
     "summer_sale_enabled": false,
-    "bts_sale_enabled": false,
+    "bts_sale_enabled": true,
     "hide_promotion_icon": true,
     "cart_promotion_text_part_one": "",
     "cart_promotion_text_part_two": "",
@@ -44,17 +44,17 @@
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"
-            }
+            },
+            "disabled": true
           },
           "announcement_text_yP4HrN": {
             "type": "announcement_text",
             "settings": {
-              "text": "🎉 Plaay Day Sale · Flat 20% Off Sitewide · 27–30 Sep · No Code Needed",
+              "text": "🎃 Halloween Sale · Up to 30% Off · 30% Variety Packs · 25% Mix Packs · 20% Everything Else · 24–31 Oct · No Code Needed",
               "text_color": "#021d49",
               "text_color_mobile": "#021d49",
               "text_style": "uppercase"
-            },
-            "disabled": true
+            }
           },
           "c2b8a7fe-ac53-4009-a024-a1af5cf2f579": {
             "type": "announcement_text",
@@ -85,8 +85,8 @@
           }
         },
         "block_order": [
-          "announcement_text_qzKxiQ",
           "announcement_text_yP4HrN",
+          "announcement_text_qzKxiQ",
           "c2b8a7fe-ac53-4009-a024-a1af5cf2f579",
           "announcement_text_yXwBXG",
           "announcement_text_4j8xfB"
@@ -382,7 +382,12 @@
         "disabled": false,
         "settings": {}
       }
-    }
+    },
+    "sale_tier_a_handles": "og-plaayer-pack,plaayer-pack,bar-bunch",
+    "sale_tier_a_pct": 30,
+    "sale_tier_b_handles": "new-chocolate-slabs-mix-pack-of-6,truffle-mix",
+    "sale_tier_b_pct": 25,
+    "sale_default_pct": 20
   },
   "platform_customizations": {
     "custom_css": [

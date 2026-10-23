@@ -196,13 +196,44 @@
       },
       {
         "type": "header",
-        "content": "Sitewide sale kit (currently: Plaay Day Sale, 27–30 Sep)"
+        "content": "Sitewide sale kit (currently: Halloween Sale, 24–31 Oct)"
       },
       {
         "type": "checkbox",
         "id": "bts_sale_enabled",
-        "label": "Enable sitewide sale kit (Plaay Day: flat 20% off, auto-shows 27–30 Sep only)",
+        "label": "Enable sitewide sale kit (Halloween: up to 30% off, auto-shows 24–31 Oct only)",
         "default": false
+      },
+      {
+        "type": "text",
+        "id": "sale_tier_a_handles",
+        "label": "Sale tier A product handles (comma separated)",
+        "default": "og-plaayer-pack,plaayer-pack,bar-bunch"
+      },
+      {
+        "type": "number",
+        "id": "sale_tier_a_pct",
+        "label": "Sale tier A % off",
+        "default": 30
+      },
+      {
+        "type": "text",
+        "id": "sale_tier_b_handles",
+        "label": "Sale tier B product handles (comma separated)",
+        "default": "new-chocolate-slabs-mix-pack-of-6,truffle-mix"
+      },
+      {
+        "type": "number",
+        "id": "sale_tier_b_pct",
+        "label": "Sale tier B % off",
+        "default": 25
+      },
+      {
+        "type": "number",
+        "id": "sale_default_pct",
+        "label": "Sale % off for every other product",
+        "default": 20,
+        "info": "Badges and copy only. The real discounts are Shopify automatic discounts."
       },
       {
         "type": "range",

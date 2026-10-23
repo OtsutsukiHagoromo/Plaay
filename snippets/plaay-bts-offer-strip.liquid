@@ -1,13 +1,15 @@
 {%- comment -%}
-  Plaay - sitewide sale offer card for the product page (BTS kit, now Plaay Day Sale). 20% off sitewide, 27-30 September.
-  Reuses the Eid offer-card CSS. Auto-hides outside the 27-30 September (Dubai) window.
+  Plaay - sitewide sale offer card for the product page (BTS kit, now Halloween Sale, 24-31 October).
+  30% off variety packs, 25% off mix packs, 20% off everything else (see snippets/sale-pct.liquid).
+  Reuses the Eid offer-card CSS. Auto-hides outside the 24-31 October (Dubai) window.
+  Pass the product: render 'plaay-bts-offer-strip', product: product
 {%- endcomment -%}
 {%- liquid
   assign bts_active = false
   if settings.bts_sale_enabled
     assign bts_now = 'now' | date: '%s' | times: 1
-    assign bts_start = '2026-09-27T00:00:00+04:00' | date: '%s' | times: 1
-    assign bts_end = '2026-10-01T00:00:00+04:00' | date: '%s' | times: 1
+    assign bts_start = '2026-10-24T00:00:00+04:00' | date: '%s' | times: 1
+    assign bts_end = '2026-11-01T00:00:00+04:00' | date: '%s' | times: 1
     if bts_now >= bts_start and bts_now < bts_end
       assign bts_active = true
     endif
@@ -15,17 +17,22 @@
 -%}
 {%- if bts_active -%}
 <div class="plaay-eid-card">
+  {%- capture sale_pct -%}{%- render 'sale-pct', product: product -%}{%- endcapture -%}
   <div class="plaay-eid-card__header">
-    <span class="plaay-eid-card__emoji">🎉</span>
-    <span class="plaay-eid-card__title">Plaay Day Sale &middot; Flat 20% Off Sitewide</span>
+    <span class="plaay-eid-card__emoji">🎃</span>
+    <span class="plaay-eid-card__title">Halloween Sale &middot; Up to {{ settings.sale_tier_a_pct | default: 30 }}% Off</span>
   </div>
   <ul class="plaay-eid-card__tiers">
     <li class="plaay-eid-card__tier">
       <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-      <strong>20% off</strong> your entire order, 27&ndash;30 Sep
+      <strong>{{ sale_pct | strip }}% off</strong> this pick, 24&ndash;31 Oct
+    </li>
+    <li class="plaay-eid-card__tier">
+      <svg class="plaay-eid-card__icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+      {{ settings.sale_tier_a_pct | default: 30 }}% off variety packs &middot; {{ settings.sale_tier_b_pct | default: 25 }}% off mix packs &middot; {{ settings.sale_default_pct | default: 20 }}% off everything else
     </li>
   </ul>
   {%- render 'plaay-bts-countdown' -%}
-  <p class="plaay-eid-card__note">Discount applied automatically at checkout &middot; Ends 11:59 PM, 30 September</p>
+  <p class="plaay-eid-card__note">Discount applied automatically at checkout &middot; Ends 11:59 PM, 31 October</p>
 </div>
 {%- endif -%}

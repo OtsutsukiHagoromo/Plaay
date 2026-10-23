@@ -1,0 +1,16 @@
+{%- comment -%}
+  Prints the sitewide-sale percentage for `product` (no % sign). Matches the Shopify automatic
+  discounts: tier A and tier B products by handle (theme settings), everything else the default.
+  Usage: {%- capture sale_pct -%}{%- render 'sale-pct', product: product -%}{%- endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign pct = settings.sale_default_pct | default: 20
+  assign tier_a = settings.sale_tier_a_handles | remove: ' ' | split: ','
+  assign tier_b = settings.sale_tier_b_handles | remove: ' ' | split: ','
+  if tier_a contains product.handle
+    assign pct = settings.sale_tier_a_pct | default: 30
+  elsif tier_b contains product.handle
+    assign pct = settings.sale_tier_b_pct | default: 25
+  endif
+  echo pct
+-%}
