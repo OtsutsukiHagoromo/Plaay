@@ -490,7 +490,7 @@
         {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
         {%- if sale_on contains '1' -%}
           {%- capture sale_pct -%}{%- render 'sale-pct', product: product -%}{%- endcapture -%}
-          <p class="plo-sale">🎃 <b>{{ settings.sale_name }} &middot; {{ sale_pct | strip }}% off</b> this pick, applied at checkout &middot; ends {{ settings.sale_ends_label }}</p>
+          <p class="plo-sale">🎃 <b>Halloween steal: {{ sale_pct | strip }}% off</b> &middot; applied at checkout. These prices vanish like a ghost 👻</p>
         {%- endif -%}
         {%- comment -%} The rewards strip carries the delivery promise; the plain line is the fallback. {%- endcomment -%}
         {%- if v.available and settings.cart_tier_ship > 0 -%}{%- render 'plo-offer-ladder', price: cta_price -%}
