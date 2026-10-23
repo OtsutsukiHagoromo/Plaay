@@ -6,7 +6,7 @@ import { cancelDispatch, dispatchOrder } from './dispatch.js';
 import { isExpressOrder } from './mapping.js';
 import { connectWebhooks, createTestOrder, getConnection } from './setup.js';
 import { verifyWebhookHmac } from './shopify.js';
-import { handleStatusUpdate, STATUS_LABELS, toDegrees } from './status.js';
+import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
 import { renderDashboard, renderOrderDetail, renderTrackingPage } from './views.js';
@@ -154,6 +154,10 @@ export async function handleDashboard(request, d) {
       } catch (err) {
         taskError = err.message;
       }
+      // Catch up on any status the webhooks missed.
+      if (task?.status_code && task.status_code !== order.noon.status) {
+        await applyTaskStatus(d, order, order.noon.taskNr, task.status_code).catch((err) => d.log.warn?.(`sync ${order.name}: ${err.message}`));
+      }
     }
     const links = { shopify: shopifyAdminUrl(d.cfg, order.legacyResourceId), tracking: trackingUrl(d.cfg, order.legacyResourceId) };
     return html(renderOrderDetail({ order, task, taskError, cfg: d.cfg, flash, labels: STATUS_LABELS, links }));
@@ -166,6 +170,7 @@ export async function handleDashboard(request, d) {
   if (connection.ok) {
     try {
       orders = await d.shopify.listOrdersByTag(TAGS.express, 100);
+      await syncActiveOrders(d, orders); // updates the orders in place
     } catch (err) {
       connection.ordersError = err.message;
     }

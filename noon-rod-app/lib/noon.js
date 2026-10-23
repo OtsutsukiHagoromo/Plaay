@@ -42,6 +42,8 @@ export function createNoonClient(cfg, fetchImpl = globalThis.fetch) {
   return {
     createTask: (payload, idempotencyKey) => call('POST', '/public/v1/create-task', { body: payload, idempotencyKey }),
     getTask: (taskNr) => call('GET', `/public/v1/tasks/${encodeURIComponent(taskNr)}`),
+    // Same order as taskNrs.
+    getTasks: (taskNrs) => call('POST', '/public/v1/tasks/details', { body: { mp_task_nrs: taskNrs } }),
     cancelTask: (taskNr) => call('POST', `/public/v1/tasks/${encodeURIComponent(taskNr)}/cancel`, { body: {} }),
     getConfigurations: () => call('GET', '/public/v1/configurations'),
     listOutlets: () => call('GET', '/public/v1/outlets'),

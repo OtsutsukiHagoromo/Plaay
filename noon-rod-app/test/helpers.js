@@ -101,7 +101,7 @@ export function fakeShopify(initial) {
   };
 }
 
-export function fakeNoon({ createError, taskStatus = 'pending_assignment', task } = {}) {
+export function fakeNoon({ createError, taskStatus = 'pending_assignment', task, sequence } = {}) {
   const calls = [];
   return {
     calls,
@@ -110,9 +110,15 @@ export function fakeNoon({ createError, taskStatus = 'pending_assignment', task 
       if (createError) throw new NoonError(createError.message, createError.status, null);
       return { mp_task_nr: 'TASK123', status: 'successful' };
     },
+    // `sequence` returns successive statuses on successive calls (the last one repeats).
     async getTask(nr) {
       calls.push(['getTask', nr]);
+      if (sequence) return { status_code: sequence[Math.min(calls.filter((c) => c[0] === 'getTask').length - 1, sequence.length - 1)] };
       return task || { status_code: taskStatus };
+    },
+    async getTasks(nrs) {
+      calls.push(['getTasks', nrs]);
+      return nrs.map(() => task || { status_code: taskStatus });
     },
     async cancelTask(nr) {
       calls.push(['cancelTask', nr]);

@@ -11,7 +11,8 @@ import { cfg, fakeNoon, fakeShopify, makeOrder, quietLog } from './helpers.js';
 const setup = (orderOverrides, noonOpts) => {
   const shopify = fakeShopify(makeOrder(orderOverrides));
   const noon = fakeNoon(noonOpts);
-  return { d: { cfg, shopify, noon, log: quietLog }, shopify, noon };
+  const sleeps = [];
+  return { d: { cfg, shopify, noon, log: quietLog, sleep: async (ms) => sleeps.push(ms) }, shopify, noon, sleeps };
 };
 
 // ---- dispatch ----
@@ -252,4 +253,63 @@ test('tracking data converts noon coordinates and hides the rider phone until pi
 
   const { d } = setup(booked);
   assert.equal((await handleTrackData(new Request('https://noon.example.com/api/track-data?t=5550001.bad'), d)).status, 404);
+});
+
+// ---- noon's API lagging behind its own webhooks (seen with test order #20537) ----
+
+test('webhook ahead of noon\'s API: re-checks until the API catches up', async () => {
+  const { d, shopify, sleeps } = setup({ ...booked, noon: { ...booked.noon, status: 'arrived_at_delivery', fulfillmentId: 'F1' } }, { sequence: ['arrived_at_delivery', 'arrived_at_delivery', 'delivered'] });
+  const r = await handleStatusUpdate(d, update('delivered'));
+  assert.equal(r.status, 'delivered');
+  assert.deepEqual(sleeps, [1000, 2000]);
+  assert.deepEqual(shopify.calls.find((c) => c[0] === 'createFulfillmentEvent').slice(1), ['F1', 'DELIVERED']);
+  assert.ok(shopify.order.tags.includes('noon-delivered'));
+});
+
+test('re-checks are bounded when the API never confirms (e.g. a forged webhook)', async () => {
+  const { d, shopify, sleeps } = setup(booked, { taskStatus: 'assigned' });
+  const r = await handleStatusUpdate(d, update('delivered'));
+  assert.equal(r.status, 'assigned');
+  assert.equal(sleeps.length, 3);
+  assert.ok(!shopify.order.tags.includes('noon-delivered'));
+});
+
+test('no re-check when the API already agrees', async () => {
+  const { d, sleeps } = setup(booked, { taskStatus: 'picked_up' });
+  await handleStatusUpdate(d, update('picked_up'));
+  assert.deepEqual(sleeps, []);
+});
+
+test('dashboard list catches up orders whose webhooks were missed', async () => {
+  const stuck = { ...booked, noon: { ...booked.noon, status: 'arrived_at_delivery', fulfillmentId: 'F1' } };
+  const { d, shopify, noon } = setup(stuck, { taskStatus: 'delivered' });
+  const auth = { authorization: `Basic ${Buffer.from('plaay:pw').toString('base64')}` };
+  shopify.listOrdersByTag = async () => [structuredClone(shopify.order)];
+  shopify.graphql = async () => ({
+    shop: { name: 'Plaay', myshopifyDomain: 'p.myshopify.com' },
+    currentAppInstallation: { app: { title: 'TMS' }, accessScopes: [{ handle: 'write_orders' }, { handle: 'write_merchant_managed_fulfillment_orders' }] },
+    webhookSubscriptions: { nodes: ['ORDERS_CREATE', 'ORDERS_UPDATED', 'ORDERS_CANCELLED'].map((topic) => ({ topic, uri: 'https://noon.example.com/api/shopify-webhook' })) },
+  });
+  const html = await (await handleDashboard(new Request('https://noon.example.com/?view=delivered', { headers: auth }), d)).text();
+  assert.deepEqual(noon.calls.find((c) => c[0] === 'getTasks'), ['getTasks', ['TASK123']]);
+  assert.ok(shopify.order.tags.includes('noon-delivered'));
+  assert.match(html, /Delivered<span class="n">1</);
+});
+
+test('opening an order page catches it up too', async () => {
+  const stuck = { ...booked, noon: { ...booked.noon, status: 'arrived_at_delivery', fulfillmentId: 'F1' } };
+  const { d, shopify } = setup(stuck, { taskStatus: 'delivered' });
+  const auth = { authorization: `Basic ${Buffer.from('plaay:pw').toString('base64')}` };
+  const html = await (await handleDashboard(new Request('https://noon.example.com/api/dashboard?order=5550001', { headers: auth }), d)).text();
+  assert.equal(shopify.order.noon.status, 'delivered');
+  assert.match(html, /<span class="b ok">Delivered<\/span>/);
+});
+
+test('dashboard sync never moves an order backwards and tolerates noon errors', async () => {
+  const { d, shopify } = setup({ ...booked, noon: { ...booked.noon, status: 'picked_up' } }, { taskStatus: 'assigned' });
+  const { syncActiveOrders } = await import('../lib/status.js');
+  assert.equal(await syncActiveOrders(d, [structuredClone(shopify.order)]), 0);
+  d.noon.getTasks = async () => { throw new Error('noon down'); };
+  assert.equal(await syncActiveOrders(d, [structuredClone(shopify.order)]), 0);
+  assert.equal(shopify.order.noon.status, 'picked_up');
 });
