@@ -189,7 +189,7 @@
     {%- if cart.item_count > 0 -%}
       <div class="pl-cartpage__main">
         {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
-        {%- if sale_on contains '1' -%}<p class="plo-sale plo-sale--cart">🎃 <b>Halloween prices unlocked</b> &middot; up to {{ settings.sale_tier_a_pct | default: 30 }}% off at checkout. Check out before they vanish 👻</p>{%- endif -%}
+        {%- if sale_on contains '1' -%}<p class="plo-sale plo-sale--cart">🎃 <b>Halloween sale, this week only.</b> Your discount is applied at checkout.</p>{%- endif -%}
         {{ ladder_html }}
         {%- render 'plaay-eid-countdown' -%}
         {%- render 'cart-drawer-items', bare: true -%}
@@ -217,7 +217,7 @@
     <div class="pl-drawer__scroll" data-cart-items>
       {%- if cart.item_count > 0 -%}
         {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
-        {%- if sale_on contains '1' -%}<p class="plo-sale plo-sale--cart">🎃 <b>Halloween prices unlocked</b> &middot; up to {{ settings.sale_tier_a_pct | default: 30 }}% off at checkout. Check out before they vanish 👻</p>{%- endif -%}
+        {%- if sale_on contains '1' -%}<p class="plo-sale plo-sale--cart">🎃 <b>Halloween sale, this week only.</b> Your discount is applied at checkout.</p>{%- endif -%}
         {{ ladder_html }}
         {%- render 'plaay-eid-countdown' -%}
         {%- render 'cart-drawer-items' -%}
