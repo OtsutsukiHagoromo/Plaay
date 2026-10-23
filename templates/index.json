@@ -185,7 +185,8 @@
             "product": "new-chocolate-slabs-mix-pack-of-6",
             "tint": "#fed8b4",
             "photo_asset": "plo-cat-slabs.jpg",
-            "photo_pos": "92% 50%"
+            "photo_pos": "92% 50%",
+            "sale_badge": "Up to 25% off"
           }
         },
         "cat_2": {
@@ -197,7 +198,8 @@
             "product": "truffle-mix",
             "tint": "#fed8b4",
             "photo_asset": "plo-cat-truffles.jpg",
-            "photo_pos": "95% 50%"
+            "photo_pos": "95% 50%",
+            "sale_badge": "20% off"
           }
         },
         "cat_3": {
@@ -209,7 +211,8 @@
             "product": "salted-caramel-bar-x12",
             "tint": "#fed8b4",
             "photo_asset": "plo-cat-bars.jpg",
-            "photo_pos": "80% 50%"
+            "photo_pos": "80% 50%",
+            "sale_badge": "Up to 30% off"
           }
         },
         "cat_4": {
@@ -221,7 +224,8 @@
             "product": "og-plaayer-pack",
             "tint": "#fed8b4",
             "photo_asset": "plo-cat-packs.jpg",
-            "photo_pos": "95% 50%"
+            "photo_pos": "95% 50%",
+            "sale_badge": "Up to 30% off"
           }
         }
       },

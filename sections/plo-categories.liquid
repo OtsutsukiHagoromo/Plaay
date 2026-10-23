@@ -8,6 +8,7 @@
 <div class="pl plo plo-sec">
   <div class="plo-wrap">
     {%- render 'plo-head', eyebrow: s.eyebrow, bold: s.heading, light: s.heading_light -%}
+    {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
     <div class="plo-cats">
       {%- for block in section.blocks -%}
         {%- liquid
@@ -22,7 +23,7 @@
           {%- if b.photo_asset != blank -%}
             <img class="plo-cat__photo" src="{{ b.photo_asset | asset_img_url: '600x' }}" srcset="{{ b.photo_asset | asset_img_url: '400x' }} 400w, {{ b.photo_asset | asset_img_url: '600x' }} 600w, {{ b.photo_asset | asset_img_url: '900x' }} 900w" sizes="(min-width: 1024px) 25vw, 50vw" alt="" loading="lazy" width="1448" height="1086">
           {%- elsif pic != blank -%}{{ pic | image_url: width: 300 | image_tag: loading: 'lazy', alt: '' }}{%- endif -%}
-          <span><span class="plo-cat__n">{{ b.title }}</span></span>
+          <span><span class="plo-cat__n">{{ b.title }}</span>{%- if sale_on contains '1' and b.sale_badge != blank -%}<span class="plo-cat__sale">{{ b.sale_badge }}</span>{%- endif -%}</span>
         </a>
       {%- endfor -%}
     </div>
@@ -50,7 +51,8 @@
         { "type": "image_picker", "id": "image", "label": "Packshot (overrides product)" },
         { "type": "color", "id": "tint", "label": "Tile colour (Option B)", "default": "#FFF0B3" },
         { "type": "text", "id": "photo_asset", "label": "Full-bleed photo (theme asset file)", "info": "Fills the tile; set the tile colour to the photo's backdrop." },
-        { "type": "text", "id": "photo_pos", "label": "Photo focus (CSS object-position)", "default": "85% 50%" }
+        { "type": "text", "id": "photo_pos", "label": "Photo focus (CSS object-position)", "default": "85% 50%" },
+        { "type": "text", "id": "sale_badge", "label": "Sale label (e.g. Up to 30% off)", "info": "Shown only while the sale kit is active (theme settings)." }
       ]
     }
   ]

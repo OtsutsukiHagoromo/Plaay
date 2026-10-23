@@ -784,6 +784,9 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 .pl-skin-b .plo-cat--photo .plo-cat__photo { position: absolute; inset: 0; right: auto; bottom: auto; z-index: -1; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 85% 50%); mix-blend-mode: normal; transition: transform .5s var(--pl-ease-out); }
 @media (hover: hover) { .pl-skin-b .plo-cat--photo:hover .plo-cat__photo { transform: scale(1.05); } }
 .pl-skin-b .plo-cat--photo .plo-cat__n { position: relative; }
+/* Sitewide sale label under the category name (block setting sale_badge, snippets/sale-active). */
+.plo-cat__sale { position: relative; display: inline-block; margin-top: 8px; padding: 4px 9px; border-radius: 999px; background: #FF8A1F; color: var(--pl-navy); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; line-height: 1.2; }
+@media (min-width: 1024px) { .plo-cat__sale { font-size: 13px; padding: 5px 11px; } }
 .plo-cat--photo .plo-cat__photo { width: 100%; height: 100%; }
 
 /* ==========================================================================
