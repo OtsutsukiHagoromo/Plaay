@@ -444,6 +444,41 @@ function livePanel(o, live) {
 </script>`;
 }
 
+export function renderPromos({ cfg, flash, discounts, error, promotions }) {
+  const when = (iso) => (iso ? dubaiTime(iso, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'no end');
+  const tone = (st) => (st === 'ACTIVE' ? 'ok' : st === 'SCHEDULED' ? 'info' : '');
+  const rows = discounts
+    .map((d) => `<tr><td><strong>${esc(d.title || '(untitled)')}</strong></td><td><span class="b ${tone(d.status)}">${esc((d.status || '').toLowerCase())}</span></td><td>${esc(when(d.startsAt))}</td><td>${esc(when(d.endsAt))}</td><td class="muted">${d.combinesWith ? esc(['product', 'order', 'shipping'].filter((k) => d.combinesWith[`${k}Discounts`]).join(', ') || 'none') : ''}</td></tr>`)
+    .join('');
+  const promoCards = Object.entries(promotions)
+    .map(([key, p]) => {
+      const live = new Date(p.endsAt) > new Date();
+      const have = p.tiers.filter((t) => discounts.some((d) => d.title === t.title)).length;
+      return `<div class="card pc"><div><h2>${esc(p.name)}</h2><div class="muted">${esc(when(p.startsAt))} → ${esc(when(p.endsAt))} (Dubai time)</div>
+      <ul>${p.tiers.map((t) => `<li><strong>${t.percent}%</strong> ${t.all ? 'everything else' : esc(t.handles.join(', '))} ${discounts.some((d) => d.title === t.title) ? '<span class="b ok">in Shopify</span>' : '<span class="b">not created</span>'}</li>`).join('')}</ul></div>
+      ${live && have < p.tiers.length ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="create-promotion"><input type="hidden" name="promotion" value="${esc(key)}"><input type="hidden" name="back" value="/promos"><button class="yellow" onclick="return confirm('Create the ${esc(p.name)} discounts in Shopify? Customers get them automatically.')">Create discounts in Shopify</button></form>` : ''}</div>`;
+    })
+    .join('');
+  const body = `
+<a class="backlink" href="/">← Express orders</a>
+${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
+<h1>Promotions</h1>
+<p class="muted">Sales set up from here become automatic discounts in Shopify. Each product gets its single best discount.</p>
+${promoCards}
+<h2 class="h2">Automatic discounts in Shopify</h2>
+${error ? `<div class="panel bad-b">Could not read discounts: ${esc(error)}</div>` : ''}
+<div class="tw"><table><thead><tr><th>Discount</th><th>Status</th><th>Starts</th><th>Ends</th><th>Combines with</th></tr></thead><tbody>${rows || '<tr><td colspan="5" class="muted">No automatic discounts.</td></tr>'}</tbody></table></div>
+<style>
+  .backlink { display: inline-block; margin-bottom: 12px; font-weight: 700; text-decoration: none; color: var(--muted); }
+  .pc { background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; padding: 16px 18px; margin: 14px 0; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; align-items: start; }
+  .pc h2 { margin: 0; font-size: 18px; font-weight: 900; } .pc ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+  .h2 { font-weight: 900; font-size: 18px; margin: 22px 0 8px; }
+  .tw { overflow-x: auto; } table { width: 100%; border-collapse: collapse; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; min-width: 640px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); font-size: 14px; } th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--cream); }
+</style>`;
+  return shell({ cfg, title: 'Promotions', body });
+}
+
 export function renderNewOrder({ cfg, flash }) {
   const staging = cfg.noon.baseUrl.includes('noonstg');
   const field = (name, label, attrs = '', hint = '') =>

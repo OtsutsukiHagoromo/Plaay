@@ -8,9 +8,10 @@ import { connectWebhooks, createManualOrder, createTestOrder, getConnection } fr
 import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { buildLive } from './live.js';
+import { createPromotion, listAutomaticDiscounts, PROMOTIONS } from './promos.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
-import { renderDashboard, renderNewOrder, renderOrderDetail, renderTrackingPage } from './views.js';
+import { renderDashboard, renderNewOrder, renderOrderDetail, renderPromos, renderTrackingPage } from './views.js';
 
 const json = (body, status = 200) => Response.json(body, { status });
 
@@ -111,7 +112,7 @@ export async function handleDashboard(request, d) {
     const form = await request.formData();
     const orderId = String(form.get('order') || '');
     const action = String(form.get('action') || '');
-    if (!['connect', 'test-order', 'create-order'].includes(action) && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
+    if (!['connect', 'test-order', 'create-order', 'create-promotion'].includes(action) && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
 
     let result;
     try {
@@ -125,6 +126,10 @@ export async function handleDashboard(request, d) {
         if (!isStaging(d.cfg)) return new Response('Test orders are only allowed while noon is on staging', { status: 403 });
         const order = await createTestOrder(d.shopify);
         result = { ok: true, message: `Test order ${order.name} created. It appears below once Shopify's order webhook arrives (a few seconds); refresh if needed.` };
+      } else if (action === 'create-promotion') {
+        const results = await createPromotion(d.shopify, String(form.get('promotion') || ''));
+        form.set('back', '/promos');
+        result = { ok: true, message: results.map((r) => `${r.title}: ${r.created ? 'created' : r.skipped}`).join(' · ') };
       } else if (action === 'create-order') {
         const f = {
           name: String(form.get('name') || '').trim().slice(0, 100),
@@ -164,6 +169,16 @@ export async function handleDashboard(request, d) {
   const html = (body) => new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
 
   if (url.searchParams.has('new')) return html(renderNewOrder({ cfg: d.cfg, flash }));
+  if (url.searchParams.has('promos')) {
+    let discounts = [];
+    let error = '';
+    try {
+      discounts = await listAutomaticDiscounts(d.shopify);
+    } catch (err) {
+      error = err.message;
+    }
+    return html(renderPromos({ cfg: d.cfg, flash, discounts, error, promotions: PROMOTIONS }));
+  }
 
   const orderParam = url.searchParams.get('order');
   if (orderParam) {
