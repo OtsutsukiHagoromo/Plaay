@@ -129,7 +129,7 @@ export async function handleDashboard(request, d) {
       } else if (action === 'create-promotion') {
         const results = await createPromotion(d.shopify, String(form.get('promotion') || ''));
         form.set('back', '/promos');
-        result = { ok: true, message: results.map((r) => `${r.title}: ${r.created ? 'created' : r.skipped}`).join(' · ') };
+        result = { ok: true, message: results.map((r) => `${r.title}: ${r.removed ? 'removed' : r.created ? `created (${r.count} products)` : r.skipped}`).join(' · ') };
       } else if (action === 'create-order') {
         const f = {
           name: String(form.get('name') || '').trim().slice(0, 100),

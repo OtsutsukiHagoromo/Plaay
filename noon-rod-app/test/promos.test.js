@@ -2,18 +2,27 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { createPromotion } from '../lib/promos.js';
 
-function fakeShop({ existing = [], products = ['og-plaayer-pack', 'plaayer-pack', 'bar-bunch', 'new-chocolate-slabs-mix-pack-of-6', 'truffle-mix'] } = {}) {
+const CATALOG = ['og-plaayer-pack', 'plaayer-pack', 'bar-bunch', 'new-chocolate-slabs-mix-pack-of-6', 'truffle-mix', 'triple-chocolate-truffle', 'plaay-70-dark-chocolate-bar-6-x-80g'];
+
+function fakeShop({ existing = [], products = CATALOG } = {}) {
   const created = [];
+  const deleted = [];
   return {
     created,
+    deleted,
     async graphql(query, vars) {
-      if (query.includes('automaticDiscountNodes')) return { automaticDiscountNodes: { nodes: [...existing, ...created].map((d, i) => ({ id: `gid://d/${i}`, automaticDiscount: d })) } };
+      if (query.includes('automaticDiscountNodes')) return { automaticDiscountNodes: { nodes: [...existing, ...created].filter((d) => !deleted.includes(d.id)).map((d) => ({ id: d.id, automaticDiscount: d })) } };
+      if (query.includes('discountAutomaticDelete')) {
+        deleted.push(vars.id);
+        return { discountAutomaticDelete: { deletedAutomaticDiscountId: vars.id, userErrors: [] } };
+      }
+      if (query.includes('products(first: 250')) return { products: { nodes: products.map((h) => ({ id: `gid://shopify/Product/${h}`, handle: h, title: h })), pageInfo: { hasNextPage: false, endCursor: null } } };
       if (query.includes('products(')) {
         const wanted = vars.q.split(' OR ').map((s) => s.replace('handle:', ''));
         return { products: { nodes: wanted.filter((h) => products.includes(h)).map((h) => ({ id: `gid://shopify/Product/${h}`, handle: h, title: h })) } };
       }
       if (query.includes('discountAutomaticBasicCreate')) {
-        created.push({ title: vars.d.title, input: vars.d });
+        created.push({ id: `gid://new/${created.length + 1}`, title: vars.d.title, input: vars.d });
         return { discountAutomaticBasicCreate: { automaticDiscountNode: { id: `gid://new/${created.length}` }, userErrors: [] } };
       }
       throw new Error('unexpected query');
@@ -33,7 +42,8 @@ test('creates three tiers with the right products, percentages, dates and combin
   assert.equal(m.customerGets.value.percentage, 0.25);
   assert.deepEqual(m.customerGets.items.products.productsToAdd, ['gid://shopify/Product/new-chocolate-slabs-mix-pack-of-6', 'gid://shopify/Product/truffle-mix']);
   assert.equal(all.customerGets.value.percentage, 0.2);
-  assert.deepEqual(all.customerGets.items, { all: true });
+  // Disjoint: the 20% lists every other product, never the 30% / 25% packs.
+  assert.deepEqual(all.customerGets.items.products.productsToAdd, ['gid://shopify/Product/triple-chocolate-truffle', 'gid://shopify/Product/plaay-70-dark-chocolate-bar-6-x-80g']);
   for (const d of [v, m, all]) {
     assert.equal(d.startsAt, '2026-10-23T20:00:00.000Z'); // 24 Oct 00:00 GST
     assert.equal(d.endsAt, '2026-10-31T19:59:59.000Z'); // 31 Oct 23:59:59 GST
@@ -41,12 +51,21 @@ test('creates three tiers with the right products, percentages, dates and combin
   }
 });
 
-test('running it again creates nothing new', async () => {
+test('running it again keeps the fixed tiers and rebuilds only the catch-all', async () => {
   const shop = fakeShop();
   await createPromotion(shop, 'halloween-2026', now);
   const again = await createPromotion(shop, 'halloween-2026', now);
-  assert.ok(again.every((r) => r.skipped));
-  assert.equal(shop.created.length, 3);
+  assert.equal(again.filter((r) => r.skipped).length, 2);
+  assert.equal(shop.deleted.length, 1);
+  const live = (await shop.graphql('automaticDiscountNodes')).automaticDiscountNodes.nodes;
+  assert.equal(live.length, 3);
+});
+
+test('replaces the earlier overlapping 20% discount', async () => {
+  const shop = fakeShop({ existing: [{ id: 'gid://old/20', title: 'Halloween 2026 · 20% off everything' }] });
+  const r = await createPromotion(shop, 'halloween-2026', now);
+  assert.ok(r.some((x) => x.removed && x.title === 'Halloween 2026 · 20% off everything'));
+  assert.deepEqual(shop.deleted, ['gid://old/20']);
 });
 
 test('a missing product stops before creating that tier', async () => {

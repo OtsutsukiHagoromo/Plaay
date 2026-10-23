@@ -455,8 +455,8 @@ export function renderPromos({ cfg, flash, discounts, error, promotions }) {
       const live = new Date(p.endsAt) > new Date();
       const have = p.tiers.filter((t) => discounts.some((d) => d.title === t.title)).length;
       return `<div class="card pc"><div><h2>${esc(p.name)}</h2><div class="muted">${esc(when(p.startsAt))} → ${esc(when(p.endsAt))} (Dubai time)</div>
-      <ul>${p.tiers.map((t) => `<li><strong>${t.percent}%</strong> ${t.all ? 'everything else' : esc(t.handles.join(', '))} ${discounts.some((d) => d.title === t.title) ? '<span class="b ok">in Shopify</span>' : '<span class="b">not created</span>'}</li>`).join('')}</ul></div>
-      ${live && have < p.tiers.length ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="create-promotion"><input type="hidden" name="promotion" value="${esc(key)}"><input type="hidden" name="back" value="/promos"><button class="yellow" onclick="return confirm('Create the ${esc(p.name)} discounts in Shopify? Customers get them automatically.')">Create discounts in Shopify</button></form>` : ''}</div>`;
+      <ul>${p.tiers.map((t) => `<li><strong>${t.percent}%</strong> ${t.allExcept ? 'every other product' : esc(t.handles.join(', '))} ${discounts.some((d) => d.title === t.title) ? '<span class="b ok">in Shopify</span>' : '<span class="b">not created</span>'}</li>`).join('')}</ul></div>
+      ${live ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="create-promotion"><input type="hidden" name="promotion" value="${esc(key)}"><input type="hidden" name="back" value="/promos"><button class="yellow" onclick="return confirm('Create the ${esc(p.name)} discounts in Shopify? Customers get them automatically.')">${have < p.tiers.length ? 'Create discounts in Shopify' : 'Refresh discounts'}</button></form>` : ''}</div>`;
     })
     .join('');
   const body = `
