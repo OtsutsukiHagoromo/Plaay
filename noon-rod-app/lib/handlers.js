@@ -61,10 +61,15 @@ export async function handleShopifyWebhook(request, d) {
   }
 }
 
-// ---- noon webhooks (noon sends our NOON_WEBHOOK_KEY as X-API-Key) ----
+// ---- noon webhooks ----
 
+// The X-API-Key is required on production. noon's staging system can't send headers, so on
+// staging a request without one is accepted (a wrong key is still rejected). Status updates
+// are verified against noon's API in both cases; see handleStatusUpdate.
 function noonAuthorized(request, d) {
-  return safeEqual(request.headers.get('x-api-key'), d.cfg.noon.webhookKey);
+  const key = request.headers.get('x-api-key');
+  if (key === null && isStaging(d.cfg)) return true;
+  return safeEqual(key, d.cfg.noon.webhookKey);
 }
 
 export async function handleNoonStatus(request, d) {

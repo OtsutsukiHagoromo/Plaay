@@ -25,7 +25,7 @@ The app has no database. All state lives on the Shopify order as tags and `noon.
 | Path | Purpose |
 |---|---|
 | `api/shopify-webhook.js` | Receives `orders/create`, `orders/updated`, `orders/cancelled` (HMAC-verified) |
-| `api/noon-status.js` | noon task status webhook (checks our `X-API-Key`) |
+| `api/noon-status.js` | noon task status webhook. `X-API-Key` is required on production and optional on staging, because noon's staging system can't send it. Either way, the status is re-read from noon's API before anything changes, so a forged request can't mark an order delivered. |
 | `api/noon-location.js` | noon rider location webhook (acknowledged; the tracking page reads live position from task details) |
 | `api/dashboard.js` | Staff dispatch dashboard at `/` (password protected) |
 | `api/track.js`, `api/track-data.js` | Customer tracking page at `/track/<signed token>` |

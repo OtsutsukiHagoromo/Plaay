@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import { test } from 'node:test';
 import { cancelDispatch, dispatchOrder } from '../lib/dispatch.js';
-import { handleDashboard, handleNoonStatus, handleShopifyWebhook, handleTrackData } from '../lib/handlers.js';
+import { handleDashboard, handleNoonLocation, handleNoonStatus, handleShopifyWebhook, handleTrackData } from '../lib/handlers.js';
+import { NoonError } from '../lib/noon.js';
 import { handleStatusUpdate } from '../lib/status.js';
 import { trackingToken } from '../lib/tracking.js';
 import { cfg, fakeNoon, fakeShopify, makeOrder, quietLog } from './helpers.js';
@@ -94,7 +95,7 @@ const booked = { tags: ['noon-express', 'noon-dispatched'], noon: { taskNr: 'TAS
 const update = (status) => ({ order_nr: 'TASK123', status_code: status, order_reference: '#1234', timestamp: '2026-09-30 12:00:00' });
 
 test('picked_up fulfils the order with a tracking link and notifies the customer', async () => {
-  const { d, shopify } = setup(booked);
+  const { d, shopify } = setup(booked, { taskStatus: 'picked_up' });
   await handleStatusUpdate(d, update('picked_up'));
   const fulfil = shopify.calls.find((c) => c[0] === 'createFulfillment')[1];
   assert.equal(fulfil.notifyCustomer, true);
@@ -105,7 +106,7 @@ test('picked_up fulfils the order with a tracking link and notifies the customer
 });
 
 test('delivered marks the fulfillment delivered (creating it silently if pickup was missed)', async () => {
-  const { d, shopify } = setup(booked);
+  const { d, shopify } = setup(booked, { taskStatus: 'delivered' });
   await handleStatusUpdate(d, update('delivered'));
   assert.equal(shopify.calls.find((c) => c[0] === 'createFulfillment')[1].notifyCustomer, false);
   assert.deepEqual(shopify.calls.find((c) => c[0] === 'createFulfillmentEvent').slice(2), ['DELIVERED']);
@@ -113,7 +114,7 @@ test('delivered marks the fulfillment delivered (creating it silently if pickup 
 });
 
 test('out-of-order and stale webhooks are ignored', async () => {
-  const late = setup({ ...booked, noon: { ...booked.noon, status: 'picked_up' } });
+  const late = setup({ ...booked, noon: { ...booked.noon, status: 'picked_up' } }, { taskStatus: 'assigned' });
   assert.match((await handleStatusUpdate(late.d, update('assigned'))).ignored, /out-of-order/);
   assert.equal(late.shopify.calls.length, 0);
 
@@ -123,7 +124,7 @@ test('out-of-order and stale webhooks are ignored', async () => {
 });
 
 test('undelivered flags the order and frees it for re-booking', async () => {
-  const { d, shopify } = setup({ ...booked, noon: { ...booked.noon, status: 'picked_up', fulfillmentId: 'F1' } });
+  const { d, shopify } = setup({ ...booked, noon: { ...booked.noon, status: 'picked_up', fulfillmentId: 'F1' } }, { taskStatus: 'undelivered' });
   await handleStatusUpdate(d, update('undelivered'));
   assert.deepEqual(shopify.calls.find((c) => c[0] === 'createFulfillmentEvent').slice(1), ['F1', 'FAILURE']);
   assert.ok(shopify.order.tags.includes('noon-undelivered'));
@@ -166,17 +167,49 @@ test('orders/create tags express orders; orders/updated with noon-dispatch books
   assert.equal(noon.calls.filter((c) => c[0] === 'createTask').length, 1);
 });
 
-test('noon status webhook requires the shared key', async () => {
-  const { d } = setup(booked);
-  const req = (key) =>
-    new Request('https://noon.example.com/api/noon-status', {
+test('noon webhook key: optional on staging (noon staging cannot send it), required on production', async () => {
+  const req = (path, key) =>
+    new Request(`https://noon.example.com/api/${path}`, {
       method: 'POST',
       body: JSON.stringify(update('assigned')),
       headers: key ? { 'x-api-key': key } : {},
     });
-  assert.equal((await handleNoonStatus(req(), d)).status, 401);
-  assert.equal((await handleNoonStatus(req('nope'), d)).status, 401);
-  assert.equal((await handleNoonStatus(req('noon-secret'), d)).status, 200);
+  const staging = setup(booked, { taskStatus: 'assigned' }).d; // test cfg points at noon staging
+  assert.equal((await handleNoonStatus(req('noon-status'), staging)).status, 200);
+  assert.equal((await handleNoonStatus(req('noon-status', 'noon-secret'), staging)).status, 200);
+  assert.equal((await handleNoonStatus(req('noon-status', 'nope'), staging)).status, 401);
+  assert.equal((await handleNoonLocation(req('noon-location'), staging)).status, 200);
+
+  const prod = { ...staging, cfg: { ...cfg, noon: { ...cfg.noon, baseUrl: 'https://food-api-team.noon.team' } } };
+  assert.equal((await handleNoonStatus(req('noon-status'), prod)).status, 401);
+  assert.equal((await handleNoonLocation(req('noon-location'), prod)).status, 401);
+  assert.equal((await handleNoonStatus(req('noon-status', 'nope'), prod)).status, 401);
+  assert.equal((await handleNoonStatus(req('noon-status', 'noon-secret'), prod)).status, 200);
+});
+
+test('a forged webhook cannot mark an order delivered: the status comes from noon\'s API', async () => {
+  const { d, shopify, noon } = setup(booked, { taskStatus: 'assigned' });
+  const r = await handleStatusUpdate(d, update('delivered'));
+  assert.equal(r.status, 'assigned');
+  assert.deepEqual(noon.calls[0], ['getTask', 'TASK123']);
+  assert.ok(!shopify.calls.some((c) => c[0] === 'createFulfillment' || c[0] === 'createFulfillmentEvent'));
+  assert.ok(!shopify.order.tags.includes('noon-delivered'));
+});
+
+test('unknown tasks, and tasks from other orders, are ignored', async () => {
+  const notOurs = setup({}, { task: { status_code: 'delivered', order_id: '#9999 - TASK123' } });
+  assert.match((await handleStatusUpdate(notOurs.d, update('delivered'))).ignored, /does not belong/);
+  assert.equal(notOurs.shopify.calls.length, 0);
+
+  const ours = setup({}, { task: { status_code: 'assigned', order_id: '#1234 - TASK123' } });
+  assert.equal((await handleStatusUpdate(ours.d, update('assigned'))).status, 'assigned');
+
+  const unknown = setup(booked);
+  unknown.noon.getTask = async () => { throw new NoonError('not found', 404, null); };
+  assert.match((await handleStatusUpdate(unknown.d, update('delivered'))).ignored, /unknown task/);
+  const down = setup(booked);
+  down.noon.getTask = async () => { throw new NoonError('down', 503, null); };
+  await assert.rejects(handleStatusUpdate(down.d, update('delivered')), /down/); // retried by noon
 });
 
 test('dashboard needs the password and blocks cross-site posts', async () => {
