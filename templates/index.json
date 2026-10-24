@@ -63,11 +63,66 @@
             "sticker_big": "",
             "sticker_small": ""
           }
+        },
+        "banner_tiers": {
+          "type": "slide",
+          "settings": {
+            "style": "image",
+            "bg": "#ffffff",
+            "image_asset": "plo-hero-tiers.jpg",
+            "image_alt": "Shop more, save more: free delivery over AED 99, 10% off over AED 299, 18% off over AED 500",
+            "image_mobile_asset": "plo-hero-tiers-m.jpg",
+            "image_mobile_ratio": "1000 / 1648",
+            "image_2_asset": "",
+            "eyebrow": "",
+            "heading": "",
+            "heading_mark": "",
+            "body": "",
+            "btn_label": "",
+            "btn_url": "shopify://collections/shop-all",
+            "btn_arrow": true,
+            "btn_navy": false,
+            "link_label": "",
+            "link_url": "",
+            "show_rating": true,
+            "chips": "",
+            "sticker_big": "",
+            "sticker_small": "",
+            "hide_in_sale": true
+          }
+        },
+        "banner_subscribe": {
+          "type": "slide",
+          "settings": {
+            "style": "image",
+            "bg": "#ffffff",
+            "image_asset": "plo-hero-subscribe.jpg",
+            "image_alt": "Subscribe and save 15% on every order, free delivery, skip or cancel anytime",
+            "image_mobile_asset": "plo-hero-subscribe-m.jpg",
+            "image_mobile_ratio": "1000 / 1648",
+            "image_2_asset": "",
+            "eyebrow": "",
+            "heading": "",
+            "heading_mark": "",
+            "body": "",
+            "btn_label": "",
+            "btn_url": "shopify://pages/subscribe-save",
+            "btn_arrow": true,
+            "btn_navy": false,
+            "link_label": "",
+            "link_url": "",
+            "show_rating": true,
+            "chips": "",
+            "sticker_big": "",
+            "sticker_small": ""
+          }
         }
       },
       "block_order": [
         "banner_halloween",
-        "banner_freedom"
+        "banner_freedom",
+        "banner_tiers",
+        "banner_subscribe"
       ],
       "settings": {
         "promo": false,

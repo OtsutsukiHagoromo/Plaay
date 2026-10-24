@@ -20,7 +20,20 @@
     assign count = settings.store_rating_count | append: '' | plus: 0
   endif
   assign rating = rating | round: 1
-  assign n = section.blocks.size
+-%}
+{%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
+{%- liquid
+  comment
+    Slides ticked "Hide during the sale" (e.g. the rewards-tier banner, whose offers are paused
+    while the sale runs) drop out of the carousel and its dots until the sale ends.
+  endcomment
+  assign n = 0
+  for block in section.blocks
+    unless block.settings.hide_in_sale and sale_on contains '1'
+      assign n = n | plus: 1
+    endunless
+  endfor
+  assign idx = 0
 -%}
 {%- capture tick -%}{%- render 'pl-icon', name: 'check', size: 10, stroke: 4 -%}{%- endcapture -%}
 {%- capture arrow -%}{%- render 'pl-icon', name: 'arrow-right', size: 18, stroke: 3 -%}{%- endcapture -%}
@@ -29,7 +42,13 @@
   <div class="plo-car"{% if n > 1 %} data-plo-carousel data-interval="{{ s.interval }}"{% endif %}>
     <div class="plo-car__track" data-plo-track>
       {%- for block in section.blocks -%}
+        {%- if block.settings.hide_in_sale and sale_on contains '1' -%}{%- continue -%}{%- endif -%}
         {%- liquid
+          assign idx = idx | plus: 1
+          assign is_first = false
+          if idx == 1
+            assign is_first = true
+          endif
           assign b = block.settings
           assign dark = false
           if b.style == 'navy'
@@ -49,7 +68,7 @@
           endif
           assign heading_html = heading_html | replace: '|', '<br>'
         -%}
-        <section class="plo-bn plo-bn--{{ b.style }}" style="--bn-bg: {{ b.bg }};" data-bg="{{ b.bg }}" data-dark="{{ dark }}" aria-roledescription="slide" aria-label="{{ forloop.index }} of {{ n }}" {{ block.shopify_attributes }}>
+        <section class="plo-bn plo-bn--{{ b.style }}" style="--bn-bg: {{ b.bg }};" data-bg="{{ b.bg }}" data-dark="{{ dark }}" aria-roledescription="slide" aria-label="{{ idx }} of {{ n }}" {{ block.shopify_attributes }}>
           {%- case b.style -%}
             {%- when 'image' -%}
               {%- liquid
@@ -73,21 +92,21 @@
                     <source media="(max-width: 767px)" srcset="{{ b.image_mobile_asset | asset_url }}">
                   {%- endif -%}
                   {%- if b.image != blank -%}
-                    <img src="{{ b.image | image_url: width: 1920 }}" srcset="{{ b.image | image_url: width: 1024 }} 1024w, {{ b.image | image_url: width: 1440 }} 1440w, {{ b.image | image_url: width: 1920 }} 1920w, {{ b.image | image_url: width: 2560 }} 2560w" sizes="100vw" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+                    <img src="{{ b.image | image_url: width: 1920 }}" srcset="{{ b.image | image_url: width: 1024 }} 1024w, {{ b.image | image_url: width: 1440 }} 1440w, {{ b.image | image_url: width: 1920 }} 1920w, {{ b.image | image_url: width: 2560 }} 2560w" sizes="100vw" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if idx == 1 %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
                   {%- else -%}
-                    <img src="{{ b.image_asset | asset_img_url: '1440x' }}" srcset="{{ b.image_asset | asset_img_url: '1024x' }} 1024w, {{ b.image_asset | asset_img_url: '1440x' }} 1440w, {{ b.image_asset | asset_url }} 1920w" sizes="100vw" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if forloop.first %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
+                    <img src="{{ b.image_asset | asset_img_url: '1440x' }}" srcset="{{ b.image_asset | asset_img_url: '1024x' }} 1024w, {{ b.image_asset | asset_img_url: '1440x' }} 1440w, {{ b.image_asset | asset_url }} 1920w" sizes="100vw" alt="{{ b.image_alt | escape }}" width="{{ w }}" height="{{ h }}"{% if idx == 1 %} loading="eager" fetchpriority="high"{% else %} loading="lazy"{% endif %} decoding="async">
                   {%- endif -%}
                 </picture>
               </a>
-              {%- if forloop.first and s.promo == false -%}<h1 class="pl-vh">{{ b.image_alt | default: shop.name }}</h1>{%- endif -%}
+              {%- if idx == 1 and s.promo == false -%}<h1 class="pl-vh">{{ b.image_alt | default: shop.name }}</h1>{%- endif -%}
             {%- when 'collage' -%}
               <div class="plo-bn__art" aria-hidden="true">
-                <div class="plo-bn__photo plo-bn__photo--1">{%- render 'plo-img', image: b.image, asset: b.image_asset, width: 900, eager: forloop.first -%}</div>
-                <div class="plo-bn__photo plo-bn__photo--2">{%- render 'plo-img', image: b.image_2, asset: b.image_2_asset, width: 700, eager: forloop.first -%}</div>
+                <div class="plo-bn__photo plo-bn__photo--1">{%- render 'plo-img', image: b.image, asset: b.image_asset, width: 900, eager: is_first -%}</div>
+                <div class="plo-bn__photo plo-bn__photo--2">{%- render 'plo-img', image: b.image_2, asset: b.image_2_asset, width: 700, eager: is_first -%}</div>
                 {%- if b.sticker_big != blank -%}<div class="plo-sticker"><span>{{ b.sticker_big }}<br><small style="font-size:.7em">{{ b.sticker_small }}</small></span></div>{%- endif -%}
               </div>
             {%- else -%}
-              <div class="plo-bn__media">{%- render 'plo-img', image: b.image, asset: b.image_asset, width: 2000, alt: b.image_alt, eager: forloop.first -%}</div>
+              <div class="plo-bn__media">{%- render 'plo-img', image: b.image, asset: b.image_asset, width: 2000, alt: b.image_alt, eager: is_first -%}</div>
               {%- if b.style == 'navy' and b.sticker_big != blank -%}
                 <div class="plo-sticker"><span><span style="font-size:2.6em;display:block;line-height:.9">{{ b.sticker_big }}</span>{{ b.sticker_small }}</span></div>
               {%- endif -%}
@@ -98,7 +117,7 @@
             {%- if b.eyebrow != blank -%}
               <span class="plo-bn__eyebrow{% if b.style == 'photo' %} plo-bn__pill{% endif %}">{{ b.eyebrow }}</span>
             {%- endif -%}
-            {%- if forloop.first and s.promo == false -%}
+            {%- if idx == 1 and s.promo == false -%}
               <h1 class="plo-bn__h">{{ heading_html }}</h1>
             {%- else -%}
               <h2 class="plo-bn__h">{{ heading_html }}</h2>
@@ -129,8 +148,8 @@
     </div>
     {%- if n > 1 -%}
       <div class="plo-car__dots" data-plo-dots role="tablist" aria-label="Choose banner">
-        {%- for block in section.blocks -%}
-          <button type="button" class="plo-car__dot" data-plo-dot aria-label="Banner {{ forloop.index }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
+        {%- for i in (1..n) -%}
+          <button type="button" class="plo-car__dot" data-plo-dot aria-label="Banner {{ i }}"{% if i == 1 %} aria-current="true"{% endif %}></button>
         {%- endfor -%}
       </div>
     {%- endif -%}
@@ -178,7 +197,8 @@
         { "type": "checkbox", "id": "show_rating", "label": "Show store rating", "default": true },
         { "type": "text", "id": "chips", "label": "Claim chips (comma separated)" },
         { "type": "text", "id": "sticker_big", "label": "Sticker, big text" },
-        { "type": "text", "id": "sticker_small", "label": "Sticker, small text" }
+        { "type": "text", "id": "sticker_small", "label": "Sticker, small text" },
+        { "type": "checkbox", "id": "hide_in_sale", "label": "Hide during the sale", "info": "While the Sale kit (theme settings) is running.", "default": false }
       ]
     }
   ]
