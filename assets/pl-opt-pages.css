@@ -325,3 +325,12 @@ a.plo-cnt__way:hover b { color: var(--pl-purple); }
 @media (prefers-reduced-motion: reduce) {
 .plo-wl__dot { animation: none; opacity: .5; }
 }
+
+/* Subscribe page: finished banner artwork instead of the text hero */
+.plo-sub__banner { padding: 12px 0 0; background: none; }
+.plo-sub__banner .plo-hero__banner { display: block; overflow: hidden; border-radius: 20px; background: #FF9114; }
+.plo-sub__banner .plo-hero__banner img { display: block; width: 100%; height: auto; }
+@media (min-width: 768px) {
+  .plo-sub__banner { padding-top: 20px; }
+  .plo-sub__banner .plo-hero__banner { border-radius: 24px; }
+}

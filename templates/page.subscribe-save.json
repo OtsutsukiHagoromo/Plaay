@@ -30,7 +30,10 @@
         "s2",
         "s3"
       ],
-      "settings": {}
+      "settings": {
+        "banner_asset": "plo-hero-subscribe.jpg",
+        "banner_alt": "Taste freedom. Subscribe and save 15% on every order, free delivery, skip, pause or cancel anytime"
+      }
     },
     "faq": {
       "type": "plo-pdp-faq",

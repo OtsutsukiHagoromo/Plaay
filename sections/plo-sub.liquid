@@ -27,6 +27,20 @@
   endfor
 -%}
 <div class="pl plo plo-sub">
+  {%- comment -%}
+    A finished banner (copy in the artwork) replaces the text hero when "Banner" is set. Same
+    horizontal artwork on desktop and phones.
+  {%- endcomment -%}
+  {%- if s.banner_asset != blank -%}
+  <header class="plo-hero plo-hero--image plo-sub__banner">
+    <div class="plo-wrap">
+      <h1 class="pl-vh">{{ s.heading | replace: '|', ' ' }}</h1>
+      <picture class="plo-hero__banner">
+        <img src="{{ s.banner_asset | asset_img_url: '1400x' }}" srcset="{{ s.banner_asset | asset_img_url: '800x' }} 800w, {{ s.banner_asset | asset_img_url: '1200x' }} 1200w, {{ s.banner_asset | asset_url }} 1920w" sizes="(min-width: 1360px) 1280px, calc(100vw - 32px)" alt="{{ s.banner_alt | escape }}" width="1920" height="800" loading="eager" fetchpriority="high">
+      </picture>
+    </div>
+  </header>
+  {%- else -%}
   <header class="plo-hero plo-sub__hero" style="--tint: {{ s.tint }}; --ink: {{ s.ink }};">
     <div class="plo-wrap plo-hero__in">
       <div class="plo-hero__copy">
@@ -45,6 +59,7 @@
       <div class="plo-sub__badge" aria-hidden="true"><b>{{ s.save_big }}</b><span>{{ s.save_small }}</span></div>
     </div>
   </header>
+  {%- endif -%}
 
   <div class="plo-wrap plo-sub__shop" id="plo-sub-shop" data-plo-sub>
     <div class="plo-sub__bar">
@@ -118,6 +133,8 @@
   "name": "Preview: subscribe page",
   "tag": "section",
   "settings": [
+    { "type": "text", "id": "banner_asset", "label": "Banner (theme asset file)", "info": "A finished horizontal banner, shown instead of the text hero on desktop and phones." },
+    { "type": "text", "id": "banner_alt", "label": "Banner alt text" },
     { "type": "text", "id": "eyebrow", "label": "Tag", "default": "Subscribe & Save" },
     { "type": "text", "id": "heading", "label": "Heading (| = new line)", "default": "Good Chocolate,|on Repeat" },
     { "type": "text", "id": "line", "label": "One line under the heading", "default": "Pick your favourites, we deliver them on your schedule." },
