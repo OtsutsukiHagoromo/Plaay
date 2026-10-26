@@ -154,11 +154,16 @@
                   assign cw = 0.308
                   assign ch = 0.83
                   if p.handle == 'dense-chocolate-fudge-truffle'
+                    comment
+                      No clean single-box shot exists: in its 10 x 60g shot the 60g box has a truffle stack
+                      in front of its right half, so the crop takes the box with its truffles (a corner of
+                      the "x10" tag shows top right). A proper 60g shot would replace this.
+                    endcomment
                     assign want = '10 x 60'
-                    assign cx = 0.42
-                    assign cy = 0.16
-                    assign cw = 0.195
-                    assign ch = 0.69
+                    assign cx = 0.434
+                    assign cy = 0.165
+                    assign cw = 0.37
+                    assign ch = 0.685
                   endif
                   for pv in p.variants
                     assign pvt = pv.title | downcase
