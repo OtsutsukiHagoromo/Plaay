@@ -136,6 +136,7 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 .pl .pl-boxline__img img:first-child { left: 4%; top: 4%; }
 .pl .pl-boxline__img img + img { right: 4%; bottom: 4%; left: auto; top: auto; }
 .pl .pl-boxline__img img:only-child { inset: 0; margin: auto; width: 88%; height: 88%; }
+.pl .pl-boxline__img img[src*="plo-ph-"] { filter: brightness(1.065); }
 .pl .pl-boxline__icon { color: var(--pl-navy); opacity: .55; display: flex; }
 .pl .pl-boxline__rows { list-style: none; margin: 2px 0 0; padding: 0; display: grid; gap: 6px; }
 .pl .pl-boxline__rows li { display: grid; gap: 1px; font-size: var(--pl-t2); line-height: 1.35; color: var(--pl-navy); }

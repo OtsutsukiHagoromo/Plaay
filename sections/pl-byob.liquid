@@ -197,7 +197,7 @@
                   endif
                 endif
               -%}
-              <div class="pl-byob__pic{% if pic != '' %} is-one{% endif %}">
+              <div class="pl-byob__pic{% if pic != '' %} is-one{% if type == 'slab' %} is-studio{% endif %}{% endif %}">
                 {%- if pic != '' -%}
                   <img src="{{ pic }}" alt="" loading="lazy" width="240" height="240">
                 {%- elsif p.featured_image -%}

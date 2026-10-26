@@ -75,6 +75,8 @@
 /* Single-piece shots (a 60g truffle box, one slab): a little more room, and the studio shots'
    white ground melts into the tile. */
 .pl .pl-byob__pic.is-one img { padding: 10px 12px; mix-blend-mode: multiply; }
+/* The slab studio shots sit on pale grey (~241,243,242); lifting it to white lets multiply melt it into the cream. */
+.pl .pl-byob__pic.is-studio img { filter: brightness(1.065); }
 .pl .pl-byob__qty {
   position: absolute; top: 6px; right: 6px; min-width: 22px; height: 22px; padding: 0 6px;
   border-radius: 999px; background: var(--pl-navy); color: var(--pl-white);
