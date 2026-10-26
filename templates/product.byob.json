@@ -5,21 +5,17 @@
       "settings": {
         "eyebrow": "Mix and match",
         "heading": "Build your box",
-        "subheading": "Pick any flavours you like, in any combination. Same price as our ready-made packs — you just choose what goes in.",
-        "size_heading": "Choose your box size",
+        "subheading": "Pick any truffles and slabs you like, in any mix and as many as you want. You pay per piece.",
         "pick_heading": "Fill your box",
         "buy_heading": "How often?",
-        "best_value_index": 3,
-        "tier_1_qty": 0,
-        "tier_2_qty": 0,
-        "tier_3_qty": 0,
-        "cat_1_label": "Slabs",
-        "cat_1_collection": "new-chocolate-slabs",
-        "cat_2_label": "Truffles",
-        "cat_2_collection": "chocolate-truffles",
-        "cat_3_label": "",
-        "cat_3_collection": "",
-        "note": "Every box ships free. Skip, swap or cancel a subscription any time."
+        "note": "Boxes of 6 or more ship free. Skip, swap or cancel a subscription any time.",
+        "min_qty": 6,
+        "truffle_label": "Truffles",
+        "truffle_size": "60g",
+        "truffle_collection": "chocolate-truffles",
+        "slab_label": "Slabs",
+        "slab_size": "80g",
+        "slab_collection": "new-chocolate-slabs"
       }
     },
     "recommendations": {
@@ -27,5 +23,8 @@
       "settings": {}
     }
   },
-  "order": ["main", "recommendations"]
+  "order": [
+    "main",
+    "recommendations"
+  ]
 }

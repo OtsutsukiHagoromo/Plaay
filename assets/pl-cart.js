@@ -780,7 +780,13 @@
     e.preventDefault();
     e.stopImmediatePropagation();
     var cur = Number(line.getAttribute('data-quantity')) || 0;
-    if (t.matches('.pl-item__remove')) setQty(line, 0);
+    var box = line.getAttribute('data-box');
+    /* A built box (truffle and slab lines sharing one _box id) leaves the bag as a whole. */
+    if (t.matches('.pl-item__remove') && box) {
+      qa('[data-cart-item][data-box]', line.parentNode).forEach(function (l) {
+        if (l.getAttribute('data-box') === box) setQty(l, 0);
+      });
+    } else if (t.matches('.pl-item__remove')) setQty(line, 0);
     else setQty(line, cur + (t.hasAttribute('data-plus') ? 1 : -1));
   }, true);
 

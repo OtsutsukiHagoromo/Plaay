@@ -41,8 +41,18 @@
           assign is_sub = true
         endif
 
+        comment
+          Build-your-box lines (sections/pl-byob.liquid): one line per piece type, sharing a hidden
+          _box id. They show their flavours and a fixed piece count; the purchase option was chosen
+          in the builder, and removing one line removes the whole box (assets/pl-cart.js).
+        endcomment
+        assign is_box = false
+        if item.properties._box != blank
+          assign is_box = true
+        endif
+
         assign has_plans = false
-        if item.product.selling_plan_groups.size > 0 and is_gift == false
+        if item.product.selling_plan_groups.size > 0 and is_gift == false and is_box == false
           assign has_plans = true
         endif
 
@@ -137,6 +147,7 @@
         data-variant-id="{{ item.variant_id }}"
         data-product-id="{{ item.product_id }}"
         data-quantity="{{ item.quantity }}"
+        {%- if is_box %} data-box="{{ item.properties._box | escape }}"{% endif %}
         data-unit="{{ line_price | divided_by: item.quantity }}"
         {%- if has_plans %} data-plan-id="{{ plan_id }}" data-plan-name="{{ plan_name | escape }}" data-sub-saving="{{ offer_saving }}"{% endif %}
         data-properties="{{ item.properties | json | escape }}">
@@ -161,11 +172,16 @@
               {%- endunless -%}
             </div>
             {%- if show_variant -%}
-              <span class="pl-item__variant">{{ variant_label }}</span>
+              <span class="pl-item__variant">{{ variant_label }}{% if is_box and is_sub %} · {{ sub_freq }}{% endif %}</span>
+            {%- endif -%}
+            {%- if is_box and item.properties.Flavours != blank -%}
+              <span class="pl-item__flavours">{{ item.properties.Flavours }}</span>
             {%- endif -%}
             <div class="pl-item__row">
               {%- if is_gift -%}
                 <span class="pl-tag pl-tag--yellow">Mystery Gift</span>
+              {%- elsif is_box -%}
+                <span class="pl-item__pieces">{{ item.quantity }} {% if item.quantity == 1 %}piece{% else %}pieces{% endif %}</span>
               {%- else -%}
                 <quantity-adjuster>
                   <div class="pl-stepper pl-stepper--sm">

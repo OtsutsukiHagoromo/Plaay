@@ -129,6 +129,9 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 .pl .pl-item__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 .pl .pl-item__title { font-size: var(--pl-t4); font-weight: 700; line-height: 1.25; }
 .pl .pl-item__variant { font-size: var(--pl-t2); color: var(--pl-mute); margin-top: -4px; }
+/* Build-your-box lines: the flavours inside, and a fixed piece count in place of the stepper. */
+.pl .pl-item__flavours { font-size: var(--pl-t2); color: var(--pl-navy); line-height: 1.35; }
+.pl .pl-item__pieces { font-size: var(--pl-t2); font-weight: 700; color: var(--pl-mute); }
 .pl .pl-item__remove {
   flex: 0 0 auto; width: 28px; height: 28px; border-radius: 999px; margin: -4px -6px 0 0;
   display: inline-flex; align-items: center; justify-content: center; color: var(--pl-mute-2);

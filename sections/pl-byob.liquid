@@ -1,25 +1,35 @@
 {%- comment -%}
   Plaay 2026 Build Your Box.
 
-  Runs on a PRODUCT template (templates/product.byob.json). The product IS the box:
-  each variant is one box size, and the variant price is the box price. There is no
-  discount involved anywhere — the price the shopper sees is the variant price, and the
-  per-unit line under it is that price divided by the unit count. That keeps the box out
-  of the automatic-discount ladder entirely, so it can never compete with the 7/10/15%
-  order discounts or the subscription plan.
+  Runs on a PRODUCT template (templates/product.byob.json). The product carries one variant per
+  piece type, and the variant price is the price of one piece:
+    - a variant whose title contains "truffle" (e.g. "Truffle 60g", AED 24.20)
+    - a variant whose title contains "slab"    (e.g. "Slab 80g",    AED 26.00)
+  The shopper picks any number of flavours of either type (at least min_qty pieces in total, no
+  upper limit). The box goes to the cart as one line per type: the type's variant at the number
+  of pieces, so Shopify charges exactly pieces x piece price. Both lines carry the same hidden
+  `_box` id and a visible "Flavours" property listing what goes in; the bag shows a box as a
+  fixed set (no steppers) and removes all of its lines together (assets/pl-cart.js).
 
-  Unit count per size is read from the VARIANT TITLE's leading number, e.g. "5 slabs" -> 5.
-  A variant whose title carries no number falls back to the matching tier_N_qty setting.
-
-  Chosen flavours ride to the cart as visible line-item properties on the single box line.
-  They are labels only: no component variant is ever added to the cart, so component stock
-  is not decremented. Shopify's native bundles would decrement it but cannot carry a
-  selling plan (docs: "Bundles can't be sold with selling plans"), and subscription was
-  the priority, so the box is a plain product exactly like the Mix Pack of 5.
+  Flavours are picker labels only: no flavour variant is added, so flavour stock is not
+  decremented. That keeps the box a plain product that can carry a selling plan.
 {%- endcomment -%}
 
 {%- liquid
   assign s = section.settings
+  assign min_qty = s.min_qty | default: 6
+
+  assign v_truffle = nil
+  assign v_slab = nil
+  for v in product.variants
+    assign vt = v.title | downcase
+    if vt contains 'truffle' and v_truffle == nil
+      assign v_truffle = v
+    elsif vt contains 'slab' and v_slab == nil
+      assign v_slab = v
+    endif
+  endfor
+
   assign sub_pct = 0
   assign default_plan_id = ''
   for group in product.selling_plan_groups
@@ -38,9 +48,15 @@
   if default_plan_id != '' and sub_pct > 0
     assign has_sub = true
   endif
+
+  comment
+    The two tabs: type, label, collection and the variant that prices it.
+  endcomment
+  assign types = 'truffle,slab' | split: ','
 -%}
 
 <div class="pl pl-byob" data-pl-byob
+  data-min="{{ min_qty }}"
   data-has-sub="{% if has_sub %}true{% else %}false{% endif %}"
   data-plan="{{ default_plan_id }}"
   data-sub-pct="{{ sub_pct }}">
@@ -50,96 +66,53 @@
       {%- if s.eyebrow != blank -%}<span class="pl-eyebrow pl-byob__eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
       <h1 class="pl-h pl-h--1 pl-byob__title">{{ s.heading | default: 'Build your box' }}</h1>
       {%- if s.subheading != blank -%}<p class="pl-byob__sub">{{ s.subheading }}</p>{%- endif -%}
+      <ul class="pl-byob__prices">
+        {%- if v_truffle -%}<li><b>Truffle {{ s.truffle_size }}</b><span>{%- render 'plaay-aed', fils: v_truffle.price -%} each</span></li>{%- endif -%}
+        {%- if v_slab -%}<li><b>Slab {{ s.slab_size }}</b><span>{%- render 'plaay-aed', fils: v_slab.price -%} each</span></li>{%- endif -%}
+        <li><b>Any mix</b><span>{{ min_qty }} or more pieces</span></li>
+      </ul>
     </div>
   </section>
 
   <div class="pl-wrap pl-byob__body">
 
-    {%- comment -%} ---------- Step 1: box size ---------- {%- endcomment -%}
+    {%- comment -%} ---------- Step 1: flavours ---------- {%- endcomment -%}
     <section class="pl-byob__step">
-      <h2 class="pl-byob__steph"><span class="pl-byob__num">1</span>{{ s.size_heading | default: 'Choose your box size' }}</h2>
-      <div class="pl-byob__sizes" role="tablist" aria-label="Box size">
-        {%- for v in product.variants -%}
-          {%- liquid
-            assign n = v.title | split: ' ' | first | times: 1
-            if n == 0
-              assign key = 'tier_' | append: forloop.index | append: '_qty'
-              assign n = s[key] | default: 0 | times: 1
-            endif
-            if n == 0
-              continue
-            endif
-            assign unit_price = v.price | divided_by: n
-            assign sub_price = 0
-            if has_sub
-              assign keep = 100 | minus: sub_pct
-              assign sub_price = v.price | times: keep | divided_by: 100
-            endif
-            assign is_first = false
-            if forloop.first
-              assign is_first = true
-            endif
-          -%}
-          <button type="button"
-            class="pl-pack pl-byob__size{% if is_first %} is-on{% endif %}{% unless v.available %} is-off{% endunless %}"
-            role="tab" aria-selected="{% if is_first %}true{% else %}false{% endif %}"
-            data-pl-size
-            data-variant="{{ v.id }}"
-            data-qty="{{ n }}"
-            data-price="{{ v.price }}"
-            data-sub-price="{{ sub_price }}"
-            {% unless v.available %}disabled{% endunless %}>
-            {%- if s.best_value_index == forloop.index -%}
-              <span class="pl-tag pl-tag--green pl-pack__tag">Best value</span>
-            {%- endif -%}
-            <span class="pl-check">{%- render 'pl-icon', name: 'check', size: 10, stroke: 3 -%}</span>
-            <span class="pl-pack__l">{{ v.title }}</span>
-            <span class="pl-pack__p">{%- render 'plaay-aed', fils: v.price -%}</span>
-            <span class="pl-byob__unit">{%- render 'plaay-aed', fils: unit_price -%} each</span>
-          </button>
-        {%- endfor -%}
-      </div>
-      {%- if product.variants.size == 0 -%}
-        <p class="pl-byob__warn">This box has no sizes yet. Add one variant per box size, titled with the unit count first, for example &ldquo;5 slabs&rdquo;.</p>
-      {%- endif -%}
-    </section>
+      <h2 class="pl-byob__steph"><span class="pl-byob__num">1</span>{{ s.pick_heading | default: 'Fill your box' }}</h2>
 
-    {%- comment -%} ---------- Step 2: flavours ---------- {%- endcomment -%}
-    <section class="pl-byob__step">
-      <h2 class="pl-byob__steph"><span class="pl-byob__num">2</span>{{ s.pick_heading | default: 'Fill your box' }}</h2>
-
-      {%- assign tab_count = 0 -%}
-      {%- for i in (1..3) -%}
-        {%- assign ck = 'cat_' | append: i | append: '_collection' -%}
-        {%- if s[ck] != blank -%}{%- assign tab_count = tab_count | plus: 1 -%}{%- endif -%}
-      {%- endfor -%}
-
-      {%- if tab_count > 1 -%}
-        <div class="pl-tabs pl-byob__tabs" role="tablist" aria-label="Flavour type">
+      {%- if v_truffle and v_slab -%}
+        <div class="pl-tabs pl-byob__tabs" role="tablist" aria-label="Piece type">
           <button type="button" class="pl-tab is-on" role="tab" aria-selected="true" data-pl-cat="all">All</button>
-          {%- for i in (1..3) -%}
-            {%- assign ck = 'cat_' | append: i | append: '_collection' -%}
-            {%- assign lk = 'cat_' | append: i | append: '_label' -%}
-            {%- if s[ck] != blank -%}
-              <button type="button" class="pl-tab" role="tab" aria-selected="false" data-pl-cat="c{{ i }}">{{ s[lk] | default: collections[s[ck]].title }}</button>
-            {%- endif -%}
-          {%- endfor -%}
+          <button type="button" class="pl-tab" role="tab" aria-selected="false" data-pl-cat="truffle">{{ s.truffle_label | default: 'Truffles' }}</button>
+          <button type="button" class="pl-tab" role="tab" aria-selected="false" data-pl-cat="slab">{{ s.slab_label | default: 'Slabs' }}</button>
         </div>
       {%- endif -%}
 
       <div class="pl-byob__grid" data-pl-grid>
-        {%- comment -%} A flavour can sit in more than one tab's collection; show it once, under the first tab that claims it. {%- endcomment -%}
-        {%- assign seen = '' -%}
-        {%- for i in (1..3) -%}
-          {%- assign ck = 'cat_' | append: i | append: '_collection' -%}
-          {%- if s[ck] == blank -%}{%- continue -%}{%- endif -%}
-          {%- for p in collections[s[ck]].products limit: 40 -%}
+        {%- for type in types -%}
+          {%- liquid
+            if type == 'truffle'
+              assign tv = v_truffle
+              assign col = collections[s.truffle_collection]
+            else
+              assign tv = v_slab
+              assign col = collections[s.slab_collection]
+            endif
+            if tv == nil or col == blank
+              continue
+            endif
+            assign sub_price = 0
+            if has_sub
+              assign keep = 100 | minus: sub_pct
+              assign sub_price = tv.price | times: keep | divided_by: 100
+            endif
+            assign seen = ''
+          -%}
+          {%- for p in col.products limit: 40 -%}
             {%- comment -%}
-              These tabs point at retail collections, so the same flavour arrives several times
-              over at different pack weights, and the ready-made mix packs arrive too. Fold the
-              pack wording away case-insensitively, drop the mixes, and keep the first tile per
-              flavour. The name is only a picker label: what reaches the cart is the box variant
-              carrying these names as line-item properties.
+              These are retail collections, so one flavour arrives several times at different pack
+              sizes, plus ready-made mix packs. Fold the pack wording away (case-insensitively),
+              drop the mixes and keep the first tile per flavour.
             {%- endcomment -%}
             {%- liquid
               assign low = p.title | downcase
@@ -153,10 +126,16 @@
               endif
               assign key = '|' | append: nm | append: '|'
             -%}
-            {%- if low contains 'mix pack' or low contains 'exclusive mix' or low contains 'variety' -%}{%- continue -%}{%- endif -%}
+            {%- if low contains 'mix pack' or low contains 'exclusive mix' or low contains 'variety' or low contains ' mix' -%}{%- continue -%}{%- endif -%}
+            {%- if p.available == false -%}{%- continue -%}{%- endif -%}
             {%- if seen contains key -%}{%- continue -%}{%- endif -%}
             {%- assign seen = seen | append: key -%}
-            <div class="pl-byob__item" data-pl-item data-cat="c{{ i }}" data-name="{{ nm | escape }}">
+            <div class="pl-byob__item" data-pl-item
+              data-cat="{{ type }}"
+              data-name="{{ nm | escape }}"
+              data-variant="{{ tv.id }}"
+              data-price="{{ tv.price }}"
+              data-sub-price="{{ sub_price }}">
               <div class="pl-byob__pic">
                 {%- if p.featured_image -%}
                   {{ p.featured_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 240', sizes: '110px', alt: '' }}
@@ -166,6 +145,7 @@
                 <span class="pl-byob__qty" data-pl-badge hidden>0</span>
               </div>
               <span class="pl-byob__name">{{ nm }}</span>
+              <span class="pl-byob__each">{% if type == 'truffle' %}Truffle {{ s.truffle_size }}{% else %}Slab {{ s.slab_size }}{% endif %} · {% render 'plaay-aed', fils: tv.price %}</span>
               <div class="pl-byob__step2">
                 <button type="button" class="pl-byob__pm" data-pl-dec aria-label="Remove one {{ nm | escape }}" disabled>
                   {%- render 'pl-icon', name: 'minus', size: 15, stroke: 2.6 -%}
@@ -179,15 +159,16 @@
           {%- endfor -%}
         {%- endfor -%}
       </div>
-      {%- if tab_count == 0 -%}
-        <p class="pl-byob__warn">No flavour collections are set. Pick at least one collection in the theme editor.</p>
+
+      {%- if v_truffle == nil or v_slab == nil -%}
+        <p class="pl-byob__warn">This box needs two variants: one titled with &ldquo;Truffle&rdquo; (priced per truffle) and one titled with &ldquo;Slab&rdquo; (priced per slab).{% if v_truffle or v_slab %} Only one was found, so only that type is shown.{% endif %}</p>
       {%- endif -%}
     </section>
 
-    {%- comment -%} ---------- Step 3: how to buy ---------- {%- endcomment -%}
+    {%- comment -%} ---------- Step 2: how to buy ---------- {%- endcomment -%}
     {%- if has_sub -%}
       <section class="pl-byob__step">
-        <h2 class="pl-byob__steph"><span class="pl-byob__num">3</span>{{ s.buy_heading | default: 'How often?' }}</h2>
+        <h2 class="pl-byob__steph"><span class="pl-byob__num">2</span>{{ s.buy_heading | default: 'How often?' }}</h2>
         <div class="pl-buybox">
           <div class="pl-buy is-sub" data-pl-buy>
             <label class="pl-buy__opt pl-buy__opt--sub">
@@ -226,7 +207,7 @@
   <div class="pl-sticky pl-byob__bar is-on" data-pl-bar>
     <div class="pl-byob__prog">
       <div class="pl-byob__progtop">
-        <span class="pl-byob__count" data-pl-progress>0 of 0 chosen</span>
+        <span class="pl-byob__count" data-pl-progress>Pick {{ min_qty }} or more</span>
         <span class="pl-byob__total" data-pl-total></span>
       </div>
       <div class="pl-byob__track"><span class="pl-byob__fill" data-pl-fill style="width:0%"></span></div>
@@ -248,24 +229,19 @@
     { "type": "header", "content": "Intro" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Mix and match" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Build your box" },
-    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Pick any flavours you like. Same price as our ready-made packs." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Pick any truffles and slabs you like, as many as you want." },
     { "type": "header", "content": "Step headings" },
-    { "type": "text", "id": "size_heading", "label": "Step 1 heading", "default": "Choose your box size" },
-    { "type": "text", "id": "pick_heading", "label": "Step 2 heading", "default": "Fill your box" },
-    { "type": "text", "id": "buy_heading", "label": "Step 3 heading", "default": "How often?" },
-    { "type": "header", "content": "Box sizes" },
-    { "type": "paragraph", "content": "Sizes and prices come from the product's variants. Title each variant with the unit count first, for example \"5 slabs\". Prices are the box price, never a discount." },
-    { "type": "range", "id": "best_value_index", "min": 0, "max": 5, "step": 1, "default": 3, "label": "Show 'Best value' on variant number (0 for none)" },
-    { "type": "range", "id": "tier_1_qty", "min": 0, "max": 36, "step": 1, "default": 0, "label": "Variant 1 unit count (only if not in the title)" },
-    { "type": "range", "id": "tier_2_qty", "min": 0, "max": 36, "step": 1, "default": 0, "label": "Variant 2 unit count (only if not in the title)" },
-    { "type": "range", "id": "tier_3_qty", "min": 0, "max": 36, "step": 1, "default": 0, "label": "Variant 3 unit count (only if not in the title)" },
-    { "type": "header", "content": "Flavours" },
-    { "type": "text", "id": "cat_1_label", "label": "Tab 1 label", "default": "Slabs" },
-    { "type": "collection", "id": "cat_1_collection", "label": "Tab 1 collection" },
-    { "type": "text", "id": "cat_2_label", "label": "Tab 2 label", "default": "Truffles" },
-    { "type": "collection", "id": "cat_2_collection", "label": "Tab 2 collection" },
-    { "type": "text", "id": "cat_3_label", "label": "Tab 3 label" },
-    { "type": "collection", "id": "cat_3_collection", "label": "Tab 3 collection" },
+    { "type": "text", "id": "pick_heading", "label": "Step 1 heading", "default": "Fill your box" },
+    { "type": "text", "id": "buy_heading", "label": "Step 2 heading", "default": "How often?" },
+    { "type": "header", "content": "Pieces" },
+    { "type": "paragraph", "content": "Prices come from the product's variants: one titled with \"Truffle\" (price of one truffle) and one titled with \"Slab\" (price of one slab)." },
+    { "type": "range", "id": "min_qty", "min": 1, "max": 24, "step": 1, "default": 6, "label": "Fewest pieces in a box" },
+    { "type": "text", "id": "truffle_label", "label": "Truffles tab label", "default": "Truffles" },
+    { "type": "text", "id": "truffle_size", "label": "Truffle size", "default": "60g" },
+    { "type": "collection", "id": "truffle_collection", "label": "Truffle flavours collection" },
+    { "type": "text", "id": "slab_label", "label": "Slabs tab label", "default": "Slabs" },
+    { "type": "text", "id": "slab_size", "label": "Slab size", "default": "80g" },
+    { "type": "collection", "id": "slab_collection", "label": "Slab flavours collection" },
     { "type": "header", "content": "Footnote" },
     { "type": "textarea", "id": "note", "label": "Note under the picker", "default": "Every box ships free. Skip, swap or cancel a subscription any time." }
   ]
