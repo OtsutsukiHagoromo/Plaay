@@ -72,6 +72,9 @@
   display: flex; align-items: center; justify-content: center; overflow: hidden;
 }
 .pl .pl-byob__pic img, .pl .pl-byob__ph { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+/* Single-piece shots (a 60g truffle box, one slab): a little more room, and the studio shots'
+   white ground melts into the tile. */
+.pl .pl-byob__pic.is-one img { padding: 10px 12px; mix-blend-mode: multiply; }
 .pl .pl-byob__qty {
   position: absolute; top: 6px; right: 6px; min-width: 22px; height: 22px; padding: 0 6px;
   border-radius: 999px; background: var(--pl-navy); color: var(--pl-white);

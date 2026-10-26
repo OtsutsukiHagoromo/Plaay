@@ -136,8 +136,71 @@
               data-variant="{{ tv.id }}"
               data-price="{{ tv.price }}"
               data-sub-price="{{ sub_price }}">
-              <div class="pl-byob__pic">
-                {%- if p.featured_image -%}
+              {%- liquid
+                comment
+                  One piece per tile, never a multipack:
+                  - Truffles: the "2 x 60g" pack shot (two 60g boxes, truffles stacked by the left one),
+                    cropped on Shopify's CDN to the clean right-hand box. Dense Chocolate Fudge has no
+                    such shot, so its "10 x 60g" shot is cropped to the single 60g box instead.
+                  - Slabs: the single-slab studio shot (theme assets plo-ph-<key>-1.jpg), no 6-pack badge.
+                  Anything without one of these falls back to the product photo.
+                endcomment
+                assign pic = ''
+                if type == 'truffle'
+                  assign src = nil
+                  assign want = '2 x 60'
+                  assign cx = 0.582
+                  assign cy = 0.09
+                  assign cw = 0.308
+                  assign ch = 0.83
+                  if p.handle == 'dense-chocolate-fudge-truffle'
+                    assign want = '10 x 60'
+                    assign cx = 0.42
+                    assign cy = 0.16
+                    assign cw = 0.195
+                    assign ch = 0.69
+                  endif
+                  for pv in p.variants
+                    assign pvt = pv.title | downcase
+                    if pvt contains want and pv.featured_image
+                      assign src = pv.featured_image
+                      break
+                    endif
+                  endfor
+                  if src == nil and p.variants.size == 1 and want == '2 x 60'
+                    assign src = p.featured_image
+                  endif
+                  if src
+                    assign c_l = src.width | times: cx | round
+                    assign c_t = src.height | times: cy | round
+                    assign c_w = src.width | times: cw | round
+                    assign c_h = src.height | times: ch | round
+                    assign pic = src | image_url: height: 480, crop: 'region', crop_left: c_l, crop_top: c_t, crop_width: c_w, crop_height: c_h
+                  endif
+                else
+                  assign pkey = ''
+                  if nm contains 'hazelnut'
+                    assign pkey = 'hazel'
+                  elsif nm contains 'sea salt'
+                    assign pkey = 'seasalt'
+                  elsif nm contains 'caramel'
+                    assign pkey = 'caramel'
+                  elsif nm contains 'cheesecake'
+                    assign pkey = 'cheese'
+                  elsif nm contains 'toffee'
+                    assign pkey = 'toffee'
+                  elsif nm contains 'dark chocolate'
+                    assign pkey = 'dark'
+                  endif
+                  if pkey != ''
+                    assign pic = 'plo-ph-' | append: pkey | append: '-1.jpg' | asset_img_url: '480x'
+                  endif
+                endif
+              -%}
+              <div class="pl-byob__pic{% if pic != '' %} is-one{% endif %}">
+                {%- if pic != '' -%}
+                  <img src="{{ pic }}" alt="" loading="lazy" width="240" height="240">
+                {%- elsif p.featured_image -%}
                   {{ p.featured_image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '120, 240', sizes: '110px', alt: '' }}
                 {%- else -%}
                   {{ 'product-1' | placeholder_svg_tag: 'pl-byob__ph' }}
