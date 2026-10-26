@@ -695,7 +695,7 @@
   function setQty(line, n) {
     n = Math.max(0, Math.min(99, n | 0));
     var key = line.getAttribute('data-key');
-    if (!idents[key]) idents[key] = line.getAttribute('data-variant-id') + '|' + (line.classList.contains('is-sub') ? 's' : 'o');
+    if (!idents[key]) idents[key] = line.getAttribute('data-variant-id') + '|' + (line.classList.contains('is-sub') || line.getAttribute('data-sub') === '1' ? 's' : 'o') + '|' + (line.getAttribute('data-box') || '');
     var unit = unitOf(line);
     line.setAttribute('data-quantity', String(n));
     var input = q('input[name="quantity"]', line);
@@ -728,7 +728,7 @@
      and one-time / subscription before it is sent; a stale key gets one retry. */
   var chain = Promise.resolve(), lastCart = null, idents = {};
 
-  function identOf(item) { return item.variant_id + '|' + (item.selling_plan_allocation ? 's' : 'o'); }
+  function identOf(item) { return item.variant_id + '|' + (item.selling_plan_allocation ? 's' : 'o') + '|' + ((item.properties && item.properties._box) || ''); }
 
   function freshKey(key) {
     if (!lastCart || !lastCart.items) return key;

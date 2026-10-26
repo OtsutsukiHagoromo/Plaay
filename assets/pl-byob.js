@@ -152,13 +152,18 @@
       var n = picks[keyOf(item)] || 0;
       if (!n) return;
       var v = item.getAttribute('data-variant');
-      var l = byVariant[v] || (byVariant[v] = { id: Number(v), quantity: 0, names: [] });
+      var l = byVariant[v] || (byVariant[v] = { id: Number(v), quantity: 0, names: [], img: '', top: 0 });
       l.quantity += n;
       l.names.push(title(item.getAttribute('data-name')) + ' × ' + n);
+      /* The bag shows the box with the photo of its most-picked flavour of each type. */
+      var im = q('.pl-byob__pic img', item);
+      if (im && n > l.top) { l.top = n; l.img = (im.currentSrc || im.src || '').replace(/^http:/, 'https:'); }
     });
     return Object.keys(byVariant).map(function (v) {
       var l = byVariant[v];
-      var line = { id: l.id, quantity: l.quantity, properties: { Flavours: l.names.join(', '), _box: box } };
+      var props = { Flavours: l.names.join(', '), _box: box };
+      if (l.img) props._img = l.img;
+      var line = { id: l.id, quantity: l.quantity, properties: props };
       if (subscribing() && planId) line.selling_plan = Number(planId);
       return line;
     });

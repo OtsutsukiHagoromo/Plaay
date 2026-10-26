@@ -129,9 +129,18 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 .pl .pl-item__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 .pl .pl-item__title { font-size: var(--pl-t4); font-weight: 700; line-height: 1.25; }
 .pl .pl-item__variant { font-size: var(--pl-t2); color: var(--pl-mute); margin-top: -4px; }
-/* Build-your-box lines: the flavours inside, and a fixed piece count in place of the stepper. */
-.pl .pl-item__flavours { font-size: var(--pl-t2); color: var(--pl-navy); line-height: 1.35; }
+/* Build Your Box (snippets/pl-box-line.liquid): one card per box, its pieces listed by type. */
 .pl .pl-item__pieces { font-size: var(--pl-t2); font-weight: 700; color: var(--pl-mute); }
+.pl .pl-boxline__img { position: relative; display: flex; align-items: center; justify-content: center; }
+.pl .pl-boxline__img img { position: absolute; width: 74%; height: 74%; object-fit: contain; }
+.pl .pl-boxline__img img:first-child { left: 4%; top: 4%; }
+.pl .pl-boxline__img img + img { right: 4%; bottom: 4%; left: auto; top: auto; }
+.pl .pl-boxline__img img:only-child { inset: 0; margin: auto; width: 88%; height: 88%; }
+.pl .pl-boxline__icon { color: var(--pl-navy); opacity: .55; display: flex; }
+.pl .pl-boxline__rows { list-style: none; margin: 2px 0 0; padding: 0; display: grid; gap: 6px; }
+.pl .pl-boxline__rows li { display: grid; gap: 1px; font-size: var(--pl-t2); line-height: 1.35; color: var(--pl-navy); }
+.pl .pl-boxline__rows b { font-weight: 900; }
+.pl .pl-boxline__rows span { color: var(--pl-mute); }
 .pl .pl-item__remove {
   flex: 0 0 auto; width: 28px; height: 28px; border-radius: 999px; margin: -4px -6px 0 0;
   display: inline-flex; align-items: center; justify-content: center; color: var(--pl-mute-2);

@@ -1,0 +1,109 @@
+{%- comment -%}
+  One Build Your Box in the bag (sections/pl-byob.liquid): its truffle and slab lines, which share
+  a hidden _box id, shown as a single card with one picture, one price and one remove.
+
+  The card is the first line's [data-cart-item]; the box's other lines ride inside it as empty
+  [data-cart-item] markers, so assets/pl-cart.js counts every piece and removing the card removes
+  every line of the box. The purchase option was chosen in the builder, so there is no stepper and
+  no subscribe toggle.
+
+  Usage: {%- render 'pl-box-line', box: item.properties._box -%}
+{%- endcomment -%}
+{%- liquid
+  assign pieces = 0
+  assign price = 0
+  assign one_time = 0
+  assign is_sub = false
+  assign freq = ''
+  assign lead = nil
+  for it in cart.items
+    if it.properties._box != box
+      continue
+    endif
+    if lead == nil
+      assign lead = it
+    endif
+    assign pieces = pieces | plus: it.quantity
+    assign price = price | plus: it.original_line_price
+    if it.selling_plan_allocation
+      assign is_sub = true
+      assign ot = it.selling_plan_allocation.compare_at_price | times: it.quantity
+      assign one_time = one_time | plus: ot
+      assign sp = it.selling_plan_allocation.selling_plan.name | downcase | remove: 'delivery' | remove: 'every' | strip
+      assign freq = 'Every ' | append: sp
+    else
+      assign one_time = one_time | plus: it.original_line_price
+    endif
+  endfor
+-%}
+{%- if lead -%}
+<div
+  class="pl-card pl-item pl-item--box{% if is_sub %} is-sub{% endif %}"
+  data-cart-item
+  data-key="{{ lead.key }}"
+  data-variant-id="{{ lead.variant_id }}"
+  data-product-id="{{ lead.product_id }}"
+  data-quantity="{{ lead.quantity }}"
+  data-unit="{{ lead.original_line_price | divided_by: lead.quantity }}"
+  data-box="{{ box | escape }}"
+  data-properties="{{ lead.properties | json | escape }}">
+  <div class="pl-item__top">
+    <a href="{{ lead.url | split: '?' | first }}" class="pl-item__img pl-boxline__img" tabindex="-1" aria-hidden="true">
+      {%- assign shown = 0 -%}
+      {%- for it in cart.items -%}
+        {%- if it.properties._box != box or it.properties._img == blank or shown >= 2 -%}{%- continue -%}{%- endif -%}
+        {%- assign shown = shown | plus: 1 -%}
+        <img src="{{ it.properties._img }}" alt="" loading="lazy" width="88" height="88">
+      {%- endfor -%}
+      {%- if shown == 0 -%}<span class="pl-boxline__icon">{%- render 'pl-icon', name: 'gift', size: 28, stroke: 1.8 -%}</span>{%- endif -%}
+    </a>
+    <div class="pl-item__body">
+      <div class="pl-item__head">
+        <a href="{{ lead.url | split: '?' | first }}" class="pl-item__title">{{ lead.product.title }}</a>
+        <cart-remove-button>
+          <button type="button" class="pl-item__remove" aria-label="Remove this box">
+            {%- render 'pl-icon', name: 'close', size: 16, stroke: 2 -%}
+          </button>
+        </cart-remove-button>
+      </div>
+      <span class="pl-item__variant">{{ pieces }} pieces{% if is_sub %} · {{ freq }}{% endif %}</span>
+      <ul class="pl-boxline__rows">
+        {%- for it in cart.items -%}
+          {%- if it.properties._box != box -%}{%- continue -%}{%- endif -%}
+          {%- liquid
+            assign vt = it.variant.title | downcase
+            if vt contains 'truffle'
+              assign kind = 'Truffles'
+            elsif vt contains 'slab'
+              assign kind = 'Slabs'
+            else
+              assign kind = it.variant.title
+            endif
+          -%}
+          <li><b>{{ kind }} · {{ it.quantity }}</b><span>{{ it.properties.Flavours }}</span></li>
+        {%- endfor -%}
+      </ul>
+      <div class="pl-item__row">
+        <span class="pl-item__pieces">{% if is_sub %}Subscribed{% else %}One-time{% endif %}</span>
+        <div class="pl-item__price">
+          {%- if one_time > price -%}<s class="pl-item__was">{% render 'plaay-aed', fils: one_time %}</s>{%- endif -%}
+          <b class="pl-item__now">{% render 'plaay-aed', fils: price %}</b>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%- for it in cart.items -%}
+    {%- if it.properties._box != box or it.key == lead.key -%}{%- continue -%}{%- endif -%}
+    <span hidden
+      data-cart-item
+      data-key="{{ it.key }}"
+      data-variant-id="{{ it.variant_id }}"
+      data-product-id="{{ it.product_id }}"
+      data-quantity="{{ it.quantity }}"
+      data-unit="{{ it.original_line_price | divided_by: it.quantity }}"
+      data-box="{{ box | escape }}"
+      {%- if it.selling_plan_allocation %} data-sub="1"{% endif %}
+      data-properties="{{ it.properties | json | escape }}"></span>
+  {%- endfor -%}
+</div>
+{%- endif -%}
