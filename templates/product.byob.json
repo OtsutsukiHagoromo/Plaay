@@ -8,14 +8,15 @@
         "subheading": "Pick any truffles and slabs you like, in any mix and as many as you want. You pay per piece.",
         "pick_heading": "Fill your box",
         "buy_heading": "How often?",
-        "note": "Boxes of 6 or more ship free. Skip, swap or cancel a subscription any time.",
+        "note": "Boxes of 6 or more ship free.",
         "min_qty": 6,
         "truffle_label": "Truffles",
         "truffle_size": "60g",
         "truffle_collection": "chocolate-truffles",
         "slab_label": "Slabs",
         "slab_size": "80g",
-        "slab_collection": "new-chocolate-slabs"
+        "slab_collection": "new-chocolate-slabs",
+        "offer_subscribe": false
       }
     },
     "recommendations": {

@@ -45,7 +45,7 @@
     endfor
   endfor
   assign has_sub = false
-  if default_plan_id != '' and sub_pct > 0
+  if s.offer_subscribe and default_plan_id != '' and sub_pct > 0
     assign has_sub = true
   endif
 
@@ -238,6 +238,7 @@
     { "type": "text", "id": "buy_heading", "label": "Step 2 heading", "default": "How often?" },
     { "type": "header", "content": "Pieces" },
     { "type": "paragraph", "content": "Prices come from the product's variants: one titled with \"Truffle\" (price of one truffle) and one titled with \"Slab\" (price of one slab)." },
+    { "type": "checkbox", "id": "offer_subscribe", "label": "Offer Subscribe & Save", "info": "Off: boxes are bought once, at the piece prices. On: the product's subscription plans are offered too.", "default": false },
     { "type": "range", "id": "min_qty", "min": 1, "max": 24, "step": 1, "default": 6, "label": "Fewest pieces in a box" },
     { "type": "text", "id": "truffle_label", "label": "Truffles tab label", "default": "Truffles" },
     { "type": "text", "id": "truffle_size", "label": "Truffle size", "default": "60g" },
@@ -246,7 +247,7 @@
     { "type": "text", "id": "slab_size", "label": "Slab size", "default": "80g" },
     { "type": "collection", "id": "slab_collection", "label": "Slab flavours collection" },
     { "type": "header", "content": "Footnote" },
-    { "type": "textarea", "id": "note", "label": "Note under the picker", "default": "Every box ships free. Skip, swap or cancel a subscription any time." }
+    { "type": "textarea", "id": "note", "label": "Note under the picker", "default": "Boxes of 6 or more ship free." }
   ]
 }
 {% endschema %}
