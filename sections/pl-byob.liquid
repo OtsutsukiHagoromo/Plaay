@@ -187,6 +187,8 @@
                 <span class="pl-buy__note">Free delivery &middot; skip, swap or cancel anytime</span>
               </span>
             </label>
+            {%- comment -%} A subscription-only product (Shopify "requires selling plan") gets no one-time option. {%- endcomment -%}
+            {%- unless product.requires_selling_plan -%}
             <label class="pl-buy__opt pl-buy__opt--one">
               <span class="pl-buy__head">
                 <input type="radio" name="pl-byob-plan" value="one" data-pl-plan-opt>
@@ -195,6 +197,7 @@
                 <span class="pl-buy__price" data-pl-one-price></span>
               </span>
             </label>
+            {%- endunless -%}
           </div>
         </div>
       </section>
