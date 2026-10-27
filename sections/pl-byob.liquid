@@ -64,12 +64,12 @@
   <section class="pl-byob__hero">
     <div class="pl-wrap">
       {%- if s.eyebrow != blank -%}<span class="pl-eyebrow pl-byob__eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
-      <h1 class="pl-h pl-h--1 pl-byob__title">{{ s.heading | default: 'Build your box' }}</h1>
+      <h1 class="pl-h pl-h--1 pl-byob__title">{{ s.heading | default: 'Build your own mix' }}</h1>
       {%- if s.subheading != blank -%}<p class="pl-byob__sub">{{ s.subheading }}</p>{%- endif -%}
       <ul class="pl-byob__prices">
+        <li><b>Minimum {{ min_qty }} pieces</b><span>Any mix</span></li>
         {%- if v_truffle -%}<li><b>Truffle {{ s.truffle_size }}</b><span>{%- render 'plaay-aed', fils: v_truffle.price -%} each</span></li>{%- endif -%}
         {%- if v_slab -%}<li><b>Slab {{ s.slab_size }}</b><span>{%- render 'plaay-aed', fils: v_slab.price -%} each</span></li>{%- endif -%}
-        <li><b>Any mix</b><span>{{ min_qty }} or more pieces</span></li>
       </ul>
     </div>
   </section>
@@ -78,7 +78,7 @@
 
     {%- comment -%} ---------- Step 1: flavours ---------- {%- endcomment -%}
     <section class="pl-byob__step">
-      <h2 class="pl-byob__steph"><span class="pl-byob__num">1</span>{{ s.pick_heading | default: 'Fill your box' }}</h2>
+      <h2 class="pl-byob__steph"><span class="pl-byob__num">1</span>{{ s.pick_heading | default: 'Pick 6 or more' }}</h2>
 
       {%- if v_truffle and v_slab -%}
         <div class="pl-tabs pl-byob__tabs" role="tablist" aria-label="Piece type">
@@ -294,15 +294,15 @@
 
 {% schema %}
 {
-  "name": "Build your box",
+  "name": "Build your own mix",
   "tag": "section",
   "settings": [
     { "type": "header", "content": "Intro" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Mix and match" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Build your box" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Build your own mix" },
     { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Pick any truffles and slabs you like, as many as you want." },
     { "type": "header", "content": "Step headings" },
-    { "type": "text", "id": "pick_heading", "label": "Step 1 heading", "default": "Fill your box" },
+    { "type": "text", "id": "pick_heading", "label": "Step 1 heading", "default": "Pick 6 or more" },
     { "type": "text", "id": "buy_heading", "label": "Step 2 heading", "default": "How often?" },
     { "type": "header", "content": "Pieces" },
     { "type": "paragraph", "content": "Prices come from the product's variants: one titled with \"Truffle\" (price of one truffle) and one titled with \"Slab\" (price of one slab)." },
@@ -315,7 +315,7 @@
     { "type": "text", "id": "slab_size", "label": "Slab size", "default": "80g" },
     { "type": "collection", "id": "slab_collection", "label": "Slab flavours collection" },
     { "type": "header", "content": "Footnote" },
-    { "type": "textarea", "id": "note", "label": "Note under the picker", "default": "Boxes of 6 or more ship free." }
+    { "type": "textarea", "id": "note", "label": "Note under the picker", "default": "Mixes of 6 or more ship free." }
   ]
 }
 {% endschema %}

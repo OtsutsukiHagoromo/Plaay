@@ -3,12 +3,12 @@
     "main": {
       "type": "pl-byob",
       "settings": {
-        "eyebrow": "Mix and match",
-        "heading": "Build your box",
-        "subheading": "Pick any truffles and slabs you like, in any mix and as many as you want. You pay per piece.",
-        "pick_heading": "Fill your box",
+        "eyebrow": "6 pieces minimum",
+        "heading": "Build your own mix",
+        "subheading": "Choose any 6 or more truffles and slabs. Mix your favourites, your way. Pay per piece.",
+        "pick_heading": "Pick 6 or more",
         "buy_heading": "How often?",
-        "note": "Boxes of 6 or more ship free.",
+        "note": "Mixes of 6 or more ship free.",
         "min_qty": 6,
         "truffle_label": "Truffles",
         "truffle_size": "60g",
