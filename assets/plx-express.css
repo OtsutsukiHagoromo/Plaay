@@ -76,3 +76,5 @@ html.plx-lock { overflow: hidden; }
 .plx-confirm__addr { font-weight: 900; }
 .plx-confirm__tier { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13.5px; }
 .plx-sheet .plx__link { justify-self: center; }
+
+.plx--cart .plx__s--need { opacity: 1; font-weight: 700; }

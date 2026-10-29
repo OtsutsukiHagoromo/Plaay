@@ -98,7 +98,9 @@
     return Math.max(0, current.secondsLeft - Math.round((Date.now() - fetchedAt) / 1000));
   }
   var ICON = { express: '⚡', '4hr': '🕓', standard: '📦', unknown: '⚡', error: '📦' };
-  var free = 'Free over AED ' + (cfg.freeOver || 99) + '.';
+  var minAed = cfg.freeOver || 99;
+  var free = 'Free on orders of AED ' + minAed + '+.';
+  var cartTotal = null; // fils, from /cart.js
 
   function placeLabel() {
     var p = place();
@@ -122,7 +124,7 @@
     var c = current || { tier: 'unknown' };
     if (c.tier === 'unknown' || c.tier === 'error') {
       return '<div class="plx__top"><span class="plx__t">⚡ Express delivery in Dubai</span>' +
-        '<span class="plx__s">Today, usually within 2 hours. ' + free + '</span></div>' +
+        '<span class="plx__s">Today, usually within 2 hours, on orders of AED ' + minAed + '+. Free delivery.</span></div>' +
         '<div class="plx__bot"><span>' + (c.tier === 'error' ? 'Couldn’t check delivery just now.' : 'Is your address covered?') + '</span>' +
         '<button type="button" class="plx__btn" data-plx-open>Check your address</button></div>';
     }
@@ -133,7 +135,8 @@
     }
     var sec = secondsLeft();
     var sub = esc(c.detail || '');
-    sub += c.when === 'today' && sec > 0 ? ' · order within <b class="plx__count" data-plx-count>' + left(sec) + '</b>' : ' ' + free;
+    sub += c.when === 'today' && sec > 0 ? ' · order within <b class="plx__count" data-plx-count>' + left(sec) + '</b>' : '';
+    if (c.tier !== 'standard') sub += '<br>On orders of AED ' + minAed + '+, delivery free.';
     return '<div class="plx__top"><span class="plx__t">' + ICON[c.tier] + ' ' + esc(c.title) + '</span>' +
       '<span class="plx__s">' + sub + '</span>' + edgeNote(c) + '</div>' +
       '<div class="plx__bot"><span>📍 ' + esc(placeLabel()) + '</span>' +
@@ -155,7 +158,9 @@
     var head = c.tier === 'express' ? '⚡ Express to ' + esc(name) : c.tier === '4hr' ? '🕓 4-hour delivery to ' + esc(name) : '📦 ' + esc(name) + ': 1–2 working days';
     var when = c.tier === 'standard' ? '' : (c.when === 'today' ? 'today' + (sec > 0 ? ', order within <b data-plx-count>' + left(sec) + '</b>' : '') : esc(c.day || ''));
     return '<span class="plx__t">' + head + '</span>' + (when ? '<span class="plx__s">' + when + '</span>' : '') +
-      (c.tier === 'standard' ? '' : '<span class="plx__s">Pick it at checkout, it’s listed first.</span>') +
+      (c.tier === 'standard' ? '' : cartTotal != null && cartTotal < minAed * 100
+        ? '<span class="plx__s plx__s--need">Add AED ' + Math.ceil((minAed * 100 - cartTotal) / 100) + ' more to get ' + (c.tier === 'express' ? 'Express' : 'same-day delivery') + '.</span>'
+        : '<span class="plx__s">Pick it at checkout, it’s listed first.</span>') +
       '<button type="button" class="plx__link" data-plx-open>Change address</button>';
   }
   function chipHTML() {
@@ -199,7 +204,8 @@
     cartAt = Date.now();
     nativeFetch('/cart.js', { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (cart) {
       var has = (cart.items || []).some(function (i) { return !!i.selling_plan_allocation; });
-      if (has !== cartHasSub) { cartHasSub = has; renderAll(); }
+      var total = cart.total_price;
+      if (has !== cartHasSub || total !== cartTotal) { cartHasSub = has; cartTotal = total; renderAll(); }
     }).catch(function () {});
   }
   function syncCartAttributes(p) {
@@ -317,7 +323,7 @@
             '<button type="button" class="plx-row plx-row--loc" data-plx-view="map">🗺️ Pick on the map</button>' +
           '</div>' +
           (cfg.signedIn ? '' : '<p class="plx-sheet__note">Have an account? <a href="' + esc(cfg.loginUrl) + '">Sign in</a> to use your saved addresses.</p>') +
-          '<p class="plx-sheet__note">Express: within 20 km of our Dubai kitchen, Monday to Saturday, order by 5 pm.</p>' +
+          '<p class="plx-sheet__note">Express: within 20 km of our Dubai kitchen, orders of AED ' + minAed + '+, Monday to Saturday by 5 pm.</p>' +
         '</div>' +
 
         '<div class="plx-view" data-plx-v="map" hidden>' +
