@@ -1,0 +1,22 @@
+{%- comment -%}
+  Plaay Express delivery promise (assets/plx-express.js fills it in for the shopper's area).
+  The markup here is the general message, shown until the script answers or if it can't run.
+  Usage: {% render 'plx-express-box', mode: 'pdp' %} (product page) or mode: 'cart' (bag).
+{%- endcomment -%}
+{%- if mode == 'cart' -%}
+  <div class="plx-ssr plx--cart" data-plx="cart">
+    <span class="plx__t">⚡ Express delivery in Dubai, today</span>
+    <button type="button" class="plx__link" data-plx-open>Check your area</button>
+  </div>
+{%- else -%}
+  <div class="plx-ssr plx--pdp" data-plx="pdp">
+    <div class="plx__top">
+      <span class="plx__t">⚡ Express delivery in Dubai</span>
+      <span class="plx__s">Today, usually within 2 hours. Free over AED {{ settings.cart_tier_ship | default: 99 }}.</span>
+    </div>
+    <div class="plx__bot">
+      <span>Is your area covered?</span>
+      <button type="button" class="plx__btn" data-plx-open>Check your area</button>
+    </div>
+  </div>
+{%- endif -%}

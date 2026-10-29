@@ -477,6 +477,7 @@
           <p class="plo-buy__price" data-plo-one>{%- render 'plaay-aed', fils: v.price -%}</p>
         {%- endif -%}
 
+        {%- if settings.express_enabled -%}{%- render 'plx-express-box', mode: 'pdp' -%}{%- endif -%}
         <div class="plo-buy__row">
           <div class="plo-step plo-step--lg">
             <button type="button" data-plo-q="-1" aria-label="One less">{%- render 'pl-icon', name: 'minus', size: 16, stroke: 2.2 -%}</button>

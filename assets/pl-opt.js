@@ -1337,7 +1337,7 @@
       Array.prototype.forEach.call(steps, function (li, i) { li.classList.toggle('is-on', i <= got); });
       if (fill) fill.style.width = Math.min(100, total / max * 100) + '%';
       var free = hasShip ? got >= 0 : false;
-      if (ship) ship.textContent = free ? 'Free 1–2 day delivery' : '1–2 day UAE delivery';
+      if (ship) ship.textContent = free ? (box.getAttribute('data-ship-free') || 'Free 1–2 day delivery') : (box.getAttribute('data-ship-base') || '1–2 day UAE delivery');
       box.classList.toggle('is-free', free);
       var next = stops[got + 1];
       if (pill) {

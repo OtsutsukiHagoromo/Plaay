@@ -399,5 +399,26 @@
         "info": "e.g. 137. Leave blank to hide the badge entirely."
       }
     ]
+  },
+  {
+    "name": "Express delivery",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Plaay Express delivery promise on product pages and in the bag. The delivery app decides which speed an area gets."
+      },
+      {
+        "type": "checkbox",
+        "id": "express_enabled",
+        "label": "Show Express delivery",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "express_api",
+        "label": "Delivery check address",
+        "default": "https://plaay-noon-delivery.vercel.app/api/express"
+      }
+    ]
   }
 ]

@@ -507,7 +507,9 @@
     "sale_tier_a_pct": 30,
     "sale_tier_b_handles": "new-chocolate-slabs-mix-pack-of-6,truffle-mix",
     "sale_tier_b_pct": 25,
-    "sale_default_pct": 20
+    "sale_default_pct": 20,
+    "express_enabled": true,
+    "express_api": "https://plaay-noon-delivery.vercel.app/api/express"
   },
   "platform_customizations": {
     "custom_css": [
