@@ -8,6 +8,7 @@ import { connectWebhooks, createManualOrder, createTestOrder, getConnection } fr
 import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { buildLive } from './live.js';
+import { areaList, checkoutRates, locate, promise } from './express.js';
 import { createPromotion, listAutomaticDiscounts, PROMOTIONS } from './promos.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
@@ -264,4 +265,44 @@ export async function handleTrackData(request, d) {
   }
   body.label = STATUS_LABELS[body.status] || 'Preparing your order';
   return json(body);
+}
+
+// ---- Website delivery check (product page, cart, area picker) ----
+// Public and read-only: GET ?areas=1 lists the areas; ?area=<id>, ?lat=&lng= or ?address=<text>
+// returns the delivery promise for that place right now.
+
+const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, OPTIONS' };
+
+export async function handleExpressCheck(request, d) {
+  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
+  const q = new URL(request.url).searchParams;
+  const s = d.cfg.express;
+  if (q.get('areas')) {
+    return Response.json(
+      { areas: areaList(s).map(({ id, name, tier }) => ({ id, name, tier })), paused: s.paused },
+      { headers: { ...CORS, 'Cache-Control': 'public, s-maxage=300, max-age=300' } },
+    );
+  }
+  const place = locate(
+    { area: q.get('area'), lat: q.get('lat') ?? undefined, lng: q.get('lng') ?? undefined, address: q.get('address') },
+    s,
+  );
+  return Response.json(promise(place, new Date(), s), { headers: { ...CORS, 'Cache-Control': 'no-store' } });
+}
+
+// ---- Shopify carrier-calculated shipping (checkout rates) ----
+// Not active until registered as a carrier service in Shopify; signed with the app secret.
+
+export async function handleCheckoutRates(request, d) {
+  const raw = await request.text();
+  if (!verifyWebhookHmac(raw, request.headers.get('x-shopify-hmac-sha256'), d.cfg.shopify.webhookSecret)) {
+    return json({ error: 'invalid signature' }, 401);
+  }
+  let body;
+  try {
+    body = JSON.parse(raw);
+  } catch {
+    return json({ error: 'invalid JSON' }, 400);
+  }
+  return json({ rates: checkoutRates(body.rate, new Date(), d.cfg.express) });
 }

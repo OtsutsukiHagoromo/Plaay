@@ -1,5 +1,7 @@
 // All settings come from environment variables; see .env.example.
 
+import { expressSettings } from './express.js';
+
 export function loadConfig(env = process.env) {
   return {
     noon: {
@@ -27,6 +29,8 @@ export function loadConfig(env = process.env) {
     autoDispatch: /^(1|true|yes)$/i.test(env.AUTO_DISPATCH || ''),
     // Last hour (Dubai time) the team accepts express / 4-hour orders, e.g. 17 = 5 pm.
     cutoffHour: Number(env.CUTOFF_HOUR_GST || 17),
+    // Website delivery check and checkout rates (lib/express.js).
+    express: expressSettings(env),
   };
 }
 
