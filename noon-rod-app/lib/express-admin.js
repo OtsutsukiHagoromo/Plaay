@@ -60,12 +60,11 @@ export async function checkoutStatus(shopify, cfg) {
   } catch (err) {
     out.errors.push(`carrier services: ${err.message}`);
   }
-  if (out.carrier) {
-    try {
-      out.inZone = (await uaeZones(shopify)).some((z) => z.carrierIds.includes(out.carrier.id));
-    } catch (err) {
-      out.errors.push(`shipping zones: ${err.message}`);
-    }
+  try {
+    out.zones = await uaeZones(shopify);
+    if (out.carrier) out.inZone = out.zones.some((z) => z.carrierIds.includes(out.carrier.id));
+  } catch (err) {
+    out.errors.push(`shipping zones: ${err.message}`);
   }
   return out;
 }
@@ -76,8 +75,11 @@ async function uaeZones(shopify) {
   const data = await shopify.graphql(`{ deliveryProfiles(first: 10) { nodes { id name
     profileLocationGroups { locationGroup { id }
       locationGroupZones(first: 30) { nodes {
-        zone { id name countries { code { countryCode } } }
-        methodDefinitions(first: 30) { nodes { id name rateProvider { ... on DeliveryParticipant { carrierService { id } } } } }
+        zone { id name countries { code { countryCode } provinces { name code } } }
+        methodDefinitions(first: 30) { nodes { id name active description
+          rateProvider { ... on DeliveryParticipant { carrierService { id } } ... on DeliveryRateDefinition { id price { amount currencyCode } } }
+          methodConditions { field operator conditionCriteria { ... on MoneyV2 { amount currencyCode } ... on Weight { value unit } } }
+        } }
       } }
     }
   } } }`);
@@ -93,6 +95,12 @@ async function uaeZones(shopify) {
           zoneId: z.zone.id,
           zone: z.zone.name,
           carrierIds: z.methodDefinitions.nodes.map((m) => m.rateProvider?.carrierService?.id).filter(Boolean),
+          countries: z.zone.countries.map((c) => `${c.code.countryCode}${c.provinces.length ? ` (${c.provinces.map((p) => p.code).join(', ')})` : ''}`),
+          rates: z.methodDefinitions.nodes.map((m) => ({
+            id: m.id, name: m.name, active: m.active, description: m.description,
+            price: m.rateProvider?.price ? `${m.rateProvider.price.amount} ${m.rateProvider.price.currencyCode}` : 'carrier',
+            conditions: m.methodConditions.map((c) => `${c.field} ${c.operator} ${c.conditionCriteria.amount ?? c.conditionCriteria.value}`),
+          })),
         });
       }
     }
@@ -102,6 +110,8 @@ async function uaeZones(shopify) {
 
 // Register (or refresh) the carrier service and add it to every UAE zone. Standard delivery stays
 // the store's own rate.
+export { uaeZones };
+
 export async function enableCheckoutRates(shopify, cfg) {
   const status = await checkoutStatus(shopify, cfg);
   let id = status.carrier?.id;

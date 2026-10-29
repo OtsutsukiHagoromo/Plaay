@@ -16,7 +16,8 @@ export async function dispatchOrder({ cfg, shopify, noon, log = console }, order
     return { ok: true, already: true, taskNr: order.noon.taskNr };
   }
 
-  const deliveryMode = DELIVERY_MODES[mode] ? mode : defaultDeliveryMode(order, cfg);
+  // Explicit choice, else what the order was set to (e.g. out of Express range -> 4-hour), else the shipping method.
+  const deliveryMode = DELIVERY_MODES[mode] ? mode : DELIVERY_MODES[order.noon.mode] ? order.noon.mode : defaultDeliveryMode(order, cfg);
   let payload;
   try {
     payload = buildTaskPayload(order, cfg, deliveryMode);

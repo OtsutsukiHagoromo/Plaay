@@ -793,6 +793,9 @@ ${connected ? form('express-carrier-off', {}, 'Disconnect from checkout', 'ghost
 <div class="seg">${['off', 'preview', 'on'].map((m) => (m === mode ? `<span class="on">${modeLabel[m]}</span>` : form('express-checkout', { mode: m }, modeLabel[m], 'ghost', m === 'on' ? 'Offer Express at checkout to every customer in range?' : ''))).join('')}</div>
 </div></div>
 
+<h2 class="h2">UAE delivery zones in Shopify</h2>
+<div class="tw"><table><thead><tr><th>Zone</th><th>Rate</th><th>Price</th><th>Conditions</th></tr></thead><tbody>${(status.zones || []).flatMap((z) => z.rates.map((r, i) => `<tr><td>${i ? '' : `<strong>${esc(z.zone)}</strong><br><span class="muted">${esc(z.profile)} · ${esc(z.countries.join(', '))}</span>`}</td><td>${esc(r.name)}${r.active ? '' : ' <span class="b">off</span>'}${r.description ? `<br><span class="muted">${esc(r.description)}</span>` : ''}</td><td>${esc(r.price)}</td><td class="muted">${esc(r.conditions.join(', '))}</td></tr>`)).join('') || '<tr><td colspan="4" class="muted">No UAE zones found.</td></tr>'}</tbody></table></div>
+
 <h2 class="h2">Areas</h2>
 <p class="muted">Driving distance from the warehouse to each area’s centre. Exact addresses and map pins are measured one by one, so near the limit some streets get Express and some 4-hour.</p>
 <div class="tw"><table><thead><tr><th>Area</th><th>Drive</th><th>Speed</th></tr></thead><tbody>${rows}</tbody></table></div>

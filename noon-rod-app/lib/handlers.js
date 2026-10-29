@@ -45,10 +45,24 @@ export async function handleShopifyWebhook(request, d) {
     case 'orders/create': {
       // REST payload -> the fields isExpressOrder reads.
       const line = payload.shipping_lines?.[0];
-      if (!isExpressOrder({ shippingLine: line && { title: line.title, code: line.code } }, d.cfg)) {
+      const lineItems = { nodes: (payload.line_items || []).map((li) => ({
+        sellingPlan: li.selling_plan_allocation || (li.properties || []).some((p) => p.name === '_plx_sub') ? {} : null,
+      })) };
+      const order = { shippingLine: line && { title: line.title, code: line.code }, lineItems };
+      if (!isExpressOrder(order, d.cfg)) {
         return json({ skipped: 'not an express order' });
       }
       await d.shopify.addTags(payload.id, [TAGS.express]);
+      // Checkout can't check distance on fixed rates: an Express order beyond the limit goes
+      // as noon 4-hour delivery instead, flagged for the team.
+      const a = payload.shipping_address;
+      if (defaultDeliveryMode(order, d.cfg) === 'standard' && a?.latitude != null && a?.longitude != null) {
+        const km = await (d.geo || geo).drivingKm(d.cfg.express.warehouse, { lat: Number(a.latitude), lng: Number(a.longitude) });
+        if (km != null && km > d.cfg.express.expressMaxKm) {
+          await d.shopify.setNoonState(payload.id, { mode: '4hr_delivery' });
+          await d.shopify.addTags(payload.id, [TAGS.outOfRange]);
+        }
+      }
       if (d.cfg.autoDispatch) return json(await dispatchOrder(d, payload.id));
       return json({ tagged: TAGS.express });
     }

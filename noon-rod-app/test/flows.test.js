@@ -329,3 +329,21 @@ test('dashboard sync never moves an order backwards and tolerates noon errors', 
   assert.equal(await syncActiveOrders(d, [structuredClone(shopify.order)]), 0);
   assert.equal(shopify.order.noon.status, 'picked_up');
 });
+
+test('orders/create: Express beyond the road limit goes 4-hour; subscriptions are not Express', async () => {
+  const far = setup({ tags: [] });
+  far.d.geo = { drivingKm: async () => 26 };
+  const ship = { shipping_lines: [{ title: 'Plaay Express (Dubai, within 20 km)', code: 'x' }], shipping_address: { latitude: 25.19, longitude: 55.27 } };
+  await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', ...ship }), far.d);
+  assert.ok(far.shopify.order.tags.includes('express-out-of-range'));
+  assert.equal(far.shopify.order.noon.mode, '4hr_delivery');
+
+  const near = setup({ tags: [] });
+  near.d.geo = { drivingKm: async () => 14 };
+  await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', ...ship }), near.d);
+  assert.ok(!near.shopify.order.tags.includes('express-out-of-range'));
+
+  const sub = setup({ tags: [] });
+  await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', ...ship, line_items: [{ selling_plan_allocation: { selling_plan: { id: 1 } } }] }), sub.d);
+  assert.ok(!sub.shopify.order.tags.includes('noon-express'));
+});
