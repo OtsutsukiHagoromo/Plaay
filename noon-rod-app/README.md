@@ -83,6 +83,12 @@ node --env-file=.env scripts/noon-smoke.js --create  # books + cancels a staging
 ```
 Then place a test express order on the store and dispatch it from the dashboard. To see the whole rider journey on staging, book a call with the noon integrations team; they drive the staging rider app. After that, switch `NOON_BASE_URL` to `https://food-api-team.noon.team` and use the production key.
 
+## Express on the website
+
+- **Delivery check** `GET /api/express`: `?areas=1` lists Dubai areas with their speed; `?area=<id>`, `?lat=&lng=` or `?address=<text>` returns the promise for that place right now (Express within `EXPRESS_MAX_KM` of the warehouse, 4-hour for the rest of Dubai, 1–2 days elsewhere; 5 pm cutoff, Mon–Sat). Used by the theme's `assets/plx-express.js`.
+- **Checkout rates** `POST /api/rates`: Shopify carrier-calculated shipping (Express, 4-hour, Standard; AED 15, free over AED 99). Does nothing until it is registered as a carrier service in Shopify, which replaces the current manual rate at checkout.
+- Driving distance is estimated (straight line × `ROAD_FACTOR`) from `WAREHOUSE_LAT`/`WAREHOUSE_LNG`. Set the real warehouse pin and adjust the area list in `lib/express.js` as delivery data comes in. `EXPRESS_PAUSED=true` shows standard delivery only.
+
 ## Daily use
 
 - Open the dashboard at `APP_URL`. The username can be anything; the password is `DASHBOARD_PASSWORD`. Express orders are listed newest first.
