@@ -175,7 +175,7 @@ export async function disableCheckoutRates(shopify, cfg) {
 
 export const FIXED_RATES = [
   { name: 'Plaay Express (Dubai, within 20 km)', description: 'Today if you order by 5 pm, Mon–Sat. Usually within 2 hours.' },
-  { name: '4-hour delivery (Dubai)', description: 'Within 4 hours if you order by 5 pm, Mon–Sat.' },
+  { name: 'Same-day delivery (Dubai, within 4 hours)', description: 'Order by 5 pm, Mon–Sat.' },
 ];
 const DUBAI_ZONE = 'Dubai';
 const MIN_AED = 99;

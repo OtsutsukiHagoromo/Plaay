@@ -36,7 +36,7 @@ test('fixed rates: Dubai split into its own zone with the normal rates plus Expr
   assert.deepEqual(dubai.countries, [{ code: 'AE', includeAllProvinces: false, provinces: [{ code: 'DU' }] }]);
   const m = dubai.methodDefinitionsToCreate;
   assert.deepEqual(m.map((x) => [x.name, x.rateDefinition.price.amount]), [
-    ['Shipping Fee', 15], ['Shipping Fee', 0], ['Plaay Express (Dubai, within 20 km)', 0], ['4-hour delivery (Dubai)', 0],
+    ['Shipping Fee', 15], ['Shipping Fee', 0], ['Plaay Express (Dubai, within 20 km)', 0], ['Same-day delivery (Dubai, within 4 hours)', 0],
   ]);
   assert.deepEqual(m[0].priceConditionsToCreate, [
     { operator: 'GREATER_THAN_OR_EQUAL_TO', criteria: { amount: 0, currencyCode: 'AED' } },
@@ -46,7 +46,7 @@ test('fixed rates: Dubai split into its own zone with the normal rates plus Expr
 });
 
 test('fixed rates: running again changes nothing; undo puts Dubai back', async () => {
-  const rates = [...shippingFee, { id: 'm3', name: 'Plaay Express (Dubai, within 20 km)', active: true, rateProvider: { price: money('0.0') }, methodConditions: [] }, { id: 'm4', name: '4-hour delivery (Dubai)', active: true, rateProvider: { price: money('0.0') }, methodConditions: [] }];
+  const rates = [...shippingFee, { id: 'm3', name: 'Plaay Express (Dubai, within 20 km)', active: true, rateProvider: { price: money('0.0') }, methodConditions: [] }, { id: 'm4', name: 'Same-day delivery (Dubai, within 4 hours)', active: true, rateProvider: { price: money('0.0') }, methodConditions: [] }];
   const s = fake([zone('Z1', 'UAE', ['AZ', 'SH', 'AJ', 'FU', 'RK', 'UQ'], shippingFee), zone('Z2', 'Dubai', ['DU'], rates)]);
   assert.deepEqual(await enableFixedRates(s), { created: false, added: [] });
   assert.equal(s.calls.length, 0);
