@@ -32,7 +32,8 @@ export const ORDER_FIELDS = `
     name firstName lastName company address1 address2 city province countryCodeV2 phone latitude longitude
   }
   billingAddress { phone }
-  lineItems(first: 30) { nodes { title quantity } }
+  lineItems(first: 30) { nodes { title quantity sellingPlan { name } } }
+  customAttributes { key value }
   taskNr: metafield(namespace: "${METAFIELD_NAMESPACE}", key: "task_nr") { value }
   noonStatus: metafield(namespace: "${METAFIELD_NAMESPACE}", key: "status") { value }
   noonError: metafield(namespace: "${METAFIELD_NAMESPACE}", key: "error") { value }

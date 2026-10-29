@@ -5,9 +5,12 @@
 //   4hr       the rest of Dubai: noon 4-hour delivery
 //   standard  everywhere else in the UAE: 1–2 working days
 //
-// Driving distance is estimated as straight-line distance x ROAD_FACTOR until the area list is
-// measured with a routing service. Express and 4-hour run Mon–Sat until the cutoff (5 pm Dubai);
-// orders after that go out on the next working day.
+// Distance is driving distance from the warehouse: measured once per area (AREA_KM, OSRM), and
+// live from OSRM for an exact pin (lib/geo.js). If the router doesn't answer, the nearest area's
+// distance is used. Express and 4-hour run Mon–Sat until the cutoff (5 pm Dubai); orders after
+// that go out on the next working day.
+
+import * as defaultGeo from './geo.js';
 
 // [name, lat, lng, extra words that identify it in an address]
 export const AREAS = [
@@ -39,12 +42,12 @@ export const AREAS = [
   ['Al Sufouh', 25.1, 55.165, ['sufouh', 'knowledge village']],
   ['Al Barsha', 25.11, 55.198, ['al barsha', 'barsha 1', 'barsha 2', 'barsha 3', 'mall of the emirates']],
   ['Al Barsha South', 25.065, 55.215, ['barsha south']],
-  ['Jumeirah Village Circle (JVC)', 25.058, 55.209, ['jvc', 'jumeirah village circle']],
-  ['Jumeirah Village Triangle (JVT)', 25.047, 55.19, ['jvt', 'jumeirah village triangle']],
+  ['Jumeirah Village Circle (JVC)', 25.058, 55.209, ['jvc', 'jumeirah village circle', 'al barsha south 4']],
+  ['Jumeirah Village Triangle (JVT)', 25.047, 55.19, ['jvt', 'jumeirah village triangle', 'al barsha south 5']],
   ['Dubai Production City (IMPZ)', 25.035, 55.19, ['impz', 'production city']],
   ['Dubai Sports City', 25.04, 55.222, ['sports city']],
   ['Motor City', 25.045, 55.235, ['motor city', 'uptown motor city']],
-  ['Arjan', 25.062, 55.235, ['arjan', 'science park', 'miracle garden']],
+  ['Arjan', 25.062, 55.235, ['arjan', 'science park', 'miracle garden', 'al barsha south 3']],
   ['Al Quoz', 25.14, 55.23, ['al quoz', 'alquoz']],
   ['Al Khail Gate', 25.14, 55.245, ['al khail gate']],
   ['Dubai Hills Estate', 25.105, 55.25, ['dubai hills']],
@@ -88,23 +91,103 @@ export const AREAS = [
 ];
 
 // Places outside Dubai: typed or found, they get standard delivery.
-const ELSEWHERE = ['sharjah', 'abu dhabi', 'ajman', 'ras al khaimah', 'rak', 'umm al quwain', 'fujairah', 'al ain'];
+const ELSEWHERE = ['sharjah', 'abu dhabi', 'ajman', 'ras al khaimah', 'umm al quwain', 'fujairah', 'al ain'];
 export const OTHER_EMIRATES = ['Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah', 'Umm Al Quwain', 'Fujairah', 'Al Ain'];
+
+// Driving km from the warehouse (DIP 2) to each area's centre, measured with OSRM on 29 Oct 2026.
+export const AREA_KM = {
+  'dubai-investments-park-1': 6.6,
+  'dubai-investments-park-2': 3.1,
+  'expo-city-dubai': 11.5,
+  'dubai-south': 28.2,
+  'jebel-ali': 14.5,
+  'al-furjan': 11.2,
+  'discovery-gardens': 12.6,
+  'the-gardens': 13.3,
+  'jumeirah-park': 16.2,
+  'jumeirah-islands': 16.4,
+  'jumeirah-golf-estates': 14.1,
+  'jumeirah-lake-towers-jlt': 19.1,
+  'dubai-marina': 18.7,
+  'jbr': 18.3,
+  'bluewaters': 19.4,
+  'dubai-harbour': 25.5,
+  'emirates-hills': 27.3,
+  'the-springs': 16.9,
+  'the-meadows': 16.4,
+  'the-lakes': 26.6,
+  'the-greens': 26.2,
+  'the-views': 25.4,
+  'barsha-heights-tecom': 24.5,
+  'dubai-media-city': 24.6,
+  'dubai-internet-city': 24.9,
+  'al-sufouh': 26.0,
+  'al-barsha': 27.4,
+  'al-barsha-south': 18.8,
+  'jumeirah-village-circle-jvc': 17.6,
+  'jumeirah-village-triangle-jvt': 20.0,
+  'dubai-production-city-impz': 11.7,
+  'dubai-sports-city': 15.9,
+  'motor-city': 16.6,
+  'arjan': 19.1,
+  'al-quoz': 28.6,
+  'al-khail-gate': 29.2,
+  'dubai-hills-estate': 22.5,
+  'living-legends': 20.6,
+  'arabian-ranches': 19.4,
+  'arabian-ranches-2': 14.6,
+  'arabian-ranches-3': 18.5,
+  'mudon': 13.0,
+  'damac-hills': 14.3,
+  'tilal-al-ghaf': 16.3,
+  'remraam': 12.4,
+  'town-square': 11.7,
+  'damac-hills-2': 16.5,
+  'villanova-serena': 19.4,
+  'the-villa': 24.9,
+  'al-barari': 44.6,
+  'majan-dubailand': 30.3,
+  'palm-jumeirah': 28.7,
+  'umm-suqeim': 32.0,
+  'jumeirah': 38.4,
+  'al-wasl-city-walk': 39.1,
+  'meydan-mbr-city': 34.1,
+  'sobha-hartland': 36.6,
+  'nad-al-sheba': 37.5,
+  'business-bay': 36.8,
+  'downtown-dubai': 37.8,
+  'difc': 38.0,
+  'al-jaddaf': 40.4,
+  'dubai-festival-city': 43.4,
+  'dubai-silicon-oasis': 32.1,
+  'international-city': 38.2,
+  'al-warqa': 43.0,
+  'mirdif': 45.9,
+  'al-rashidiya': 47.3,
+  'al-garhoud': 45.1,
+  'karama': 43.6,
+  'bur-dubai': 45.2,
+  'deira': 46.3,
+  'al-qusais': 50.0,
+  'al-nahda-dubai': 53.2,
+};
 
 const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const norm = (s) => ` ${String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()} `;
 
 export function expressSettings(env = process.env) {
   return {
-    warehouse: { lat: Number(env.WAREHOUSE_LAT || 24.978), lng: Number(env.WAREHOUSE_LNG || 55.188) },
+    warehouse: { lat: Number(env.WAREHOUSE_LAT || 24.9811042), lng: Number(env.WAREHOUSE_LNG || 55.2066267) },
     expressMaxKm: Number(env.EXPRESS_MAX_KM || 20),
-    roadFactor: Number(env.ROAD_FACTOR || 1.3),
+    roadFactor: Number(env.ROAD_FACTOR || 1.6), // only when neither a measurement nor the router is available
     cutoffHour: Number(env.CUTOFF_HOUR_GST || 17),
     openHour: Number(env.OPEN_HOUR_GST || 9),
     workDays: String(env.WORK_DAYS || '1,2,3,4,5,6').split(',').map(Number), // 0 = Sunday
     freeOver: Number(env.FREE_DELIVERY_OVER_AED || 99),
     fee: Number(env.DELIVERY_FEE_AED || 15),
     paused: /^(1|true|yes)$/i.test(env.EXPRESS_PAUSED || ''),
+    // Checkout rates: off; preview (only bags built on the express-preview theme); on (everyone).
+    checkout: ['off', 'preview', 'on'].includes(env.EXPRESS_CHECKOUT) ? env.EXPRESS_CHECKOUT : 'preview',
   };
 }
 
@@ -117,51 +200,74 @@ export function straightKm(a, b) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-const drivingKm = (point, s) => straightKm(s.warehouse, point) * s.roadFactor;
+const tierFor = (km, s) => (km <= s.expressMaxKm ? 'express' : '4hr');
 
-// Rough Dubai outline for a location that isn't near a listed area.
+// Rough Dubai outline for a pin that isn't near a listed area.
 const inDubai = ({ lat, lng }) => lat > 24.75 && lat < 25.36 && lng > 54.89 && lng < 55.65 && !(lat > 25.29 && lng > 55.36);
 
 export function areaList(s = expressSettings()) {
   const list = AREAS.map(([name, lat, lng]) => {
-    const km = drivingKm({ lat, lng }, s);
-    return { id: slug(name), name, tier: km <= s.expressMaxKm ? 'express' : '4hr', km: Math.round(km) };
+    const id = slug(name);
+    const km = AREA_KM[id] ?? straightKm(s.warehouse, { lat, lng }) * s.roadFactor;
+    // Near the limit, some streets in the area are inside it and some aren't: check the exact address.
+    const edge = Math.abs(km - s.expressMaxKm) <= 2.5;
+    return { id, name, tier: tierFor(km, s), km: Math.round(km * 10) / 10, edge, lat, lng };
   });
   for (const name of OTHER_EMIRATES) list.push({ id: slug(name), name, tier: 'standard', km: null });
   return list;
 }
 
-// Where is this? Accepts an area id, a lat/lng, or free address text (city, community, street).
-export function locate({ area, lat, lng, address } = {}, s = expressSettings()) {
-  const list = areaList(s);
+function nearestArea(p, s) {
+  let best = null;
+  for (const a of areaList(s)) {
+    if (a.lat == null) continue;
+    const d = straightKm(p, a);
+    if (!best || d < best.d) best = { ...a, d };
+  }
+  return best;
+}
+
+// Which tier a pin gets: road distance from the router, else the nearest measured area.
+export async function locatePin(p, s = expressSettings(), geo = defaultGeo) {
+  const near = nearestArea(p, s);
+  const named = near && near.d < 3 ? near : null;
+  if (!inDubai(p)) return { id: 'location', name: 'Outside Dubai', tier: 'standard', km: null, lat: p.lat, lng: p.lng };
+  let km = await geo.drivingKm(s.warehouse, p);
+  let measured = km != null;
+  if (km == null) km = named ? named.km : straightKm(s.warehouse, p) * s.roadFactor;
+  return { id: named ? named.id : 'location', name: named ? named.name : 'Dubai', tier: tierFor(km, s), km: Math.round(km * 10) / 10, measured, lat: p.lat, lng: p.lng };
+}
+
+// The area named in address text, or null.
+export function matchArea(address, s = expressSettings()) {
+  const text = norm(address);
+  let hit = null;
+  for (const [name, , , words] of AREAS) {
+    for (const w of [name, ...words]) {
+      const k = norm(w);
+      if (text.includes(k) && (!hit || k.length > hit.len)) hit = { name, len: k.length };
+    }
+  }
+  if (hit) return areaList(s).find((a) => a.name === hit.name);
+  for (const e of ELSEWHERE) if (text.includes(norm(e))) return { id: slug(e), name: e.replace(/\b\w/g, (c) => c.toUpperCase()), tier: 'standard', km: null };
+  return null;
+}
+
+// Where is this? An area id, a pin, or address text (which is looked up if it names no known area).
+export async function locate({ area, lat, lng, address } = {}, s = expressSettings(), geo = defaultGeo) {
   if (area) {
-    const hit = list.find((a) => a.id === area);
+    const hit = areaList(s).find((a) => a.id === area);
     if (hit) return hit;
   }
-  if (lat != null && lng != null && Number.isFinite(+lat) && Number.isFinite(+lng)) {
-    const p = { lat: +lat, lng: +lng };
-    let best = null;
-    for (const [name, alat, alng] of AREAS) {
-      const d = straightKm(p, { lat: alat, lng: alng });
-      if (!best || d < best.d) best = { d, name };
-    }
-    const km = drivingKm(p, s);
-    const tier = !inDubai(p) ? 'standard' : km <= s.expressMaxKm ? 'express' : '4hr';
-    const name = best && best.d < 4 ? best.name : tier === 'standard' ? 'Outside Dubai' : 'Dubai';
-    return { id: best && best.d < 4 ? slug(best.name) : 'location', name, tier, km: Math.round(km) };
+  if (lat != null && lng != null && lat !== '' && lng !== '' && Number.isFinite(+lat) && Number.isFinite(+lng)) {
+    return locatePin({ lat: +lat, lng: +lng }, s, geo);
   }
   if (address) {
-    const text = norm(address);
-    let hit = null;
-    for (const [name, , , words] of AREAS) {
-      for (const w of [name, ...words]) {
-        const k = norm(w);
-        if (text.includes(k) && (!hit || k.length > hit.len)) hit = { name, len: k.length };
-      }
-    }
-    if (hit) return list.find((a) => a.name === hit.name);
-    for (const e of ELSEWHERE) if (text.includes(norm(e))) return { id: slug(e), name: e.replace(/\b\w/g, (c) => c.toUpperCase()), tier: 'standard', km: null };
-    if (text.includes(' dubai ')) return { id: 'dubai', name: 'Dubai', tier: '4hr', km: null };
+    const hit = matchArea(address, s);
+    if (hit) return hit;
+    const pin = await geo.geocode(address);
+    if (pin) return locatePin(pin, s, geo);
+    if (norm(address).includes(' dubai ')) return { id: 'dubai', name: 'Dubai', tier: '4hr', km: null };
   }
   return null;
 }
@@ -193,57 +299,66 @@ export function schedule(now = new Date(), s = expressSettings()) {
 
 const openLabel = (s) => (s.openHour > 12 ? `${s.openHour - 12} pm` : `${s.openHour} am`);
 
-// What to tell the shopper for an area at a moment in time.
+// What to tell the shopper for a place at a moment in time.
 export function promise(place, now = new Date(), s = expressSettings()) {
   if (!place) return { tier: 'unknown' };
   let tier = place.tier;
   if (s.paused && tier !== 'standard') tier = 'standard';
-  const base = { tier, area: { id: place.id, name: place.name } };
+  const base = { tier, area: { id: place.id, name: place.name }, km: place.km ?? null };
   if (tier === 'standard') {
     return { ...base, title: 'Delivery in 1–2 working days', detail: place.tier === 'standard' ? 'Express is Dubai-only for now.' : 'Express is paused right now.' };
   }
   const sch = schedule(now, s);
   const today = sch.when === 'today';
+  const out = { ...base, when: sch.when, day: sch.label, secondsLeft: sch.secondsLeft, cutoff: sch.cutoff };
   if (tier === 'express') {
     return {
-      ...base,
-      when: sch.when,
-      secondsLeft: sch.secondsLeft,
-      cutoff: sch.cutoff,
+      ...out,
       title: today ? 'Plaay Express · Today' : `Plaay Express · ${sch.label} from ${openLabel(s)}`,
       detail: today ? 'Usually within 2 hours' : 'Order now and it’s first out of the door.',
+      edge: !!place.edge,
     };
   }
   return {
-    ...base,
-    when: sch.when,
-    secondsLeft: sch.secondsLeft,
-    cutoff: sch.cutoff,
+    ...out,
     title: today ? '4-hour delivery · Today' : `4-hour delivery · ${sch.label}`,
     detail: today ? 'Within 4 hours of your order' : `Goes out ${sch.label.toLowerCase()} from ${openLabel(s)}.`,
+    edge: !!place.edge,
   };
 }
 
-// Shopify carrier-calculated shipping: rates for one checkout. `rate` is Shopify's request body.
-export function checkoutRates(rate, now = new Date(), s = expressSettings()) {
-  const dest = rate?.destination || {};
-  const currency = rate?.currency || 'AED';
-  const subtotal = (rate?.items || []).reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0); // fils
-  const price = subtotal >= s.freeOver * 100 ? 0 : s.fee * 100;
-  const standard = { service_name: 'Standard delivery', service_code: 'standard', description: '1–2 working days', total_price: String(price), currency };
-  if (String(dest.country || '').toUpperCase() !== 'AE') return [standard];
+const prop = (item, key) => {
+  const p = item?.properties;
+  return p && typeof p === 'object' && p[key] != null && p[key] !== '' && p[key] !== false;
+};
 
+// Shopify carrier-calculated shipping: the Express and 4-hour rates for one checkout (`rate` is
+// Shopify's request body). Standard delivery stays the store's own rate, so checkout always has
+// it even if this service is slow or down. No Express for Subscribe & Save (renewals would book
+// a rider every cycle): the theme marks those lines with the hidden _plx_sub property.
+export async function checkoutRates(rate, now = new Date(), s = expressSettings(), geo = defaultGeo) {
+  const dest = rate?.destination || {};
+  const items = rate?.items || [];
+  if (s.checkout === 'off' || s.paused) return [];
+  if (s.checkout === 'preview' && !items.some((i) => prop(i, '_plx'))) return [];
+  if (items.some((i) => prop(i, '_plx_sub'))) return [];
+  if (String(dest.country || '').toUpperCase() !== 'AE') return [];
+
+  const currency = rate?.currency || 'AED';
+  const subtotal = items.reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0); // fils
+  const price = String(subtotal >= s.freeOver * 100 ? 0 : s.fee * 100);
   const address = [dest.address1, dest.address2, dest.address3, dest.city, dest.province].filter(Boolean).join(', ');
-  const place = locate(dest.latitude != null && dest.longitude != null ? { lat: dest.latitude, lng: dest.longitude } : { address }, s);
-  const p = promise(place, now, s);
+  const pin = dest.latitude != null && dest.longitude != null ? { lat: dest.latitude, lng: dest.longitude } : {};
+  const place = await locate({ ...pin, address }, s, geo);
+  if (!place || place.tier === 'standard') return [];
+
+  const day = (p) => (p.when === 'today' ? 'today' : p.title.split('· ')[1].toLowerCase());
   const rates = [];
-  if (p.tier === 'express') {
-    rates.push({ service_name: p.when === 'today' ? 'Plaay Express · today' : `Plaay Express · ${p.title.split('· ')[1].toLowerCase()}`, service_code: 'plaay-express', description: p.detail, total_price: String(price), currency });
+  if (place.tier === 'express') {
+    const p = promise(place, now, s);
+    rates.push({ service_name: `Plaay Express · ${day(p)}`, service_code: 'plaay-express', description: p.detail, total_price: price, currency, phone_required: true });
   }
-  if (p.tier === 'express' || p.tier === '4hr') {
-    const four = promise({ ...place, tier: '4hr' }, now, s);
-    rates.push({ service_name: `4-hour delivery · ${four.when === 'today' ? 'today' : four.title.split('· ')[1].toLowerCase()}`, service_code: '4hr-delivery', description: four.detail, total_price: String(price), currency });
-  }
-  rates.push(standard);
+  const four = promise({ ...place, tier: '4hr' }, now, s);
+  rates.push({ service_name: `4-hour delivery · ${day(four)}`, service_code: '4hr-delivery', description: four.detail, total_price: price, currency, phone_required: true });
   return rates;
 }

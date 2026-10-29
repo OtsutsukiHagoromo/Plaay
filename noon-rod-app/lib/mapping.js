@@ -38,10 +38,26 @@ export const DELIVERY_MODES = {
 
 const shippingText = (order) => `${order.shippingLine?.title || ''} ${order.shippingLine?.code || ''}`;
 
+// Subscribe & Save orders (first box and renewals) don't go Express for now.
+export const hasSubscription = (order) => (order.lineItems?.nodes || []).some((li) => li.sellingPlan);
+
 // Orders for noon: express (on-demand) or 4-hour shipping methods.
 export function isExpressOrder(order, cfg) {
-  if (!order.shippingLine) return false;
+  if (!order.shippingLine || hasSubscription(order)) return false;
   return cfg.expressMatch.test(shippingText(order)) || cfg.fourHourMatch.test(shippingText(order));
+}
+
+// The pin the shopper set on the website's map (cart attributes from assets/plx-express.js), used
+// when the checkout address has no coordinates and is in the same area as the pin.
+export function websitePin(order) {
+  const attr = Object.fromEntries((order.customAttributes || []).map((x) => [x.key, x.value]));
+  const m = String(attr._plx_pin || '').match(/^(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)$/);
+  if (!m) return null;
+  const area = String(attr['Delivery area'] || '').toLowerCase().replace(/\s*\(.*\)\s*/, '').trim();
+  const a = order.shippingAddress || {};
+  const text = [a.address1, a.address2, a.city, a.province].join(' ').toLowerCase();
+  if (area && !text.includes(area)) return null;
+  return { latitude: Number(m[1]), longitude: Number(m[2]) };
 }
 
 // The noon delivery mode an order should use unless staff pick another one.
@@ -57,7 +73,11 @@ export function isCashOnDelivery(order, cfg) {
 
 export function buildTaskPayload(order, cfg, mode = 'standard') {
   const problems = [];
-  const a = order.shippingAddress;
+  let a = order.shippingAddress;
+  if (a && (a.latitude == null || a.longitude == null)) {
+    const pin = websitePin(order);
+    if (pin) a = { ...a, ...pin };
+  }
 
   if (!cfg.noon.outletCode) problems.push('NOON_OUTLET_CODE is not configured');
   if (!a) {

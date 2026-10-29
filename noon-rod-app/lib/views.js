@@ -183,7 +183,7 @@ ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 ${connectionPanel(connection)}
 ${cutoffBanner(cfg)}
 <div class="head"><div><h1>Express orders</h1><div class="muted">Pack the order first, then press <strong>Dispatch rider</strong>. The rider arrives within minutes.</div></div>
-<div class="hbtns">${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="test-order"><input type="hidden" name="back" value="/?view=todo"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the Shopify store?')">+ Test order</button></form>` : ''}${connection?.ok ? '<a class="btn" href="/new">+ New order</a>' : ''}</div></div>
+<div class="hbtns">${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="test-order"><input type="hidden" name="back" value="/?view=todo"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the Shopify store?')">+ Test order</button></form>` : ''}${connection?.ok ? '<a class="btn ghost" href="/express">Express settings</a> <a class="btn" href="/new">+ New order</a>' : ''}</div></div>
 <div class="bar"><nav class="tabs">${tabs}</nav>
 <form class="search" method="get" action="/"><input type="hidden" name="view" value="${esc(view)}"><input type="search" name="q" value="${esc(q)}" placeholder="Search order #, name, phone, area" aria-label="Search orders"></form></div>
 <table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Payment</th><th>Rider</th><th></th></tr></thead>
@@ -757,4 +757,55 @@ export function renderTrackingPage({ token }) {
   refresh();
   setInterval(refresh, 15000);
 </script></body></html>`;
+}
+
+// Express settings: checkout rates (Shopify carrier service), who sees them, pause, and the areas.
+export function renderExpress({ cfg, flash, status, settings, areas }) {
+  const form = (action, fields, label, cls = '', confirmText = '') =>
+    `<form method="post" action="/api/dashboard" class="inl"><input type="hidden" name="action" value="${action}"><input type="hidden" name="back" value="/express">${Object.entries(fields).map(([k, v]) => `<input type="hidden" name="${k}" value="${esc(v)}">`).join('')}<button class="${cls}"${confirmText ? ` onclick="return confirm('${esc(confirmText)}')"` : ''}>${label}</button></form>`;
+  const plan = status.plan;
+  const c = status.carrier;
+  const connected = c?.active && status.inZone;
+  const mode = settings.checkout;
+  const modeLabel = { off: 'Off', preview: 'Preview only', on: 'Everyone' };
+  const rows = areas.filter((a) => a.km != null)
+    .map((a) => `<tr><td>${esc(a.name)}</td><td class="num">${a.km.toFixed(1)} km</td><td>${a.tier === 'express' ? '<span class="b ok">Express</span>' : '<span class="b info">4-hour</span>'}${a.edge ? ' <span class="b warn">near the limit</span>' : ''}</td></tr>`).join('');
+  const body = `
+<a class="backlink" href="/">← Express orders</a>
+${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
+<h1>Express settings</h1>
+<p class="muted">Express: within ${settings.expressMaxKm} km driving of the warehouse. 4-hour: the rest of Dubai. Orders by ${settings.cutoffHour - 12} pm, Monday to Saturday. AED ${settings.fee}, free over AED ${settings.freeOver}. No Express for Subscribe &amp; Save.</p>
+
+<div class="card pc"><div><h2>Pause Express</h2><div class="muted">For days with no riders or the warehouse closed. The website and checkout show standard delivery only within a minute.</div></div>
+${settings.paused ? `<div><span class="b bad">Paused</span> ${form('express-pause', { paused: 'false' }, 'Turn Express back on', 'yellow')}</div>` : form('express-pause', { paused: 'true' }, 'Pause Express', 'ghost', 'Pause Express on the website and at checkout?')}</div>
+
+<div class="card pc"><div><h2>Checkout delivery rates</h2>
+<div class="muted">Adds “Plaay Express” and “4-hour delivery” to Shopify checkout for addresses in range. Standard delivery stays your own rate.</div>
+<ul>
+<li>Shopify plan: <strong>${esc(plan?.publicDisplayName || 'unknown')}</strong>${plan?.shopifyPlus ? ' (Plus)' : ''}</li>
+<li>Connected to Shopify: ${c ? (c.active ? '<span class="b ok">yes</span>' : '<span class="b warn">inactive</span>') : '<span class="b">no</span>'} ${c ? (status.inZone ? '<span class="b ok">in the UAE shipping zone</span>' : '<span class="b warn">not in the UAE shipping zone</span>') : ''}</li>
+<li>Shown to: <strong>${modeLabel[mode]}</strong> <span class="muted">${mode === 'preview' ? '(bags built on the express-preview theme)' : ''}</span></li>
+</ul>
+${status.errors.length ? `<div class="panel bad-b">${status.errors.map(esc).join('<br>')}</div>` : ''}
+</div>
+<div class="stack">
+${connected ? form('express-carrier-off', {}, 'Disconnect from checkout', 'ghost', 'Remove Express and 4-hour from Shopify checkout?') : form('express-carrier-on', {}, 'Connect to checkout', 'yellow')}
+<div class="seg">${['off', 'preview', 'on'].map((m) => (m === mode ? `<span class="on">${modeLabel[m]}</span>` : form('express-checkout', { mode: m }, modeLabel[m], 'ghost', m === 'on' ? 'Offer Express at checkout to every customer in range?' : ''))).join('')}</div>
+</div></div>
+
+<h2 class="h2">Areas</h2>
+<p class="muted">Driving distance from the warehouse to each area’s centre. Exact addresses and map pins are measured one by one, so near the limit some streets get Express and some 4-hour.</p>
+<div class="tw"><table><thead><tr><th>Area</th><th>Drive</th><th>Speed</th></tr></thead><tbody>${rows}</tbody></table></div>
+<style>
+  .backlink { display: inline-block; margin-bottom: 12px; font-weight: 700; text-decoration: none; color: var(--muted); }
+  .pc { background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; padding: 16px 18px; margin: 14px 0; display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; align-items: start; }
+  .pc > div:first-child { flex: 1 1 320px; min-width: 0; } .pc h2 { margin: 0; font-size: 18px; font-weight: 900; } .pc ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+  .inl { display: inline; } .stack { display: grid; gap: 10px; justify-items: end; }
+  .seg { display: inline-flex; gap: 4px; align-items: center; border: 1.5px solid var(--line); border-radius: 99px; padding: 3px; }
+  .seg .on { background: var(--navy); color: #fff; border-radius: 99px; padding: 6px 14px; font-weight: 700; font-size: 14px; } .seg button { padding: 6px 14px; border: 0; }
+  .h2 { font-weight: 900; font-size: 18px; margin: 22px 0 8px; }
+  .tw { overflow-x: auto; } table { width: 100%; border-collapse: collapse; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); font-size: 14px; } th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--cream); } .num { font-variant-numeric: tabular-nums; }
+</style>`;
+  return shell({ cfg, title: 'Express settings', body });
 }

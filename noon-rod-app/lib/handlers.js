@@ -8,11 +8,13 @@ import { connectWebhooks, createManualOrder, createTestOrder, getConnection } fr
 import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { buildLive } from './live.js';
-import { areaList, checkoutRates, locate, promise } from './express.js';
+import { areaList, checkoutRates, locate, matchArea, promise } from './express.js';
+import { checkoutStatus, disableCheckoutRates, enableCheckoutRates, liveSettings, setSetting } from './express-admin.js';
+import * as geo from './geo.js';
 import { createPromotion, listAutomaticDiscounts, PROMOTIONS } from './promos.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
-import { renderDashboard, renderNewOrder, renderOrderDetail, renderPromos, renderTrackingPage } from './views.js';
+import { renderDashboard, renderExpress, renderNewOrder, renderOrderDetail, renderPromos, renderTrackingPage } from './views.js';
 
 const json = (body, status = 200) => Response.json(body, { status });
 
@@ -113,7 +115,7 @@ export async function handleDashboard(request, d) {
     const form = await request.formData();
     const orderId = String(form.get('order') || '');
     const action = String(form.get('action') || '');
-    if (!['connect', 'test-order', 'create-order', 'create-promotion'].includes(action) && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
+    if (!['connect', 'test-order', 'create-order', 'create-promotion'].includes(action) && !action.startsWith('express-') && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
 
     let result;
     try {
@@ -131,6 +133,9 @@ export async function handleDashboard(request, d) {
         const results = await createPromotion(d.shopify, String(form.get('promotion') || ''));
         form.set('back', '/promos');
         result = { ok: true, message: results.map((r) => `${r.title}: ${r.removed ? 'removed' : r.created ? `created (${r.count} products)` : r.skipped}`).join(' · ') };
+      } else if (action.startsWith('express-')) {
+        form.set('back', '/express');
+        result = (await expressAction(d, action, form)) || { ok: false, reason: 'unknown action' };
       } else if (action === 'create-order') {
         const f = {
           name: String(form.get('name') || '').trim().slice(0, 100),
@@ -170,6 +175,7 @@ export async function handleDashboard(request, d) {
   const html = (body) => new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
 
   if (url.searchParams.has('new')) return html(renderNewOrder({ cfg: d.cfg, flash }));
+  if (url.searchParams.has('express')) return html(renderExpress({ cfg: d.cfg, flash, ...(await expressPageData(d)) }));
   if (url.searchParams.has('promos')) {
     let discounts = [];
     let error = '';
@@ -267,31 +273,42 @@ export async function handleTrackData(request, d) {
   return json(body);
 }
 
-// ---- Website delivery check (product page, cart, area picker) ----
-// Public and read-only: GET ?areas=1 lists the areas; ?area=<id>, ?lat=&lng= or ?address=<text>
-// returns the delivery promise for that place right now.
+// ---- Website delivery check (product page, bag, "Where should we deliver?" sheet) ----
+// Public and read-only:
+//   ?areas=1                 Dubai areas with their speed
+//   ?q=<text>                address suggestions (areas first, then streets and buildings)
+//   ?area=<id> | ?lat=&lng= | ?address=<text>   the delivery promise for that place right now;
+//                            with a pin, also the address found there (for checkout)
 
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET, OPTIONS' };
 
 export async function handleExpressCheck(request, d) {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
   const q = new URL(request.url).searchParams;
-  const s = d.cfg.express;
+  const s = await liveSettings(d);
+  const g = d.geo || geo;
+  const out = (body, cache = 'no-store') => Response.json(body, { headers: { ...CORS, 'Cache-Control': cache } });
+
   if (q.get('areas')) {
-    return Response.json(
-      { areas: areaList(s).map(({ id, name, tier }) => ({ id, name, tier })), paused: s.paused },
-      { headers: { ...CORS, 'Cache-Control': 'public, s-maxage=300, max-age=300' } },
-    );
+    return out({ areas: areaList(s).map(({ id, name, tier, edge }) => ({ id, name, tier, edge })), paused: s.paused }, 'public, s-maxage=300, max-age=300');
   }
-  const place = locate(
-    { area: q.get('area'), lat: q.get('lat') ?? undefined, lng: q.get('lng') ?? undefined, address: q.get('address') },
-    s,
-  );
-  return Response.json(promise(place, new Date(), s), { headers: { ...CORS, 'Cache-Control': 'no-store' } });
+  if (q.get('q') != null) {
+    const text = q.get('q').trim().toLowerCase();
+    const areas = text.length < 2 ? [] : areaList(s).filter((a) => a.name.toLowerCase().includes(text)).slice(0, 4)
+      .map(({ id, name, tier, edge }) => ({ kind: 'area', id, name, tier, edge }));
+    const places = (await g.searchAddress(q.get('q'))).map((a) => ({ kind: 'address', ...a, area: matchArea(`${a.label} ${a.community}`, s)?.name || a.community }));
+    return out({ results: [...areas, ...places].slice(0, 8) }, 'public, s-maxage=600, max-age=600');
+  }
+  const lat = q.get('lat');
+  const lng = q.get('lng');
+  const place = await locate({ area: q.get('area'), lat: lat ?? undefined, lng: lng ?? undefined, address: q.get('address') }, s, g);
+  const body = promise(place, new Date(), s);
+  if (lat && lng && place && q.get('reverse')) body.address = await g.reverseAddress(lat, lng);
+  return out(body);
 }
 
 // ---- Shopify carrier-calculated shipping (checkout rates) ----
-// Not active until registered as a carrier service in Shopify; signed with the app secret.
+// Express and 4-hour only; standard stays the store's own rate. Signed with the app secret.
 
 export async function handleCheckoutRates(request, d) {
   const raw = await request.text();
@@ -304,5 +321,40 @@ export async function handleCheckoutRates(request, d) {
   } catch {
     return json({ error: 'invalid JSON' }, 400);
   }
-  return json({ rates: checkoutRates(body.rate, new Date(), d.cfg.express) });
+  const s = await liveSettings(d);
+  const rates = await checkoutRates(body.rate, new Date(), s, d.geo || geo);
+  const dest = body.rate?.destination || {};
+  // No names, streets or phone numbers in the log: area-level only.
+  d.log?.info?.(`rates ${s.checkout} ${dest.country}/${dest.province}/${dest.city} items=${(body.rate?.items || []).length} props=${[...new Set((body.rate?.items || []).flatMap((i) => Object.keys(i.properties || {})))].join('|')} -> ${rates.map((r) => r.service_code).join(',') || 'none'}`);
+  return json({ rates });
+}
+
+// ---- Dashboard: Express settings page actions ----
+
+export async function expressAction(d, action, form) {
+  if (action === 'express-pause') {
+    const paused = form.get('paused') === 'true';
+    await setSetting(d.shopify, 'paused', paused);
+    return { ok: true, message: paused ? 'Express paused: shoppers see standard delivery only.' : 'Express is on again.' };
+  }
+  if (action === 'express-checkout') {
+    const mode = String(form.get('mode'));
+    if (!['off', 'preview', 'on'].includes(mode)) return { ok: false, reason: 'unknown mode' };
+    await setSetting(d.shopify, 'checkout', mode);
+    return { ok: true, message: { off: 'Checkout shows standard delivery only.', preview: 'Checkout offers Express only to bags from the express-preview theme.', on: 'Checkout offers Express and 4-hour to everyone in range.' }[mode] };
+  }
+  if (action === 'express-carrier-on') {
+    const r = await enableCheckoutRates(d.shopify, d.cfg);
+    return { ok: true, message: `Checkout delivery rates connected${r.added.length ? ` and added to ${r.added.join(', ')}` : ''}.` };
+  }
+  if (action === 'express-carrier-off') {
+    const r = await disableCheckoutRates(d.shopify, d.cfg);
+    return { ok: true, message: r.removed ? 'Checkout delivery rates removed.' : 'Checkout delivery rates were not connected.' };
+  }
+  return null;
+}
+
+export async function expressPageData(d) {
+  const [status, s] = await Promise.all([checkoutStatus(d.shopify, d.cfg), liveSettings(d)]);
+  return { status, settings: s, areas: areaList(s) };
 }
