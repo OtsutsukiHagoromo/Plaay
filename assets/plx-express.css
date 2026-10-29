@@ -48,3 +48,31 @@ html.plx-lock { overflow: hidden; }
 .plx-tag--h { background: #E6EEFF; color: #1D4ED8; }
 .plx-sheet__note { margin: 0; font-size: 12.5px; opacity: .75; }
 .plx-sheet__note a { color: inherit; font-weight: 700; }
+
+/* Edge-of-zone note, Subscribe & Save state */
+.plx__edge { display: block; margin-top: 4px; font-size: 12.5px; }
+.plx--pdp .plx__top--muted { background: var(--plx-cream); }
+
+/* Sticky "Add to bag" bar: short promise */
+.plx--chip { display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 99px; background: var(--plx-sun); color: var(--plx-ink); font-size: 11px; font-weight: 900; font-style: normal; white-space: nowrap; vertical-align: 1px; }
+.plx--chip[hidden] { display: none; }
+
+/* Sheet views */
+.plx-view { display: grid; gap: 10px; }
+.plx-view[hidden] { display: none; }
+.plx-sheet__head h2 { flex: 1; }
+.plx-sheet__back { font: inherit; font-size: 20px; background: none; border: 0; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; color: inherit; }
+.plx-sheet__back[hidden] { display: none; }
+.plx-sheet__btns { display: grid; gap: 8px; }
+.plx-row small { display: block; font-size: 12px; opacity: .7; margin-top: 1px; }
+.plx-row > span:first-child { min-width: 0; }
+.plx__btn--full { width: 100%; padding: 12px 16px; font-size: 15px; background: var(--pl-navy, #081D48); color: #fff; }
+.plx__btn--full:disabled { opacity: .5; cursor: default; }
+.plx-map { position: relative; height: min(52vh, 380px); border-radius: 14px; overflow: hidden; border: 1.5px solid rgba(8, 29, 72, .2); background: #E9EEF3; }
+.plx-map .plx-map__canvas { width: 100%; height: 100%; }
+.plx-map__pin { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -100%); font-size: 34px; line-height: 1; z-index: 5; pointer-events: none; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .3)); }
+.plx-confirm { display: grid; gap: 6px; padding: 12px 14px; border-radius: 12px; background: var(--pl-cream, #FFF7DD); }
+.plx-confirm p { margin: 0; }
+.plx-confirm__addr { font-weight: 900; }
+.plx-confirm__tier { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13.5px; }
+.plx-sheet .plx__link { justify-self: center; }

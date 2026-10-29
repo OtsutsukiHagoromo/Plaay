@@ -6,7 +6,7 @@
 {%- if mode == 'cart' -%}
   <div class="plx-ssr plx--cart" data-plx="cart">
     <span class="plx__t">⚡ Express delivery in Dubai, today</span>
-    <button type="button" class="plx__link" data-plx-open>Check your area</button>
+    <button type="button" class="plx__link" data-plx-open>Check your address</button>
   </div>
 {%- else -%}
   <div class="plx-ssr plx--pdp" data-plx="pdp">
@@ -15,8 +15,8 @@
       <span class="plx__s">Today, usually within 2 hours. Free over AED {{ settings.cart_tier_ship | default: 99 }}.</span>
     </div>
     <div class="plx__bot">
-      <span>Is your area covered?</span>
-      <button type="button" class="plx__btn" data-plx-open>Check your area</button>
+      <span>Is your address covered?</span>
+      <button type="button" class="plx__btn" data-plx-open>Check your address</button>
     </div>
   </div>
 {%- endif -%}

@@ -650,7 +650,7 @@
           assign st_size = v.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' | replace: ' g', 'g'
         endif
       -%}
-      <span class="plo-sticky__t"><b title="{{ product.title | escape }}">{{ t_name }}</b><span class="plo-sticky__p"><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- if has_sub -%} <s data-plo-sticky-was>{%- render 'plaay-aed', fils: v.price -%}</s>{%- endif -%}{%- if st_size != blank -%}<i class="plo-sticky__sz" data-plo-sticky-size>{{ st_size }}</i>{%- endif -%}</span></span>
+      <span class="plo-sticky__t"><b title="{{ product.title | escape }}">{{ t_name }}</b><span class="plo-sticky__p"><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- if has_sub -%} <s data-plo-sticky-was>{%- render 'plaay-aed', fils: v.price -%}</s>{%- endif -%}{%- if st_size != blank -%}<i class="plo-sticky__sz" data-plo-sticky-size>{{ st_size }}</i>{%- endif -%}{%- if settings.express_enabled -%}<i data-plx="chip" hidden></i>{%- endif -%}</span></span>
       <button type="button" class="plo-btn" data-plo-sticky-add>Add to bag</button>
     </div>
   {%- endif -%}
