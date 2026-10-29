@@ -167,3 +167,94 @@ export async function disableCheckoutRates(shopify, cfg) {
   if (e.length) throw new Error(e.map((x) => x.message).join('; '));
   return { removed: true };
 }
+
+// ---- Fixed checkout rates (no carrier-calculated shipping on the plan) ----
+// Dubai gets its own zone with the store's normal rates plus Express and 4-hour, free on orders
+// of AED 99+; the rest of the UAE keeps the normal rates only. Distance and the clock can't be
+// checked at checkout this way, so the app checks each Express order (out of range -> 4-hour).
+
+export const FIXED_RATES = [
+  { name: 'Plaay Express (Dubai, within 20 km)', description: 'Today if you order by 5 pm, Mon–Sat. Usually within 2 hours.' },
+  { name: '4-hour delivery (Dubai)', description: 'Within 4 hours if you order by 5 pm, Mon–Sat.' },
+];
+const DUBAI_ZONE = 'Dubai';
+const MIN_AED = 99;
+
+const provincesOf = (z) => (z.countries.find((c) => c.startsWith('AE')) || '').replace(/^AE\s*\(?|\)$/g, '').split(',').map((s) => s.trim()).filter(Boolean);
+
+// Copy a rate (price + conditions) into a create input.
+function copyRate(r, currencyCode = 'AED') {
+  const [amount] = r.price.split(' ');
+  return {
+    name: r.name,
+    active: r.active,
+    ...(r.description ? { description: r.description } : {}),
+    rateDefinition: { price: { amount: Number(amount), currencyCode } },
+    priceConditionsToCreate: r.conditions
+      .filter((c) => c.startsWith('TOTAL_PRICE'))
+      .map((c) => {
+        const [, operator, value] = c.split(' ');
+        return { operator, criteria: { amount: Number(value), currencyCode } };
+      }),
+  };
+}
+
+const expressRate = (rate) => ({
+  name: rate.name,
+  description: rate.description,
+  active: true,
+  rateDefinition: { price: { amount: 0, currencyCode: 'AED' } },
+  priceConditionsToCreate: [{ operator: 'GREATER_THAN_OR_EQUAL_TO', criteria: { amount: MIN_AED, currencyCode: 'AED' } }],
+});
+
+async function updateProfile(shopify, profileId, profile) {
+  const r = await shopify.graphql(
+    `mutation($id: ID!, $profile: DeliveryProfileInput!) { deliveryProfileUpdate(id: $id, profile: $profile) { profile { id } userErrors { field message } } }`,
+    { id: profileId, profile },
+  );
+  const e = r.deliveryProfileUpdate.userErrors;
+  if (e.length) throw new Error(e.map((x) => `${(x.field || []).join('.')}: ${x.message}`).join('; '));
+}
+
+export async function enableFixedRates(shopify) {
+  const zones = await uaeZones(shopify);
+  const dubai = zones.find((z) => z.zone === DUBAI_ZONE);
+  if (dubai) {
+    // Already split: make sure both Express rates are there.
+    const missing = FIXED_RATES.filter((f) => !dubai.rates.some((r) => r.name === f.name));
+    if (missing.length) {
+      await updateProfile(shopify, dubai.profileId, { locationGroupsToUpdate: [{ id: dubai.groupId, zonesToUpdate: [{ id: dubai.zoneId, methodDefinitionsToCreate: missing.map(expressRate) }] }] });
+    }
+    return { created: false, added: missing.map((m) => m.name) };
+  }
+  const uae = zones.find((z) => provincesOf(z).includes('DU'));
+  if (!uae) throw new Error('No UAE zone that includes Dubai was found.');
+  const rest = provincesOf(uae).filter((p) => p !== 'DU');
+  await updateProfile(shopify, uae.profileId, {
+    locationGroupsToUpdate: [{
+      id: uae.groupId,
+      zonesToUpdate: [{ id: uae.zoneId, countries: [{ code: 'AE', includeAllProvinces: false, provinces: rest.map((code) => ({ code })) }] }],
+      zonesToCreate: [{
+        name: DUBAI_ZONE,
+        countries: [{ code: 'AE', includeAllProvinces: false, provinces: [{ code: 'DU' }] }],
+        methodDefinitionsToCreate: [...uae.rates.filter((r) => r.price !== 'carrier').map((r) => copyRate(r)), ...FIXED_RATES.map(expressRate)],
+      }],
+    }],
+  });
+  return { created: true, standard: uae.rates.length, from: uae.zone };
+}
+
+// Undo: Dubai back into the UAE zone, the Dubai zone (and its Express rates) removed.
+export async function disableFixedRates(shopify) {
+  const zones = await uaeZones(shopify);
+  const dubai = zones.find((z) => z.zone === DUBAI_ZONE);
+  if (!dubai) return { removed: false };
+  const uae = zones.find((z) => z.zoneId !== dubai.zoneId && z.profileId === dubai.profileId);
+  if (!uae) throw new Error('No other UAE zone to move Dubai back into.');
+  const all = [...new Set([...provincesOf(uae), 'DU'])];
+  await updateProfile(shopify, dubai.profileId, {
+    zonesToDelete: [dubai.zoneId],
+    locationGroupsToUpdate: [{ id: uae.groupId, zonesToUpdate: [{ id: uae.zoneId, countries: [{ code: 'AE', includeAllProvinces: false, provinces: all.map((code) => ({ code })) }] }] }],
+  });
+  return { removed: true };
+}

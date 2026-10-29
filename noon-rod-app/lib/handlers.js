@@ -9,7 +9,7 @@ import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { buildLive } from './live.js';
 import { areaList, checkoutRates, locate, matchArea, promise } from './express.js';
-import { checkoutStatus, disableCheckoutRates, enableCheckoutRates, liveSettings, setSetting } from './express-admin.js';
+import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
 import * as geo from './geo.js';
 import { createPromotion, listAutomaticDiscounts, PROMOTIONS } from './promos.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
@@ -360,6 +360,14 @@ export async function expressAction(d, action, form) {
   if (action === 'express-carrier-on') {
     const r = await enableCheckoutRates(d.shopify, d.cfg);
     return { ok: true, message: `Checkout delivery rates connected${r.added.length ? ` and added to ${r.added.join(', ')}` : ''}.` };
+  }
+  if (action === 'express-fixed-on') {
+    const r = await enableFixedRates(d.shopify);
+    return { ok: true, message: r.created ? `Dubai now has its own delivery zone with Express and 4-hour (free on AED 99+), plus the ${r.standard} normal rate(s) copied from ${r.from}.` : r.added.length ? `Added ${r.added.join(' and ')} to the Dubai zone.` : 'Express and 4-hour are already at checkout for Dubai.' };
+  }
+  if (action === 'express-fixed-off') {
+    const r = await disableFixedRates(d.shopify);
+    return { ok: true, message: r.removed ? 'Express and 4-hour removed from checkout; Dubai is back in the UAE zone.' : 'There was no Dubai zone to remove.' };
   }
   if (action === 'express-carrier-off') {
     const r = await disableCheckoutRates(d.shopify, d.cfg);
