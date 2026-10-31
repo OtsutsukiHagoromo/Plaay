@@ -91,8 +91,7 @@
             "m-img": "shopify://shop_images/Plaay_offers_banner_mobile_2_1.jpg",
             "section_one_video": "",
             "section_two_video": ""
-          },
-          "disabled": true
+          }
         },
         "slide_BwPeAp": {
           "type": "slide",
@@ -213,7 +212,8 @@
             "link_two_text": "",
             "section_one_video": "",
             "section_two_video": ""
-          }
+          },
+          "disabled": true
         }
       },
       "block_order": [
@@ -686,7 +686,8 @@
         "title": "HALLOWEEN SALE ENDS IN:",
         "end_time": "2026-10-31T23:59:59",
         "start_time": "2026-10-24T00:00:00"
-      }
+      },
+      "disabled": true
     },
     "scrolling_content_U784BN": {
       "type": "scrolling-content",
