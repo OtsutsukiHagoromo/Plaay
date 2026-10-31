@@ -425,14 +425,16 @@
             "settings": {
               "text": "🎃 Halloween sale: up to 30% off, this week only",
               "url": "shopify://collections/shop-all"
-            }
+            },
+            "disabled": true
           },
           "msg_halloween_2": {
             "type": "message",
             "settings": {
               "text": "30% off variety packs. 25% off mix packs. 20% off the rest.",
               "url": "shopify://collections/variety-packs"
-            }
+            },
+            "disabled": true
           }
         },
         "block_order": [
@@ -498,7 +500,7 @@
         "settings": {}
       }
     },
-    "sale_kit_enabled": true,
+    "sale_kit_enabled": false,
     "sale_name": "Halloween Sale",
     "sale_starts": "2026-10-24T00:00:00+04:00",
     "sale_ends": "2026-11-01T00:00:00+04:00",
