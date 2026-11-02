@@ -1,13 +1,16 @@
 {%- comment -%}
   "Build your own mix" card for the Truffles and Slabs grids (sections/plo-collection.liquid).
   Same frame as a product card (snippets/plo-card), linking to the builder
-  (/products/build-your-box). The picture pairs one 60g truffle box (the 2 x 60g shot cropped on
+  (/products/build-your-own-mix). The picture pairs one 60g truffle box (the 2 x 60g shot cropped on
   Shopify's CDN to its right-hand box, as in sections/pl-byob.liquid) with one slab (studio shot).
   The "from" price is the box product's truffle variant (price per piece).
   Usage: {%- render 'plo-mix-card', lead: 'truffle' -%}   (lead: which piece sits in front)
 {%- endcomment -%}
 {%- liquid
-  assign box = all_products['build-your-box']
+  assign box = all_products['build-your-own-mix']
+  if box == blank
+    assign box = all_products['build-your-box']
+  endif
   assign p_truffle = 0
   for v in box.variants
     assign vt = v.title | downcase
