@@ -135,7 +135,7 @@ export async function removeMentions(shopify, terms) {
 }
 
 // Proof a product wasn't on sale: status, sales channels, stock, dates and orders that contain it.
-export async function productEvidence(shopify, id) {
+export async function productEvidence(shopify, id, { since } = {}) {
   const data = await shopify.graphql(`query($id: ID!) { product(id: $id) {
     id title handle status createdAt updatedAt publishedAt onlineStoreUrl totalInventory tracksInventory
     resourcePublicationsV2(first: 20, onlyPublished: false) { nodes { isPublished publishDate publication { name } } }
@@ -153,7 +153,7 @@ export async function productEvidence(shopify, id) {
     for (let i = 0; i < 20; i++) {
       const r = await shopify.graphql(
         'query($q: String!, $after: String) { orders(first: 50, after: $after, query: $q, sortKey: CREATED_AT) { nodes { name createdAt displayFinancialStatus cancelledAt lineItems(first: 50) { nodes { quantity product { id } } } } pageInfo { hasNextPage endCursor } } }',
-        { q: `product_id:${legacyId}`, after },
+        { q: `product_id:${legacyId}${since ? ` created_at:>=${since}` : ''}`, after },
       );
       for (const o of r.orders.nodes) {
         const qty = o.lineItems.nodes.filter((li) => li.product?.id === p.id).reduce((n, li) => n + li.quantity, 0);
@@ -175,5 +175,5 @@ export async function productEvidence(shopify, id) {
       orders.bySku.push({ sku: v.sku, error: err.message });
     }
   }
-  return { product: p, orders, checkedAt: new Date().toISOString() };
+  return { product: p, orders, since: since || null, checkedAt: new Date().toISOString() };
 }

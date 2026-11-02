@@ -858,7 +858,7 @@ export function renderEvidence({ cfg, ev }) {
 <tr><th>First published</th><td>${esc(when(p.publishedAt))}</td></tr>
 <tr><th>Stock</th><td>${esc(p.totalInventory)}${p.tracksInventory ? '' : ' (not tracked)'}</td></tr>
 <tr><th>Variants</th><td>${p.variants.nodes.map((v) => `${esc(v.title)} · SKU ${esc(v.sku || '—')} · AED ${esc(v.price)} · stock ${esc(v.inventoryQuantity)}`).join('<br>')}</td></tr>
-<tr><th>Orders with this product</th><td>${ev.orders.byProductError ? `<span class="muted">${esc(ev.orders.byProductError)}</span>` : orderList(ev.orders.byProduct)}</td></tr>
+<tr><th>Orders with this product${ev.since ? `<br><span class="muted">${esc(dubaiTime(ev.since + 'T00:00:00+04:00', { day: 'numeric', month: 'short', year: 'numeric' }))} to ${esc(dubaiTime(ev.checkedAt, { day: 'numeric', month: 'short', year: 'numeric' }))}</span>` : ''}</th><td>${ev.orders.byProductError ? `<span class="muted">${esc(ev.orders.byProductError)}</span>` : orderList(ev.orders.byProduct)}${ev.since ? `<br><span class="muted">Orders placed from ${esc(dubaiTime(ev.since + 'T00:00:00+04:00', { day: 'numeric', month: 'long', year: 'numeric' }))} onwards.</span>` : ''}</td></tr>
 ${ev.orders.bySku.map((s) => `<tr><th>Orders with SKU ${esc(s.sku)}</th><td>${s.error ? esc(s.error) : orderList(s.orders)}</td></tr>`).join('')}
 </tbody></table></div>
 <style>

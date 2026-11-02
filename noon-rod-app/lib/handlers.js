@@ -199,7 +199,8 @@ export async function handleDashboard(request, d) {
   if (url.searchParams.has('evidence')) {
     const id = String(url.searchParams.get('evidence'));
     if (!/^gid:\/\/shopify\/Product\/\d+$/.test(id)) return new Response('Bad product id', { status: 400 });
-    const ev = await productEvidence(d.shopify, id);
+    const since = /^\d{4}-\d{2}-\d{2}$/.test(url.searchParams.get('since') || '') ? url.searchParams.get('since') : null;
+    const ev = await productEvidence(d.shopify, id, { since });
     if (url.searchParams.get('format') === 'json') return Response.json(ev, { headers: { 'Cache-Control': 'no-store' } });
     return html(renderEvidence({ cfg: d.cfg, ev }));
   }
