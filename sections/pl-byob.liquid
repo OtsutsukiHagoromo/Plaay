@@ -141,7 +141,7 @@
                   One piece per tile, never a multipack:
                   - Truffles: the "2 x 60g" pack shot (two 60g boxes, truffles stacked by the left one),
                     cropped on Shopify's CDN to the clean right-hand box. Dense Chocolate Fudge has no
-                    such shot, so its "10 x 60g" shot is cropped to the single 60g box instead.
+                    such shot, so it uses a theme asset of its single 60g box (see below).
                   - Slabs: the single-slab studio shot (theme assets plo-ph-<key>-1.jpg), no 6-pack badge.
                   Anything without one of these falls back to the product photo.
                 endcomment
@@ -153,18 +153,6 @@
                   assign cy = 0.09
                   assign cw = 0.308
                   assign ch = 0.83
-                  if p.handle == 'dense-chocolate-fudge-truffle'
-                    comment
-                      No clean single-box shot exists: in its 10 x 60g shot the 60g box has a truffle stack
-                      in front of its right half, so the crop takes the box with its truffles (a corner of
-                      the "x10" tag shows top right). A proper 60g shot would replace this.
-                    endcomment
-                    assign want = '10 x 60'
-                    assign cx = 0.434
-                    assign cy = 0.165
-                    assign cw = 0.37
-                    assign ch = 0.685
-                  endif
                   for pv in p.variants
                     assign pvt = pv.title | downcase
                     if pvt contains want and pv.featured_image
@@ -174,6 +162,14 @@
                   endfor
                   if src == nil and p.variants.size == 1 and want == '2 x 60'
                     assign src = p.featured_image
+                  endif
+                  comment
+                    Dense Chocolate Fudge has no 2 x 60g shot; its single 60g box is a theme asset made from
+                    the 10 x 60g shot with the 10-pack box, truffle stack and tag taken out.
+                  endcomment
+                  if p.handle == 'dense-chocolate-fudge-truffle'
+                    assign src = nil
+                    assign pic = 'plo-ph-densefudge-60g.jpg' | asset_img_url: '480x'
                   endif
                   if src
                     assign c_l = src.width | times: cx | round
