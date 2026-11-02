@@ -42,3 +42,28 @@ export async function customerCounts(shopify) {
     repeat: await q('orders_count:>1'),
   };
 }
+
+// The latest export's orders in the shape lib/club.js reads (or null if there is no export).
+export async function exportedOrders(shopify, fetchImpl = globalThis.fetch) {
+  const st = await exportStatus(shopify);
+  if (!st?.url) return null;
+  const text = await (await fetchImpl(st.url)).text();
+  const orders = new Map();
+  const subs = new Set();
+  for (const line of text.split('\n')) {
+    if (!line) continue;
+    const o = JSON.parse(line);
+    if (o.__parentId) { if (o.sellingPlan) subs.add(o.__parentId); continue; }
+    if (!o.createdAt) continue;
+    orders.set(o.id, {
+      id: o.id,
+      customerId: o.customer?.id || null,
+      createdAt: o.createdAt,
+      total: Number(o.totalPriceSet?.shopMoney?.amount || 0),
+      cancelled: !!o.cancelledAt,
+      subscription: String(o.sourceName || '').startsWith('subscription_contract'),
+    });
+  }
+  for (const id of subs) if (orders.has(id)) orders.get(id).subscription = true;
+  return { orders: [...orders.values()], exportedAt: st.completedAt };
+}

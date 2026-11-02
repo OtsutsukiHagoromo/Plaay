@@ -12,11 +12,12 @@ import { areaList, checkoutRates, locate, matchArea, promise } from './express.j
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
 import * as geo from './geo.js';
 import { findMentions, productEvidence, removeMentions } from './cleanup.js';
-import { customerCounts, exportStatus, startExport } from './insights.js';
+import { customerCounts, exportedOrders, exportStatus, startExport } from './insights.js';
+import { clubSettings, simulate } from './club.js';
 import { createPromotion, listAutomaticDiscounts, PROMOTIONS } from './promos.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
-import { renderCleanup, renderDashboard, renderEvidence, renderExpress, renderNewOrder, renderOrderDetail, renderPromos, renderTrackingPage } from './views.js';
+import { renderCleanup, renderClub, renderDashboard, renderEvidence, renderExpress, renderNewOrder, renderOrderDetail, renderPromos, renderTrackingPage } from './views.js';
 
 const json = (body, status = 200) => Response.json(body, { status });
 
@@ -197,6 +198,11 @@ export async function handleDashboard(request, d) {
   const html = (body) => new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
 
   if (url.searchParams.has('new')) return html(renderNewOrder({ cfg: d.cfg, flash }));
+  if (url.searchParams.has('club')) {
+    const data = await exportedOrders(d.shopify);
+    const s = clubSettings();
+    return html(renderClub({ cfg: d.cfg, settings: s, sim: data ? simulate(data.orders, new Date(), s) : null, exportedAt: data?.exportedAt }));
+  }
   if (url.searchParams.has('insights')) {
     const step = url.searchParams.get('insights');
     const body = step === 'start' ? await startExport(d.shopify) : step === 'customers' ? await customerCounts(d.shopify) : await exportStatus(d.shopify);

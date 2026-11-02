@@ -183,7 +183,7 @@ ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 ${connectionPanel(connection)}
 ${cutoffBanner(cfg)}
 <div class="head"><div><h1>Express orders</h1><div class="muted">Pack the order first, then press <strong>Dispatch rider</strong>. The rider arrives within minutes.</div></div>
-<div class="hbtns">${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="test-order"><input type="hidden" name="back" value="/?view=todo"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the Shopify store?')">+ Test order</button></form>` : ''}${connection?.ok ? '<a class="btn ghost" href="/express">Express settings</a> <a class="btn" href="/new">+ New order</a>' : ''}</div></div>
+<div class="hbtns">${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="test-order"><input type="hidden" name="back" value="/?view=todo"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the Shopify store?')">+ Test order</button></form>` : ''}${connection?.ok ? '<a class="btn ghost" href="/club">Club</a> <a class="btn ghost" href="/express">Express settings</a> <a class="btn" href="/new">+ New order</a>' : ''}</div></div>
 <div class="bar"><nav class="tabs">${tabs}</nav>
 <form class="search" method="get" action="/"><input type="hidden" name="view" value="${esc(view)}"><input type="search" name="q" value="${esc(q)}" placeholder="Search order #, name, phone, area" aria-label="Search orders"></form></div>
 <table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Payment</th><th>Rider</th><th></th></tr></thead>
@@ -867,4 +867,26 @@ ${ev.orders.bySku.map((s) => `<tr><th>Orders with SKU ${esc(s.sku)}</th><td>${s.
   th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: top; } th { width: 220px; color: var(--muted); font-weight: 700; background: var(--cream); }
 </style>`;
   return shell({ cfg, title: 'Sales record', body });
+}
+
+// Plaayers Club: on/off, the rules, and what the tiers look like on real orders.
+export function renderClub({ cfg, settings, sim, exportedAt }) {
+  const aed = (n) => `AED ${Math.round(n).toLocaleString('en-US')}`;
+  const rows = sim ? ['plaayer', 'pro', 'legend'].map((t) => `<tr><td><strong>${t === 'plaayer' ? 'Plaayer' : t === 'pro' ? 'Pro' : 'Legend'}</strong></td><td class="num">${settings.rates[t]}%</td><td class="num">${sim.tiers[t].customers.toLocaleString('en-US')}</td><td class="num">${aed(sim.tiers[t].revenue)}</td><td class="num">${sim.revenue ? Math.round((100 * sim.tiers[t].revenue) / sim.revenue) : 0}%</td></tr>`).join('') : '';
+  const body = `
+<a class="backlink" href="/">← Express orders</a>
+<h1>Plaayers Club</h1>
+<div class="card pc"><div><h2>Status: ${settings.enabled ? '<span class="b ok">ON</span>' : '<span class="b">OFF</span>'}</h2><div class="muted">${settings.enabled ? 'Credit is added to paid orders and tiers are saved on customers.' : 'Nothing is written to Shopify. The website pieces are on the club-preview theme only. Switched on with CLUB_ENABLED when you launch.'}</div>
+<ul><li>Credit back: Plaayer ${settings.rates.plaayer}% · Pro ${settings.rates.pro}% · Legend ${settings.rates.legend}%</li><li>Pro from AED ${settings.proSpend} in 12 months or any active subscription; Legend from AED ${settings.legendSpend}</li><li>Credit lasts ${settings.creditDays} days; AED ${settings.welcomeCredit} for the second order</li></ul></div></div>
+<h2 class="h2">If the Club started today</h2>
+${sim ? `<p class="muted">Customers with an order in the last 12 months, from the order export of ${esc(dubaiTime(exportedAt))}. Most it could cost: <strong>${aed(sim.maxCredit)}</strong> a year (every customer joins and spends all their credit) on ${aed(sim.revenue)} of 12-month revenue.</p>
+<div class="tw"><table><thead><tr><th>Tier</th><th>Back</th><th>Customers</th><th>12-month spend</th><th>Share</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="muted">No order export yet.</p>'}
+<style>
+  .backlink { display: inline-block; margin-bottom: 12px; font-weight: 700; text-decoration: none; color: var(--muted); }
+  .pc { background: var(--card); border: 1.5px solid var(--line); border-radius: 16px; padding: 16px 18px; margin: 14px 0; } .pc h2 { margin: 0; font-size: 18px; font-weight: 900; } .pc ul { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+  .h2 { font-weight: 900; font-size: 18px; margin: 22px 0 8px; }
+  .tw { overflow-x: auto; } table { width: 100%; border-collapse: collapse; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); font-size: 14px; } th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--cream); } .num { font-variant-numeric: tabular-nums; }
+</style>`;
+  return shell({ cfg, title: 'Plaayers Club', body });
 }
