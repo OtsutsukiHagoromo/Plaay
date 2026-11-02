@@ -11,11 +11,11 @@ import { buildLive } from './live.js';
 import { areaList, checkoutRates, locate, matchArea, promise } from './express.js';
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
 import * as geo from './geo.js';
-import { findMentions, removeMentions } from './cleanup.js';
+import { findMentions, productEvidence, removeMentions } from './cleanup.js';
 import { createPromotion, listAutomaticDiscounts, PROMOTIONS } from './promos.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
-import { renderCleanup, renderDashboard, renderExpress, renderNewOrder, renderOrderDetail, renderPromos, renderTrackingPage } from './views.js';
+import { renderCleanup, renderDashboard, renderEvidence, renderExpress, renderNewOrder, renderOrderDetail, renderPromos, renderTrackingPage } from './views.js';
 
 const json = (body, status = 200) => Response.json(body, { status });
 
@@ -196,6 +196,13 @@ export async function handleDashboard(request, d) {
   const html = (body) => new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
 
   if (url.searchParams.has('new')) return html(renderNewOrder({ cfg: d.cfg, flash }));
+  if (url.searchParams.has('evidence')) {
+    const id = String(url.searchParams.get('evidence'));
+    if (!/^gid:\/\/shopify\/Product\/\d+$/.test(id)) return new Response('Bad product id', { status: 400 });
+    const ev = await productEvidence(d.shopify, id);
+    if (url.searchParams.get('format') === 'json') return Response.json(ev, { headers: { 'Cache-Control': 'no-store' } });
+    return html(renderEvidence({ cfg: d.cfg, ev }));
+  }
   if (url.searchParams.has('cleanup')) {
     const terms = String(url.searchParams.get('terms') || 'biscoff,lotus').split(',').map((t) => t.trim().replace(/[^\p{L}\p{N} ]/gu, '')).filter(Boolean).slice(0, 5);
     const result = await findMentions(d.shopify, terms);

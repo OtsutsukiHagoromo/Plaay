@@ -818,7 +818,7 @@ ${(status.zones || []).some((z) => z.zone === 'Dubai') ? form('express-fixed-off
 
 // Brand clean-up: every mention of the terms across the store.
 export function renderCleanup({ cfg, flash, terms, hits, errors, at }) {
-  const rows = hits.map((h) => `<tr><td><span class="b">${esc(h.kind)}</span></td><td><strong>${esc(h.label)}</strong><br><span class="muted">${esc(h.field)}</span></td><td class="muted">…${esc(h.snippet)}…</td></tr>`).join('');
+  const rows = hits.map((h) => `<tr><td><span class="b">${esc(h.kind)}</span></td><td><strong>${esc(h.label)}</strong>${h.kind === 'product' ? ` <a href="/api/dashboard?evidence=${encodeURIComponent(h.id)}">sales record</a>` : ''}<br><span class="muted">${esc(h.field)}</span></td><td class="muted">…${esc(h.snippet)}…</td></tr>`).join('');
   const body = `
 <a class="backlink" href="/">← Express orders</a>
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
@@ -834,4 +834,37 @@ ${hits.length ? `<form method="post" action="/api/dashboard"><input type="hidden
   th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: top; } th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--cream); }
 </style>`;
   return shell({ cfg, title: 'Brand clean-up', body });
+}
+
+// Sales record for one product: was it on sale, and was it ever ordered.
+export function renderEvidence({ cfg, ev }) {
+  if (!ev) return shell({ cfg, title: 'Sales record', body: '<p>Product not found (already deleted?).</p>' });
+  const p = ev.product;
+  const when = (iso) => (iso ? dubaiTime(iso) : '—');
+  const pubs = p.resourcePublicationsV2.nodes;
+  const live = pubs.filter((x) => x.isPublished);
+  const orderList = (list) => (list && list.length ? list.map((o) => `${esc(o.name)} (${esc(when(o.createdAt))})`).join(', ') : '<strong>none</strong>');
+  const body = `
+<a class="backlink" href="/cleanup">← Brand clean-up</a>
+<h1>Sales record: ${esc(p.title)}</h1>
+<p class="muted">From Shopify, ${esc(when(ev.checkedAt))} Dubai time.</p>
+<div class="tw"><table><tbody>
+<tr><th>Product</th><td>${esc(p.title)}<br><span class="muted">/products/${esc(p.handle)} · ${esc(p.id)}</span></td></tr>
+<tr><th>Status</th><td><span class="b ${p.status === 'ACTIVE' ? 'ok' : 'warn'}">${esc(p.status)}</span> ${p.status === 'ARCHIVED' ? '(hidden from the store, cannot be bought)' : ''}</td></tr>
+<tr><th>Online store link</th><td>${p.onlineStoreUrl ? esc(p.onlineStoreUrl) : '<strong>none</strong> (not on the online store)'}</td></tr>
+<tr><th>Sales channels</th><td>Published on <strong>${live.length}</strong> of ${pubs.length}${pubs.length ? `<br><span class="muted">${pubs.map((x) => `${esc(x.publication?.name || '?')}: ${x.isPublished ? 'published' : 'not published'}`).join(' · ')}</span>` : ''}</td></tr>
+<tr><th>Created</th><td>${esc(when(p.createdAt))}</td></tr>
+<tr><th>Last changed</th><td>${esc(when(p.updatedAt))}</td></tr>
+<tr><th>First published</th><td>${esc(when(p.publishedAt))}</td></tr>
+<tr><th>Stock</th><td>${esc(p.totalInventory)}${p.tracksInventory ? '' : ' (not tracked)'}</td></tr>
+<tr><th>Variants</th><td>${p.variants.nodes.map((v) => `${esc(v.title)} · SKU ${esc(v.sku || '—')} · AED ${esc(v.price)} · stock ${esc(v.inventoryQuantity)}`).join('<br>')}</td></tr>
+<tr><th>Orders with this product</th><td>${ev.orders.byProductError ? `<span class="muted">${esc(ev.orders.byProductError)}</span>` : orderList(ev.orders.byProduct)}</td></tr>
+${ev.orders.bySku.map((s) => `<tr><th>Orders with SKU ${esc(s.sku)}</th><td>${s.error ? esc(s.error) : orderList(s.orders)}</td></tr>`).join('')}
+</tbody></table></div>
+<style>
+  .backlink { display: inline-block; margin-bottom: 12px; font-weight: 700; text-decoration: none; color: var(--muted); }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: top; } th { width: 220px; color: var(--muted); font-weight: 700; background: var(--cream); }
+</style>`;
+  return shell({ cfg, title: 'Sales record', body });
 }

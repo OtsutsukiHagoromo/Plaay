@@ -133,3 +133,31 @@ export async function removeMentions(shopify, terms) {
   for (const h of hits) if (!['product', 'file'].includes(h.kind)) left.push(`${h.label} (${h.field})`);
   return { done, left: [...new Set(left)] };
 }
+
+// Proof a product wasn't on sale: status, sales channels, stock, dates and orders that contain it.
+export async function productEvidence(shopify, id) {
+  const data = await shopify.graphql(`query($id: ID!) { product(id: $id) {
+    id title handle status createdAt updatedAt publishedAt onlineStoreUrl totalInventory tracksInventory
+    resourcePublicationsV2(first: 20, onlyPublished: false) { nodes { isPublished publishDate publication { name } } }
+    variants(first: 20) { nodes { id title sku price inventoryQuantity } }
+  } }`, { id });
+  const p = data.product;
+  if (!p) return null;
+  const legacyId = p.id.split('/').pop();
+  const orders = { byProduct: null, bySku: [] };
+  try {
+    const r = await shopify.graphql('query($q: String!) { orders(first: 50, query: $q) { nodes { name createdAt } } }', { q: `product_id:${legacyId}` });
+    orders.byProduct = r.orders.nodes;
+  } catch (err) {
+    orders.byProductError = err.message;
+  }
+  for (const v of p.variants.nodes.filter((x) => x.sku)) {
+    try {
+      const r = await shopify.graphql('query($q: String!) { orders(first: 50, query: $q) { nodes { name createdAt } } }', { q: `sku:${JSON.stringify(v.sku)}` });
+      orders.bySku.push({ sku: v.sku, orders: r.orders.nodes });
+    } catch (err) {
+      orders.bySku.push({ sku: v.sku, error: err.message });
+    }
+  }
+  return { product: p, orders, checkedAt: new Date().toISOString() };
+}
