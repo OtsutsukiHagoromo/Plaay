@@ -283,6 +283,16 @@
               assign last_range = passes.size | minus: 1
               assign placed = ','
               assign n = 0
+              assign mix_lead = ''
+              if collection.handle == 'chocolate-truffles'
+                assign mix_lead = 'truffle'
+              elsif collection.handle == 'new-chocolate-slabs'
+                assign mix_lead = 'slab'
+              endif
+              assign current_page_n = 1
+              if paginate.current_page
+                assign current_page_n = paginate.current_page
+              endif
             -%}
             {%- for pass in passes -%}
               {%- for product in collection.products -%}
@@ -323,6 +333,10 @@
                   endif
                 -%}
                 {%- render 'plo-card', product: product, eager: eager, skip_new: true, view: template.suffix -%}
+                {%- comment -%} Truffles and Slabs: the "Build your own mix" card sits third on page 1 (snippets/plo-mix-card). {%- endcomment -%}
+                {%- if n == 2 and mix_lead != blank and current_page_n == 1 -%}
+                  {%- render 'plo-mix-card', lead: mix_lead -%}
+                {%- endif -%}
               {%- endfor -%}
             {%- endfor -%}
           </div>

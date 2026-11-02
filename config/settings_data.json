@@ -375,8 +375,8 @@
           "link_7": {
             "type": "link",
             "settings": {
-              "label": "Limited Edition",
-              "url": "/collections/limited-editions",
+              "label": "Build Your Own Mix",
+              "url": "/products/build-your-box",
               "mega": false
             }
           },
