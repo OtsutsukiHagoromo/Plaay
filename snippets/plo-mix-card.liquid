@@ -1,0 +1,56 @@
+{%- comment -%}
+  "Build your own mix" card for the Truffles and Slabs grids (sections/plo-collection.liquid).
+  Same frame as a product card (snippets/plo-card), linking to the builder
+  (/products/build-your-own-mix). The picture pairs one 60g truffle box (the 2 x 60g shot cropped on
+  Shopify's CDN to its right-hand box, as in sections/pl-byob.liquid) with one slab (studio shot).
+  The "from" price is the box product's truffle variant (price per piece).
+  Usage: {%- render 'plo-mix-card', lead: 'truffle' -%}   (lead: which piece sits in front)
+{%- endcomment -%}
+{%- liquid
+  assign box = all_products['build-your-own-mix']
+  if box == blank
+    assign box = all_products['build-your-box']
+  endif
+  assign p_truffle = 0
+  for v in box.variants
+    assign vt = v.title | downcase
+    if vt contains 'truffle'
+      assign p_truffle = v.price
+    endif
+  endfor
+
+  assign t_img = ''
+  assign tp = all_products['triple-chocolate-truffle']
+  for pv in tp.variants
+    assign pvt = pv.title | downcase
+    if pvt contains '2 x 60' and pv.featured_image
+      assign src = pv.featured_image
+      assign c_l = src.width | times: 0.582 | round
+      assign c_t = src.height | times: 0.09 | round
+      assign c_w = src.width | times: 0.308 | round
+      assign c_h = src.height | times: 0.83 | round
+      assign t_img = src | image_url: height: 480, crop: 'region', crop_left: c_l, crop_top: c_t, crop_width: c_w, crop_height: c_h
+      break
+    endif
+  endfor
+  assign s_img = 'plo-ph-hazel-1.jpg' | asset_img_url: '480x'
+-%}
+{%- if box != blank and box.available and p_truffle > 0 -%}
+<article class="plo-card plo-c3 plo-mixc{% if lead == 'slab' %} plo-mixc--slab{% endif %}" data-plo-mixcard>
+  <a class="plo-card__img plo-mixc__img" href="{{ box.url }}" tabindex="-1" aria-hidden="true">
+    <span class="plo-badge plo-badge--launch">New</span>
+    {%- if t_img != '' -%}<img class="plo-mixc__t" src="{{ t_img }}" alt="" loading="lazy" width="160" height="430">{%- endif -%}
+    <img class="plo-mixc__s" src="{{ s_img }}" alt="" loading="lazy" width="384" height="480">
+  </a>
+  <div class="plo-card__body">
+    <h3 class="plo-card__name"><a href="{{ box.url }}">Build your own mix</a></h3>
+    <div class="plo-card__detail"><span>Any truffles &amp; slabs · 6 or more</span></div>
+    <div class="plo-card__foot">
+      <div class="plo-card__prices">
+        <span class="plo-card__price plo-mixc__from">From {% render 'plaay-aed', fils: p_truffle %}<small> / piece</small></span>
+      </div>
+      <a class="plo-add plo-c3__add plo-mixc__go" href="{{ box.url }}" aria-label="Build your own mix">{%- render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.6 -%}</a>
+    </div>
+  </div>
+</article>
+{%- endif -%}
