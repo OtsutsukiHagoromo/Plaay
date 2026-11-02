@@ -108,3 +108,28 @@ export async function findMentions(shopify, terms = ['biscoff', 'lotus']) {
   });
   return { hits, errors, at: new Date().toISOString() };
 }
+
+// Remove what findMentions finds that can be removed outright: archived products (deleted, so
+// their URL stops working, with no redirect) and files. Anything else is reported for editing.
+export async function removeMentions(shopify, terms) {
+  const { hits } = await findMentions(shopify, terms);
+  const done = [];
+  const left = [];
+  const products = [...new Map(hits.filter((h) => h.kind === 'product').map((h) => [h.id, h])).values()];
+  for (const p of products) {
+    if (!/\(archived,/.test(p.label)) { left.push(p.label); continue; }
+    const r = await shopify.graphql('mutation($input: ProductDeleteInput!) { productDelete(input: $input) { deletedProductId userErrors { message } } }', { input: { id: p.id } });
+    const e = r.productDelete.userErrors;
+    if (e.length) throw new Error(`${p.label}: ${e.map((x) => x.message).join('; ')}`);
+    done.push(`deleted product ${p.label}`);
+  }
+  const files = [...new Map(hits.filter((h) => h.kind === 'file').map((h) => [h.id, h])).values()];
+  if (files.length) {
+    const r = await shopify.graphql('mutation($ids: [ID!]!) { fileDelete(fileIds: $ids) { deletedFileIds userErrors { message } } }', { ids: files.map((f) => f.id) });
+    const e = r.fileDelete.userErrors;
+    if (e.length) throw new Error(`files: ${e.map((x) => x.message).join('; ')}`);
+    done.push(...files.map((f) => `deleted file ${f.label}`));
+  }
+  for (const h of hits) if (!['product', 'file'].includes(h.kind)) left.push(`${h.label} (${h.field})`);
+  return { done, left: [...new Set(left)] };
+}

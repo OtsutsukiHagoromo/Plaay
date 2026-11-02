@@ -826,6 +826,7 @@ ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 <p class="muted">Every mention of <strong>${esc(terms.join(', '))}</strong> in products (archived included), collections, pages, blog posts, SEO, image alt text, tags, menus, files, redirects and metafields. Checked ${esc(dubaiTime(at, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }))} Dubai time.</p>
 ${errors.length ? `<div class="panel bad-b">Some areas couldn't be read: ${errors.map(esc).join('<br>')}</div>` : ''}
 <p><strong>${hits.length}</strong> mention${hits.length === 1 ? '' : 's'} found.</p>
+${hits.length ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="cleanup-remove"><input type="hidden" name="terms" value="${esc(terms.join(','))}"><button class="yellow" onclick="return confirm('Permanently delete the archived products and files listed here? This cannot be undone.')">Delete archived products and files</button></form>` : ''}
 <div class="tw"><table><thead><tr><th>Type</th><th>Where</th><th>Text</th></tr></thead><tbody>${rows || '<tr><td colspan="3">Nothing found.</td></tr>'}</tbody></table></div>
 <style>
   .backlink { display: inline-block; margin-bottom: 12px; font-weight: 700; text-decoration: none; color: var(--muted); }

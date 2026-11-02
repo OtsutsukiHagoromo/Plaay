@@ -11,7 +11,7 @@ import { buildLive } from './live.js';
 import { areaList, checkoutRates, locate, matchArea, promise } from './express.js';
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
 import * as geo from './geo.js';
-import { findMentions } from './cleanup.js';
+import { findMentions, removeMentions } from './cleanup.js';
 import { createPromotion, listAutomaticDiscounts, PROMOTIONS } from './promos.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
@@ -130,7 +130,7 @@ export async function handleDashboard(request, d) {
     const form = await request.formData();
     const orderId = String(form.get('order') || '');
     const action = String(form.get('action') || '');
-    if (!['connect', 'test-order', 'create-order', 'create-promotion'].includes(action) && !action.startsWith('express-') && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
+    if (!['connect', 'test-order', 'create-order', 'create-promotion'].includes(action) && !action.startsWith('express-') && action !== 'cleanup-remove' && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
 
     let result;
     try {
@@ -148,6 +148,12 @@ export async function handleDashboard(request, d) {
         const results = await createPromotion(d.shopify, String(form.get('promotion') || ''));
         form.set('back', '/promos');
         result = { ok: true, message: results.map((r) => `${r.title}: ${r.removed ? 'removed' : r.created ? `created (${r.count} products)` : r.skipped}`).join(' · ') };
+      } else if (action === 'cleanup-remove') {
+        const terms = String(form.get('terms') || '').split(',').map((t) => t.trim().replace(/[^\p{L}\p{N} ]/gu, '')).filter(Boolean).slice(0, 5);
+        if (!terms.length) return new Response('No terms', { status: 400 });
+        const r = await removeMentions(d.shopify, terms);
+        form.set('back', `/cleanup?terms=${encodeURIComponent(terms.join(','))}`);
+        result = { ok: true, message: [r.done.join('; ') || 'Nothing to delete.', r.left.length ? `Still to edit by hand: ${r.left.join('; ')}` : ''].filter(Boolean).join(' ') };
       } else if (action.startsWith('express-')) {
         form.set('back', '/express');
         result = (await expressAction(d, action, form)) || { ok: false, reason: 'unknown action' };
