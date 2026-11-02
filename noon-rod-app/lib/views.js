@@ -815,3 +815,22 @@ ${(status.zones || []).some((z) => z.zone === 'Dubai') ? form('express-fixed-off
 </style>`;
   return shell({ cfg, title: 'Express settings', body });
 }
+
+// Brand clean-up: every mention of the terms across the store.
+export function renderCleanup({ cfg, flash, terms, hits, errors, at }) {
+  const rows = hits.map((h) => `<tr><td><span class="b">${esc(h.kind)}</span></td><td><strong>${esc(h.label)}</strong><br><span class="muted">${esc(h.field)}</span></td><td class="muted">…${esc(h.snippet)}…</td></tr>`).join('');
+  const body = `
+<a class="backlink" href="/">← Express orders</a>
+${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
+<h1>Brand clean-up</h1>
+<p class="muted">Every mention of <strong>${esc(terms.join(', '))}</strong> in products (archived included), collections, pages, blog posts, SEO, image alt text, tags, menus, files, redirects and metafields. Checked ${esc(dubaiTime(at, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }))} Dubai time.</p>
+${errors.length ? `<div class="panel bad-b">Some areas couldn't be read: ${errors.map(esc).join('<br>')}</div>` : ''}
+<p><strong>${hits.length}</strong> mention${hits.length === 1 ? '' : 's'} found.</p>
+<div class="tw"><table><thead><tr><th>Type</th><th>Where</th><th>Text</th></tr></thead><tbody>${rows || '<tr><td colspan="3">Nothing found.</td></tr>'}</tbody></table></div>
+<style>
+  .backlink { display: inline-block; margin-bottom: 12px; font-weight: 700; text-decoration: none; color: var(--muted); }
+  .tw { overflow-x: auto; } table { width: 100%; border-collapse: collapse; background: var(--card); border: 1.5px solid var(--line); border-radius: 12px; }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: top; } th { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--cream); }
+</style>`;
+  return shell({ cfg, title: 'Brand clean-up', body });
+}

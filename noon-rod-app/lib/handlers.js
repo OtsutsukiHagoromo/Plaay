@@ -11,10 +11,11 @@ import { buildLive } from './live.js';
 import { areaList, checkoutRates, locate, matchArea, promise } from './express.js';
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
 import * as geo from './geo.js';
+import { findMentions } from './cleanup.js';
 import { createPromotion, listAutomaticDiscounts, PROMOTIONS } from './promos.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
-import { renderDashboard, renderExpress, renderNewOrder, renderOrderDetail, renderPromos, renderTrackingPage } from './views.js';
+import { renderCleanup, renderDashboard, renderExpress, renderNewOrder, renderOrderDetail, renderPromos, renderTrackingPage } from './views.js';
 
 const json = (body, status = 200) => Response.json(body, { status });
 
@@ -189,6 +190,12 @@ export async function handleDashboard(request, d) {
   const html = (body) => new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
 
   if (url.searchParams.has('new')) return html(renderNewOrder({ cfg: d.cfg, flash }));
+  if (url.searchParams.has('cleanup')) {
+    const terms = String(url.searchParams.get('terms') || 'biscoff,lotus').split(',').map((t) => t.trim().replace(/[^\p{L}\p{N} ]/gu, '')).filter(Boolean).slice(0, 5);
+    const result = await findMentions(d.shopify, terms);
+    if (url.searchParams.get('format') === 'json') return Response.json({ terms, ...result }, { headers: { 'Cache-Control': 'no-store' } });
+    return html(renderCleanup({ cfg: d.cfg, flash, terms, ...result }));
+  }
   if (url.searchParams.has('express')) return html(renderExpress({ cfg: d.cfg, flash, ...(await expressPageData(d)) }));
   if (url.searchParams.has('promos')) {
     let discounts = [];

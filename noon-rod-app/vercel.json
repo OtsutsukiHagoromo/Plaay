@@ -17,6 +17,10 @@
       "destination": "/api/dashboard?express=1"
     },
     {
+      "source": "/cleanup",
+      "destination": "/api/dashboard?cleanup=1"
+    },
+    {
       "source": "/order/:id",
       "destination": "/api/dashboard?order=:id"
     },
