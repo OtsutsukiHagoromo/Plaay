@@ -146,8 +146,24 @@ export async function productEvidence(shopify, id) {
   const legacyId = p.id.split('/').pop();
   const orders = { byProduct: null, bySku: [] };
   try {
-    const r = await shopify.graphql('query($q: String!) { orders(first: 50, query: $q) { nodes { name createdAt } } }', { q: `product_id:${legacyId}` });
-    orders.byProduct = r.orders.nodes;
+    // Only orders whose line items really contain this product (a search filter Shopify
+    // doesn't support would otherwise return every order).
+    const found = [];
+    let after = null;
+    for (let i = 0; i < 20; i++) {
+      const r = await shopify.graphql(
+        'query($q: String!, $after: String) { orders(first: 50, after: $after, query: $q, sortKey: CREATED_AT) { nodes { name createdAt displayFinancialStatus cancelledAt lineItems(first: 50) { nodes { quantity product { id } } } } pageInfo { hasNextPage endCursor } } }',
+        { q: `product_id:${legacyId}`, after },
+      );
+      for (const o of r.orders.nodes) {
+        const qty = o.lineItems.nodes.filter((li) => li.product?.id === p.id).reduce((n, li) => n + li.quantity, 0);
+        orders.scanned = (orders.scanned || 0) + 1;
+        if (qty) found.push({ name: o.name, createdAt: o.createdAt, qty, status: o.displayFinancialStatus, cancelled: !!o.cancelledAt });
+      }
+      if (!r.orders.pageInfo.hasNextPage) break;
+      after = r.orders.pageInfo.endCursor;
+    }
+    orders.byProduct = found;
   } catch (err) {
     orders.byProductError = err.message;
   }
