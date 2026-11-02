@@ -1,0 +1,2 @@
+{%- comment -%} Credit-back % for a tier: {% render 'club-rate', tier: 'pro' %} {%- endcomment -%}
+{%- case tier -%}{%- when 'legend' -%}{{ settings.club_rate_legend | default: 10 }}{%- when 'pro' -%}{{ settings.club_rate_pro | default: 7 }}{%- else -%}{{ settings.club_rate_plaayer | default: 5 }}{%- endcase -%}

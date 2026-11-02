@@ -1,0 +1,27 @@
+{%- comment -%}
+  Plaayers Club: who is looking. Prints "tier|credit_fils|spend_fils" for the caller to split.
+    tier   guest | plaayer | pro | legend
+    credit Plaay credit balance in fils (customer metafield plaay_club.credit, kept by the app
+           alongside Shopify store credit)
+    spend  spend in the last 12 months in fils (plaay_club.spend_12m, worked out nightly)
+  The tier comes from plaay_club.tier (set nightly by the delivery app). On a preview theme,
+  "Preview as" in Theme settings > Plaayers Club shows any tier with example numbers.
+  Usage: {%- capture cs -%}{%- render 'club-state' -%}{%- endcapture -%}{%- assign cs = cs | split: '|' -%}
+{%- endcomment -%}
+{%- liquid
+  assign tier = 'guest'
+  assign credit = 0
+  assign spend = 0
+  if settings.club_preview_as != blank and settings.club_preview_as != 'off'
+    assign tier = settings.club_preview_as
+    if tier != 'guest'
+      assign credit = settings.club_preview_credit | times: 100
+      assign spend = settings.club_preview_spend | times: 100
+    endif
+  elsif customer
+    assign tier = customer.metafields.plaay_club.tier.value | default: 'plaayer'
+    assign credit = customer.metafields.plaay_club.credit.value | default: 0 | plus: 0
+    assign spend = customer.metafields.plaay_club.spend_12m.value | default: 0 | plus: 0
+  endif
+  echo tier | append: '|' | append: credit | append: '|' | append: spend
+-%}

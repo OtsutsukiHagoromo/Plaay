@@ -1,0 +1,7 @@
+{%- comment -%}
+  Prints 1 when the bag's 10% / 18% spend rewards are switched off: during a sitewide sale
+  (snippets/sale-active), or while the Plaayers Club is on (members earn credit instead).
+  Free delivery over the threshold stays either way.
+{%- endcomment -%}
+{%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
+{%- if sale_on contains '1' or settings.club_enabled -%}1{%- endif -%}

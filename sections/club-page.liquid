@@ -1,0 +1,127 @@
+{%- comment -%}
+  Plaayers Club page (/pages/club, template page.club). Guests: what the Club is and how to
+  join. Members: their own card (tier, credit, progress, perks) above the same explainer.
+  ?from=noon (or talabat, careem, store) is the pack-QR landing: "AED 20 is yours".
+{%- endcomment -%}
+{%- capture cs -%}{%- render 'club-state' -%}{%- endcapture -%}
+{%- liquid
+  assign s = section.settings
+  assign cs = cs | split: '|'
+  assign tier = cs[0]
+  assign credit = cs[1] | plus: 0
+  assign spend = cs[2] | plus: 0
+  assign pro_at = settings.club_pro_spend | default: 500
+  assign legend_at = settings.club_legend_spend | default: 1000
+  assign tiers = 'plaayer,pro,legend' | split: ','
+  assign login = routes.account_login_url | append: '?return_url=/pages/club'
+-%}
+<div class="pl club-page">
+  <header class="club-hero">
+    <div class="pl-wrap club-hero__in">
+      <span class="club-chip" data-club-from>{{ s.eyebrow }}</span>
+      <h1 class="club-hero__t" data-club-title>{{ s.heading }}</h1>
+      <p class="club-hero__p" data-club-lead>{{ s.lead }}</p>
+      {%- if tier == 'guest' -%}
+        <a class="club-btn club-btn--lg" href="{{ login }}" data-club-join>Join free · AED {{ s.welcome_credit }} for your next order</a>
+        <p class="club-hero__s">Already shopped with us? Sign in with your email and your past orders count.</p>
+      {%- endif -%}
+    </div>
+  </header>
+
+  <div class="pl-wrap club-body">
+    {%- if tier != 'guest' -%}
+      {%- liquid
+        assign next_name = ''
+        assign next_at = 0
+        if tier == 'plaayer'
+          assign next_name = 'Pro'
+          assign next_at = pro_at | times: 100
+        elsif tier == 'pro'
+          assign next_name = 'Legend'
+          assign next_at = legend_at | times: 100
+        endif
+        capture rate
+          render 'club-rate', tier: tier
+        endcapture
+      -%}
+      <section class="club-card club-card--{{ tier }}" aria-label="Your Club">
+        <div class="club-row"><span class="club-badge club-badge--{{ tier }}">{% if tier == 'legend' %}Legend{% elsif tier == 'pro' %}Pro{% else %}Plaayer{% endif %}</span><span>{{ rate }}% back on every order</span></div>
+        <span class="club-card__l">Plaay credit</span>
+        <b class="club-card__big">{% render 'plaay-aed', fils: credit %}</b>
+        <span class="club-card__s">Used at checkout. Credit lasts {{ s.expiry_days }} days from when you earn it.</span>
+        {%- if next_at > 0 -%}
+          {%- assign left = next_at | minus: spend | at_least: 0 -%}
+          {%- assign pct = spend | times: 100 | divided_by: next_at -%}
+          <span class="club-bar club-bar--light"><i style="width: {{ pct | at_most: 100 }}%"></i></span>
+          <span class="club-card__s">{% render 'plaay-aed', fils: spend %} spent this year · {% render 'plaay-aed', fils: left %} to {{ next_name }}</span>
+        {%- else -%}
+          <span class="club-card__s">{% render 'plaay-aed', fils: spend %} spent this year · top tier</span>
+        {%- endif -%}
+        <a class="club-btn" href="{{ routes.account_url }}">Orders and account</a>
+      </section>
+    {%- endif -%}
+
+    <section class="club-steps" aria-label="How it works">
+      <div><b>1</b><span>Join free with your email</span></div>
+      <div><b>2</b><span>Earn {{ settings.club_rate_plaayer | default: 5 }}–{{ settings.club_rate_legend | default: 10 }}% back as Plaay credit</span></div>
+      <div><b>3</b><span>Spend it on any order within {{ s.expiry_days }} days</span></div>
+    </section>
+
+    <section class="club-tiers" aria-label="Tiers">
+      {%- for t in tiers -%}
+        {%- capture r -%}{%- render 'club-rate', tier: t -%}{%- endcapture -%}
+        <article class="club-tier{% if t == tier %} is-me{% endif %}">
+          <div class="club-row"><span class="club-badge club-badge--{{ t }}">{% if t == 'legend' %}Legend{% elsif t == 'pro' %}Pro{% else %}Plaayer{% endif %}</span><b class="club-tier__pct">{{ r }}% back</b></div>
+          <p class="club-tier__who">{% case t %}{% when 'plaayer' %}Free with an account{% when 'pro' %}AED {{ pro_at }}+ a year, or any Subscribe &amp; Save{% else %}AED {{ legend_at }}+ a year{% endcase %}</p>
+          <ul class="club-perks">
+            {%- case t -%}
+              {%- when 'plaayer' -%}<li>AED {{ s.welcome_credit }} credit on your second order</li><li>Free delivery over AED {{ settings.cart_tier_ship | default: 99 }}</li><li>Birthday truffle tube</li>
+              {%- when 'pro' -%}<li>Free Express on every order</li><li>New flavours 48 hours early</li><li>Everything in Plaayer</li>
+              {%- else -%}<li>Free Express on every order</li><li>A free new-flavour box each quarter</li><li>WhatsApp line to the team</li>
+            {%- endcase -%}
+          </ul>
+          {%- if t == tier -%}<span class="club-tier__me">You're here</span>{%- endif -%}
+        </article>
+      {%- endfor -%}
+    </section>
+
+    <section class="club-faq" aria-label="Questions">
+      <details><summary>How does credit work?</summary><p>You earn credit on the order total after discounts, not on delivery. It's added when your order is paid and can be used on any order, in any amount, within {{ s.expiry_days }} days. We remind you before it expires.</p></details>
+      <details><summary>Can I use credit with Subscribe &amp; Save or a sale?</summary><p>Yes. Credit counts as payment, so it works alongside everything. Discount codes don't combine with sales or Subscribe &amp; Save.</p></details>
+      <details><summary>How is my tier worked out?</summary><p>From what you spent with us in the last 12 months, checked every night. Pro starts at AED {{ pro_at }} or with any active subscription; Legend at AED {{ legend_at }}. Once you reach a tier you keep it for at least 3 months.</p></details>
+      <details><summary>I bought Plaay on noon or in a supermarket</summary><p>Scan the QR card in your pack to join. You get AED {{ s.qr_credit }} credit for your first order here, with Express delivery the same day across most of Dubai.</p></details>
+    </section>
+  </div>
+</div>
+
+{%- comment -%} The pack QR lands here with ?from=<channel>: swap the hero for the AED 20 welcome. {%- endcomment -%}
+<script>
+  (function () {
+    var from = new URLSearchParams(location.search).get('from');
+    var names = { noon: 'noon', talabat: 'Talabat', careem: 'Careem', amazon: 'Amazon', store: 'the supermarket' };
+    if (!from || !names[from]) return;
+    try { localStorage.setItem('club-from', from); } catch (e) {}
+    var q = function (s) { return document.querySelector(s); };
+    if (q('[data-club-from]')) q('[data-club-from]').textContent = 'From your ' + names[from] + ' order';
+    if (q('[data-club-title]')) q('[data-club-title]').textContent = 'AED {{ s.qr_credit }} is yours';
+    if (q('[data-club-lead]')) q('[data-club-lead]').textContent = 'Join the Plaayers Club with your email. Your AED {{ s.qr_credit }} credit is ready for your first order here, with Express delivery today across most of Dubai.';
+    var j = q('[data-club-join]');
+    if (j) { j.textContent = 'Join and get AED {{ s.qr_credit }}'; j.href = j.href + '%3Ffrom%3D' + from; }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Plaayers Club page",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Label", "default": "Plaayers Club" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Every order pays for the next one" },
+    { "type": "textarea", "id": "lead", "label": "Intro", "default": "Free to join. Earn credit on every order, get free Express as a Pro, and taste new flavours first." },
+    { "type": "number", "id": "welcome_credit", "label": "Second-order credit (AED)", "default": 25 },
+    { "type": "number", "id": "qr_credit", "label": "Pack QR credit (AED)", "default": 20 },
+    { "type": "number", "id": "expiry_days", "label": "Credit lasts (days)", "default": 60 }
+  ],
+  "presets": [{ "name": "Plaayers Club page" }]
+}
+{% endschema %}

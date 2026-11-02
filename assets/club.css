@@ -1,0 +1,51 @@
+/* Plaayers Club: header credit, product "you'll earn" line, bag block and the Club page. */
+.club-pill { display: inline-flex; align-items: center; height: 26px; padding: 0 9px; border-radius: 99px; background: var(--pl-cream, #FFF7DD); border: 1.5px solid var(--pl-navy, #081D48); color: var(--pl-navy, #081D48); font-weight: 900; font-size: 12px; text-decoration: none; white-space: nowrap; }
+.club-coin { width: 22px; height: 22px; border-radius: 50%; background: var(--pl-yellow, #FFB600); border: 2px solid var(--pl-navy, #081D48); display: inline-grid; place-items: center; font-weight: 900; font-size: 11px; flex: none; }
+.club-earn { display: flex; gap: 9px; align-items: center; margin: 0 0 10px; padding: 9px 12px; border-radius: 12px; background: var(--pl-cream, #FFF7DD); color: var(--pl-navy, #081D48); font-size: 13.5px; text-decoration: none; }
+.club-earn b { font-weight: 900; }
+.club-badge { display: inline-block; font-weight: 900; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; padding: 2px 9px; border-radius: 99px; }
+.club-badge--plaayer { background: var(--pl-cream, #FFF7DD); color: var(--pl-navy, #081D48); border: 1.5px solid var(--pl-navy, #081D48); }
+.club-badge--pro { background: var(--pl-navy, #081D48); color: var(--pl-yellow, #FFB600); }
+.club-badge--legend { background: linear-gradient(135deg, #FFB600, #E8467C); color: #fff; }
+.club-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.club-small { font-size: 12.5px; opacity: .8; }
+.club-bar { display: block; height: 8px; border-radius: 9px; background: rgba(8, 29, 72, .1); overflow: hidden; }
+.club-bar i { display: block; height: 100%; background: var(--pl-navy, #081D48); border-radius: 9px; }
+.club-bar--light { background: rgba(255, 255, 255, .25); }
+.club-bar--light i { background: var(--pl-yellow, #FFB600); }
+.club-btn { display: inline-flex; justify-content: center; align-items: center; padding: 10px 18px; border-radius: 99px; background: var(--pl-yellow, #FFB600); color: var(--pl-navy, #081D48); font-weight: 900; text-decoration: none; }
+.club-btn--lg { padding: 14px 24px; font-size: 16px; }
+.club-bag { display: grid; gap: 6px; margin: 10px 0; padding: 11px 13px; border: 1.5px solid var(--pl-navy, #081D48); border-radius: 14px; background: #fff; color: var(--pl-navy, #081D48); font-size: 13.5px; }
+
+/* Club page */
+.club-page { color: var(--pl-navy, #081D48); }
+.club-hero { background: var(--pl-navy, #081D48); color: #fff; }
+.club-hero__in { padding-block: 40px 44px; display: grid; gap: 12px; justify-items: start; max-width: 760px; }
+.club-chip { background: var(--pl-yellow, #FFB600); color: var(--pl-navy, #081D48); font-weight: 900; font-size: 12px; letter-spacing: .07em; text-transform: uppercase; padding: 4px 11px 3px; border-radius: 99px; }
+.club-hero__t { margin: 0; font-weight: 900; font-size: clamp(34px, 6vw, 56px); line-height: .95; text-transform: uppercase; color: var(--pl-yellow, #FFB600); text-wrap: balance; }
+.club-hero__p { margin: 0; font-size: 17px; max-width: 52ch; }
+.club-hero__s { margin: 0; font-size: 13px; opacity: .8; }
+.club-body { padding-block: 28px 48px; display: grid; gap: 22px; }
+.club-card { display: grid; gap: 8px; padding: 18px; border-radius: 20px; color: #fff; background: var(--pl-navy, #081D48); max-width: 520px; }
+.club-card--pro { background: linear-gradient(135deg, #081D48, #1D3E8A); }
+.club-card--legend { background: linear-gradient(135deg, #C98A00, #E8467C); }
+.club-card__l { font-size: 13px; opacity: .85; }
+.club-card__big { font-weight: 900; font-size: 40px; line-height: 1; }
+.club-card__s { font-size: 13px; opacity: .9; }
+.club-card .club-btn { justify-self: start; margin-top: 4px; }
+.club-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.club-steps div { background: var(--pl-cream, #FFF7DD); border-radius: 14px; padding: 14px 12px; display: grid; gap: 4px; font-size: 14px; }
+.club-steps b { font-weight: 900; font-size: 22px; }
+.club-tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.club-tier { border: 1.5px solid rgba(8, 29, 72, .14); border-radius: 18px; padding: 16px; display: grid; gap: 8px; align-content: start; background: #fff; }
+.club-tier.is-me { border-color: var(--pl-navy, #081D48); box-shadow: 3px 3px 0 var(--pl-navy, #081D48); background: var(--pl-cream, #FFF7DD); }
+.club-tier__pct { font-weight: 900; font-size: 22px; }
+.club-tier__who { margin: 0; font-size: 13.5px; opacity: .8; }
+.club-tier__me { font-weight: 900; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+.club-perks { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 14px; }
+.club-faq { display: grid; gap: 8px; max-width: 760px; }
+.club-faq details { border-bottom: 1px solid rgba(8, 29, 72, .14); padding: 10px 0; }
+.club-faq summary { font-weight: 900; cursor: pointer; }
+.club-faq p { margin: 8px 0 0; font-size: 14.5px; }
+.club-btn:focus-visible, .club-earn:focus-visible, .club-pill:focus-visible, .club-faq summary:focus-visible { outline: 3px solid var(--pl-yellow, #FFB600); outline-offset: 2px; }
+@media (max-width: 640px) { .club-steps { grid-template-columns: 1fr; } }

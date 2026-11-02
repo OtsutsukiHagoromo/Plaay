@@ -1,0 +1,9 @@
+{%- comment -%} Header: a member's Plaay credit, linking to the Club page. {%- endcomment -%}
+{%- if settings.club_enabled -%}
+  {%- capture cs -%}{%- render 'club-state' -%}{%- endcapture -%}
+  {%- assign cs = cs | split: '|' -%}
+  {%- assign credit = cs[1] | plus: 0 -%}
+  {%- if cs[0] != 'guest' and credit > 0 -%}
+    <a class="club-pill" href="/pages/club" aria-label="Plaay credit {% render 'plaay-aed', fils: credit %}">{% render 'plaay-aed', fils: credit %}</a>
+  {%- endif -%}
+{%- endif -%}

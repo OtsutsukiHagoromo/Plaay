@@ -1,0 +1,30 @@
+{%- comment -%}
+  Product page: what this product earns in Plaay credit at the shopper's tier, and free Express
+  for Pro and Legend. Guests see what members earn. Usage: {% render 'club-earn', price: cta_price %}
+{%- endcomment -%}
+{%- if settings.club_enabled -%}
+  {%- capture cs -%}{%- render 'club-state' -%}{%- endcapture -%}
+  {%- liquid
+    assign cs = cs | split: '|'
+    assign tier = cs[0]
+    capture rate
+      render 'club-rate', tier: tier
+    endcapture
+    assign rate = rate | strip | plus: 0
+    assign earn = price | times: rate | divided_by: 100 | round
+    assign tier_name = 'Plaayer'
+    if tier == 'pro'
+      assign tier_name = 'Pro'
+    elsif tier == 'legend'
+      assign tier_name = 'Legend'
+    endif
+  -%}
+  <a class="club-earn" href="/pages/club">
+    <span class="club-coin" aria-hidden="true">P</span>
+    {%- if tier == 'guest' -%}
+      <span>Members earn <b>{% render 'plaay-aed', fils: earn %}</b>+ credit on this. <u>Join free</u></span>
+    {%- else -%}
+      <span>You'll earn <b>{% render 'plaay-aed', fils: earn %}</b> credit as a {{ tier_name }}{% if tier == 'pro' or tier == 'legend' %} · <b>free Express</b>{% endif %}</span>
+    {%- endif -%}
+  </a>
+{%- endif -%}

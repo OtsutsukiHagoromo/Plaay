@@ -32,10 +32,10 @@
   assign labels = 'Free delivery'
 
   capture sale_on
-    render 'sale-active'
+    render 'rewards-off'
   endcapture
   if sale_on contains '1'
-    # Sitewide sale: free delivery is the only stop (the sale replaces the % rewards).
+    # Sitewide sale or Plaayers Club: free delivery is the only stop (the sale replaces the % rewards).
     assign sale_ladder = true
   elsif settings.eid_sale_enabled
     assign a1 = settings.eid_tier_1_spend | default: 250

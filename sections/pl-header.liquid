@@ -135,6 +135,7 @@
         <button type="button" class="pl-iconbtn pl-iconbtn--ghost pl-header__search-btn" aria-label="Search" data-pl-open-search>
           {%- render 'pl-icon', name: 'search', size: 22, stroke: 2 -%}
         </button>
+        {%- render 'club-header' -%}
         <a class="pl-iconbtn pl-iconbtn--ghost pl-header__account{% if customer %} is-in{% endif %}" href="{{ account_url }}" aria-label="Account" data-pl-open-account>
           {%- render 'pl-icon', name: 'user', size: 22, stroke: 2 -%}
         </a>

@@ -69,7 +69,7 @@
   # rewards (they don't combine and the sale is always bigger), so the ladder stops at free
   # delivery instead of showing tiers as unlocked that won't apply.
   capture sale_on
-    render 'sale-active'
+    render 'rewards-off'
   endcapture
   if sale_on contains '1' and reached >= 0
     assign reached = 0
@@ -96,6 +96,7 @@
       <p class="pl-ladder__msg pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}{% if sale_on contains '1' %}Free delivery unlocked{% else %}All rewards unlocked{% endif %}</p>
     {%- endif -%}
     {%- render 'cart-tier-bar' -%}
+    {%- render 'club-bag' -%}
     {%- if next_label != '' and cart.item_count > 0 -%}
       {%- liquid
         comment

@@ -420,5 +420,95 @@
         "default": "https://plaay-noon-delivery.vercel.app/api/express"
       }
     ]
+  },
+  {
+    "name": "Plaayers Club",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Membership: credit back on every order, tiers by 12-month spend. Turning it on also hides the 10% / 18% bag rewards."
+      },
+      {
+        "type": "checkbox",
+        "id": "club_enabled",
+        "label": "Show the Plaayers Club",
+        "default": false
+      },
+      {
+        "type": "number",
+        "id": "club_rate_plaayer",
+        "label": "Plaayer credit back (%)",
+        "default": 5
+      },
+      {
+        "type": "number",
+        "id": "club_rate_pro",
+        "label": "Pro credit back (%)",
+        "default": 7
+      },
+      {
+        "type": "number",
+        "id": "club_rate_legend",
+        "label": "Legend credit back (%)",
+        "default": 10
+      },
+      {
+        "type": "number",
+        "id": "club_pro_spend",
+        "label": "Pro from (AED a year)",
+        "default": 500
+      },
+      {
+        "type": "number",
+        "id": "club_legend_spend",
+        "label": "Legend from (AED a year)",
+        "default": 1000
+      },
+      {
+        "type": "header",
+        "content": "Preview only"
+      },
+      {
+        "type": "select",
+        "id": "club_preview_as",
+        "label": "Preview as",
+        "info": "Shows the Club as this tier with the example numbers below, for everyone viewing this theme. Keep Off on the live theme.",
+        "default": "off",
+        "options": [
+          {
+            "value": "off",
+            "label": "Off (real customers)"
+          },
+          {
+            "value": "guest",
+            "label": "Guest"
+          },
+          {
+            "value": "plaayer",
+            "label": "Plaayer"
+          },
+          {
+            "value": "pro",
+            "label": "Pro"
+          },
+          {
+            "value": "legend",
+            "label": "Legend"
+          }
+        ]
+      },
+      {
+        "type": "number",
+        "id": "club_preview_credit",
+        "label": "Example credit (AED)",
+        "default": 32
+      },
+      {
+        "type": "number",
+        "id": "club_preview_spend",
+        "label": "Example 12-month spend (AED)",
+        "default": 840
+      }
+    ]
   }
 ]

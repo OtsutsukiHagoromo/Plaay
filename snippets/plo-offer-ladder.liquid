@@ -20,7 +20,7 @@
   assign top = ship
   # During a sitewide sale only free delivery is offered here; the % rewards don't apply.
   capture sale_on
-    render 'sale-active'
+    render 'rewards-off'
   endcapture
   if sale_on contains '1'
     assign t_spends = ''

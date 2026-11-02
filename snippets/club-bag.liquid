@@ -1,0 +1,47 @@
+{%- comment -%}
+  Bag: the shopper's Club state. Members: credit (applied at checkout), what this bag earns,
+  progress to the next tier. Guests: one prompt to join.
+{%- endcomment -%}
+{%- if settings.club_enabled and cart.item_count > 0 -%}
+  {%- capture cs -%}{%- render 'club-state' -%}{%- endcapture -%}
+  {%- liquid
+    assign cs = cs | split: '|'
+    assign tier = cs[0]
+    assign credit = cs[1] | plus: 0
+    assign spend = cs[2] | plus: 0
+    capture rate
+      render 'club-rate', tier: tier
+    endcapture
+    assign rate = rate | strip | plus: 0
+    assign earn = cart.total_price | times: rate | divided_by: 100 | round
+    assign pro_at = settings.club_pro_spend | default: 500 | times: 100
+    assign legend_at = settings.club_legend_spend | default: 1000 | times: 100
+    assign next_name = ''
+    assign next_at = 0
+    if tier == 'plaayer'
+      assign next_name = 'Pro'
+      assign next_at = pro_at
+    elsif tier == 'pro'
+      assign next_name = 'Legend'
+      assign next_at = legend_at
+    endif
+  -%}
+  <div class="club-bag">
+    {%- if tier == 'guest' -%}
+      <b>Join the Plaayers Club</b>
+      <span class="club-small">Earn {% render 'plaay-aed', fils: earn %} on this bag and get AED 25 for your next order. Free, sign in with your email.</span>
+      <a class="club-btn" href="{{ routes.account_login_url }}?return_url=/pages/club">Join free</a>
+    {%- else -%}
+      <div class="club-row"><span class="club-badge club-badge--{{ tier }}">{% if tier == 'legend' %}Legend{% elsif tier == 'pro' %}Pro{% else %}Plaayer{% endif %}</span><b>{% render 'plaay-aed', fils: credit %} credit</b></div>
+      <span class="club-small">{% if credit > 0 %}Applied at checkout. {% endif %}This bag earns <b>{% render 'plaay-aed', fils: earn %}</b>.</span>
+      {%- if next_at > 0 -%}
+        {%- assign left = next_at | minus: spend | at_least: 0 -%}
+        {%- assign pct = spend | times: 100 | divided_by: next_at -%}
+        <span class="club-bar"><i style="width: {{ pct | at_most: 100 }}%"></i></span>
+        <span class="club-small">{% render 'plaay-aed', fils: left %} more this year to reach {{ next_name }}</span>
+      {%- else -%}
+        <span class="club-small">Top tier · free Express · quarterly new-flavour box</span>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+{%- endif -%}

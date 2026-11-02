@@ -85,7 +85,7 @@
     {%- liquid
       assign plo_skin = ''
       assign plo_b_names = 'index,product,collection,list-collections,search,cart,404' | split: ','
-      assign plo_b_pages = 'option-b,subscribe-save,faq,contact,shipping,returns,terms,retailers,wishlist' | split: ','
+      assign plo_b_pages = 'option-b,club,subscribe-save,faq,contact,shipping,returns,terms,retailers,wishlist' | split: ','
       assign plo_b = false
       if template.suffix != blank and plo_b_pages contains template.suffix
         assign plo_b = true
@@ -109,6 +109,7 @@
     {{ 'plaay-ui.css' | asset_url | stylesheet_tag }}
     {{ 'pl-shell.css' | asset_url | stylesheet_tag }}
     {%- if settings.express_enabled -%}{{ 'plx-express.css' | asset_url | stylesheet_tag }}{%- endif -%}
+    {%- if settings.club_enabled -%}{{ 'club.css' | asset_url | stylesheet_tag }}{%- endif -%}
     {%- if plo_b -%}
       {%- assign plo_skin = 'b' -%}
       {{ 'pl-opt.css' | asset_url | stylesheet_tag }}
