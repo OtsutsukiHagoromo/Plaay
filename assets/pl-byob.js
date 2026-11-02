@@ -159,9 +159,19 @@
       var im = q('.pl-byob__pic img', item);
       if (im && n > l.top) { l.top = n; l.img = (im.currentSrc || im.src || '').replace(/^http:/, 'https:'); }
     });
+    /* Visible on the order for packing: one "Mix" line, identical on every line of this mix, so
+       the team sees which truffle and slab lines go in the same box and what the whole mix holds. */
+    var parts = [], total = 0;
+    items.forEach(function (item) { total += picks[keyOf(item)] || 0; });
+    ['truffle', 'slab'].forEach(function (cat) {
+      var n = 0;
+      items.forEach(function (item) { if (item.getAttribute('data-cat') === cat) n += picks[keyOf(item)] || 0; });
+      if (n) parts.push(n + ' ' + cat + (n === 1 ? '' : 's'));
+    });
+    var mix = 'Mix ' + box.slice(-5) + ' · ' + total + ' pieces' + (parts.length > 1 ? ' (' + parts.join(' + ') + ')' : '');
     return Object.keys(byVariant).map(function (v) {
       var l = byVariant[v];
-      var props = { Flavours: l.names.join(', '), _box: box };
+      var props = { Mix: mix, Flavours: l.names.join(', '), _box: box };
       if (l.img) props._img = l.img;
       var line = { id: l.id, quantity: l.quantity, properties: props };
       if (subscribing() && planId) line.selling_plan = Number(planId);
