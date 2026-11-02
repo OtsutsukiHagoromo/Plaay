@@ -12,6 +12,7 @@ import { areaList, checkoutRates, locate, matchArea, promise } from './express.j
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
 import * as geo from './geo.js';
 import { findMentions, productEvidence, removeMentions } from './cleanup.js';
+import { customerCounts, exportStatus, startExport } from './insights.js';
 import { createPromotion, listAutomaticDiscounts, PROMOTIONS } from './promos.js';
 import { shopifyAdminUrl, VIEWS } from './orders.js';
 import { trackingUrl, verifyTrackingToken } from './tracking.js';
@@ -196,6 +197,11 @@ export async function handleDashboard(request, d) {
   const html = (body) => new Response(body, { headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' } });
 
   if (url.searchParams.has('new')) return html(renderNewOrder({ cfg: d.cfg, flash }));
+  if (url.searchParams.has('insights')) {
+    const step = url.searchParams.get('insights');
+    const body = step === 'start' ? await startExport(d.shopify) : step === 'customers' ? await customerCounts(d.shopify) : await exportStatus(d.shopify);
+    return Response.json(body, { headers: { 'Cache-Control': 'no-store' } });
+  }
   if (url.searchParams.has('evidence')) {
     const id = String(url.searchParams.get('evidence'));
     if (!/^gid:\/\/shopify\/Product\/\d+$/.test(id)) return new Response('Bad product id', { status: 400 });
