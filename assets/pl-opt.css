@@ -825,6 +825,9 @@ body .pl .plo-sticky .plo-btn { padding: 0 14px; font-size: 13px; }
 
 /* chips: count */
 .plo-chips a small { margin-left: 6px; font-size: 11px; font-weight: 700; opacity: .55; }
+/* Build Your Own Mix tab (sections/plo-collection.liquid): yellow, with a small New tag. */
+.pl-skin-b .plo-chips a.plo-chips__mix { background: var(--pl-yellow); }
+.plo-chips a.plo-chips__mix em { margin-left: 6px; padding: 2px 6px; border-radius: 999px; background: var(--pl-navy); color: #fff; font-style: normal; font-size: 10px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
 /* Shop all: one row per range */
 .plo-range { padding-top: 32px; }
 .plo-range + .plo-range { border-top: 1px solid rgba(8, 29, 72, .08); margin-top: 32px; }

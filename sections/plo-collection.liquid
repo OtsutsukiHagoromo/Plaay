@@ -149,6 +149,11 @@
           {%- assign i = forloop.index0 -%}
           <a href="{{ routes.collections_url }}/{{ h }}{% if view_q != blank %}?{{ view_q }}{% endif %}"{% if collection.handle == h %} aria-current="page"{% endif %}>{{ chip_labels[i] }}<small>{{ collections[h].products_count }}</small></a>
         {%- endfor -%}
+        {%- comment -%} Last tab: the Build Your Own Mix builder (a product page, so it is never the current tab). {%- endcomment -%}
+        {%- assign mix_p = all_products['build-your-own-mix'] -%}
+        {%- if mix_p != blank and mix_p.available -%}
+          <a class="plo-chips__mix" href="{{ mix_p.url }}">Build your own mix<em>New</em></a>
+        {%- endif -%}
       </nav>
 
       {%- liquid
