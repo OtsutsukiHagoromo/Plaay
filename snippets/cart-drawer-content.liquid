@@ -193,6 +193,7 @@
         {{ ladder_html }}
         {%- render 'plaay-eid-countdown' -%}
         {%- render 'cart-drawer-items', bare: true -%}
+        {%- render 'pl-mix-nudge' -%}
         <cart-page-recommendations class="pl-cartpage__recs" data-id="{{ first_product_id }}" data-url="{{ routes.product_recommendations_url }}">
           <h2 class="pl-h pl-h--4" data-recommendations-title>You might also like</h2>
           <div class="pl-grid pl-grid--2" data-cart-page-recommendations data-limit="4"></div>
@@ -221,6 +222,7 @@
         {{ ladder_html }}
         {%- render 'plaay-eid-countdown' -%}
         {%- render 'cart-drawer-items' -%}
+        {%- render 'pl-mix-nudge' -%}
         {%- render 'cart-recommendations', remaining_fils: remaining_fils, next_label: next_label, reached: reached -%}
         <div class="pl-card pl-summary-card" data-cart-drawer-footer>
           {%- render 'cart-drawer-footer', ship_fils: ship_fils -%}

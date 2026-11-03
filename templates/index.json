@@ -117,11 +117,38 @@
             "sticker_big": "",
             "sticker_small": ""
           }
+        },
+        "banner_mix": {
+          "type": "slide",
+          "settings": {
+            "style": "image",
+            "bg": "#fbf1da",
+            "image_asset": "plo-hero-mix.jpg",
+            "image_alt": "New: Build your own mix. Pick any 6 or more truffles and slabs, truffle 60g AED 24.20, slab 80g AED 26",
+            "image_mobile_asset": "plo-hero-mix-m.jpg",
+            "image_mobile_ratio": "1000 / 1648",
+            "image_2_asset": "",
+            "eyebrow": "",
+            "heading": "",
+            "heading_mark": "",
+            "body": "",
+            "btn_label": "",
+            "btn_url": "shopify://products/build-your-own-mix",
+            "btn_arrow": true,
+            "btn_navy": false,
+            "link_label": "",
+            "link_url": "",
+            "show_rating": true,
+            "chips": "",
+            "sticker_big": "",
+            "sticker_small": ""
+          }
         }
       },
       "block_order": [
         "banner_halloween",
         "banner_freedom",
+        "banner_mix",
         "banner_tiers",
         "banner_subscribe"
       ],
@@ -226,7 +253,8 @@
         "link_label": "Shop all",
         "link_url": "/collections/shop-all",
         "pad_bottom": false,
-        "tab_label": "Bestsellers"
+        "tab_label": "Bestsellers",
+        "mix_pos": 2
       }
     },
     "categories": {
@@ -283,13 +311,29 @@
             "photo_pos": "95% 50%",
             "sale_badge": "Up to 30% off"
           }
+        },
+        "cat_mix": {
+          "type": "cat",
+          "settings": {
+            "title": "Build your own mix",
+            "sub": "Pick any 6+ truffles & slabs. Every flavour your call.",
+            "url": "/products/build-your-own-mix",
+            "tint": "#fff0c4",
+            "photo_asset": "pl-mix-hero.jpg",
+            "photo_pos": "50% 50%",
+            "wide": true,
+            "tag": "New",
+            "cta": "Start your mix",
+            "sale_badge": ""
+          }
         }
       },
       "block_order": [
         "cat_1",
         "cat_2",
         "cat_3",
-        "cat_4"
+        "cat_4",
+        "cat_mix"
       ],
       "settings": {
         "eyebrow": "Shop",

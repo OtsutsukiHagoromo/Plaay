@@ -417,7 +417,8 @@
       "pl-announcement": {
         "type": "pl-announcement",
         "settings": {
-          "hide_mobile": false
+          "hide_mobile": false,
+          "with_ladder": true
         },
         "blocks": {
           "msg_halloween_1": {
@@ -435,9 +436,17 @@
               "url": "shopify://collections/variety-packs"
             },
             "disabled": true
+          },
+          "msg_mix": {
+            "type": "message",
+            "settings": {
+              "text": "New: Build your own mix · pick any 6+ truffles & slabs →",
+              "url": "shopify://products/build-your-own-mix"
+            }
           }
         },
         "block_order": [
+          "msg_mix",
           "msg_halloween_1",
           "msg_halloween_2"
         ]
