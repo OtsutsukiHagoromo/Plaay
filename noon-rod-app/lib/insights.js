@@ -17,10 +17,21 @@ const QUERY = `{
   }
 }`;
 
-export async function startExport(shopify) {
+// Delivery pins only (date, value, coordinates, emirate): for sizing Express by distance.
+const GEO_QUERY = `{
+  orders(query: "created_at:>=2025-11-01") {
+    edges { node {
+      id createdAt cancelledAt sourceName
+      totalPriceSet { shopMoney { amount } }
+      shippingAddress { latitude longitude provinceCode }
+    } }
+  }
+}`;
+
+export async function startExport(shopify, kind = 'orders') {
   const r = await shopify.graphql(
     'mutation($q: String!) { bulkOperationRunQuery(query: $q) { bulkOperation { id status } userErrors { field message } } }',
-    { q: QUERY },
+    { q: kind === 'geo' ? GEO_QUERY : QUERY },
   );
   const e = r.bulkOperationRunQuery.userErrors;
   if (e.length) throw new Error(e.map((x) => x.message).join('; '));

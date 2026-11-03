@@ -205,7 +205,7 @@ export async function handleDashboard(request, d) {
   }
   if (url.searchParams.has('insights')) {
     const step = url.searchParams.get('insights');
-    const body = step === 'start' ? await startExport(d.shopify) : step === 'customers' ? await customerCounts(d.shopify) : await exportStatus(d.shopify);
+    const body = step === 'start' || step === 'geo' ? await startExport(d.shopify, step === 'geo' ? 'geo' : 'orders') : step === 'customers' ? await customerCounts(d.shopify) : await exportStatus(d.shopify);
     return Response.json(body, { headers: { 'Cache-Control': 'no-store' } });
   }
   if (url.searchParams.has('evidence')) {
