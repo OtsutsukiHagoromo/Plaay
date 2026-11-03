@@ -1355,3 +1355,32 @@ body.pl-skin-b.template-index #main > .shopify-section:nth-child(n+5) { contain-
 
 /* Product page delivery + rewards strip (snippets/plo-offer-ladder): flat, no card. */
 @keyframes plo-offer-drive { 40% { transform: translateX(4px); } }
+
+/* "Build your own mix" card in the Truffles and Slabs grids and the home bestsellers (snippets/plo-mix-card): one 60g truffle
+   box and one slab, overlapping; the card's lead piece sits in front. */
+.pl-skin-b .plo-mixc .plo-mixc__img { background: #FFF0C4; }
+.pl-skin-b .plo-mixc .plo-mixc__img img { position: absolute; width: auto; height: 74%; object-fit: contain; mix-blend-mode: multiply; }
+.pl-skin-b .plo-mixc .plo-mixc__img img.plo-mixc__t { left: 22%; top: 15%; z-index: 2; }
+.pl-skin-b .plo-mixc .plo-mixc__img img.plo-mixc__s { right: 14%; top: 12%; z-index: 1; filter: brightness(1.065); }
+.pl-skin-b .plo-mixc--slab .plo-mixc__img img.plo-mixc__t { z-index: 1; left: 16%; top: 10%; }
+.pl-skin-b .plo-mixc--slab .plo-mixc__img img.plo-mixc__s { z-index: 2; right: 18%; top: 15%; }
+.pl-skin-b .plo-mixc .plo-mixc__from small { font-size: .75em; font-weight: 700; color: var(--pl-mute); }
+.pl-skin-b .plo-mixc .plo-mixc__go { display: inline-flex; align-items: center; justify-content: center; }
+
+/* Wide category tile (sections/plo-categories, block "wide"): whole row, copy left, packshot right. */
+.plo-cat--wide { grid-column: 1 / -1; isolation: isolate; overflow: hidden; }
+.pl-skin-b .plo-cat--wide { height: 168px; flex-direction: row; align-items: center; justify-content: flex-start; padding: 18px 20px; }
+.pl-skin-b .plo-cat--wide .plo-cat__pack { position: absolute; right: -4%; top: 50%; bottom: auto; width: auto; height: 132%; transform: translateY(-50%); mix-blend-mode: multiply; transition: transform .5s var(--pl-ease-out); }
+@media (hover: hover) { .pl-skin-b .plo-cat--wide:hover .plo-cat__pack { transform: translateY(-50%) scale(1.04); } }
+.plo-cat__copy { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; max-width: 58%; }
+.plo-cat__tag { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--pl-red); color: #fff; font-style: normal; font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.plo-cat__sub { font-size: 13px; font-weight: 700; line-height: 1.3; color: var(--pl-navy); }
+.plo-cat__go { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; padding: 8px 14px; border-radius: 999px; background: var(--pl-navy); color: var(--pl-yellow, #FFB600); font-size: 12px; font-weight: 900; text-transform: uppercase; }
+@media (min-width: 1024px) {
+  .pl-skin-b .plo-cat--wide { height: 220px; padding: 28px 40px; }
+  .pl-skin-b .plo-cat--wide .plo-cat__pack { right: 6%; height: 140%; }
+  .plo-cat__copy { gap: 8px; }
+  .plo-cat__sub { font-size: 17px; }
+  .plo-cat__go { font-size: 14px; padding: 10px 18px; }
+  .plo-cat__tag { font-size: 13px; }
+}

@@ -436,3 +436,12 @@ html.pl-app cart-drawer .pl-drawer .pl-drawer__head { padding-top: calc(var(--pl
 @media (prefers-reduced-motion: reduce) {
 .pl .pl-drawer__sum { transition: none; }
 }
+
+/* "Build your own mix" prompt under the bag lines (snippets/pl-mix-nudge). */
+.pl-mixnudge { display: flex; align-items: center; gap: 12px; margin: 12px 0; padding: 10px 12px; border-radius: 16px; background: #FFF0C4; color: var(--pl-navy); text-decoration: none; }
+.pl-mixnudge img { width: 56px; height: 56px; flex: 0 0 auto; border-radius: 12px; object-fit: cover; mix-blend-mode: multiply; }
+.pl-mixnudge__t { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.pl-mixnudge__t b { font-size: 14px; font-weight: 900; }
+.pl-mixnudge__t em { display: inline-block; margin-left: 4px; padding: 1px 7px; border-radius: 999px; background: var(--pl-red); color: #fff; font-style: normal; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; vertical-align: 2px; }
+.pl-mixnudge__t small { font-size: 12px; color: var(--pl-mute); line-height: 1.3; }
+.pl-mixnudge__go { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; flex: 0 0 auto; border-radius: 50%; background: var(--pl-navy); color: #fff; }

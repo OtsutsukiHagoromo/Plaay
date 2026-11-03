@@ -1,0 +1,34 @@
+{%- comment -%}
+  Bag prompt for "Build your own mix" (drawer and cart page, under the lines): shown when the bag
+  holds a single truffle or slab product (from the Truffles or Slabs collection) and no mix yet.
+  Links to the builder; renders nothing if the mix product is unavailable.
+  Usage: {%- render 'pl-mix-nudge' -%}
+{%- endcomment -%}
+{%- liquid
+  assign box = all_products['build-your-own-mix']
+  assign show = false
+  assign has_mix = false
+  for it in cart.items
+    if it.properties._box != blank
+      assign has_mix = true
+      break
+    endif
+    assign ch = it.product.collections | map: 'handle' | join: ','
+    if ch contains 'chocolate-truffles' or ch contains 'new-chocolate-slabs'
+      assign show = true
+    endif
+  endfor
+  if has_mix or box == blank or box.available == false
+    assign show = false
+  endif
+-%}
+{%- if show -%}
+<a class="pl-card pl-mixnudge" href="{{ box.url }}">
+  <img src="{{ 'pl-mix-hero.jpg' | asset_img_url: '160x' }}" alt="" width="64" height="64" loading="lazy">
+  <span class="pl-mixnudge__t">
+    <b>Build your own mix <em>New</em></b>
+    <small>Pick any 6+ truffles &amp; slabs, every flavour your call</small>
+  </span>
+  <span class="pl-mixnudge__go" aria-hidden="true">{%- render 'pl-icon', name: 'arrow-right', size: 16, stroke: 2.6 -%}</span>
+</a>
+{%- endif -%}

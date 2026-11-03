@@ -39,8 +39,8 @@
   endcapture
   assign fallback = fb | strip | split: '|'
   assign count = shown
-  if shown == 0
-    assign count = fallback.size
+  if shown == 0 or section.settings.with_ladder
+    assign count = shown | plus: fallback.size
   endif
 -%}
 <div class="pl pl-ann{% if section.settings.hide_mobile %} pl-hide-m{% endif %}" id="pl-ann-{{ section.id }}" data-pl-announcement role="region" aria-label="Announcement">
@@ -58,6 +58,10 @@
         </p>
         {%- assign first = false -%}
       {%- endfor -%}
+      {%- comment -%} "Also rotate the rewards lines": the ladder follows the messages. {%- endcomment -%}
+      {%- if section.settings.with_ladder -%}
+        {%- for m in fallback -%}<p class="pl-ann__msg" aria-hidden="true"><span>{{ m }}</span></p>{%- endfor -%}
+      {%- endif -%}
     {%- else -%}
       {%- for m in fallback -%}
         <p class="pl-ann__msg{% if forloop.first %} is-on{% endif %}"{% unless forloop.first %} aria-hidden="true"{% endunless %}><span>{{ m }}</span></p>
@@ -105,6 +109,12 @@
       "type": "checkbox",
       "id": "hide_mobile",
       "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "with_ladder",
+      "label": "Also rotate the rewards lines after the messages",
       "default": false
     },
     {

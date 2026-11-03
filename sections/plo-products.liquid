@@ -28,12 +28,33 @@
       </div>
     {%- endif -%}
     <div class="plo-grid plo-tabpan" data-plo-tabpan="0">
+      {%- liquid
+        comment
+          "Build your own mix" card (snippets/plo-mix-card) in the first panel at position mix_pos;
+          it takes one of the `limit` places so the row stays full. The snippet renders nothing if
+          the mix product is unavailable, so then the products fill every place.
+        endcomment
+        assign mix_html = ''
+        if s.mix_pos > 0
+          capture mix_html
+            render 'plo-mix-card', lead: 'truffle'
+          endcapture
+          assign mix_html = mix_html | strip
+        endif
+        assign mix_at = s.mix_pos | minus: 1
+        assign plim = lim
+        if mix_html != blank
+          assign plim = lim | minus: 1
+        endif
+      -%}
       {%- for p in s.products -%}
-        {%- if p.id != current_id and shown < lim -%}
+        {%- if mix_html != blank and shown == mix_at -%}{{ mix_html }}{%- assign mix_html = '' -%}{%- endif -%}
+        {%- if p.id != current_id and shown < plim -%}
           {%- render 'plo-card', product: p, eager: false, view: template.suffix -%}
           {%- assign shown = shown | plus: 1 -%}
         {%- endif -%}
       {%- endfor -%}
+      {{ mix_html }}
     </div>
     {%- for b in tabs -%}
       <div class="plo-grid plo-tabpan" data-plo-tabpan="{{ forloop.index }}" hidden>
@@ -67,6 +88,7 @@
     { "type": "text", "id": "link_label", "label": "Link label", "default": "Shop all" },
     { "type": "url", "id": "link_url", "label": "Link" },
     { "type": "checkbox", "id": "pad_bottom", "label": "Space below (last section on the page)", "default": false },
+    { "type": "range", "id": "mix_pos", "label": "Build your own mix card position (0 = off)", "min": 0, "max": 8, "step": 1, "default": 0 },
     { "type": "text", "id": "tab_label", "label": "First tab label (when tabs are added)", "default": "Bestsellers" }
   ],
   "blocks": [
