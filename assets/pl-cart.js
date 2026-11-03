@@ -256,6 +256,57 @@
 
   document.addEventListener('plaay:cart:updated', function () { syncCount(); });
 
+  /* ---------- Build Your Own Mix -> order note ----------
+     Shopify's packing slip can't read line-item properties, but it does print the order note. So the
+     bag keeps a block in the cart note (it becomes the order note at checkout) listing every mix in
+     the bag: its Mix code, then each type with its flavours. Only the text from MIX_HEAD to MIX_END is
+     ours; anything else in the note is left as it is. Runs after every bag render, posts only on change. */
+  var MIX_HEAD = 'BUILD YOUR OWN MIX - pack together:';
+  var MIX_END = '---';
+  var noteBusy = false, noteAgain = false;
+
+  function mixBlock(items) {
+    var boxes = {}, ids = [];
+    items.forEach(function (it) {
+      var p = it.properties || {};
+      if (!p._box) return;
+      if (!boxes[p._box]) { boxes[p._box] = { mix: p.Mix || ('Mix ' + String(p._box).slice(-5)), rows: [] }; ids.push(p._box); }
+      var vt = String(it.variant_title || '').toLowerCase();
+      var kind = vt.indexOf('truffle') > -1 ? 'Truffles' : vt.indexOf('slab') > -1 ? 'Slabs' : (it.variant_title || it.product_title);
+      boxes[p._box].rows.push('- ' + kind + ' x ' + it.quantity + ': ' + (p.Flavours || ''));
+    });
+    if (!ids.length) return '';
+    return MIX_HEAD + '\n' + ids.map(function (b) { return boxes[b].mix + '\n' + boxes[b].rows.join('\n'); }).join('\n\n') + '\n' + MIX_END;
+  }
+
+  function stripMix(note) {
+    var i = note.indexOf(MIX_HEAD);
+    if (i < 0) return note;
+    var j = note.indexOf('\n' + MIX_END, i);
+    return (note.slice(0, i) + (j < 0 ? '' : note.slice(j + MIX_END.length + 1))).replace(/^\s+|\s+$/g, '');
+  }
+
+  function syncMixNote() {
+    if (noteBusy) { noteAgain = true; return; }
+    noteBusy = true;
+    fetch(CART_URL.replace(/\/$/, '') + '.js', { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (cart) {
+        var note = cart.note || '';
+        var other = stripMix(note);
+        var block = mixBlock(cart.items || []);
+        var want = block ? (other ? block + '\n\n' + other : block) : other;
+        if (want === note) return;
+        return post('/cart/update.js', { note: want });
+      })
+      .catch(function () {})
+      .then(function () {
+        noteBusy = false;
+        if (noteAgain) { noteAgain = false; syncMixNote(); }
+      });
+  }
+  document.addEventListener('plaay:cart:updated', syncMixNote);
+
   /* ---------- drawer shell ----------
      The bag drawer is opened and closed here only (the old webpack drawer modules are gone):
      <cart-drawer> gets `active` (assets/pl-cart.css slides it in), the overlay in
