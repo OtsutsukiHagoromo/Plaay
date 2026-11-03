@@ -261,29 +261,49 @@
      bag keeps a block in the cart note (it becomes the order note at checkout) listing every mix in
      the bag: its Mix code, then each type with its flavours. Only the text from MIX_HEAD to MIX_END is
      ours; anything else in the note is left as it is. Runs after every bag render, posts only on change. */
-  var MIX_HEAD = 'BUILD YOUR OWN MIX - pack together:';
+  var MIX_HEAD = 'BUILD YOUR OWN MIX - pack together';
+  var MIX_HEADS = [MIX_HEAD, 'BUILD YOUR OWN MIX - pack together:'];   /* older wording, still cleared */
   var MIX_END = '---';
   var noteBusy = false, noteAgain = false;
+
+  /* One flavour per line, biggest count first: "Pistachio Chocolate × 2, Karak × 1" -> "• 2 x Pistachio Chocolate". */
+  function flavourLines(str) {
+    return String(str || '').split(/,\s*(?=[^,]*×\s*\d+\s*$|[^,]*×\s*\d+\s*,)/)
+      .map(function (part) {
+        var m = part.match(/^\s*(.+?)\s*×\s*(\d+)\s*$/);
+        return m ? { n: Number(m[2]), name: m[1] } : { n: 0, name: part.trim() };
+      })
+      .filter(function (f) { return f.name; })
+      .sort(function (a, b) { return b.n - a.n; })
+      .map(function (f) { return '• ' + (f.n ? f.n + ' x ' : '') + f.name; });
+  }
 
   function mixBlock(items) {
     var boxes = {}, ids = [];
     items.forEach(function (it) {
       var p = it.properties || {};
       if (!p._box) return;
-      if (!boxes[p._box]) { boxes[p._box] = { mix: p.Mix || ('Mix ' + String(p._box).slice(-5)), rows: [] }; ids.push(p._box); }
+      if (!boxes[p._box]) { boxes[p._box] = { mix: p.Mix || ('Mix ' + String(p._box).slice(-5)), parts: [] }; ids.push(p._box); }
       var vt = String(it.variant_title || '').toLowerCase();
       var kind = vt.indexOf('truffle') > -1 ? 'Truffles' : vt.indexOf('slab') > -1 ? 'Slabs' : (it.variant_title || it.product_title);
-      boxes[p._box].rows.push('- ' + kind + ' x ' + it.quantity + ': ' + (p.Flavours || ''));
+      boxes[p._box].parts.push({ rank: kind === 'Truffles' ? 0 : 1, text: kind + ' (' + it.quantity + '):\n' + flavourLines(p.Flavours).join('\n') });
     });
     if (!ids.length) return '';
-    return MIX_HEAD + '\n' + ids.map(function (b) { return boxes[b].mix + '\n' + boxes[b].rows.join('\n'); }).join('\n\n') + '\n' + MIX_END;
+    return MIX_HEAD + '\n\n' + ids.map(function (b) {
+      var parts = boxes[b].parts.sort(function (x, y) { return x.rank - y.rank; }).map(function (x) { return x.text; });
+      return boxes[b].mix.replace(' · ', ' - ') + '\n\n' + parts.join('\n\n');
+    }).join('\n\n====\n\n') + '\n' + MIX_END;
   }
 
   function stripMix(note) {
-    var i = note.indexOf(MIX_HEAD);
-    if (i < 0) return note;
-    var j = note.indexOf('\n' + MIX_END, i);
-    return (note.slice(0, i) + (j < 0 ? '' : note.slice(j + MIX_END.length + 1))).replace(/^\s+|\s+$/g, '');
+    for (var h = 0; h < MIX_HEADS.length; h++) {
+      var i = note.indexOf(MIX_HEADS[h]);
+      if (i < 0) continue;
+      var j = note.indexOf('\n' + MIX_END, i);
+      note = (note.slice(0, i) + (j < 0 ? '' : note.slice(j + MIX_END.length + 1))).replace(/^\s+|\s+$/g, '');
+      h = -1;
+    }
+    return note;
   }
 
   function syncMixNote() {
