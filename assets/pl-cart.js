@@ -911,21 +911,34 @@
     var panel = q('[data-pl-sum]', foot);
     if (!panel) return;
     if (!panel.hidden) { closeSum(foot); return; }
-    /* The summary is already in the bag: bring it into view and flash it, rather than
-       opening a second copy of the same rows above the footer. */
-    var src = q('cart-drawer .pl-drawer__scroll .pl-summary-card');
+    /* Tap Total: open the order summary above the footer. If the summary card in the bag is
+       already fully on screen, flash that one instead, so the same rows never show twice. */
+    var card = q('cart-drawer .pl-drawer__scroll .pl-summary-card');
+    var src = card && q('.pl-summary', card);
     if (!src) return;
-    /* Scroll only the bag's own list (scrollIntoView can also shift the drawer itself on iOS,
-       which pushed the footer out of view and left the total area blank). */
-    var scroller = src.closest('.pl-drawer__scroll');
-    if (scroller) {
-      var top = src.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
-      var target = Math.max(0, top + src.offsetHeight - scroller.clientHeight + 12);
-      if (scroller.scrollTo) scroller.scrollTo({ top: target, behavior: calm ? 'auto' : 'smooth' });
-      else scroller.scrollTop = target;
+    var scroller = card.closest('.pl-drawer__scroll');
+    var footTop = foot.getBoundingClientRect().top;
+    var r = card.getBoundingClientRect();
+    var sr = scroller ? scroller.getBoundingClientRect() : { top: 0 };
+    if (r.top >= sr.top && r.bottom <= footTop) {
+      card.classList.remove('is-flash'); void card.offsetWidth; card.classList.add('is-flash');
+      return;
     }
-    src.classList.remove('is-flash'); void src.offsetWidth; src.classList.add('is-flash');
+    var copy = src.cloneNode(true);
+    qa('button, [data-plaay-discount-remove]', copy).forEach(function (b) { b.remove(); });
+    panel.innerHTML = '';
+    panel.appendChild(copy);
+    panel.hidden = false;
+    void panel.offsetWidth;
+    panel.classList.add('is-open');
+    btn.setAttribute('aria-expanded', 'true');
   });
+
+  /* Scrolling the bag closes the summary, so it never sits over the same rows in the list. */
+  document.addEventListener('scroll', function (e) {
+    var open = q('cart-drawer [data-pl-sum].is-open');
+    if (open && e.target && e.target.classList && e.target.classList.contains('pl-drawer__scroll')) closeSum(open.closest('.pl-drawer__foot'));
+  }, true);
 
   /* ---------- boot ---------- */
   function init() {
