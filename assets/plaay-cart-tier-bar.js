@@ -13,7 +13,10 @@
    to emit and renders identical markup server-side.
 
    Every stop threshold is in fils and compared against the cart's ORIGINAL (pre-discount)
-   total, so a percentage tier discount can never knock a shopper back down a tier. */
+   total, so a percentage tier discount can never knock a shopper back down a tier.
+   The % reward stops count one-time items only: the Shopify tier discounts don't apply to
+   subscribed items, and their AED 299 / 500 minimums count only the items they apply to.
+   Free delivery counts the whole bag. update(total, eligible); eligible(cart) works it out. */
 
 (function() {
   if (window.plaayTierBarDefined) return;
@@ -62,10 +65,23 @@
     return reached;
   }
 
-  function renderLadder(total, stops) {
+  // Free delivery (the first stop) counts the whole bag; the % rewards count one-time items.
+  function stopValue(i, stops, total, elig) {
+    return (i === 0 && /delivery/i.test(stops[0].label)) ? total : elig;
+  }
+  function reachedFor(total, elig, stops) {
+    var reached = -1;
+    for (var i = 0; i < stops.length; i += 1) {
+      if (stopValue(i, stops, total, elig) >= stops[i].fils) reached = i;
+    }
+    return reached;
+  }
+
+  function renderLadder(all, elig, stops) {
     if (!stops.length) return '';
     var last = stops[stops.length - 1].fils;
-    var reached = reachedIndex(total, stops);
+    var reached = reachedFor(all, elig, stops);
+    var total = reached + 1 < stops.length ? stopValue(reached + 1, stops, all, elig) : elig;
     var msg, msgDone = false;
 
     if (reached === stops.length - 1) {
@@ -84,13 +100,14 @@
     // Multiply before dividing. `total / last * 100` routes through a binary fraction:
     // 14500/25000*100 is 57.99999999999999, which floors to 57 while Liquid's integer
     // maths gives 58, so the bar twitched back a percent on the first client update.
-    var pct = Math.min(100, Math.floor(total * 100 / last));
+    var pct = Math.min(100, Math.floor(elig * 100 / last));
+    if (reached >= 0) pct = Math.max(pct, Math.floor(stops[reached].fils * 100 / last));
 
     // Rail: one dot per stop at its share of the top threshold, labels underneath.
     // Same markup as snippets/cart-tier-bar.liquid (integer maths to match Liquid).
     var dots = '', labels = '';
     for (var i = 0; i < stops.length; i += 1) {
-      var done = total >= stops[i].fils;
+      var done = i <= reached;
       var at = Math.floor(stops[i].fils * 100 / last);
       var short = stops[i].label.replace(' off + Mystery Gift', ' + gift').replace(' Off + Mystery Gift', ' + gift').replace('Mystery Gift', 'Gift');
       dots += '<span class="plaay-tier-bar__dot' + (done ? ' is-done' : (i === reached + 1 ? ' is-next' : '')) + '" style="left:' + at + '%">' + (done ? CHECK : '') + '</span>';
@@ -126,8 +143,16 @@
   }
 
   window.plaayTierBar = {
-    update: function(totalFils) {
+    eligible: function(cart) {
+      var n = 0;
+      ((cart && cart.items) || []).forEach(function(it) {
+        if (!it.selling_plan_allocation) n += Number(it.original_line_price) || 0;
+      });
+      return n;
+    },
+    update: function(totalFils, eligFils) {
       var total = Number(totalFils) || 0;
+      var elig = eligFils == null ? total : (Number(eligFils) || 0);
       var all = bars();
       for (var i = 0; i < all.length; i += 1) {
         var bar = all[i];
@@ -136,13 +161,13 @@
         var stops = readStops(bar);
         if (!stops.length) continue;
 
-        var tierIndex = reachedIndex(total, stops);
+        var tierIndex = reachedFor(total, elig, stops);
         var prevAttr = bar.getAttribute('data-tier-index');
         var prevIndex = prevAttr === null ? -1 : Number(prevAttr);
         var tierChanged = prevAttr !== null && tierIndex > prevIndex;
         bar.setAttribute('data-tier-index', tierIndex);
 
-        inner.innerHTML = renderLadder(total, stops);
+        inner.innerHTML = renderLadder(total, elig, stops);
         scrollPillsToActive(bar, tierChanged);
       }
     }

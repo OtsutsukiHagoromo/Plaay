@@ -125,7 +125,7 @@
                 if (window.plaayTierBar) {
                   // Pre-discount total: the reward tiers are earned on what was added to
                   // cart, so a percentage tier discount must not drop the shopper a tier.
-                  window.plaayTierBar.update(cart.original_total_price || cart.total_price);
+                  window.plaayTierBar.update(cart.original_total_price || cart.total_price, window.plaayTierBar.eligible(cart));
                 }
               })
               .catch(function() {});
@@ -161,7 +161,7 @@
         })
         .then(function(cart) {
           if (window.plaayTierBar) {
-            window.plaayTierBar.update(cart.original_total_price || cart.total_price);
+            window.plaayTierBar.update(cart.original_total_price || cart.total_price, window.plaayTierBar.eligible(cart));
           }
           return refreshVisibleCart().then(function() { return cart; });
         });

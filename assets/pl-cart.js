@@ -911,16 +911,12 @@
     var panel = q('[data-pl-sum]', foot);
     if (!panel) return;
     if (!panel.hidden) { closeSum(foot); return; }
-    var src = q('cart-drawer .pl-drawer__scroll .pl-summary');
+    /* The summary is already in the bag: bring it into view and flash it, rather than
+       opening a second copy of the same rows above the footer. */
+    var src = q('cart-drawer .pl-drawer__scroll .pl-summary-card');
     if (!src) return;
-    var copy = src.cloneNode(true);
-    qa('button, [data-plaay-discount-remove]', copy).forEach(function (b) { b.remove(); });
-    panel.innerHTML = '';
-    panel.appendChild(copy);
-    panel.hidden = false;
-    void panel.offsetWidth;
-    panel.classList.add('is-open');
-    btn.setAttribute('aria-expanded', 'true');
+    src.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'end' });
+    src.classList.remove('is-flash'); void src.offsetWidth; src.classList.add('is-flash');
   });
 
   /* ---------- boot ---------- */

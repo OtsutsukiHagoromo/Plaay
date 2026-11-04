@@ -1316,6 +1316,8 @@
     });
     if (!stops.length) return;
     var cart = Number(box.getAttribute('data-cart')) || 0;
+    /* One-time items only: the % rewards skip subscribed items (free delivery counts everything). */
+    var elig = box.hasAttribute('data-elig') ? Number(box.getAttribute('data-elig')) || 0 : cart;
     var ship = box.querySelector('[data-plo-offer-ship] span');
     var pill = box.querySelector('[data-plo-offer-next]');
     var fill = box.querySelector('[data-plo-offer-fill]');
@@ -1330,10 +1332,17 @@
       return each * (qty ? Math.max(1, Number(qty.value) || 1) : 1);
     }
     var last = -2;
+    function subscribing() {
+      var plan = pdp.querySelector('[data-plo-plan]');
+      return !!(plan && !plan.disabled);
+    }
     function paint() {
-      var total = cart + line();
+      var add = line();
+      var all = cart + add;
+      var total = elig + (subscribing() ? 0 : add);
+      var valueAt = function (i) { return (i === 0 && hasShip) ? all : total; };
       var got = -1;
-      stops.forEach(function (st, i) { if (total >= st.at) got = i; });
+      stops.forEach(function (st, i) { if (valueAt(i) >= st.at && got === i - 1) got = i; });
       Array.prototype.forEach.call(steps, function (li, i) { li.classList.toggle('is-on', i <= got); });
       if (fill) fill.style.width = Math.min(100, total / max * 100) + '%';
       var free = hasShip ? got >= 0 : false;
@@ -1342,7 +1351,7 @@
       var next = stops[got + 1];
       if (pill) {
         pill.hidden = false;
-        pill.textContent = next ? aed(next.at - total) + ' → ' + short(next.label) : stops[got].label + ' unlocked 🎉';
+        pill.textContent = next ? aed(next.at - valueAt(got + 1)) + ' → ' + short(next.label) : stops[got].label + ' unlocked 🎉';
       }
       box.classList.toggle('is-top', !next);
       /* A little pop when this change crossed a new stop. */
@@ -1353,7 +1362,11 @@
       if (!window.fetch) return;
       fetch(((window.routes || {}).cart_url || '/cart') + '.js', { headers: { Accept: 'application/json' } })
         .then(function (r) { return r.json(); })
-        .then(function (c) { cart = Number(c.original_total_price) || 0; paint(); })
+        .then(function (c) {
+          cart = Number(c.original_total_price) || 0;
+          elig = (c.items || []).reduce(function (n, it) { return n + (it.selling_plan_allocation ? 0 : Number(it.original_line_price) || 0); }, 0);
+          paint();
+        })
         .catch(function () {});
     }
     pdp.addEventListener('change', function () { setTimeout(paint, 0); });

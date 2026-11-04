@@ -83,8 +83,8 @@
     return /\/cart\/(add|change|update|clear)(\.js)?(\?|$)/.test(String(url || ''));
   }
 
-  function refreshCartUi(totalPrice) {
-    if (window.plaayTierBar && typeof totalPrice === 'number') { window.plaayTierBar.update(totalPrice); }
+  function refreshCartUi(cart) {
+    if (window.plaayTierBar && cart) { window.plaayTierBar.update(cart.original_total_price || cart.total_price, window.plaayTierBar.eligible(cart)); }
     if (window.plaayRefreshCartDrawer) { window.plaayRefreshCartDrawer().catch(function() {}); }
     if (window.plaayRefreshCartPage)   { window.plaayRefreshCartPage().catch(function() {}); }
   }
@@ -156,25 +156,25 @@
 
         if (qualifies && giftQty === 0) {
           return addGift().then(fetchCart).then(function(next) {
-            refreshCartUi(next.original_total_price || next.total_price);
+            refreshCartUi(next);
             syncRewardFeedback(true);
           });
         }
         if (qualifies && giftQty > 1) {
           return normalizeGiftQuantity(giftLines).then(fetchCart).then(function(next) {
-            refreshCartUi(next.original_total_price || next.total_price);
+            refreshCartUi(next);
             syncRewardFeedback(true);
           });
         }
         if (!qualifies && giftQty > 0) {
           return removeGift(giftLines).then(fetchCart).then(function(next) {
-            refreshCartUi(next.original_total_price || next.total_price);
+            refreshCartUi(next);
             syncRewardFeedback(false);
           });
         }
 
         syncRewardFeedback(qualifies);
-        refreshCartUi(cart.original_total_price || cart.total_price);
+        refreshCartUi(cart);
         return null;
       })
       .catch(function(err) { console.error('Plaay mystery gift sync failed:', err); })

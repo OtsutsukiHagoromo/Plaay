@@ -76,17 +76,39 @@
   assign stop_count = stop_amounts | size
   assign last_index = stop_count | minus: 1
   assign last_fils = stop_amounts[last_index] | times: 100
-  assign total = cart.original_total_price
+  # Free delivery counts the whole bag; the % rewards count one-time items only (the Shopify
+  # tier discounts skip subscribed items and their minimums count only the items they cover).
+  assign all_total = cart.original_total_price
+  assign elig = 0
+  for it in cart.items
+    unless it.selling_plan_allocation
+      assign elig = elig | plus: it.original_line_price
+    endunless
+  endfor
 
   assign reached = -1
   for amt in stop_amounts
     assign amt_fils = amt | times: 100
-    if total >= amt_fils
+    assign v = elig
+    if forloop.first and stop_labels[0] == 'Free delivery'
+      assign v = all_total
+    endif
+    if v >= amt_fils
       assign reached = forloop.index0
     endif
   endfor
+  assign total = elig
+  if reached < 0 and stop_labels[0] == 'Free delivery'
+    assign total = all_total
+  endif
 
-  assign bar_pct = total | times: 100 | divided_by: last_fils
+  assign bar_pct = elig | times: 100 | divided_by: last_fils
+  if reached >= 0
+    assign r_pct = stop_amounts[reached] | times: 100 | times: 100 | divided_by: last_fils
+    if r_pct > bar_pct
+      assign bar_pct = r_pct
+    endif
+  endif
   if bar_pct > 100
     assign bar_pct = 100
   endif
@@ -127,8 +149,8 @@
       {%- for amt in stop_amounts -%}
         {%- assign amt_fils = amt | times: 100 -%}
         {%- assign at = amt_fils | times: 100 | divided_by: last_fils -%}
-        <span class="plaay-tier-bar__dot{% if total >= amt_fils %} is-done{% elsif forloop.index0 == next_i %} is-next{% endif %}" style="left:{{ at }}%">
-          {%- if total >= amt_fils -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
+        <span class="plaay-tier-bar__dot{% if forloop.index0 <= reached %} is-done{% elsif forloop.index0 == next_i %} is-next{% endif %}" style="left:{{ at }}%">
+          {%- if forloop.index0 <= reached -%}<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- endif -%}
         </span>
       {%- endfor -%}
     </div>
@@ -137,7 +159,7 @@
         {%- assign amt_fils = amt | times: 100 -%}
         {%- assign at = amt_fils | times: 100 | divided_by: last_fils -%}
         {%- assign short = stop_labels[forloop.index0] | replace: ' off + Mystery Gift', ' + gift' | replace: ' Off + Mystery Gift', ' + gift' | replace: 'Mystery Gift', 'Gift' -%}
-        <span class="plaay-tier-bar__stop{% if total >= amt_fils %} is-done{% endif %}{% if forloop.last %} is-last{% endif %}" style="left:{{ at }}%"><b>AED {{ amt }}</b>{{ short }}</span>
+        <span class="plaay-tier-bar__stop{% if forloop.index0 <= reached %} is-done{% endif %}{% if forloop.last %} is-last{% endif %}" style="left:{{ at }}%"><b>AED {{ amt }}</b>{{ short }}</span>
       {%- endfor -%}
     </div>
   </div>

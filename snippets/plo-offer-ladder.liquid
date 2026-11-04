@@ -38,9 +38,16 @@
     endif
   endfor
   assign stop_list = stops | split: ','
+  # % rewards count one-time items only (the tier discounts skip subscribed items); free delivery counts the whole bag.
+  assign elig = 0
+  for it in cart.items
+    unless it.selling_plan_allocation
+      assign elig = elig | plus: it.original_line_price
+    endunless
+  endfor
 -%}
 {%- if stop_list.size > 0 -%}
-  <div class="plo-offer" data-plo-offer data-stops="{{ stops | escape }}" data-cart="{{ cart.original_total_price }}" data-price="{{ price }}">
+  <div class="plo-offer" data-plo-offer data-stops="{{ stops | escape }}" data-cart="{{ cart.original_total_price }}" data-elig="{{ elig }}" data-price="{{ price }}">
     <p class="plo-offer__top">
       <span class="plo-offer__ship" data-plo-offer-ship>
         {%- render 'pl-icon', name: 'truck', size: 16, stroke: 2 -%}

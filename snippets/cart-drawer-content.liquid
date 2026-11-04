@@ -25,21 +25,31 @@
   assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift' | replace: '+ Mystery Gift', '+ a Mystery Gift'
   assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift' | replace: '+ Mystery Gift', '+ a Mystery Gift'
 
+  # Free delivery counts the whole bag. The % rewards count one-time items only: the Shopify
+  # tier discounts don't apply to subscribed items, and their minimum spend counts only the
+  # items they apply to (so a subscribed line can't "unlock" 10% that checkout won't give).
   assign total = cart.original_total_price
+  assign elig = 0
+  assign has_sub = false
+  for it in cart.items
+    if it.selling_plan_allocation
+      assign has_sub = true
+    else
+      assign elig = elig | plus: it.original_line_price
+    endif
+  endfor
   assign reached = -1
   if total >= ship_fils
     assign reached = 0
   endif
-  if total >= t1_fils
+  if reached == 0 and t1_fils > 0 and elig >= t1_fils
     assign reached = 1
   endif
-  if total >= t2_fils
+  if reached == 1 and t2_fils > 0 and elig >= t2_fils
     assign reached = 2
   endif
-  if t3_fils > 0
-    if total >= t3_fils
-      assign reached = 3
-    endif
+  if reached == 2 and t3_fils > 0 and elig >= t3_fils
+    assign reached = 3
   endif
 
   assign next_fils = 0
@@ -77,7 +87,11 @@
     assign next_label = ''
     assign done_label = 'Free delivery'
   endif
-  assign remaining_fils = next_fils | minus: total
+  if reached == -1
+    assign remaining_fils = next_fils | minus: total
+  else
+    assign remaining_fils = next_fils | minus: elig
+  endif
   if remaining_fils < 0
     assign remaining_fils = 0
   endif
@@ -96,6 +110,9 @@
       <p class="pl-ladder__msg pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}{% if sale_on contains '1' %}Free delivery unlocked{% else %}All rewards unlocked{% endif %}</p>
     {%- endif -%}
     {%- render 'cart-tier-bar' -%}
+    {%- unless sale_on contains '1' -%}{%- if has_sub and t1_fils > 0 -%}
+      <p class="pl-ladder__note">Subscribed items already get their subscription discount, so they don't count toward the % rewards.</p>
+    {%- endif -%}{%- endunless -%}
     {%- if next_label != '' and cart.item_count > 0 -%}
       {%- liquid
         comment
