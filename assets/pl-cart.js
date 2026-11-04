@@ -915,7 +915,15 @@
        opening a second copy of the same rows above the footer. */
     var src = q('cart-drawer .pl-drawer__scroll .pl-summary-card');
     if (!src) return;
-    src.scrollIntoView({ behavior: calm ? 'auto' : 'smooth', block: 'end' });
+    /* Scroll only the bag's own list (scrollIntoView can also shift the drawer itself on iOS,
+       which pushed the footer out of view and left the total area blank). */
+    var scroller = src.closest('.pl-drawer__scroll');
+    if (scroller) {
+      var top = src.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
+      var target = Math.max(0, top + src.offsetHeight - scroller.clientHeight + 12);
+      if (scroller.scrollTo) scroller.scrollTo({ top: target, behavior: calm ? 'auto' : 'smooth' });
+      else scroller.scrollTop = target;
+    }
     src.classList.remove('is-flash'); void src.offsetWidth; src.classList.add('is-flash');
   });
 
