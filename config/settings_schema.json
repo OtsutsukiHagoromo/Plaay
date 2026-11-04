@@ -93,6 +93,13 @@
       },
       {
         "type": "number",
+        "id": "cart_ship_fee",
+        "label": "Delivery fee below the threshold (AED)",
+        "info": "Match the UAE rate in Settings > Shipping. The bag shows it, and struck through once delivery is free.",
+        "default": 15
+      },
+      {
+        "type": "number",
         "id": "cart_tier_1_spend",
         "label": "Tier 1 spend threshold (AED)",
         "default": 299

@@ -450,3 +450,5 @@ html.pl-app cart-drawer .pl-drawer .pl-drawer__head { padding-top: calc(var(--pl
 .pl-ladder__note { margin: 8px 0 0; font-size: 12px; line-height: 1.35; color: var(--pl-mute); }
 @keyframes pl-sum-flash { 0% { box-shadow: 0 0 0 0 rgba(255, 182, 0, .9); } 100% { box-shadow: 0 0 0 10px rgba(255, 182, 0, 0); } }
 .pl-summary-card.is-flash { animation: pl-sum-flash .9s ease-out 1; }
+.pl .pl-summary__was { margin-right: 4px; font-weight: 500; color: var(--pl-mute); text-decoration: line-through; }
+.pl .pl-summary__v .pl-green { color: var(--pl-green); }

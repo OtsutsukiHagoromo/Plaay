@@ -125,7 +125,16 @@
 
   <div class="pl-summary__row">
     <span class="pl-summary__k">Delivery</span>
-    <span class="pl-summary__v">{% if delivery_free %}Free{% else %}Calculated at checkout{% endif %}</span>
+    {%- assign ship_fee = settings.cart_ship_fee | default: 15 | times: 100 -%}
+    <span class="pl-summary__v">
+      {%- if delivery_free -%}
+        {%- if ship_fee > 0 -%}<s class="pl-summary__was">{% render 'plaay-aed', fils: ship_fee %}</s> {% endif -%}<span class="pl-green">Free</span>
+      {%- elsif ship_fee > 0 -%}
+        {% render 'plaay-aed', fils: ship_fee %}
+      {%- else -%}
+        Calculated at checkout
+      {%- endif -%}
+    </span>
   </div>
 
   <div class="pl-summary__row pl-summary__row--total" data-subtotal data-cart-total="{{ cart.total_price }}">
