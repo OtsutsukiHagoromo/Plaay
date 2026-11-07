@@ -16,7 +16,8 @@
         "slab_label": "Slabs",
         "slab_size": "80g",
         "slab_collection": "new-chocolate-slabs",
-        "offer_subscribe": false
+        "offer_subscribe": false,
+        "sold_out": "triple chocolate"
       }
     },
     "recommendations": {

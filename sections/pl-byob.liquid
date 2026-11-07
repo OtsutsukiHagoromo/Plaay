@@ -130,7 +130,21 @@
             {%- if p.available == false -%}{%- continue -%}{%- endif -%}
             {%- if seen contains key -%}{%- continue -%}{%- endif -%}
             {%- assign seen = seen | append: key -%}
-            <div class="pl-byob__item" data-pl-item
+            {%- liquid
+              comment
+                "Out of stock in the mix" (section setting): flavour names, one per line or comma
+                separated, matched against the tile name. The tile stays visible, greyed, with no +.
+              endcomment
+              assign is_out = false
+              assign outs = s.sold_out | downcase | newline_to_br | replace: '<br />', ',' | split: ','
+              for o in outs
+                assign o = o | strip
+                if o != blank and nm == o
+                  assign is_out = true
+                endif
+              endfor
+            -%}
+            <div class="pl-byob__item{% if is_out %} is-out{% endif %}" data-pl-item
               data-cat="{{ type }}"
               data-name="{{ nm | escape }}"
               data-variant="{{ tv.id }}"
@@ -209,13 +223,14 @@
                 <span class="pl-byob__qty" data-pl-badge hidden>0</span>
               </div>
               <span class="pl-byob__name">{{ nm }}</span>
+              {%- if is_out -%}<span class="pl-byob__out">Out of stock</span>{%- endif -%}
               <span class="pl-byob__each">{% if type == 'truffle' %}Truffle {{ s.truffle_size }}{% else %}Slab {{ s.slab_size }}{% endif %} · {% render 'plaay-aed', fils: tv.price %}</span>
               <div class="pl-byob__step2">
                 <button type="button" class="pl-byob__pm" data-pl-dec aria-label="Remove one {{ nm | escape }}" disabled>
                   {%- render 'pl-icon', name: 'minus', size: 15, stroke: 2.6 -%}
                 </button>
                 <span class="pl-byob__n" data-pl-n>0</span>
-                <button type="button" class="pl-byob__pm" data-pl-inc aria-label="Add one {{ nm | escape }}">
+                <button type="button" class="pl-byob__pm" data-pl-inc aria-label="{% if is_out %}{{ nm | escape }} is out of stock{% else %}Add one {{ nm | escape }}{% endif %}"{% if is_out %} disabled{% endif %}>
                   {%- render 'pl-icon', name: 'plus', size: 15, stroke: 2.6 -%}
                 </button>
               </div>
@@ -311,6 +326,7 @@
     { "type": "text", "id": "slab_size", "label": "Slab size", "default": "80g" },
     { "type": "collection", "id": "slab_collection", "label": "Slab flavours collection" },
     { "type": "header", "content": "Footnote" },
+    { "type": "textarea", "id": "sold_out", "label": "Out of stock in the mix", "info": "Flavour names as shown on the tiles, one per line (e.g. triple chocolate). Their tiles show Out of stock and can't be added." },
     { "type": "textarea", "id": "note", "label": "Note under the picker", "default": "Mixes of 6 or more ship free." }
   ]
 }
