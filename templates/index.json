@@ -117,11 +117,38 @@
             "sticker_big": "",
             "sticker_small": ""
           }
+        },
+        "banner_tf_mix": {
+          "type": "slide",
+          "settings": {
+            "style": "image",
+            "bg": "#f3dcc9",
+            "image_asset": "plo-hero-tf-mix.jpg",
+            "image_alt": "Taste freedom: build your own mix of Plaay truffles and slabs",
+            "image_mobile_asset": "plo-hero-tf-mix-m.jpg",
+            "image_mobile_ratio": "768 / 1296",
+            "image_2_asset": "",
+            "eyebrow": "",
+            "heading": "",
+            "heading_mark": "",
+            "body": "",
+            "btn_label": "",
+            "btn_url": "shopify://products/build-your-own-mix",
+            "btn_arrow": true,
+            "btn_navy": false,
+            "link_label": "",
+            "link_url": "",
+            "show_rating": true,
+            "chips": "",
+            "sticker_big": "",
+            "sticker_small": ""
+          }
         }
       },
       "block_order": [
         "banner_halloween",
         "banner_freedom",
+        "banner_tf_mix",
         "banner_tiers",
         "banner_subscribe"
       ],
