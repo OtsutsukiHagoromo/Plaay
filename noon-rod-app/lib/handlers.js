@@ -409,7 +409,7 @@ export async function expressAction(d, action, form) {
     if (!handle) return { ok: false, reason: 'Enter a product handle or link.' };
     const r = await enableTest(d.shopify, handle, d.cfg.express);
     const p = r.products[0];
-    return { ok: true, message: `${r.already ? 'The test is already on' : 'Test on'}: ${p?.title || ''}. Only this hidden copy offers Plaay Express (2-hour) at checkout, Dubai addresses only.` };
+    return { ok: true, message: `${r.already ? `The test is already on${r.added?.length ? ` (added ${r.added.join(', ')})` : r.changed ? ' (rates updated)' : ''}` : 'Test on'}: ${p?.title || ''}. This hidden copy offers normal delivery and Plaay Express (2-hour) at checkout, Dubai addresses only.` };
   }
   if (action === 'express-test-off') {
     const r = await disableTest(d.shopify);

@@ -183,7 +183,7 @@ const MIN_AED = 99;
 const provincesOf = (z) => (z.countries.find((c) => c.startsWith('AE')) || '').replace(/^AE\s*\(?|\)$/g, '').split(',').map((s) => s.trim()).filter(Boolean);
 
 // Copy a rate (price + conditions) into a create input.
-function copyRate(r, currencyCode = 'AED') {
+export function copyRate(r, currencyCode = 'AED') {
   const [amount] = r.price.split(' ');
   return {
     name: r.name,

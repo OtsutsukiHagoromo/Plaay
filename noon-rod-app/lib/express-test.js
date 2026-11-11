@@ -4,13 +4,16 @@
 // search or the sitemap). The copy sits in its own delivery profile whose only rate is Plaay
 // Express (2-hour, Dubai), so nothing changes for any other product or customer. Order the copy
 // on the website with a Dubai address to place a real test order; the app tags it noon-express
-// and staff press Dispatch as usual. Turning the test off deletes the profile and the copy.
+// and staff press Dispatch as usual. The store's normal delivery rate is copied in too, so
+// checkout shows both choices as it will at launch. Turning the test off deletes the profile and the copy.
+
+import { copyRate, uaeZones } from './express-admin.js';
 
 export const TEST_PROFILE = 'Plaay Express test (hidden)';
 export const TEST_TAG = 'express-test';
 export const TEST_RATE = {
   name: 'Plaay Express (Dubai, 2-hour delivery)',
-  description: 'Order by 5 pm, Mon–Sat. Delivered within 2 hours by noon.',
+  description: 'Order by 5 pm, Mon–Sat. Delivered within 2 hours.',
 };
 
 const errs = (e) => {
@@ -41,9 +44,40 @@ const rate = (amount, conditions) => ({
   priceConditionsToCreate: conditions,
 });
 
+// The store's normal rates for Dubai (from the main profile), as create inputs.
+async function standardRates(shopify) {
+  const zones = (await uaeZones(shopify)).filter((z) => z.profile !== TEST_PROFILE);
+  const dubai = zones.find((z) => z.countries.some((c) => c === 'AE' || (c.startsWith('AE (') && /\bDU\b/.test(c))));
+  if (!dubai) return [];
+  return dubai.rates.filter((r) => r.price !== 'carrier' && r.active).map((r) => copyRate(r));
+}
+
+const expressRates = ({ fee, freeOver }) => [
+  rate(0, [{ operator: 'GREATER_THAN_OR_EQUAL_TO', criteria: { amount: freeOver, currencyCode: 'AED' } }]),
+  rate(fee, [{ operator: 'LESS_THAN_OR_EQUAL_TO', criteria: { amount: freeOver - 0.01, currencyCode: 'AED' } }]),
+];
+
+// Bring an existing test profile up to date: current Express wording, normal rates present.
+async function syncTest(shopify, profileId) {
+  const data = await shopify.graphql(`query($id: ID!) { deliveryProfile(id: $id) { profileLocationGroups { locationGroup { id }
+    locationGroupZones(first: 5) { nodes { zone { id } methodDefinitions(first: 20) { nodes { id name description } } } } } } }`, { id: profileId });
+  const g = data.deliveryProfile.profileLocationGroups[0];
+  const z = g.locationGroupZones.nodes[0];
+  const have = z.methodDefinitions.nodes;
+  const toUpdate = have.filter((m) => m.name === TEST_RATE.name && m.description !== TEST_RATE.description).map((m) => ({ id: m.id, description: TEST_RATE.description }));
+  const toCreate = (await standardRates(shopify)).filter((r) => !have.some((m) => m.name === r.name));
+  if (!toUpdate.length && !toCreate.length) return { changed: false };
+  const r = await shopify.graphql(
+    'mutation($id: ID!, $p: DeliveryProfileInput!) { deliveryProfileUpdate(id: $id, profile: $p) { profile { id } userErrors { field message } } }',
+    { id: profileId, p: { locationGroupsToUpdate: [{ id: g.locationGroup.id, zonesToUpdate: [{ id: z.zone.id, methodDefinitionsToUpdate: toUpdate, methodDefinitionsToCreate: toCreate }] }] } },
+  );
+  errs(r.deliveryProfileUpdate.userErrors);
+  return { changed: true, added: toCreate.map((x) => x.name) };
+}
+
 export async function enableTest(shopify, handle, { fee = 15, freeOver = 99 } = {}) {
   const t = await findTest(shopify);
-  if (t.profile && t.products.length) return { already: true, products: t.products };
+  if (t.profile && t.products.length) return { already: true, products: t.products, ...(await syncTest(shopify, t.profile.id)) };
 
   // 1. The hidden copy.
   let copy = t.products[0];
@@ -90,10 +124,7 @@ export async function enableTest(shopify, handle, { fee = 15, freeOver = 99 } = 
           zonesToCreate: [{
             name: 'Dubai (Express test)',
             countries: [{ code: 'AE', includeAllProvinces: false, provinces: [{ code: 'DU' }] }],
-            methodDefinitionsToCreate: [
-              rate(0, [{ operator: 'GREATER_THAN_OR_EQUAL_TO', criteria: { amount: freeOver, currencyCode: 'AED' } }]),
-              rate(fee, [{ operator: 'LESS_THAN_OR_EQUAL_TO', criteria: { amount: freeOver - 0.01, currencyCode: 'AED' } }]),
-            ],
+            methodDefinitionsToCreate: [...(await standardRates(shopify)), ...expressRates({ fee, freeOver })],
           }],
         }],
       } },
