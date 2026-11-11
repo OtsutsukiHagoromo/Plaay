@@ -108,6 +108,15 @@
     {%- endif -%}
     {{ 'plaay-ui.css' | asset_url | stylesheet_tag }}
     {{ 'pl-shell.css' | asset_url | stylesheet_tag }}
+    {%- liquid
+      # Plaay Express: everywhere once express_enabled is on; until then only on product pages
+      # tagged express-test (the hidden live test product).
+      assign plx_on = settings.express_enabled
+      if template.name == 'product' and product.tags contains 'express-test'
+        assign plx_on = true
+      endif
+    -%}
+    {%- if plx_on -%}{{ 'plx-express.css' | asset_url | stylesheet_tag }}{%- endif -%}
     {%- if plo_b -%}
       {%- assign plo_skin = 'b' -%}
       {{ 'pl-opt.css' | asset_url | stylesheet_tag }}
@@ -337,6 +346,31 @@
 </script>
 
       {% render 'pl-tabbar' %}
+      {%- if plx_on -%}
+        {%- comment -%}
+          Plaay Express (assets/plx-express.js): where the delivery check lives, and a signed-in
+          customer's saved UAE addresses so their delivery promise needs no question.
+        {%- endcomment -%}
+        <script>
+          window.PlaayExpress = {
+            api: {{ settings.express_api | default: 'https://plaay-noon-delivery.vercel.app/api/express' | json }},
+            freeOver: {{ settings.cart_tier_ship | default: 99 | json }},
+            signedIn: {% if customer %}true{% else %}false{% endif %},
+            loginUrl: {{ routes.account_login_url | append: '?return_url=' | append: request.path | json }},
+            addresses: [
+              {%- if customer -%}
+                {%- for a in customer.addresses -%}
+                  {%- if a.country_code != 'AE' -%}{%- continue -%}{%- endif -%}
+                  {%- capture a_label -%}{{ a.address1 }}{% if a.address2 != blank %}, {{ a.address2 }}{% endif %}, {{ a.city }}{%- endcapture -%}
+                  {%- capture a_query -%}{{ a.address1 }}, {{ a.address2 }}, {{ a.city }}, {{ a.province }}{%- endcapture -%}
+                  {"label": {{ a_label | strip | json }}, "query": {{ a_query | json }}, "isDefault": {% if a.id == customer.default_address.id %}true{% else %}false{% endif %}}{% unless forloop.last %},{% endunless %}
+                {%- endfor -%}
+              {%- endif -%}
+            ]
+          };
+        </script>
+        <script defer src="{{ 'plx-express.js' | asset_url }}"></script>
+      {%- endif -%}
       {%- if plo_skin != blank -%}
         <script defer src="{{ 'pl-opt.js' | asset_url }}"></script>
         {%- comment -%}

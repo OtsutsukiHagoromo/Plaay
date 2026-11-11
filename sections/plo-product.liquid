@@ -477,6 +477,15 @@
           <p class="plo-buy__price" data-plo-one>{%- render 'plaay-aed', fils: v.price -%}</p>
         {%- endif -%}
 
+        {%- liquid
+          # Plaay Express: everywhere once express_enabled is on; until then only on products
+          # tagged express-test (the hidden live test product).
+          assign plx_on = settings.express_enabled
+          if product.tags contains 'express-test'
+            assign plx_on = true
+          endif
+        -%}
+        {%- if plx_on -%}{%- render 'plx-express-box', mode: 'pdp' -%}{%- endif -%}
         <div class="plo-buy__row">
           <div class="plo-step plo-step--lg">
             <button type="button" data-plo-q="-1" aria-label="One less">{%- render 'pl-icon', name: 'minus', size: 16, stroke: 2.2 -%}</button>
@@ -493,7 +502,7 @@
           <p class="plo-sale">🎃 <b>{{ sale_pct | strip }}% off, this week only.</b> Applied at checkout.</p>
         {%- endif -%}
         {%- comment -%} The rewards strip carries the delivery promise; the plain line is the fallback. {%- endcomment -%}
-        {%- if v.available and settings.cart_tier_ship > 0 -%}{%- render 'plo-offer-ladder', price: cta_price -%}
+        {%- if v.available and settings.cart_tier_ship > 0 -%}{%- render 'plo-offer-ladder', price: cta_price, plx: plx_on -%}
         {%- elsif s.trust != blank -%}<p class="plo-buy__trust">{{ s.trust }}</p>{%- endif -%}
       {%- endform -%}
       {%- liquid
@@ -649,7 +658,7 @@
           assign st_size = v.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' | replace: ' g', 'g'
         endif
       -%}
-      <span class="plo-sticky__t"><b title="{{ product.title | escape }}">{{ t_name }}</b><span class="plo-sticky__p"><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- if has_sub -%} <s data-plo-sticky-was>{%- render 'plaay-aed', fils: v.price -%}</s>{%- endif -%}{%- if st_size != blank -%}<i class="plo-sticky__sz" data-plo-sticky-size>{{ st_size }}</i>{%- endif -%}</span></span>
+      <span class="plo-sticky__t"><b title="{{ product.title | escape }}">{{ t_name }}</b><span class="plo-sticky__p"><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- if has_sub -%} <s data-plo-sticky-was>{%- render 'plaay-aed', fils: v.price -%}</s>{%- endif -%}{%- if st_size != blank -%}<i class="plo-sticky__sz" data-plo-sticky-size>{{ st_size }}</i>{%- endif -%}{%- if settings.express_enabled or product.tags contains 'express-test' -%}<i data-plx="chip" hidden></i>{%- endif -%}</span></span>
       <button type="button" class="plo-btn" data-plo-sticky-add>Add to bag</button>
     </div>
   {%- endif -%}
