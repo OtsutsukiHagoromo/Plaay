@@ -311,7 +311,7 @@ export function promise(place, now = new Date(), s = expressSettings()) {
   if (s.paused && tier !== 'standard') tier = 'standard';
   const base = { tier, area: { id: place.id, name: place.name }, km: place.km ?? null };
   if (tier === 'standard') {
-    return { ...base, title: 'Delivery in 1–2 working days', detail: s.paused && place.tier !== 'standard' ? 'Express is paused right now.' : place.km != null ? `Express covers addresses within ${s.expressMaxKm} km of our warehouse for now.` : 'Express is Dubai-only for now.' };
+    return { ...base, title: 'Delivery in 1–2 working days', detail: s.paused && place.tier !== 'standard' ? 'Express is paused right now.' : place.km != null ? '2-hour Express doesn’t reach this address yet, but we’re expanding soon.' : '2-hour Express is Dubai-only for now.' };
   }
   const sch = schedule(now, s);
   const today = sch.when === 'today';

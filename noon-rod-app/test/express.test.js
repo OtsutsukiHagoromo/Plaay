@@ -158,6 +158,6 @@ test('4-hour off (live for now): beyond the Express limit is normal 1–2 day de
   assert.equal(near.tier, 'express');
   const p = promise({ id: far.id, name: far.name, tier: '4hr', km: 26 }, wedAfternoon, off4);
   assert.equal(p.tier, 'standard');
-  assert.match(p.detail, /within 20 km/);
+  assert.match(p.detail, /doesn’t reach this address yet/);
   assert.equal(await locate({ address: 'Somewhere, Dubai' }, off4, { geocode: async () => null, drivingKm: async () => null }), null);
 });
