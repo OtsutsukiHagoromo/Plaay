@@ -147,3 +147,22 @@ export async function disableTest(shopify) {
   }
   return { removedProfile: !!t.profile, removedProducts: t.products.map((p) => p.title) };
 }
+
+// Once checkout asks the app for rates (carrier-calculated shipping), the test product's fixed
+// Express rate goes: Express then appears only for addresses the app finds in range.
+export async function dropFixedTestRate(shopify) {
+  const t = await findTest(shopify);
+  if (!t.profile) return { removed: 0 };
+  const data = await shopify.graphql(`query($id: ID!) { deliveryProfile(id: $id) { profileLocationGroups { locationGroup { id }
+    locationGroupZones(first: 5) { nodes { zone { id } methodDefinitions(first: 20) { nodes { id name } } } } } } }`, { id: t.profile.id });
+  const g = data.deliveryProfile.profileLocationGroups[0];
+  const zones = g.locationGroupZones.nodes;
+  const ids = zones.flatMap((z) => z.methodDefinitions.nodes.filter((m) => m.name === TEST_RATE.name).map((m) => m.id));
+  if (!ids.length) return { removed: 0 };
+  const r = await shopify.graphql(
+    'mutation($id: ID!, $p: DeliveryProfileInput!) { deliveryProfileUpdate(id: $id, profile: $p) { profile { id } userErrors { field message } } }',
+    { id: t.profile.id, p: { methodDefinitionsToDelete: ids } },
+  );
+  errs(r.deliveryProfileUpdate.userErrors);
+  return { removed: ids.length };
+}

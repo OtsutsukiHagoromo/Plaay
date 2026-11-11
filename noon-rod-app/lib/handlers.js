@@ -9,7 +9,7 @@ import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { buildLive } from './live.js';
 import { areaList, checkoutRates, locate, matchArea, promise } from './express.js';
-import { disableTest, enableTest, testStatus } from './express-test.js';
+import { disableTest, dropFixedTestRate, enableTest, testStatus } from './express-test.js';
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
 import * as geo from './geo.js';
 import { findMentions, productEvidence, removeMentions } from './cleanup.js';
@@ -398,7 +398,12 @@ export async function expressAction(d, action, form) {
   }
   if (action === 'express-carrier-on') {
     const r = await enableCheckoutRates(d.shopify, d.cfg);
-    return { ok: true, message: `Checkout delivery rates connected${r.added.length ? ` and added to ${r.added.join(', ')}` : ''}.` };
+    // Checkout now measures each address: the test product's fixed Express rate is no longer needed,
+    // and Express stays limited to bags from pages with the Express box (preview) until launch.
+    const dropped = await dropFixedTestRate(d.shopify);
+    const s = await liveSettings(d);
+    if (s.checkout === 'off') await setSetting(d.shopify, 'checkout', 'preview');
+    return { ok: true, message: `Checkout delivery rates connected${r.added.length ? ` and added to ${r.added.join(', ')}` : ''}. Express now shows only for addresses within ${d.cfg.express.expressMaxKm} km${dropped.removed ? '; the fixed test rate was removed' : ''}.` };
   }
   if (action === 'express-fixed-on') {
     const r = await enableFixedRates(d.shopify);

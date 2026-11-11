@@ -90,3 +90,12 @@ test('4-hour is off unless FOUR_HOUR_ENABLED', async () => {
   assert.ok(rates.length >= 1);
   assert.ok(rates.every((r) => r.service_code !== '4hr-delivery'));
 });
+
+test('connecting checkout rates removes the fixed Express rate from the test profile', async () => {
+  const { dropFixedTestRate } = await import('../lib/express-test.js');
+  const s = fakeShopify();
+  await enableTest(s, 'peanut-butter-truffles');
+  const r = await dropFixedTestRate(s);
+  assert.equal(r.removed, 1);
+  assert.deepEqual(s.state.updated.methodDefinitionsToDelete, ['e1']);
+});
