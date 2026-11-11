@@ -6,7 +6,8 @@ import { handleCheckoutRates, handleExpressCheck } from '../lib/handlers.js';
 import { hasSubscription, isExpressOrder, websitePin, buildTaskPayload } from '../lib/mapping.js';
 import { cfg, makeOrder } from './helpers.js';
 
-const s = expressSettings({});
+const s = expressSettings({ FOUR_HOUR_ENABLED: 'true' }); // 4-hour paths; see the 4-hour-off test below
+const off4 = expressSettings({});
 const on = expressSettings({ EXPRESS_CHECKOUT: 'on', FOUR_HOUR_ENABLED: 'true' });
 // Dubai is UTC+4: 11:00Z = 3 pm, 14:00Z = 6 pm.
 const wedAfternoon = new Date('2026-11-04T11:00:00Z');
@@ -96,7 +97,8 @@ test('checkout: no Express with Subscribe & Save, when paused, off, or (preview)
   assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, { ...on, paused: true }, geo()), []);
   assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, { ...on, checkout: 'off' }, geo()), []);
   assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai', { props: null }), wedAfternoon, s, geo()), []);
-  assert.equal((await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, s, geo())).length, 1); // Express only: 4-hour is off by default
+  assert.equal((await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, s, geo())).length, 2);
+  assert.equal((await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, off4, geo())).length, 1); // 4-hour off: Express only
 });
 
 test('checkout rate names are picked up by the dispatch app', async () => {
@@ -147,4 +149,15 @@ test('checkout rates endpoint rejects unsigned requests', async () => {
   const ok = await handleCheckoutRates(new Request('https://x/api/rates', { method: 'POST', body: raw, headers: { 'x-shopify-hmac-sha256': sig } }), d);
   assert.equal(ok.status, 200);
   assert.equal((await ok.json()).rates.length, 2);
+});
+
+test('4-hour off (live for now): beyond the Express limit is normal 1–2 day delivery', async () => {
+  const far = areaList(off4).find((a) => a.km != null && a.km > off4.expressMaxKm);
+  const near = areaList(off4).find((a) => a.km != null && a.km <= off4.expressMaxKm);
+  assert.equal(far.tier, 'standard');
+  assert.equal(near.tier, 'express');
+  const p = promise({ id: far.id, name: far.name, tier: '4hr', km: 26 }, wedAfternoon, off4);
+  assert.equal(p.tier, 'standard');
+  assert.match(p.detail, /within 20 km/);
+  assert.equal(await locate({ address: 'Somewhere, Dubai' }, off4, { geocode: async () => null, drivingKm: async () => null }), null);
 });

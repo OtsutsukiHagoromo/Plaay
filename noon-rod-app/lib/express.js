@@ -202,7 +202,8 @@ export function straightKm(a, b) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-const tierFor = (km, s) => (km <= s.expressMaxKm ? 'express' : '4hr');
+// Beyond the Express limit: noon 4-hour when it's on, else normal 1–2 day delivery.
+const tierFor = (km, s) => (km <= s.expressMaxKm ? 'express' : s.fourHour ? '4hr' : 'standard');
 
 // Rough Dubai outline for a pin that isn't near a listed area.
 const inDubai = ({ lat, lng }) => lat > 24.75 && lat < 25.36 && lng > 54.89 && lng < 55.65 && !(lat > 25.29 && lng > 55.36);
@@ -269,7 +270,8 @@ export async function locate({ area, lat, lng, address } = {}, s = expressSettin
     if (hit) return hit;
     const pin = await geo.geocode(address);
     if (pin) return locatePin(pin, s, geo);
-    if (norm(address).includes(' dubai ')) return { id: 'dubai', name: 'Dubai', tier: '4hr', km: null };
+    // Somewhere in Dubai, but not where: 4-hour covers all of Dubai; without it, ask for a pin.
+    if (s.fourHour && norm(address).includes(' dubai ')) return { id: 'dubai', name: 'Dubai', tier: '4hr', km: null };
   }
   return null;
 }
@@ -305,10 +307,11 @@ const openLabel = (s) => (s.openHour > 12 ? `${s.openHour - 12} pm` : `${s.openH
 export function promise(place, now = new Date(), s = expressSettings()) {
   if (!place) return { tier: 'unknown' };
   let tier = place.tier;
+  if (tier === '4hr' && !s.fourHour) tier = 'standard';
   if (s.paused && tier !== 'standard') tier = 'standard';
   const base = { tier, area: { id: place.id, name: place.name }, km: place.km ?? null };
   if (tier === 'standard') {
-    return { ...base, title: 'Delivery in 1–2 working days', detail: place.tier === 'standard' ? 'Express is Dubai-only for now.' : 'Express is paused right now.' };
+    return { ...base, title: 'Delivery in 1–2 working days', detail: s.paused && place.tier !== 'standard' ? 'Express is paused right now.' : place.km != null ? `Express covers addresses within ${s.expressMaxKm} km of our warehouse for now.` : 'Express is Dubai-only for now.' };
   }
   const sch = schedule(now, s);
   const today = sch.when === 'today';
