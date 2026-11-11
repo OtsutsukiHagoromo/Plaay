@@ -323,7 +323,7 @@
             '<button type="button" class="plx-row plx-row--loc" data-plx-view="map">🗺️ Pick on the map</button>' +
           '</div>' +
           (cfg.signedIn ? '' : '<p class="plx-sheet__note">Have an account? <a href="' + esc(cfg.loginUrl) + '">Sign in</a> to use your saved addresses.</p>') +
-          '<p class="plx-sheet__note">Express: within 20 km of our Dubai kitchen, Monday to Saturday, order by 5 pm. ' + free + '</p>' +
+          '<p class="plx-sheet__note">2-hour Express covers much of Dubai, Monday to Saturday, order by 5 pm. ' + free + '</p>' +
         '</div>' +
 
         '<div class="plx-view" data-plx-v="map" hidden>' +
