@@ -107,7 +107,8 @@ function actions(order, back, cfg, { size = '', both = false } = {}) {
 }
 
 const modeBadge = (order, cfg) =>
-  (order.noon.mode || defaultDeliveryMode(order, cfg)) === '4hr_delivery' ? ' <span class="b info">4-hour</span>' : '';
+  ((order.noon.mode || defaultDeliveryMode(order, cfg)) === '4hr_delivery' ? ' <span class="b info">4-hour</span>' : '') +
+  ((order.tags || []).includes('express-out-of-range') ? ' <span class="b bad" title="The delivery address is beyond the Express limit by road. Call the customer before booking a rider.">Outside Express range</span>' : '');
 const ACTIVE_NOT_CANCELLABLE = ['picked_up', 'arrived_at_delivery'];
 
 function connectionPanel(c) {

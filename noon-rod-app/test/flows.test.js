@@ -346,6 +346,13 @@ test('orders/create: Express beyond the road limit goes 4-hour; subscriptions ar
   assert.ok(off.shopify.order.tags.includes('express-out-of-range'));
   assert.notEqual(off.shopify.order.noon.mode, '4hr_delivery');
 
+  // No pin from Shopify: the address is looked up, then measured.
+  const typed = setup({ tags: [] });
+  typed.d.cfg = off.d.cfg;
+  typed.d.geo = { geocode: async (q) => (/Deira City Centre/.test(q) ? { lat: 25.2526, lng: 55.3309 } : null), drivingKm: async () => 34 };
+  await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', shipping_lines: ship.shipping_lines, shipping_address: { address1: 'Deira City Centre, Baniyas Road', city: 'Al Garhoud', province: 'Dubai' } }), typed.d);
+  assert.ok(typed.shopify.order.tags.includes('express-out-of-range'));
+
   const near = setup({ tags: [] });
   near.d.geo = { drivingKm: async () => 14 };
   await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', ...ship }), near.d);

@@ -60,8 +60,12 @@ export async function handleShopifyWebhook(request, d) {
       // Checkout can't check distance on fixed rates: an Express order beyond the limit goes
       // as noon 4-hour delivery instead, flagged for the team.
       const a = payload.shipping_address;
-      if (defaultDeliveryMode(order, d.cfg) === 'standard' && a?.latitude != null && a?.longitude != null) {
-        const km = await (d.geo || geo).drivingKm(d.cfg.express.warehouse, { lat: Number(a.latitude), lng: Number(a.longitude) });
+      const g = d.geo || geo;
+      // Shopify's own pin for the address, else look the address up.
+      let pin = a?.latitude != null && a?.longitude != null ? { lat: Number(a.latitude), lng: Number(a.longitude) } : null;
+      if (!pin && a && g.geocode) pin = await g.geocode([a.address1, a.address2, a.city, a.province || 'Dubai'].filter(Boolean).join(', ')).catch(() => null);
+      if (defaultDeliveryMode(order, d.cfg) === 'standard' && pin) {
+        const km = await g.drivingKm(d.cfg.express.warehouse, pin);
         if (km != null && km > d.cfg.express.expressMaxKm) {
           // 4-hour is off for now: flag it for the team instead of switching the service.
           if (d.cfg.express.fourHour) await d.shopify.setNoonState(payload.id, { mode: '4hr_delivery' });
