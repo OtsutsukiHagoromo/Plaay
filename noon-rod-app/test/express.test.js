@@ -7,7 +7,7 @@ import { hasSubscription, isExpressOrder, websitePin, buildTaskPayload } from '.
 import { cfg, makeOrder } from './helpers.js';
 
 const s = expressSettings({});
-const on = expressSettings({ EXPRESS_CHECKOUT: 'on' });
+const on = expressSettings({ EXPRESS_CHECKOUT: 'on', FOUR_HOUR_ENABLED: 'true' });
 // Dubai is UTC+4: 11:00Z = 3 pm, 14:00Z = 6 pm.
 const wedAfternoon = new Date('2026-11-04T11:00:00Z');
 const wedEvening = new Date('2026-11-04T14:00:00Z');
@@ -96,7 +96,7 @@ test('checkout: no Express with Subscribe & Save, when paused, off, or (preview)
   assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, { ...on, paused: true }, geo()), []);
   assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, { ...on, checkout: 'off' }, geo()), []);
   assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai', { props: null }), wedAfternoon, s, geo()), []);
-  assert.equal((await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, s, geo())).length, 2);
+  assert.equal((await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, s, geo())).length, 1); // Express only: 4-hour is off by default
 });
 
 test('checkout rate names are picked up by the dispatch app', async () => {

@@ -186,6 +186,8 @@ export function expressSettings(env = process.env) {
     freeOver: Number(env.FREE_DELIVERY_OVER_AED || 99),
     fee: Number(env.DELIVERY_FEE_AED || 15),
     paused: /^(1|true|yes)$/i.test(env.EXPRESS_PAUSED || ''),
+    // noon 4-hour delivery: off for now, Express (2-hour) only.
+    fourHour: /^(1|true|yes)$/i.test(env.FOUR_HOUR_ENABLED || ''),
     // Checkout rates: off; preview (only bags built on the express-preview theme); on (everyone).
     checkout: ['off', 'preview', 'on'].includes(env.EXPRESS_CHECKOUT) ? env.EXPRESS_CHECKOUT : 'preview',
   };
@@ -358,6 +360,7 @@ export async function checkoutRates(rate, now = new Date(), s = expressSettings(
     const p = promise(place, now, s);
     rates.push({ service_name: `Plaay Express · ${day(p)}`, service_code: 'plaay-express', description: p.detail, total_price: price, currency, phone_required: true });
   }
+  if (!s.fourHour) return rates;
   const four = promise({ ...place, tier: '4hr' }, now, s);
   rates.push({ service_name: `4-hour delivery · ${day(four)}`, service_code: '4hr-delivery', description: four.detail, total_price: price, currency, phone_required: true });
   return rates;

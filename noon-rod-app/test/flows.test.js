@@ -338,6 +338,14 @@ test('orders/create: Express beyond the road limit goes 4-hour; subscriptions ar
   assert.ok(far.shopify.order.tags.includes('express-out-of-range'));
   assert.equal(far.shopify.order.noon.mode, '4hr_delivery');
 
+  // With 4-hour off (the live setting for now) the order is only flagged; it stays Express.
+  const off = setup({ tags: [] });
+  off.d.cfg = { ...cfg, express: { ...cfg.express, fourHour: false } };
+  off.d.geo = { drivingKm: async () => 26 };
+  await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', ...ship }), off.d);
+  assert.ok(off.shopify.order.tags.includes('express-out-of-range'));
+  assert.notEqual(off.shopify.order.noon.mode, '4hr_delivery');
+
   const near = setup({ tags: [] });
   near.d.geo = { drivingKm: async () => 14 };
   await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', ...ship }), near.d);

@@ -760,7 +760,7 @@ export function renderTrackingPage({ token }) {
 }
 
 // Express settings: checkout rates (Shopify carrier service), who sees them, pause, and the areas.
-export function renderExpress({ cfg, flash, status, settings, areas }) {
+export function renderExpress({ cfg, flash, status, settings, areas, test = {} }) {
   const form = (action, fields, label, cls = '', confirmText = '') =>
     `<form method="post" action="/api/dashboard" class="inl"><input type="hidden" name="action" value="${action}"><input type="hidden" name="back" value="/express">${Object.entries(fields).map(([k, v]) => `<input type="hidden" name="${k}" value="${esc(v)}">`).join('')}<button class="${cls}"${confirmText ? ` onclick="return confirm('${esc(confirmText)}')"` : ''}>${label}</button></form>`;
   const plan = status.plan;
@@ -775,6 +775,13 @@ export function renderExpress({ cfg, flash, status, settings, areas }) {
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 <h1>Express settings</h1>
 <p class="muted">Express: within ${settings.expressMaxKm} km driving of the warehouse. 4-hour: the rest of Dubai. Orders by ${settings.cutoffHour - 12} pm, Monday to Saturday. AED ${settings.fee}, free over AED ${settings.freeOver}. No Express for Subscribe &amp; Save.</p>
+
+<div class="card pc"><div><h2>Hidden test on the live store</h2>
+<div class="muted">Makes a hidden copy of one product (link only, not in collections or search) whose only delivery option is “Plaay Express (Dubai, 2-hour delivery)”. Nothing changes for other products. Turning it off deletes the copy and its delivery profile.</div>
+${test.error ? `<div class="panel bad-b">${esc(test.error)}</div>` : ''}
+${test.on ? `<ul>${(test.products || []).map((p) => `<li><strong>${esc(p.title)}</strong>: <a href="https://shopplaay.com/products/${esc(p.handle)}" target="_blank">shopplaay.com/products/${esc(p.handle)}</a> <span class="b">${esc(p.status)}</span></li>`).join('')}</ul>` : ''}
+</div>
+${test.on ? `<div><span class="b ok">On</span> ${form('express-test-off', {}, 'Turn test off', 'ghost', 'Delete the test product and its delivery profile?')}</div>` : `<form method="post" action="/api/dashboard" class="inl"><input type="hidden" name="action" value="express-test-on"><input type="hidden" name="back" value="/express"><input name="handle" placeholder="product handle or link" required> <button class="yellow">Turn test on</button></form>`}</div>
 
 <div class="card pc"><div><h2>Pause Express</h2><div class="muted">For days with no riders or the warehouse closed. The website and checkout show standard delivery only within a minute.</div></div>
 ${settings.paused ? `<div><span class="b bad">Paused</span> ${form('express-pause', { paused: 'false' }, 'Turn Express back on', 'yellow')}</div>` : form('express-pause', { paused: 'true' }, 'Pause Express', 'ghost', 'Pause Express on the website and at checkout?')}</div>

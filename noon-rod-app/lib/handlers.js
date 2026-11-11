@@ -9,6 +9,7 @@ import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { buildLive } from './live.js';
 import { areaList, checkoutRates, locate, matchArea, promise } from './express.js';
+import { disableTest, enableTest, testStatus } from './express-test.js';
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
 import * as geo from './geo.js';
 import { findMentions, productEvidence, removeMentions } from './cleanup.js';
@@ -62,7 +63,8 @@ export async function handleShopifyWebhook(request, d) {
       if (defaultDeliveryMode(order, d.cfg) === 'standard' && a?.latitude != null && a?.longitude != null) {
         const km = await (d.geo || geo).drivingKm(d.cfg.express.warehouse, { lat: Number(a.latitude), lng: Number(a.longitude) });
         if (km != null && km > d.cfg.express.expressMaxKm) {
-          await d.shopify.setNoonState(payload.id, { mode: '4hr_delivery' });
+          // 4-hour is off for now: flag it for the team instead of switching the service.
+          if (d.cfg.express.fourHour) await d.shopify.setNoonState(payload.id, { mode: '4hr_delivery' });
           await d.shopify.addTags(payload.id, [TAGS.outOfRange]);
         }
       }
@@ -402,6 +404,17 @@ export async function expressAction(d, action, form) {
     const r = await disableFixedRates(d.shopify);
     return { ok: true, message: r.removed ? 'Express and 4-hour removed from checkout; Dubai is back in the UAE zone.' : 'There was no Dubai zone to remove.' };
   }
+  if (action === 'express-test-on') {
+    const handle = String(form.get('handle') || '').trim().replace(/^.*\/products\//, '').replace(/[?#].*$/, '');
+    if (!handle) return { ok: false, reason: 'Enter a product handle or link.' };
+    const r = await enableTest(d.shopify, handle, d.cfg.express);
+    const p = r.products[0];
+    return { ok: true, message: `${r.already ? 'The test is already on' : 'Test on'}: ${p?.title || ''}. Only this hidden copy offers Plaay Express (2-hour) at checkout, Dubai addresses only.` };
+  }
+  if (action === 'express-test-off') {
+    const r = await disableTest(d.shopify);
+    return { ok: true, message: `Test off: ${r.removedProfile ? 'delivery profile removed' : 'no profile'}; ${r.removedProducts.length ? `deleted ${r.removedProducts.join(', ')}` : 'no test product'}.` };
+  }
   if (action === 'express-carrier-off') {
     const r = await disableCheckoutRates(d.shopify, d.cfg);
     return { ok: true, message: r.removed ? 'Checkout delivery rates removed.' : 'Checkout delivery rates were not connected.' };
@@ -410,6 +423,6 @@ export async function expressAction(d, action, form) {
 }
 
 export async function expressPageData(d) {
-  const [status, s] = await Promise.all([checkoutStatus(d.shopify, d.cfg), liveSettings(d)]);
-  return { status, settings: s, areas: areaList(s) };
+  const [status, s, test] = await Promise.all([checkoutStatus(d.shopify, d.cfg), liveSettings(d), testStatus(d.shopify).catch((err) => ({ error: err.message }))]);
+  return { status, settings: s, areas: areaList(s), test };
 }

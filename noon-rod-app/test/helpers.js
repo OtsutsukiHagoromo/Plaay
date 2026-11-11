@@ -8,6 +8,7 @@ export const cfg = loadConfig({
   APP_URL: 'https://noon.example.com',
   TRACKING_SECRET: 'track-secret',
   DASHBOARD_PASSWORD: 'pw',
+  FOUR_HOUR_ENABLED: 'true', // the 4-hour paths stay covered; express-test.test.js checks it off
 });
 
 export function makeOrder(overrides = {}) {
