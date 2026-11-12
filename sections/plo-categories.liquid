@@ -20,7 +20,7 @@
           assign href = b.url | default: '/collections/shop-all'
         -%}
         {%- if b.wide -%}
-          {%- comment -%} Wide tile across the whole row: copy on the left, a packshot on the right (e.g. Build your own mix). {%- endcomment -%}
+          {%- comment -%} Wide tile across the whole row (optionally a scene photo, "photo fills the right side"): copy on the left, a packshot on the right (e.g. Build your own mix). {%- endcomment -%}
           <a class="plo-cat plo-box plo-cat--wide{% if b.photo_cover %} plo-cat--cover{% endif %}" href="{{ href }}" style="--tint: {{ b.tint }};" {{ block.shopify_attributes }}>
             {%- if b.photo_asset != blank -%}
               <img class="plo-cat__pack" src="{{ b.photo_asset | asset_img_url: '600x' }}" srcset="{{ b.photo_asset | asset_img_url: '400x' }} 400w, {{ b.photo_asset | asset_img_url: '600x' }} 600w, {{ b.photo_asset | asset_img_url: '900x' }} 900w" sizes="(min-width: 1024px) 30vw, 50vw" alt="" loading="lazy" width="1200" height="1200">
