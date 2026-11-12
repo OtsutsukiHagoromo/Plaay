@@ -1370,15 +1370,15 @@ body.pl-skin-b.template-index #main > .shopify-section:nth-child(n+5) { contain-
 /* Wide category tile (sections/plo-categories, block "wide"): whole row, copy left, packshot right. */
 .plo-cat--wide { grid-column: 1 / -1; isolation: isolate; overflow: hidden; }
 .pl-skin-b .plo-cat--wide { height: 168px; flex-direction: row; align-items: center; justify-content: flex-start; padding: 18px 20px; }
-.pl-skin-b .plo-cat--wide .plo-cat__pack { position: absolute; right: -4%; top: 50%; bottom: auto; width: auto; height: 132%; transform: translateY(-50%); mix-blend-mode: multiply; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 84%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 16%, #000 84%, transparent 100%); transition: transform .5s var(--pl-ease-out); }
+.pl-skin-b .plo-cat--wide .plo-cat__pack { position: absolute; right: 2%; top: 50%; bottom: auto; width: 46%; height: auto; max-height: 94%; object-fit: contain; object-position: right center; transform: translateY(-50%); mix-blend-mode: multiply; transition: transform .5s var(--pl-ease-out); }
 @media (hover: hover) { .pl-skin-b .plo-cat--wide:hover .plo-cat__pack { transform: translateY(-50%) scale(1.04); } }
-.plo-cat__copy { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; max-width: 58%; }
+.plo-cat__copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; max-width: 54%; }
 .plo-cat__tag { display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--pl-red); color: #fff; font-style: normal; font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 .plo-cat__sub { font-size: 13px; font-weight: 700; line-height: 1.3; color: var(--pl-navy); }
 .plo-cat__go { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; padding: 8px 14px; border-radius: 999px; background: var(--pl-navy); color: var(--pl-yellow, #FFB600); font-size: 12px; font-weight: 900; text-transform: uppercase; }
 @media (min-width: 1024px) {
   .pl-skin-b .plo-cat--wide { height: 220px; padding: 28px 40px; }
-  .pl-skin-b .plo-cat--wide .plo-cat__pack { right: 6%; height: 140%; }
+  .pl-skin-b .plo-cat--wide .plo-cat__pack { right: 4%; width: auto; height: 92%; max-height: none; }
   .plo-cat__copy { gap: 8px; }
   .plo-cat__sub { font-size: 17px; }
   .plo-cat__go { font-size: 14px; padding: 10px 18px; }
