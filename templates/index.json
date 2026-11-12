@@ -123,9 +123,9 @@
           "settings": {
             "style": "image",
             "bg": "#f3dcc9",
-            "image_asset": "plo-hero-tf-mix.jpg",
+            "image_asset": "plo-hero-tf-plain.jpg",
             "image_alt": "Taste freedom: build your own mix of Plaay truffles and slabs",
-            "image_mobile_asset": "plo-hero-tf-mix-m.jpg",
+            "image_mobile_asset": "plo-hero-tf-plain-m.jpg",
             "image_mobile_ratio": "768 / 1296",
             "image_2_asset": "",
             "eyebrow": "",
