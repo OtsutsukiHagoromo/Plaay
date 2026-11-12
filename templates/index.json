@@ -291,14 +291,13 @@
             "title": "Build your own mix",
             "sub": "Pick any 6+ truffles & slabs. Every flavour your call.",
             "url": "/products/build-your-own-mix",
-            "tint": "#f6c55a",
-            "photo_asset": "pl-mix-scene.jpg",
+            "tint": "#fff0c4",
+            "photo_asset": "pl-mix-cutout.png",
             "photo_pos": "50% 50%",
             "wide": true,
             "tag": "New",
-            "cta": "Start your mix ",
-            "sale_badge": "",
-            "photo_cover": true
+            "cta": "Start your mix",
+            "sale_badge": ""
           }
         }
       },
