@@ -90,7 +90,8 @@
             "sticker_big": "",
             "sticker_small": "",
             "hide_in_sale": true
-          }
+          },
+          "disabled": true
         },
         "banner_subscribe": {
           "type": "slide",
@@ -116,12 +117,94 @@
             "chips": "",
             "sticker_big": "",
             "sticker_small": ""
+          },
+          "disabled": true
+        },
+        "banner_b2": {
+          "type": "slide",
+          "settings": {
+            "style": "image",
+            "bg": "#ffffff",
+            "image_asset": "plo-hero-b2.jpg",
+            "image_alt": "Your everyday chocolate: build your own mix of Plaay truffles and slabs",
+            "image_mobile_asset": "plo-hero-b2-m.jpg",
+            "image_mobile_ratio": "1000 / 1648",
+            "image_2_asset": "",
+            "eyebrow": "",
+            "heading": "",
+            "heading_mark": "",
+            "body": "",
+            "btn_label": "",
+            "btn_url": "shopify://products/build-your-own-mix",
+            "btn_arrow": true,
+            "btn_navy": false,
+            "link_label": "",
+            "link_url": "",
+            "show_rating": true,
+            "chips": "",
+            "sticker_big": "",
+            "sticker_small": ""
+          }
+        },
+        "banner_b3": {
+          "type": "slide",
+          "settings": {
+            "style": "image",
+            "bg": "#ffffff",
+            "image_asset": "plo-hero-b3.jpg",
+            "image_alt": "Taste freedom: Plaay clean chocolate by the pool",
+            "image_mobile_asset": "plo-hero-b3-m.jpg",
+            "image_mobile_ratio": "1000 / 1648",
+            "image_2_asset": "",
+            "eyebrow": "",
+            "heading": "",
+            "heading_mark": "",
+            "body": "",
+            "btn_label": "",
+            "btn_url": "shopify://collections/shop-all",
+            "btn_arrow": true,
+            "btn_navy": false,
+            "link_label": "",
+            "link_url": "",
+            "show_rating": true,
+            "chips": "",
+            "sticker_big": "",
+            "sticker_small": ""
+          }
+        },
+        "banner_b4": {
+          "type": "slide",
+          "settings": {
+            "style": "image",
+            "bg": "#ffffff",
+            "image_asset": "plo-hero-b4.jpg",
+            "image_alt": "Your everyday chocolate: subscribe now and save 15%",
+            "image_mobile_asset": "plo-hero-b4-m.jpg",
+            "image_mobile_ratio": "1000 / 1648",
+            "image_2_asset": "",
+            "eyebrow": "",
+            "heading": "",
+            "heading_mark": "",
+            "body": "",
+            "btn_label": "",
+            "btn_url": "shopify://pages/subscribe-save",
+            "btn_arrow": true,
+            "btn_navy": false,
+            "link_label": "",
+            "link_url": "",
+            "show_rating": true,
+            "chips": "",
+            "sticker_big": "",
+            "sticker_small": ""
           }
         }
       },
       "block_order": [
         "banner_halloween",
         "banner_freedom",
+        "banner_b2",
+        "banner_b3",
+        "banner_b4",
         "banner_tiers",
         "banner_subscribe"
       ],
