@@ -54,3 +54,17 @@ test('fixed rates: running again changes nothing; undo puts Dubai back', async (
   assert.deepEqual(s.calls[0].profile.zonesToDelete, ['Z2']);
   assert.deepEqual(s.calls[0].profile.locationGroupsToUpdate[0].zonesToUpdate[0].countries[0].provinces.map((p) => p.code).sort(), ['AJ', 'AZ', 'DU', 'FU', 'RK', 'SH', 'UQ']);
 });
+
+test('renameRate renames a rate in every UAE zone that has it', async () => {
+  const { renameRate } = await import('../lib/express-admin.js');
+  const calls = [];
+  const shopify = { async graphql(q, v) {
+    if (q.includes('deliveryProfiles(first: 10)')) return { deliveryProfiles: { nodes: [{ id: 'p1', name: 'General', profileLocationGroups: [{ locationGroup: { id: 'g1' }, locationGroupZones: { nodes: [{
+      zone: { id: 'z1', name: 'UAE', countries: [{ code: { countryCode: 'AE' }, provinces: [] }] },
+      methodDefinitions: { nodes: [{ id: 'm1', name: 'Shipping Fee', active: true, description: null, rateProvider: { id: 'r', price: { amount: '15.0', currencyCode: 'AED' } }, methodConditions: [] }] } }] } }] }] } };
+    calls.push(v); return { deliveryProfileUpdate: { profile: { id: 'p1' }, userErrors: [] } };
+  } };
+  const done = await renameRate(shopify, 'Shipping Fee', 'Standard delivery (1–2 days)');
+  assert.equal(done.length, 1);
+  assert.deepEqual(calls[0].profile.locationGroupsToUpdate[0].zonesToUpdate[0].methodDefinitionsToUpdate, [{ id: 'm1', name: 'Standard delivery (1–2 days)' }]);
+});

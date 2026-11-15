@@ -258,3 +258,17 @@ export async function disableFixedRates(shopify) {
   });
   return { removed: true };
 }
+
+// Rename a delivery rate (e.g. the store's "Shipping Fee") in every UAE zone, test profile included.
+export async function renameRate(shopify, from, to) {
+  const done = [];
+  for (const z of await uaeZones(shopify)) {
+    const hits = z.rates.filter((r) => r.name === from);
+    if (!hits.length) continue;
+    await updateProfile(shopify, z.profileId, {
+      locationGroupsToUpdate: [{ id: z.groupId, zonesToUpdate: [{ id: z.zoneId, methodDefinitionsToUpdate: hits.map((r) => ({ id: r.id, name: to })) }] }],
+    });
+    done.push(`${z.profile} / ${z.zone} (${hits.length})`);
+  }
+  return done;
+}

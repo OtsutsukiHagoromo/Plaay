@@ -10,6 +10,7 @@ import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, t
 import { buildLive } from './live.js';
 import { areaList, checkoutRates, locate, matchArea, promise } from './express.js';
 import { disableTest, dropFixedTestRate, enableTest, testStatus } from './express-test.js';
+import { renameRate } from './express-admin.js';
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
 import * as geo from './geo.js';
 import { findMentions, productEvidence, removeMentions } from './cleanup.js';
@@ -423,6 +424,13 @@ export async function expressAction(d, action, form) {
   if (action === 'express-test-off') {
     const r = await disableTest(d.shopify);
     return { ok: true, message: `Test off: ${r.removedProfile ? 'delivery profile removed' : 'no profile'}; ${r.removedProducts.length ? `deleted ${r.removedProducts.join(', ')}` : 'no test product'}.` };
+  }
+  if (action === 'express-rename-rate') {
+    const from = String(form.get('from') || '').trim();
+    const to = String(form.get('to') || '').trim();
+    if (!from || !to) return { ok: false, reason: 'Give the current and the new rate name.' };
+    const done = await renameRate(d.shopify, from, to);
+    return { ok: true, message: done.length ? `Renamed “${from}” to “${to}” in ${done.join(', ')}.` : `No UAE rate is called “${from}”.` };
   }
   if (action === 'express-carrier-off') {
     const r = await disableCheckoutRates(d.shopify, d.cfg);
