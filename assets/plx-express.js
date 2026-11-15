@@ -142,7 +142,8 @@
     var sub = esc(c.detail || '');
     sub += c.when === 'today' && !c.beforeOpen && sec > 0 ? ' · order within <b class="plx__count" data-plx-count>' + left(sec) + '</b>' : '';
     if (c.tier !== 'standard') sub += '<br>' + free + ' Pick “Plaay Express” at checkout.';
-    return '<div class="plx__top"><span class="plx__t">' + ICON[c.tier] + ' ' + esc(c.title) + '</span>' +
+    var avail = c.tier === 'express' ? '<span class="plx__ok">✓ Available at your address</span>' : '';
+    return '<div class="plx__top">' + avail + '<span class="plx__t">' + ICON[c.tier] + ' ' + esc(c.title) + '</span>' +
       '<span class="plx__s">' + sub + '</span>' + edgeNote(c) + '</div>' +
       '<div class="plx__bot"><span>📍 ' + esc(placeLabel()) + '</span>' +
       '<button type="button" class="plx__link" data-plx-open>Change</button></div>';

@@ -89,3 +89,14 @@ html.plx-lock { overflow: hidden; }
 .plx-wallet .additional-checkout-buttons, .plx-wallet .dynamic-checkout__content { margin: 0; }
 .plx-wallet [data-shopify-buttoncontainer] { justify-content: stretch; }
 .plx-wallet__note { margin: 6px 0 0; font-size: 12px; text-align: center; opacity: .7; }
+
+/* Express available at the shopper's address: green, so "yes, it reaches you" reads at a glance */
+.plx, .plx-sheet { --plx-ok: #DDF5E5; --plx-ok-ink: #0E6B36; --plx-ok-line: #1E9E55; }
+.plx--pdp.plx--express { border-color: var(--plx-ok-line); }
+.plx--pdp.plx--express .plx__top { background: var(--plx-ok); }
+.plx--pdp.plx--express .plx__t { color: var(--plx-ok-ink); }
+.plx--pdp.plx--express .plx__bot { border-top: 1px solid rgba(30, 158, 85, .25); }
+.plx--cart.plx--express { background: var(--plx-ok); border-color: var(--plx-ok-line); }
+.plx--cart.plx--express .plx__t { color: var(--plx-ok-ink); }
+.plx--chip:not(:empty) { background: var(--plx-ok-line); color: #fff; }
+.plx__ok { justify-self: start; margin-bottom: 2px; padding: 2px 9px; border-radius: 99px; background: var(--plx-ok-line); color: #fff; font-size: 11.5px; font-weight: 900; letter-spacing: .01em; }
