@@ -8,7 +8,7 @@ import { connectWebhooks, createManualOrder, createTestOrder, getConnection } fr
 import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { buildLive } from './live.js';
-import { areaList, checkoutRates, locate, matchArea, promise } from './express.js';
+import { areaList, checkoutRates, locate, matchArea, parseHolidays, promise, schedule } from './express.js';
 import { disableTest, dropFixedTestRate, enableTest, testStatus } from './express-test.js';
 import { renameRate } from './express-admin.js';
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
@@ -58,6 +58,12 @@ export async function handleShopifyWebhook(request, d) {
         return json({ skipped: 'not an express order' });
       }
       await d.shopify.addTags(payload.id, [TAGS.express]);
+      // Paid after the cutoff (checkout opened at 4:55, paid at 5:05) or on a day off: it goes
+      // in the next run, whatever the rate's name said.
+      const live = await liveSettings(d);
+      if (payload.created_at && schedule(new Date(payload.created_at), live).when !== 'today') {
+        await d.shopify.addTags(payload.id, [TAGS.nextRun]);
+      }
       // Checkout can't check distance on fixed rates: an Express order beyond the limit goes
       // as noon 4-hour delivery instead, flagged for the team.
       const a = payload.shipping_address;
@@ -424,6 +430,11 @@ export async function expressAction(d, action, form) {
   if (action === 'express-test-off') {
     const r = await disableTest(d.shopify);
     return { ok: true, message: `Test off: ${r.removedProfile ? 'delivery profile removed' : 'no profile'}; ${r.removedProducts.length ? `deleted ${r.removedProducts.join(', ')}` : 'no test product'}.` };
+  }
+  if (action === 'express-holidays') {
+    const days = parseHolidays(form.get('holidays'));
+    await setSetting(d.shopify, 'holidays', days.join(','));
+    return { ok: true, message: days.length ? `No Express runs on ${days.join(', ')}.` : 'No holidays set.' };
   }
   if (action === 'express-rename-rate') {
     const from = String(form.get('from') || '').trim();

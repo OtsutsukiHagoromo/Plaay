@@ -188,9 +188,15 @@ export function expressSettings(env = process.env) {
     paused: /^(1|true|yes)$/i.test(env.EXPRESS_PAUSED || ''),
     // noon 4-hour delivery: off for now, Express (2-hour) only.
     fourHour: /^(1|true|yes)$/i.test(env.FOUR_HOUR_ENABLED || ''),
+    // Days with no Express runs (public holidays), Dubai dates: 2026-12-02,2026-12-03
+    holidays: parseHolidays(env.EXPRESS_HOLIDAYS),
     // Checkout rates: off; preview (only bags built on the express-preview theme); on (everyone).
     checkout: ['off', 'preview', 'on'].includes(env.EXPRESS_CHECKOUT) ? env.EXPRESS_CHECKOUT : 'preview',
   };
+}
+
+export function parseHolidays(text) {
+  return String(text || '').split(/[\s,]+/).filter((d) => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort();
 }
 
 export function straightKm(a, b) {
@@ -287,16 +293,19 @@ const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frid
 // When the next express / 4-hour run goes out: today (with seconds left to the cutoff) or a later day.
 export function schedule(now = new Date(), s = expressSettings()) {
   const d = dubai(now);
-  if (s.workDays.includes(d.day) && d.hour < s.cutoffHour) {
+  const holidays = s.holidays || [];
+  const runs = (t) => s.workDays.includes(t.getUTCDay()) && !holidays.includes(t.toISOString().slice(0, 10));
+  if (runs(d.date) && d.hour < s.cutoffHour) {
     const cutoff = new Date(Date.UTC(d.date.getUTCFullYear(), d.date.getUTCMonth(), d.date.getUTCDate(), s.cutoffHour - 4));
     // Before the first run (e.g. 00:10): still today, but riders only leave from the opening hour.
     const beforeOpen = d.hour < s.openHour;
     return { when: 'today', label: 'Today', beforeOpen, cutoff: cutoff.toISOString(), secondsLeft: Math.max(0, Math.round((cutoff - now) / 1000)) };
   }
-  for (let i = 1; i <= 7; i++) {
-    const day = (d.day + i) % 7;
-    if (s.workDays.includes(day)) {
-      const label = i === 1 ? 'Tomorrow' : DAY_NAMES[day];
+  for (let i = 1; i <= 21; i++) {
+    const t = new Date(d.date.getTime() + i * 86400e3);
+    const day = t.getUTCDay();
+    if (runs(t)) {
+      const label = i === 1 ? 'Tomorrow' : i < 7 ? DAY_NAMES[day] : `${DAY_NAMES[day]} ${t.getUTCDate()} ${t.toLocaleString('en', { month: 'short', timeZone: 'UTC' })}`;
       return { when: i === 1 ? 'tomorrow' : 'later', label, cutoff: null, secondsLeft: 0 };
     }
   }
@@ -340,6 +349,29 @@ const prop = (item, key) => {
   return p && typeof p === 'object' && p[key] != null && p[key] !== '' && p[key] !== false;
 };
 
+// Where a checkout delivers to. Shopify's own pin for the address wins. Otherwise the pin the
+// shopper confirmed on the website (bag lines carry it as _plx_pin) is used when the checkout
+// address is in the same place (within 4 km of what the typed text points to, or text we can't
+// place); a different address typed at checkout is judged on its text. No pin is fine: the
+// text decides, so wallet checkouts (Apple Pay, Google Pay) still get Express in range.
+export const PIN_MATCH_KM = 4;
+export async function checkoutPlace(dest, address, items, s = expressSettings(), geo = defaultGeo) {
+  if (dest.latitude != null && dest.longitude != null && dest.latitude !== '' && Number.isFinite(+dest.latitude)) {
+    return locate({ lat: dest.latitude, lng: dest.longitude }, s, geo);
+  }
+  const raw = items.map((i) => i?.properties?._plx_pin).find((v) => typeof v === 'string' && /^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(v));
+  const typed = await locate({ address }, s, geo);
+  if (!raw || String(dest.province || '').toUpperCase() !== 'DU') return typed;
+  const [lat, lng] = raw.split(',').map(Number);
+  const pin = { lat, lng };
+  const near = !typed || typed.tier === undefined || (typed.lat != null ? straightKm(typed, pin) <= PIN_MATCH_KM : (() => {
+    const a = areaList(s).find((x) => x.id === typed.id);
+    return !a || a.lat == null || straightKm(a, pin) <= PIN_MATCH_KM;
+  })());
+  if (!near) return typed;
+  return locatePin(pin, s, geo);
+}
+
 // Shopify carrier-calculated shipping: the Express and 4-hour rates for one checkout (`rate` is
 // Shopify's request body). Standard delivery stays the store's own rate, so checkout always has
 // it even if this service is slow or down. No Express for Subscribe & Save (renewals would book
@@ -356,8 +388,7 @@ export async function checkoutRates(rate, now = new Date(), s = expressSettings(
   const subtotal = items.reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0); // fils
   const price = String(subtotal >= s.freeOver * 100 ? 0 : s.fee * 100);
   const address = [dest.address1, dest.address2, dest.address3, dest.city, dest.province].filter(Boolean).join(', ');
-  const pin = dest.latitude != null && dest.longitude != null ? { lat: dest.latitude, lng: dest.longitude } : {};
-  const place = await locate({ ...pin, address }, s, geo);
+  const place = await checkoutPlace(dest, address, items, s, geo);
   if (!place || place.tier === 'standard') return [];
 
   const day = (p) => p.title.split('· ')[1].toLowerCase();

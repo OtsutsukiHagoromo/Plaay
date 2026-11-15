@@ -362,3 +362,15 @@ test('orders/create: Express beyond the road limit goes 4-hour; subscriptions ar
   await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', ...ship, line_items: [{ selling_plan_allocation: { selling_plan: { id: 1 } } }] }), sub.d);
   assert.ok(!sub.shopify.order.tags.includes('noon-express'));
 });
+
+test('orders/create: an Express order paid after the cutoff is flagged for the next run', async () => {
+  const late = setup({ tags: [] });
+  late.d.geo = { drivingKm: async () => 12, geocode: async () => null };
+  const ship = { shipping_lines: [{ title: 'Plaay Express · today', code: 'plaay-express' }], shipping_address: { latitude: 25.04, longitude: 55.23 } };
+  await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', created_at: '2026-11-16T13:05:00Z', ...ship }), late.d); // Mon 5:05 pm Dubai
+  assert.ok(late.shopify.order.tags.includes('express-next-run'));
+  const early = setup({ tags: [] });
+  early.d.geo = late.d.geo;
+  await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', created_at: '2026-11-16T10:00:00Z', ...ship }), early.d); // 2 pm
+  assert.ok(!early.shopify.order.tags.includes('express-next-run'));
+});

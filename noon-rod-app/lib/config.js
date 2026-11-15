@@ -43,7 +43,8 @@ export const TAGS = {
   delivered: 'noon-delivered',
   undelivered: 'noon-undelivered',
   cancelled: 'noon-cancelled',
-  outOfRange: 'express-out-of-range', // set by the app: Express chosen beyond the limit, goes 4-hour
+  outOfRange: 'express-out-of-range', // set by the app: Express chosen beyond the limit
+  nextRun: 'express-next-run', // set by the app: Express order placed after the day's last run
 };
 
 export const METAFIELD_NAMESPACE = 'noon';

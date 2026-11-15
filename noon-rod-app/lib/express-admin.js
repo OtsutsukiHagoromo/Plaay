@@ -1,3 +1,4 @@
+import { parseHolidays } from './express.js';
 // Express controls kept in Shopify, so the team can change them from the dashboard without a
 // redeploy: shop metafields plaay_express.paused and plaay_express.checkout (off | preview | on),
 // and the carrier service that gives Shopify checkout the Express and 4-hour rates.
@@ -16,8 +17,9 @@ export async function liveSettings(d) {
       const data = await d.shopify.graphql(`{ shop {
         paused: metafield(namespace: "${NS}", key: "paused") { value }
         checkout: metafield(namespace: "${NS}", key: "checkout") { value }
+        holidays: metafield(namespace: "${NS}", key: "holidays") { value }
       } }`);
-      cached = { at: Date.now(), value: { paused: data.shop.paused?.value, checkout: data.shop.checkout?.value } };
+      cached = { at: Date.now(), value: { paused: data.shop.paused?.value, checkout: data.shop.checkout?.value, holidays: data.shop.holidays?.value } };
     } catch {
       cached = { at: Date.now(), value: {} };
     }
@@ -27,6 +29,7 @@ export async function liveSettings(d) {
     ...base,
     paused: v.paused != null ? v.paused === 'true' : base.paused,
     checkout: ['off', 'preview', 'on'].includes(v.checkout) ? v.checkout : base.checkout,
+    holidays: v.holidays != null ? parseHolidays(v.holidays) : base.holidays,
   };
 }
 

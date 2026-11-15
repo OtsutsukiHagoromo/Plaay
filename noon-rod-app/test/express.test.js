@@ -172,3 +172,31 @@ test('after midnight on a working day Express is today from the opening hour, no
   const [x] = await checkoutRates(rate('Motor City', 'Dubai'), monEarly, { ...off4, checkout: 'on' }, geo());
   assert.equal(x.service_name, 'Plaay Express · today from 9 am');
 });
+
+test('holidays: no Express run that day; the next working day is promised', () => {
+  const hol = { ...off4, holidays: ['2026-12-02', '2026-12-03'] };
+  const tueEve = new Date('2026-12-01T14:00:00Z'); // Tue 1 Dec, 6 pm Dubai
+  const sch = schedule(tueEve, hol);
+  assert.equal(sch.label, 'Friday'); // Wed 2 and Thu 3 are holidays
+  const wedNoon = new Date('2026-12-02T08:00:00Z');
+  assert.notEqual(schedule(wedNoon, hol).when, 'today');
+  assert.equal(schedule(wedNoon, off4).when, 'today');
+});
+
+test('checkout uses the website pin when the typed address is the same place, else the typed text', async () => {
+  const sOn = { ...off4, checkout: 'on' };
+  // Typed "Dubai Marina" (area centre 18.7 km, Express) but the pin is past the limit by road.
+  const pinFar = '25.0870,55.1460';
+  const byKm = (pinKm) => ({ ...geo(), drivingKm: async (_w, p) => (Math.abs(p.lat - 25.087) < 0.001 ? pinKm : 18.7), geocode: async () => null });
+  const withPin = { ...rate('Dubai Marina', 'Dubai'), items: [{ price: 12000, quantity: 1, properties: { _plx: '1', _plx_pin: pinFar } }] };
+  assert.deepEqual(await checkoutRates(withPin, wedAfternoon, sOn, byKm(21.4)), []);
+  // Same pin, but it is inside the limit: Express.
+  assert.equal((await checkoutRates(withPin, wedAfternoon, sOn, byKm(19.2)))[0].service_code, 'plaay-express');
+  // No pin at all (e.g. Apple Pay): the typed text decides, Express still offered in range.
+  const noPin = rate('Dubai Marina', 'Dubai', { price: 12000 });
+  assert.equal((await checkoutRates(noPin, wedAfternoon, sOn, byKm(21.4)))[0].service_code, 'plaay-express');
+  // A pin from a different place (Deira typed, Motor City pinned): the typed address is judged.
+  const other = { ...rate('Deira City Centre', 'Dubai'), items: [{ price: 12000, quantity: 1, properties: { _plx: '1', _plx_pin: '25.0450,55.2380' } }] };
+  const deira = { ...geo(), geocode: async () => ({ lat: 25.2526, lng: 55.3309 }), drivingKm: async (_w, p) => (p.lat > 25.2 ? 34 : 16) };
+  assert.deepEqual(await checkoutRates(other, wedAfternoon, sOn, deira), []);
+});

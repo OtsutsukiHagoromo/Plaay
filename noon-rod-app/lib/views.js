@@ -108,7 +108,8 @@ function actions(order, back, cfg, { size = '', both = false } = {}) {
 
 const modeBadge = (order, cfg) =>
   ((order.noon.mode || defaultDeliveryMode(order, cfg)) === '4hr_delivery' ? ' <span class="b info">4-hour</span>' : '') +
-  ((order.tags || []).includes('express-out-of-range') ? ' <span class="b bad" title="The delivery address is beyond the Express limit by road. Call the customer before booking a rider.">Outside Express range</span>' : '');
+  ((order.tags || []).includes('express-out-of-range') ? ' <span class="b bad" title="The delivery address is beyond the Express limit by road. Call the customer before booking a rider.">Outside Express range</span>' : '') +
+  ((order.tags || []).includes('express-next-run') ? ' <span class="b warn" title="Placed after the day’s last run (or on a day off): send it in the next run and let the customer know.">Next run</span>' : '');
 const ACTIVE_NOT_CANCELLABLE = ['picked_up', 'arrived_at_delivery'];
 
 function connectionPanel(c) {
@@ -783,6 +784,9 @@ ${test.error ? `<div class="panel bad-b">${esc(test.error)}</div>` : ''}
 ${test.on ? `<ul>${(test.products || []).map((p) => `<li><strong>${esc(p.title)}</strong>: <a href="https://shopplaay.com/products/${esc(p.handle)}" target="_blank">shopplaay.com/products/${esc(p.handle)}</a> <span class="b">${esc(p.status)}</span></li>`).join('')}</ul>` : ''}
 </div>
 ${test.on ? `<div><span class="b ok">On</span> ${form('express-test-on', { handle: test.products?.[0]?.handle || '' }, 'Refresh rates', 'ghost')} ${form('express-test-off', {}, 'Turn test off', 'ghost', 'Delete the test product and its delivery profile?')}</div>` : `<form method="post" action="/api/dashboard" class="inl"><input type="hidden" name="action" value="express-test-on"><input type="hidden" name="back" value="/express"><input name="handle" placeholder="product handle or link" required> <button class="yellow">Turn test on</button></form>`}</div>
+
+<div class="card pc"><div><h2>Holidays</h2><div class="muted">No Express runs on these days (Dubai dates). The website and checkout show the next working day.</div></div>
+<form method="post" action="/api/dashboard" class="inl"><input type="hidden" name="action" value="express-holidays"><input type="hidden" name="back" value="/express"><input name="holidays" value="${esc((settings.holidays || []).join(', '))}" placeholder="2026-12-02, 2026-12-03" size="28"> <button class="ghost">Save</button></form></div>
 
 <div class="card pc"><div><h2>Pause Express</h2><div class="muted">For days with no riders or the warehouse closed. The website and checkout show standard delivery only within a minute.</div></div>
 ${settings.paused ? `<div><span class="b bad">Paused</span> ${form('express-pause', { paused: 'false' }, 'Turn Express back on', 'yellow')}</div>` : form('express-pause', { paused: 'true' }, 'Pause Express', 'ghost', 'Pause Express on the website and at checkout?')}</div>
