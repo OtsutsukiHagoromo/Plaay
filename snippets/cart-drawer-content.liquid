@@ -276,16 +276,30 @@
             save AED x" on the left, the pre-discount total struck through beside the total on
             the right; with no discount yet, "Free delivery" once unlocked.
           endcomment
-          assign saved = cart.original_total_price | minus: cart.total_price
+          # Savings = everything taken off the one-time price: subscription prices, rewards tiers,
+          # promo codes, sale. The base matches the summary's "Subtotal" (subscribed lines at their
+          # one-time price), so base - total = every "−" row in the summary added up.
+          assign was = 0
+          for item in cart.items
+            if item.selling_plan_allocation
+              assign was = item.selling_plan_allocation.compare_at_price | times: item.quantity | plus: was
+            else
+              assign was = was | plus: item.original_line_price
+            endif
+          endfor
+          if was < cart.total_price
+            assign was = cart.total_price
+          endif
+          assign saved = was | minus: cart.total_price
           assign chip = ''
-          if sale_on contains '1' and saved > 0
-            # Show what the sale actually takes off this bag, e.g. "20% off" or "24% off" for a mix.
-            assign saved_pct = saved | times: 100.0 | divided_by: cart.original_total_price | round
+          if saved > 0
+            # The chip is the real share saved on this bag (e.g. 15% subscription + 10% reward on
+            # part of it reads "13% off"), never just the tier name.
+            assign saved_pct = saved | times: 100.0 | divided_by: was | floor
+            if saved_pct < 1
+              assign saved_pct = 1
+            endif
             assign chip = saved_pct | append: '% off'
-          elsif reached >= 1
-            assign chip = done_label
-          elsif saved > 0
-            assign chip = 'Promo'
           endif
         -%}
         <button type="button" class="pl-drawer__total" data-pl-sum-toggle aria-expanded="false" aria-label="Show order summary">
@@ -298,7 +312,7 @@
             {%- endif -%}
           </span>
           <span class="pl-drawer__total-row">
-            {%- if saved > 0 -%}<s class="pl-drawer__was">{% render 'plaay-aed', fils: cart.original_total_price %}</s>{%- endif -%}
+            {%- if saved > 0 -%}<s class="pl-drawer__was">{% render 'plaay-aed', fils: was %}</s>{%- endif -%}
             <span class="pl-drawer__total-v" data-pl-sticky-total>{% render 'plaay-aed', fils: cart.total_price %}</span>
           </span>
         </button>
