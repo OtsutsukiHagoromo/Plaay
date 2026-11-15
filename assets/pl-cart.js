@@ -976,7 +976,7 @@
     ['[data-pl-sum-toggle]', 'bag_total_tap'],
     ['[data-pl-sub-on]', 'bag_subscribe'],
     ['[data-pl-sub-off]', 'bag_one_time'],
-    ['cart-remove-button', 'bag_remove'],
+    ['cart-remove-button, .pl-item__remove', 'bag_remove'],
     ['[data-pl-gap] summary', 'bag_see_picks'],
     ['[data-pl-gap-add]', 'bag_pick_add'],
     ['.pl-mixnudge', 'bag_mix_nudge'],
@@ -985,7 +985,8 @@
     ['cart-recommendations a, cart-recommendations button', 'bag_rec_tap'],
     ['cart-drawer [data-close]', 'bag_close']
   ];
-  document.addEventListener('click', function (e) {
+  /* On window (capture) so it runs before the bag's own capture handlers, which stop the click. */
+  window.addEventListener('click', function (e) {
     if (!e.target.closest) return;
     var inBag = e.target.closest('cart-drawer, [data-cart-page-root]');
     if (!inBag) return;
