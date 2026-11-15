@@ -183,7 +183,7 @@
 @media (max-width: 767px) {
   .plo-chead { padding-top: 10px; }
   .plo-chead__t { font-size: 22px; }
-  .plo-coll .plo-lgrid { margin-top: 12px; }
+  .pl-skin-b .plo-coll .plo-lgrid { padding-top: 12px; }
   .plo-coll .plo-chips { padding-top: 8px; }
   .plo-coll .plo-tools { margin-top: 8px; padding-bottom: 8px; }
   .plo-coll .plo-range:first-of-type { margin-top: 4px; }
