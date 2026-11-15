@@ -340,6 +340,7 @@
     if (!cd) { if (!q('[data-cart-page-root]')) window.location.href = CART_URL; return; }
     if (window.plCloseSheets) window.plCloseSheets();
     if (!isOpen()) lastFocus = document.activeElement;
+    if (!isOpen()) track('bag_open');
     cd.classList.add('active');
     var ov = q('site-drawers [data-overlay]');
     if (ov) ov.classList.add('active');
@@ -955,6 +956,45 @@
   } else {
     init();
   }
+
+  /* ---------- Clarity: what people do in the bag ----------
+     The bag is a drawer, not a page, so Clarity can't tell it apart by URL. Each action below is a
+     Clarity event (filter recordings / heatmaps by it), and the session gets tags: bag_opened=yes,
+     bag_checkout=yes once Checkout or a wallet button is tapped. "bag_opened = yes" without
+     "bag_checkout" = people who looked at the bag and left. */
+  function track(name) {
+    try {
+      if (typeof window.clarity !== 'function') return;
+      window.clarity('event', name);
+      if (name === 'bag_open') window.clarity('set', 'bag_opened', 'yes');
+      if (name === 'bag_checkout' || name === 'bag_wallet') window.clarity('set', 'bag_checkout', 'yes');
+    } catch (e) {}
+  }
+  var TRACK = [
+    ['.pl-drawer__checkout, [data-cart-page-root] [name="checkout"], [data-cart-page-root] a[href="/checkout"]', 'bag_checkout'],
+    ['.pl-wallet', 'bag_wallet'],
+    ['[data-pl-sum-toggle]', 'bag_total_tap'],
+    ['[data-pl-sub-on]', 'bag_subscribe'],
+    ['[data-pl-sub-off]', 'bag_one_time'],
+    ['cart-remove-button', 'bag_remove'],
+    ['[data-pl-gap] summary', 'bag_see_picks'],
+    ['[data-pl-gap-add]', 'bag_pick_add'],
+    ['.pl-mixnudge', 'bag_mix_nudge'],
+    ['.plaay-discount-toggle', 'bag_promo_open'],
+    ['[data-plaay-discount-apply]', 'bag_promo_apply'],
+    ['cart-recommendations a, cart-recommendations button', 'bag_rec_tap'],
+    ['cart-drawer [data-close]', 'bag_close']
+  ];
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest) return;
+    var inBag = e.target.closest('cart-drawer, [data-cart-page-root]');
+    if (!inBag) return;
+    for (var i = 0; i < TRACK.length; i++) {
+      if (e.target.closest(TRACK[i][0])) { track(TRACK[i][1]); return; }
+    }
+    if (e.target.closest('[data-minus]')) track('bag_qty_minus');
+    else if (e.target.closest('[data-plus]')) track('bag_qty_plus');
+  }, true);
 
   window.plCart = {
     add: add,
