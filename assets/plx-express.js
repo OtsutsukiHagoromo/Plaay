@@ -140,7 +140,7 @@
     }
     var sec = secondsLeft();
     var sub = esc(c.detail || '');
-    sub += c.when === 'today' && sec > 0 ? ' · order within <b class="plx__count" data-plx-count>' + left(sec) + '</b>' : '';
+    sub += c.when === 'today' && !c.beforeOpen && sec > 0 ? ' · order within <b class="plx__count" data-plx-count>' + left(sec) + '</b>' : '';
     if (c.tier !== 'standard') sub += '<br>' + free + ' Pick “Plaay Express” at checkout.';
     return '<div class="plx__top"><span class="plx__t">' + ICON[c.tier] + ' ' + esc(c.title) + '</span>' +
       '<span class="plx__s">' + sub + '</span>' + edgeNote(c) + '</div>' +
@@ -162,7 +162,9 @@
     }
     var sec = secondsLeft();
     var head = c.tier === 'express' ? '⚡ Express to ' + esc(name) : c.tier === '4hr' ? '🕓 4-hour delivery to ' + esc(name) : '📦 ' + esc(name) + ': 1–2 working days';
-    var when = c.tier === 'standard' ? '' : (c.when === 'today' ? 'today' + (sec > 0 ? ', order within <b data-plx-count>' + left(sec) + '</b>' : '') : esc(c.day || ''));
+    var when = c.tier === 'standard' ? '' : c.when === 'today'
+      ? (c.beforeOpen ? esc((c.title || '').split('· ')[1] || 'today') : 'today' + (sec > 0 ? ', order within <b data-plx-count>' + left(sec) + '</b>' : ''))
+      : esc((c.title || '').split('· ')[1] || c.day || '');
     return '<span class="plx__t">' + head + '</span>' + (when ? '<span class="plx__s">' + when + '</span>' : '') +
       (c.tier === 'standard' ? '' : cartTotal != null && cartTotal < minAed * 100
         ? '<span class="plx__s plx__s--need">Add AED ' + Math.ceil((minAed * 100 - cartTotal) / 100) + ' more for free delivery.</span>'
