@@ -778,7 +778,7 @@ ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 <p class="muted">Express: within ${settings.expressMaxKm} km driving of the warehouse. 4-hour: the rest of Dubai. Orders by ${settings.cutoffHour - 12} pm, Monday to Saturday. AED ${settings.fee}, free over AED ${settings.freeOver}. No Express for Subscribe &amp; Save.</p>
 
 <div class="card pc"><div><h2>Hidden test on the live store</h2>
-<div class="muted">Makes a hidden copy of one product (link only, not in collections or search) that offers “Plaay Express (Dubai, 2-hour delivery)” next to normal delivery, Dubai addresses only. Nothing changes for other products. Turning it off deletes the copy and its delivery profile.</div>
+<div class="muted">Makes a hidden copy of one product (link only, not in collections or search) that offers Plaay Express next to standard delivery: standard delivery anywhere in the UAE, Express only where it reaches. Nothing changes for other products. Turning it off deletes the copy and its delivery profile.</div>
 ${test.error ? `<div class="panel bad-b">${esc(test.error)}</div>` : ''}
 ${test.on ? `<ul>${(test.products || []).map((p) => `<li><strong>${esc(p.title)}</strong>: <a href="https://shopplaay.com/products/${esc(p.handle)}" target="_blank">shopplaay.com/products/${esc(p.handle)}</a> <span class="b">${esc(p.status)}</span></li>`).join('')}</ul>` : ''}
 </div>

@@ -60,19 +60,21 @@ const expressRates = ({ fee, freeOver }) => [
 // Bring an existing test profile up to date: current Express wording, normal rates present.
 async function syncTest(shopify, profileId) {
   const data = await shopify.graphql(`query($id: ID!) { deliveryProfile(id: $id) { profileLocationGroups { locationGroup { id }
-    locationGroupZones(first: 5) { nodes { zone { id } methodDefinitions(first: 20) { nodes { id name description } } } } } } }`, { id: profileId });
+    locationGroupZones(first: 5) { nodes { zone { id name countries { code { countryCode } provinces { code } } } methodDefinitions(first: 20) { nodes { id name description } } } } } } }`, { id: profileId });
   const g = data.deliveryProfile.profileLocationGroups[0];
   const z = g.locationGroupZones.nodes[0];
   const have = z.methodDefinitions.nodes;
   const toUpdate = have.filter((m) => m.name === TEST_RATE.name && m.description !== TEST_RATE.description).map((m) => ({ id: m.id, description: TEST_RATE.description }));
   const toCreate = (await standardRates(shopify)).filter((r) => !have.some((m) => m.name === r.name));
-  if (!toUpdate.length && !toCreate.length) return { changed: false };
+  // Older test profiles covered Dubai only, so other emirates got no delivery at all.
+  const dubaiOnly = (z.zone.countries || []).some((c) => c.code.countryCode === 'AE' && c.provinces.length);
+  if (!toUpdate.length && !toCreate.length && !dubaiOnly) return { changed: false };
   const r = await shopify.graphql(
     'mutation($id: ID!, $p: DeliveryProfileInput!) { deliveryProfileUpdate(id: $id, profile: $p) { profile { id } userErrors { field message } } }',
-    { id: profileId, p: { locationGroupsToUpdate: [{ id: g.locationGroup.id, zonesToUpdate: [{ id: z.zone.id, methodDefinitionsToUpdate: toUpdate, methodDefinitionsToCreate: toCreate }] }] } },
+    { id: profileId, p: { locationGroupsToUpdate: [{ id: g.locationGroup.id, zonesToUpdate: [{ id: z.zone.id, ...(dubaiOnly ? { name: 'UAE (Express test)', countries: [{ code: 'AE', includeAllProvinces: true }] } : {}), methodDefinitionsToUpdate: toUpdate, methodDefinitionsToCreate: toCreate }] }] } },
   );
   errs(r.deliveryProfileUpdate.userErrors);
-  return { changed: true, added: toCreate.map((x) => x.name) };
+  return { changed: true, added: toCreate.map((x) => x.name), widened: dubaiOnly };
 }
 
 export async function enableTest(shopify, handle, { fee = 15, freeOver = 99 } = {}) {
@@ -122,8 +124,9 @@ export async function enableTest(shopify, handle, { fee = 15, freeOver = 99 } = 
         locationGroupsToCreate: [{
           locations,
           zonesToCreate: [{
-            name: 'Dubai (Express test)',
-            countries: [{ code: 'AE', includeAllProvinces: false, provinces: [{ code: 'DU' }] }],
+            // All of the UAE gets normal delivery; Express itself is limited to Dubai by its rate.
+            name: 'UAE (Express test)',
+            countries: [{ code: 'AE', includeAllProvinces: true }],
             methodDefinitionsToCreate: [...(await standardRates(shopify)), ...expressRates({ fee, freeOver })],
           }],
         }],

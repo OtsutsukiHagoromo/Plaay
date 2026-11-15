@@ -22,7 +22,7 @@ function fakeShopify() {
         }] } }] }] } };
       }
       if (q.includes('deliveryProfile(id:')) {
-        return { deliveryProfile: { profileLocationGroups: [{ locationGroup: { id: 'tg' }, locationGroupZones: { nodes: [{ zone: { id: 'tz' }, methodDefinitions: { nodes: [{ id: 'e1', name: 'Plaay Express (Dubai, 2-hour delivery)', description: 'Delivered within 2 hours by noon.' }] } }] } }] } };
+        return { deliveryProfile: { profileLocationGroups: [{ locationGroup: { id: 'tg' }, locationGroupZones: { nodes: [{ zone: { id: 'tz', name: 'Dubai (Express test)', countries: [{ code: { countryCode: 'AE' }, provinces: [{ code: 'DU' }] }] }, methodDefinitions: { nodes: [{ id: 'e1', name: 'Plaay Express (Dubai, 2-hour delivery)', description: 'Delivered within 2 hours by noon.' }] } }] } }] } };
       }
       if (q.includes('deliveryProfileUpdate')) { state.updated = v.p; return { deliveryProfileUpdate: { profile: { id: v.id }, userErrors: [] } }; }
       if (q.includes('productByIdentifier')) return { productByIdentifier: v.h === 'peanut-butter-truffles' ? { id: 'gid://shopify/Product/1', title: 'Peanut Butter Truffles' } : null };
@@ -57,7 +57,7 @@ test('test on: a hidden copy in its own Dubai-only profile with the 2-hour Expre
   assert.equal(p.name, TEST_PROFILE);
   assert.deepEqual(p.variantsToAssociate, ['gid://shopify/ProductVariant/9']);
   const zone = p.locationGroupsToCreate[0].zonesToCreate[0];
-  assert.deepEqual(zone.countries, [{ code: 'AE', includeAllProvinces: false, provinces: [{ code: 'DU' }] }]);
+  assert.deepEqual(zone.countries, [{ code: 'AE', includeAllProvinces: true }]);
   assert.deepEqual(zone.methodDefinitionsToCreate.map((m) => [m.name, m.rateDefinition.price.amount]), [
     ['Shipping Fee', 15], ['Shipping Fee', 0],
     ['Plaay Express (Dubai, 2-hour delivery)', 0], ['Plaay Express (Dubai, 2-hour delivery)', 15],
@@ -69,6 +69,7 @@ test('test on: a hidden copy in its own Dubai-only profile with the 2-hour Expre
   const upd = s.state.updated.locationGroupsToUpdate[0].zonesToUpdate[0];
   assert.deepEqual(upd.methodDefinitionsToCreate.map((m) => m.name), ['Shipping Fee', 'Shipping Fee']);
   assert.deepEqual(upd.methodDefinitionsToUpdate, [{ id: 'e1', description: 'Order by 5 pm, Mon–Sat. Delivered within 2 hours.' }]);
+  assert.deepEqual(upd.countries, [{ code: 'AE', includeAllProvinces: true }]);
 });
 
 test('test off removes the profile and the copy; unknown handles are refused', async () => {
