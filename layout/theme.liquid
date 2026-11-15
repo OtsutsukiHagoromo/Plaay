@@ -115,6 +115,11 @@
       if template.name == 'product' and product.tags contains 'express-test'
         assign plx_on = true
       endif
+      for plx_item in cart.items
+        if plx_item.product.tags contains 'express-test'
+          assign plx_on = true
+        endif
+      endfor
     -%}
     {%- if plx_on -%}{{ 'plx-express.css' | asset_url | stylesheet_tag }}{%- endif -%}
     {%- if plo_b -%}

@@ -78,3 +78,14 @@ html.plx-lock { overflow: hidden; }
 .plx-sheet .plx__link { justify-self: center; }
 
 .plx--cart .plx__s--need { opacity: 1; font-weight: 700; }
+
+/* Sheet v2: pin step, details form, optional pin nudge */
+.plx-sheet__step { margin: 0; font-weight: 900; font-size: 15px; }
+.plx__opt { opacity: .7; font-size: 12px; }
+.plx--cart .plx__edge { flex: 1 1 100%; font-size: 12.5px; }
+
+/* Bag: Apple Pay / Google Pay under Checkout */
+.plx-wallet { margin-top: 8px; }
+.plx-wallet .additional-checkout-buttons, .plx-wallet .dynamic-checkout__content { margin: 0; }
+.plx-wallet [data-shopify-buttoncontainer] { justify-content: stretch; }
+.plx-wallet__note { margin: 6px 0 0; font-size: 12px; text-align: center; opacity: .7; }

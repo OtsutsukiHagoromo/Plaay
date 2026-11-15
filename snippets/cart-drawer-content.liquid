@@ -189,12 +189,23 @@
   </div>
 {%- endcapture -%}
 
+{%- liquid
+  # Plaay Express in the bag: everywhere once express_enabled is on; until then only when the
+  # bag holds the hidden test product (tag express-test).
+  assign plx_cart = settings.express_enabled
+  for plx_item in cart.items
+    if plx_item.product.tags contains 'express-test'
+      assign plx_cart = true
+    endif
+  endfor
+-%}
 {%- capture trust_html -%}
   {%- comment -%}
     Two quiet facts under the summary. No returns promise: the products are perishable.
   {%- endcomment -%}
+  {%- if plx_cart -%}{%- render 'plx-express-box', mode: 'cart' -%}{%- endif -%}
   <div class="pl-trust pl-trust--quiet">
-    <span>{% render 'pl-icon', name: 'truck', size: 14, stroke: 1.8 %}1–2 day UAE delivery · Free delivery over AED {{ settings.cart_tier_ship | default: 99 }}</span>
+    <span>{% render 'pl-icon', name: 'truck', size: 14, stroke: 1.8 %}{% if plx_cart %}Express in Dubai · 1–2 days UAE-wide{% else %}1–2 day UAE delivery{% endif %} · Free delivery over AED {{ settings.cart_tier_ship | default: 99 }}</span>
     <span>{% render 'pl-icon', name: 'lock', size: 14, stroke: 1.8 %}Secure checkout · Halal certified</span>
   </div>
 {%- endcapture -%}
@@ -293,6 +304,9 @@
         </button>
         <div class="pl-drawer__sum" data-pl-sum hidden></div>
         <a href="/checkout" class="pl-btn pl-drawer__checkout" data-checkout-url="/checkout">{% render 'pl-icon', name: 'lock', size: 17, stroke: 2.4 %}<span>Checkout</span></a>
+        {%- if plx_cart and additional_checkout_buttons -%}
+          <div class="plx-wallet">{{ content_for_additional_checkout_buttons }}</div>
+        {%- endif -%}
       {%- else -%}
         <button type="button" class="pl-btn pl-btn--full" data-close>Continue shopping</button>
       {%- endif -%}

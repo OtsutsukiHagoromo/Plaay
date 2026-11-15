@@ -9,10 +9,12 @@
    Where: the shopper's own pick on this device (an area, an exact address/pin, or a saved
    address; kept 30 days), else a signed-in customer's default address, else unknown.
 
-   An exact pick also
-     - goes on the cart as attributes ("Delivery area", _plx_pin) so the team, and noon, get the
-       exact pin even if the checkout address has none;
-     - pre-fills the checkout address (address, flat/villa, area, emirate).
+   An exact pick (pin confirmed on the map, then building / flat / street) also
+     - goes on every bag line as _plx_pin, which checkout's rate check uses when the checkout
+       address is in the same place, and on the cart as attributes for the team and noon;
+     - pre-fills the checkout address (building and street, flat/villa, area, emirate).
+   The pin is optional: an area or a saved address still gets Express when it is in range, and
+   checkout (Apple Pay / Google Pay too) judges the typed address. The box only suggests it.
 
    Bag lines get hidden properties: _plx (bag built here; checkout offers Express to these while
    Express is in preview) and _plx_sub (Subscribe & Save: no Express). */
@@ -113,11 +115,14 @@
     var m = document.querySelector('[data-plo-mode]:checked');
     return !!(m && m.value === 'sub');
   }
+  // No exact pin yet (an area, or a saved address): suggest one, never require it.
   function edgeNote(c) {
     var p = place();
-    return c.edge && p && p.kind === 'area'
-      ? '<span class="plx__edge">Parts of ' + esc(c.area.name) + ' are just outside the Express zone. <button type="button" class="plx__link" data-plx-open="search">Add your building</button> to confirm.</span>'
-      : '';
+    if (!p || p.kind === 'location' || c.tier === 'unknown' || c.tier === 'error') return '';
+    if (c.edge && c.tier === 'express') {
+      return '<span class="plx__edge">Parts of ' + esc(c.area.name) + ' are right at the edge of the Express zone. <button type="button" class="plx__link" data-plx-open="pin">Pin your building</button> to be sure.</span>';
+    }
+    return '<span class="plx__edge"><button type="button" class="plx__link" data-plx-open="pin">📍 Pin your building</button> <span class="plx__opt">optional, helps the rider find you</span></span>';
   }
 
   function pdpHTML() {
@@ -145,7 +150,8 @@
   function cartHTML() {
     var c = current || { tier: 'unknown' };
     if (c.tier === 'unknown' || c.tier === 'error') {
-      return '<span class="plx__t">⚡ Express delivery in Dubai, today</span>' +
+      return '<span class="plx__t">⚡ Express delivery in Dubai</span>' +
+        '<span class="plx__s">Check your address to see if it reaches you today.</span>' +
         '<button type="button" class="plx__link" data-plx-open>Check your address</button>';
     }
     var name = placeLabel();
@@ -160,7 +166,8 @@
     return '<span class="plx__t">' + head + '</span>' + (when ? '<span class="plx__s">' + when + '</span>' : '') +
       (c.tier === 'standard' ? '' : cartTotal != null && cartTotal < minAed * 100
         ? '<span class="plx__s plx__s--need">Add AED ' + Math.ceil((minAed * 100 - cartTotal) / 100) + ' more for free delivery.</span>'
-        : '<span class="plx__s">Pick “Plaay Express” at checkout.</span>') +
+        : '<span class="plx__s">Pick “Plaay Express” at checkout. Apple Pay and Google Pay offer it too.</span>') +
+      (c.tier === 'express' ? edgeNote(c) : '') +
       '<button type="button" class="plx__link" data-plx-open>Change address</button>';
   }
   function chipHTML() {
@@ -208,7 +215,36 @@
       if (has !== cartHasSub || total !== cartTotal) { cartHasSub = has; cartTotal = total; renderAll(); }
     }).catch(function () {});
   }
+  function pinOf(p) { return p && p.kind === 'location' ? p.lat + ',' + p.lng : ''; }
+  // Put the pin on every bag line (Shopify only passes line properties to the rate check).
+  var syncing = null;
+  function syncLines(p) {
+    var pin = pinOf(p);
+    syncing = nativeFetch('/cart.js', { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (cart) {
+      var todo = (cart.items || []).filter(function (i) {
+        var props = i.properties || {};
+        if (Object.keys(props).some(function (k) { return k.indexOf('_plaay') === 0; })) return false;
+        return (props._plx_pin || '') !== pin;
+      });
+      return todo.reduce(function (chain, i) {
+        return chain.then(function () {
+          var props = Object.assign({}, i.properties || {}, { _plx: '1', _plx_pin: pin });
+          return nativeFetch('/cart/change.js', {
+            method: 'POST', credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ id: i.key, quantity: i.quantity, properties: props })
+          });
+        });
+      }, Promise.resolve()).then(function () {
+        if (todo.length && typeof window.plaayRenderCartDrawerSections === 'function') {
+          try { window.plaayRenderCartDrawerSections(); } catch (e) {}
+        }
+      });
+    }).catch(function () {}).then(function () { syncing = null; });
+    return syncing;
+  }
   function syncCartAttributes(p) {
+    syncLines(p);
     var exact = p.kind === 'location';
     var area = (exact ? p.area : p.label) || '';
     nativeFetch('/cart/update.js', {
@@ -225,6 +261,8 @@
     var props = Object.assign({}, item.properties || {});
     if (Object.keys(props).some(function (k) { return k.indexOf('_plaay') === 0; })) return item;
     props._plx = '1';
+    var pin = pinOf(readPick());
+    if (pin) props._plx_pin = pin;
     if (item.selling_plan) props._plx_sub = '1'; else delete props._plx_sub;
     return Object.assign({}, item, { properties: props });
   }
@@ -232,6 +270,7 @@
     if (body instanceof FormData) {
       if (/\/cart\/add/.test(url)) {
         body.set('properties[_plx]', '1');
+        if (pinOf(readPick())) body.set('properties[_plx_pin]', pinOf(readPick()));
         if (body.get('selling_plan')) body.set('properties[_plx_sub]', '1');
       }
       return body;
@@ -277,7 +316,7 @@
     if (!p || p.kind === 'address') return href;
     var f = {};
     if (p.kind === 'location') {
-      f.address1 = p.address1 || p.label;
+      f.address1 = [p.address1 || p.label, p.street].filter(Boolean).join(', ');
       if (p.flat) f.address2 = p.flat;
       f.city = p.area || p.community || 'Dubai';
       f.province = p.emirate || 'Dubai';
@@ -327,17 +366,21 @@
         '</div>' +
 
         '<div class="plx-view" data-plx-v="map" hidden>' +
-          '<p class="plx-sheet__note">Move the map so the pin sits on your building.</p>' +
+          '<p class="plx-sheet__step" data-plx-maphint>Move the map so the pin sits on your building.</p>' +
           '<div class="plx-map"><div class="plx-map__canvas" data-plx-map></div><span class="plx-map__pin" aria-hidden="true">📍</span></div>' +
-          '<button type="button" class="plx__btn plx__btn--full" data-plx-pin>Use this spot</button>' +
+          '<button type="button" class="plx__btn plx__btn--full" data-plx-pin>Yes, the pin is on my building</button>' +
         '</div>' +
 
         '<div class="plx-view" data-plx-v="confirm" hidden>' +
           '<div class="plx-confirm" data-plx-confirm aria-live="polite"></div>' +
-          '<label class="plx-sheet__lbl" for="plx-flat">Flat, villa or office no. (optional)</label>' +
+          '<label class="plx-sheet__lbl" for="plx-bld">Building or villa</label>' +
+          '<input id="plx-bld" class="plx-sheet__in" type="text" autocomplete="address-line1" placeholder="e.g. Bloom Towers A">' +
+          '<label class="plx-sheet__lbl" for="plx-flat">Flat, villa or office no.</label>' +
           '<input id="plx-flat" class="plx-sheet__in" type="text" autocomplete="address-line2" placeholder="e.g. Apt 1203">' +
+          '<label class="plx-sheet__lbl" for="plx-street">Street or landmark (optional)</label>' +
+          '<input id="plx-street" class="plx-sheet__in" type="text" placeholder="e.g. Dana Road, near Spinneys">' +
           '<button type="button" class="plx__btn plx__btn--full" data-plx-save disabled>Deliver here</button>' +
-          '<button type="button" class="plx__link" data-plx-view="map">Not quite right? Adjust the pin</button>' +
+          '<button type="button" class="plx__link" data-plx-view="map">Not quite right? Move the pin</button>' +
         '</div>' +
       '</div>';
     document.body.appendChild(sheet);
@@ -395,21 +438,33 @@
       };
       box.innerHTML = '<p class="plx-confirm__addr">📍 ' + esc(chosen.label) + '</p>' +
         '<p class="plx-confirm__tier">' + (TAG[res.tier] || '') + ' ' + esc(res.title || '') + '</p>';
+      // Pre-fill what the pin (or the search result) tells us; the shopper corrects it.
+      var bld = sheet.querySelector('#plx-bld');
+      if (!bld.value) bld.value = chosen.address1 === 'Pinned location' ? '' : chosen.address1;
       btn.disabled = false;
-      setTimeout(function () { sheet.querySelector('#plx-flat').focus(); }, 30);
+      setTimeout(function () { (bld.value ? sheet.querySelector('#plx-flat') : bld).focus(); }, 30);
     }).catch(function () {
       box.innerHTML = '<p class="plx-empty">Couldn’t check this spot. Try again in a moment.</p>';
     });
   }
 
+  // Where the map opens: a spot to confirm (search result, my location), else the last pin.
+  var mapTarget = null;
+  var pendingKnown = null;
   function showMap() {
     var el = sheet.querySelector('[data-plx-map]');
     var p = readPick();
     var exact = p && p.kind === 'location';
+    var t = mapTarget || (chosen ? { lat: chosen.lat, lng: chosen.lng } : exact ? { lat: p.lat, lng: p.lng } : null);
+    sheet.querySelector('[data-plx-maphint]').textContent = t
+      ? 'Is the pin on your building? Move the map if it isn’t.'
+      : 'Move the map so the pin sits on your building.';
     loadMapLibre().then(function (ml) {
       if (!map) {
-        map = new ml.Map({ container: el, style: MAP_STYLE, center: exact ? [p.lng, p.lat] : [DUBAI[1], DUBAI[0]], zoom: exact ? 16.5 : 11, attributionControl: { compact: true } });
+        map = new ml.Map({ container: el, style: MAP_STYLE, center: t ? [+t.lng, +t.lat] : [DUBAI[1], DUBAI[0]], zoom: t ? 17 : 11, attributionControl: { compact: true } });
         map.addControl(new ml.NavigationControl({ showCompass: false }), 'top-left');
+      } else if (t) {
+        map.jumpTo({ center: [+t.lng, +t.lat], zoom: 17 });
       }
       setTimeout(function () { map.resize(); }, 50);
     }).catch(function () {
@@ -439,7 +494,10 @@
       var r = lastResults[+t.getAttribute('data-plx-res')];
       if (!r) return;
       if (r.kind === 'area') { savePick({ kind: 'area', id: r.id, label: r.name }); return done(); }
-      return confirmSpot(r.lat, r.lng, r);
+      // Step 1: confirm the pin on the map. Step 2: building / flat / street.
+      mapTarget = { lat: r.lat, lng: r.lng };
+      pendingKnown = r;
+      return view('map');
     }
     if (t.hasAttribute('data-plx-addr')) {
       var a = cfg.addresses[+t.getAttribute('data-plx-addr')];
@@ -450,10 +508,17 @@
     if (t.hasAttribute('data-plx-pin')) {
       if (!map) return;
       var c = map.getCenter();
-      return confirmSpot(c.lat.toFixed(5), c.lng.toFixed(5));
+      // Keep the search result's address when the pin stayed on it (within ~150 m).
+      var known = pendingKnown && Math.abs(c.lat - pendingKnown.lat) < 0.0014 && Math.abs(c.lng - pendingKnown.lng) < 0.0015 ? pendingKnown : null;
+      mapTarget = null; pendingKnown = null;
+      return confirmSpot(c.lat.toFixed(5), c.lng.toFixed(5), known);
     }
     if (t.hasAttribute('data-plx-save') && chosen) {
+      var bld = sheet.querySelector('#plx-bld').value.trim().slice(0, 80);
+      if (bld) chosen.address1 = bld;
       chosen.flat = sheet.querySelector('#plx-flat').value.trim().slice(0, 80);
+      chosen.street = sheet.querySelector('#plx-street').value.trim().slice(0, 80);
+      chosen.label = [chosen.address1, chosen.community].filter(Boolean).join(', ') || chosen.label;
       savePick(chosen);
       return done();
     }
@@ -464,7 +529,8 @@
     navigator.geolocation.getCurrentPosition(function (pos) {
       btn.disabled = false;
       btn.textContent = '📍 Use my current location';
-      confirmSpot(pos.coords.latitude.toFixed(5), pos.coords.longitude.toFixed(5));
+      mapTarget = { lat: pos.coords.latitude.toFixed(5), lng: pos.coords.longitude.toFixed(5) };
+      view('map');
     }, function () {
       btn.disabled = false;
       btn.textContent = '📍 Location is off. Search or pick on the map.';
@@ -485,7 +551,16 @@
     document.documentElement.classList.add('plx-lock');
     sheet.querySelector('#plx-q').value = '';
     sheet.querySelector('[data-plx-results]').innerHTML = '';
-    sheet.querySelector('#plx-flat').value = '';
+    ['#plx-flat', '#plx-bld', '#plx-street'].forEach(function (s) { sheet.querySelector(s).value = ''; });
+    chosen = null; mapTarget = null; pendingKnown = null;
+    if (start === 'pin') {
+      // "Pin your building": start from what we know (area or saved address) and search it.
+      var p = place();
+      var q = p ? (p.kind === 'address' ? p.address : p.label) : '';
+      view('search');
+      if (q) { sheet.querySelector('#plx-q').value = q; search(q); }
+      return;
+    }
     view(start === 'map' ? 'map' : 'search');
   }
   function close() {
