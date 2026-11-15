@@ -161,3 +161,14 @@ test('4-hour off (live for now): beyond the Express limit is normal 1–2 day de
   assert.match(p.detail, /doesn’t reach this address yet/);
   assert.equal(await locate({ address: 'Somewhere, Dubai' }, off4, { geocode: async () => null, drivingKm: async () => null }), null);
 });
+
+test('after midnight on a working day Express is today from the opening hour, not within 2 hours', async () => {
+  const monEarly = new Date('2026-11-15T20:13:00Z'); // Mon 16 Nov, 00:13 in Dubai
+  const p = promise({ id: 'motor-city', name: 'Motor City', tier: 'express', km: 16.6 }, monEarly, off4);
+  assert.equal(p.title, 'Plaay Express · Today from 9 am');
+  assert.doesNotMatch(p.detail, /within 2 hours/);
+  const noon = promise({ id: 'motor-city', name: 'Motor City', tier: 'express', km: 16.6 }, new Date('2026-11-16T08:00:00Z'), off4);
+  assert.equal(noon.title, 'Plaay Express · Today');
+  const [x] = await checkoutRates(rate('Motor City', 'Dubai'), monEarly, { ...off4, checkout: 'on' }, geo());
+  assert.equal(x.service_name, 'Plaay Express · today from 9 am');
+});

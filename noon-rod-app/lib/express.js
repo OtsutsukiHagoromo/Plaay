@@ -289,7 +289,9 @@ export function schedule(now = new Date(), s = expressSettings()) {
   const d = dubai(now);
   if (s.workDays.includes(d.day) && d.hour < s.cutoffHour) {
     const cutoff = new Date(Date.UTC(d.date.getUTCFullYear(), d.date.getUTCMonth(), d.date.getUTCDate(), s.cutoffHour - 4));
-    return { when: 'today', label: 'Today', cutoff: cutoff.toISOString(), secondsLeft: Math.max(0, Math.round((cutoff - now) / 1000)) };
+    // Before the first run (e.g. 00:10): still today, but riders only leave from the opening hour.
+    const beforeOpen = d.hour < s.openHour;
+    return { when: 'today', label: 'Today', beforeOpen, cutoff: cutoff.toISOString(), secondsLeft: Math.max(0, Math.round((cutoff - now) / 1000)) };
   }
   for (let i = 1; i <= 7; i++) {
     const day = (d.day + i) % 7;
@@ -319,8 +321,9 @@ export function promise(place, now = new Date(), s = expressSettings()) {
   if (tier === 'express') {
     return {
       ...out,
-      title: today ? 'Plaay Express · Today' : `Plaay Express · ${sch.label} from ${openLabel(s)}`,
-      detail: today ? 'Usually within 2 hours' : 'Order now and it’s first out of the door.',
+      title: today ? (sch.beforeOpen ? `Plaay Express · Today from ${openLabel(s)}` : 'Plaay Express · Today') : `Plaay Express · ${sch.label} from ${openLabel(s)}`,
+      detail: today ? (sch.beforeOpen ? `Riders start at ${openLabel(s)}; yours is in the first run.` : 'Usually within 2 hours') : 'Order now and it’s first out of the door.',
+      beforeOpen: !!sch.beforeOpen,
       edge: !!place.edge,
     };
   }
@@ -357,7 +360,7 @@ export async function checkoutRates(rate, now = new Date(), s = expressSettings(
   const place = await locate({ ...pin, address }, s, geo);
   if (!place || place.tier === 'standard') return [];
 
-  const day = (p) => (p.when === 'today' ? 'today' : p.title.split('· ')[1].toLowerCase());
+  const day = (p) => p.title.split('· ')[1].toLowerCase();
   const rates = [];
   if (place.tier === 'express') {
     const p = promise(place, now, s);
