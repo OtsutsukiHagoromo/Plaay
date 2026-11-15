@@ -88,60 +88,13 @@
 -%}
 <div class="pl plo plo-coll">
   {%- paginate collection.products by s.per_page -%}
-    {%- if b_layout == 'image' and b_asset != blank -%}
-    <header class="plo-hero plo-hero--image{% if is_all %} plo-hero--all{% endif %}">
-      <div class="plo-wrap">
-        <h1 class="pl-vh">{{ collection.title }}</h1>
-        <picture class="plo-hero__banner">
-          {%- if b_mobile != blank -%}<source media="(max-width: 767px)" srcset="{{ b_mobile | asset_img_url: '600x' }} 600w, {{ b_mobile | asset_img_url: '900x' }} 900w, {{ b_mobile | asset_url }} 1200w" sizes="100vw">{%- endif -%}
-          <img src="{{ b_asset | asset_img_url: '1400x' }}" srcset="{{ b_asset | asset_img_url: '800x' }} 800w, {{ b_asset | asset_img_url: '1200x' }} 1200w, {{ b_asset | asset_img_url: '1600x' }} 1600w, {{ b_asset | asset_url }} 1942w" sizes="(min-width: 1360px) 1280px, calc(100vw - 32px)" alt="{{ collection.title | escape }}" width="1942" height="809" loading="eager" fetchpriority="high">
-        </picture>
-      </div>
-      {%- comment -%} No range tiles under an artwork banner: the range tabs below do that job. {%- endcomment -%}
+    {%- comment -%}
+      No banner (Nov 2026): on phones the banner pushed every product below the first screen and ad
+      visitors left before seeing one. A compact title row, then the tabs, the toolbar and products.
+    {%- endcomment -%}
+    <header class="plo-chead">
+      <div class="plo-wrap"><h1 class="plo-chead__t">{{ collection.title }}</h1></div>
     </header>
-    {%- else -%}
-    <header class="plo-hero{% if has_photo %} plo-hero--photo{% endif %}{% if is_all %} plo-hero--all{% endif %}{% if b_layout == 'art' and has_photo %} plo-hero--art{% endif %}" style="--tint: {{ b_tint }}; --ink: {{ b_ink }}; --pos: {{ b_pos }};">
-      <div class="plo-wrap plo-hero__in">
-        <div class="plo-hero__copy">
-          <h1 class="plo-hero__t">{{ collection.title }}</h1>
-          {%- if b_facts.size > 0 -%}
-            <ul class="plo-hero__usps">
-              {%- for x in b_facts -%}
-                {%- assign x = x | strip -%}
-                {%- if x == blank -%}{%- continue -%}{%- endif -%}
-                {%- assign ux = x | split: ':' -%}
-                {%- if ux.size > 1 -%}{%- assign ic = ux[0] -%}{%- assign lb = ux[1] -%}{%- else -%}{%- assign ic = 'check' -%}{%- assign lb = x -%}{%- endif -%}
-                <li style="--i: {{ forloop.index }}">{{ lb }}</li>
-              {%- endfor -%}
-            </ul>
-          {%- endif -%}
-        </div>
-        {%- if has_photo and b_layout == 'art' -%}
-          <div class="plo-hero__art" aria-hidden="true">
-            {%- if banner_d != blank -%}
-              {{ banner_d | image_url: width: 1400 | image_tag: class: 'plo-hero__img', loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 640px, 100vw', widths: '600, 900, 1400', alt: '' }}
-            {%- else -%}
-              <img class="plo-hero__img" src="{{ b_asset | asset_url }}" srcset="{{ b_asset | asset_img_url: '600x' }} 600w, {{ b_asset | asset_img_url: '900x' }} 900w, {{ b_asset | asset_url }} 1055w" sizes="(min-width: 1024px) 640px, 100vw" alt="" width="1055" height="1491" loading="eager" fetchpriority="high">
-            {%- endif -%}
-          </div>
-        {%- elsif has_photo -%}
-          <div class="plo-hero__card">
-            {%- if banner_d != blank -%}
-              <picture>
-                {%- if banner_m != blank -%}<source media="(max-width: 767px)" srcset="{{ banner_m | image_url: width: 800 }} 800w, {{ banner_m | image_url: width: 1200 }} 1200w" sizes="50vw">{%- endif -%}
-                {{ banner_d | image_url: width: 1600 | image_tag: class: 'plo-hero__img', loading: 'eager', fetchpriority: 'high', sizes: '(min-width: 1024px) 50vw, 40vw', widths: '600, 1000, 1600', alt: '' }}
-              </picture>
-            {%- else -%}
-              <img class="plo-hero__img" src="{{ b_asset | asset_img_url: '900x' }}" srcset="{{ b_asset | asset_img_url: '600x' }} 600w, {{ b_asset | asset_img_url: '900x' }} 900w, {{ b_asset | asset_url }} 1448w" sizes="(min-width: 1024px) 50vw, 100vw" alt="" width="1448" height="1086" loading="eager" fetchpriority="high">
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-      </div>
-      {%- if is_all -%}
-        <div class="plo-wrap plo-hero__tiles">{%- render 'pl-menu-tiles', size: 'lg' -%}</div>
-      {%- endif -%}
-    </header>
-    {%- endif -%}
 
     <div class="plo-wrap">
       <nav class="plo-chips" aria-label="Shop by type">
@@ -248,13 +201,6 @@
         <div class="plo-tools__active" data-plo-factive hidden></div>
       </div>
 
-      {%- if s.show_promo -%}
-        <a class="plo-substrip" href="{{ s.promo_url | default: '/pages/subscribe-save' }}">
-          <span class="plo-substrip__ic" aria-hidden="true">{%- render 'pl-icon', name: 'refresh', size: 16, stroke: 2.2 -%}</span>
-          <span class="plo-substrip__t"><b>{{ s.promo_heading }}</b> {{ s.promo_body }}</span>
-          <span class="plo-substrip__go">{{ s.promo_btn }}</span>
-        </a>
-      {%- endif -%}
 
       {%- if grouped -%}
         {%- for h in chip_handles -%}
@@ -348,6 +294,15 @@
         </div>
       {%- else -%}
         <p class="plo-empty">Nothing here yet. <a class="plo-u" href="{{ routes.collections_url }}/shop-all{% if view_q != blank %}?{{ view_q }}{% endif %}">Shop all</a></p>
+      {%- endif -%}
+
+      {%- comment -%} Subscribe & save strip: under the products, so they come first. {%- endcomment -%}
+      {%- if s.show_promo -%}
+        <a class="plo-substrip plo-substrip--end" href="{{ s.promo_url | default: '/pages/subscribe-save' }}">
+          <span class="plo-substrip__ic" aria-hidden="true">{%- render 'pl-icon', name: 'refresh', size: 16, stroke: 2.2 -%}</span>
+          <span class="plo-substrip__t"><b>{{ s.promo_heading }}</b> {{ s.promo_body }}</span>
+          <span class="plo-substrip__go">{{ s.promo_btn }}</span>
+        </a>
       {%- endif -%}
 
       <p class="plo-empty" data-plo-fempty hidden>No products match these filters. <button type="button" class="plo-u" data-plo-fclear>Clear filters</button></p>

@@ -172,3 +172,24 @@
   .plo-hero--image .plo-hero__banner { border-radius: 24px; }
 }
 
+
+/* Collection pages without a banner (sections/plo-collection, Nov 2026): a compact title row so the
+   tabs, toolbar and first products sit in the first screen on phones. */
+.plo-chead { padding-top: 14px; }
+.plo-chead__t { margin: 0; font-size: 26px; line-height: 1.1; font-weight: 900; color: var(--pl-navy); letter-spacing: -.02em; }
+.plo-coll .plo-chips { padding-top: 10px; }
+.plo-substrip--end { margin-top: 28px; }
+@media (max-width: 767px) {
+  .plo-chead { padding-top: 10px; }
+  .plo-chead__t { font-size: 22px; }
+  .plo-coll .plo-chips { padding-top: 8px; }
+  .plo-coll .plo-tools { margin-top: 8px; padding-bottom: 8px; }
+  .plo-coll .plo-range:first-of-type { margin-top: 4px; }
+  /* WhatsApp: smaller over the product grid. */
+  .template-collection .plaay-wa-float { width: 44px; height: 44px; right: 10px; }
+  .template-collection .plaay-wa-icon { width: 22px; height: 22px; }
+}
+@media (min-width: 1024px) {
+  .plo-chead { padding-top: 28px; }
+  .plo-chead__t { font-size: 40px; }
+}
