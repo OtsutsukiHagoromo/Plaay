@@ -97,16 +97,17 @@
     </header>
 
     <div class="plo-wrap">
+      {%- comment -%} The Build Your Own Mix builder (a product page, so never the current tab) sits before Variety. {%- endcomment -%}
+      {%- assign mix_p = all_products['build-your-own-mix'] -%}
+      {%- capture mix_tab -%}{%- if mix_p != blank and mix_p.available -%}<a class="plo-chips__mix" href="{{ mix_p.url }}">Build your own mix<em>New</em></a>{%- endif -%}{%- endcapture -%}
+      {%- assign mix_done = false -%}
       <nav class="plo-chips" aria-label="Shop by type">
         {%- for h in chip_handles -%}
           {%- assign i = forloop.index0 -%}
+          {%- if mix_done == false and h contains 'variety' -%}{{ mix_tab }}{%- assign mix_done = true -%}{%- endif -%}
           <a href="{{ routes.collections_url }}/{{ h }}{% if view_q != blank %}?{{ view_q }}{% endif %}"{% if collection.handle == h %} aria-current="page"{% endif %}>{{ chip_labels[i] }}<small>{{ collections[h].products_count }}</small></a>
         {%- endfor -%}
-        {%- comment -%} Last tab: the Build Your Own Mix builder (a product page, so it is never the current tab). {%- endcomment -%}
-        {%- assign mix_p = all_products['build-your-own-mix'] -%}
-        {%- if mix_p != blank and mix_p.available -%}
-          <a class="plo-chips__mix" href="{{ mix_p.url }}">Build your own mix<em>New</em></a>
-        {%- endif -%}
+        {%- if mix_done == false -%}{{ mix_tab }}{%- endif -%}
       </nav>
 
       {%- liquid
