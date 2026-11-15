@@ -6,8 +6,8 @@ import { handleCheckoutRates, handleExpressCheck } from '../lib/handlers.js';
 import { hasSubscription, isExpressOrder, websitePin, buildTaskPayload } from '../lib/mapping.js';
 import { cfg, makeOrder } from './helpers.js';
 
-const s = expressSettings({ FOUR_HOUR_ENABLED: 'true' }); // 4-hour paths; see the 4-hour-off test below
-const off4 = expressSettings({});
+const s = { ...expressSettings({ FOUR_HOUR_ENABLED: 'true' }), previewProducts: ['9100000000001'] }; // 4-hour paths; see the 4-hour-off test below
+const off4 = { ...expressSettings({}), previewProducts: ['9100000000001'] };
 const on = expressSettings({ EXPRESS_CHECKOUT: 'on', FOUR_HOUR_ENABLED: 'true' });
 // Dubai is UTC+4: 11:00Z = 3 pm, 14:00Z = 6 pm.
 const wedAfternoon = new Date('2026-11-04T11:00:00Z');
@@ -70,9 +70,10 @@ test('promise wording; pausing turns Express off', async () => {
   assert.equal(promise(motor, wedAfternoon, { ...s, paused: true }).tier, 'standard');
 });
 
-const rate = (address1, city, { price = 5000, qty = 1, props = { _plx: '1' } } = {}) => ({
+const TEST_ID = '9100000000001'; // the hidden test product
+const rate = (address1, city, { price = 5000, qty = 1, props = { _plx: '1' }, pid = TEST_ID } = {}) => ({
   destination: { country: 'AE', province: city === 'Sharjah' ? 'SH' : 'DU', city, address1 },
-  items: [{ price, quantity: qty, properties: props }],
+  items: [{ price, quantity: qty, properties: props, product_id: Number(pid) }],
   currency: 'AED',
 });
 
@@ -96,7 +97,9 @@ test('checkout: no Express with Subscribe & Save, when paused, off, or (preview)
   assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai', { props: { _plx: '1', _plx_sub: '1' } }), wedAfternoon, on, geo()), []);
   assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, { ...on, paused: true }, geo()), []);
   assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, { ...on, checkout: 'off' }, geo()), []);
-  assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai', { props: null }), wedAfternoon, s, geo()), []);
+  // Preview: a bag without the hidden test product gets nothing, even with the website's marker.
+  assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai', { pid: '123' }), wedAfternoon, s, geo()), []);
+  assert.deepEqual(await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, { ...s, previewProducts: [] }, geo()), []);
   assert.equal((await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, s, geo())).length, 2);
   assert.equal((await checkoutRates(rate('Motor City', 'Dubai'), wedAfternoon, off4, geo())).length, 1); // 4-hour off: Express only
 });
@@ -141,7 +144,11 @@ test('delivery check endpoint: areas, suggestions, a pin with its address', asyn
 });
 
 test('checkout rates endpoint rejects unsigned requests', async () => {
-  const d = { cfg, geo: geo(), log: { info() {} } };
+  // Shopify knows the hidden test product; checkout mode stays preview.
+  const shopify = { graphql: async (q) => (q.includes('tag:express-test')
+    ? { deliveryProfiles: { nodes: [] }, products: { nodes: [{ id: `gid://shopify/Product/${TEST_ID}`, title: 't', handle: 't', status: 'UNLISTED', variants: { nodes: [] } }] } }
+    : { shop: {} }) };
+  const d = { cfg: { ...cfg, express: { ...cfg.express, checkout: 'preview' } }, shopify, geo: geo(), log: { info() {} } };
   const raw = JSON.stringify({ rate: rate('Motor City', 'Dubai') });
   const bad = await handleCheckoutRates(new Request('https://x/api/rates', { method: 'POST', body: raw }), d);
   assert.equal(bad.status, 401);
@@ -188,7 +195,7 @@ test('checkout uses the website pin when the typed address is the same place, el
   // Typed "Dubai Marina" (area centre 18.7 km, Express) but the pin is past the limit by road.
   const pinFar = '25.0870,55.1460';
   const byKm = (pinKm) => ({ ...geo(), drivingKm: async (_w, p) => (Math.abs(p.lat - 25.087) < 0.001 ? pinKm : 18.7), geocode: async () => null });
-  const withPin = { ...rate('Dubai Marina', 'Dubai'), items: [{ price: 12000, quantity: 1, properties: { _plx: '1', _plx_pin: pinFar } }] };
+  const withPin = { ...rate('Dubai Marina', 'Dubai'), items: [{ price: 12000, quantity: 1, product_id: 9100000000001, properties: { _plx: '1', _plx_pin: pinFar } }] };
   assert.deepEqual(await checkoutRates(withPin, wedAfternoon, sOn, byKm(21.4)), []);
   // Same pin, but it is inside the limit: Express.
   assert.equal((await checkoutRates(withPin, wedAfternoon, sOn, byKm(19.2)))[0].service_code, 'plaay-express');
@@ -196,7 +203,7 @@ test('checkout uses the website pin when the typed address is the same place, el
   const noPin = rate('Dubai Marina', 'Dubai', { price: 12000 });
   assert.equal((await checkoutRates(noPin, wedAfternoon, sOn, byKm(21.4)))[0].service_code, 'plaay-express');
   // A pin from a different place (Deira typed, Motor City pinned): the typed address is judged.
-  const other = { ...rate('Deira City Centre', 'Dubai'), items: [{ price: 12000, quantity: 1, properties: { _plx: '1', _plx_pin: '25.0450,55.2380' } }] };
+  const other = { ...rate('Deira City Centre', 'Dubai'), items: [{ price: 12000, quantity: 1, product_id: 9100000000001, properties: { _plx: '1', _plx_pin: '25.0450,55.2380' } }] };
   const deira = { ...geo(), geocode: async () => ({ lat: 25.2526, lng: 55.3309 }), drivingKm: async (_w, p) => (p.lat > 25.2 ? 34 : 16) };
   assert.deepEqual(await checkoutRates(other, wedAfternoon, sOn, deira), []);
 });

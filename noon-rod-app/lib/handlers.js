@@ -370,6 +370,19 @@ export async function handleExpressCheck(request, d) {
 // ---- Shopify carrier-calculated shipping (checkout rates) ----
 // Express and 4-hour only; standard stays the store's own rate. Signed with the app secret.
 
+// Ids of the hidden test products (tag express-test), cached for 5 minutes. Empty if unknown.
+let previewCache = null;
+async function previewProducts(d) {
+  if (previewCache && Date.now() - previewCache.at < 300_000) return previewCache.ids;
+  try {
+    const t = await testStatus(d.shopify);
+    previewCache = { at: Date.now(), ids: t.products.map((p) => p.id.split('/').pop()) };
+  } catch {
+    previewCache = { at: Date.now(), ids: previewCache?.ids || [] };
+  }
+  return previewCache.ids;
+}
+
 export async function handleCheckoutRates(request, d) {
   const raw = await request.text();
   if (!verifyWebhookHmac(raw, request.headers.get('x-shopify-hmac-sha256'), d.cfg.shopify.webhookSecret)) {
@@ -381,7 +394,7 @@ export async function handleCheckoutRates(request, d) {
   } catch {
     return json({ error: 'invalid JSON' }, 400);
   }
-  const s = await liveSettings(d);
+  const s = { ...(await liveSettings(d)), previewProducts: await previewProducts(d) };
   const rates = await checkoutRates(body.rate, new Date(), s, d.geo || geo);
   const dest = body.rate?.destination || {};
   // No names, streets or phone numbers in the log: area-level only.

@@ -380,7 +380,12 @@ export async function checkoutRates(rate, now = new Date(), s = expressSettings(
   const dest = rate?.destination || {};
   const items = rate?.items || [];
   if (s.checkout === 'off' || s.paused) return [];
-  if (s.checkout === 'preview' && !items.some((i) => prop(i, '_plx'))) return [];
+  // Preview (testing): only bags holding a hidden test product (tag express-test) get Express.
+  // Without the list of test products nobody does.
+  if (s.checkout === 'preview') {
+    const ids = new Set((s.previewProducts || []).map(String));
+    if (!items.some((i) => ids.has(String(i.product_id)))) return [];
+  }
   if (items.some((i) => prop(i, '_plx_sub'))) return [];
   if (String(dest.country || '').toUpperCase() !== 'AE') return [];
 
