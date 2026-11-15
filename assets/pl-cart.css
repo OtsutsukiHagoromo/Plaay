@@ -201,6 +201,9 @@ cart-drawer.loading .pl-drawer__loading { opacity: 1; visibility: visible; trans
 .pl .pl-summary__row--save .pl-summary__v { color: var(--pl-green); }
 .pl .pl-summary__row--total { color: var(--pl-navy); font-size: var(--pl-t4); font-weight: 700; padding-top: 10px; margin-top: 4px; border-top: 1px solid var(--pl-line); }
 .pl .pl-summary__row--total .pl-summary__v { font-size: var(--pl-t6); font-weight: 900; }
+/* In the bag drawer the total lives in the sticky footer only (Total + Checkout), so the summary card
+   and the tap-open summary stop at Delivery instead of repeating it. The cart page keeps its row. */
+cart-drawer .pl-summary .pl-summary__row--total { display: none; }
 .pl .pl-summary__code { display: inline-flex; align-items: center; gap: 6px; }
 .pl .pl-summary__code-x { width: 18px; height: 18px; border-radius: 999px; background: var(--pl-line-2); color: var(--pl-mute); font-size: 12px; line-height: 1; display: inline-flex; align-items: center; justify-content: center; }
 .pl .pl-summary__code-x:hover { background: var(--pl-navy); color: var(--pl-white); }
