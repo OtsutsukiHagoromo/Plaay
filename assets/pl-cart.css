@@ -452,3 +452,7 @@ html.pl-app cart-drawer .pl-drawer .pl-drawer__head { padding-top: calc(var(--pl
 .pl-summary-card.is-flash { animation: pl-sum-flash .9s ease-out 1; }
 .pl .pl-summary__was { margin-right: 4px; font-weight: 500; color: var(--pl-mute); text-decoration: line-through; }
 .pl .pl-summary__v .pl-green { color: var(--pl-green); }
+
+/* Bag drawer: Apple Pay / Google Pay / Shop Pay under Checkout (Shopify's accelerated buttons) */
+.pl .pl-wallet { margin-top: 8px; --shopify-accelerated-checkout-button-block-size: 48px; --shopify-accelerated-checkout-button-border-radius: 999px; --shopify-accelerated-checkout-row-gap: 8px; --shopify-accelerated-checkout-inline-alignment: center; }
+.pl .pl-wallet .dynamic-checkout__content { margin: 0; }

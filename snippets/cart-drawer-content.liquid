@@ -304,8 +304,9 @@
         </button>
         <div class="pl-drawer__sum" data-pl-sum hidden></div>
         <a href="/checkout" class="pl-btn pl-drawer__checkout" data-checkout-url="/checkout">{% render 'pl-icon', name: 'lock', size: 17, stroke: 2.4 %}<span>Checkout</span></a>
-        {%- if plx_cart and additional_checkout_buttons -%}
-          <div class="plx-wallet">{{ content_for_additional_checkout_buttons }}</div>
+        {%- comment -%} Apple Pay / Google Pay / Shop Pay under Checkout, for every bag. {%- endcomment -%}
+        {%- if additional_checkout_buttons -%}
+          <div class="pl-wallet">{{ content_for_additional_checkout_buttons }}</div>
         {%- endif -%}
       {%- else -%}
         <button type="button" class="pl-btn pl-btn--full" data-close>Continue shopping</button>
