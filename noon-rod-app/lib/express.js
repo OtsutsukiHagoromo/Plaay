@@ -349,6 +349,21 @@ const prop = (item, key) => {
   return p && typeof p === 'object' && p[key] != null && p[key] !== '' && p[key] !== false;
 };
 
+// What the bag costs after discount codes and automatic discounts, in fils: the free-delivery
+// threshold is judged on this, like the store's own Standard delivery rate. Item prices in the
+// request are before discounts; Shopify sends the cart's totals and discount separately
+// (order_totals, in fils). Without them, the item prices are all we have.
+export function afterDiscounts(rate) {
+  const items = rate?.items || [];
+  const itemsTotal = items.reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0);
+  const ot = rate?.order_totals;
+  if (!ot) return itemsTotal;
+  const total = Number(ot.total_price ?? ot.subtotal_price);
+  const discount = Number(ot.discount_amount || 0);
+  if (!Number.isFinite(total) || total <= 0) return Math.max(0, itemsTotal - (Number.isFinite(discount) ? discount : 0));
+  return Math.max(0, total - (Number.isFinite(discount) ? discount : 0));
+}
+
 // Where a checkout delivers to. Shopify's own pin for the address wins. Otherwise the pin the
 // shopper confirmed on the website (bag lines carry it as _plx_pin) is used when the checkout
 // address is in the same place (within 4 km of what the typed text points to, or text we can't
@@ -390,8 +405,7 @@ export async function checkoutRates(rate, now = new Date(), s = expressSettings(
   if (String(dest.country || '').toUpperCase() !== 'AE') return [];
 
   const currency = rate?.currency || 'AED';
-  const subtotal = items.reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0); // fils
-  const price = String(subtotal >= s.freeOver * 100 ? 0 : s.fee * 100);
+  const price = String(afterDiscounts(rate) >= s.freeOver * 100 ? 0 : s.fee * 100);
   const address = [dest.address1, dest.address2, dest.address3, dest.city, dest.province].filter(Boolean).join(', ');
   const place = await checkoutPlace(dest, address, items, s, geo);
   if (!place || place.tier === 'standard') return [];

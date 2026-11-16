@@ -207,3 +207,15 @@ test('checkout uses the website pin when the typed address is the same place, el
   const deira = { ...geo(), geocode: async () => ({ lat: 25.2526, lng: 55.3309 }), drivingKm: async (_w, p) => (p.lat > 25.2 ? 34 : 16) };
   assert.deepEqual(await checkoutRates(other, wedAfternoon, sOn, deira), []);
 });
+
+test('free Express is judged after discount codes, like Standard delivery', async () => {
+  const sOn = { ...off4, checkout: 'on' };
+  const bag = rate('Motor City', 'Dubai', { price: 6000, qty: 2 }); // AED 120 before discounts
+  assert.equal((await checkoutRates(bag, wedAfternoon, sOn, geo()))[0].total_price, '0');
+  // PLAAYNOW takes AED 30 off: AED 90 left, under AED 99, so AED 15.
+  const coded = { ...bag, order_totals: { subtotal_price: 12000, total_price: 12000, discount_amount: 3000 } };
+  assert.equal((await checkoutRates(coded, wedAfternoon, sOn, geo()))[0].total_price, '1500');
+  // A small discount that keeps it over AED 99: still free.
+  const small = { ...bag, order_totals: { subtotal_price: 12000, total_price: 12000, discount_amount: 1000 } };
+  assert.equal((await checkoutRates(small, wedAfternoon, sOn, geo()))[0].total_price, '0');
+});

@@ -398,7 +398,7 @@ export async function handleCheckoutRates(request, d) {
   const rates = await checkoutRates(body.rate, new Date(), s, d.geo || geo);
   const dest = body.rate?.destination || {};
   // No names, streets or phone numbers in the log: area-level only.
-  d.log?.info?.(`rates ${s.checkout} ${dest.country}/${dest.province}/${dest.city} items=${(body.rate?.items || []).length} props=${[...new Set((body.rate?.items || []).flatMap((i) => Object.keys(i.properties || {})))].join('|')} -> ${rates.map((r) => r.service_code).join(',') || 'none'}`);
+  d.log?.info?.(`rates totals=${JSON.stringify(body.rate?.order_totals || null)} ${s.checkout} ${dest.country}/${dest.province}/${dest.city} items=${(body.rate?.items || []).length} props=${[...new Set((body.rate?.items || []).flatMap((i) => Object.keys(i.properties || {})))].join('|')} -> ${rates.map((r) => r.service_code).join(',') || 'none'}`);
   return json({ rates });
 }
 
