@@ -213,9 +213,10 @@ test('free Express is judged after discount codes, like Standard delivery', asyn
   const bag = rate('Motor City', 'Dubai', { price: 6000, qty: 2 }); // AED 120 before discounts
   assert.equal((await checkoutRates(bag, wedAfternoon, sOn, geo()))[0].total_price, '0');
   // PLAAYNOW takes AED 30 off: AED 90 left, under AED 99, so AED 15.
-  const coded = { ...bag, order_totals: { subtotal_price: 12000, total_price: 12000, discount_amount: 3000 } };
+  // The shape Shopify sends (seen in the live log): total_price is already after the discount.
+  const coded = { ...bag, order_totals: { subtotal_price: 12000, total_price: 9000, discount_amount: 3000 } };
   assert.equal((await checkoutRates(coded, wedAfternoon, sOn, geo()))[0].total_price, '1500');
   // A small discount that keeps it over AED 99: still free.
-  const small = { ...bag, order_totals: { subtotal_price: 12000, total_price: 12000, discount_amount: 1000 } };
+  const small = { ...bag, order_totals: { subtotal_price: 12000, total_price: 10500, discount_amount: 1500 } }; // AED 105 left
   assert.equal((await checkoutRates(small, wedAfternoon, sOn, geo()))[0].total_price, '0');
 });

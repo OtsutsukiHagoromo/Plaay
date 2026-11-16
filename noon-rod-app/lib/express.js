@@ -351,17 +351,20 @@ const prop = (item, key) => {
 
 // What the bag costs after discount codes and automatic discounts, in fils: the free-delivery
 // threshold is judged on this, like the store's own Standard delivery rate. Item prices in the
-// request are before discounts; Shopify sends the cart's totals and discount separately
-// (order_totals, in fils). Without them, the item prices are all we have.
+// request are before discounts; Shopify sends the cart's totals separately, in fils, e.g.
+// AED 120 with PLAAYNOW: { subtotal_price: 12000, discount_amount: 3000, total_price: 9000 }.
+// Without them, the item prices are all we have.
 export function afterDiscounts(rate) {
   const items = rate?.items || [];
   const itemsTotal = items.reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0);
   const ot = rate?.order_totals;
   if (!ot) return itemsTotal;
-  const total = Number(ot.total_price ?? ot.subtotal_price);
-  const discount = Number(ot.discount_amount || 0);
-  if (!Number.isFinite(total) || total <= 0) return Math.max(0, itemsTotal - (Number.isFinite(discount) ? discount : 0));
-  return Math.max(0, total - (Number.isFinite(discount) ? discount : 0));
+  const num = (v) => (v == null || v === '' || !Number.isFinite(Number(v)) ? null : Number(v));
+  const sub = num(ot.subtotal_price);
+  const disc = num(ot.discount_amount) ?? 0;
+  if (sub != null) return Math.max(0, sub - disc);
+  const total = num(ot.total_price);
+  return total != null ? Math.max(0, total) : Math.max(0, itemsTotal - disc);
 }
 
 // Where a checkout delivers to. Shopify's own pin for the address wins. Otherwise the pin the
