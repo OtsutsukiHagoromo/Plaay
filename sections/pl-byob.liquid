@@ -61,8 +61,19 @@
   data-plan="{{ default_plan_id }}"
   data-sub-pct="{{ sub_pct }}">
 
-  <section class="pl-byob__hero">
-    <div class="pl-wrap">
+  {%- comment -%}
+    Header photo (Taste Freedom products, headline removed) behind the page's own text:
+    desktop text sits on the plain wall to the left of the products; phones show the text on the
+    same wall colour with the products below it, the photo's top fading into it.
+  {%- endcomment -%}
+  <section class="pl-byob__hero{% if s.hero_photo %} has-photo{% endif %}">
+    {%- if s.hero_photo -%}
+      <picture class="pl-byob__photo">
+        <source media="(min-width: 768px)" srcset="{{ 'pl-byob-hero.jpg' | asset_url }}" width="2000" height="857">
+        <img src="{{ 'pl-byob-hero-m.jpg' | asset_url }}" alt="" width="900" height="734" fetchpriority="high">
+      </picture>
+    {%- endif -%}
+    <div class="pl-wrap pl-byob__copy">
       {%- if s.eyebrow != blank -%}<span class="pl-eyebrow pl-byob__eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
       <h1 class="pl-h pl-h--1 pl-byob__title">{{ s.heading | default: 'Build your own mix' }}</h1>
       {%- if s.subheading != blank -%}<p class="pl-byob__sub">{{ s.subheading }}</p>{%- endif -%}
@@ -309,6 +320,7 @@
   "tag": "section",
   "settings": [
     { "type": "header", "content": "Intro" },
+    { "type": "checkbox", "id": "hero_photo", "label": "Product photo behind the intro", "default": true },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Mix and match" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Build your own mix" },
     { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Pick any truffles and slabs you like, as many as you want." },

@@ -20,6 +20,41 @@
   color: rgba(255, 255, 255, .78);
 }
 
+/* ---------- hero with the product photo (section setting "hero_photo") ---------- */
+.pl .pl-byob__hero.has-photo {
+  position: relative; overflow: hidden;
+  background: linear-gradient(90deg, #CCA186, #DFBAA3);
+  color: var(--pl-navy);
+  padding: var(--pl-s5) 0 0;
+}
+.pl .pl-byob__hero.has-photo .pl-byob__copy { position: relative; z-index: 1; }
+.pl .pl-byob__hero.has-photo .pl-byob__eyebrow { color: var(--pl-navy); opacity: .75; }
+.pl .pl-byob__hero.has-photo .pl-byob__title { color: var(--pl-navy); }
+.pl .pl-byob__hero.has-photo .pl-byob__sub { color: rgba(8, 29, 72, .82); }
+.pl .pl-byob__hero.has-photo .pl-byob__prices li {
+  background: rgba(255, 255, 255, .72); color: var(--pl-navy);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.pl .pl-byob__hero.has-photo .pl-byob__prices b { color: var(--pl-navy); }
+/* Phones: products under the text, their wall fading into the text area. */
+.pl .pl-byob__photo { display: block; }
+.pl .pl-byob__photo img {
+  display: block; width: 100%; height: auto; margin-top: -28px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 18%);
+}
+@media (min-width: 768px) {
+  /* Desktop: the photo fills the header, text on the open wall at the left. */
+  .pl .pl-byob__hero.has-photo { padding: 0; min-height: clamp(360px, 36vw, 520px); display: flex; align-items: center; }
+  .pl .pl-byob__photo { position: absolute; inset: 0; }
+  .pl .pl-byob__photo img {
+    width: 100%; height: 100%; margin: 0; object-fit: cover; object-position: 70% 50%;
+    -webkit-mask-image: none; mask-image: none;
+  }
+  .pl .pl-byob__hero.has-photo .pl-byob__copy { width: 100%; padding-top: var(--pl-s6); padding-bottom: var(--pl-s6); }
+  .pl .pl-byob__hero.has-photo .pl-byob__copy > * { max-width: min(46%, 560px); }
+}
+
 /* ---------- steps ---------- */
 .pl .pl-byob__body { padding-top: var(--pl-s6); }
 .pl .pl-byob__step + .pl-byob__step { margin-top: var(--pl-s7); }

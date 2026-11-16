@@ -3,6 +3,7 @@
     "main": {
       "type": "pl-byob",
       "settings": {
+        "hero_photo": true,
         "eyebrow": "6 pieces minimum",
         "heading": "Build your own mix",
         "subheading": "Choose any 6 or more truffles and slabs. Mix your favourites, your way. Pay per piece.",
