@@ -37,16 +37,17 @@
 }
 .pl .pl-byob__hero.has-photo .pl-byob__prices b { color: var(--pl-navy); }
 /* Phones: products under the text, their wall fading into the text area. */
-.pl .pl-byob__photo { display: block; }
+.pl .pl-byob__hero.has-photo { display: flex; flex-direction: column; }
+.pl .pl-byob__photo { display: block; order: 2; margin-top: -24px; }
 .pl .pl-byob__photo img {
-  display: block; width: 100%; height: auto; margin-top: -28px;
+  display: block; width: 100%; height: auto;
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 18%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 18%);
 }
 @media (min-width: 768px) {
   /* Desktop: the photo fills the header, text on the open wall at the left. */
   .pl .pl-byob__hero.has-photo { padding: 0; min-height: clamp(360px, 36vw, 520px); display: flex; align-items: center; }
-  .pl .pl-byob__photo { position: absolute; inset: 0; }
+  .pl .pl-byob__photo { position: absolute; inset: 0; margin: 0; }
   .pl .pl-byob__photo img {
     width: 100%; height: 100%; margin: 0; object-fit: cover; object-position: 70% 50%;
     -webkit-mask-image: none; mask-image: none;
