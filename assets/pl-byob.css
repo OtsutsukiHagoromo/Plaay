@@ -36,7 +36,7 @@
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
 .pl .pl-byob__hero.has-photo .pl-byob__prices b { color: var(--pl-navy); }
-/* Phones: products under the text, their wall fading into the text area. */
+/* Phones: text first, the products under it, their wall fading up into the text area. */
 .pl .pl-byob__hero.has-photo { display: flex; flex-direction: column; }
 .pl .pl-byob__photo { display: block; order: 2; margin-top: -24px; }
 .pl .pl-byob__photo img {
