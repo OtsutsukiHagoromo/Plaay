@@ -776,7 +776,7 @@ export function renderExpress({ cfg, flash, status, settings, areas, test = {} }
 <a class="backlink" href="/">← Express orders</a>
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 <h1>Express settings</h1>
-<p class="muted">Express: within ${settings.expressMaxKm} km driving of the warehouse. 4-hour: the rest of Dubai. Orders by ${settings.cutoffHour - 12} pm, Monday to Saturday. AED ${settings.fee}, free over AED ${settings.freeOver}. No Express for Subscribe &amp; Save.</p>
+<p class="muted">Express: within ${settings.expressMaxKm} km driving of the warehouse. 4-hour: the rest of Dubai. Orders by ${settings.cutoffHour - 12} pm, Monday to Saturday. Express AED ${settings.fee}, free from AED ${settings.freeOver} (Standard delivery keeps its own rate). No Express for Subscribe &amp; Save.</p>
 
 <div class="card pc"><div><h2>Hidden test on the live store</h2>
 <div class="muted">Makes a hidden copy of one product (link only, not in collections or search) that offers Plaay Express next to standard delivery: standard delivery anywhere in the UAE, Express only where it reaches. Nothing changes for other products. Turning it off deletes the copy and its delivery profile.</div>

@@ -183,7 +183,8 @@ export function expressSettings(env = process.env) {
     cutoffHour: Number(env.CUTOFF_HOUR_GST || 17),
     openHour: Number(env.OPEN_HOUR_GST || 9),
     workDays: String(env.WORK_DAYS || '1,2,3,4,5,6').split(',').map(Number), // 0 = Sunday
-    freeOver: Number(env.FREE_DELIVERY_OVER_AED || 99),
+    // Express is free from AED 199 (after discounts); Standard delivery stays the store's own rate (free from AED 99).
+    freeOver: Number(env.EXPRESS_FREE_OVER_AED || 199),
     fee: Number(env.DELIVERY_FEE_AED || 15),
     paused: /^(1|true|yes)$/i.test(env.EXPRESS_PAUSED || ''),
     // noon 4-hour delivery: off for now, Express (2-hour) only.

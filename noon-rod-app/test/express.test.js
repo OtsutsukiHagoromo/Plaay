@@ -85,8 +85,9 @@ test('checkout: Express then 4-hour (standard stays the store rate), phone requi
   assert.ok(r.every((x) => x.phone_required));
 });
 
-test('checkout: free over AED 99, names follow the clock, other emirates get nothing extra', async () => {
-  const free = await checkoutRates(rate('Downtown', 'Dubai', { qty: 2 }), wedAfternoon, on, geo());
+test('checkout: Express free from AED 199, names follow the clock, other emirates get nothing extra', async () => {
+  const free = await checkoutRates(rate('Downtown', 'Dubai', { qty: 4 }), wedAfternoon, on, geo()); // AED 200
+  assert.equal((await checkoutRates(rate('Downtown', 'Dubai', { qty: 3 }), wedAfternoon, on, geo()))[0].total_price, '1500'); // AED 150
   assert.deepEqual(free.map((x) => x.service_code), ['4hr-delivery']);
   assert.equal(free[0].total_price, '0');
   assert.equal((await checkoutRates(rate('Motor City', 'Dubai'), satEvening, on, geo()))[0].service_name, 'Plaay Express · monday from 9 am');
@@ -208,15 +209,18 @@ test('checkout uses the website pin when the typed address is the same place, el
   assert.deepEqual(await checkoutRates(other, wedAfternoon, sOn, deira), []);
 });
 
-test('free Express is judged after discount codes, like Standard delivery', async () => {
+test('free Express (AED 199+) is judged after discount codes', async () => {
   const sOn = { ...off4, checkout: 'on' };
-  const bag = rate('Motor City', 'Dubai', { price: 6000, qty: 2 }); // AED 120 before discounts
+  assert.equal(sOn.freeOver, 199);
+  const bag = rate('Motor City', 'Dubai', { price: 6000, qty: 4 }); // AED 240 before discounts
   assert.equal((await checkoutRates(bag, wedAfternoon, sOn, geo()))[0].total_price, '0');
-  // PLAAYNOW takes AED 30 off: AED 90 left, under AED 99, so AED 15.
+  // PLAAYNOW takes AED 60 off: AED 180 left, under AED 199, so AED 15.
   // The shape Shopify sends (seen in the live log): total_price is already after the discount.
-  const coded = { ...bag, order_totals: { subtotal_price: 12000, total_price: 9000, discount_amount: 3000 } };
+  const coded = { ...bag, order_totals: { subtotal_price: 24000, total_price: 18000, discount_amount: 6000 } };
   assert.equal((await checkoutRates(coded, wedAfternoon, sOn, geo()))[0].total_price, '1500');
-  // A small discount that keeps it over AED 99: still free.
-  const small = { ...bag, order_totals: { subtotal_price: 12000, total_price: 10500, discount_amount: 1500 } }; // AED 105 left
+  // A small discount that keeps it at AED 199+: still free.
+  const small = { ...bag, order_totals: { subtotal_price: 24000, total_price: 20000, discount_amount: 4000 } }; // AED 200 left
   assert.equal((await checkoutRates(small, wedAfternoon, sOn, geo()))[0].total_price, '0');
+  // AED 120 (free Standard delivery) still pays AED 15 for Express.
+  assert.equal((await checkoutRates(rate('Motor City', 'Dubai', { price: 6000, qty: 2 }), wedAfternoon, sOn, geo()))[0].total_price, '1500');
 });
