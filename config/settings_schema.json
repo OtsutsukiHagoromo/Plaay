@@ -425,6 +425,20 @@
         "id": "express_api",
         "label": "Delivery check address",
         "default": "https://plaay-noon-delivery.vercel.app/api/express"
+      },
+      {
+        "type": "number",
+        "id": "express_fee",
+        "label": "Express fee (AED)",
+        "default": 15,
+        "info": "Shown on the website. The checkout price is set in the delivery app (DELIVERY_FEE_AED)."
+      },
+      {
+        "type": "number",
+        "id": "express_free_over",
+        "label": "Express free from (AED)",
+        "default": 199,
+        "info": "Shown on the website. The checkout threshold is set in the delivery app (EXPRESS_FREE_OVER_AED)."
       }
     ]
   }

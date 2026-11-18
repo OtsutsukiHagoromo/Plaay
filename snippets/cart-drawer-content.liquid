@@ -205,7 +205,7 @@
   {%- endcomment -%}
   {%- if plx_cart -%}{%- render 'plx-express-box', mode: 'cart' -%}{%- endif -%}
   <div class="pl-trust pl-trust--quiet">
-    <span>{% render 'pl-icon', name: 'truck', size: 14, stroke: 1.8 %}{% if plx_cart %}Express in Dubai · 1–2 days UAE-wide{% else %}1–2 day UAE delivery{% endif %} · Free delivery over AED {{ settings.cart_tier_ship | default: 99 }}</span>
+    <span>{% render 'pl-icon', name: 'truck', size: 14, stroke: 1.8 %}{% if plx_cart %}Express in Dubai, free over AED {{ settings.express_free_over | default: 199 }} · 1–2 days UAE-wide, free over AED {{ settings.cart_tier_ship | default: 99 }}{% else %}1–2 day UAE delivery · Free delivery over AED {{ settings.cart_tier_ship | default: 99 }}{% endif %}</span>
     <span>{% render 'pl-icon', name: 'lock', size: 14, stroke: 1.8 %}Secure checkout · Halal certified</span>
   </div>
 {%- endcapture -%}

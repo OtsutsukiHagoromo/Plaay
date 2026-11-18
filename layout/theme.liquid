@@ -360,6 +360,8 @@
           window.PlaayExpress = {
             api: {{ settings.express_api | default: 'https://plaay-noon-delivery.vercel.app/api/express' | json }},
             freeOver: {{ settings.cart_tier_ship | default: 99 | json }},
+            expressFreeOver: {{ settings.express_free_over | default: 199 | json }},
+            expressFee: {{ settings.express_fee | default: 15 | json }},
             signedIn: {% if customer %}true{% else %}false{% endif %},
             loginUrl: {{ routes.account_login_url | append: '?return_url=' | append: request.path | json }},
             addresses: [

@@ -100,8 +100,10 @@
     return Math.max(0, current.secondsLeft - Math.round((Date.now() - fetchedAt) / 1000));
   }
   var ICON = { express: '⚡', '4hr': '🕓', standard: '📦', unknown: '⚡', error: '📦' };
-  var minAed = cfg.freeOver || 99;
-  var free = 'Free on orders of AED ' + minAed + '+.';
+  // Express: AED 15, free from AED 199 (Standard delivery is free from AED 99, set in Shopify).
+  var minAed = cfg.expressFreeOver || 199;
+  var fee = cfg.expressFee || 15;
+  var free = 'AED ' + fee + ', or free on orders of AED ' + minAed + '+.';
   var cartTotal = null; // fils, from /cart.js
 
   function placeLabel() {
@@ -168,7 +170,7 @@
       : esc((c.title || '').split('· ')[1] || c.day || '');
     return '<span class="plx__t">' + head + '</span>' + (when ? '<span class="plx__s">' + when + '</span>' : '') +
       (c.tier === 'standard' ? '' : cartTotal != null && cartTotal < minAed * 100
-        ? '<span class="plx__s plx__s--need">Add AED ' + Math.ceil((minAed * 100 - cartTotal) / 100) + ' more for free delivery.</span>'
+        ? '<span class="plx__s plx__s--need">Express AED ' + fee + ' · add AED ' + Math.ceil((minAed * 100 - cartTotal) / 100) + ' more for free Express.</span>'
         : '<span class="plx__s">Pick “Plaay Express” at checkout. Apple Pay and Google Pay offer it too.</span>') +
       (c.tier === 'express' ? edgeNote(c) : '') +
       '<button type="button" class="plx__link" data-plx-open>Change address</button>';
@@ -365,7 +367,7 @@
             '<button type="button" class="plx-row plx-row--loc" data-plx-view="map">🗺️ Pick on the map</button>' +
           '</div>' +
           (cfg.signedIn ? '' : '<p class="plx-sheet__note">Have an account? <a href="' + esc(cfg.loginUrl) + '">Sign in</a> to use your saved addresses.</p>') +
-          '<p class="plx-sheet__note">2-hour Express covers much of Dubai, Monday to Saturday, order by 5 pm. ' + free + '</p>' +
+          '<p class="plx-sheet__note">2-hour Express covers much of Dubai, Monday to Saturday, order by 5 pm. Express is ' + free + '</p>' +
         '</div>' +
 
         '<div class="plx-view" data-plx-v="map" hidden>' +
