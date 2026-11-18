@@ -214,6 +214,7 @@
             </div>
             <div class="plo-rel__row plo-range__row">
               {%- for product in gc.products limit: 50 -%}
+                {%- if product.handle == 'build-your-own-mix' -%}{%- continue -%}{%- endif -%}
                 {%- render 'plo-card', product: product, eager: false, skip_new: true, view: template.suffix -%}
               {%- endfor -%}
             </div>
@@ -236,12 +237,8 @@
               assign last_range = passes.size | minus: 1
               assign placed = ','
               assign n = 0
+              # Nov 2026: no "Build your own mix" card or product in collection grids (it has its own tab).
               assign mix_lead = ''
-              if collection.handle == 'chocolate-truffles'
-                assign mix_lead = 'truffle'
-              elsif collection.handle == 'new-chocolate-slabs'
-                assign mix_lead = 'slab'
-              endif
               assign current_page_n = 1
               if paginate.current_page
                 assign current_page_n = paginate.current_page
@@ -252,6 +249,9 @@
                 {%- liquid
                   assign key = ',' | append: product.id | append: ','
                   if placed contains key
+                    continue
+                  endif
+                  if product.handle == 'build-your-own-mix'
                     continue
                   endif
                   if pass != 'all'
