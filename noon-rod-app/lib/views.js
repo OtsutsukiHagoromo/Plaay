@@ -272,7 +272,7 @@ export function renderOrderDetail({ order: o, task, taskError, cfg, flash, label
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 <div class="dhead">
   <div><h1>${esc(o.name)}</h1><div class="muted">${esc(dubaiTime(o.createdAt))} · ${esc(ago(o.createdAt))}</div></div>
-  <div class="dact">${statusBadge(o, labels)}${modeBadge(o, cfg)} ${actions(o, back, cfg, { both: true })}</div>
+  <div class="dact">${statusBadge(o, labels)}${modeBadge(o, cfg)} ${actions(o, back, cfg, { both: true })}${o.noon.taskNr && !['delivered', 'cancelled', 'failed'].includes(String(o.noon.status || '').toLowerCase()) ? '' : ` <form method="post" action="/api/dashboard" class="inl"><input type="hidden" name="action" value="hide"><input type="hidden" name="order" value="${esc(o.legacyResourceId)}"><button class="ghost" onclick="return confirm('Remove ${esc(o.name)} from the dashboard? The Shopify order is not changed.')">Remove from dashboard</button></form>`}</div>
 </div>
 <div class="links">
   <a class="btn ghost" href="${esc(links.shopify)}" target="_blank" rel="noopener">Open in Shopify ↗</a>

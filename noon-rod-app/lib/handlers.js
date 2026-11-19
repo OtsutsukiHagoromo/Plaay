@@ -170,7 +170,7 @@ export async function handleDashboard(request, d) {
         form.set('back', `/cleanup?terms=${encodeURIComponent(terms.join(','))}`);
         result = { ok: true, message: [r.done.join('; ') || 'Nothing to delete.', r.left.length ? `Still to edit by hand: ${r.left.join('; ')}` : ''].filter(Boolean).join(' ') };
       } else if (action.startsWith('express-')) {
-        form.set('back', '/express');
+        if (!form.get('back')) form.set('back', '/express');
         result = (await expressAction(d, action, form)) || { ok: false, reason: 'unknown action' };
       } else if (action === 'create-order') {
         const f = {
@@ -195,6 +195,14 @@ export async function handleDashboard(request, d) {
         }
       } else if (action === 'dispatch') result = await dispatchOrder(d, orderId, { mode: String(form.get('mode') || '') || undefined });
       else if (action === 'cancel') result = await cancelDispatch(d, orderId);
+      else if (action === 'hide') {
+        // Off the dashboard (tests, mistakes): the Express tags go, noon-hidden is added. The
+        // Shopify order itself is not cancelled or refunded.
+        await d.shopify.removeTags(orderId, [TAGS.express, TAGS.dispatch, TAGS.error, TAGS.outOfRange, TAGS.nextRun]);
+        await d.shopify.addTags(orderId, ['noon-hidden']);
+        form.set('back', '/');
+        result = { ok: true, message: 'Removed from the dashboard (the Shopify order is unchanged).' };
+      }
       else return new Response('Unknown action', { status: 400 });
       flash = result.message || (result.ok ? `${action === 'dispatch' ? 'Rider booked' : 'Rider cancelled'}${result.taskNr ? ` (${result.taskNr})` : ''}` : `Failed: ${result.reason}`);
     } catch (err) {

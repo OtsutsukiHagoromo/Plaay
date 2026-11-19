@@ -374,3 +374,18 @@ test('orders/create: an Express order paid after the cutoff is flagged for the n
   await handleShopifyWebhook(shopifyRequest('orders/create', { id: 5550001, tags: '', created_at: '2026-11-16T10:00:00Z', ...ship }), early.d); // 2 pm
   assert.ok(!early.shopify.order.tags.includes('express-next-run'));
 });
+
+test('Remove from dashboard drops the Express tags and leaves the Shopify order alone', async () => {
+  const { d, shopify } = setup({ tags: ['noon-express', 'noon-error'] });
+  const auth = { authorization: `Basic ${Buffer.from('plaay:pw').toString('base64')}` };
+  const res = await handleDashboard(new Request('https://noon.example.com/api/dashboard', {
+    method: 'POST',
+    headers: { ...auth, origin: 'https://noon.example.com', 'content-type': 'application/x-www-form-urlencoded' },
+    body: 'order=5550001&action=hide',
+  }), d);
+  assert.equal(res.status, 303);
+  assert.ok(!shopify.order.tags.includes('noon-express'));
+  assert.ok(!shopify.order.tags.includes('noon-error'));
+  assert.ok(shopify.order.tags.includes('noon-hidden'));
+  assert.equal(new URL(res.headers.get('location')).pathname, '/');
+});
