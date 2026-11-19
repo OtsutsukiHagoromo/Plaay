@@ -179,3 +179,7 @@ html.plx-lock { overflow: hidden; }
 .plx-tags input:focus-visible + span { outline: 3px solid var(--pl-yellow, #FFB600); outline-offset: 2px; }
 .plx-sheet .maplibregl-ctrl-attrib { font-size: 10px; }
 .plx--cart.plx--s-sub .plx__t, .plx--cart.plx--s-std .plx__t { color: inherit; }
+/* Headlines are text, not flex (flex drops the spaces around the countdown) */
+.plx--pdp .plx__t, .plx--cart .plx__t { display: block; }
+.plx--cart .plx__t .plx-i, .plx--pdp .plx__t .plx-i { margin-right: 6px; }
+.plx__edge .plx__link { white-space: normal; }

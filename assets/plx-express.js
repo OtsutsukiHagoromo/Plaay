@@ -128,7 +128,7 @@
     if (c.tier !== 'express') {
       return c.edge ? '<span class="plx__edge">Live in a part of ' + esc(c.area.name) + ' closer to us? <button type="button" class="plx__link" data-plx-open="pin">Pin your building</button> to check Express.</span>' : '';
     }
-    return '<span class="plx__edge"><button type="button" class="plx__link" data-plx-open="pin">' + I.pin + 'Pin your building</button> <span class="plx__opt">optional, helps the rider find you</span></span>';
+    return '<span class="plx__edge"><button type="button" class="plx__link" data-plx-open="pin">Pin your building</button> <span class="plx__opt">optional, helps the rider find you</span></span>';
   }
 
   // ---------- look ----------
@@ -160,7 +160,7 @@
     if (p.kind === 'location') return p.area || p.community || (p.label || '').split(',')[0];
     return (p.label || '').split(',')[0];
   }
-  var priceLine = function () { return 'AED ' + fee + ' · free from AED ' + minAed; };
+  var priceLine = function () { return 'AED&nbsp;' + fee + ' · free from AED&nbsp;' + minAed; };
   // How far the bag is from free Express (only once we know the bag).
   function progressHTML() {
     if (cartTotal == null || cartTotal <= 0) return '';
@@ -218,8 +218,7 @@
       : st === 'std' ? ''
       : (progressHTML() || '<span class="plx__s">' + priceLine() + '</span>');
     return '<span class="plx__row"><span class="plx__t">' + head + '</span>' +
-      '<button type="button" class="plx__link" data-plx-open>Change</button></span>' + line +
-      (st === 'now' || st === 'soon' ? edgeNote(c) : '');
+      '<button type="button" class="plx__link" data-plx-open>Change</button></span>' + line;
   }
   function chipHTML() {
     var st = stateOf(current);
