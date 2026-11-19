@@ -792,11 +792,11 @@ ${test.on ? `<div><span class="b ok">On</span> ${form('express-test-on', { handl
 ${settings.paused ? `<div><span class="b bad">Paused</span> ${form('express-pause', { paused: 'false' }, 'Turn Express back on', 'yellow')}</div>` : form('express-pause', { paused: 'true' }, 'Pause Express', 'ghost', 'Pause Express on the website and at checkout?')}</div>
 
 <div class="card pc"><div><h2>Checkout delivery rates</h2>
-<div class="muted">Adds “Plaay Express” and “4-hour delivery” to Shopify checkout for addresses in range. Standard delivery stays your own rate.</div>
+<div class="muted">Adds “Plaay Express” to Shopify checkout for addresses in range${settings.fourHour ? ', and 4-hour delivery for the rest of Dubai' : ''}. Standard delivery stays your own rate.</div>
 <ul>
 <li>Shopify plan: <strong>${esc(plan?.publicDisplayName || 'unknown')}</strong>${plan?.shopifyPlus ? ' (Plus)' : ''}</li>
 <li>Connected to Shopify: ${c ? (c.active ? '<span class="b ok">yes</span>' : '<span class="b warn">inactive</span>') : '<span class="b">no</span>'} ${c ? (status.inZone ? '<span class="b ok">in the UAE shipping zone</span>' : '<span class="b warn">not in the UAE shipping zone</span>') : ''}</li>
-<li>Shown to: <strong>${modeLabel[mode]}</strong> <span class="muted">${mode === 'preview' ? '(bags built on the express-preview theme)' : ''}</span></li>
+<li>Shown to: <strong>${modeLabel[mode]}</strong> <span class="muted">${mode === 'preview' ? '(bags holding the hidden test product)' : ''}</span></li>
 </ul>
 ${status.errors.length ? `<div class="panel bad-b">${status.errors.map(esc).join('<br>')}</div>` : ''}
 </div>

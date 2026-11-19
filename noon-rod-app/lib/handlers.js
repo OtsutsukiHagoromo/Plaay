@@ -414,7 +414,7 @@ export async function expressAction(d, action, form) {
     const mode = String(form.get('mode'));
     if (!['off', 'preview', 'on'].includes(mode)) return { ok: false, reason: 'unknown mode' };
     await setSetting(d.shopify, 'checkout', mode);
-    return { ok: true, message: { off: 'Checkout shows standard delivery only.', preview: 'Checkout offers Express only to bags from the express-preview theme.', on: 'Checkout offers Express and 4-hour to everyone in range.' }[mode] };
+    return { ok: true, message: { off: 'Checkout shows standard delivery only.', preview: 'Checkout offers Express only to bags holding the hidden test product.', on: 'Checkout offers Express to everyone in range.' }[mode] };
   }
   if (action === 'express-carrier-on') {
     const r = await enableCheckoutRates(d.shopify, d.cfg);
