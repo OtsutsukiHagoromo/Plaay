@@ -466,10 +466,10 @@
       : 'Move the map so the pin sits on your building.';
     loadMapLibre().then(function (ml) {
       if (!map) {
-        map = new ml.Map({ container: el, style: MAP_STYLE, center: t ? [+t.lng, +t.lat] : [DUBAI[1], DUBAI[0]], zoom: t ? 17 : 11, attributionControl: { compact: true } });
+        map = new ml.Map({ container: el, style: MAP_STYLE, center: t ? [+t.lng, +t.lat] : [DUBAI[1], DUBAI[0]], zoom: t ? (t.zoom || 17) : 11, attributionControl: { compact: true } });
         map.addControl(new ml.NavigationControl({ showCompass: false }), 'top-left');
       } else if (t) {
-        map.jumpTo({ center: [+t.lng, +t.lat], zoom: 17 });
+        map.jumpTo({ center: [+t.lng, +t.lat], zoom: t.zoom || 17 });
       }
       setTimeout(function () { map.resize(); }, 50);
     }).catch(function () {
@@ -558,16 +558,33 @@
     sheet.querySelector('[data-plx-results]').innerHTML = '';
     ['#plx-flat', '#plx-bld', '#plx-street'].forEach(function (s) { sheet.querySelector(s).value = ''; });
     chosen = null; mapTarget = null; pendingKnown = null;
-    if (start === 'pin') {
-      // "Pin your building": start from what we know (area or saved address) and search it.
-      var p = place();
-      var q = p ? (p.kind === 'address' ? p.address : p.label) : '';
-      view('search');
-      if (q) { sheet.querySelector('#plx-q').value = q; search(q); }
-      return;
-    }
+    if (start === 'pin') return pinFromPlace();
     view(start === 'map' ? 'map' : 'search');
   }
+  // "Pin your building": straight to the map, centred on what we already know (the saved
+  // address, else the area), so the shopper only nudges the pin onto their building.
+  var areaCoords = null;
+  function pinFromPlace() {
+    var p = place();
+    mapTarget = null; pendingKnown = null;
+    view('map');
+    if (!p) return;
+    var found = p.kind === 'address'
+      ? api('q=' + encodeURIComponent(p.address)).then(function (res) {
+          var list = res.results || [];
+          var hit = list.filter(function (r) { return r.kind === 'address' && r.lat != null; })[0] || list.filter(function (r) { return r.lat != null; })[0];
+          if (hit && hit.kind === 'address') pendingKnown = hit;
+          return hit;
+        })
+      : (areaCoords ? Promise.resolve(areaCoords) : api('areas=1').then(function (res) { areaCoords = res.areas || []; return areaCoords; }))
+          .then(function (areas) { return areas.filter(function (a) { return a.id === p.id; })[0]; });
+    found.then(function (hit) {
+      if (!hit || hit.lat == null || sheet.hidden) return;
+      mapTarget = { lat: hit.lat, lng: hit.lng, zoom: hit.kind === 'address' ? 17 : 15 };
+      showMap();
+    }).catch(function () {});
+  }
+
   function close() {
     if (!sheet) return;
     sheet.hidden = true;
