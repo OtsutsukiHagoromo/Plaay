@@ -183,3 +183,5 @@ html.plx-lock { overflow: hidden; }
 .plx--pdp .plx__t, .plx--cart .plx__t { display: block; }
 .plx--cart .plx__t .plx-i, .plx--pdp .plx__t .plx-i { margin-right: 6px; }
 .plx__edge .plx__link { white-space: normal; }
+.plx .plx-i, .plx-sheet .plx-i { display: inline-block; }
+.plx-row > .plx-i, .plx-search .plx-i, .plx-map__pin .plx-i { display: block; }
