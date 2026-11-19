@@ -124,6 +124,10 @@
     if (c.edge && c.tier === 'express') {
       return '<span class="plx__edge">Parts of ' + esc(c.area.name) + ' are right at the edge of the Express zone. <button type="button" class="plx__link" data-plx-open="pin">Pin your building</button> to be sure.</span>';
     }
+    // Outside Express: a pin only matters where part of the area may be in range.
+    if (c.tier !== 'express') {
+      return c.edge ? '<span class="plx__edge">Live in a part of ' + esc(c.area.name) + ' closer to us? <button type="button" class="plx__link" data-plx-open="pin">Pin your building</button> to check Express.</span>' : '';
+    }
     return '<span class="plx__edge"><button type="button" class="plx__link" data-plx-open="pin">📍 Pin your building</button> <span class="plx__opt">optional, helps the rider find you</span></span>';
   }
 
