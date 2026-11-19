@@ -8,7 +8,7 @@ import { connectWebhooks, createManualOrder, createTestOrder, getConnection } fr
 import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { buildLive } from './live.js';
-import { areaList, checkoutRates, locate, matchArea, parseHolidays, promise, quickTier, schedule } from './express.js';
+import { areaList, checkoutRates, expressStatus, locate, matchArea, nextOpening, parseHolidays, promise, quickTier, schedule, whenText } from './express.js';
 import { disableTest, dropFixedTestRate, enableTest, testStatus } from './express-test.js';
 import { renameRate } from './express-admin.js';
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
@@ -284,7 +284,8 @@ export async function handleDashboard(request, d) {
       connection.ordersError = err.message;
     }
   }
-  return html(renderDashboard({ orders, cfg: d.cfg, flash, labels: STATUS_LABELS, connection, view, q }));
+  const express = connection.ok ? expressStatus(await liveSettings(d)) : null;
+  return html(renderDashboard({ orders, cfg: d.cfg, flash, labels: STATUS_LABELS, connection, view, q, express }));
 }
 
 // ---- Customer tracking ----
@@ -406,9 +407,23 @@ export async function handleCheckoutRates(request, d) {
 
 export async function expressAction(d, action, form) {
   if (action === 'express-pause') {
-    const paused = form.get('paused') === 'true';
-    await setSetting(d.shopify, 'paused', paused);
-    return { ok: true, message: paused ? 'Express paused: shoppers see standard delivery only.' : 'Express is on again.' };
+    // mode: resume | 1h | today (until the next opening) | manual (until resumed). Old form: paused=true|false.
+    const mode = String(form.get('mode') || (form.get('paused') === 'true' ? 'manual' : form.get('paused') === 'false' ? 'resume' : ''));
+    const s = await liveSettings(d);
+    if (mode === 'resume') {
+      await setSetting(d.shopify, 'paused', false);
+      await setSetting(d.shopify, 'paused_until', '1970-01-01T00:00:00Z'); // Shopify won't store an empty value
+      return { ok: true, message: 'Express is on again (website and checkout within a minute).' };
+    }
+    if (mode === 'manual') {
+      await setSetting(d.shopify, 'paused', true);
+      return { ok: true, message: 'Express paused until someone turns it back on. Shoppers see standard delivery only.' };
+    }
+    const until = mode === '1h' ? new Date(Date.now() + 3600e3) : mode === 'today' ? nextOpening(new Date(), s) : null;
+    if (!until) return { ok: false, reason: 'Unknown pause option.' };
+    await setSetting(d.shopify, 'paused', false);
+    await setSetting(d.shopify, 'paused_until', until.toISOString());
+    return { ok: true, message: `Express paused until ${whenText(until)}, then it comes back on by itself.` };
   }
   if (action === 'express-checkout') {
     const mode = String(form.get('mode'));

@@ -18,16 +18,21 @@ export async function liveSettings(d) {
         paused: metafield(namespace: "${NS}", key: "paused") { value }
         checkout: metafield(namespace: "${NS}", key: "checkout") { value }
         holidays: metafield(namespace: "${NS}", key: "holidays") { value }
+        pausedUntil: metafield(namespace: "${NS}", key: "paused_until") { value }
       } }`);
-      cached = { at: Date.now(), value: { paused: data.shop.paused?.value, checkout: data.shop.checkout?.value, holidays: data.shop.holidays?.value } };
+      cached = { at: Date.now(), value: { paused: data.shop.paused?.value, checkout: data.shop.checkout?.value, holidays: data.shop.holidays?.value, pausedUntil: data.shop.pausedUntil?.value } };
     } catch {
       cached = { at: Date.now(), value: {} };
     }
   }
   const v = cached.value;
+  // A timed pause (paused_until) ends by itself; a plain pause lasts until someone resumes.
+  const until = v.pausedUntil && Date.parse(v.pausedUntil) > Date.now() ? v.pausedUntil : null;
+  const manual = v.paused != null ? v.paused === 'true' : base.paused;
   return {
     ...base,
-    paused: v.paused != null ? v.paused === 'true' : base.paused,
+    paused: manual || !!until,
+    pausedUntil: manual ? null : until,
     checkout: ['off', 'preview', 'on'].includes(v.checkout) ? v.checkout : base.checkout,
     holidays: v.holidays != null ? parseHolidays(v.holidays) : base.holidays,
   };

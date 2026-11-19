@@ -233,3 +233,20 @@ test('search suggestions carry a quick speed: Ajman standard, near the warehouse
   const marina = areaList(off4).find((a) => a.name === 'Dubai Marina');
   assert.equal(quickTier({ lat: marina.lat, lng: marina.lng }, off4), null); // near the limit
 });
+
+test('dashboard status: live in hours, closed after the cutoff (automatic), timed pauses end by themselves', async () => {
+  const { expressStatus, nextOpening, whenText } = await import('../lib/express.js');
+  const mon2pm = new Date('2026-11-16T10:00:00Z');
+  assert.equal(expressStatus(off4, mon2pm).state, 'live');
+  const mon6pm = new Date('2026-11-16T14:00:00Z');
+  const closed = expressStatus(off4, mon6pm);
+  assert.equal(closed.state, 'closed');
+  assert.match(closed.text, /opens tomorrow 9 am/);
+  const sat6pm = new Date('2026-11-21T14:00:00Z');
+  assert.equal(whenText(nextOpening(sat6pm, off4), sat6pm), 'Mon 9 am');
+  assert.equal(whenText(nextOpening(new Date('2026-11-16T02:00:00Z'), off4), new Date('2026-11-16T02:00:00Z')), 'today 9 am');
+  const p = expressStatus({ ...off4, paused: true, pausedUntil: '2026-11-16T11:00:00Z' }, mon2pm);
+  assert.equal(p.state, 'paused');
+  assert.match(p.text, /until today 3 pm, then back on by itself/);
+  assert.match(expressStatus({ ...off4, paused: true }, mon2pm).text, /until someone turns it back on/);
+});

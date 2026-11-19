@@ -327,6 +327,42 @@ export function schedule(now = new Date(), s = expressSettings()) {
   return { when: 'later', label: 'Soon', cutoff: null, secondsLeft: 0 };
 }
 
+// When the next run starts after `now` (today's 9 am if it's earlier, else the next working day).
+export function nextOpening(now = new Date(), s = expressSettings()) {
+  const d = dubai(now);
+  const holidays = s.holidays || [];
+  for (let i = 0; i <= 21; i++) {
+    const t = new Date(d.date.getTime() + i * 86400e3);
+    const runs = s.workDays.includes(t.getUTCDay()) && !holidays.includes(t.toISOString().slice(0, 10));
+    if (!runs || (i === 0 && d.hour >= s.openHour)) continue;
+    return new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate(), s.openHour - 4));
+  }
+  return null;
+}
+
+// Dubai label for a moment, e.g. "today 5 pm", "Tue 9 am".
+export function whenText(at, now = new Date()) {
+  const a = dubai(new Date(at));
+  const n = dubai(now);
+  const h = a.hour % 12 || 12;
+  const m = a.min ? `:${String(a.min).padStart(2, '0')}` : '';
+  const time = `${h}${m} ${a.hour < 12 ? 'am' : 'pm'}`;
+  const day = a.date.toISOString().slice(0, 10) === n.date.toISOString().slice(0, 10) ? 'today'
+    : (a.date - n.date) / 86400e3 < 2 && a.day === (n.day + 1) % 7 ? 'tomorrow' : DAY_NAMES[a.day].slice(0, 3);
+  return `${day} ${time}`;
+}
+
+// What the team sees at the top of the dashboard: live, closed for the day (automatic), or paused.
+export function expressStatus(s, now = new Date()) {
+  if (s.paused) {
+    return { state: 'paused', text: s.pausedUntil ? `Paused until ${whenText(s.pausedUntil, now)}, then back on by itself` : 'Paused until someone turns it back on' };
+  }
+  const sch = schedule(now, s);
+  if (sch.when === 'today' && !sch.beforeOpen) return { state: 'live', text: `Live · taking Express orders until ${s.cutoffHour - 12} pm` };
+  const open = nextOpening(now, s);
+  return { state: 'closed', text: `Closed for now (automatic) · opens ${open ? whenText(open, now) : 'soon'}` };
+}
+
 const openLabel = (s) => (s.openHour > 12 ? `${s.openHour - 12} pm` : `${s.openHour} am`);
 
 // What to tell the shopper for a place at a moment in time.

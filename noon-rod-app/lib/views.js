@@ -1,3 +1,4 @@
+import { whenText } from './express.js';
 // Server-rendered HTML for the staff dashboard and the customer tracking page.
 
 import { defaultDeliveryMode, DELIVERY_MODES, isCashOnDelivery, normalizePhone } from './mapping.js';
@@ -145,7 +146,21 @@ function cutoffBanner(cfg, now = new Date()) {
   return `<div class="panel warn-b"><strong>Past today’s ${label} cutoff.</strong> New express and 4-hour orders go out on the next working day.</div>`;
 }
 
-export function renderDashboard({ orders, cfg, flash, labels, connection, view = 'todo', q = '' }) {
+// Express on/off at the top of the dashboard: the schedule opens and closes it by itself; the team
+// can pause it for an hour, until the next opening, or until someone resumes.
+function expressSwitch(ex, back) {
+  if (!ex) return '';
+  const btn = (mode, label, cls = 'ghost', confirmText = '') =>
+    `<form method="post" action="/api/dashboard" class="inl"><input type="hidden" name="action" value="express-pause"><input type="hidden" name="mode" value="${mode}"><input type="hidden" name="back" value="${esc(back)}"><button class="${cls}"${confirmText ? ` onclick="return confirm('${esc(confirmText)}')"` : ''}>${label}</button></form>`;
+  const pill = { live: '<span class="b ok">● Express live</span>', closed: '<span class="b">Express closed</span>', paused: '<span class="b bad">Express paused</span>' }[ex.state];
+  const buttons = ex.state === 'paused'
+    ? btn('resume', 'Turn Express back on', 'yellow')
+    : `${btn('1h', 'Pause 1 hour', 'ghost', 'Pause Express for an hour? Website and checkout show standard delivery only.')} ${btn('today', 'Pause until next opening', 'ghost', 'Pause Express until the next opening?')} ${btn('manual', 'Pause until I resume', 'ghost', 'Pause Express until someone turns it back on?')}`;
+  return `<div class="card xsw xsw--${ex.state}"><div>${pill} <span class="xsw__t">${esc(ex.text)}</span><div class="muted">Opens and closes on its own (Mon–Sat, 9 am to the 5 pm cutoff, holidays off). A pause takes the website and checkout to standard delivery within a minute.</div></div><div class="xsw__b">${buttons}</div></div>
+<style>.xsw { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; } .xsw__t { font-weight: 700; margin-left: 6px; } .xsw__b { display: flex; gap: 6px; flex-wrap: wrap; } .xsw--paused { border-color: #e5322d; } .xsw .muted { margin-top: 4px; font-size: 13px; }</style>`;
+}
+
+export function renderDashboard({ orders, cfg, flash, labels, connection, view = 'todo', q = '', express = null }) {
   const counts = countByView(orders);
   const visible = filterOrders(orders, view, q);
   const staging = cfg.noon.baseUrl.includes('noonstg');
@@ -183,6 +198,7 @@ export function renderDashboard({ orders, cfg, flash, labels, connection, view =
   const body = `
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 ${connectionPanel(connection)}
+${expressSwitch(express, here)}
 ${cutoffBanner(cfg)}
 <div class="head"><div><h1>Express orders</h1><div class="muted">Pack the order first, then press <strong>Dispatch rider</strong>. The rider arrives within minutes.</div></div>
 <div class="hbtns">${staging && connection?.ok ? `<form method="post" action="/api/dashboard"><input type="hidden" name="action" value="test-order"><input type="hidden" name="back" value="/?view=todo"><button class="ghost" onclick="return confirm('Create a paid AED 1 test order in the Shopify store?')">+ Test order</button></form>` : ''}${connection?.ok ? '<a class="btn ghost" href="/club">Club</a> <a class="btn ghost" href="/express">Express settings</a> <a class="btn" href="/new">+ New order</a>' : ''}</div></div>
@@ -789,7 +805,7 @@ ${test.on ? `<div><span class="b ok">On</span> ${form('express-test-on', { handl
 <form method="post" action="/api/dashboard" class="inl"><input type="hidden" name="action" value="express-holidays"><input type="hidden" name="back" value="/express"><input name="holidays" value="${esc((settings.holidays || []).join(', '))}" placeholder="2026-12-02, 2026-12-03" size="28"> <button class="ghost">Save</button></form></div>
 
 <div class="card pc"><div><h2>Pause Express</h2><div class="muted">For days with no riders or the warehouse closed. The website and checkout show standard delivery only within a minute.</div></div>
-${settings.paused ? `<div><span class="b bad">Paused</span> ${form('express-pause', { paused: 'false' }, 'Turn Express back on', 'yellow')}</div>` : form('express-pause', { paused: 'true' }, 'Pause Express', 'ghost', 'Pause Express on the website and at checkout?')}</div>
+${settings.paused ? `<div><span class="b bad">Paused${settings.pausedUntil ? ' until ' + esc(whenText(settings.pausedUntil)) : ''}</span> ${form('express-pause', { mode: 'resume' }, 'Turn Express back on', 'yellow')}</div>` : `<div>${form('express-pause', { mode: '1h' }, 'Pause 1 hour', 'ghost', 'Pause Express for an hour?')} ${form('express-pause', { mode: 'today' }, 'Pause until next opening', 'ghost', 'Pause Express until the next opening?')} ${form('express-pause', { mode: 'manual' }, 'Pause until I resume', 'ghost', 'Pause Express until someone turns it back on?')}</div>`}</div>
 
 <div class="card pc"><div><h2>Checkout delivery rates</h2>
 <div class="muted">Adds “Plaay Express” to Shopify checkout for addresses in range${settings.fourHour ? ', and 4-hour delivery for the rest of Dubai' : ''}. Standard delivery stays your own rate.</div>
