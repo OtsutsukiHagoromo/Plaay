@@ -350,12 +350,12 @@ export async function handleExpressCheck(request, d) {
   const out = (body, cache = 'no-store') => Response.json(body, { headers: { ...CORS, 'Cache-Control': cache } });
 
   if (q.get('areas')) {
-    return out({ areas: areaList(s).map(({ id, name, tier, edge }) => ({ id, name, tier, edge })), paused: s.paused }, 'public, s-maxage=300, max-age=300');
+    return out({ areas: areaList(s).map(({ id, name, tier, edge, lat, lng }) => ({ id, name, tier, edge, lat, lng })), paused: s.paused }, 'public, s-maxage=300, max-age=300');
   }
   if (q.get('q') != null) {
     const text = q.get('q').trim().toLowerCase();
     const areas = text.length < 2 ? [] : areaList(s).filter((a) => a.name.toLowerCase().includes(text)).slice(0, 4)
-      .map(({ id, name, tier, edge }) => ({ kind: 'area', id, name, tier, edge }));
+      .map(({ id, name, tier, edge, lat, lng }) => ({ kind: 'area', id, name, tier, edge, lat, lng }));
     const places = (await g.searchAddress(q.get('q'))).map((a) => ({ kind: 'address', ...a, area: matchArea(`${a.label} ${a.community}`, s)?.name || a.community }));
     return out({ results: [...areas, ...places].slice(0, 8) }, 'public, s-maxage=600, max-age=600');
   }
