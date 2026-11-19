@@ -387,7 +387,7 @@
 
   // ---------- sheet ----------
   var sheet, lastFocus, map, chosen;
-  var TAG = { express: '<span class="plx-tag plx-tag--x">Express</span>', '4hr': '<span class="plx-tag plx-tag--h">4-hour</span>', standard: '<span class="plx-tag">1–2 days</span>' };
+  var TAG = { express: '<span class="plx-tag plx-tag--x">Express</span>', '4hr': '<span class="plx-tag plx-tag--h">4-hour</span>', standard: '<span class="plx-tag plx-tag--s">Standard · 1–2 days</span>' };
 
   function buildSheet() {
     sheet = document.createElement('div');
@@ -472,7 +472,7 @@
       box.innerHTML = lastResults.length ? lastResults.map(function (r, i) {
         return r.kind === 'area'
           ? '<li><button type="button" class="plx-row" data-plx-res="' + i + '">' + I.map + '<span><b>' + esc(r.name) + '</b><small>Area</small></span>' + (TAG[r.tier] || '') + '</button></li>'
-          : '<li><button type="button" class="plx-row" data-plx-res="' + i + '">' + I.pin + '<span><b>' + esc(r.address1) + '</b><small>' + esc([r.community, r.emirate].filter(Boolean).join(', ')) + '</small></span></button></li>';
+          : '<li><button type="button" class="plx-row" data-plx-res="' + i + '">' + I.pin + '<span><b>' + esc(r.address1) + '</b><small>' + esc([r.community, r.emirate].filter(Boolean).join(', ')) + '</small></span>' + (TAG[r.tier] || '') + '</button></li>';
       }).join('') : '<li class="plx-empty">No match. Try your building or street name, or pick on the map.</li>';
     }).catch(function () {
       box.innerHTML = '<li class="plx-empty">Couldn’t search just now. Pick on the map instead.</li>';

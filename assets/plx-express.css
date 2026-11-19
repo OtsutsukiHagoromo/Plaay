@@ -185,3 +185,4 @@ html.plx-lock { overflow: hidden; }
 .plx__edge .plx__link { white-space: normal; }
 .plx .plx-i, .plx-sheet .plx-i { display: inline-block; }
 .plx-row > .plx-i, .plx-search .plx-i, .plx-map__pin .plx-i { display: block; }
+.plx-tag--s { background: #EEF1F6; color: var(--pl-navy, #081D48); }
