@@ -142,9 +142,10 @@ export function createShopifyClient(cfg, fetchImpl = globalThis.fetch) {
         `query($q: String!, $first: Int!) {
           orders(first: $first, query: $q, sortKey: CREATED_AT, reverse: true) { nodes { ${ORDER_FIELDS} } }
         }`,
-        { q: `tag:${JSON.stringify(tag)}`, first },
+        { q: `tag:${JSON.stringify(tag)} -tag:noon-hidden`, first },
       );
-      return data.orders.nodes.map(normalizeOrder);
+      // Shopify's search can lag a tag change by a minute; drop removed orders straight away.
+      return data.orders.nodes.map(normalizeOrder).filter((o) => !(o.tags || []).includes('noon-hidden') && (o.tags || []).includes(tag));
     },
 
     // fields: { task_nr, status, error, fulfillment_id } -> noon.* metafields. Empty string clears the value.
