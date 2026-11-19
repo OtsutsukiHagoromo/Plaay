@@ -224,3 +224,12 @@ test('free Express (AED 199+) is judged after discount codes', async () => {
   // AED 120 (free Standard delivery) still pays AED 15 for Express.
   assert.equal((await checkoutRates(rate('Motor City', 'Dubai', { price: 6000, qty: 2 }), wedAfternoon, sOn, geo()))[0].total_price, '1500');
 });
+
+test('search suggestions carry a quick speed: Ajman standard, near the warehouse Express, edge unknown', async () => {
+  const { quickTier } = await import('../lib/express.js');
+  assert.equal(quickTier({ lat: 25.40, lng: 55.48 }, off4), 'standard'); // Ajman
+  assert.equal(quickTier({ lat: 25.047, lng: 55.238 }, off4), 'express'); // Motor City
+  assert.equal(quickTier({ lat: 25.27, lng: 55.33 }, off4), 'standard'); // Deira
+  const marina = areaList(off4).find((a) => a.name === 'Dubai Marina');
+  assert.equal(quickTier({ lat: marina.lat, lng: marina.lng }, off4), null); // near the limit
+});

@@ -237,6 +237,20 @@ function nearestArea(p, s) {
   return best;
 }
 
+// A quick guess for search suggestions (no router call): outside Dubai is standard; in Dubai,
+// the nearest measured area's speed, or straight-line distance when no area is close. Spots near
+// the Express limit return null: the exact pin decides once the shopper picks one.
+export function quickTier(p, s = expressSettings()) {
+  if (p?.lat == null || p?.lng == null) return null;
+  if (!inDubai(p)) return 'standard';
+  const near = nearestArea(p, s);
+  if (near && near.d < 3) return near.edge ? null : near.tier;
+  const est = straightKm(s.warehouse, p) * s.roadFactor;
+  if (est > s.expressMaxKm * 1.15) return tierFor(est, s);
+  if (est < s.expressMaxKm * 0.85) return 'express';
+  return null;
+}
+
 // Which tier a pin gets: road distance from the router, else the nearest measured area.
 export async function locatePin(p, s = expressSettings(), geo = defaultGeo) {
   const near = nearestArea(p, s);

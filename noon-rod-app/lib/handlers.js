@@ -8,7 +8,7 @@ import { connectWebhooks, createManualOrder, createTestOrder, getConnection } fr
 import { verifyWebhookHmac } from './shopify.js';
 import { applyTaskStatus, handleStatusUpdate, STATUS_LABELS, syncActiveOrders, toDegrees } from './status.js';
 import { buildLive } from './live.js';
-import { areaList, checkoutRates, locate, matchArea, parseHolidays, promise, schedule } from './express.js';
+import { areaList, checkoutRates, locate, matchArea, parseHolidays, promise, quickTier, schedule } from './express.js';
 import { disableTest, dropFixedTestRate, enableTest, testStatus } from './express-test.js';
 import { renameRate } from './express-admin.js';
 import { checkoutStatus, disableCheckoutRates, disableFixedRates, enableCheckoutRates, enableFixedRates, liveSettings, setSetting } from './express-admin.js';
@@ -356,7 +356,7 @@ export async function handleExpressCheck(request, d) {
     const text = q.get('q').trim().toLowerCase();
     const areas = text.length < 2 ? [] : areaList(s).filter((a) => a.name.toLowerCase().includes(text)).slice(0, 4)
       .map(({ id, name, tier, edge, lat, lng }) => ({ kind: 'area', id, name, tier, edge, lat, lng }));
-    const places = (await g.searchAddress(q.get('q'))).map((a) => ({ kind: 'address', ...a, area: matchArea(`${a.label} ${a.community}`, s)?.name || a.community }));
+    const places = (await g.searchAddress(q.get('q'))).map((a) => ({ kind: 'address', ...a, area: matchArea(`${a.label} ${a.community}`, s)?.name || a.community, tier: quickTier(a, s) }));
     return out({ results: [...areas, ...places].slice(0, 8) }, 'public, s-maxage=600, max-age=600');
   }
   const lat = q.get('lat');
