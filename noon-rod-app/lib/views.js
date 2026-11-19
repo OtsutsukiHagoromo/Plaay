@@ -160,6 +160,59 @@ function expressSwitch(ex, back) {
 <style>.xsw { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; } .xsw__t { font-weight: 700; margin-left: 6px; } .xsw__b { display: flex; gap: 6px; flex-wrap: wrap; } .xsw--paused { border-color: #e5322d; } .xsw .muted { margin-top: 4px; font-size: 13px; }</style>`;
 }
 
+// New-order alerts for whoever has the dashboard open: the page reloads every minute; an order
+// that wasn't in "To dispatch" last time triggers a desktop notification (with the system
+// sound), a chime, a banner and a blinking tab title. Turned on once per browser.
+function newOrderAlerts(orders) {
+  const todo = orders.filter((o) => bucket(o) === 'todo').map((o) => ({ id: String(o.legacyResourceId), name: o.name, who: o.shippingAddress?.name || '', area: o.shippingAddress?.city || '' }));
+  return `<div class="xal" id="xal" hidden><strong>New Express order</strong> <span id="xal-t"></span> <button class="yellow" onclick="document.getElementById('xal').hidden=true">OK</button></div>
+<div class="xal-on" id="xal-on" hidden><span>Get a sound and a desktop alert when a new Express order arrives.</span> <button class="ghost" id="xal-btn">🔔 Turn on order alerts</button></div>
+<script>
+(function () {
+  var todo = ${JSON.stringify(todo).replace(/</g, '\u003c')};
+  var KEY = 'plx-seen-orders', ON = 'plx-alerts-on';
+  var seen = null; try { seen = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+  var fresh = seen ? todo.filter(function (o) { return seen.indexOf(o.id) < 0; }) : [];
+  try { localStorage.setItem(KEY, JSON.stringify(todo.map(function (o) { return o.id; }).concat(seen || []).slice(0, 300))); } catch (e) {}
+  var on = false; try { on = localStorage.getItem(ON) === '1'; } catch (e) {}
+  var perm = window.Notification ? Notification.permission : 'denied';
+  var box = document.getElementById('xal-on');
+  if (!on || perm === 'default') box.hidden = false;
+  document.getElementById('xal-btn').onclick = function () {
+    try { localStorage.setItem(ON, '1'); } catch (e) {}
+    chime();
+    if (window.Notification && Notification.permission === 'default') Notification.requestPermission().then(function () { box.hidden = true; });
+    else box.hidden = true;
+  };
+  function chime() {
+    try {
+      var C = new (window.AudioContext || window.webkitAudioContext)();
+      [0, 0.18, 0.36].forEach(function (t, i) {
+        var o = C.createOscillator(), g = C.createGain();
+        o.frequency.value = [880, 1175, 1568][i]; o.connect(g); g.connect(C.destination);
+        g.gain.setValueAtTime(0.0001, C.currentTime + t); g.gain.exponentialRampToValueAtTime(0.3, C.currentTime + t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, C.currentTime + t + 0.3);
+        o.start(C.currentTime + t); o.stop(C.currentTime + t + 0.32);
+      });
+    } catch (e) {}
+  }
+  if (!fresh.length) return;
+  var text = fresh.map(function (o) { return o.name + (o.who ? ' · ' + o.who : '') + (o.area ? ' · ' + o.area : ''); }).join(', ');
+  document.getElementById('xal-t').textContent = text;
+  document.getElementById('xal').hidden = false;
+  if (on) chime();
+  if (on && window.Notification && Notification.permission === 'granted') {
+    var n = new Notification(fresh.length > 1 ? fresh.length + ' new Express orders' : 'New Express order ' + fresh[0].name, { body: text + ' · pack it, then press Dispatch rider', tag: 'plx-' + fresh[0].id, requireInteraction: true });
+    n.onclick = function () { window.focus(); location.href = '/order/' + fresh[0].id; };
+  }
+  var base = document.title, flip = false;
+  var blink = setInterval(function () { document.title = (flip = !flip) ? '🔔 (' + fresh.length + ') New Express order' : base; }, 1000);
+  window.addEventListener('focus', function () { clearInterval(blink); document.title = base; });
+})();
+</script>
+<style>.xal { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 14px; margin-bottom: 12px; border-radius: 14px; background: #DDF5E5; border: 2px solid #1E9E55; } .xal[hidden], .xal-on[hidden] { display: none; } .xal-on { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 14px; margin-bottom: 12px; border-radius: 14px; border: 1.5px dashed var(--line); font-size: 14px; }</style>`;
+}
+
 export function renderDashboard({ orders, cfg, flash, labels, connection, view = 'todo', q = '', express = null }) {
   const counts = countByView(orders);
   const visible = filterOrders(orders, view, q);
@@ -198,6 +251,7 @@ export function renderDashboard({ orders, cfg, flash, labels, connection, view =
   const body = `
 ${flash ? `<div class="flash">${esc(flash)}</div>` : ''}
 ${connectionPanel(connection)}
+${newOrderAlerts(orders)}
 ${expressSwitch(express, here)}
 ${cutoffBanner(cfg)}
 <div class="head"><div><h1>Express orders</h1><div class="muted">Pack the order first, then press <strong>Dispatch rider</strong>. The rider arrives within minutes.</div></div>
