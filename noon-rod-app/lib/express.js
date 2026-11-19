@@ -418,7 +418,9 @@ export async function checkoutRates(rate, now = new Date(), s = expressSettings(
   const rates = [];
   if (place.tier === 'express') {
     const p = promise(place, now, s);
-    rates.push({ service_name: `Plaay Express · ${day(p)}`, service_code: 'plaay-express', description: p.detail, total_price: price, currency, phone_required: true });
+    // Names read on their own, whichever order Shopify lists them (cheapest first).
+    const when = p.when === 'today' && !p.beforeOpen ? 'today, within 2 hours' : day(p);
+    rates.push({ service_name: `⚡ Plaay Express · ${when}`, service_code: 'plaay-express', description: p.detail, total_price: price, currency, phone_required: true });
   }
   if (!s.fourHour) return rates;
   const four = promise({ ...place, tier: '4hr' }, now, s);

@@ -80,7 +80,7 @@ const rate = (address1, city, { price = 5000, qty = 1, props = { _plx: '1' }, pi
 test('checkout: Express then 4-hour (standard stays the store rate), phone required', async () => {
   const r = await checkoutRates(rate('Uptown Motor City', 'Dubai'), wedAfternoon, on, geo());
   assert.deepEqual(r.map((x) => x.service_code), ['plaay-express', '4hr-delivery']);
-  assert.equal(r[0].service_name, 'Plaay Express · today');
+  assert.equal(r[0].service_name, '⚡ Plaay Express · today, within 2 hours');
   assert.equal(r[0].total_price, '1500');
   assert.ok(r.every((x) => x.phone_required));
 });
@@ -90,7 +90,7 @@ test('checkout: Express free from AED 199, names follow the clock, other emirate
   assert.equal((await checkoutRates(rate('Downtown', 'Dubai', { qty: 3 }), wedAfternoon, on, geo()))[0].total_price, '1500'); // AED 150
   assert.deepEqual(free.map((x) => x.service_code), ['4hr-delivery']);
   assert.equal(free[0].total_price, '0');
-  assert.equal((await checkoutRates(rate('Motor City', 'Dubai'), satEvening, on, geo()))[0].service_name, 'Plaay Express · monday from 9 am');
+  assert.equal((await checkoutRates(rate('Motor City', 'Dubai'), satEvening, on, geo()))[0].service_name, '⚡ Plaay Express · monday from 9 am');
   assert.deepEqual(await checkoutRates(rate('Al Majaz', 'Sharjah'), wedAfternoon, on, geo()), []);
 });
 
@@ -113,7 +113,7 @@ test('checkout rate names are picked up by the dispatch app', async () => {
 });
 
 test('subscription orders are never treated as Express', () => {
-  const o = makeOrder({ shippingLine: { title: 'Plaay Express · today', code: 'plaay-express' } });
+  const o = makeOrder({ shippingLine: { title: '⚡ Plaay Express · today, within 2 hours', code: 'plaay-express' } });
   assert.equal(isExpressOrder(o, cfg), true);
   const sub = makeOrder({ shippingLine: o.shippingLine, lineItems: { nodes: [{ title: 'Truffles', quantity: 1, sellingPlan: { name: 'Every 4 weeks' } }] } });
   assert.equal(hasSubscription(sub), true);
@@ -178,7 +178,7 @@ test('after midnight on a working day Express is today from the opening hour, no
   const noon = promise({ id: 'motor-city', name: 'Motor City', tier: 'express', km: 16.6 }, new Date('2026-11-16T08:00:00Z'), off4);
   assert.equal(noon.title, 'Plaay Express · Today');
   const [x] = await checkoutRates(rate('Motor City', 'Dubai'), monEarly, { ...off4, checkout: 'on' }, geo());
-  assert.equal(x.service_name, 'Plaay Express · today from 9 am');
+  assert.equal(x.service_name, '⚡ Plaay Express · today from 9 am');
 });
 
 test('holidays: no Express run that day; the next working day is promised', () => {
