@@ -110,7 +110,7 @@
     var p = place();
     if (!p) return '';
     if (p.kind === 'address') return (p.home ? 'Home · ' : '') + p.label;
-    if (p.kind === 'location') return [p.flat, p.label].filter(Boolean).join(', ');
+    if (p.kind === 'location') return (p.tag ? p.tag + ' · ' : '') + [p.flat, p.label].filter(Boolean).join(', ');
     return (current && current.area && current.area.name) || p.label || '';
   }
   function subChosen() {
@@ -128,62 +128,103 @@
     if (c.tier !== 'express') {
       return c.edge ? '<span class="plx__edge">Live in a part of ' + esc(c.area.name) + ' closer to us? <button type="button" class="plx__link" data-plx-open="pin">Pin your building</button> to check Express.</span>' : '';
     }
-    return '<span class="plx__edge"><button type="button" class="plx__link" data-plx-open="pin">📍 Pin your building</button> <span class="plx__opt">optional, helps the rider find you</span></span>';
+    return '<span class="plx__edge"><button type="button" class="plx__link" data-plx-open="pin">' + I.pin + 'Pin your building</button> <span class="plx__opt">optional, helps the rider find you</span></span>';
+  }
+
+  // ---------- look ----------
+  // Line icons (brand style, currentColor) instead of emoji.
+  var SVG = function (d, extra) { return '<svg class="plx-i" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"' + (extra || '') + '>' + d + '</svg>'; };
+  var I = {
+    bolt: SVG('<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" fill="currentColor" stroke="none"/>'),
+    truck: SVG('<path d="M3 6h11v9H3zM14 9h4l3 3v3h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>'),
+    pin: SVG('<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>'),
+    clock: SVG('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+    check: SVG('<path d="m5 12 5 5 9-10"/>'),
+    locate: SVG('<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>'),
+    map: SVG('<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/>'),
+    search: SVG('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
+    home: SVG('<path d="M3 11 12 4l9 7M5 10v10h14V10"/>')
+  };
+
+  // now: Express goes out today; soon: Express, but from 9 am / tomorrow; std: 1–2 days.
+  function stateOf(c) {
+    if (!c || c.tier === 'unknown' || c.tier === 'error') return c && c.tier === 'error' ? 'error' : 'unknown';
+    if (c.tier === 'standard') return 'std';
+    if (subChosen()) return 'sub';
+    return c.when === 'today' && !c.beforeOpen ? 'now' : 'soon';
+  }
+  function whenLabel(c) { return ((c.title || '').split('· ')[1] || c.day || '').replace(/^\w/, function (x) { return x.toLowerCase(); }); }
+  function shortPlace() {
+    var p = place();
+    if (!p) return '';
+    if (p.kind === 'location') return p.area || p.community || (p.label || '').split(',')[0];
+    return (p.label || '').split(',')[0];
+  }
+  var priceLine = function () { return 'AED ' + fee + ' · free from AED ' + minAed; };
+  // How far the bag is from free Express (only once we know the bag).
+  function progressHTML() {
+    if (cartTotal == null || cartTotal <= 0) return '';
+    if (cartTotal >= minAed * 100) return '<span class="plx__prog plx__prog--ok">' + I.check + 'Free Express on your bag</span>';
+    var gap = Math.ceil((minAed * 100 - cartTotal) / 100);
+    var pct = Math.max(4, Math.min(100, Math.round(cartTotal / (minAed * 100) * 100)));
+    return '<span class="plx__prog"><span class="plx__bar"><i style="width:' + pct + '%"></i></span>AED ' + gap + ' more for free Express</span>';
   }
 
   function pdpHTML() {
     var c = current || { tier: 'unknown' };
-    if (c.tier === 'unknown' || c.tier === 'error') {
-      return '<div class="plx__top"><span class="plx__t">⚡ Express delivery in Dubai</span>' +
-        '<span class="plx__s">Today within 2 hours if you order by 5 pm, Mon–Sat. ' + free + '</span></div>' +
-        '<div class="plx__bot"><span>' + (c.tier === 'error' ? 'Couldn’t check delivery just now.' : 'Is your address covered?') + '</span>' +
-        '<button type="button" class="plx__btn" data-plx-open>Check your address</button></div>';
+    var st = stateOf(c);
+    if (st === 'unknown' || st === 'error') {
+      return '<div class="plx__top"><span class="plx__t">' + I.bolt + 'Express delivery in Dubai</span>' +
+        '<span class="plx__s">Within 2 hours, order by 5 pm Mon–Sat · ' + priceLine() + '</span></div>' +
+        '<div class="plx__bot"><span class="plx__q">' + (st === 'error' ? 'Couldn’t check just now.' : 'Does it reach you?') + '</span>' +
+        '<button type="button" class="plx__btn plx__btn--ghost" data-plx-open>' + I.pin + 'Check address</button></div>';
     }
-    if (subChosen() && c.tier !== 'standard') {
-      return '<div class="plx__top plx__top--muted"><span class="plx__t">📦 Subscribe &amp; Save ships in 1–2 days</span>' +
-        '<span class="plx__s">Want it today? Choose one-time purchase for ' + (c.tier === 'express' ? 'Plaay Express' : '4-hour delivery') + '.</span></div>' +
-        '<div class="plx__bot"><span>📍 ' + esc(placeLabel()) + '</span><button type="button" class="plx__link" data-plx-open>Change</button></div>';
+    var head, sub;
+    if (st === 'sub') {
+      head = I.truck + 'Subscribe &amp; Save ships in 1–2 days';
+      sub = 'Want it today? Choose one-time purchase for Express.';
+    } else if (st === 'now') {
+      var sec = secondsLeft();
+      head = I.bolt + 'Express today' + (sec > 0 ? ' · order within <b class="plx__count" data-plx-count>' + left(sec) + '</b>' : '');
+      sub = 'Arrives within 2 hours · ' + priceLine();
+    } else if (st === 'soon') {
+      head = I.clock + 'Express ' + esc(whenLabel(c));
+      sub = (c.beforeOpen ? 'Riders start at 9 am, yours goes in the first run' : 'Order now, it goes out first thing') + ' · ' + priceLine();
+    } else {
+      head = I.truck + 'Standard delivery · 1–2 days';
+      sub = 'Free from AED ' + (cfg.freeOver || 99) + ' · ' + esc(c.detail || '');
     }
-    var sec = secondsLeft();
-    var sub = esc(c.detail || '');
-    sub += c.when === 'today' && !c.beforeOpen && sec > 0 ? ' · order within <b class="plx__count" data-plx-count>' + left(sec) + '</b>' : '';
-    if (c.tier !== 'standard') sub += '<br>' + free + ' Pick “Plaay Express” at checkout.';
-    var avail = c.tier === 'express' ? '<span class="plx__ok">✓ Available at your address</span>' : '';
-    return '<div class="plx__top">' + avail + '<span class="plx__t">' + ICON[c.tier] + ' ' + esc(c.title) + '</span>' +
-      '<span class="plx__s">' + sub + '</span>' + edgeNote(c) + '</div>' +
-      '<div class="plx__bot"><span>📍 ' + esc(placeLabel()) + '</span>' +
+    return '<div class="plx__top"><span class="plx__t">' + head + '</span>' +
+      '<span class="plx__s">' + sub + '</span>' + (st === 'now' || st === 'soon' ? progressHTML() : '') + edgeNote(c) + '</div>' +
+      '<div class="plx__bot"><span class="plx__addr">' + I.pin + esc(placeLabel()) + '</span>' +
       '<button type="button" class="plx__link" data-plx-open>Change</button></div>';
   }
   function cartHTML() {
     var c = current || { tier: 'unknown' };
-    if (c.tier === 'unknown' || c.tier === 'error') {
-      return '<span class="plx__t">⚡ Express delivery in Dubai</span>' +
-        '<span class="plx__s">Check your address to see if it reaches you today.</span>' +
-        '<button type="button" class="plx__link" data-plx-open>Check your address</button>';
+    var st = cartHasSub && c.tier !== 'standard' && c.tier !== 'unknown' && c.tier !== 'error' ? 'sub' : stateOf(c);
+    if (st === 'unknown' || st === 'error') {
+      return '<span class="plx__row"><span class="plx__t">' + I.bolt + 'Express in Dubai, within 2 hours</span>' +
+        '<button type="button" class="plx__link" data-plx-open>Check address</button></span>';
     }
-    var name = placeLabel();
-    if (cartHasSub && c.tier !== 'standard') {
-      return '<span class="plx__t">📦 Delivery to ' + esc(name) + ' in 1–2 days</span>' +
-        '<span class="plx__s">Express isn’t available with Subscribe &amp; Save. Switch to one-time for ' + (c.tier === 'express' ? 'Express today.' : '4-hour delivery.') + '</span>' +
-        '<button type="button" class="plx__link" data-plx-open>Change address</button>';
-    }
-    var sec = secondsLeft();
-    var head = c.tier === 'express' ? '⚡ Express to ' + esc(name) : c.tier === '4hr' ? '🕓 4-hour delivery to ' + esc(name) : '📦 ' + esc(name) + ': 1–2 working days';
-    var when = c.tier === 'standard' ? '' : c.when === 'today'
-      ? (c.beforeOpen ? esc((c.title || '').split('· ')[1] || 'today') : 'today' + (sec > 0 ? ', order within <b data-plx-count>' + left(sec) + '</b>' : ''))
-      : esc((c.title || '').split('· ')[1] || c.day || '');
-    return '<span class="plx__t">' + head + '</span>' + (when ? '<span class="plx__s">' + when + '</span>' : '') +
-      (c.tier === 'standard' ? '' : cartTotal != null && cartTotal < minAed * 100
-        ? '<span class="plx__s plx__s--need">Express AED ' + fee + ' · add AED ' + Math.ceil((minAed * 100 - cartTotal) / 100) + ' more for free Express.</span>'
-        : '<span class="plx__s">Pick “Plaay Express” at checkout. Apple Pay and Google Pay offer it too.</span>') +
-      (c.tier === 'express' ? edgeNote(c) : '') +
-      '<button type="button" class="plx__link" data-plx-open>Change address</button>';
+    var name = esc(shortPlace());
+    var head;
+    if (st === 'sub') head = I.truck + 'Standard to ' + name + ' · 1–2 days';
+    else if (st === 'now') {
+      var sec = secondsLeft();
+      head = I.bolt + 'Express today to ' + name + (sec > 0 ? ' · <b data-plx-count>' + left(sec) + '</b>' : '');
+    } else if (st === 'soon') head = I.clock + 'Express ' + esc(whenLabel(c)) + ' to ' + name;
+    else head = I.truck + 'Standard to ' + name + ' · 1–2 days';
+    var line = st === 'sub' ? '<span class="plx__s">No Express with Subscribe &amp; Save items in the bag.</span>'
+      : st === 'std' ? ''
+      : (progressHTML() || '<span class="plx__s">' + priceLine() + '</span>');
+    return '<span class="plx__row"><span class="plx__t">' + head + '</span>' +
+      '<button type="button" class="plx__link" data-plx-open>Change</button></span>' + line +
+      (st === 'now' || st === 'soon' ? edgeNote(c) : '');
   }
   function chipHTML() {
-    var c = current || {};
-    if (subChosen()) return '';
-    if (c.tier === 'express') return c.when === 'today' ? '⚡ Today' : '⚡ ' + esc(c.day || '');
-    if (c.tier === '4hr') return c.when === 'today' ? '🕓 Today' : '';
+    var st = stateOf(current);
+    if (st === 'now') return I.bolt + 'Today';
+    if (st === 'soon') return I.clock + esc(whenLabel(current).replace(/ from .*/, ''));
     return '';
   }
   function renderAll() {
@@ -199,7 +240,9 @@
         el.hidden = !t;
         continue;
       }
-      el.className = 'plx plx--' + mode + ' plx--' + tier;
+      var st = stateOf(current);
+      if (mode === 'cart' && cartHasSub && (st === 'now' || st === 'soon')) st = 'sub';
+      el.className = 'plx plx--' + mode + ' plx--' + tier + ' plx--s-' + st;
       el.innerHTML = mode === 'cart' ? cartHTML() : pdpHTML();
       el.hidden = false;
     }
@@ -216,7 +259,7 @@
   // ---------- the bag ----------
   var cartAt = 0;
   function checkCart() {
-    if (!document.querySelector('[data-plx="cart"]') || Date.now() - cartAt < 1500) return;
+    if (!document.querySelector('[data-plx]') || Date.now() - cartAt < 1500) return;
     cartAt = Date.now();
     nativeFetch('/cart.js', { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (cart) {
       var has = (cart.items || []).some(function (i) { return !!i.selling_plan_allocation; });
@@ -345,14 +388,14 @@
 
   // ---------- sheet ----------
   var sheet, lastFocus, map, chosen;
-  var TAG = { express: '<span class="plx-tag plx-tag--x">⚡ Express</span>', '4hr': '<span class="plx-tag plx-tag--h">🕓 4-hour</span>', standard: '<span class="plx-tag">1–2 days</span>' };
+  var TAG = { express: '<span class="plx-tag plx-tag--x">Express</span>', '4hr': '<span class="plx-tag plx-tag--h">4-hour</span>', standard: '<span class="plx-tag">1–2 days</span>' };
 
   function buildSheet() {
     sheet = document.createElement('div');
     sheet.className = 'plx-sheet';
     sheet.hidden = true;
     var saved = (cfg.addresses || []).map(function (a, i) {
-      return '<li><button type="button" class="plx-row" data-plx-addr="' + i + '"><span><b>' + esc(a.isDefault ? 'Default address' : 'Saved address') + '</b> · ' + esc(a.label) + '</span><span data-plx-addr-tag="' + i + '"></span></button></li>';
+      return '<li><button type="button" class="plx-row" data-plx-addr="' + i + '">' + I.home + '<span><b>' + esc(a.isDefault ? 'Default address' : 'Saved address') + '</b><small>' + esc(a.label) + '</small></span><span data-plx-addr-tag="' + i + '"></span></button></li>';
     }).join('');
     sheet.innerHTML =
       '<div class="plx-sheet__dim" data-plx-close></div>' +
@@ -360,23 +403,23 @@
         '<div class="plx-sheet__head"><button type="button" class="plx-sheet__back" data-plx-view="search" aria-label="Back" hidden>←</button>' +
         '<h2 id="plx-sheet-h">Where should we deliver?</h2>' +
         '<button type="button" class="plx-sheet__x" data-plx-close aria-label="Close">✕</button></div>' +
+        '<ol class="plx-steps" aria-label="Steps"><li data-plx-step="search">Find</li><li data-plx-step="map">Pin</li><li data-plx-step="confirm">Details</li></ol>' +
 
         '<div class="plx-view" data-plx-v="search">' +
-          (saved ? '<ul class="plx-list plx-list--saved">' + saved + '</ul>' : '') +
-          '<label class="plx-sheet__lbl" for="plx-q">Building, street or area</label>' +
-          '<input id="plx-q" class="plx-sheet__in" type="search" autocomplete="off" placeholder="e.g. Bloom Towers, JVC, Dubai Marina">' +
+          (navigator.geolocation ? '<button type="button" class="plx-row plx-row--main" data-plx-loc>' + I.locate + '<span data-plx-loc-t>Use my current location<small>Fastest on your phone</small></span></button>' : '') +
+          '<label class="plx-sheet__lbl" for="plx-q">Or search a building, street or area</label>' +
+          '<div class="plx-search">' + I.search + '<input id="plx-q" class="plx-sheet__in" type="search" autocomplete="off" placeholder="e.g. Bloom Towers, JVC, Dubai Marina"></div>' +
           '<ul class="plx-list" data-plx-results aria-live="polite"></ul>' +
-          '<div class="plx-sheet__btns">' +
-            (navigator.geolocation ? '<button type="button" class="plx-row plx-row--loc" data-plx-loc>📍 Use my current location</button>' : '') +
-            '<button type="button" class="plx-row plx-row--loc" data-plx-view="map">🗺️ Pick on the map</button>' +
-          '</div>' +
+          (saved ? '<p class="plx-sheet__lbl">Saved addresses</p><ul class="plx-list plx-list--saved">' + saved + '</ul>' : '') +
+          '<div data-plx-recent-wrap></div>' +
+          '<button type="button" class="plx-row plx-row--loc" data-plx-view="map">' + I.map + 'Pick on the map</button>' +
           (cfg.signedIn ? '' : '<p class="plx-sheet__note">Have an account? <a href="' + esc(cfg.loginUrl) + '">Sign in</a> to use your saved addresses.</p>') +
           '<p class="plx-sheet__note">2-hour Express covers much of Dubai, Monday to Saturday, order by 5 pm. Express is ' + free + '</p>' +
         '</div>' +
 
         '<div class="plx-view" data-plx-v="map" hidden>' +
           '<p class="plx-sheet__step" data-plx-maphint>Move the map so the pin sits on your building.</p>' +
-          '<div class="plx-map"><div class="plx-map__canvas" data-plx-map></div><span class="plx-map__pin" aria-hidden="true">📍</span></div>' +
+          '<div class="plx-map"><div class="plx-map__canvas" data-plx-map></div><span class="plx-map__pin" aria-hidden="true">' + I.pin + '</span></div>' +
           '<button type="button" class="plx__btn plx__btn--full" data-plx-pin>Yes, the pin is on my building</button>' +
         '</div>' +
 
@@ -388,6 +431,9 @@
           '<input id="plx-flat" class="plx-sheet__in" type="text" autocomplete="address-line2" placeholder="e.g. Apt 1203">' +
           '<label class="plx-sheet__lbl" for="plx-street">Street or landmark (optional)</label>' +
           '<input id="plx-street" class="plx-sheet__in" type="text" placeholder="e.g. Dana Road, near Spinneys">' +
+          '<div class="plx-tags" role="radiogroup" aria-label="Save as">' +
+            ['Home', 'Work', 'Other'].map(function (x, i) { return '<label><input type="radio" name="plx-tag" value="' + x + '"' + (i === 0 ? ' checked' : '') + '><span>' + x + '</span></label>'; }).join('') +
+          '</div>' +
           '<button type="button" class="plx__btn plx__btn--full" data-plx-save disabled>Deliver here</button>' +
           '<button type="button" class="plx__link" data-plx-view="map">Not quite right? Move the pin</button>' +
         '</div>' +
@@ -405,6 +451,12 @@
     var vs = sheet.querySelectorAll('[data-plx-v]');
     for (var i = 0; i < vs.length; i++) vs[i].hidden = vs[i].getAttribute('data-plx-v') !== name;
     sheet.querySelector('.plx-sheet__back').hidden = name === 'search';
+    var order = ['search', 'map', 'confirm'];
+    [].forEach.call(sheet.querySelectorAll('[data-plx-step]'), function (li) {
+      var k = order.indexOf(li.getAttribute('data-plx-step')), now = order.indexOf(name);
+      li.className = k < now ? 'is-done' : k === now ? 'is-on' : '';
+    });
+    if (name === 'search') renderRecent();
     if (name === 'map') showMap();
     if (name === 'search') setTimeout(function () { sheet.querySelector('#plx-q').focus(); }, 30);
   }
@@ -420,8 +472,8 @@
       lastResults = res.results || [];
       box.innerHTML = lastResults.length ? lastResults.map(function (r, i) {
         return r.kind === 'area'
-          ? '<li><button type="button" class="plx-row" data-plx-res="' + i + '"><span><b>' + esc(r.name) + '</b><small>Area</small></span>' + (TAG[r.tier] || '') + '</button></li>'
-          : '<li><button type="button" class="plx-row" data-plx-res="' + i + '"><span><b>' + esc(r.address1) + '</b><small>' + esc([r.community, r.emirate].filter(Boolean).join(', ')) + '</small></span></button></li>';
+          ? '<li><button type="button" class="plx-row" data-plx-res="' + i + '">' + I.map + '<span><b>' + esc(r.name) + '</b><small>Area</small></span>' + (TAG[r.tier] || '') + '</button></li>'
+          : '<li><button type="button" class="plx-row" data-plx-res="' + i + '">' + I.pin + '<span><b>' + esc(r.address1) + '</b><small>' + esc([r.community, r.emirate].filter(Boolean).join(', ')) + '</small></span></button></li>';
       }).join('') : '<li class="plx-empty">No match. Try your building or street name, or pick on the map.</li>';
     }).catch(function () {
       box.innerHTML = '<li class="plx-empty">Couldn’t search just now. Pick on the map instead.</li>';
@@ -445,7 +497,7 @@
         area: (res.area && res.area.name !== 'Dubai' && res.area.name !== 'Outside Dubai' ? res.area.name : '') || addr.community || '',
         label: [addr.address1 || addr.label, addr.community].filter(Boolean).join(', ') || 'Pinned location'
       };
-      box.innerHTML = '<p class="plx-confirm__addr">📍 ' + esc(chosen.label) + '</p>' +
+      box.innerHTML = '<p class="plx-confirm__addr">' + I.pin + esc(chosen.label) + '</p>' +
         '<p class="plx-confirm__tier">' + (TAG[res.tier] || '') + ' ' + esc(res.title || '') + '</p>';
       // Pre-fill what the pin (or the search result) tells us; the shopper corrects it.
       var bld = sheet.querySelector('#plx-bld');
@@ -472,6 +524,10 @@
       if (!map) {
         map = new ml.Map({ container: el, style: MAP_STYLE, center: t ? [+t.lng, +t.lat] : [DUBAI[1], DUBAI[0]], zoom: t ? (t.zoom || 17) : 11, attributionControl: { compact: true } });
         map.addControl(new ml.NavigationControl({ showCompass: false }), 'top-left');
+        map.on('load', function () {
+          var a = el.querySelector('.maplibregl-ctrl-attrib');
+          if (a) a.classList.remove('maplibregl-compact-show');
+        });
       } else if (t) {
         map.jumpTo({ center: [+t.lng, +t.lat], zoom: t.zoom || 17 });
       }
@@ -495,10 +551,15 @@
   }
 
   function onSheetClick(e) {
-    var t = e.target.closest('[data-plx-close],[data-plx-view],[data-plx-res],[data-plx-addr],[data-plx-loc],[data-plx-pin],[data-plx-save]');
+    var t = e.target.closest('[data-plx-close],[data-plx-view],[data-plx-res],[data-plx-recent],[data-plx-addr],[data-plx-loc],[data-plx-pin],[data-plx-save]');
     if (!t) return;
     if (t.hasAttribute('data-plx-close')) return close();
     if (t.hasAttribute('data-plx-view')) return view(t.getAttribute('data-plx-view'));
+    if (t.hasAttribute('data-plx-recent')) {
+      var rc = recent()[+t.getAttribute('data-plx-recent')];
+      if (rc) { savePick(Object.assign({}, rc)); return done(); }
+      return;
+    }
     if (t.hasAttribute('data-plx-res')) {
       var r = lastResults[+t.getAttribute('data-plx-res')];
       if (!r) return;
@@ -528,21 +589,25 @@
       chosen.flat = sheet.querySelector('#plx-flat').value.trim().slice(0, 80);
       chosen.street = sheet.querySelector('#plx-street').value.trim().slice(0, 80);
       chosen.label = [chosen.address1, chosen.community].filter(Boolean).join(', ') || chosen.label;
+      var tag = sheet.querySelector('input[name="plx-tag"]:checked');
+      chosen.tag = tag && tag.value !== 'Other' ? tag.value : '';
       savePick(chosen);
+      remember(chosen);
       return done();
     }
   }
   function locateMe(btn) {
     btn.disabled = true;
-    btn.textContent = '📍 Finding you…';
+    var lt = btn.querySelector('[data-plx-loc-t]') || btn;
+    lt.textContent = 'Finding you…';
     navigator.geolocation.getCurrentPosition(function (pos) {
       btn.disabled = false;
-      btn.textContent = '📍 Use my current location';
+      lt.innerHTML = 'Use my current location<small>Fastest on your phone</small>';
       mapTarget = { lat: pos.coords.latitude.toFixed(5), lng: pos.coords.longitude.toFixed(5) };
       view('map');
     }, function () {
       btn.disabled = false;
-      btn.textContent = '📍 Location is off. Search or pick on the map.';
+      lt.innerHTML = 'Location is off<small>Search below or pick on the map</small>';
     }, { timeout: 10000, maximumAge: 600000, enableHighAccuracy: true });
   }
   function tagSaved() {
@@ -558,6 +623,7 @@
     lastFocus = document.activeElement;
     sheet.hidden = false;
     document.documentElement.classList.add('plx-lock');
+    popups(true);
     sheet.querySelector('#plx-q').value = '';
     sheet.querySelector('[data-plx-results]').innerHTML = '';
     ['#plx-flat', '#plx-bld', '#plx-street'].forEach(function (s) { sheet.querySelector(s).value = ''; });
@@ -565,6 +631,32 @@
     if (start === 'pin') return pinFromPlace();
     view(start === 'map' ? 'map' : 'search');
   }
+  // Recent pinned addresses on this device (guests too), newest first, 3 kept.
+  var RECENT = 'plx-recent';
+  function recent() { try { return JSON.parse(localStorage.getItem(RECENT) || '[]'); } catch (e) { return []; } }
+  function remember(p) {
+    if (!p || p.kind !== 'location') return;
+    var list = recent().filter(function (x) { return Math.abs(x.lat - p.lat) > 0.0005 || Math.abs(x.lng - p.lng) > 0.0005; });
+    list.unshift(p);
+    try { localStorage.setItem(RECENT, JSON.stringify(list.slice(0, 3))); } catch (e) {}
+  }
+  function renderRecent() {
+    var wrap = sheet.querySelector('[data-plx-recent-wrap]');
+    var list = recent();
+    wrap.innerHTML = list.length ? '<p class="plx-sheet__lbl">Recent</p><ul class="plx-list plx-list--saved">' + list.map(function (r, i) {
+      return '<li><button type="button" class="plx-row" data-plx-recent="' + i + '">' + (r.tag === 'Home' ? I.home : I.pin) + '<span><b>' + esc(r.tag || r.address1 || 'Pinned spot') + '</b><small>' + esc([r.flat, r.label].filter(Boolean).join(', ')) + '</small></span></button></li>';
+    }).join('') + '</ul>' : '';
+  }
+
+  // Email pop-ups (Klaviyo) stay out of the way while the sheet is open.
+  function popups(hide) {
+    [].forEach.call(document.body.children, function (n) {
+      if (n === sheet || !n.classList || !n.classList.contains('needsclick')) return;
+      if (hide) { if (!n.hasAttribute('data-plx-hid')) n.setAttribute('data-plx-hid', n.style.visibility || ''); n.style.visibility = 'hidden'; }
+      else if (n.hasAttribute('data-plx-hid')) { n.style.visibility = n.getAttribute('data-plx-hid'); n.removeAttribute('data-plx-hid'); }
+    });
+  }
+
   // "Pin your building": straight to the map, centred on what we already know (the saved
   // address, else the area), so the shopper only nudges the pin onto their building.
   var areaCoords = null;
@@ -593,6 +685,7 @@
     if (!sheet) return;
     sheet.hidden = true;
     document.documentElement.classList.remove('plx-lock');
+    popups(false);
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   function done() {
@@ -617,6 +710,29 @@
   }).observe(document.body, { childList: true, subtree: true });
 
   document.addEventListener('visibilitychange', function () { if (!document.hidden) refresh(false); });
+
+  // Phones: the narrow "25% OFF" side tab (Klaviyo teaser) covers the delivery card's edge, so it
+  // steps aside while the card is on screen.
+  if ('IntersectionObserver' in window) {
+    var teaserOff = false;
+    var setTeaser = function (hide) {
+      if (hide === teaserOff) return;
+      teaserOff = hide;
+      [].forEach.call(document.body.children, function (n) {
+        if (n === sheet || !n.classList || !n.classList.contains('needsclick')) return;
+        var r = n.getBoundingClientRect();
+        var narrow = r.width > 0 && r.width < 240;
+        if (hide && narrow) { n.setAttribute('data-plx-teaser', '1'); n.style.opacity = '0'; n.style.pointerEvents = 'none'; }
+        if (!hide && n.hasAttribute('data-plx-teaser')) { n.removeAttribute('data-plx-teaser'); n.style.opacity = ''; n.style.pointerEvents = ''; }
+      });
+    };
+    var io = new IntersectionObserver(function (es) {
+      setTeaser(window.innerWidth < 768 && es.some(function (x) { return x.isIntersecting; }));
+    }, { threshold: 0.2 });
+    var watchCard = function () { var c = document.querySelector('[data-plx="pdp"]'); if (c && !c.hasAttribute('data-plx-watched')) { c.setAttribute('data-plx-watched', ''); io.observe(c); } };
+    watchCard();
+    setTimeout(watchCard, 2000);
+  }
   window.PlaayExpress.open = open;
   refresh(false);
   checkCart();

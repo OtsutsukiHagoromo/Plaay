@@ -309,11 +309,21 @@
               <span class="pl-drawer__perk is-save">You save {% render 'plaay-aed', fils: saved %}</span>
             {%- elsif reached >= 0 -%}
               <span class="pl-drawer__perk">{% render 'pl-icon', name: 'truck', size: 13, stroke: 2.2 %}Free delivery</span>
+            {%- else -%}
+              <span class="pl-drawer__perk">{% render 'pl-icon', name: 'truck', size: 13, stroke: 2.2 %}Incl. AED {{ settings.cart_ship_fee | default: 15 }} delivery</span>
             {%- endif -%}
           </span>
           <span class="pl-drawer__total-row">
             {%- if saved > 0 -%}<s class="pl-drawer__was">{% render 'plaay-aed', fils: was %}</s>{%- endif -%}
-            <span class="pl-drawer__total-v" data-pl-sticky-total>{% render 'plaay-aed', fils: cart.total_price %}</span>
+            {%- liquid
+              # Same as the summary: Standard delivery is in the total until it is free.
+              assign foot_total = cart.total_price
+              if reached < 0
+                assign foot_fee = settings.cart_ship_fee | default: 15 | times: 100
+                assign foot_total = foot_total | plus: foot_fee
+              endif
+            -%}
+            <span class="pl-drawer__total-v" data-pl-sticky-total>{% render 'plaay-aed', fils: foot_total %}</span>
           </span>
         </button>
         <div class="pl-drawer__sum" data-pl-sum hidden></div>

@@ -123,9 +123,15 @@
     {%- endif -%}
   {%- endfor -%}
 
+  {%- comment -%}
+    Delivery: the Standard rate (free from settings.cart_tier_ship). The Total includes it, so the
+    rows add up; Express (if chosen at checkout) is priced there.
+  {%- endcomment -%}
+  {%- assign ship_fee = settings.cart_ship_fee | default: 15 | times: 100 -%}
+  {%- assign grand_total = cart.total_price -%}
+  {%- unless delivery_free -%}{%- assign grand_total = grand_total | plus: ship_fee -%}{%- endunless -%}
   <div class="pl-summary__row">
-    <span class="pl-summary__k">Delivery</span>
-    {%- assign ship_fee = settings.cart_ship_fee | default: 15 | times: 100 -%}
+    <span class="pl-summary__k">Delivery{% if settings.express_enabled %} <small class="pl-summary__note">Standard · Express at checkout</small>{% endif %}</span>
     <span class="pl-summary__v">
       {%- if delivery_free -%}
         {%- if ship_fee > 0 -%}<s class="pl-summary__was">{% render 'plaay-aed', fils: ship_fee %}</s> {% endif -%}<span class="pl-green">Free</span>
@@ -139,7 +145,7 @@
 
   <div class="pl-summary__row pl-summary__row--total" data-subtotal data-cart-total="{{ cart.total_price }}">
     <b class="pl-summary__k">Total</b>
-    <b class="pl-summary__v">{% render 'plaay-aed', fils: cart.total_price %}</b>
+    <b class="pl-summary__v">{% render 'plaay-aed', fils: grand_total %}</b>
   </div>
 </div>
 

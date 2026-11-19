@@ -459,3 +459,4 @@ html.pl-app cart-drawer .pl-drawer .pl-drawer__head { padding-top: calc(var(--pl
 /* Bag drawer: Apple Pay / Google Pay / Shop Pay under Checkout (Shopify's accelerated buttons) */
 .pl .pl-wallet { margin-top: 8px; --shopify-accelerated-checkout-button-block-size: 48px; --shopify-accelerated-checkout-button-border-radius: 999px; --shopify-accelerated-checkout-row-gap: 8px; --shopify-accelerated-checkout-inline-alignment: center; }
 .pl .pl-wallet .dynamic-checkout__content { margin: 0; }
+.pl .pl-summary__note { display: block; font-size: 11px; font-weight: 600; opacity: .65; }
