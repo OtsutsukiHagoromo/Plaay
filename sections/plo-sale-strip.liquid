@@ -13,19 +13,19 @@
   assign small = s.small_print | split: '|'
 -%}
 {%- if s.status != 'off' -%}
-<div class="pl plo-sale{% if s.tilt %} is-tilt{% endif %}" data-plo-sale data-live="{% if s.status == 'live' %}1{% endif %}" data-start="{{ s.starts | escape }}" data-end="{{ s.ends | escape }}" hidden
+<div class="pl plo-salestrip{% if s.tilt %} is-tilt{% endif %}" data-plo-salestrip data-live="{% if s.status == 'live' %}1{% endif %}" data-start="{{ s.starts | escape }}" data-end="{{ s.ends | escape }}" hidden
   style="--sale-ink: {{ s.ink }}; --sale-bg: {{ s.bg }}; --sale-band: {{ s.band }}; --sale-band-ink: {{ s.band_ink }};">
-  <a class="plo-sale__link" href="{{ s.link | default: '/collections/shop-all' }}">
+  <a class="plo-salestrip__link" href="{{ s.link | default: '/collections/shop-all' }}">
     <span class="pl-vh">{{ s.label }}: {{ big }}. {{ s.small_print | replace: '|', '. ' }}</span>
-    <span class="plo-sale__big" aria-hidden="true">
-      <span class="plo-sale__track">
-        {%- for i in (1..6) -%}<span class="plo-sale__item">{%- if s.label != blank -%}<em>{{ s.label }}</em>{%- endif -%}{{ big }}</span><span class="plo-sale__dot"></span>{%- endfor -%}
+    <span class="plo-salestrip__big" aria-hidden="true">
+      <span class="plo-salestrip__track">
+        {%- for i in (1..6) -%}<span class="plo-salestrip__item">{%- if s.label != blank -%}<em>{{ s.label }}</em>{%- endif -%}{{ big }}</span><span class="plo-salestrip__dot"></span>{%- endfor -%}
       </span>
     </span>
     {%- if small.size > 0 -%}
-      <span class="plo-sale__small" aria-hidden="true">
-        <span class="plo-sale__track plo-sale__track--rev">
-          {%- for i in (1..6) -%}{%- for t in small -%}<span>{{ t | strip }}</span><span class="plo-sale__star">✦</span>{%- endfor -%}{%- endfor -%}
+      <span class="plo-salestrip__small" aria-hidden="true">
+        <span class="plo-salestrip__track plo-salestrip__track--rev">
+          {%- for i in (1..6) -%}{%- for t in small -%}<span>{{ t | strip }}</span><span class="plo-salestrip__star">✦</span>{%- endfor -%}{%- endfor -%}
         </span>
       </span>
     {%- endif -%}
@@ -34,7 +34,7 @@
 <script>
   (function () {
     var el = document.currentScript.previousElementSibling;
-    if (!el || !el.hasAttribute('data-plo-sale')) return;
+    if (!el || !el.hasAttribute('data-plo-salestrip')) return;
     var preview = /[?&]sale=preview\b/.test(location.search);
     function t(v) { if (!v) return null; var d = new Date(v.indexOf('T') > -1 || v.indexOf('+') > -1 ? v : v.replace(' ', 'T') + '+04:00'); return isNaN(d) ? null : d.getTime(); }
     var now = Date.now(), a = t(el.getAttribute('data-start')), b = t(el.getAttribute('data-end'));
@@ -47,7 +47,7 @@
 {
   "name": "Sale strip",
   "tag": "section",
-  "class": "plo-sale-sec",
+  "class": "plo-salestrip-sec",
   "settings": [
     { "type": "select", "id": "status", "label": "Status", "default": "preview", "options": [ { "value": "off", "label": "Off" }, { "value": "preview", "label": "Preview only (?sale=preview)" }, { "value": "live", "label": "Live (uses the dates)" } ] },
     { "type": "text", "id": "starts", "label": "Starts (Gulf time)", "info": "e.g. 2026-11-27 00:00. Blank = now." },

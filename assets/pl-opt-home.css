@@ -135,29 +135,29 @@
    Two scrolling bands across the bottom edge of the homepage banner: the offer, big, in pink on
    white; the small print in yellow on navy, scrolling the other way. With "tilt" the pair leans
    a little and overlaps the banner, like a sticker; the section above keeps its own spacing. */
-.plo-sale { position: relative; z-index: 3; overflow: hidden; padding: 6px 0 14px; }
-.plo-sale.is-tilt { margin-top: -26px; padding: 18px 0 22px; }
-.plo-sale__link { display: block; color: inherit; text-decoration: none; }
-.plo-sale__big, .plo-sale__small { display: block; overflow: hidden; white-space: nowrap; }
-.plo-sale__big { background: var(--sale-bg); color: var(--sale-ink); padding: 10px 0 8px; box-shadow: 0 6px 18px rgba(8, 29, 72, .12); }
-.plo-sale__small { background: var(--sale-band); color: var(--sale-band-ink); padding: 9px 0; }
-.plo-sale.is-tilt .plo-sale__big { transform: rotate(-2deg); margin: 0 -12px; }
-.plo-sale.is-tilt .plo-sale__small { transform: rotate(-2deg); margin: -2px -12px 0; }
-.plo-sale__track { display: inline-flex; align-items: center; gap: 22px; padding-left: 22px; animation: plo-sale-l 30s linear infinite; will-change: transform; }
-.plo-sale__track--rev { animation-name: plo-sale-r; animation-duration: 36s; }
-.plo-sale__item { display: inline-flex; align-items: center; gap: 12px; font-weight: 900; font-size: clamp(26px, 6.2vw, 64px); line-height: 1; letter-spacing: -.035em; text-transform: uppercase; }
-.plo-sale__item em {
+.plo-salestrip { position: relative; z-index: 3; overflow: hidden; padding: 6px 0 14px; }
+.plo-salestrip.is-tilt { margin-top: -26px; padding: 18px 0 22px; }
+.plo-salestrip__link { display: block; color: inherit; text-decoration: none; }
+.plo-salestrip__big, .plo-salestrip__small { display: block; overflow: hidden; white-space: nowrap; }
+.plo-salestrip__big { background: var(--sale-bg); color: var(--sale-ink); padding: 10px 0 8px; box-shadow: 0 6px 18px rgba(8, 29, 72, .12); }
+.plo-salestrip__small { background: var(--sale-band); color: var(--sale-band-ink); padding: 9px 0; }
+.plo-salestrip.is-tilt .plo-salestrip__big { transform: rotate(-2deg); margin: 0 -12px; }
+.plo-salestrip.is-tilt .plo-salestrip__small { transform: rotate(-2deg); margin: -2px -12px 0; }
+.plo-salestrip__track { display: inline-flex; align-items: center; gap: 22px; padding-left: 22px; animation: plo-salestrip-l 30s linear infinite; will-change: transform; }
+.plo-salestrip__track--rev { animation-name: plo-salestrip-r; animation-duration: 36s; }
+.plo-salestrip__item { display: inline-flex; align-items: center; gap: 12px; font-weight: 900; font-size: clamp(26px, 6.2vw, 64px); line-height: 1; letter-spacing: -.035em; text-transform: uppercase; }
+.plo-salestrip__item em {
   font-style: normal; font-size: .42em; letter-spacing: .06em; line-height: 1;
   background: var(--sale-ink); color: var(--sale-bg); padding: .38em .55em .32em; border-radius: 999px; transform: translateY(-.1em);
 }
-.plo-sale__dot { width: .32em; height: .32em; border-radius: 50%; background: var(--sale-ink); font-size: clamp(26px, 6.2vw, 64px); flex: 0 0 auto; }
-.plo-sale__small span { font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
-.plo-sale__star { opacity: .8; }
-.plo-sale__link:hover .plo-sale__track, .plo-sale__link:focus-visible .plo-sale__track { animation-play-state: paused; }
-@keyframes plo-sale-l { to { transform: translateX(-50%); } }
-@keyframes plo-sale-r { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+.plo-salestrip__dot { width: .32em; height: .32em; border-radius: 50%; background: var(--sale-ink); font-size: clamp(26px, 6.2vw, 64px); flex: 0 0 auto; }
+.plo-salestrip__small span { font-size: 12px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+.plo-salestrip__star { opacity: .8; }
+.plo-salestrip__link:hover .plo-salestrip__track, .plo-salestrip__link:focus-visible .plo-salestrip__track { animation-play-state: paused; }
+@keyframes plo-salestrip-l { to { transform: translateX(-50%); } }
+@keyframes plo-salestrip-r { from { transform: translateX(-50%); } to { transform: translateX(0); } }
 @media (min-width: 768px) {
-  .plo-sale.is-tilt { margin-top: -44px; }
-  .plo-sale__small span { font-size: 14px; }
+  .plo-salestrip.is-tilt { margin-top: -44px; }
+  .plo-salestrip__small span { font-size: 14px; }
 }
-@media (prefers-reduced-motion: reduce) { .plo-sale__track { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .plo-salestrip__track { animation: none; } }
