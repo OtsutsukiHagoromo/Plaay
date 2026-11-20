@@ -1,0 +1,67 @@
+{%- comment -%}
+  Sale strip: two scrolling bands that sit across the bottom edge of the homepage banner, so a sale
+  needs no new banner artwork. Band 1: the offer in big pink type on white. Band 2: the small print
+  in yellow on navy, scrolling the other way. The whole strip links to the sale.
+
+  "Status": Off / Preview only (visible only with ?sale=preview on the homepage URL) / Live (visible
+  between "Starts" and "Ends", Gulf time, checked in the browser so cached pages stay right; blank
+  dates = always). ?sale=preview always shows it, to check it before it starts.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign big = s.headline | default: '25% OFF ON ORDERS ABOVE AED 399'
+  assign small = s.small_print | split: '|'
+-%}
+{%- if s.status != 'off' -%}
+<div class="pl plo-sale{% if s.tilt %} is-tilt{% endif %}" data-plo-sale data-live="{% if s.status == 'live' %}1{% endif %}" data-start="{{ s.starts | escape }}" data-end="{{ s.ends | escape }}" hidden
+  style="--sale-ink: {{ s.ink }}; --sale-bg: {{ s.bg }}; --sale-band: {{ s.band }}; --sale-band-ink: {{ s.band_ink }};">
+  <a class="plo-sale__link" href="{{ s.link | default: '/collections/shop-all' }}">
+    <span class="pl-vh">{{ s.label }}: {{ big }}. {{ s.small_print | replace: '|', '. ' }}</span>
+    <span class="plo-sale__big" aria-hidden="true">
+      <span class="plo-sale__track">
+        {%- for i in (1..6) -%}<span class="plo-sale__item">{%- if s.label != blank -%}<em>{{ s.label }}</em>{%- endif -%}{{ big }}</span><span class="plo-sale__dot"></span>{%- endfor -%}
+      </span>
+    </span>
+    {%- if small.size > 0 -%}
+      <span class="plo-sale__small" aria-hidden="true">
+        <span class="plo-sale__track plo-sale__track--rev">
+          {%- for i in (1..6) -%}{%- for t in small -%}<span>{{ t | strip }}</span><span class="plo-sale__star">✦</span>{%- endfor -%}{%- endfor -%}
+        </span>
+      </span>
+    {%- endif -%}
+  </a>
+</div>
+<script>
+  (function () {
+    var el = document.currentScript.previousElementSibling;
+    if (!el || !el.hasAttribute('data-plo-sale')) return;
+    var preview = /[?&]sale=preview\b/.test(location.search);
+    function t(v) { if (!v) return null; var d = new Date(v.indexOf('T') > -1 || v.indexOf('+') > -1 ? v : v.replace(' ', 'T') + '+04:00'); return isNaN(d) ? null : d.getTime(); }
+    var now = Date.now(), a = t(el.getAttribute('data-start')), b = t(el.getAttribute('data-end'));
+    if (preview || (el.getAttribute('data-live') === '1' && (a === null || now >= a) && (b === null || now < b))) el.hidden = false;
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Sale strip",
+  "tag": "section",
+  "class": "plo-sale-sec",
+  "settings": [
+    { "type": "select", "id": "status", "label": "Status", "default": "preview", "options": [ { "value": "off", "label": "Off" }, { "value": "preview", "label": "Preview only (?sale=preview)" }, { "value": "live", "label": "Live (uses the dates)" } ] },
+    { "type": "text", "id": "starts", "label": "Starts (Gulf time)", "info": "e.g. 2026-11-27 00:00. Blank = now." },
+    { "type": "text", "id": "ends", "label": "Ends (Gulf time)", "info": "e.g. 2026-12-01 00:00. Blank = no end." },
+    { "type": "text", "id": "label", "label": "Tag before the offer", "default": "SALE" },
+    { "type": "text", "id": "headline", "label": "Offer", "default": "25% OFF ON ORDERS ABOVE AED 399" },
+    { "type": "text", "id": "small_print", "label": "Small print (split with |)", "default": "Applied automatically at checkout|Spend AED 399, save 25%|Truffles, slabs, bars and mixes" },
+    { "type": "url", "id": "link", "label": "Link" },
+    { "type": "checkbox", "id": "tilt", "label": "Slight tilt", "default": true },
+    { "type": "color", "id": "ink", "label": "Offer colour", "default": "#E8178A" },
+    { "type": "color", "id": "bg", "label": "Offer band", "default": "#FFFFFF" },
+    { "type": "color", "id": "band", "label": "Small print band", "default": "#081D48" },
+    { "type": "color", "id": "band_ink", "label": "Small print colour", "default": "#FFB600" }
+  ],
+  "presets": [{ "name": "Sale strip" }]
+}
+{% endschema %}
