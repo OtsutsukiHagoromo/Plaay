@@ -596,10 +596,28 @@
         "instafeed_app_block_akyUpA"
       ],
       "settings": {}
+    },
+    "sale_strip": {
+      "type": "plo-sale-strip",
+      "settings": {
+        "status": "preview",
+        "starts": "",
+        "ends": "",
+        "label": "SALE",
+        "headline": "25% OFF ON ORDERS ABOVE AED 399",
+        "small_print": "Applied automatically at checkout|Spend AED 399, save 25%|Truffles, slabs, bars and mixes",
+        "link": "shopify://collections/shop-all",
+        "tilt": true,
+        "ink": "#E8178A",
+        "bg": "#FFFFFF",
+        "band": "#081D48",
+        "band_ink": "#FFB600"
+      }
     }
   },
   "order": [
     "hero",
+    "sale_strip",
     "claims",
     "bestsellers",
     "categories",
