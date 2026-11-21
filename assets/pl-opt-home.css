@@ -135,7 +135,8 @@
    Two scrolling bands across the bottom edge of the homepage banner: the offer, big, in pink on
    white; the small print in yellow on navy, scrolling the other way. With "tilt" the pair leans
    a little and overlaps the banner, like a sticker; the section above keeps its own spacing. */
-.plo-salestrip { position: relative; z-index: 3; overflow: hidden; padding: 6px 0 14px; }
+.plo-salestrip { position: relative; z-index: 3; overflow: hidden; padding: 0; }
+.plo-salestrip:not(.is-tilt) .plo-salestrip__big { box-shadow: none; border-bottom: 1px solid rgba(8, 29, 72, .08); }
 .plo-salestrip.is-tilt { margin-top: -26px; padding: 18px 0 22px; }
 .plo-salestrip__link { display: block; color: inherit; text-decoration: none; }
 .plo-salestrip__big, .plo-salestrip__small { display: block; overflow: hidden; white-space: nowrap; }
