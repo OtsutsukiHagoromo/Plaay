@@ -602,7 +602,7 @@
       "settings": {
         "status": "live",
         "starts": "2026-11-22 00:00",
-        "ends": "2026-12-01 00:00",
+        "ends": "2026-12-01 00:00:00",
         "label": "BLACK FRIDAY SALE",
         "headline": "25% OFF ON ORDERS ABOVE AED 399",
         "small_print": "",
