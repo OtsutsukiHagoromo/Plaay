@@ -1,4 +1,4 @@
-import { createListing, LISTINGS, readProduct } from './listing.js';
+import { addImage, createListing, LISTINGS, readProduct } from './listing.js';
 // HTTP handlers (Web Request -> Response). api/*.js wire these to Vercel routes.
 
 import crypto from 'node:crypto';
@@ -146,7 +146,7 @@ export async function handleDashboard(request, d) {
     const form = await request.formData();
     const orderId = String(form.get('order') || '');
     const action = String(form.get('action') || '');
-    if (!['connect', 'test-order', 'create-order', 'create-promotion', 'listing-create'].includes(action) && !action.startsWith('express-') && action !== 'cleanup-remove' && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
+    if (!['connect', 'test-order', 'create-order', 'create-promotion', 'listing-create', 'listing-image'].includes(action) && !action.startsWith('express-') && action !== 'cleanup-remove' && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
 
     let result;
     try {
@@ -203,6 +203,19 @@ export async function handleDashboard(request, d) {
         const r = await createListing(d.shopify, spec, d.cfg.appUrl);
         form.set('back', `/?product=${encodeURIComponent(r.handle)}`);
         result = { ok: true, message: `${r.updated ? 'Updated' : 'Created'} ${r.handle} on ${r.channels} sales channels.` };
+      }
+      else if (action === 'listing-image') {
+        const file = String(form.get('file') || '');
+        if (!/^[a-z0-9-]+\.(jpg|png|webp)$/.test(file)) return new Response('Bad file', { status: 400 });
+        const r = await addImage(d.shopify, {
+          handle: String(form.get('handle') || '').replace(/[^a-z0-9-]/g, ''),
+          file,
+          alt: String(form.get('alt') || '').slice(0, 300),
+          position: Number(form.get('position') || 0) || 0,
+          replace: form.get('replace') === '1',
+        }, d.cfg.appUrl);
+        form.set('back', `/?product=${encodeURIComponent(r.handle)}`);
+        result = { ok: true, message: `Image added to ${r.handle} (${r.images} images).` };
       }
       else if (action === 'hide') {
         // Off the dashboard (tests, mistakes): the Express tags go, noon-hidden is added. The
