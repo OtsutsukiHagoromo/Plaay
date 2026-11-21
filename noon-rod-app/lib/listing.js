@@ -107,14 +107,15 @@ export async function setStock(shopify, handle, quantity) {
   const v = p.variants.nodes[0];
   const loc = d.locations.nodes.find((l) => l.isActive && l.fulfillsOnlineOrders);
   if (!loc) throw new Error('No active location for online orders');
-  await shopify.graphql('mutation($i: ID!, $l: ID!) { inventoryActivate(inventoryItemId: $i, locationId: $l) { userErrors { field message } } }', { i: v.inventoryItem.id, l: loc.id });
+  // Inventory writes need an idempotency key (Admin API 2026-04+).
+  await shopify.graphql('mutation($i: ID!, $l: ID!, $k: String!) { inventoryActivate(inventoryItemId: $i, locationId: $l) @idempotent(key: $k) { userErrors { field message } } }', { i: v.inventoryItem.id, l: loc.id, k: crypto.randomUUID() });
   const lvl = await shopify.graphql('query($i: ID!, $l: ID!) { inventoryItem(id: $i) { inventoryLevel(locationId: $l) { quantities(names: ["available"]) { quantity } } } }', { i: v.inventoryItem.id, l: loc.id });
   const current = lvl.inventoryItem.inventoryLevel?.quantities?.[0]?.quantity ?? 0;
   const delta = quantity - current;
   if (delta) {
     const r = await shopify.graphql(
-      'mutation($in: InventoryAdjustQuantitiesInput!) { inventoryAdjustQuantities(input: $in) { userErrors { field message } } }',
-      { in: { name: 'available', reason: 'correction', changes: [{ inventoryItemId: v.inventoryItem.id, locationId: loc.id, delta, changeFromQuantity: current }] } },
+      'mutation($in: InventoryAdjustQuantitiesInput!, $k: String!) { inventoryAdjustQuantities(input: $in) @idempotent(key: $k) { userErrors { field message } } }',
+      { k: crypto.randomUUID(), in: { name: 'available', reason: 'correction', changes: [{ inventoryItemId: v.inventoryItem.id, locationId: loc.id, delta, changeFromQuantity: current }] } },
     );
     const e = r.inventoryAdjustQuantities.userErrors;
     if (e.length) throw new Error(e.map((x) => x.message).join('; '));
