@@ -1,3 +1,4 @@
+import { readProduct } from './listing.js';
 // HTTP handlers (Web Request -> Response). api/*.js wire these to Vercel routes.
 
 import crypto from 'node:crypto';
@@ -280,6 +281,10 @@ export async function handleDashboard(request, d) {
     return html(renderOrderDetail({ order, task, taskError, cfg: d.cfg, flash, labels: STATUS_LABELS, links, live }));
   }
 
+  // Read-only: how a product is set up (for copying its pattern to a new listing).
+  if (url.searchParams.get('product')) {
+    return json(await readProduct(d.shopify, url.searchParams.get('product').slice(0, 120)));
+  }
   const view = VIEWS.some((v) => v.key === url.searchParams.get('view')) ? url.searchParams.get('view') : 'todo';
   const q = (url.searchParams.get('q') || '').slice(0, 100);
   const connection = await getConnection(d.shopify, d.cfg);
