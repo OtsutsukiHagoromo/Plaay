@@ -326,7 +326,7 @@
             "tint": "#fed8b4",
             "photo_asset": "plo-cat-slabs.jpg",
             "photo_pos": "92% 50%",
-            "sale_badge": "Up to 25% off"
+            "sale_badge": ""
           }
         },
         "cat_2": {
@@ -339,7 +339,7 @@
             "tint": "#fed8b4",
             "photo_asset": "plo-cat-truffles.jpg",
             "photo_pos": "95% 50%",
-            "sale_badge": "20% off"
+            "sale_badge": ""
           }
         },
         "cat_3": {
@@ -352,7 +352,7 @@
             "tint": "#fed8b4",
             "photo_asset": "plo-cat-bars.jpg",
             "photo_pos": "80% 50%",
-            "sale_badge": "Up to 30% off"
+            "sale_badge": ""
           }
         },
         "cat_4": {
@@ -365,7 +365,7 @@
             "tint": "#fed8b4",
             "photo_asset": "plo-cat-packs.jpg",
             "photo_pos": "95% 50%",
-            "sale_badge": "Up to 30% off"
+            "sale_badge": ""
           }
         },
         "cat_mix": {
@@ -600,9 +600,9 @@
     "sale_strip": {
       "type": "plo-sale-strip",
       "settings": {
-        "status": "preview",
-        "starts": "",
-        "ends": "",
+        "status": "live",
+        "starts": "2026-11-22 00:00",
+        "ends": "2026-12-01 00:00",
         "label": "BLACK FRIDAY SALE",
         "headline": "25% OFF ON ORDERS ABOVE AED 399",
         "small_print": "",
