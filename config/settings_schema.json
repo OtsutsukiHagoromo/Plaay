@@ -279,6 +279,19 @@
         "info": "Badges and copy only. The real discounts are Shopify automatic discounts."
       },
       {
+        "type": "number",
+        "id": "sale_min_spend",
+        "label": "Minimum spend for the sale (AED, 0 = none)",
+        "default": 0,
+        "info": "Set for an order-total sale (e.g. 25% off over AED 399): cards show the badge below, the bag ladder ends at this spend."
+      },
+      {
+        "type": "text",
+        "id": "sale_badge",
+        "label": "Card badge for an order-total sale",
+        "default": "Sale"
+      },
+      {
         "type": "range",
         "id": "product_recommendations_limit",
         "label": "Product recommendations limit",

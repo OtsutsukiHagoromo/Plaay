@@ -25,6 +25,27 @@
   assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift' | replace: '+ Mystery Gift', '+ a Mystery Gift'
   assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift' | replace: '+ Mystery Gift', '+ a Mystery Gift'
 
+  # Threshold sale (sale kit on + sale_min_spend, e.g. Black Friday 25% off AED 399+): the ladder
+  # becomes free delivery -> tier 1 (if below the sale minimum) -> the sale. Shopify gives the
+  # bigger of the non-combining order discounts, so this is what checkout applies.
+  assign threshold_sale = false
+  capture sale_on_l
+    render 'sale-active'
+  endcapture
+  assign sale_min_fils = settings.sale_min_spend | default: 0 | times: 100
+  if sale_on_l contains '1' and sale_min_fils > 0
+    assign threshold_sale = true
+    if t1_fils >= sale_min_fils
+      assign t1_fils = sale_min_fils
+      assign l1 = settings.sale_default_pct | append: '% off'
+      assign t2_fils = 0
+    else
+      assign t2_fils = sale_min_fils
+      assign l2 = settings.sale_default_pct | append: '% off'
+    endif
+    assign t3_fils = 0
+  endif
+
   # Free delivery counts the whole bag. The % rewards count one-time items only: the Shopify
   # tier discounts don't apply to subscribed items, and their minimum spend counts only the
   # items they apply to (so a subscribed line can't "unlock" 10% that checkout won't give).
@@ -81,7 +102,7 @@
   capture sale_on
     render 'sale-active'
   endcapture
-  if sale_on contains '1' and reached >= 0
+  if sale_on contains '1' and reached >= 0 and threshold_sale == false
     assign reached = 0
     assign next_fils = 0
     assign next_label = ''
@@ -217,7 +238,7 @@
     {%- if cart.item_count > 0 -%}
       <div class="pl-cartpage__main">
         {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
-        {%- if sale_on contains '1' -%}<p class="plo-sale plo-sale--cart">🎃 <b>Halloween sale, this week only.</b> Your discount is applied at checkout.</p>{%- endif -%}
+        {%- if sale_on contains '1' -%}{%- render 'sale-note', countdown: true, mod: 'cart' -%}{%- endif -%}
         {{ ladder_html }}
         {%- render 'plaay-eid-countdown' -%}
         {%- render 'cart-drawer-items', bare: true -%}
@@ -246,7 +267,7 @@
     <div class="pl-drawer__scroll" data-cart-items>
       {%- if cart.item_count > 0 -%}
         {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
-        {%- if sale_on contains '1' -%}<p class="plo-sale plo-sale--cart">🎃 <b>Halloween sale, this week only.</b> Your discount is applied at checkout.</p>{%- endif -%}
+        {%- if sale_on contains '1' -%}{%- render 'sale-note', countdown: true, mod: 'cart' -%}{%- endif -%}
         {{ ladder_html }}
         {%- render 'plaay-eid-countdown' -%}
         {%- render 'cart-drawer-items' -%}

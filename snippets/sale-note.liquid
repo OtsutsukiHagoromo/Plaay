@@ -1,0 +1,53 @@
+{%- comment -%}
+  Sale line for the bag and the product page while the sale kit is on (snippets/sale-active).
+  Threshold sale (theme setting sale_min_spend > 0, e.g. Black Friday 25% off AED 399+): names the
+  offer and the minimum. Product sale (sale_min_spend 0): the product's own % (snippets/sale-pct).
+  countdown: true adds a live "Ends in 2d 04:12:33" to sale_ends (one shared timer, survives the
+  bag re-rendering).
+  Usage: {%- render 'sale-note', product: product, countdown: true, mod: 'cart' -%}
+{%- endcomment -%}
+{%- liquid
+  assign min = settings.sale_min_spend | default: 0 | plus: 0
+  assign nm = settings.sale_name | default: 'Sale'
+  if min > 0
+    assign pct = settings.sale_default_pct | default: 25
+  elsif product
+    capture pct
+      render 'sale-pct', product: product
+    endcapture
+  else
+    assign pct = ''
+  endif
+  assign pct = pct | strip
+-%}
+<p class="plo-sale plo-sale--note{% if mod %} plo-sale--{{ mod }}{% endif %}">
+  <b>{{ nm }}:</b>
+  {%- if min > 0 %} {{ pct }}% off orders over AED {{ min }}.
+  {%- elsif pct != '' %} {{ pct }}% off.
+  {%- endif %} Applied at checkout{% if settings.sale_ends_label != blank %}, ends {{ settings.sale_ends_label }}{% endif %}.
+  {%- if countdown and settings.sale_ends != blank %}
+    <span class="plo-sale__cd" data-sale-cd="{{ settings.sale_ends | date: '%s' }}" hidden>Ends in <b data-sale-cd-t>--</b></span>
+  {%- endif -%}
+</p>
+{%- if countdown -%}
+<script>
+  (function () {
+    if (window.__plSaleCd) { window.__plSaleCd(); return; }
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+    function tick() {
+      var els = document.querySelectorAll('[data-sale-cd]');
+      for (var i = 0; i < els.length; i++) {
+        var left = Number(els[i].getAttribute('data-sale-cd')) * 1000 - Date.now();
+        if (left <= 0) { els[i].hidden = true; continue; }
+        var s = Math.floor(left / 1000), d = Math.floor(s / 86400); s -= d * 86400;
+        var h = Math.floor(s / 3600); s -= h * 3600; var m = Math.floor(s / 60); s -= m * 60;
+        var t = els[i].querySelector('[data-sale-cd-t]');
+        if (t) t.textContent = (d > 0 ? d + 'd ' : '') + pad(h) + ':' + pad(m) + ':' + pad(s);
+        els[i].hidden = false;
+      }
+    }
+    window.__plSaleCd = tick;
+    tick(); setInterval(tick, 1000);
+  })();
+</script>
+{%- endif -%}

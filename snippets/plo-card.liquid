@@ -118,6 +118,11 @@
       render 'sale-pct', product: product
     endcapture
     assign badge_text = sale_pct | strip | append: '% Off'
+    # Threshold sale (min spend, e.g. Black Friday 25% off AED 399+): the card says the sale's
+    # name, not a % the product alone doesn't get.
+    if settings.sale_min_spend > 0
+      assign badge_text = settings.sale_badge | default: settings.sale_name
+    endif
     assign badge_mod = 'sale'
   endif
   comment

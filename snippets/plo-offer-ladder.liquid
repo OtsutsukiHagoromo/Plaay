@@ -22,7 +22,19 @@
   capture sale_on
     render 'sale-active'
   endcapture
-  if sale_on contains '1'
+  assign sale_min = settings.sale_min_spend | default: 0 | plus: 0
+  if sale_on contains '1' and sale_min > 0
+    # Threshold sale: tier 1 (if below the sale minimum), then the sale.
+    assign a1 = settings.cart_tier_1_spend | plus: 0
+    assign sale_lbl = settings.sale_default_pct | append: '% off'
+    if a1 > 0 and a1 < sale_min
+      assign t_spends = a1 | append: ',' | append: sale_min | split: ','
+      assign t_labels = settings.cart_tier_1_label | append: '|' | append: sale_lbl | split: '|'
+    else
+      assign t_spends = sale_min | append: '' | split: ','
+      assign t_labels = sale_lbl | split: '|'
+    endif
+  elsif sale_on contains '1'
     assign t_spends = ''
   endif
   for sp in t_spends

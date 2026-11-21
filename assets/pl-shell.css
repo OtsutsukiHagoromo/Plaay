@@ -641,3 +641,6 @@ body.pl-inv-open { overflow: hidden; }
 .plo-sale { margin: 10px 0 0; padding: 9px 12px; border-radius: 12px; background: #FF8A1F; color: #081D48; font-size: 13px; line-height: 1.35; }
 .plo-sale b { font-weight: 700; }
 .plo-sale--cart { margin: 0 0 10px; }
+/* Sale note countdown (snippets/sale-note.liquid) */
+.plo-sale__cd { display: inline-block; margin-left: 4px; white-space: nowrap; }
+.plo-sale__cd b { font-variant-numeric: tabular-nums; font-weight: 900; }
