@@ -515,7 +515,7 @@
     },
     "sale_kit_enabled": true,
     "sale_name": "Black Friday Sale",
-    "sale_starts": "2026-11-22T00:00:00+04:00",
+    "sale_starts": "2026-11-21T20:00:00Z",
     "sale_ends": "2026-12-01T00:00:00+04:00",
     "sale_ends_label": "30 Nov",
     "sale_tier_a_handles": "",
