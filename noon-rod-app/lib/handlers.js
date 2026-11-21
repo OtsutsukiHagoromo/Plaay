@@ -1,4 +1,4 @@
-import { readProduct } from './listing.js';
+import { createListing, LISTINGS, readProduct } from './listing.js';
 // HTTP handlers (Web Request -> Response). api/*.js wire these to Vercel routes.
 
 import crypto from 'node:crypto';
@@ -146,7 +146,7 @@ export async function handleDashboard(request, d) {
     const form = await request.formData();
     const orderId = String(form.get('order') || '');
     const action = String(form.get('action') || '');
-    if (!['connect', 'test-order', 'create-order', 'create-promotion'].includes(action) && !action.startsWith('express-') && action !== 'cleanup-remove' && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
+    if (!['connect', 'test-order', 'create-order', 'create-promotion', 'listing-create'].includes(action) && !action.startsWith('express-') && action !== 'cleanup-remove' && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
 
     let result;
     try {
@@ -196,6 +196,14 @@ export async function handleDashboard(request, d) {
         }
       } else if (action === 'dispatch') result = await dispatchOrder(d, orderId, { mode: String(form.get('mode') || '') || undefined });
       else if (action === 'cancel') result = await cancelDispatch(d, orderId);
+      else if (action === 'listing-create') {
+        const handle = String(form.get('spec') || '').replace(/[^a-z0-9-]/g, '');
+        const spec = LISTINGS[handle];
+        if (!spec) return new Response('Unknown listing', { status: 400 });
+        const r = await createListing(d.shopify, spec, d.cfg.appUrl);
+        form.set('back', `/?product=${encodeURIComponent(r.handle)}`);
+        result = { ok: true, message: `${r.updated ? 'Updated' : 'Created'} ${r.handle} on ${r.channels} sales channels.` };
+      }
       else if (action === 'hide') {
         // Off the dashboard (tests, mistakes): the Express tags go, noon-hidden is added. The
         // Shopify order itself is not cancelled or refunded.

@@ -1,0 +1,108 @@
+{
+  "handle": "truffles-mix-pack-of-6",
+  "title": "Truffles Mix - Pack Of 6",
+  "price": "145.00",
+  "productType": "Variety Packs",
+  "vendor": "Plaay Store",
+  "tags": [
+    "badge:new-launch",
+    "Gluten Free",
+    "Halal",
+    "Non Vegan",
+    "Vegetarian"
+  ],
+  "templateSuffix": "all-products",
+  "descriptionHtml": "<p>Can’t pick a favourite? Don’t. The Truffles Mix brings all six of our truffle flavours together, each in its own tube of 4, so there’s one for every mood (and every person you’re sharing with). Rich dark chocolate shells, nutty, fudgy and caramel centres, 100% clean ingredients and 0% refined sugar.</p><p><b>You’ll get 6 tubes, 24 truffles:</b></p><ul><li>1 x Loca Almond Brownie Truffles (4 pcs)</li><li>1 x Dreamy Cashew Caramel Truffles (4 pcs)</li><li>1 x OG Peanut Butter Truffles (4 pcs)</li><li>1 x Chic Pistachio Truffles (4 pcs)</li><li>1 x Showstopper Triple Chocolate Truffles (4 pcs)</li><li>1 x Dense Chocolate Fudge Truffles (4 pcs)</li></ul><p>Perfect for gifting, sharing at the office, or keeping a stash in the fridge for your 3 p.m. reset.</p>",
+  "seo": {
+    "title": "Truffles Mix Pack of 6 - 24 Clean Chocolate Truffles - Shop Plaay",
+    "description": "All six Plaay truffle flavours in one pack: 6 tubes, 24 truffles. 71% dark chocolate, 100% clean ingredients, 0% refined sugar. Delivered across the UAE."
+  },
+  "image": {
+    "path": "listing/truffles-mix-pack-of-6.jpg",
+    "alt": "Plaay Truffles Mix pack of 6: Almond Brownie, Cashew Caramel, Peanut Butter, Pistachio, Triple Chocolate and Dense Chocolate Fudge truffle tubes"
+  },
+  "collections": [
+    "gid://shopify/Collection/419536994521",
+    "gid://shopify/Collection/410663452889"
+  ],
+  "publications": [
+    "Online Store",
+    "Facebook & Instagram",
+    "Google & YouTube",
+    "TikTok"
+  ],
+  "metafields": [
+    {
+      "namespace": "custom",
+      "key": "tagline",
+      "type": "single_line_text_field",
+      "value": "All six truffle flavours, 4 of each: 24 truffles, 100% clean, 0% refined sugar."
+    },
+    {
+      "namespace": "arena",
+      "key": "exact_ingredients",
+      "type": "multi_line_text_field",
+      "value": "<b>Loca Almond Brownie Truffles</b><br>Naturally sweet Almonds, 71% Vegan dark chocolate (Cacao mass, Cocoa butter, Coconut sugar, Emulsifier: Sunflower lecithin (E322)), Almond flour, Dates, 3% Cocoa powder, Coconut oil (Non-hydrogenated), Salt, Prebiotic Inulin Fiber, Probiotic Bacillus Coagulans (1.25 billion CFU)<br><br><b>Dreamy Cashew Caramel Truffles</b><br>Full ingredients are printed on the tube.<br><br><b>OG Peanut Butter Truffles</b><br>70% Dark Chocolate [Cacao Mass, Coconut Sugar, Cacao Butter, Cow's Pure Ghee (Milk Fat), Natural Vanilla Flavour], Dates, Peanuts, Shea Butter (Non-Hydrogenated), Grass Fed Cow's Whey Protein, Prebiotic Inulin, Emulsifier: Sunflower Lecithin, Natural Nut Flavour<br><br><b>Chic Pistachio Truffles</b><br>Filled Chocolate 70% Dark Chocolate [Cacao Mass, Coconut Sugar, Cacao Butter, Cow's Pure Ghee (Milk Fat), Natural Vanilla Flavor], Dates, Shea Butter (Non- Hydrogenated), Pistachio, Grass Fed Cow's Whole Milk Powder, Prebiotic Inulin, Tea Powder, Natural Pistachio Flavor, Emulsifier: Sunflower Lecithin, Natural Colourant: Chlorophyll Extract , Salt.<br><br><b>Showstopper Triple Chocolate Truffles</b><br>Hazelnuts, 71% Vegan dark chocolate (Cacao mass, Cocoa butter, Coconut sugar, Emulsifier: Sunflower lecithin (E322)), Dates, 5% Cocoa powder, Grass Fed Whey Protein, Prebiotic Inulin Fiber, Probiotic Bacillus Coagulans (2.5 billion CFU)<br><br><b>Dense Chocolate Fudge Truffles</b><br>Filled Chocolate Dark Chocolate: Cocoa Solids 70% Min. 70% Dark Chocolate (Cacao Mass, Coconut Sugar, Cacao Butter, Cow's Pure Ghee, Natural Vanilla Flavour), Dates, Shea Butter (Non-Hydrogenated), Naturally Sweet Almonds, Cacao Powder, Prebiotic Inulin, Emulsifier: Sunflower Lecithin, Salt"
+    },
+    {
+      "namespace": "custom",
+      "key": "allergens",
+      "type": "multi_line_text_field",
+      "value": "Contains: Almond, Cashew, Hazelnut, Peanut, Pistachio, Milk, Coconut Nectar.\nMay contain traces of Sesame."
+    },
+    {
+      "namespace": "custom",
+      "key": "nutrition_facts",
+      "type": "multi_line_text_field",
+      "value": "Serving size: 15g per piece\nCalories: 75kcal – 78kcal\nFat: 5g–6g\nCarbs: 3g–5g\nProtein: 2g–3g\nRefined Sugars: 0g\n\nNutritional information differs slightly between flavours\nIf you have any more questions please email hello@shopplaay.com and we'll be happy to help!"
+    },
+    {
+      "namespace": "custom",
+      "key": "shipping_policy",
+      "type": "multi_line_text_field",
+      "value": "Free standard delivery (1–2 days, UAE-wide) on orders of AED 99+, AED 15 below that.\nPlaay Express in Dubai: delivered within 2 hours when you order by 5 pm, Monday to Saturday. AED 15, or free on orders of AED 199+. Check your address on this page to see if Express reaches you."
+    },
+    {
+      "namespace": "custom",
+      "key": "product_benefits",
+      "type": "multi_line_text_field",
+      "value": "• Cravings Buster\n• Daily Pick-Me-Upper\n• Fuller for Longer\n• Sustained Energy\n• On-the-go Snack-Hack\n• No Sugar Crashes\n• Gut-Friendly Goodness"
+    },
+    {
+      "namespace": "custom",
+      "key": "ingredients",
+      "type": "single_line_text_field",
+      "value": "All of our ingredients are 100% clean, safe and of the highest quality:<br> <br> <b>NOTE: Ingredients may vary across products. Please read the exact ingredients under the description of each product.</b></br></br><b>71% Vegan Dark Chocolate</b><br> Made in-house from creamy Spanish cacao butter and coconut nectar. No Soy.<br> <br> <b>100% Clean Ingredients &amp; Whole Nuts</b><br> All of our ingredients are 100% clean and made with the finest quality whole nuts. Meaning no oxidation, making everything fresher and better for your heart.<br> <br> <b>100% Natural Sweeteners</b><br> A mix of no more than 5gs of dates & coconut sugar in our Truffles and no more than 18gs of dates & coconut sugar in our Bars. To give sweetness without the crash or cravings.<br> <br> <b>Grass-fed Whey Protein or Vegan Alternatives</b><br> Certified Grass-fed whey protein. Great for the gut.<br> Or 100% Vegan Options. Perfect for plant-based diets.<br> <br> <b>Billions of Added Pre &amp; Probiotics</b><br> Great for gut health<br> <br> <b>Sunflower Lecithin</b><br> Sunflower lecithin helps strengthen your gut lining, supporting better digestion.<br> <br> <b>Coconut Oil</b><br> Naturally nourishing and provides healthy fats for sustained energy and enhanced flavour.<br> <br> <b>Cocoa Powder</b><br> Great source of antioxidants and fibre."
+    },
+    {
+      "namespace": "custom",
+      "key": "nutritional_facts",
+      "type": "single_line_text_field",
+      "value": "Nutritional information differs slightly between flavours<br> If you have any more questions please email <a href=\"mailto:hello@shopplaay.com\">hello@shopplaay.com</a> and we'll be happy to help!"
+    },
+    {
+      "namespace": "arena",
+      "key": "usp_text",
+      "type": "list.single_line_text_field",
+      "value": "[\"Naturally Gluten Free\", \"Refined Sugar Free\", \"Soy Free\", \"Halal\"]"
+    },
+    {
+      "namespace": "custom",
+      "key": "usp_image",
+      "type": "list.file_reference",
+      "value": "[\"gid://shopify/MediaImage/36468073332953\",\"gid://shopify/MediaImage/36468073300185\",\"gid://shopify/MediaImage/36468073267417\",\"gid://shopify/MediaImage/36468073201881\",\"gid://shopify/MediaImage/36468073234649\"]"
+    },
+    {
+      "namespace": "mm-google-shopping",
+      "key": "google_product_category",
+      "type": "string",
+      "value": "4748"
+    },
+    {
+      "namespace": "mc-facebook",
+      "key": "google_product_category",
+      "type": "string",
+      "value": "4748"
+    }
+  ]
+}
