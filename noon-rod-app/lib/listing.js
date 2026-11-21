@@ -95,3 +95,32 @@ export async function addImage(shopify, { handle, file, alt, position, replace }
   }
   return { handle, images: (replace ? 1 : before.length + 1) };
 }
+
+// Set a single-variant product's stock at the store's online-orders location, and stop selling
+// at zero (inventoryPolicy DENY).
+export async function setStock(shopify, handle, quantity) {
+  const d = await shopify.graphql(`query($h: String!) {
+    productByIdentifier(identifier: { handle: $h }) { id variants(first: 1) { nodes { id inventoryItem { id } } } }
+    locations(first: 20) { nodes { id name isActive fulfillsOnlineOrders } } }`, { h: handle });
+  const p = d.productByIdentifier;
+  if (!p) throw new Error(`No product ${handle}`);
+  const v = p.variants.nodes[0];
+  const loc = d.locations.nodes.find((l) => l.isActive && l.fulfillsOnlineOrders);
+  if (!loc) throw new Error('No active location for online orders');
+  await shopify.graphql('mutation($i: ID!, $l: ID!) { inventoryActivate(inventoryItemId: $i, locationId: $l) { userErrors { field message } } }', { i: v.inventoryItem.id, l: loc.id });
+  const lvl = await shopify.graphql('query($i: ID!, $l: ID!) { inventoryItem(id: $i) { inventoryLevel(locationId: $l) { quantities(names: ["available"]) { quantity } } } }', { i: v.inventoryItem.id, l: loc.id });
+  const current = lvl.inventoryItem.inventoryLevel?.quantities?.[0]?.quantity ?? 0;
+  const delta = quantity - current;
+  if (delta) {
+    const r = await shopify.graphql(
+      'mutation($in: InventoryAdjustQuantitiesInput!) { inventoryAdjustQuantities(input: $in) { userErrors { field message } } }',
+      { in: { name: 'available', reason: 'correction', changes: [{ inventoryItemId: v.inventoryItem.id, locationId: loc.id, delta, changeFromQuantity: current }] } },
+    );
+    const e = r.inventoryAdjustQuantities.userErrors;
+    if (e.length) throw new Error(e.map((x) => x.message).join('; '));
+  }
+  const pol = await shopify.graphql('mutation($p: ID!, $v: [ProductVariantsBulkInput!]!) { productVariantsBulkUpdate(productId: $p, variants: $v) { userErrors { field message } } }', { p: p.id, v: [{ id: v.id, inventoryPolicy: 'DENY' }] });
+  const pe = pol.productVariantsBulkUpdate.userErrors;
+  if (pe.length) throw new Error(pe.map((x) => x.message).join('; '));
+  return { handle, location: loc.name, from: current, to: quantity };
+}

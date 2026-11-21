@@ -1,4 +1,4 @@
-import { addImage, createListing, LISTINGS, readProduct } from './listing.js';
+import { addImage, createListing, LISTINGS, readProduct, setStock } from './listing.js';
 // HTTP handlers (Web Request -> Response). api/*.js wire these to Vercel routes.
 
 import crypto from 'node:crypto';
@@ -146,7 +146,7 @@ export async function handleDashboard(request, d) {
     const form = await request.formData();
     const orderId = String(form.get('order') || '');
     const action = String(form.get('action') || '');
-    if (!['connect', 'test-order', 'create-order', 'create-promotion', 'listing-create', 'listing-image'].includes(action) && !action.startsWith('express-') && action !== 'cleanup-remove' && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
+    if (!['connect', 'test-order', 'create-order', 'create-promotion', 'listing-create', 'listing-image', 'listing-stock'].includes(action) && !action.startsWith('express-') && action !== 'cleanup-remove' && !/^\d+$/.test(orderId)) return new Response('Bad order id', { status: 400 });
 
     let result;
     try {
@@ -216,6 +216,13 @@ export async function handleDashboard(request, d) {
         }, d.cfg.appUrl);
         form.set('back', `/?product=${encodeURIComponent(r.handle)}`);
         result = { ok: true, message: `Image added to ${r.handle} (${r.images} images).` };
+      }
+      else if (action === 'listing-stock') {
+        const qty = Math.max(0, Math.min(100000, Math.floor(Number(form.get('quantity')))));
+        if (!Number.isFinite(qty)) return new Response('Bad quantity', { status: 400 });
+        const r = await setStock(d.shopify, String(form.get('handle') || '').replace(/[^a-z0-9-]/g, ''), qty);
+        form.set('back', `/?product=${encodeURIComponent(r.handle)}`);
+        result = { ok: true, message: `Stock for ${r.handle} at ${r.location}: ${r.from} → ${r.to}; stops selling at zero.` };
       }
       else if (action === 'hide') {
         // Off the dashboard (tests, mistakes): the Express tags go, noon-hidden is added. The
