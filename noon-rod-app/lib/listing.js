@@ -12,7 +12,7 @@ const PRODUCT_FIELDS = `id legacyResourceId handle title status productType vend
   resourcePublicationsV2(first: 10) { nodes { isPublished publication { name } } }
   sellingPlanGroups(first: 5) { nodes { id name } }
   variants(first: 10) { nodes { id title sku barcode price compareAtPrice taxable inventoryPolicy
-    inventoryItem { tracked measurement { weight { value unit } } }
+    inventoryItem { tracked measurement { weight { value unit } } inventoryLevels(first: 10) { nodes { location { name } quantities(names: ["available"]) { quantity } } } }
     inventoryQuantity } }`;
 
 export async function readProduct(shopify, handle) {
