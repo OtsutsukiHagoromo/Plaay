@@ -520,14 +520,18 @@
     "sale_ends_label": "30 Nov",
     "sale_tier_a_handles": "plaayer-pack,og-plaayer-pack,bar-bunch",
     "sale_tier_a_pct": 30,
-    "sale_tier_b_handles": "new-chocolate-slabs-mix-pack-of-6,plaay-70-dark-chocolate-caramel-crunch-mousse-bar-6-x-80g,plaay-milk-chocolate-cheesecake-bar-6-x-80g,truffles-mix-pack-of-6,truffle-mix",
+    "sale_tier_b_handles": "salted-caramel-bar-x12,cookies-and-cream-bar-x12,mocha-almond-bar-x12,salty-peanut-bar-x12,pistachio-chocolate-bar-x-12",
     "sale_tier_b_pct": 25,
     "sale_tier_c_handles": "build-your-own-mix",
     "sale_tier_c_pct": 15,
+    "sale_tier_d_handles": "new-chocolate-slabs-mix-pack-of-6,plaay-70-dark-chocolate-caramel-crunch-mousse-bar-6-x-80g,plaay-milk-chocolate-cheesecake-bar-6-x-80g,truffles-mix-pack-of-6,truffle-mix,plaay-karak-chocolate-truffles-2-x-60g,coffee-date-chocolate-truffles-60g-copy,mexican-chilli-chocolate-truffles-2-x-60g,triple-chocolate-truffles-150g,pistachio-chocolate-truffles-150g,plaay-70-dark-chocolate-bar-6-x-35g,plaay-milk-chocolate-toffee-almond-bar-6-x-35g,plaay-70-dark-chocolate-bar-6-x-80g,plaay-70-dark-chocolate-hazelnut-bar-6-x-80g,plaay-70-dark-chocolate-sea-salt-bar-6-x-80g,plaay-milk-chocolate-toffee-almond-bar-6-x-80g,almond-brownie-truffle,cashew-caramel-truffle,peanut-butter-truffle,triple-chocolate-truffle,pistachio-truffle,dense-chocolate-fudge-truffle",
+    "sale_tier_d_pct": 20,
+    "sale_variant_pcts": "48658326225113:15,48658368692441:15,48658378916057:15,48658321375449:15,48658316427481:15,50788231938265:15",
+    "sale_row_tiers": "a,b",
     "sale_default_pct": 0,
     "sale_min_spend": 0,
     "sale_badge": "Black Friday",
-    "sale_note_text": "up to 30% off selected packs"
+    "sale_note_text": "up to 30% off everything"
   },
   "platform_customizations": {
     "custom_css": [
