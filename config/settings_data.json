@@ -518,13 +518,16 @@
     "sale_starts": "2026-11-21T20:00:00Z",
     "sale_ends": "2026-12-01T00:00:00+04:00",
     "sale_ends_label": "30 Nov",
-    "sale_tier_a_handles": "",
+    "sale_tier_a_handles": "plaayer-pack,og-plaayer-pack,bar-bunch",
     "sale_tier_a_pct": 30,
-    "sale_tier_b_handles": "",
+    "sale_tier_b_handles": "new-chocolate-slabs-mix-pack-of-6,plaay-70-dark-chocolate-caramel-crunch-mousse-bar-6-x-80g,plaay-milk-chocolate-cheesecake-bar-6-x-80g,truffles-mix-pack-of-6,truffle-mix",
     "sale_tier_b_pct": 25,
-    "sale_default_pct": 25,
-    "sale_min_spend": 399,
-    "sale_badge": "Black Friday"
+    "sale_tier_c_handles": "build-your-own-mix",
+    "sale_tier_c_pct": 15,
+    "sale_default_pct": 0,
+    "sale_min_spend": 0,
+    "sale_badge": "Black Friday",
+    "sale_note_text": "up to 30% off selected packs"
   },
   "platform_customizations": {
     "custom_css": [
