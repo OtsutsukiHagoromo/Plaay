@@ -313,6 +313,14 @@ export async function handleDashboard(request, d) {
   if (url.searchParams.get('product')) {
     return json(await readProduct(d.shopify, url.searchParams.get('product').slice(0, 120)));
   }
+  // Read-only: what noon has switched on for this partner account (delivery modes, limits).
+  if (url.searchParams.get('noon') === 'config') {
+    try {
+      return json(await d.noon.getConfigurations());
+    } catch (e) {
+      return json({ error: String(e.message || e) });
+    }
+  }
   const view = VIEWS.some((v) => v.key === url.searchParams.get('view')) ? url.searchParams.get('view') : 'todo';
   const q = (url.searchParams.get('q') || '').slice(0, 100);
   const connection = await getConnection(d.shopify, d.cfg);
