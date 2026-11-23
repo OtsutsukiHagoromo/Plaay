@@ -652,3 +652,4 @@ body.pl-inv-open { overflow: hidden; }
 .plo-salebadge b { color: #E8178A; background: #fff; padding: 6px 10px; }
 .plo-sale--byob { max-width: 520px; }
 .pl-byob__copy .plo-salebadge { margin: 10px 0 4px; }
+.plo-salebadge em { font-style: normal; }

@@ -116,9 +116,17 @@
   endcapture
   if sale_on contains '1'
     capture sale_pct
-      render 'sale-pct', product: product
+      render 'sale-pct', product: product, variant: v
     endcapture
     assign sale_pct = sale_pct | strip
+    capture sale_max
+      render 'sale-pct', product: product
+    endcapture
+    capture sale_min
+      render 'sale-pct', product: product, mode: 'min'
+    endcapture
+    assign sale_max = sale_max | strip
+    assign sale_min = sale_min | strip
     # Product sale: the card leads with the sale price (one-time), full price struck.
     if settings.sale_min_spend == 0 or settings.sale_min_spend == blank
       assign card_sale = sale_pct | plus: 0
@@ -129,8 +137,11 @@
     if settings.sale_min_spend > 0
       assign badge_text = settings.sale_badge | default: settings.sale_name
       assign badge_mod = 'sale'
-    elsif sale_pct != '0' and sale_pct != ''
-      assign badge_text = sale_pct | append: '% Off'
+    elsif sale_max != '0' and sale_max != ''
+      assign badge_text = sale_max | append: '% Off'
+      if sale_min != sale_max
+        assign badge_text = 'Up to ' | append: badge_text
+      endif
       assign badge_mod = 'sale'
     endif
   endif
@@ -224,7 +235,7 @@
           <select data-plo-szsel autocomplete="off">
             {%- for x in product.variants -%}
               {%- assign xl = x.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' | replace: ' g', 'g' -%}
-              <option value="{{ x.id }}" data-price="{{ x.price }}"{% if x.featured_image %} data-img="{{ x.featured_image | image_url: width: 600 }}" data-srcset="{{ x.featured_image | image_url: width: 240 }} 240w, {{ x.featured_image | image_url: width: 360 }} 360w, {{ x.featured_image | image_url: width: 480 }} 480w, {{ x.featured_image | image_url: width: 600 }} 600w"{% endif %}{% if x.id == v.id %} selected{% endif %}{% unless x.available %} disabled{% endunless %}>{{ xl }}</option>
+              <option value="{{ x.id }}" data-price="{{ x.price }}"{% if card_sale > 0 %} data-sale="{%- render 'sale-pct', product: product, variant: x -%}"{% endif %}{% if x.featured_image %} data-img="{{ x.featured_image | image_url: width: 600 }}" data-srcset="{{ x.featured_image | image_url: width: 240 }} 240w, {{ x.featured_image | image_url: width: 360 }} 360w, {{ x.featured_image | image_url: width: 480 }} 480w, {{ x.featured_image | image_url: width: 600 }} 600w"{% endif %}{% if x.id == v.id %} selected{% endif %}{% unless x.available %} disabled{% endunless %}>{{ xl }}</option>
             {%- endfor -%}
           </select>
           {%- render 'pl-icon', name: 'chev-down', size: 12, stroke: 2.6 -%}

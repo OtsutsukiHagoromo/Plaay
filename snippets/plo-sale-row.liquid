@@ -8,7 +8,23 @@
 {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
 {%- if sale_on contains '1' -%}
   {%- liquid
-    assign sale_handles = settings.sale_tier_a_handles | append: ',' | append: settings.sale_tier_b_handles | append: ',' | append: settings.sale_tier_c_handles | remove: ' ' | split: ','
+    # Tiers in the row (theme setting "Collection sale row: tiers", e.g. a,b for just the biggest
+    # deals when everything is on sale), biggest % first.
+    assign row_tiers = settings.sale_row_tiers | default: 'a,b,c,d' | remove: ' '
+    assign sale_handles = ''
+    if row_tiers contains 'a'
+      assign sale_handles = sale_handles | append: ',' | append: settings.sale_tier_a_handles
+    endif
+    if row_tiers contains 'b'
+      assign sale_handles = sale_handles | append: ',' | append: settings.sale_tier_b_handles
+    endif
+    if row_tiers contains 'd'
+      assign sale_handles = sale_handles | append: ',' | append: settings.sale_tier_d_handles
+    endif
+    if row_tiers contains 'c'
+      assign sale_handles = sale_handles | append: ',' | append: settings.sale_tier_c_handles
+    endif
+    assign sale_handles = sale_handles | remove: ' ' | split: ','
     assign sale_n = 0
     for sh in sale_handles
       if sh != blank and sh != 'build-your-own-mix' and all_products[sh].id

@@ -15,6 +15,14 @@
     capture pct
       render 'sale-pct', product: product
     endcapture
+    capture pct_min
+      render 'sale-pct', product: product, mode: 'min'
+    endcapture
+    assign pct_min = pct_min | strip
+    # Packs on different % (e.g. 30g truffles 15%, 60g 20%): "up to" the biggest.
+    if pct_min != pct
+      assign upto = true
+    endif
   else
     assign pct = ''
   endif
@@ -32,7 +40,7 @@
 <p class="plo-sale plo-sale--note{% if mod %} plo-sale--{{ mod }}{% endif %}">
   <b>{{ nm }}:</b>
   {%- if min > 0 %} {{ pct }}% off orders over AED {{ min }}.
-  {%- elsif pct != '' %} {{ pct }}% off.
+  {%- elsif pct != '' %} {% if upto %}up to {% endif %}{{ pct }}% off.
   {%- elsif gen != blank %} {{ gen }}.
   {%- endif %} Applied at checkout{% if settings.sale_ends_label != blank %}, ends {{ settings.sale_ends_label }}{% endif %}.
   {%- if countdown and settings.sale_ends != blank %}

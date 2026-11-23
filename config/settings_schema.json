@@ -283,6 +283,30 @@
         "default": 15
       },
       {
+        "type": "text",
+        "id": "sale_tier_d_handles",
+        "label": "Tier D product handles (comma separated)"
+      },
+      {
+        "type": "number",
+        "id": "sale_tier_d_pct",
+        "label": "Tier D % off",
+        "default": 20
+      },
+      {
+        "type": "textarea",
+        "id": "sale_variant_pcts",
+        "label": "Sale % by pack (variantId:pct, comma separated)",
+        "info": "Overrides the product's tier for single packs, e.g. 10 x 30g truffles at 15%."
+      },
+      {
+        "type": "text",
+        "id": "sale_row_tiers",
+        "label": "Collection sale row: tiers to show",
+        "default": "a,b,c,d",
+        "info": "e.g. a,b for just the biggest deals when everything is on sale."
+      },
+      {
         "type": "number",
         "id": "sale_default_pct",
         "label": "% off for every other product",

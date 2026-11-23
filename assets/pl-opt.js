@@ -179,6 +179,12 @@
       if (e.target.matches('[data-plo-size]')) {
         variantInput.value = e.target.value;
         price = Number(e.target.getAttribute('data-price'));
+        /* Packs on different sale % (e.g. 30g truffles 15%, 60g 20%). */
+        if (e.target.hasAttribute('data-sale-pct')) {
+          var nsp = e.target.getAttribute('data-sale-pct').trim();
+          root.setAttribute('data-sale-pct', nsp);
+          Array.prototype.forEach.call(root.querySelectorAll('[data-plo-sale-b]'), function (x) { x.textContent = nsp; });
+        }
         showSizePhoto(e.target);
         var sz = root.querySelector('[data-plo-sticky-size]'), lb = e.target.parentNode.querySelector('b');
         if (sz && lb) sz.textContent = lb.textContent.trim();
@@ -433,7 +439,7 @@
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-quick]'), function (q) { q.setAttribute('data-plo-quick', id); });
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp]'), function (el) { el.textContent = aed(price); });
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sub]'), function (el) { el.textContent = aed(Math.floor(price * (100 - pct) / 100)); });
-    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sale]'), function (el) { el.textContent = aed(Math.floor(price * (100 - Number(el.getAttribute('data-plo-cp-sale'))) / 100)); });
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sale]'), function (el) { el.textContent = aed(Math.floor(price * (100 - (b.hasAttribute('data-sale') ? Number(b.getAttribute('data-sale')) : Number(el.getAttribute('data-plo-cp-sale')))) / 100)); });
   });
 
   /* Card size picker (select): same effect as the swatches. */
@@ -450,7 +456,7 @@
     if (cimg && opt.getAttribute('data-img')) { cimg.srcset = opt.getAttribute('data-srcset') || ''; cimg.src = opt.getAttribute('data-img'); }
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp]'), function (el) { el.textContent = aed(price); });
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sub]'), function (el) { el.textContent = aed(Math.floor(price * (100 - pct) / 100)); });
-    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sale]'), function (el) { el.textContent = aed(Math.floor(price * (100 - Number(el.getAttribute('data-plo-cp-sale'))) / 100)); });
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sale]'), function (el) { el.textContent = aed(Math.floor(price * (100 - (opt.hasAttribute('data-sale') ? Number(opt.getAttribute('data-sale')) : Number(el.getAttribute('data-plo-cp-sale')))) / 100)); });
   });
 
   /* ---------- range tabs (Subscribe & Save, All collections): filter the cards in place ---------- */

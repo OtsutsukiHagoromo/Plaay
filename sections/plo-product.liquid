@@ -190,7 +190,7 @@
   assign sale_min_p = settings.sale_min_spend | default: 0 | plus: 0
   if sale_live contains '1' and sale_min_p == 0
     capture sale_pct
-      render 'sale-pct', product: product
+      render 'sale-pct', product: product, variant: v
     endcapture
     assign sale_pct = sale_pct | strip | plus: 0
   endif
@@ -323,7 +323,7 @@
         endif
       -%}
       {%- if sale_pct > 0 -%}
-        <p class="plo-salebadge"><span>{{ settings.sale_badge | default: settings.sale_name }}</span><b>{{ sale_pct }}% off</b></p>
+        <p class="plo-salebadge"><span>{{ settings.sale_badge | default: settings.sale_name }}</span><b><em data-plo-sale-b>{{ sale_pct }}</em>% off</b></p>
       {%- endif -%}
       <h1 class="plo-buy__t">
         {%- if t_kick != blank -%}<span class="plo-buy__kick">{{ t_kick }}</span>{%- endif -%}
@@ -432,7 +432,7 @@
                   endif
                 -%}
                 <label class="plo-size{% if variant.id == best_id %} is-best{% endif %}">
-                  <input type="radio" name="plo-size-{{ section.id }}" value="{{ variant.id }}" data-price="{{ variant.price }}"{% if vplan != '' %} data-plans="{%- render 'plo-vplans', variant: variant, freq_ids: freq_ids, fallback: vplan -%}"{% endif %}{% if pcs > 0 %} data-pcs="{{ pcs }}"{% endif %}{% if variant.featured_image %} data-img="{{ variant.featured_image | image_url: width: 1000 }}" data-thumb="{{ variant.featured_image | image_url: width: 160 }}"{% endif %}{% if variant.id == v.id %} checked{% endif %}{% unless variant.available %} disabled{% endunless %} data-plo-size>
+                  <input type="radio" name="plo-size-{{ section.id }}" value="{{ variant.id }}" data-price="{{ variant.price }}"{% if sale_pct > 0 %} data-sale-pct="{%- render 'sale-pct', product: product, variant: variant -%}"{% endif %}{% if vplan != '' %} data-plans="{%- render 'plo-vplans', variant: variant, freq_ids: freq_ids, fallback: vplan -%}"{% endif %}{% if pcs > 0 %} data-pcs="{{ pcs }}"{% endif %}{% if variant.featured_image %} data-img="{{ variant.featured_image | image_url: width: 1000 }}" data-thumb="{{ variant.featured_image | image_url: width: 160 }}"{% endif %}{% if variant.id == v.id %} checked{% endif %}{% unless variant.available %} disabled{% endunless %} data-plo-size>
                   <span>
                     {%- if variant.id == best_id -%}<em class="plo-size__tag">Best value</em>{%- endif -%}
                     <b>{{ label }}</b>

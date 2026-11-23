@@ -15,7 +15,7 @@
     for it in cart.items
       unless it.selling_plan_allocation
         capture p
-          render 'sale-pct', product: it.product
+          render 'sale-pct', product: it.product, variant: it.variant
         endcapture
         assign p = p | strip | plus: 0
         if p > 0

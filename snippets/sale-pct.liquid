@@ -1,20 +1,61 @@
 {%- comment -%}
-  Prints the sale percentage for `product` (no % sign). Matches the Shopify automatic discounts
-  (created from the dispatch app's Promotions page): tier A and tier B products by handle, every
-  other product the default.
-  Usage: {%- capture sale_pct -%}{%- render 'sale-pct', product: product -%}{%- endcapture -%}
+  Prints the sale percentage (no % sign). Matches the Shopify automatic discounts: tier A, B, C and
+  D products by handle, every other product the default (0 = not on sale: no badge, the bag keeps
+  the rewards ladder). "Sale % by pack" (sale_variant_pcts, "variantId:pct,...") overrides single
+  packs, e.g. 10 x 30g truffles at 15% while the 60g packs are 20%.
+    variant: that pack's %.
+    no variant: the product's biggest % across its packs; mode: 'min' for the smallest.
+  Usage: {%- capture sale_pct -%}{%- render 'sale-pct', product: product, variant: v -%}{%- endcapture -%}
 {%- endcomment -%}
 {%- liquid
-  assign pct = settings.sale_default_pct | default: 20
+  assign base = settings.sale_default_pct | default: 0
   assign tier_a = settings.sale_tier_a_handles | remove: ' ' | split: ','
   assign tier_b = settings.sale_tier_b_handles | remove: ' ' | split: ','
   assign tier_c = settings.sale_tier_c_handles | remove: ' ' | split: ','
+  assign tier_d = settings.sale_tier_d_handles | remove: ' ' | split: ','
   if tier_a contains product.handle
-    assign pct = settings.sale_tier_a_pct | default: 30
+    assign base = settings.sale_tier_a_pct | default: 30
   elsif tier_b contains product.handle
-    assign pct = settings.sale_tier_b_pct | default: 25
+    assign base = settings.sale_tier_b_pct | default: 25
   elsif tier_c contains product.handle
-    assign pct = settings.sale_tier_c_pct | default: 15
+    assign base = settings.sale_tier_c_pct | default: 15
+  elsif tier_d contains product.handle
+    assign base = settings.sale_tier_d_pct | default: 20
+  endif
+  assign base = base | plus: 0
+  assign vmap = settings.sale_variant_pcts | remove: ' ' | split: ','
+
+  if variant
+    assign pct = base
+    assign vid = variant.id | append: ''
+    for pair in vmap
+      assign kv = pair | split: ':'
+      if kv[0] == vid
+        assign pct = kv[1] | plus: 0
+      endif
+    endfor
+  else
+    assign pct = -1
+    for x in product.variants
+      assign xp = base
+      assign xid = x.id | append: ''
+      for pair in vmap
+        assign kv = pair | split: ':'
+        if kv[0] == xid
+          assign xp = kv[1] | plus: 0
+        endif
+      endfor
+      if pct == -1
+        assign pct = xp
+      elsif mode == 'min' and xp < pct
+        assign pct = xp
+      elsif mode != 'min' and xp > pct
+        assign pct = xp
+      endif
+    endfor
+    if pct == -1
+      assign pct = base
+    endif
   endif
   echo pct
 -%}
