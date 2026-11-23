@@ -964,9 +964,11 @@
      shared links keep it. */
   function initCollFilter(tools) {
     var scope = tools.closest('.plo') || document;
-    var cards = Array.prototype.slice.call(scope.querySelectorAll('.plo-card[data-f-prices]'));
+    /* The sale row (snippets/plo-sale-row) is a showcase, not part of the collection: the
+       filters and counts leave it out. */
+    var cards = Array.prototype.slice.call(scope.querySelectorAll('.plo-card[data-f-prices]')).filter(function (c) { return !c.closest('.plo-range--sale'); });
     var opts = Array.prototype.slice.call(tools.querySelectorAll('[data-plo-fopt]'));
-    var grouped = !!scope.querySelector('.plo-range');
+    var grouped = !!scope.querySelector('.plo-range:not(.plo-range--sale)');
     var count = tools.querySelector('[data-plo-fcount]');
     var total = Number(count.getAttribute('data-total')) || cards.length;
     var badge = tools.querySelector('[data-plo-fbadge]');

@@ -1,0 +1,34 @@
+{%- comment -%}
+  Sale row for collection pages (Shop all: before the range rows; other collections: above the
+  grid on page 1, top: true) while the sale kit runs with per-product tiers: every sale product,
+  biggest % first (tier A, B, C; Build Your Own Mix stays out, it has its own tab). Hides itself
+  when the sale ends. Phones swipe; desktop shows them all (no 4-card cap like the range rows).
+  Usage: {%- render 'plo-sale-row', view: template.suffix -%}
+{%- endcomment -%}
+{%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
+{%- if sale_on contains '1' -%}
+  {%- liquid
+    assign sale_handles = settings.sale_tier_a_handles | append: ',' | append: settings.sale_tier_b_handles | append: ',' | append: settings.sale_tier_c_handles | remove: ' ' | split: ','
+    assign sale_n = 0
+    for sh in sale_handles
+      if sh != blank and sh != 'build-your-own-mix' and all_products[sh].id
+        assign sale_n = sale_n | plus: 1
+      endif
+    endfor
+  -%}
+  {%- if sale_n > 0 -%}
+    <section class="plo-range plo-range--sale{% if top %} is-top{% endif %}">
+      <div class="plo-range__head">
+        <h2 class="plo-range__t">{{ settings.sale_name | default: 'Sale' }} <small>{{ sale_n }}</small></h2>
+        {%- if settings.sale_note_text != blank -%}<span class="plo-range__sub">{{ settings.sale_note_text | capitalize }}</span>{%- endif -%}
+      </div>
+      <div class="plo-rel__row plo-range__row">
+        {%- for sh in sale_handles -%}
+          {%- if sh == blank or sh == 'build-your-own-mix' -%}{%- continue -%}{%- endif -%}
+          {%- assign product = all_products[sh] -%}
+          {%- if product.id -%}{%- render 'plo-card', product: product, eager: true, skip_new: true, view: view -%}{%- endif -%}
+        {%- endfor -%}
+      </div>
+    </section>
+  {%- endif -%}
+{%- endif -%}
