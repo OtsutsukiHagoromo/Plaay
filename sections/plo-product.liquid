@@ -180,6 +180,23 @@
     and savings, one tap away.
   endcomment
   assign cta_price = v.price
+  # Product sale (sale kit with per-product %, snippets/sale-pct): a badge by the title, and the
+  # one-time price shows the sale price against the full price. Shopify's automatic discount takes
+  # the same % off in the bag and at checkout; subscriptions keep their own discount.
+  assign sale_pct = 0
+  capture sale_live
+    render 'sale-active'
+  endcapture
+  assign sale_min_p = settings.sale_min_spend | default: 0 | plus: 0
+  if sale_live contains '1' and sale_min_p == 0
+    capture sale_pct
+      render 'sale-pct', product: product
+    endcapture
+    assign sale_pct = sale_pct | strip | plus: 0
+  endif
+  assign sale_keep = 100 | minus: sale_pct
+  assign one_price = v.price | times: sale_keep | divided_by: 100
+  assign cta_price = one_price
   capture pkey
     render 'plo-photo-key', handle: product.handle
   endcapture
@@ -189,7 +206,7 @@
   endcapture
   assign factkey = factkey | strip
 -%}
-<div class="pl plo plo-pdp" data-plo-pdp data-view="{{ view }}" data-pct="{{ sub_pct }}" data-plans="{%- render 'plo-vplans', variant: v, freq_ids: freq_ids, fallback: plan_id -%}" data-freq="{{ freq_def }}">
+<div class="pl plo plo-pdp" data-plo-pdp data-view="{{ view }}" data-pct="{{ sub_pct }}" data-sale-pct="{{ sale_pct }}" data-plans="{%- render 'plo-vplans', variant: v, freq_ids: freq_ids, fallback: plan_id -%}" data-freq="{{ freq_def }}">
   <div class="plo-pdp__cols">
     {%- liquid
       comment
@@ -305,6 +322,9 @@
           assign t_kick = ''
         endif
       -%}
+      {%- if sale_pct > 0 -%}
+        <p class="plo-salebadge"><span>{{ settings.sale_badge | default: settings.sale_name }}</span><b>{{ sale_pct }}% off</b></p>
+      {%- endif -%}
       <h1 class="plo-buy__t">
         {%- if t_kick != blank -%}<span class="plo-buy__kick">{{ t_kick }}</span>{%- endif -%}
         <span class="plo-buy__name">{{ t_name }}</span>
@@ -435,7 +455,7 @@
             <label class="plo-mode plo-mode--one">
               <input type="radio" name="plo-mode-{{ section.id }}" value="one" checked data-plo-mode>
               <span class="plo-mode__r" aria-hidden="true"></span>
-              <span class="plo-mode__b"><span class="plo-mode__h"><b>One-time purchase</b><span data-plo-one>{%- render 'plaay-aed', fils: v.price -%}</span></span></span>
+              <span class="plo-mode__b"><span class="plo-mode__h"><b>One-time purchase</b><span class="plo-mode__one">{%- if sale_pct > 0 -%}<s data-plo-one-was>{%- render 'plaay-aed', fils: v.price -%}</s> {% endif -%}<span data-plo-one>{%- render 'plaay-aed', fils: one_price -%}</span></span></span></span>
             </label>
             <label class="plo-mode plo-mode--sub">
               <input type="radio" name="plo-mode-{{ section.id }}" value="sub" data-plo-mode>
@@ -474,7 +494,7 @@
             {%- endif -%}
           </div>
         {%- else -%}
-          <p class="plo-buy__price" data-plo-one>{%- render 'plaay-aed', fils: v.price -%}</p>
+          <p class="plo-buy__price">{%- if sale_pct > 0 -%}<s data-plo-one-was>{%- render 'plaay-aed', fils: v.price -%}</s> {% endif -%}<span data-plo-one>{%- render 'plaay-aed', fils: one_price -%}</span></p>
         {%- endif -%}
 
         {%- liquid
@@ -657,7 +677,7 @@
           assign st_size = v.title | replace: ' X ', ' × ' | replace: ' x ', ' × ' | replace: 'G', 'g' | replace: ' g', 'g'
         endif
       -%}
-      <span class="plo-sticky__t"><b title="{{ product.title | escape }}">{{ t_name }}</b><span class="plo-sticky__p"><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- if has_sub -%} <s data-plo-sticky-was>{%- render 'plaay-aed', fils: v.price -%}</s>{%- endif -%}{%- if st_size != blank -%}<i class="plo-sticky__sz" data-plo-sticky-size>{{ st_size }}</i>{%- endif -%}{%- if settings.express_enabled or product.tags contains 'express-test' -%}<i data-plx="chip" hidden></i>{%- endif -%}</span></span>
+      <span class="plo-sticky__t"><b title="{{ product.title | escape }}">{{ t_name }}</b><span class="plo-sticky__p"><span data-plo-sticky-p>{%- render 'plaay-aed', fils: cta_price -%}</span>{%- if has_sub or sale_pct > 0 -%} <s data-plo-sticky-was>{%- render 'plaay-aed', fils: v.price -%}</s>{%- endif -%}{%- if st_size != blank -%}<i class="plo-sticky__sz" data-plo-sticky-size>{{ st_size }}</i>{%- endif -%}{%- if settings.express_enabled or product.tags contains 'express-test' -%}<i data-plx="chip" hidden></i>{%- endif -%}</span></span>
       <button type="button" class="plo-btn" data-plo-sticky-add>Add to bag</button>
     </div>
   {%- endif -%}

@@ -460,3 +460,7 @@ html.pl-app cart-drawer .pl-drawer .pl-drawer__head { padding-top: calc(var(--pl
 .pl .pl-wallet { margin-top: 8px; --shopify-accelerated-checkout-button-block-size: 48px; --shopify-accelerated-checkout-button-border-radius: 999px; --shopify-accelerated-checkout-row-gap: 8px; --shopify-accelerated-checkout-inline-alignment: center; }
 .pl .pl-wallet .dynamic-checkout__content { margin: 0; }
 .pl .pl-summary__note { display: block; font-size: 11px; font-weight: 600; opacity: .65; }
+
+/* Line discount (e.g. a sale's automatic product discount): price after it, and the % off. */
+.pl .pl-item__now--sale { color: #E8178A; }
+.pl .pl-item__off { font-style: normal; font-size: 11px; font-weight: 900; color: #fff; background: #E8178A; border-radius: 999px; padding: 2px 6px; }

@@ -638,9 +638,16 @@ body.pl-inv-open { overflow: hidden; }
 
 /* Sitewide sale note (product page + cart drawer; snippets/sale-active). Global because the
    drawer opens on every page. */
-.plo-sale { margin: 10px 0 0; padding: 9px 12px; border-radius: 12px; background: #FF8A1F; color: #081D48; font-size: 13px; line-height: 1.35; }
-.plo-sale b { font-weight: 700; }
+.plo-sale { margin: 10px 0 0; padding: 9px 12px; border-radius: 12px; background: #FFF0F7; border: 2px solid #E8178A; color: #081D48; font-size: 13px; line-height: 1.35; }
+.plo-sale b { font-weight: 800; color: #E8178A; }
+.plo-sale--coll { margin: 8px 0 0; }
 .plo-sale--cart { margin: 0 0 10px; }
 /* Sale note countdown (snippets/sale-note.liquid) */
 .plo-sale__cd { display: inline-block; margin-left: 4px; white-space: nowrap; }
 .plo-sale__cd b { font-variant-numeric: tabular-nums; font-weight: 900; }
+
+/* Sale badge (product page title, Build Your Own Mix hero) */
+.plo-salebadge { display: inline-flex; align-items: center; gap: 0; margin: 0 0 10px; border-radius: 999px; overflow: hidden; font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; line-height: 1; border: 2px solid #E8178A; }
+.plo-salebadge span { background: #E8178A; color: #fff; padding: 6px 10px; }
+.plo-salebadge b { color: #E8178A; background: #fff; padding: 6px 10px; }
+.plo-sale--byob { max-width: 520px; }

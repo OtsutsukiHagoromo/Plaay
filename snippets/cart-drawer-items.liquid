@@ -67,6 +67,15 @@
         if line_compare > line_price and is_sub == false
           assign show_was = true
         endif
+        # Line discounts (e.g. a sale's automatic product discount): the line shows what it costs
+        # after them, struck against the full price, with the % off.
+        assign line_disc = item.line_level_total_discount | default: 0
+        assign line_final = line_price | minus: line_disc
+        assign disc_pct = 0
+        if line_disc > 0 and line_price > 0
+          assign half = line_price | divided_by: 2
+          assign disc_pct = line_disc | times: 100 | plus: half | divided_by: line_price
+        endif
 
         assign plan_id = ''
         assign plan_name = ''
@@ -150,7 +159,7 @@
         data-variant-id="{{ item.variant_id }}"
         data-product-id="{{ item.product_id }}"
         data-quantity="{{ item.quantity }}"
-        data-unit="{{ line_price | divided_by: item.quantity }}"
+        data-unit="{{ line_final | divided_by: item.quantity }}"
         {%- if has_plans %} data-plan-id="{{ plan_id }}" data-plan-name="{{ plan_name | escape }}" data-sub-saving="{{ offer_saving }}"{% endif %}
         data-properties="{{ item.properties | json | escape }}">
         <div class="pl-item__top">
@@ -189,13 +198,18 @@
                 </quantity-adjuster>
               {%- endif -%}
               <div class="pl-item__price">
-                {%- if show_was -%}
+                {%- if line_disc > 0 -%}
+                  <s class="pl-item__was">{% render 'plaay-aed', fils: line_price %}</s>
+                {%- elsif show_was -%}
                   <s class="pl-item__was">{% render 'plaay-aed', fils: line_compare %}</s>
                 {%- elsif is_sub and sub_saving > 0 -%}
                   <s class="pl-item__was">{% render 'plaay-aed', fils: line_one_time %}</s>
                 {%- endif -%}
                 {%- if is_gift and line_price == 0 -%}
                   <b class="pl-item__now">Free</b>
+                {%- elsif line_disc > 0 -%}
+                  <b class="pl-item__now pl-item__now--sale">{% render 'plaay-aed', fils: line_final %}</b>
+                  {%- if disc_pct > 0 -%}<em class="pl-item__off">−{{ disc_pct }}%</em>{%- endif -%}
                 {%- else -%}
                   <b class="pl-item__now">{% render 'plaay-aed', fils: line_price %}</b>
                 {%- endif -%}

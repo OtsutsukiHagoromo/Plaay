@@ -307,3 +307,8 @@
   .plo-offer__fill, .plo-offer__stop i { transition: none; }
   .plo-offer.is-pop .plo-offer__stop.is-on i, .plo-offer.is-pop .plo-offer__ship svg { animation: none; }
 }
+
+/* Product sale (sale kit): badge above the title, sale price struck against the full price. */
+.plo-mode__one s, .plo-buy__price s { font-weight: 600; opacity: .55; margin-right: 6px; font-size: .9em; }
+.plo-buy__price s + span, .plo-mode__one s + span { color: #E8178A; }
+.plo-sticky.is-one.is-sale .plo-sticky__p s { display: inline; }

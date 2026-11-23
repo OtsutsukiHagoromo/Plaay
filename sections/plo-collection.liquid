@@ -93,7 +93,11 @@
       visitors left before seeing one. A compact title row, then the tabs, the toolbar and products.
     {%- endcomment -%}
     <header class="plo-chead">
-      <div class="plo-wrap"><h1 class="plo-chead__t">{{ collection.title }}</h1></div>
+      <div class="plo-wrap"><h1 class="plo-chead__t">{{ collection.title }}</h1>
+        {%- comment -%} Sale kit on: one compact line with the offer and the countdown (no banner, see above). {%- endcomment -%}
+        {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
+        {%- if sale_on contains '1' -%}{%- render 'sale-note', countdown: true, mod: 'coll' -%}{%- endif -%}
+      </div>
     </header>
 
     <div class="plo-wrap">

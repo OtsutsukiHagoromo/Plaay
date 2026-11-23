@@ -128,6 +128,7 @@
       Array.prototype.forEach.call(sticky.querySelectorAll('[data-plo-smode]'), function (r) { r.checked = !!m && r.value === m.value; });
       if (sfreq) { sfreq.value = String(freq()); sfreq.disabled = !isSub(); }
       sticky.classList.toggle('is-one', !isSub());
+      sticky.classList.toggle('is-sale', Number(root.getAttribute('data-sale-pct')) > 0);
     }
 
     /* Sizes with their own photo (data-img): show it in the gallery, the first thumbnail and the
@@ -153,20 +154,24 @@
     function paint() {
       if (!price) return;
       var sub = Math.floor(price * (100 - pct) / 100);
+      /* Product sale: one-time is the sale price (data-sale-pct), struck against the full price. */
+      var sp = Number(root.getAttribute('data-sale-pct')) || 0;
+      var one = sp ? Math.floor(price * (100 - sp) / 100) : price;
       var set = function (sel, txt) { Array.prototype.forEach.call(root.querySelectorAll(sel), function (el) { el.textContent = txt; }); };
       set('[data-plo-sub]', aed(sub));
       set('[data-plo-was]', aed(price));
       set('[data-plo-save]', 'save ' + aed(price - sub));
-      set('[data-plo-one]', aed(price));
-      set('[data-plo-cta]', aed(isSub() ? sub : price));
-      set('[data-plo-sticky-p]', aed(isSub() ? sub : price));
+      set('[data-plo-one]', aed(one));
+      set('[data-plo-one-was]', aed(price));
+      set('[data-plo-cta]', aed(isSub() ? sub : one));
+      set('[data-plo-sticky-p]', aed(isSub() ? sub : one));
       set('[data-plo-sticky-was]', aed(price));
       /* Pack chips: price per truffle at the price the shopper is about to pay. */
       Array.prototype.forEach.call(form.querySelectorAll('[data-plo-size][data-pcs]'), function (r) {
         var out = r.parentNode.querySelector('[data-plo-per]');
         var p = Number(r.getAttribute('data-price')), n = Number(r.getAttribute('data-pcs'));
         if (!out || !p || !n) return;
-        var eff = isSub() ? Math.floor(p * (100 - pct) / 100) : p;
+        var eff = isSub() ? Math.floor(p * (100 - pct) / 100) : (sp ? Math.floor(p * (100 - sp) / 100) : p);
         out.textContent = aed(Math.round(eff / n)) + ' / truffle';
       });
     }
@@ -285,7 +290,7 @@
       }
     }
     if (!price) {
-      var m = (root.querySelector('[data-plo-one]') || {}).textContent || '';
+      var m = (root.querySelector('[data-plo-one-was]') || root.querySelector('[data-plo-one]') || {}).textContent || '';
       var num = parseFloat(m.replace(/[^0-9.]/g, ''));
       if (num) price = Math.round(num * 100);
     }

@@ -75,6 +75,11 @@
     {%- endif -%}
     <div class="pl-wrap pl-byob__copy">
       {%- if s.eyebrow != blank -%}<span class="pl-eyebrow pl-byob__eyebrow">{{ s.eyebrow }}</span>{%- endif -%}
+      {%- capture sale_on -%}{%- render 'sale-active' -%}{%- endcapture -%}
+      {%- if sale_on contains '1' and product -%}
+        {%- capture bsp -%}{%- render 'sale-pct', product: product -%}{%- endcapture -%}{%- assign bsp = bsp | strip | plus: 0 -%}
+        {%- if bsp > 0 and settings.sale_min_spend == 0 -%}<p class="plo-salebadge"><span>{{ settings.sale_badge | default: settings.sale_name }}</span><b>{{ bsp }}% off</b></p>{%- endif -%}
+      {%- endif -%}
       <h1 class="pl-h pl-h--1 pl-byob__title">{{ s.heading | default: 'Build your own mix' }}</h1>
       {%- if s.subheading != blank -%}<p class="pl-byob__sub">{{ s.subheading }}</p>{%- endif -%}
       <ul class="pl-byob__prices">
@@ -82,6 +87,7 @@
         {%- if v_truffle -%}<li><b>Truffle {{ s.truffle_size }}</b><span>{%- render 'plaay-aed', fils: v_truffle.price -%} each</span></li>{%- endif -%}
         {%- if v_slab -%}<li><b>Slab {{ s.slab_size }}</b><span>{%- render 'plaay-aed', fils: v_slab.price -%} each</span></li>{%- endif -%}
       </ul>
+      {%- if sale_on contains '1' and product -%}{%- render 'sale-note', product: product, countdown: true, mod: 'byob' -%}{%- endif -%}
     </div>
   </section>
 
