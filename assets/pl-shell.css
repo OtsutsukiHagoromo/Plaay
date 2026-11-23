@@ -647,7 +647,8 @@ body.pl-inv-open { overflow: hidden; }
 .plo-sale__cd b { font-variant-numeric: tabular-nums; font-weight: 900; }
 
 /* Sale badge (product page title, Build Your Own Mix hero) */
-.plo-salebadge { display: inline-flex; align-items: center; gap: 0; margin: 0 0 10px; border-radius: 999px; overflow: hidden; font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; line-height: 1; border: 2px solid #E8178A; }
+.plo-salebadge { display: flex; width: max-content; max-width: 100%; align-items: center; gap: 0; margin: 0 0 10px; border-radius: 999px; overflow: hidden; font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; line-height: 1; border: 2px solid #E8178A; }
 .plo-salebadge span { background: #E8178A; color: #fff; padding: 6px 10px; }
 .plo-salebadge b { color: #E8178A; background: #fff; padding: 6px 10px; }
 .plo-sale--byob { max-width: 520px; }
+.pl-byob__copy .plo-salebadge { margin: 10px 0 4px; }
