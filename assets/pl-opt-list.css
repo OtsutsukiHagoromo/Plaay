@@ -197,3 +197,4 @@
 /* Sale row on Shop all (sale kit on): pink title and a short line about the offer. */
 .plo-range--sale .plo-range__t { color: #E8178A; }
 .plo-range__sub { font-size: 13px; font-weight: 800; color: #E8178A; text-align: right; }
+@media (max-width: 767px) { .plo-range__sub { display: none; } }

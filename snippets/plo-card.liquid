@@ -110,6 +110,7 @@
     assign badge_text = badge
   endif
   # Sitewide sale (snippets/sale-active): the product's own % takes the badge slot.
+  assign card_sale = 0
   capture sale_on
     render 'sale-active'
   endcapture
@@ -118,6 +119,10 @@
       render 'sale-pct', product: product
     endcapture
     assign sale_pct = sale_pct | strip
+    # Product sale: the card leads with the sale price (one-time), full price struck.
+    if settings.sale_min_spend == 0 or settings.sale_min_spend == blank
+      assign card_sale = sale_pct | plus: 0
+    endif
     # Threshold sale (min spend, e.g. Black Friday 25% off AED 399+): the card says the sale's
     # name, not a % the product alone doesn't get. Product sale: the product's own %, and no
     # sale badge on products outside the sale (0%).
@@ -234,6 +239,10 @@
       <div class="plo-card__prices">
         {%- if sub_mode and sub_price > 0 -%}
           <span class="plo-card__price"><span data-plo-cp-sub>{%- render 'plaay-aed', fils: sub_price -%}</span></span>
+          <s class="plo-card__was" data-plo-cp>{%- render 'plaay-aed', fils: v.price -%}</s>
+        {%- elsif card_sale > 0 -%}
+          {%- assign keep_s = 100 | minus: card_sale -%}{%- assign sale_fils = v.price | times: keep_s | divided_by: 100 -%}
+          <span class="plo-card__price plo-card__price--sale"><span data-plo-cp-sale="{{ card_sale }}">{%- render 'plaay-aed', fils: sale_fils -%}</span></span>
           <s class="plo-card__was" data-plo-cp>{%- render 'plaay-aed', fils: v.price -%}</s>
         {%- else -%}
           <span class="plo-card__price"><span data-plo-cp>{%- render 'plaay-aed', fils: v.price -%}</span></span>

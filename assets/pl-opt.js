@@ -433,6 +433,7 @@
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-quick]'), function (q) { q.setAttribute('data-plo-quick', id); });
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp]'), function (el) { el.textContent = aed(price); });
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sub]'), function (el) { el.textContent = aed(Math.floor(price * (100 - pct) / 100)); });
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sale]'), function (el) { el.textContent = aed(Math.floor(price * (100 - Number(el.getAttribute('data-plo-cp-sale'))) / 100)); });
   });
 
   /* Card size picker (select): same effect as the swatches. */
@@ -449,6 +450,7 @@
     if (cimg && opt.getAttribute('data-img')) { cimg.srcset = opt.getAttribute('data-srcset') || ''; cimg.src = opt.getAttribute('data-img'); }
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp]'), function (el) { el.textContent = aed(price); });
     Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sub]'), function (el) { el.textContent = aed(Math.floor(price * (100 - pct) / 100)); });
+    Array.prototype.forEach.call(card.querySelectorAll('[data-plo-cp-sale]'), function (el) { el.textContent = aed(Math.floor(price * (100 - Number(el.getAttribute('data-plo-cp-sale'))) / 100)); });
   });
 
   /* ---------- range tabs (Subscribe & Save, All collections): filter the cards in place ---------- */
