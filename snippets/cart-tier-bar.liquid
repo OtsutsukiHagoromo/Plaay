@@ -64,7 +64,30 @@
     assign l2 = settings.cart_tier_2_label | default: '10% off + Mystery Gift'
     assign a3 = settings.cart_tier_3_spend | default: 500
     assign l3 = settings.cart_tier_3_label | default: '15% off + Mystery Gift'
-    # A tier whose spend is 0 is switched off (the Oct 2026 ladder has two tiers).
+    # A tier whose spend is 0 is switched off (the Oct 2026 ladder has two tiers). In a partial
+    # product sale a tier that saves less than the sale already does on this bag is dropped too
+    # (snippets/sale-cart-save).
+    capture sale_save
+      render 'sale-cart-save'
+    endcapture
+    assign sale_save = sale_save | strip | plus: 0
+    if sale_save > 0
+      assign p = l1 | split: '%' | first | plus: 0
+      assign sv = a1 | times: p
+      if sv <= sale_save
+        assign a1 = 0
+      endif
+      assign p = l2 | split: '%' | first | plus: 0
+      assign sv = a2 | times: p
+      if sv <= sale_save
+        assign a2 = 0
+      endif
+      assign p = l3 | split: '%' | first | plus: 0
+      assign sv = a3 | times: p
+      if sv <= sale_save
+        assign a3 = 0
+      endif
+    endif
     if a1 > 0
       assign amounts = amounts | append: ',' | append: a1
       assign labels = labels | append: '|' | append: l1

@@ -1,0 +1,28 @@
+{%- comment -%}
+  Partial product sale (sale kit on, default % 0, no minimum spend): prints what the sale's product
+  discounts take off the bag's one-time items, in fils (0 otherwise). The 10% / 18% rewards don't
+  combine with them and Shopify applies the bigger, so a reward tier only helps when its own saving
+  beats this; the bag ladder and tier bar hide the tiers that don't.
+  Usage: {%- capture ss -%}{%- render 'sale-cart-save' -%}{%- endcapture -%}{%- assign ss = ss | strip | plus: 0 -%}
+{%- endcomment -%}
+{%- liquid
+  assign save = 0
+  capture on
+    render 'sale-active'
+  endcapture
+  assign min = settings.sale_min_spend | default: 0 | plus: 0
+  if on contains '1' and min == 0 and settings.sale_default_pct == 0
+    for it in cart.items
+      unless it.selling_plan_allocation
+        capture p
+          render 'sale-pct', product: it.product
+        endcapture
+        assign p = p | strip | plus: 0
+        if p > 0
+          assign save = it.original_line_price | times: p | divided_by: 100 | plus: save
+        endif
+      endunless
+    endfor
+  endif
+  echo save
+-%}

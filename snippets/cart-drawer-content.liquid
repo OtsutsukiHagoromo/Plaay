@@ -59,6 +59,46 @@
       assign elig = elig | plus: it.original_line_price
     endif
   endfor
+  # Partial product sale: drop the % rewards that save less than the sale already does on this bag
+  # (Shopify gives the bigger, so they'd unlock nothing), and close the gaps.
+  capture sale_save
+    render 'sale-cart-save'
+  endcapture
+  assign sale_save = sale_save | strip | plus: 0
+  if sale_save > 0
+    for k in (1..3)
+      assign p1 = l1 | split: '%' | first | plus: 0
+      assign p2 = l2 | split: '%' | first | plus: 0
+      assign p3 = l3 | split: '%' | first | plus: 0
+      assign s1 = t1_fils | times: p1 | divided_by: 100
+      assign s2 = t2_fils | times: p2 | divided_by: 100
+      assign s3 = t3_fils | times: p3 | divided_by: 100
+      if t1_fils > 0 and s1 <= sale_save
+        assign t1_fils = t2_fils
+        assign l1 = l2
+        assign t2_fils = t3_fils
+        assign l2 = l3
+        assign t3_fils = 0
+      elsif t1_fils == 0 and t2_fils > 0
+        assign t1_fils = t2_fils
+        assign l1 = l2
+        assign t2_fils = t3_fils
+        assign l2 = l3
+        assign t3_fils = 0
+      elsif t2_fils > 0 and s2 <= sale_save
+        assign t2_fils = t3_fils
+        assign l2 = l3
+        assign t3_fils = 0
+      elsif t2_fils == 0 and t3_fils > 0
+        assign t2_fils = t3_fils
+        assign l2 = l3
+        assign t3_fils = 0
+      elsif t3_fils > 0 and s3 <= sale_save
+        assign t3_fils = 0
+      endif
+    endfor
+  endif
+
   assign reached = -1
   if total >= ship_fils
     assign reached = 0
