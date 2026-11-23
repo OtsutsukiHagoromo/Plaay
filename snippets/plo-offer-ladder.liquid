@@ -34,7 +34,8 @@
       assign t_spends = sale_min | append: '' | split: ','
       assign t_labels = sale_lbl | split: '|'
     endif
-  elsif sale_on contains '1'
+  elsif sale_on contains '1' and settings.sale_default_pct > 0
+    # Sitewide sale replaces the rewards; a partial sale (default 0) keeps them.
     assign t_spends = ''
   endif
   for sp in t_spends

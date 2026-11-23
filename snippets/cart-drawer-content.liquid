@@ -102,7 +102,9 @@
   capture sale_on
     render 'sale-active'
   endcapture
-  if sale_on contains '1' and reached >= 0 and threshold_sale == false
+  # A partial sale (only some products discounted, default % 0) keeps the ladder: Shopify gives
+  # the bigger of the product discounts and the order reward, so the 10% / 18% can still apply.
+  if sale_on contains '1' and reached >= 0 and threshold_sale == false and settings.sale_default_pct > 0
     assign reached = 0
     assign next_fils = 0
     assign next_label = ''
@@ -128,10 +130,10 @@
     {%- if next_label != '' -%}
       <p class="pl-ladder__msg"><b>{% render 'plaay-aed', fils: remaining_fils %}</b> away from <b>{{ next_label }}</b></p>
     {%- else -%}
-      <p class="pl-ladder__msg pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}{% if sale_on contains '1' %}Free delivery unlocked{% else %}All rewards unlocked{% endif %}</p>
+      <p class="pl-ladder__msg pl-green">{% render 'pl-icon', name: 'check', size: 14, stroke: 2.6 %}{% if sale_on contains '1' and settings.sale_default_pct > 0 %}Free delivery unlocked{% else %}All rewards unlocked{% endif %}</p>
     {%- endif -%}
     {%- render 'cart-tier-bar' -%}
-    {%- unless sale_on contains '1' -%}{%- if has_sub and t1_fils > 0 -%}
+    {%- unless sale_on contains '1' and settings.sale_default_pct > 0 -%}{%- if has_sub and t1_fils > 0 -%}
       <p class="pl-ladder__note">Subscribed items already get their subscription discount, so they don't count toward the % rewards.</p>
     {%- endif -%}{%- endunless -%}
     {%- if next_label != '' and cart.item_count > 0 -%}

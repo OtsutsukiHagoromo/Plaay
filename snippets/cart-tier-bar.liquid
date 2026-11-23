@@ -45,7 +45,7 @@
     endif
     assign amounts = amounts | append: ',' | append: sale_min
     assign labels = labels | append: '|' | append: settings.sale_default_pct | append: '% off'
-  elsif sale_on contains '1'
+  elsif sale_on contains '1' and settings.sale_default_pct > 0
     # Sitewide sale: free delivery is the only stop (the sale replaces the % rewards).
     assign sale_ladder = true
   elsif settings.eid_sale_enabled

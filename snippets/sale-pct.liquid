@@ -8,10 +8,13 @@
   assign pct = settings.sale_default_pct | default: 20
   assign tier_a = settings.sale_tier_a_handles | remove: ' ' | split: ','
   assign tier_b = settings.sale_tier_b_handles | remove: ' ' | split: ','
+  assign tier_c = settings.sale_tier_c_handles | remove: ' ' | split: ','
   if tier_a contains product.handle
     assign pct = settings.sale_tier_a_pct | default: 30
   elsif tier_b contains product.handle
     assign pct = settings.sale_tier_b_pct | default: 25
+  elsif tier_c contains product.handle
+    assign pct = settings.sale_tier_c_pct | default: 15
   endif
   echo pct
 -%}

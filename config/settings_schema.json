@@ -272,11 +272,28 @@
         "default": 25
       },
       {
+        "type": "text",
+        "id": "sale_tier_c_handles",
+        "label": "Tier C product handles (comma separated)"
+      },
+      {
+        "type": "number",
+        "id": "sale_tier_c_pct",
+        "label": "Tier C % off",
+        "default": 15
+      },
+      {
         "type": "number",
         "id": "sale_default_pct",
         "label": "% off for every other product",
         "default": 20,
-        "info": "Badges and copy only. The real discounts are Shopify automatic discounts."
+        "info": "Badges and copy only. The real discounts are Shopify automatic discounts. 0 = only the tier products are on sale (no badge on the rest, the bag keeps the 10% / 18% rewards)."
+      },
+      {
+        "type": "text",
+        "id": "sale_note_text",
+        "label": "Bag note when there's no single %",
+        "info": "e.g. Up to 30% off selected packs"
       },
       {
         "type": "number",

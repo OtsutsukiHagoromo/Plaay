@@ -117,13 +117,17 @@
     capture sale_pct
       render 'sale-pct', product: product
     endcapture
-    assign badge_text = sale_pct | strip | append: '% Off'
+    assign sale_pct = sale_pct | strip
     # Threshold sale (min spend, e.g. Black Friday 25% off AED 399+): the card says the sale's
-    # name, not a % the product alone doesn't get.
+    # name, not a % the product alone doesn't get. Product sale: the product's own %, and no
+    # sale badge on products outside the sale (0%).
     if settings.sale_min_spend > 0
       assign badge_text = settings.sale_badge | default: settings.sale_name
+      assign badge_mod = 'sale'
+    elsif sale_pct != '0' and sale_pct != ''
+      assign badge_text = sale_pct | append: '% Off'
+      assign badge_mod = 'sale'
     endif
-    assign badge_mod = 'sale'
   endif
   comment
     Listings pass skip_new: when most of a collection is new, a New badge on every card is noise.

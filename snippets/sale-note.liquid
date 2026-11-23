@@ -19,11 +19,21 @@
     assign pct = ''
   endif
   assign pct = pct | strip
+  if pct == '0'
+    assign pct = ''
+  endif
+  # No single % to quote (the bag, or a product outside a partial sale): the sale's own line,
+  # e.g. "up to 30% off selected packs".
+  assign gen = ''
+  if min == 0 and pct == ''
+    assign gen = settings.sale_note_text
+  endif
 -%}
 <p class="plo-sale plo-sale--note{% if mod %} plo-sale--{{ mod }}{% endif %}">
   <b>{{ nm }}:</b>
   {%- if min > 0 %} {{ pct }}% off orders over AED {{ min }}.
   {%- elsif pct != '' %} {{ pct }}% off.
+  {%- elsif gen != blank %} {{ gen }}.
   {%- endif %} Applied at checkout{% if settings.sale_ends_label != blank %}, ends {{ settings.sale_ends_label }}{% endif %}.
   {%- if countdown and settings.sale_ends != blank %}
     <span class="plo-sale__cd" data-sale-cd="{{ settings.sale_ends | date: '%s' }}" hidden>Ends in <b data-sale-cd-t>--</b></span>

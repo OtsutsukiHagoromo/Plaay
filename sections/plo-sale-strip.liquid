@@ -11,15 +11,20 @@
   assign s = section.settings
   assign big = s.headline | default: '25% OFF ON ORDERS ABOVE AED 399'
   assign small = s.small_print | split: '|'
+  # The offer can be several lines split with | (e.g. "Up to 30% off|30% off variety packs"): the
+  # band scrolls through them in turn, the tag before the first. Slower per extra line, so each
+  # stays readable.
+  assign lines = big | split: '|'
+  assign secs = lines.size | times: 30
 -%}
 {%- if s.status != 'off' -%}
 <div class="pl plo-salestrip{% if s.tilt %} is-tilt{% endif %}" data-plo-salestrip data-live="{% if s.status == 'live' %}1{% endif %}" data-start="{{ s.starts | escape }}" data-end="{{ s.ends | escape }}" hidden
   style="--sale-ink: {{ s.ink }}; --sale-bg: {{ s.bg }}; --sale-band: {{ s.band }}; --sale-band-ink: {{ s.band_ink }};">
   <a class="plo-salestrip__link" href="{{ s.link | default: '/collections/shop-all' }}">
-    <span class="pl-vh">{{ s.label }}: {{ big }}{% if s.small_print != blank %}. {{ s.small_print | replace: '|', '. ' }}{% endif %}</span>
+    <span class="pl-vh">{{ s.label }}: {{ big | replace: '|', '. ' }}{% if s.small_print != blank %}. {{ s.small_print | replace: '|', '. ' }}{% endif %}</span>
     <span class="plo-salestrip__big" aria-hidden="true">
-      <span class="plo-salestrip__track">
-        {%- for i in (1..6) -%}<span class="plo-salestrip__item">{%- if s.label != blank -%}<em>{{ s.label }}</em>{%- endif -%}{{ big }}</span><span class="plo-salestrip__dot"></span>{%- endfor -%}
+      <span class="plo-salestrip__track"{% if lines.size > 1 %} style="animation-duration: {{ secs }}s"{% endif %}>
+        {%- for i in (1..6) -%}{%- for ln in lines -%}<span class="plo-salestrip__item">{%- if forloop.first and s.label != blank -%}<em>{{ s.label }}</em>{%- endif -%}{{ ln | strip }}</span><span class="plo-salestrip__dot"></span>{%- endfor -%}{%- endfor -%}
       </span>
     </span>
     {%- if small.size > 0 -%}
@@ -53,7 +58,7 @@
     { "type": "text", "id": "starts", "label": "Starts (Gulf time)", "info": "e.g. 2026-11-27 00:00. Blank = now." },
     { "type": "text", "id": "ends", "label": "Ends (Gulf time)", "info": "e.g. 2026-12-01 00:00. Blank = no end." },
     { "type": "text", "id": "label", "label": "Tag before the offer", "default": "SALE" },
-    { "type": "text", "id": "headline", "label": "Offer", "default": "25% OFF ON ORDERS ABOVE AED 399" },
+    { "type": "text", "id": "headline", "label": "Offer (several lines: split with |)", "default": "25% OFF ON ORDERS ABOVE AED 399" },
     { "type": "text", "id": "small_print", "label": "Second band, small print (split with |; blank = no second band)" },
     { "type": "url", "id": "link", "label": "Link" },
     { "type": "checkbox", "id": "tilt", "label": "Slight tilt", "default": false },
