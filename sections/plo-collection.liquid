@@ -250,6 +250,28 @@
                 assign current_page_n = paginate.current_page
               endif
             -%}
+            {%- comment -%}
+              "Lead products" setting (lines of collection-handle:product-handle,...): those products
+              open page 1 of that collection, in that order, while no sort is picked. The rest follow
+              in the collection's own order.
+            {%- endcomment -%}
+            {%- if current_page_n == 1 and collection.sort_by == blank and s.lead_products != blank -%}
+              {%- assign lead_lines = s.lead_products | newline_to_br | split: '<br />' -%}
+              {%- for ln in lead_lines -%}
+                {%- assign lp = ln | strip | split: ':' -%}
+                {%- if lp[0] != collection.handle or lp[1] == blank -%}{%- continue -%}{%- endif -%}
+                {%- assign lead_handles = lp[1] | remove: ' ' | split: ',' -%}
+                {%- for lh in lead_handles -%}
+                  {%- assign product = all_products[lh] -%}
+                  {%- unless product.id -%}{%- continue -%}{%- endunless -%}
+                  {%- assign key = ',' | append: product.id | append: ',' -%}
+                  {%- if placed contains key -%}{%- continue -%}{%- endif -%}
+                  {%- assign placed = placed | append: product.id | append: ',' -%}
+                  {%- assign n = n | plus: 1 -%}
+                  {%- render 'plo-card', product: product, eager: true, skip_new: true, view: template.suffix -%}
+                {%- endfor -%}
+              {%- endfor -%}
+            {%- endif -%}
             {%- for pass in passes -%}
               {%- for product in collection.products -%}
                 {%- liquid
@@ -382,6 +404,12 @@
       "id": "all_handle",
       "label": "Shop all collection handle",
       "default": "shop-all"
+    },
+    {
+      "type": "textarea",
+      "id": "lead_products",
+      "label": "Lead products (one line per collection: collection-handle:product-handle,product-handle)",
+      "info": "They open page 1 of that collection, in this order, until a sort is picked."
     },
     {
       "type": "checkbox",
