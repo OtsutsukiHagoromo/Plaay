@@ -13,7 +13,7 @@
       "type": "plo-collection",
       "settings": {
         "per_page": 48,
-        "lead_products": "chocolate-truffles:truffles-mix-pack-of-6",
+        "lead_products": "chocolate-truffles: truffles-mix-pack-of-6",
         "show_promo": true,
         "promo_url": "/pages/subscribe-save",
         "chip_labels": "All|Slabs|Truffles|Bars|Variety|Limited",
