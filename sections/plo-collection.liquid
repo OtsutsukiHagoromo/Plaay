@@ -226,7 +226,6 @@
           </section>
         {%- endfor -%}
       {%- elsif collection.products.size > 0 -%}
-        {%- if paginate.current_page == 1 -%}{%- render 'plo-sale-row', view: template.suffix, top: true -%}{%- endif -%}
         <div class="plo-lgrid">
           <div class="plo-grid">
             {%- liquid
